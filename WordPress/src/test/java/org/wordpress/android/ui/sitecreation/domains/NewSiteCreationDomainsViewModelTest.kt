@@ -76,12 +76,18 @@ class NewSiteCreationDomainsViewModelTest {
         }
     }
 
+    /**
+     * Verifies the UI state for when the VM is started with an empty site title.
+     */
     @Test
     fun verifyEmptyTitleQueryUiState() = testWithSuccessResponse {
         viewModel.start(null)
         verifyInitialContentUiState(requireNotNull(viewModel.uiState.value), showProgress = false)
     }
 
+    /**
+     * Verifies the initial UI state for when the VM is started with a non-empty site title.
+     */
     @Test
     fun verifyMultiResultTitleQueryInitialUiState() = testWithSuccessResponse {
         viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
@@ -90,6 +96,10 @@ class NewSiteCreationDomainsViewModelTest {
         verifyInitialContentUiState(requireNotNull(captor.firstValue), showProgress = true)
     }
 
+    /**
+     * Verifies the UI state for after the VM is started with a non-empty site title and it results in some domain
+     * suggestions.
+     */
     @Test
     fun verifyMultiResultTitleQueryUiStateAfterResponse() = testWithSuccessResponse {
         viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
@@ -98,17 +108,22 @@ class NewSiteCreationDomainsViewModelTest {
         verifyVisibleItemsContentUiState(captor.secondValue)
     }
 
+    /**
+     * Verifies the initial UI state for when the user enters a non-empty query.
+     */
     @Test
-    fun verifyUpdateEmptyQueryInitialUiState() =
-            testWithSuccessResponse(queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY) {
-                viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
-                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-                verify(uiStateObserver, times(2)).onChanged(captor.capture())
-                verifyInitialContentUiState(captor.firstValue, showProgress = true, showClearButton = true)
-            }
+    fun verifyNonEmptyUpdateQueryInitialUiState() = testWithSuccessResponse {
+        viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verifyInitialContentUiState(captor.firstValue, showProgress = true, showClearButton = true)
+    }
 
+    /**
+     * Verifies the UI state for after the user enters a non-empty query which results in no domain suggestions.
+     */
     @Test
-    fun verifyUpdateEmptyQueryUiStateAfterResponse() =
+    fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithEmptyResults() =
             testWithSuccessResponse(queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY) {
                 viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
@@ -119,22 +134,20 @@ class NewSiteCreationDomainsViewModelTest {
                 )
             }
 
+    /**
+     * Verifies the UI state for after the user enters a non-empty query which results in multiple domain suggestions.
+     */
     @Test
-    fun verifyUpdateMultiResultQueryInitialUiState() = testWithSuccessResponse {
-        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
-        verifyInitialContentUiState(captor.firstValue, showProgress = true, showClearButton = true)
-    }
-
-    @Test
-    fun verifyUpdateMultiResultQueryUiStateAfterResponse() = testWithSuccessResponse {
+    fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithMultipleResults() = testWithSuccessResponse {
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(2)).onChanged(captor.capture())
         verifyVisibleItemsContentUiState(captor.secondValue, showClearButton = true)
     }
 
+    /**
+     * Verifies that help button is properly propagated.
+     */
     @Test
     fun verifyOnHelpClickedPropagated() = testWithSuccessResponse {
         viewModel.onHelpClicked()
@@ -142,6 +155,9 @@ class NewSiteCreationDomainsViewModelTest {
         verify(onHelpClickedObserver, times(1)).onChanged(captor.capture())
     }
 
+    /**
+     * Verifies that clear button is properly propagated.
+     */
     @Test
     fun verifyOnClearBtnClickedPropagated() = testWithSuccessResponse {
         viewModel.onClearTextBtnClicked()
@@ -149,6 +165,9 @@ class NewSiteCreationDomainsViewModelTest {
         verify(clearBtnObserver, times(1)).onChanged(captor.capture())
     }
 
+    /**
+     * Verifies that create site button is properly propagated when a domain is selected.
+     */
     @Test
     fun verifyCreateSiteBtnClickedPropagated() = testWithSuccessResponse {
         val domainName = "test.domain"
@@ -159,6 +178,9 @@ class NewSiteCreationDomainsViewModelTest {
         assertThat(captor.firstValue, Is(domainName))
     }
 
+    /**
+     * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.Initial] content state.
+     */
     private fun verifyInitialContentUiState(
         uiState: DomainsUiState,
         showProgress: Boolean = false,
@@ -170,6 +192,9 @@ class NewSiteCreationDomainsViewModelTest {
         assertThat(uiState.createSiteButtonContainerVisibility, Is(false))
     }
 
+    /**
+     * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.VisibleItems] content state.
+     */
     private fun verifyVisibleItemsContentUiState(
         uiState: DomainsUiState,
         showClearButton: Boolean = false,
@@ -181,6 +206,9 @@ class NewSiteCreationDomainsViewModelTest {
         assertThat(uiState.contentState.items.size, Is(numberOfItems))
     }
 
+    /**
+     * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.Empty] content state.
+     */
     private fun verifyEmptyItemsContentUiState(
         uiState: DomainsUiState,
         showClearButton: Boolean = false
@@ -191,6 +219,9 @@ class NewSiteCreationDomainsViewModelTest {
         assertThat(uiState.contentState.items.size, Is(0))
     }
 
+    /**
+     * Helper function that creates an [OnSuggestedDomains] event for the given query and number of results pair.
+     */
     private fun createSuccessfulOnSuggestedDomains(queryResultSizePair: Pair<String, Int>): OnSuggestedDomains {
         val suggestions = (0..(queryResultSizePair.second - 1)).map {
             val response = DomainSuggestionResponse()
