@@ -27,6 +27,7 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsV
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
+import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -51,6 +52,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var skipClickedListener: OnSkipClickedListener
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var uiHelpers: UiHelpers
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -80,6 +82,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
         errorLayout = rootView.findViewById(R.id.error_layout)
         searchInputWithHeader = SearchInputWithHeader(
+                uiHelpers = uiHelpers,
                 rootView = rootView,
                 onClear = { viewModel.onClearTextBtnClicked() }
         )
@@ -143,9 +146,9 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
-                updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
-                updateVisibility(contentLayout, uiState.contentLayoutVisibility)
-                updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
+                uiHelpers.updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
+                uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                uiHelpers.updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
 
                 when (uiState) {
                     is VerticalsContentUiState -> updateContentLayout(uiState)
@@ -173,7 +176,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     }
 
     private fun updateContentLayout(uiState: VerticalsContentUiState) {
-        updateVisibility(skipButton, uiState.showSkipButton)
+        uiHelpers.updateVisibility(skipButton, uiState.showSkipButton)
         searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
         searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
         updateSuggestions(uiState.items)
@@ -197,10 +200,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun updateSuggestions(suggestions: List<VerticalsListItemUiState>) {
         (recyclerView.adapter as NewSiteCreationVerticalsAdapter).update(suggestions)
-    }
-
-    private fun updateVisibility(view: View, visible: Boolean) {
-        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun getScreenTitle(): String {
