@@ -66,12 +66,13 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
             siteCreationState = SiteCreationState()
             wizardManager = WizardManager(SITE_CREATION_STEPS)
         } else {
+            siteCreationState = savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE)
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
             wizardManager = WizardManager(SITE_CREATION_STEPS, currentStepIndex)
-            siteCreationState = savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE)
         }
         isStarted = true
         if (savedInstanceState == null) {
+            // Show the next step only if it's a fresh activity so we can handle the navigation
             wizardManager.showNextStep()
         }
     }
