@@ -37,11 +37,11 @@ import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.properties.Delegates
 
-private const val FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS = true
-private const val FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS = true
-private const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS = false
-private const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR = false
-private const val FETCH_DOMAINS_SIZE = 20
+const val FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS = true
+const val FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS = true
+const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS = false
+const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR = false
+const val FETCH_DOMAINS_SIZE = 20
 
 private const val THROTTLE_DELAY: Int = 500
 
