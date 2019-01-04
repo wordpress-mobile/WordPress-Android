@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.StringRes
 import kotlinx.android.parcel.Parcelize
@@ -19,6 +20,18 @@ import org.wordpress.android.viewmodel.SingleEventObservable
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
+private const val KEY_CURRENT_STEP = "key_current_step"
+private const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
+private val SITE_CREATION_STEPS =
+        // TODO we'll receive this from a server/Firebase config
+        listOf(
+                SiteCreationStep.fromString("site_creation_segments"),
+                SiteCreationStep.fromString("site_creation_verticals"),
+                SiteCreationStep.fromString("site_creation_site_info"),
+                SiteCreationStep.fromString("site_creation_domains"),
+                SiteCreationStep.fromString("site_creation_site_preview")
+        )
+
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
@@ -32,32 +45,41 @@ data class SiteCreationState(
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
 class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
-    private val wizardManager: WizardManager<SiteCreationStep> = WizardManager(
-            // TODO we'll receive this from a server/Firebase config
-            listOf(
-                    SiteCreationStep.fromString("site_creation_segments"),
-                    SiteCreationStep.fromString("site_creation_verticals"),
-                    SiteCreationStep.fromString("site_creation_site_info"),
-                    SiteCreationStep.fromString("site_creation_domains"),
-                    SiteCreationStep.fromString("site_creation_site_preview")
-            )
-    )
     private var isStarted = false
-    private var siteCreationState = SiteCreationState()
+    private lateinit var wizardManager: WizardManager<SiteCreationStep>
+    private lateinit var siteCreationState: SiteCreationState
 
-    val navigationTargetObservable: SingleEventObservable<NavigationTarget> = SingleEventObservable(
-            Transformations.map(wizardManager.navigatorLiveData) {
-                WizardNavigationTarget(it, siteCreationState)
-            }
-    )
+    val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
+        SingleEventObservable(
+                Transformations.map(wizardManager.navigatorLiveData) {
+                    WizardNavigationTarget(it, siteCreationState)
+                }
+        )
+    }
 
     private val _wizardFinishedObservable = SingleLiveEvent<CreateSiteState>()
     val wizardFinishedObservable: LiveData<CreateSiteState> = _wizardFinishedObservable
 
-    fun start() {
+    fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
+        if (savedInstanceState == null) {
+            siteCreationState = SiteCreationState()
+            wizardManager = WizardManager(SITE_CREATION_STEPS)
+        } else {
+            siteCreationState = savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE)
+            val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
+            wizardManager = WizardManager(SITE_CREATION_STEPS, currentStepIndex)
+        }
         isStarted = true
-        wizardManager.showNextStep()
+        if (savedInstanceState == null) {
+            // Show the next step only if it's a fresh activity so we can handle the navigation
+            wizardManager.showNextStep()
+        }
+    }
+
+    fun writeToBundle(outState: Bundle) {
+        outState.putInt(KEY_CURRENT_STEP, wizardManager.currentStep)
+        outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
     }
 
     fun onSegmentSelected(segmentId: Long) {

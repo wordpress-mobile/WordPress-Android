@@ -54,12 +54,17 @@ class NewSiteCreationActivity : AppCompatActivity(),
 
         setContentView(R.layout.new_site_creation_activity)
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(NewSiteCreationMainVM::class.java)
-        mainViewModel.start()
+        mainViewModel.start(savedInstanceState)
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED)
         }
         observeVMState()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mainViewModel.writeToBundle(outState)
     }
 
     private fun observeVMState() {
