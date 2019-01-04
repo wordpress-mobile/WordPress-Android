@@ -74,6 +74,7 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
@@ -595,6 +596,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // Reset Notifications Data
         NotificationsTable.reset();
+
+        // Cancel QuickStart reminders
+        QuickStartUtils.stopQuickStartReminderTimer(context);
     }
 
     /**
