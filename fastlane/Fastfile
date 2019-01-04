@@ -35,7 +35,7 @@ import "./ScreenshotFastfile"
 # Environment
 ########################################################################
 Dotenv.load('~/.wpandroid-env.default')
-ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
+ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 
 ########################################################################
 # Release Lanes
