@@ -5,7 +5,6 @@ import android.animation.Animator.AnimatorListener;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -17,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -84,20 +84,44 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                     mTaskCompleted.size()));
 
             if (mIsCompletedTaskListExpanded) {
+                headerViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_rounded_top_white_card);
                 headerViewHolder.mChevron.setRotation(EXPANDED_CHEVRON_ROTATION);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_collapse_desc));
             } else {
+                headerViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_rounded_white_card);
                 headerViewHolder.mChevron.setRotation(COLLAPSED_CHEVRON_ROTATION);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_expand_desc));
             }
 
-            headerViewHolder.mTopSpacing.setVisibility(mTasksUncompleted.isEmpty() ? View.GONE : View.VISIBLE);
+            int topMargin = mTasksUncompleted.size() > 0
+                    ? mContext.getResources().getDimensionPixelSize(R.dimen.margin_extra_large)
+                    : 0;
+            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, topMargin, 0, 0);
+            headerViewHolder.itemView.setLayoutParams(params);
             return;
         }
 
         TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
+
+        // When first list item...
+        if (position == 0) {
+            // Use rounded background when next item is header.
+            if (getItemViewType(position + 1) == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
+                taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_rounded_white_card);
+            // Use top rounded background when next item is not header (i.e. middle or bottom).
+            } else {
+                taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_rounded_top_white_card);
+            }
+        // When last list item or next item is header, use bottom rounded background.
+        } else if (position == mTasks.size() - 1 || getItemViewType(position + 1) == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
+            taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_rounded_bottom_white_card);
+        // Otherwise, use middle unrounded background.
+        } else {
+            taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_white);
+        }
 
         QuickStartTask task = mTasks.get(position);
         boolean isEnabled = mTasksUncompleted.contains(task);
@@ -175,8 +199,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    void updateContent(List<QuickStartTask> tasksUncompleted,
-                       List<QuickStartTask> tasksCompleted, @Nullable QuickStartTask updatedTask) {
+    void updateContent(List<QuickStartTask> tasksUncompleted, List<QuickStartTask> tasksCompleted) {
         List<QuickStartTask> newList = new ArrayList<>(tasksUncompleted);
         if (!tasksCompleted.isEmpty()) {
             newList.add(null);
@@ -196,14 +219,12 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         mTasks.clear();
         mTasks.addAll(newList);
 
-        // update the position of items
         diffResult.dispatchUpdatesTo(this);
 
-        // trigger update of changed task and completed task counter
-        if (updatedTask != null) {
-            notifyItemChanged(mTasks.indexOf(updatedTask));
+        // Notify adapter of each task change individually.  Using notifyDataSetChanged() kills list changing animation.
+        for (QuickStartTask task : mTasks) {
+            notifyItemChanged(mTasks.indexOf(task));
         }
-        notifyItemChanged(mTasks.indexOf(null));
     }
 
     @Override
@@ -282,13 +303,11 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
     public class CompletedHeaderViewHolder extends RecyclerView.ViewHolder {
         ImageView mChevron;
         TextView mTitle;
-        View mTopSpacing;
 
         CompletedHeaderViewHolder(final View inflate) {
             super(inflate);
-            mChevron = inflate.findViewById(R.id.completed_tasks_list_chevron);
-            mTitle = inflate.findViewById(R.id.complete_tasks_header_label);
-            mTopSpacing = inflate.findViewById(R.id.top_spacing);
+            mChevron = inflate.findViewById(R.id.completed_tasks_header_chevron);
+            mTitle = inflate.findViewById(R.id.completed_tasks_header_title);
 
             View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
@@ -301,12 +320,11 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         private void toggleCompletedTasksList() {
-            ViewPropertyAnimator viewPropertyAnimator =
-                    mChevron.animate()
-                            .rotation(mIsCompletedTaskListExpanded ? COLLAPSED_CHEVRON_ROTATION
-                                    : EXPANDED_CHEVRON_ROTATION)
-                            .setInterpolator(new LinearInterpolator())
-                            .setDuration(Duration.SHORT.toMillis(mContext));
+            ViewPropertyAnimator viewPropertyAnimator = mChevron
+                    .animate()
+                    .rotation(mIsCompletedTaskListExpanded ? COLLAPSED_CHEVRON_ROTATION : EXPANDED_CHEVRON_ROTATION)
+                    .setInterpolator(new LinearInterpolator())
+                    .setDuration(Duration.SHORT.toMillis(mContext));
 
             viewPropertyAnimator.setListener(new AnimatorListener() {
                 @Override
@@ -316,13 +334,19 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
+                    int positionOfHeader = getAdapterPosition();
+                    int positionAfterHeader = positionOfHeader + 1;
+
                     if (mIsCompletedTaskListExpanded) {
                         mTasks.removeAll(mTaskCompleted);
-                        notifyItemRangeRemoved(getAdapterPosition() + 1, mTaskCompleted.size());
+                        notifyItemRangeRemoved(positionAfterHeader, mTaskCompleted.size());
                     } else {
                         mTasks.addAll(mTaskCompleted);
-                        notifyItemRangeInserted(getAdapterPosition() + 1, mTaskCompleted.size());
+                        notifyItemRangeInserted(positionAfterHeader, mTaskCompleted.size());
                     }
+
+                    // Update header background based after collapsed and expanded.
+                    notifyItemChanged(positionOfHeader);
                     mIsCompletedTaskListExpanded = !mIsCompletedTaskListExpanded;
                     itemView.setClickable(true);
                 }
@@ -340,8 +364,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     interface OnQuickStartAdapterActionListener {
-        void onTaskTapped(QuickStartTask task);
-
         void onSkipTaskTapped(QuickStartTask task);
+        void onTaskTapped(QuickStartTask task);
     }
 }

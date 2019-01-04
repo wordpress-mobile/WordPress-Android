@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -87,11 +88,16 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         boolean isCompletedTasksListExpanded = savedInstanceState != null
                                                && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
 
-        mQuickStartAdapter = new QuickStartAdapter(requireContext(), tasksUncompleted, tasksCompleted,
+        mQuickStartAdapter = new QuickStartAdapter(
+                requireContext(),
+                tasksUncompleted,
+                tasksCompleted,
                 isCompletedTasksListExpanded);
         mQuickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
         list.setLayoutManager(new LinearLayoutManager(requireContext()));
         list.setAdapter(mQuickStartAdapter);
+        // Disable default change animations to avoid blinking effect when adapter data is changed.
+        ((DefaultItemAnimator) list.getItemAnimator()).setSupportsChangeAnimations(false);
 
         return rootView;
     }
@@ -135,8 +141,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             int site = AppPrefs.getSelectedSite();
             mQuickStartAdapter.updateContent(
                     mQuickStartStore.getUncompletedTasksByType(site, mTasksType),
-                    mQuickStartStore.getCompletedTasksByType(site, mTasksType),
-                    task);
+                    mQuickStartStore.getCompletedTasksByType(site, mTasksType));
         }
     }
 }
