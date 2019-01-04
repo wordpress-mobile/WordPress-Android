@@ -7,29 +7,27 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
-import org.wordpress.android.util.AppLog;
 
-import static android.app.Service.START_NOT_STICKY;
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static org.wordpress.android.ui.RequestCodes.QUICK_START_REMINDER_NOTIFICATION;
 
 public class QuickStartReminderReceiver extends BroadcastReceiver {
+    public static final String ARG_QUICK_START_TASK_BATCH = "ARG_QUICK_START_TASK_BATCH";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        QuickStartDetails quickStartDetails = (QuickStartDetails) intent.getBundleExtra("b")
+        QuickStartDetails quickStartDetails = (QuickStartDetails) intent.getBundleExtra(ARG_QUICK_START_TASK_BATCH)
                                                                         .getSerializable(QuickStartDetails.KEY);
+
 
         Intent resultIntent = new Intent(context, WPMainActivity.class);
 
         resultIntent.putExtra(MySiteFragment.ARG_QUICK_START_TASK, quickStartDetails.getTask());
-        resultIntent.putExtra("a", "b");
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                               | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction("android.intent.action.MAIN");
@@ -37,7 +35,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntentWithParentStack(resultIntent);
         PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                stackBuilder.getPendingIntent(QUICK_START_REMINDER_NOTIFICATION, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
@@ -52,6 +50,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 .build();
 
 
-        notificationManager.notify(111, notification);
+        notificationManager.notify(QUICK_START_REMINDER_NOTIFICATION, notification);
     }
 }
