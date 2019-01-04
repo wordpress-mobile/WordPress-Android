@@ -10,10 +10,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -106,6 +109,7 @@ public class MySiteFragment extends Fragment implements
     public static final String HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT";
     public static final String ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK";
     public static final String TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG";
+    public static final String TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG";
     public static final String TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG";
     public static final String TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG = "TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG";
     public static final String TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG";
@@ -140,6 +144,7 @@ public class MySiteFragment extends Fragment implements
     private TextView mQuickStartGrowSubtitle;
     private TextView mQuickStartGrowTitle;
     private View mQuickStartGrowView;
+    private View mQuickStartMenuButton;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -262,6 +267,7 @@ public class MySiteFragment extends Fragment implements
         mQuickStartGrowIcon = rootView.findViewById(R.id.quick_start_grow_icon);
         mQuickStartGrowSubtitle = rootView.findViewById(R.id.quick_start_grow_subtitle);
         mQuickStartGrowTitle = rootView.findViewById(R.id.quick_start_grow_title);
+        mQuickStartMenuButton = rootView.findViewById(R.id.quick_start_more);
 
         setupClickListeners(rootView);
 
@@ -451,6 +457,13 @@ public class MySiteFragment extends Fragment implements
                 showQuickStartList(GROW);
             }
         });
+
+        mQuickStartMenuButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showQuickStartCardMenu();
+            }
+        });
     }
 
     @Override
@@ -510,6 +523,22 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
+    private void showQuickStartCardMenu() {
+        PopupMenu quickStartPopupMenu = new PopupMenu(requireContext(), mQuickStartMenuButton);
+        quickStartPopupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.quick_start_card_menu_remove) {
+                    showRemoveNextStepsDialog();
+                    return true;
+                }
+                return false;
+            }
+        });
+        quickStartPopupMenu.inflate(R.menu.quick_start_card_menu);
+        quickStartPopupMenu.show();
+    }
+
     private void showQuickStartList(QuickStartTaskType type) {
         clearActiveQuickStart();
         final Bundle bundle = QuickStartFullScreenDialogFragment.newBundle(type);
@@ -567,6 +596,17 @@ public class MySiteFragment extends Fragment implements
                 message,
                 getString(R.string.dialog_button_ok),
                 null,
+                null);
+        dialog.show((requireActivity()).getSupportFragmentManager(), tag);
+    }
+
+    private void showRemoveNextStepsDialog() {
+        BasicFragmentDialog dialog = new BasicFragmentDialog();
+        String tag = TAG_REMOVE_NEXT_STEPS_DIALOG;
+        dialog.initialize(tag, getString(R.string.quick_start_dialog_remove_next_steps_title),
+                getString(R.string.quick_start_dialog_remove_next_steps_message),
+                getString(R.string.remove),
+                getString(R.string.cancel),
                 null);
         dialog.show((requireActivity()).getSupportFragmentManager(), tag);
     }
@@ -950,10 +990,26 @@ public class MySiteFragment extends Fragment implements
             case TAG_QUICK_START_MIGRATION_DIALOG:
                 // TODO: Quick Start - Add analytics for migration dialog positive tapped.
                 break;
+            case TAG_REMOVE_NEXT_STEPS_DIALOG:
+                // TODO: Quick Start - Add analytics for remove next steps dialog positive tapped.
+                skipQuickStart();
+                updateQuickStartContainer();
+                clearActiveQuickStart();
+                break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
                 throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
         }
+    }
+
+    private void skipQuickStart() {
+        int siteId = AppPrefs.getSelectedSite();
+        for (QuickStartTask quickStartTask : QuickStartTask.values()) {
+            mQuickStartStore.setDoneTask(siteId, quickStartTask, true);
+        }
+        mQuickStartStore.setQuickStartCompleted(siteId, true);
+        // skipping all tasks means no achievement notification, so we mark it as received
+        mQuickStartStore.setQuickStartNotificationReceived(siteId, true);
     }
 
     private void startQuickStart() {
@@ -974,6 +1030,9 @@ public class MySiteFragment extends Fragment implements
                 break;
             case TAG_QUICK_START_DIALOG:
                 AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED);
+                break;
+            case TAG_REMOVE_NEXT_STEPS_DIALOG:
+                // TODO: Quick Start - Add analytics for remove next steps dialog negative tapped.
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
