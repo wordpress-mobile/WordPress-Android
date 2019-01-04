@@ -191,7 +191,7 @@ class NotificationRestClient constructor(
                 "fields" to NOTIFICATION_DEFAULT_FIELDS)
         val request = WPComGsonRequest.buildGetRequest(url, params, NotificationsApiResponse::class.java,
                 { response ->
-                    val notification = response?.notes?.first()?.let {
+                    val notification = response?.notes?.firstOrNull()?.let {
                         NotificationApiResponse.notificationResponseToNotificationModel(it)
                     }
                     val payload = FetchNotificationResponsePayload(notification)
