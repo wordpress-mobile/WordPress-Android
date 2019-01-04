@@ -62,16 +62,17 @@
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/create_site_button"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/margin_extra_extra_medium_large"
+            android:layout_height="@dimen/new_site_creation_domains_create_site_button_height"
             android:layout_gravity="end"
             android:layout_margin="@dimen/margin_extra_large"
-            android:background="@color/wp_blue_medium"
+            android:background="@drawable/wp_blue_medium_extra_small_rounded_bg"
             android:fontFamily="sans-serif-medium"
             android:paddingEnd="@dimen/margin_medium"
             android:paddingStart="@dimen/margin_medium"
             android:text="@string/new_site_creation_create_site_button"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_medium"/>
+            android:textSize="@dimen/text_sz_medium"
+            android:theme="@style/WordPress.Button"/>
     </android.support.v7.widget.CardView>
 
     <FrameLayout
