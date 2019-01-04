@@ -29,10 +29,8 @@ import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceStat
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
@@ -79,9 +77,6 @@ class NewSitePreviewViewModel @Inject constructor(
 
     private val _onOkButtonClicked = SingleLiveEvent<CreateSiteState>()
     val onOkButtonClicked: LiveData<CreateSiteState> = _onOkButtonClicked
-
-    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
-    val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
 
     init {
         dispatcher.register(fetchWpComSiteUseCase)
@@ -223,7 +218,6 @@ class NewSitePreviewViewModel @Inject constructor(
          */
         if (uiState.value !is SitePreviewContentUiState) {
             updateUiState(SitePreviewContentUiState(createSitePreviewData()))
-            _toastMessage.value = ToastMessageHolder(R.string.preview_screen_links_disabled, Duration.SHORT)
         }
     }
 
