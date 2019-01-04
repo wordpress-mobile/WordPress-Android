@@ -104,6 +104,7 @@ public class MySiteFragment extends Fragment implements
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
     public static final String HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT";
+    public static final String ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK";
     public static final String TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG";
     public static final String TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG";
     public static final String TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG = "TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG";
@@ -456,7 +457,14 @@ public class MySiteFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (mActiveTutorialPrompt != null) {
+        if (getActivity().getIntent().hasExtra(ARG_QUICK_START_TASK)) {
+            QuickStartTask taskFromNotification =
+                    (QuickStartTask) getActivity().getIntent().getSerializableExtra(ARG_QUICK_START_TASK);
+
+            mActiveTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(taskFromNotification);
+            getActivity().getIntent().removeExtra(ARG_QUICK_START_TASK);
+            showActiveQuickStartTutorial();
+        } else if (mActiveTutorialPrompt != null) {
             showQuickStartFocusPoint();
         }
     }
@@ -1088,7 +1096,8 @@ public class MySiteFragment extends Fragment implements
 
     private void completeQuickStarTask(QuickStartTask quickStartTask) {
         if (getSelectedSite() != null) {
-            QuickStartUtils.completeTask(mQuickStartStore, quickStartTask, mDispatcher, getSelectedSite(), getContext());
+            QuickStartUtils
+                    .completeTask(mQuickStartStore, quickStartTask, mDispatcher, getSelectedSite(), getContext());
             // We update completed tasks counter onResume, but UPLOAD_SITE_ICON can be completed without navigating
             // away from the activity, so we are updating counter here
             if (quickStartTask == QuickStartTask.UPLOAD_SITE_ICON) {
