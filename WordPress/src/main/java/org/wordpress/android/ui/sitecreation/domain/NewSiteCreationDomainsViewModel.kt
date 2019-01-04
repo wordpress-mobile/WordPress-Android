@@ -175,7 +175,14 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                     )
             )
         } else {
-            updateUiStateToContent(query, ListState.Success(event.suggestions.map { it.domain_name }))
+            /**
+             * We would like to show the domains that matches the current query at the top. For this, we split the
+             * domain names into two, one part for the domain names that start with the current query plus `.` and the
+             * other part for the others. We then combine them back again into a single list.
+             */
+            val domainNames = event.suggestions.map { it.domain_name }.partition { it.startsWith("${query.value}.") }
+                    .toList().flatten()
+            updateUiStateToContent(query, ListState.Success(domainNames))
         }
     }
 
