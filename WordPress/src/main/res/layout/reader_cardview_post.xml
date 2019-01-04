@@ -295,8 +295,8 @@
                 android:layout_width="@dimen/reader_more_icon"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
-                android:tint="@color/grey_text_min"
-                android:src="@drawable/ic_ellipsis_grey_lighten_10_24dp" >
+                android:src="@drawable/ic_ellipsis_white_24dp"
+                android:tint="@color/grey_text_min" >
             </ImageView>
 
         </RelativeLayout>
