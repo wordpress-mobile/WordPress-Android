@@ -71,7 +71,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     private fun initSkipNextButton(rootView: ViewGroup) {
-        skipNextButton = rootView.findViewById(R.id.site_info_skip_or_next_button)
+        skipNextButton = rootView.findViewById(R.id.btn_skip)
         skipNextButton.setOnClickListener { viewModel.onSkipNextClicked() }
     }
 

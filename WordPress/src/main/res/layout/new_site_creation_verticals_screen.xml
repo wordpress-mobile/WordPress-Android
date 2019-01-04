@@ -54,24 +54,19 @@
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:scrollbars="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/btn_skip"
+            app:layout_constraintBottom_toTopOf="@+id/site_info_skip_or_next_button_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/search_input_layout"/>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_skip"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/site_info_skip_or_next_button_container"
+            layout="@layout/new_site_creation_skip_button_container"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/new_site_creation_button_skip"
-            android:layout_margin="@dimen/margin_extra_large"
-            android:theme="@style/WordPress.Button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"/>
+            app:layout_constraintStart_toStartOf="parent"/>
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>
