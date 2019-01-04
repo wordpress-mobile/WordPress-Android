@@ -37,7 +37,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartDetails
-import org.wordpress.android.ui.quickstart.QuickStartReminderNotificationService
+import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
 class QuickStartUtils {
@@ -260,16 +260,16 @@ class QuickStartUtils {
         fun startQuickStartReminderTimer(context: Context, quickStartTask: QuickStartTask) {
             val ONE_DAY = (24 * 60 * 60 * 1000).toLong()
 
-            val intent = Intent(context, QuickStartReminderNotificationService::class.java)
-            val bundle = Bundle();
-            bundle.putSerializable(QuickStartDetails.KEY, QuickStartDetails.getDetailsForTask(quickStartTask));
+            val intent = Intent(context, QuickStartReminderReceiver::class.java)
+            val bundle = Bundle()
+            bundle.putSerializable(QuickStartDetails.KEY, QuickStartDetails.getDetailsForTask(quickStartTask))
             intent.putExtra("b", bundle)
 
             intent.putExtra("yolo", QuickStartDetails.CHECK_STATS)
             intent.putExtra("aaa", "bbb")
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-            val pendingIntent = PendingIntent.getService(context, 723648247, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(context, 723648247, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
             alarmManager.set(
                     AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1 * 10 * 1000),
@@ -278,7 +278,7 @@ class QuickStartUtils {
         }
 
         fun stopQuickStartReminderTimer(context: Context) {
-            val intent = Intent(context, QuickStartReminderNotificationService::class.java)
+            val intent = Intent(context, QuickStartReminderReceiver::class.java)
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
             val pendingIntent = PendingIntent.getService(context, 555, intent, 0)
