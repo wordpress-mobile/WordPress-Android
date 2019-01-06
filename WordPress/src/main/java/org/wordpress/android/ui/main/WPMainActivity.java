@@ -223,6 +223,8 @@ public class WPMainActivity extends AppCompatActivity implements
                 boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
                         ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
                 boolean openRequestedPage = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_PAGE));
+                boolean isQuickStartRequestedFromPush = (getIntent() != null
+                                                         && getIntent().hasExtra(MySiteFragment.ARG_QUICK_START_TASK));
                 boolean openZendeskTicketsFromPush = (getIntent() != null && getIntent()
                         .getBooleanExtra(ARG_SHOW_ZENDESK_NOTIFICATIONS, false));
 
@@ -243,6 +245,9 @@ public class WPMainActivity extends AppCompatActivity implements
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
+                } else if (isQuickStartRequestedFromPush) {
+                    // when app is opened from Quick Start reminder switch to MySite fragment and let it handle the rest
+                    mBottomNav.setCurrentPosition(PAGE_MY_SITE);
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
@@ -309,6 +314,10 @@ public class WPMainActivity extends AppCompatActivity implements
         }
         if (intent.hasExtra(ARG_OPEN_PAGE)) {
             handleOpenPageIntent(intent);
+        }
+
+        if (intent.hasExtra(MySiteFragment.ARG_QUICK_START_TASK)) {
+            mBottomNav.setCurrentPosition(PAGE_MY_SITE);
         }
     }
 
@@ -713,6 +722,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 setSite(data);
                 jumpNewPost(data);
                 showQuickStartDialog();
+                QuickStartUtils.stopQuickStartReminderTimer(this);
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -740,6 +750,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
                     }
+                    QuickStartUtils.stopQuickStartReminderTimer(this);
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:
@@ -783,8 +794,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 R.drawable.img_illustration_site_about_280dp,
                 getString(R.string.quick_start_dialog_need_help_button_negative),
                 "",
-                getString(R.string.quick_start_dialog_need_help_button_neutral)
-        );
+                getString(R.string.quick_start_dialog_need_help_button_neutral));
 
         promoDialog.show(getSupportFragmentManager(), tag);
         AnalyticsTracker.track(Stat.QUICK_START_REQUEST_VIEWED);
