@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.yalantis.ucrop.UCrop;
@@ -67,7 +68,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class MeFragment extends Fragment implements MainToolbarFragment {
+public class MeFragment extends Fragment implements MainToolbarFragment, WPMainActivity.OnScrollToTopListener {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
     private static final String IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR";
 
@@ -83,6 +84,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
     private View mNotificationsView;
     private View mNotificationsDividerView;
     private ProgressDialog mDisconnectProgressDialog;
+    private ScrollView mScrollView;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -136,6 +138,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
         mAccountSettingsView = rootView.findViewById(R.id.row_account_settings);
         mNotificationsView = rootView.findViewById(R.id.row_notifications);
         mNotificationsDividerView = rootView.findViewById(R.id.me_notifications_divider);
+        mScrollView = rootView.findViewById(R.id.scroll_view);
 
         OnClickListener showPickerListener = new View.OnClickListener() {
             @Override
@@ -218,6 +221,13 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
         outState.putBoolean(IS_UPDATING_GRAVATAR, mIsUpdatingGravatar);
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onScrollToTop() {
+        if (isAdded()) {
+            mScrollView.smoothScrollTo(0, 0);
+        }
     }
 
     @Override
