@@ -189,7 +189,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             return;
         }
         clearPendingNotificationsItemsOnUI();
-        if (getFirstVisibleItemID() > 0) {
+        if (mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() > 0) {
             mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
         }
     }
