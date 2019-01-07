@@ -744,13 +744,20 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
 
+                    boolean isSameSiteSelected =
+                            data != null
+                            && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs.getSelectedSite();
+
+                    if (!isSameSiteSelected) {
+                        QuickStartUtils.stopQuickStartReminderTimer(this);
+                    }
+
                     setSite(data);
                     jumpNewPost(data);
 
                     if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
                     }
-                    QuickStartUtils.stopQuickStartReminderTimer(this);
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:
