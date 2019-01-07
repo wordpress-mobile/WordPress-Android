@@ -778,13 +778,10 @@ public class MediaStore extends Store {
         payload.media.setUploadState(MediaUploadState.UPLOADING);
         MediaSqlUtils.insertOrUpdateMedia(payload.media);
 
-        AppLog.d(T.MEDIA, "Upload image starts");
         if (payload.stripLocation) {
-            AppLog.d(T.MEDIA, "Stripping location for file: " + payload.media.getFilePath());
             MediaUtils.stripLocation(payload.media.getFilePath());
         }
 
-        AppLog.d(T.MEDIA, "Upload starts: " + payload.media.getFilePath());
         if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else {
