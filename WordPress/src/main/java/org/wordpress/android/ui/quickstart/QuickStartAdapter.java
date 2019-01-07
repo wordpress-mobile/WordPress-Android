@@ -349,6 +349,10 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                     notifyItemChanged(positionOfHeader);
                     mIsCompletedTaskListExpanded = !mIsCompletedTaskListExpanded;
                     itemView.setClickable(true);
+
+                    if (mListener != null) {
+                        mListener.onCompletedTasksListToggled(mIsCompletedTaskListExpanded);
+                    }
                 }
 
                 @Override
@@ -365,6 +369,9 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     interface OnQuickStartAdapterActionListener {
         void onSkipTaskTapped(QuickStartTask task);
+
         void onTaskTapped(QuickStartTask task);
+
+        void onCompletedTasksListToggled(boolean isExpanded);
     }
 }

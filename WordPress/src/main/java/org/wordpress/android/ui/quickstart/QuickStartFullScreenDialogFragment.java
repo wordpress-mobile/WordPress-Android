@@ -20,6 +20,8 @@ import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener;
+import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AniUtils.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         OnQuickStartAdapterActionListener {
     private FullScreenDialogController mDialogController;
     private QuickStartAdapter mQuickStartAdapter;
+    private View mQuickStartCompleteView;
 
     public static final String KEY_COMPLETED_TASKS_LIST_EXPANDED = "completed_tasks_list_expanded";
     public static final String EXTRA_TYPE = "EXTRA_TYPE";
@@ -93,6 +96,12 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 tasksUncompleted,
                 tasksCompleted,
                 isCompletedTasksListExpanded);
+
+        mQuickStartCompleteView = rootView.findViewById(R.id.quick_start_complete_view);
+        if (tasksUncompleted.isEmpty()) {
+            mQuickStartCompleteView.setVisibility(!isCompletedTasksListExpanded ? View.VISIBLE : View.GONE);
+        }
+
         mQuickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
         list.setLayoutManager(new LinearLayoutManager(requireContext()));
         list.setAdapter(mQuickStartAdapter);
@@ -139,9 +148,33 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), task, true);
         if (mQuickStartAdapter != null) {
             int site = AppPrefs.getSelectedSite();
+
+            List<QuickStartTask> uncompletedTasks = mQuickStartStore.getUncompletedTasksByType(site, mTasksType);
+
             mQuickStartAdapter.updateContent(
-                    mQuickStartStore.getUncompletedTasksByType(site, mTasksType),
+                    uncompletedTasks,
                     mQuickStartStore.getCompletedTasksByType(site, mTasksType));
+
+            if (uncompletedTasks.isEmpty() && !mQuickStartAdapter.isCompletedTasksListExpanded()) {
+                toggleCompletedView(true);
+            }
+        }
+    }
+
+    @Override
+    public void onCompletedTasksListToggled(boolean isExpanded) {
+        if (!mQuickStartStore.getUncompletedTasksByType(AppPrefs.getSelectedSite(), mTasksType).isEmpty()) {
+            return;
+        }
+
+        toggleCompletedView(!isExpanded);
+    }
+
+    private void toggleCompletedView(boolean isVisible) {
+        if (isVisible) {
+            AniUtils.fadeIn(mQuickStartCompleteView, Duration.SHORT);
+        } else {
+            AniUtils.fadeOut(mQuickStartCompleteView, Duration.SHORT);
         }
     }
 }
