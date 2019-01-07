@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 /**
  * Static data that represents user facing description of quick start tasks.
  **/
-enum class QuickStartDetails constructor(
+enum class QuickStartTaskDetails constructor(
     val task: QuickStartTask,
     val titleId: Int,
     val subtitleId: Int,
@@ -83,8 +83,8 @@ enum class QuickStartDetails constructor(
         const val KEY = "quick_start_details"
 
         @JvmStatic
-        fun getDetailsForTask(task: QuickStartTask): QuickStartDetails? {
-            QuickStartDetails.values().forEach {
+        fun getDetailsForTask(task: QuickStartTask): QuickStartTaskDetails? {
+            QuickStartTaskDetails.values().forEach {
                 if (it.task == task) return it
             }
             return null

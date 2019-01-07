@@ -37,8 +37,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.quickstart.QuickStartDetails
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
+import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
 class QuickStartUtils {
@@ -191,7 +191,7 @@ class QuickStartUtils {
         }
 
         @JvmStatic
-        fun completeTask(
+        fun completeTaskAndRemindOfNextOne(
             quickStartStore: QuickStartStore,
             task: QuickStartTask,
             dispatcher: Dispatcher,
@@ -258,25 +258,25 @@ class QuickStartUtils {
             }
         }
 
-        fun startQuickStartReminderTimer(context: Context, quickStartTask: QuickStartTask) {
+        private fun startQuickStartReminderTimer(context: Context, quickStartTask: QuickStartTask) {
             val ONE_DAY = (24 * 60 * 60 * 1000).toLong()
 
             val intent = Intent(context, QuickStartReminderReceiver::class.java)
+
+            // for some reason we have to use a bundle to pass serializable to broadcast receiver
             val bundle = Bundle()
-            bundle.putSerializable(QuickStartDetails.KEY, QuickStartDetails.getDetailsForTask(quickStartTask))
+            bundle.putSerializable(QuickStartTaskDetails.KEY, QuickStartTaskDetails.getDetailsForTask(quickStartTask))
             intent.putExtra(QuickStartReminderReceiver.ARG_QUICK_START_TASK_BATCH, bundle)
 
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
             val pendingIntent = PendingIntent.getBroadcast(
                     context,
                     RequestCodes.QUICK_START_REMINDER_RECEIVER,
                     intent,
                     PendingIntent.FLAG_UPDATE_CURRENT
             )
-
             alarmManager.set(
-                    AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1 * 10 * 1000),
+                    AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1 * 30 * 1000),
                     pendingIntent
             )
         }
@@ -294,7 +294,11 @@ class QuickStartUtils {
             alarmManager.cancel(pendingIntent)
         }
 
-        fun getNextUncompletedQuickStartTask(
+        /**
+         * This method tries to return the next uncompleted task of taskType
+         * if no uncompleted task of taskType remain it tries to find and return uncompleted task of other task type
+         */
+        private fun getNextUncompletedQuickStartTask(
             quickStartStore: QuickStartStore,
             siteId: Long,
             taskType: QuickStartTaskType

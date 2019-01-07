@@ -451,7 +451,8 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
-        QuickStartUtils.completeTask(mQuickStartStore, QuickStartTask.PUBLISH_POST, mDispatcher, mSite, this);
+        QuickStartUtils.completeTaskAndRemindOfNextOne(mQuickStartStore,
+                QuickStartTask.PUBLISH_POST, mDispatcher, mSite, this);
 
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(mImageLoader);
@@ -661,7 +662,7 @@ public class EditPostActivity extends AppCompatActivity implements
             for (MediaModel media : allUploadingMediaInPost) {
                 if (media != null) {
                     mEditorMediaUploadListener.onMediaUploadReattached(String.valueOf(media.getId()),
-                                                                       UploadService.getUploadProgressForMedia(media));
+                            UploadService.getUploadProgressForMedia(media));
                 }
             }
         }
@@ -939,12 +940,12 @@ public class EditPostActivity extends AppCompatActivity implements
             }
             if (hasSelectedPicture) {
                 WPMediaUtils.advertiseImageOptimization(this,
-                                                        new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
-                                                            @Override
-                                                            public void done() {
-                                                                addMediaList(uriList, false);
-                                                            }
-                                                        });
+                        new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                            @Override
+                            public void done() {
+                                addMediaList(uriList, false);
+                            }
+                        });
                 return;
             }
         }
@@ -1162,7 +1163,7 @@ public class EditPostActivity extends AppCompatActivity implements
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
             if (!(mShowAztecEditor || mShowGutenbergEditor)
-                        && (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress())) {
+                && (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress())) {
                 ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
                 return false;
             }
@@ -1320,7 +1321,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void onUploadSuccess(MediaModel media) {
         if (mEditorMediaUploadListener != null && media != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                                                              FluxCUtils.mediaFileFromMediaModel(media));
+                    FluxCUtils.mediaFileFromMediaModel(media));
         }
     }
 
@@ -1343,7 +1344,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadFailed(localMediaId,
-                                                           EditorFragmentAbstract.getEditorMimeType(mf), errorMessage);
+                    EditorFragmentAbstract.getEditorMimeType(mf), errorMessage);
         }
     }
 
@@ -1393,7 +1394,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 AnalyticsTracker.Stat.EDITOR_CREATED_POST,
                 mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()),
                 properties
-        );
+                                           );
     }
 
     private synchronized void updatePostObject(boolean isAutosave) throws EditorFragmentNotAddedException {
@@ -1454,7 +1455,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     this,
                     org.wordpress.android.editor.R.drawable.ic_gridicons_image,
                     aztecEditorFragment.getMaxMediaSize()
-            );
+                                                                                                    );
             mAztecImageLoader = new AztecImageLoader(getBaseContext(), mImageManager, loadingImagePlaceholder);
             aztecEditorFragment.setAztecImageLoader(mAztecImageLoader);
             aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder);
@@ -1463,7 +1464,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     this,
                     org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera,
                     aztecEditorFragment.getMaxMediaSize()
-            );
+                                                                                                    );
             aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
             aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
 
@@ -1478,7 +1479,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                        && !PostStatus.PRIVATE.toString().equals(getPost().getStatus());
                             }
                         }
-                );
+                                                             );
             }
             aztecEditorFragment.setExternalLogger(new AztecLog.ExternalLogger() {
                 @Override
@@ -1762,27 +1763,27 @@ public class EditPostActivity extends AppCompatActivity implements
             String message = TextUtils.isEmpty(account.getEmail())
                     ? getString(R.string.editor_confirm_email_prompt_message)
                     : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
-                                    account.getEmail());
+                            account.getEmail());
 
             AlertDialog.Builder builder = new AlertDialog.Builder(
                     new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
                    .setMessage(message)
                    .setPositiveButton(android.R.string.ok,
-                                      new DialogInterface.OnClickListener() {
-                                          public void onClick(DialogInterface dialog, int id) {
-                                              ToastUtils.showToast(EditPostActivity.this,
-                                                                   getString(R.string.toast_saving_post_as_draft));
-                                              savePostAndOptionallyFinish(true);
-                                          }
-                                      })
+                           new DialogInterface.OnClickListener() {
+                               public void onClick(DialogInterface dialog, int id) {
+                                   ToastUtils.showToast(EditPostActivity.this,
+                                           getString(R.string.toast_saving_post_as_draft));
+                                   savePostAndOptionallyFinish(true);
+                               }
+                           })
                    .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
-                                      new DialogInterface.OnClickListener() {
-                                          public void onClick(DialogInterface dialog, int id) {
-                                              mDispatcher
-                                                      .dispatch(AccountActionBuilder.newSendVerificationEmailAction());
-                                          }
-                                      });
+                           new DialogInterface.OnClickListener() {
+                               public void onClick(DialogInterface dialog, int id) {
+                                   mDispatcher
+                                           .dispatch(AccountActionBuilder.newSendVerificationEmailAction());
+                               }
+                           });
             builder.create().show();
             return;
         }
@@ -1929,11 +1930,11 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean isPublishable = PostUtils.isPublishable(mPost);
         boolean hasUnpublishedLocalDraftChanges = (PostStatus.fromPost(mPost) == PostStatus.DRAFT
                                                    || PostStatus.fromPost(mPost) == PostStatus.PENDING)
-                                                      && isPublishable && hasLocalChanges;
+                                                  && isPublishable && hasLocalChanges;
 
         // if post was modified or has unpublished local changes, save it
         return (mOriginalPost != null && hasChanges)
-                             || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
+               || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
     }
 
 
@@ -2009,7 +2010,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                 AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
-                                                               AppPrefs.isAztecEditorToolbarExpanded());
+                                AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
                         return new EditorFragment();
@@ -2172,7 +2173,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Set up the placeholder text
         mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
         mEditorFragment.setTitlePlaceholder(getString(mIsPage ? R.string.editor_page_title_placeholder
-                                                              : R.string.editor_post_title_placeholder));
+                : R.string.editor_post_title_placeholder));
 
         // Set post title and content
         if (mPost != null) {
@@ -2182,7 +2183,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                                                mPost.getContent().replaceAll("\uFFFC", ""));
+                            mPost.getContent().replaceAll("\uFFFC", ""));
                 } else {
                     // TODO: Might be able to drop .replaceAll() when legacy editor is removed
                     String content = mPost.getContent().replaceAll("\uFFFC", "");
@@ -2211,12 +2212,12 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void launchCamera() {
         WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
-                                  new WPMediaUtils.LaunchCameraCallback() {
-                                      @Override
-                                      public void onMediaCapturePathReady(String mediaCapturePath) {
-                                          mMediaCapturePath = mediaCapturePath;
-                                      }
-                                  });
+                new WPMediaUtils.LaunchCameraCallback() {
+                    @Override
+                    public void onMediaCapturePathReady(String mediaCapturePath) {
+                        mMediaCapturePath = mediaCapturePath;
+                    }
+                });
     }
 
     protected void setPostContentFromShareAction() {
@@ -2234,7 +2235,7 @@ public class EditPostActivity extends AppCompatActivity implements
             text = AutolinkUtils.autoCreateLinks(text);
             if (mEditorFragment instanceof LegacyEditorFragment) {
                 mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, mPost,
-                                                           getMaximumThumbnailWidthForEditor()));
+                        getMaximumThumbnailWidthForEditor()));
             } else {
                 mEditorFragment.setContent(text);
             }
@@ -2324,7 +2325,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!isAutoSave) {
                 // Add gallery shortcode
                 MediaGalleryImageSpan[] gallerySpans = postContent.getSpans(0, postContent.length(),
-                                                                            MediaGalleryImageSpan.class);
+                        MediaGalleryImageSpan.class);
                 for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
                     int start = postContent.getSpanStart(gallerySpan);
                     postContent.removeSpan(gallerySpan);
@@ -2357,7 +2358,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         } else {
                             // local image for upload
                             postContent.insert(tagStart,
-                                               "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
+                                    "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                         }
                     }
                 }
@@ -2413,10 +2414,10 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     /*
-      * for as long as the user is in the Editor, we check whether there are any differences in media items
-      * being uploaded since they opened the Editor for this Post. If some items have finished, the current list
-      * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
-      * URLs will have been replaced with the remote ones.
+     * for as long as the user is in the Editor, we check whether there are any differences in media items
+     * being uploaded since they opened the Editor for this Post. If some items have finished, the current list
+     * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
+     * URLs will have been replaced with the remote ones.
      */
     private boolean compareCurrentMediaMarkedUploadingToOriginal(String newContent) {
         List<String> currentUploadingMedia = AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, newContent);
@@ -2436,9 +2437,9 @@ public class EditPostActivity extends AppCompatActivity implements
     /**
      * Analytics about media from device
      *
-     * @param isNew Whether is a fresh media
+     * @param isNew   Whether is a fresh media
      * @param isVideo Whether is a video or not
-     * @param uri The URI of the media on the device, or null
+     * @param uri     The URI of the media on the device, or null
      */
     private void trackAddMediaFromDeviceEvents(boolean isNew, boolean isVideo, Uri uri) {
         if (uri == null) {
@@ -2467,8 +2468,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     /**
      * Analytics about media already available in the blog's library.
+     *
      * @param source where the media is being added from
-     * @param media media being added
+     * @param media  media being added
      */
     private void trackAddMediaEvent(@NonNull AddExistingdMediaSource source, @NonNull MediaModel media) {
         switch (source) {
@@ -2585,7 +2587,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         hideOverlay();
                         if (mDidAnyFail) {
                             ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error,
-                                                 ToastUtils.Duration.SHORT);
+                                    ToastUtils.Duration.SHORT);
                         }
                     }
                 }
@@ -2663,7 +2665,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
         MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri),
-                                                MediaUploadState.QUEUED);
+                MediaUploadState.QUEUED);
         if (mediaModel == null) {
             ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
             return;
@@ -2697,12 +2699,12 @@ public class EditPostActivity extends AppCompatActivity implements
     private void advertiseImageOptimisationAndAddMedia(final Intent data) {
         if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
             WPMediaUtils.advertiseImageOptimization(this,
-                                                    new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
-                                                        @Override
-                                                        public void done() {
-                                                            addMediaItemGroupOrSingleItem(data);
-                                                        }
-                                                    });
+                    new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                        @Override
+                        public void done() {
+                            addMediaItemGroupOrSingleItem(data);
+                        }
+                    });
         } else {
             addMediaItemGroupOrSingleItem(data);
         }
@@ -2778,7 +2780,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case RequestCodes.MEDIA_SETTINGS:
                     if (mEditorFragment instanceof AztecEditorFragment) {
                         mEditorFragment.onActivityResult(AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
-                                                         Activity.RESULT_OK, data);
+                                Activity.RESULT_OK, data);
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
@@ -3019,7 +3021,7 @@ public class EditPostActivity extends AppCompatActivity implements
             Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
                     videoPath,
                     EditorMediaUtils.getMaximumThumbnailSizeForEditor(this)
-            );
+                                                            );
             if (thumb != null) {
                 thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
                 thumbnailPath = outputFile.getAbsolutePath();
@@ -3216,12 +3218,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     /*
-    * When the user deletes a media item that was being uploaded at that moment, we only cancel the
-    * upload but keep the media item in FluxC DB because the user might have deleted it accidentally,
-    * and they can always UNDO the delete action in Aztec.
-    * So, when the user exits then editor (and thus we lose the undo/redo history) we are safe to
-    * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
-    * */
+     * When the user deletes a media item that was being uploaded at that moment, we only cancel the
+     * upload but keep the media item in FluxC DB because the user might have deleted it accidentally,
+     * and they can always UNDO the delete action in Aztec.
+     * So, when the user exits then editor (and thus we lose the undo/redo history) we are safe to
+     * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
+     * */
     private void definitelyDeleteBackspaceDeletedMediaItems() {
         for (String mediaId : mAztecBackspaceDeletedMediaItemIds) {
             if (!TextUtils.isEmpty(mediaId)) {
@@ -3371,9 +3373,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 @Override
                 public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
                     CrashlyticsUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
-                                                  T.EDITOR,
-                                                  String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber,
-                                                                message));
+                            T.EDITOR,
+                            String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber,
+                                    message));
                 }
 
                 @Override
@@ -3609,8 +3611,10 @@ public class EditPostActivity extends AppCompatActivity implements
     private void showAsyncPromoDialog(boolean isPage, boolean isScheduled) {
         int title = isScheduled ? R.string.async_promo_title_schedule : R.string.async_promo_title_publish;
         int description = isScheduled
-            ? (isPage ? R.string.async_promo_description_schedule_page : R.string.async_promo_description_schedule_post)
-            : (isPage ? R.string.async_promo_description_publish_page : R.string.async_promo_description_publish_post);
+                ? (isPage ? R.string.async_promo_description_schedule_page
+                : R.string.async_promo_description_schedule_post)
+                : (isPage ? R.string.async_promo_description_publish_page
+                        : R.string.async_promo_description_publish_post);
         int button = isScheduled ? R.string.async_promo_schedule_now : R.string.async_promo_publish_now;
 
         final PromoDialog asyncPromoDialog = new PromoDialog();
