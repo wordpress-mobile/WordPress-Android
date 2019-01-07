@@ -782,7 +782,7 @@ public class ReaderPostListFragment extends Fragment
                 }
 
                 if (getSelectedSite() != null) {
-                    QuickStartUtils.completeTaskAndRemindOfNextOne(mQuickStartStore, QuickStartTask.FOLLOW_SITE,
+                    QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.FOLLOW_SITE,
                             mDispatcher, getSelectedSite(), getContext());
                 }
 

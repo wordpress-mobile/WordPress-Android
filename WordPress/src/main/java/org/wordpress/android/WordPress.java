@@ -598,7 +598,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         NotificationsTable.reset();
 
         // Cancel QuickStart reminders
-        QuickStartUtils.stopQuickStartReminderTimer(context);
+        QuickStartUtils.cancelQuickStartReminder(context);
     }
 
     /**

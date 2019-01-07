@@ -43,6 +43,8 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
 class QuickStartUtils {
     companion object {
+         private const val QUICK_START_REMINDER_INTERVAL = (24 * 60 * 60 * 1000 * 2).toLong() // two days
+
         /**
          * Formats the string, to highlight text between %1$s and %2$s with specified color, and add an icon
          * in front of it if necessary
@@ -191,7 +193,7 @@ class QuickStartUtils {
         }
 
         @JvmStatic
-        fun completeTaskAndRemindOfNextOne(
+        fun completeTaskAndRemindNextOne(
             quickStartStore: QuickStartStore,
             task: QuickStartTask,
             dispatcher: Dispatcher,
@@ -201,12 +203,12 @@ class QuickStartUtils {
             val siteId = site.id.toLong()
 
             if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore) ||
-                    quickStartStore.hasDoneTask(siteId, task)) {
+                    quickStartStore.hasDoneTask(siteId, task) || !isQuickStartAvailableForTheSite(site)) {
                 return
             }
 
             if (context != null) {
-                stopQuickStartReminderTimer(context)
+                cancelQuickStartReminder(context)
             }
 
             quickStartStore.setDoneTask(siteId, task, true)
@@ -259,8 +261,6 @@ class QuickStartUtils {
         }
 
         private fun startQuickStartReminderTimer(context: Context, quickStartTask: QuickStartTask) {
-            val ONE_DAY = (24 * 60 * 60 * 1000).toLong()
-
             val intent = Intent(context, QuickStartReminderReceiver::class.java)
 
             // for some reason we have to use a bundle to pass serializable to broadcast receiver
@@ -276,13 +276,13 @@ class QuickStartUtils {
                     PendingIntent.FLAG_UPDATE_CURRENT
             )
             alarmManager.set(
-                    AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1 * 30 * 1000),
+                    AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + QUICK_START_REMINDER_INTERVAL,
                     pendingIntent
             )
         }
 
         @JvmStatic
-        fun stopQuickStartReminderTimer(context: Context) {
+        fun cancelQuickStartReminder(context: Context) {
             val intent = Intent(context, QuickStartReminderReceiver::class.java)
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val pendingIntent = PendingIntent.getBroadcast(

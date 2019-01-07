@@ -718,11 +718,11 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (mySiteFragment != null) {
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
+                QuickStartUtils.cancelQuickStartReminder(this);
 
                 setSite(data);
                 jumpNewPost(data);
                 showQuickStartDialog();
-                QuickStartUtils.stopQuickStartReminderTimer(this);
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -749,7 +749,7 @@ public class WPMainActivity extends AppCompatActivity implements
                             && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs.getSelectedSite();
 
                     if (!isSameSiteSelected) {
-                        QuickStartUtils.stopQuickStartReminderTimer(this);
+                        QuickStartUtils.cancelQuickStartReminder(this);
                     }
 
                     setSite(data);
