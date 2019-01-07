@@ -315,10 +315,6 @@ public class WPMainActivity extends AppCompatActivity implements
         if (intent.hasExtra(ARG_OPEN_PAGE)) {
             handleOpenPageIntent(intent);
         }
-
-        if (intent.hasExtra(MySiteFragment.ARG_QUICK_START_TASK)) {
-            mBottomNav.setCurrentPosition(PAGE_MY_SITE);
-        }
     }
 
     private void handleOpenPageIntent(Intent intent) {
