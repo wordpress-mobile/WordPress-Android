@@ -1,12 +1,16 @@
 package org.wordpress.android.fluxc.utils;
 
 import android.support.annotation.NonNull;
+import android.support.media.ExifInterface;
 import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.File;
+import java.io.IOException;
 
 public class MediaUtils {
     public static final double MEMORY_LIMIT_FILESIZE_MULTIPLIER = 0.75D;
@@ -143,5 +147,25 @@ public class MediaUtils {
      */
     public static double getMaxFilesizeForMemoryLimit(double mediaMemoryLimit) {
         return MEMORY_LIMIT_FILESIZE_MULTIPLIER * mediaMemoryLimit;
+    }
+
+    /**
+     * Removes location from the Exif information from an image
+     * @param imagePath image file path
+     * @return success
+     */
+    public static boolean stripLocation(String imagePath) {
+        try {
+            ExifInterface exifInterface = new ExifInterface(imagePath);
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_DEST_LONGITUDE, null);
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_DEST_LONGITUDE_REF, null);
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_DEST_LATITUDE, null);
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_DEST_LATITUDE_REF, null);
+            exifInterface.saveAttributes();
+            return true;
+        } catch (IOException e) {
+            AppLog.e(T.MEDIA, "Removing of GPS info from image failed");
+            return false;
+        }
     }
 }
