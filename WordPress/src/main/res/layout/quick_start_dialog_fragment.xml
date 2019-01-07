@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        app:aevImage="@drawable/img_illustration_completed_quick_start_191dp"
+        app:aevImage="@drawable/img_illustration_completed_quick_start_customize_191dp"
         app:aevSubtitle="@string/quick_start_complete_view_subtitle"
         app:aevTitle="@string/quick_start_complete_view_title"
         tools:visibility="visible"/>
