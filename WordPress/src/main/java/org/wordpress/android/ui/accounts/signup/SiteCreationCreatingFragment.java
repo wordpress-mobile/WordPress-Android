@@ -33,7 +33,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
     private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
-    private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
+    private static final String ARG_SITE_ADDRESS = "ARG_SITE_ADDRESS";
     private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
 
     private static final String KEY_WEBVIEW_LOADED_IN_TIME = "KEY_WEBVIEW_LOADED_IN_TIME";
@@ -79,13 +79,13 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         return !state.isAfterCreation();
     }
 
-    public static SiteCreationCreatingFragment newInstance(String siteTitle, String siteTagline, String siteSlug,
+    public static SiteCreationCreatingFragment newInstance(String siteTitle, String siteTagline, String siteAddress,
                                                            String themeId) {
         SiteCreationCreatingFragment fragment = new SiteCreationCreatingFragment();
         Bundle args = new Bundle();
         args.putString(ARG_SITE_TITLE, siteTitle);
         args.putString(ARG_SITE_TAGLINE, siteTagline);
-        args.putString(ARG_SITE_SLUG, siteSlug);
+        args.putString(ARG_SITE_ADDRESS, siteAddress);
         args.putString(ARG_SITE_THEME_ID, themeId);
         fragment.setArguments(args);
         return fragment;
@@ -191,9 +191,9 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     void createSite(SiteCreationState retryFromState) {
         String siteTitle = getArguments().getString(ARG_SITE_TITLE);
         String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
-        String siteSlug = getArguments().getString(ARG_SITE_SLUG);
+        String siteAddress = getArguments().getString(ARG_SITE_ADDRESS);
         String themeId = getArguments().getString(ARG_SITE_THEME_ID);
-        SiteCreationService.createSite(getContext(), retryFromState, siteTitle, siteTagline, siteSlug, themeId);
+        SiteCreationService.createSite(getContext(), retryFromState, siteTitle, siteTagline, siteAddress, themeId);
     }
 
     private void mutateToCompleted(boolean showWebView) {
@@ -214,7 +214,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     }
 
     private PreviewWebViewClient loadWebview() {
-        String siteAddress = "https://" + getArguments().getString(ARG_SITE_SLUG) + ".wordpress.com";
+        String siteAddress = getArguments().getString(ARG_SITE_ADDRESS);
         PreviewWebViewClient client = new PreviewWebViewClient(siteAddress);
         mWebView.setWebViewClient(client);
         mWebView.loadUrl(siteAddress);

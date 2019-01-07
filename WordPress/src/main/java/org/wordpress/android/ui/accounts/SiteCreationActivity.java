@@ -191,10 +191,8 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void withDomain(String domain) {
-        String siteSlug = UrlUtils.extractSubDomain(domain);
-
         SiteCreationCreatingFragment siteCreationCreatingFragment =
-                SiteCreationCreatingFragment.newInstance(mSiteTitle, mSiteTagline, siteSlug, mThemeId);
+                SiteCreationCreatingFragment.newInstance(mSiteTitle, mSiteTagline, domain, mThemeId);
         slideInFragment(siteCreationCreatingFragment, SiteCreationCreatingFragment.TAG);
     }
 
