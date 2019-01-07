@@ -163,7 +163,8 @@ public class MediaUtils {
             exifInterface.setAttribute(ExifInterface.TAG_GPS_DEST_LATITUDE_REF, null);
             exifInterface.saveAttributes();
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             AppLog.e(T.MEDIA, "Removing of GPS info from image failed");
             return false;
         }
