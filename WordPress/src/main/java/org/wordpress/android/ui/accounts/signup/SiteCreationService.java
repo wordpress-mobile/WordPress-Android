@@ -37,6 +37,7 @@ import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.Map;
 
@@ -403,14 +404,25 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             langID = deviceLanguageCode;
         }
 
+        /*
+          If a site with a `wordpress.com` domain is being created the server expects just the "name" of the site which
+          is the subdomain, however if a site with `.blog` subdomain is being created such as `example.home.blog` the
+          server expects the full url.
+
+          IMPORTANT: At this point we don't support paid domains and it's unknown whether sending the full url will
+          work when we do. Since this class will be completely replaced before that happens, it's unlikely that this
+          will matter but if a change is required to this call, it might be important to keep all this in mind.
+         */
+        String siteName = siteAddress.contains("wordpress.com") ? UrlUtils.extractSubDomain(siteAddress) : siteAddress;
+
         NewSitePayload newSitePayload = new NewSitePayload(
-                siteAddress,
+                siteName,
                 siteTitle,
                 langID,
                 SiteStore.SiteVisibility.PUBLIC,
                 false);
         mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
-        AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", SiteAddress: " + siteAddress);
+        AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", SiteName: " + siteName);
     }
 
     private void fetchNewSite() {

@@ -22,7 +22,6 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 
 public class SiteCreationActivity extends AppCompatActivity implements SiteCreationListener {
     public static final String KEY_DO_NEW_POST = "KEY_DO_NEW_POST";
