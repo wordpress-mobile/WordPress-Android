@@ -43,7 +43,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
 class QuickStartUtils {
     companion object {
-         private const val QUICK_START_REMINDER_INTERVAL = (24 * 60 * 60 * 1000 * 2).toLong() // two days
+        private const val QUICK_START_REMINDER_INTERVAL = (24 * 60 * 60 * 1000 * 2).toLong() // two days
 
         /**
          * Formats the string, to highlight text between %1$s and %2$s with specified color, and add an icon
@@ -218,7 +218,7 @@ class QuickStartUtils {
                 AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
             } else {
-                if (context != null) {
+                if (context != null && quickStartStore.hasDoneTask(siteId, CREATE_SITE)) {
                     val nextTask = getNextUncompletedQuickStartTask(quickStartStore, siteId, task.taskType)
                     if (nextTask != null) {
                         startQuickStartReminderTimer(context, nextTask)

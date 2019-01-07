@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -37,6 +38,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
 
         // Failsafes
         if (quickStartTaskDetails == null || siteLocalId == -1 || AppPrefs.isQuickStartDisabled()
+            || !mQuickStartStore.hasDoneTask(siteLocalId, QuickStartTask.CREATE_SITE)
             || mQuickStartStore.getQuickStartCompleted(siteLocalId)
             || mQuickStartStore.hasDoneTask(siteLocalId, quickStartTaskDetails.getTask())) {
             return;
