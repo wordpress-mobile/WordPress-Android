@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.wellsql.generated.MediaModelTable;
 import com.yarolegovich.wellsql.WellCursor;
@@ -27,6 +28,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -776,10 +778,13 @@ public class MediaStore extends Store {
         payload.media.setUploadState(MediaUploadState.UPLOADING);
         MediaSqlUtils.insertOrUpdateMedia(payload.media);
 
+        AppLog.d(T.MEDIA, "Upload image starts");
         if (payload.stripLocation) {
+            AppLog.d(T.MEDIA, "Stripping location for file: " + payload.media.getFilePath());
             MediaUtils.stripLocation(payload.media.getFilePath());
         }
 
+        AppLog.d(T.MEDIA, "Upload starts: " + payload.media.getFilePath());
         if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else {
