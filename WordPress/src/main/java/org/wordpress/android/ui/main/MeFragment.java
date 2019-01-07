@@ -50,6 +50,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.prefs.AppPrefsWrapper;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -328,6 +329,12 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
                     newAvatarUploaded ? injectFilePath : avatarUrl, new RequestListener<Drawable>() {
                         @Override
                         public void onLoadFailed(@Nullable Exception e) {
+                            final String appLogMessage = "onLoadFailed while loading Gravatar image!";
+                            if (e == null) {
+                                AppLog.e(T.MAIN, appLogMessage + " e == null");
+                            } else {
+                                AppLog.e(T.MAIN, appLogMessage, e);
+                            }
                             ToastUtils.showToast(getActivity(), R.string.error_refreshing_gravatar,
                                     ToastUtils.Duration.SHORT);
                         }
