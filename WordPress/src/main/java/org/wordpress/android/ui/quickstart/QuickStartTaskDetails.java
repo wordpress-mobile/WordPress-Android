@@ -84,9 +84,9 @@ public enum QuickStartTaskDetails {
     public static final String KEY = "quick_start_task_details";
 
     private final QuickStartTask mTask;
-    int mTitleResId;
-    int mSubtitleResId;
-    int mIconResId;
+    private int mTitleResId;
+    private int mSubtitleResId;
+    private int mIconResId;
 
     public QuickStartTask getTask() {
         return mTask;

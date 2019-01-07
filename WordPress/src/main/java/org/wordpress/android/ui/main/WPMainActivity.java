@@ -744,8 +744,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
 
-                    boolean isSameSiteSelected =
-                            data != null
+                    boolean isSameSiteSelected = data != null
                             && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs.getSelectedSite();
 
                     if (!isSameSiteSelected) {

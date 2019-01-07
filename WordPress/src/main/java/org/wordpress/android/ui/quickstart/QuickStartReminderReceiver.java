@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 import org.wordpress.android.R;
@@ -30,10 +31,15 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
+        Bundle bundleWithQuickStartTaskDetails = intent.getBundleExtra(ARG_QUICK_START_TASK_BATCH);
+
+        if (bundleWithQuickStartTaskDetails == null) {
+            return;
+        }
+
         int siteLocalId = AppPrefs.getSelectedSite();
 
-        QuickStartTaskDetails quickStartTaskDetails = (QuickStartTaskDetails) intent
-                .getBundleExtra(ARG_QUICK_START_TASK_BATCH)
+        QuickStartTaskDetails quickStartTaskDetails = (QuickStartTaskDetails) bundleWithQuickStartTaskDetails
                 .getSerializable(QuickStartTaskDetails.KEY);
 
         // Failsafes
