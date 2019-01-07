@@ -335,8 +335,12 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
                             } else {
                                 AppLog.e(T.MAIN, appLogMessage, e);
                             }
-                            ToastUtils.showToast(getActivity(), R.string.error_refreshing_gravatar,
-                                    ToastUtils.Duration.SHORT);
+
+                            // For some reason, the Activity can be null so, guard for it. See #8590.
+                            if (getActivity() != null) {
+                                ToastUtils.showToast(getActivity(), R.string.error_refreshing_gravatar,
+                                        ToastUtils.Duration.SHORT);
+                            }
                         }
 
                         @Override
