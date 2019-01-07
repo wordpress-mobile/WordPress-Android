@@ -48,7 +48,7 @@ public class MediaStore extends Store {
     //
 
     /**
-     * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOAD(ED)_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
+     * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOADED_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
      */
     public static class MediaPayload extends Payload<MediaError> {
         public SiteModel site;
@@ -60,6 +60,23 @@ public class MediaStore extends Store {
             this.site = site;
             this.media = media;
             this.error = error;
+        }
+    }
+
+    /**
+     * Action: UPLOAD_MEDIA
+     */
+    public static class UploadMediaPayload extends MediaPayload {
+        public final boolean stripLocation;
+
+        public UploadMediaPayload(SiteModel site, MediaModel media, boolean stripLocation) {
+            super(site, media, null);
+            this.stripLocation = stripLocation;
+        }
+
+        public UploadMediaPayload(SiteModel site, MediaModel media, MediaError error, boolean stripLocation) {
+            super(site, media, error);
+            this.stripLocation = stripLocation;
         }
     }
 
@@ -99,6 +116,7 @@ public class MediaStore extends Store {
         public boolean loadedMore;
         public boolean canLoadMore;
         public String mimeType;
+
         public FetchMediaListResponsePayload(SiteModel site,
                                              @NonNull List<MediaModel> mediaList,
                                              boolean loadedMore,
@@ -127,10 +145,12 @@ public class MediaStore extends Store {
         public float progress;
         public boolean completed;
         public boolean canceled;
+
         public ProgressPayload(MediaModel media, float progress, boolean completed, boolean canceled) {
             this(media, progress, completed, null);
             this.canceled = canceled;
         }
+
         public ProgressPayload(MediaModel media, float progress, boolean completed, MediaError error) {
             this.media = media;
             this.progress = progress;
@@ -198,9 +218,11 @@ public class MediaStore extends Store {
     public static class MediaError implements OnChangedError {
         public MediaErrorType type;
         public String message;
+
         public MediaError(MediaErrorType type) {
             this.type = type;
         }
+
         public MediaError(MediaErrorType type, String message) {
             this.type = type;
             this.message = message;
@@ -236,6 +258,7 @@ public class MediaStore extends Store {
     public static class UploadStockMediaError implements OnChangedError {
         public UploadStockMediaErrorType type;
         public String message;
+
         public UploadStockMediaError(UploadStockMediaErrorType type, String message) {
             this.type = type;
             this.message = message;
@@ -245,15 +268,19 @@ public class MediaStore extends Store {
     public static class OnMediaChanged extends OnChanged<MediaError> {
         public MediaAction cause;
         public List<MediaModel> mediaList;
+
         public OnMediaChanged(MediaAction cause) {
             this(cause, new ArrayList<MediaModel>(), null);
         }
+
         public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList) {
             this(cause, mediaList, null);
         }
+
         public OnMediaChanged(MediaAction cause, MediaError error) {
             this(cause, new ArrayList<MediaModel>(), error);
         }
+
         public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList, MediaError error) {
             this.cause = cause;
             this.mediaList = mediaList;
@@ -265,11 +292,13 @@ public class MediaStore extends Store {
         public SiteModel site;
         public boolean canLoadMore;
         public String mimeType;
+
         public OnMediaListFetched(SiteModel site, boolean canLoadMore, String mimeType) {
             this.site = site;
             this.canLoadMore = canLoadMore;
             this.mimeType = mimeType;
         }
+
         public OnMediaListFetched(SiteModel site, MediaError error, String mimeType) {
             this.site = site;
             this.error = error;
@@ -282,6 +311,7 @@ public class MediaStore extends Store {
         public float progress;
         public boolean completed;
         public boolean canceled;
+
         public OnMediaUploaded(MediaModel media, float progress, boolean completed, boolean canceled) {
             this.media = media;
             this.progress = progress;
@@ -299,6 +329,7 @@ public class MediaStore extends Store {
             this.site = site;
             this.mediaList = mediaList;
         }
+
         public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull UploadStockMediaError error) {
             this.site = site;
             this.error = error;
@@ -427,7 +458,7 @@ public class MediaStore extends Store {
                 performPushMedia((MediaPayload) action.getPayload());
                 break;
             case UPLOAD_MEDIA:
-                performUploadMedia((MediaPayload) action.getPayload());
+                performUploadMedia((UploadMediaPayload) action.getPayload());
                 break;
             case FETCH_MEDIA_LIST:
                 performFetchMediaList((FetchMediaListPayload) action.getPayload());
@@ -507,6 +538,7 @@ public class MediaStore extends Store {
     }
 
     public static final List<String> NOT_DELETED_STATES = new ArrayList<>();
+
     static {
         NOT_DELETED_STATES.add(MediaUploadState.DELETING.toString());
         NOT_DELETED_STATES.add(MediaUploadState.FAILED.toString());
@@ -731,7 +763,7 @@ public class MediaStore extends Store {
         emitChange(onMediaUploaded);
     }
 
-    private void performUploadMedia(MediaPayload payload) {
+    private void performUploadMedia(UploadMediaPayload payload) {
         String errorMessage = MediaUtils.getMediaValidationError(payload.media);
         if (errorMessage != null) {
             AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + errorMessage);
@@ -743,6 +775,10 @@ public class MediaStore extends Store {
 
         payload.media.setUploadState(MediaUploadState.UPLOADING);
         MediaSqlUtils.insertOrUpdateMedia(payload.media);
+
+        if (payload.stripLocation) {
+            MediaUtils.stripLocation(payload.media.getFilePath());
+        }
 
         if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
