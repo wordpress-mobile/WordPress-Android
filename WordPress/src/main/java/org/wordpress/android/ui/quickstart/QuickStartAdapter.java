@@ -141,9 +141,9 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         QuickStartTaskDetails quickStartTaskDetails = QuickStartTaskDetails.getDetailsForTask(task);
-        taskViewHolder.mIcon.setImageResource(quickStartTaskDetails.getIconId());
-        taskViewHolder.mTitle.setText(quickStartTaskDetails.getTitleId());
-        taskViewHolder.mSubtitle.setText(quickStartTaskDetails.getSubtitleId());
+        taskViewHolder.mIcon.setImageResource(quickStartTaskDetails.getIconResId());
+        taskViewHolder.mTitle.setText(quickStartTaskDetails.getTitleResId());
+        taskViewHolder.mSubtitle.setText(quickStartTaskDetails.getSubtitleResId());
     }
 
     void updateContent(List<QuickStartTask> tasksUncompleted, List<QuickStartTask> tasksCompleted) {

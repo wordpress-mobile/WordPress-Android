@@ -1,17 +1,12 @@
-package org.wordpress.android.ui.quickstart
+package org.wordpress.android.ui.quickstart;
 
-import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.R;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 
 /**
  * Static data that represents user facing description of quick start tasks.
  **/
-enum class QuickStartTaskDetails constructor(
-    val task: QuickStartTask,
-    val titleId: Int,
-    val subtitleId: Int,
-    val iconId: Int
-) {
+public enum QuickStartTaskDetails {
     CREATE_SITE_TUTORIAL(
             QuickStartTask.CREATE_SITE,
             R.string.quick_start_list_create_site_title,
@@ -79,15 +74,42 @@ enum class QuickStartTaskDetails constructor(
             R.drawable.ic_plans_white_24dp
     );
 
-    companion object {
-        const val KEY = "quick_start_details"
+    QuickStartTaskDetails(QuickStartTask task, int titleResId, int subtitleResId, int iconResId) {
+        mTask = task;
+        mTitleResId = titleResId;
+        mSubtitleResId = subtitleResId;
+        mIconResId = iconResId;
+    }
 
-        @JvmStatic
-        fun getDetailsForTask(task: QuickStartTask): QuickStartTaskDetails? {
-            QuickStartTaskDetails.values().forEach {
-                if (it.task == task) return it
+    public static final String KEY = "quick_start_task_details";
+
+    private final QuickStartTask mTask;
+    int mTitleResId;
+    int mSubtitleResId;
+    int mIconResId;
+
+    public QuickStartTask getTask() {
+        return mTask;
+    }
+
+    public int getTitleResId() {
+        return mTitleResId;
+    }
+
+    public int getSubtitleResId() {
+        return mSubtitleResId;
+    }
+
+    public int getIconResId() {
+        return mIconResId;
+    }
+
+    public static QuickStartTaskDetails getDetailsForTask(QuickStartTask task) {
+        for (QuickStartTaskDetails quickStartTaskDetails : QuickStartTaskDetails.values()) {
+            if (quickStartTaskDetails.mTask == task) {
+                return quickStartTaskDetails;
             }
-            return null
         }
+        return null;
     }
 }
