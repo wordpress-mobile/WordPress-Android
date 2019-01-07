@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import junit.framework.Assert;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -214,10 +216,20 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     }
 
     private PreviewWebViewClient loadWebview() {
+        Assert.assertNotNull("Arguments can't be null at this point!", getArguments());
         String siteAddress = getArguments().getString(ARG_SITE_ADDRESS);
-        PreviewWebViewClient client = new PreviewWebViewClient(siteAddress);
+        Assert.assertNotNull("Site address must be provided in the arguments!", siteAddress);
+        /*
+          For wordpress.com sites we need to load the site with `https` protocol whereas the `.blog` sub-domains only
+          work with `http`protocol.
+
+          Ideally, we'd get the full url from the site creation service so we don't do this guess work but since this
+          flow is completely being replaced in an upcoming version, it's good enough a solution as it's less disrupting.
+         */
+        String url = (siteAddress.contains("wordpress.com") ? "https://" : "http://") + siteAddress;
+        PreviewWebViewClient client = new PreviewWebViewClient(url);
         mWebView.setWebViewClient(client);
-        mWebView.loadUrl(siteAddress);
+        mWebView.loadUrl(url);
         return client;
     }
 
