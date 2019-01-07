@@ -72,9 +72,9 @@ public class MediaUtils {
 
     public static boolean isSupportedMimeType(String type) {
         return isSupportedImageMimeType(type)
-                || isSupportedVideoMimeType(type)
-                || isSupportedAudioMimeType(type)
-                || isSupportedApplicationMimeType(type);
+               || isSupportedVideoMimeType(type)
+               || isSupportedAudioMimeType(type)
+               || isSupportedApplicationMimeType(type);
     }
 
     public static String getMimeTypeForExtension(String extension) {
@@ -94,15 +94,21 @@ public class MediaUtils {
     }
 
     private static boolean isExpectedMimeType(String expected, String type) {
-        if (type == null) return false;
+        if (type == null) {
+            return false;
+        }
         String[] split = type.split("/");
         return split.length == 2 && expected.startsWith(split[0]);
     }
 
     private static boolean isSupportedMimeType(String type, String[] supported, String mimeType) {
-        if (type == null || supported == null || mimeType == null) return false;
+        if (type == null || supported == null || mimeType == null) {
+            return false;
+        }
         for (String supportedSubtype : supported) {
-            if (mimeType.equals(type + supportedSubtype)) return true;
+            if (mimeType.equals(type + supportedSubtype)) {
+                return true;
+            }
         }
         return false;
     }
@@ -119,7 +125,9 @@ public class MediaUtils {
      * Queries filesystem to determine if a given file can be read.
      */
     public static boolean canReadFile(String filePath) {
-        if (filePath == null || TextUtils.isEmpty(filePath)) return false;
+        if (filePath == null || TextUtils.isEmpty(filePath)) {
+            return false;
+        }
         File file = new File(filePath);
         return file.canRead();
     }
@@ -128,8 +136,12 @@ public class MediaUtils {
      * Returns the substring of characters that follow the final '.' in the given string.
      */
     public static String getExtension(String filePath) {
-        if (TextUtils.isEmpty(filePath) || !filePath.contains(".")) return null;
-        if (filePath.lastIndexOf(".") + 1 >= filePath.length()) return null;
+        if (TextUtils.isEmpty(filePath) || !filePath.contains(".")) {
+            return null;
+        }
+        if (filePath.lastIndexOf(".") + 1 >= filePath.length()) {
+            return null;
+        }
         return filePath.substring(filePath.lastIndexOf(".") + 1);
     }
 
@@ -137,8 +149,12 @@ public class MediaUtils {
      * Returns the substring of characters that follow the final '/' in the given string.
      */
     public static String getFileName(String filePath) {
-        if (TextUtils.isEmpty(filePath) || !filePath.contains("/")) return null;
-        if (filePath.lastIndexOf("/") + 1 >= filePath.length()) return null;
+        if (TextUtils.isEmpty(filePath) || !filePath.contains("/")) {
+            return null;
+        }
+        if (filePath.lastIndexOf("/") + 1 >= filePath.length()) {
+            return null;
+        }
         return filePath.substring(filePath.lastIndexOf("/") + 1);
     }
 
@@ -151,20 +167,25 @@ public class MediaUtils {
 
     /**
      * Removes location from the Exif information from an image
+     *
      * @param imagePath image file path
      * @return success
      */
     public static boolean stripLocation(String imagePath) {
         try {
             ExifInterface exifInterface = new ExifInterface(imagePath);
-            exifInterface.setAttribute(ExifInterface.TAG_GPS_DEST_LONGITUDE, null);
-            exifInterface.setAttribute(ExifInterface.TAG_GPS_DEST_LONGITUDE_REF, null);
-            exifInterface.setAttribute(ExifInterface.TAG_GPS_DEST_LATITUDE, null);
-            exifInterface.setAttribute(ExifInterface.TAG_GPS_DEST_LATITUDE_REF, null);
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_ALTITUDE, "0/0");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_ALTITUDE_REF, "0");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE, "0/0,0/0000,00000000/00000");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, "0");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, "0/0,0/0,000000/00000 ");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, "0");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_TIMESTAMP, "0:0:0 ");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD, "0");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_DATESTAMP, " ");
             exifInterface.saveAttributes();
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
             AppLog.e(T.MEDIA, "Removing of GPS info from image failed");
             return false;
         }
