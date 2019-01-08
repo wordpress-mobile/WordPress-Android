@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.yarolegovich.wellsql.SelectQuery
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Unconfined
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -40,7 +40,7 @@ class ActivityLogStoreTest {
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
-        activityLogStore = ActivityLogStore(activityLogRestClient, activityLogSqlUtils, Dispatchers.Unconfined, dispatcher)
+        activityLogStore = ActivityLogStore(activityLogRestClient, activityLogSqlUtils, Unconfined, dispatcher)
     }
 
     @Test
