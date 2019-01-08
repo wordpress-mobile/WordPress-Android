@@ -16,7 +16,7 @@
         android:scaleType="centerInside"
         android:layout_marginTop="@dimen/margin_extra_extra_large"
         android:contentDescription="@null"
-        app:srcCompat="@drawable/img_email_alert_120dp"/>
+        app:srcCompat="@drawable/login_email_alert"/>
 
     <TextView
         android:id="@+id/label"
