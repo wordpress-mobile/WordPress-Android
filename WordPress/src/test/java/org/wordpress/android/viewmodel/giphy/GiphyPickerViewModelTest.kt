@@ -222,6 +222,21 @@ class GiphyPickerViewModelTest {
     }
 
     @Test
+    fun `when download fails due to network error, it posts an error string resource id`() {
+        // Arrange
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
+
+        // Act
+        runBlocking { viewModel.downloadSelected().join() }
+
+        // Assert
+        with(checkNotNull(viewModel.downloadResult.value)) {
+            assertThat(errorMessageStringResId).isNotNull()
+            assertThat(mediaModels).isNull()
+        }
+    }
+
+    @Test
     fun `when download fails, it posts an error string resource id`() {
         // Arrange
         runBlocking {
