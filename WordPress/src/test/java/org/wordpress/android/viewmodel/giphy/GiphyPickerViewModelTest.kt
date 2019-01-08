@@ -14,12 +14,17 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
 import java.util.Random
 import java.util.UUID
 
+@RunWith(MockitoJUnitRunner::class)
 class GiphyPickerViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -29,10 +34,17 @@ class GiphyPickerViewModelTest {
     private val dataSourceFactory = mock<GiphyPickerDataSourceFactory>()
     private val mediaFetcher = mock<GiphyMediaFetcher>()
 
+    @Mock private lateinit var networkUtils: NetworkUtilsWrapper
+
     @Before
     fun setUp() {
-        viewModel = GiphyPickerViewModel(dataSourceFactory = dataSourceFactory, mediaFetcher = mediaFetcher)
+        viewModel = GiphyPickerViewModel(
+                dataSourceFactory = dataSourceFactory,
+                networkUtils = networkUtils,
+                mediaFetcher = mediaFetcher
+        )
         viewModel.setup(site = mock())
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test
@@ -165,7 +177,6 @@ class GiphyPickerViewModelTest {
         val dataSource = mock<GiphyPickerDataSource>()
 
         whenever(dataSourceFactory.create()).thenReturn(dataSource)
-        whenever(dataSourceFactory.searchQuery).thenReturn("dummy")
         whenever(dataSourceFactory.initialLoadError).thenReturn(mock())
 
         val callbackCaptor = argumentCaptor<LoadInitialCallback<GiphyMediaViewModel>>()
