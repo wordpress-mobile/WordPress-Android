@@ -1,10 +1,10 @@
 package org.wordpress.android.fluxc.store
 
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.launch
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test

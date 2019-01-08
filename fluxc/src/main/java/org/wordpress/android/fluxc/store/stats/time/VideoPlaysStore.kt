@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.store.stats.time
 
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel
@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPO
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class VideoPlaysStore
