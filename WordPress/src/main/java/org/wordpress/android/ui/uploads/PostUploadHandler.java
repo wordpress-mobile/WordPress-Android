@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
+import org.wordpress.android.fluxc.store.MediaStore.UploadMediaPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -484,7 +485,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             }
 
             CountDownLatch countDownLatch = new CountDownLatch(1);
-            MediaPayload payload = new MediaPayload(mSite, FluxCUtils.mediaModelFromMediaFile(mediaFile));
+            UploadMediaPayload payload = new UploadMediaPayload(
+                    mSite,
+                    FluxCUtils.mediaModelFromMediaFile(mediaFile),
+                    AppPrefs.isStripImageLocation()
+            );
             mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
             try {
@@ -516,7 +521,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
         private String uploadImageFile(MediaFile mediaFile, SiteModel site) {
             CountDownLatch countDownLatch = new CountDownLatch(1);
-            MediaPayload payload = new MediaPayload(site, FluxCUtils.mediaModelFromMediaFile(mediaFile));
+            UploadMediaPayload payload = new UploadMediaPayload(
+                    site,
+                    FluxCUtils.mediaModelFromMediaFile(mediaFile),
+                    AppPrefs.isStripImageLocation()
+            );
             mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
             try {

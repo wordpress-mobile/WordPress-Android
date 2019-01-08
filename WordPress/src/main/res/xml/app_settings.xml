@@ -58,6 +58,13 @@
 
     </PreferenceScreen>
 
+    <org.wordpress.android.ui.prefs.WPSwitchPreference
+        android:id="@+id/pref_strip_image_location"
+        android:defaultValue="false"
+        android:layout="@layout/wp_preference_layout"
+        android:key="@string/pref_key_strip_image_location"
+        android:title="@string/preference_strip_image_location"/>
+
     <Preference
         android:key="@string/pref_key_device_settings"
         android:layout="@layout/wp_preference_layout"
