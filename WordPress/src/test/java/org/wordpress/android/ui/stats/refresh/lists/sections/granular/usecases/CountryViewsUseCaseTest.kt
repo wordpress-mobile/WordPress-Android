@@ -80,7 +80,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
             Assertions.assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
             val mapItem = (this.items[1] as MapItem)
-            assertThat(mapItem.mapData).isEqualTo("['Czech Republic',500],")
+            assertThat(mapItem.mapData).isEqualTo("['CZ',500],")
             assertThat(mapItem.label).isEqualTo(R.string.stats_country_views_label)
             assertLabel(this.items[2])
             assertItem(this.items[3], country.fullName, country.views, country.flagIconUrl)
