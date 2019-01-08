@@ -35,7 +35,11 @@ class VisitsAndViewsStore
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, granularity, date)
-                OnStatsFetched(timeStatsMapper.map(payload.response))
+                val overviewResponse = timeStatsMapper.map(payload.response)
+                if (overviewResponse.period.isBlank() || overviewResponse.dates.isEmpty())
+                    OnStatsFetched(StatsError(INVALID_RESPONSE, "Overview: Required data 'period' or 'dates' missing"))
+                else
+                    OnStatsFetched(overviewResponse)
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
