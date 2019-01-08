@@ -18,6 +18,7 @@ import junit.framework.Assert;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationState;
@@ -215,10 +216,14 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         }
     }
 
-    private PreviewWebViewClient loadWebview() {
-        Assert.assertNotNull("Arguments can't be null at this point!", getArguments());
-        String siteAddress = getArguments().getString(ARG_SITE_ADDRESS);
-        Assert.assertNotNull("Site address must be provided in the arguments!", siteAddress);
+    private @Nullable PreviewWebViewClient loadWebview() {
+        String siteAddress = getArguments() != null ? getArguments().getString(ARG_SITE_ADDRESS, "") : "";
+        if (siteAddress.isEmpty()) {
+            if (BuildConfig.DEBUG) {
+                throw new IllegalStateException("The newly created site address should not be null!");
+            }
+            return null;
+        }
         /*
           For wordpress.com sites we need to load the site with `https` protocol whereas the `.blog` sub-domains only
           work with `http`protocol.
