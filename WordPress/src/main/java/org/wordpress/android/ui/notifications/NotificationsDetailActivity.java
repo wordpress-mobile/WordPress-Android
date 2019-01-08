@@ -317,7 +317,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
      * Tries to pick the correct fragment detail type for a given note
      * Defaults to NotificationDetailListFragment
      */
-    private Fragment getDetailFragmentForNote(Note note, int idForFragmentContainer) {
+    private Fragment getDetailFragmentForNote(Note note) {
         if (note == null) {
             return null;
         }
@@ -329,8 +329,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                                                                  false);
             fragment = CommentDetailFragment.newInstance(note.getId(),
                                                          getIntent().getStringExtra(
-                                                                 NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA),
-                                                         idForFragmentContainer);
+                                                                 NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
 
             if (isInstantReply) {
                 ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
@@ -478,7 +477,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         @Override
         public Fragment getItem(int position) {
-            return getDetailFragmentForNote(mNoteList.get(position), position);
+            return getDetailFragmentForNote(mNoteList.get(position));
         }
 
         @Override
