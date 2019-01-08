@@ -108,7 +108,7 @@ class TimeStatsMapper
             }
         }
         if (response.data == null) {
-            AppLog.e(STATS, "VisitsAndViewsResponse: Date field should never be null")
+            AppLog.e(STATS, "VisitsAndViewsResponse: Data field should never be null")
         }
         return VisitsAndViewsModel(response.date ?: "", dataPerPeriod ?: listOf())
     }
