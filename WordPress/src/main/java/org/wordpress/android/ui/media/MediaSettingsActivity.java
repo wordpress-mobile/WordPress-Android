@@ -996,7 +996,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         }
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        request.addRequestHeader("User-Agent", WordPress.getDefaultUserAgent());
+        request.addRequestHeader("User-Agent", WordPress.getUserAgent());
 
         mDownloadId = dm.enqueue(request);
         invalidateOptionsMenu();
