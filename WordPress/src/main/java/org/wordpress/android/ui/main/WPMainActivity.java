@@ -140,6 +140,9 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_ME = "show_me";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
 
+    // Track the first `onResume` event for the current session so we can use it for Analytics tracking
+    private static boolean mFirstResume = true;
+
     private WPMainNavigationView mBottomNav;
     private WPDialogSnackbar mQuickStartSnackbar;
 
@@ -531,7 +534,7 @@ public class WPMainActivity extends AppCompatActivity implements
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
         int currentItem = mBottomNav.getCurrentPosition();
-        trackLastVisiblePage(currentItem, false);
+        trackLastVisiblePage(currentItem, mFirstResume);
 
         if (currentItem == PAGE_NOTIFS) {
             // if we are presenting the notifications list, it's safe to clear any outstanding
@@ -553,6 +556,8 @@ public class WPMainActivity extends AppCompatActivity implements
         ProfilingUtils.split("WPMainActivity.onResume");
         ProfilingUtils.dump();
         ProfilingUtils.stop();
+
+        mFirstResume = false;
     }
 
     private void checkQuickStartNotificationStatus() {
