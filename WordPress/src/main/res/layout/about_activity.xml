@@ -49,7 +49,6 @@
                 android:paddingBottom="?attr/actionBarSize"
                 app:maxWidth="@dimen/nux_width">
 
-
                 <ImageView
                     android:id="@+id/nux_fragment_icon"
                     android:layout_width="50dp"
