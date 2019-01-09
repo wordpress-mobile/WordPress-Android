@@ -871,8 +871,6 @@ public class WPMainActivity extends AppCompatActivity implements
         }
 
         if (mAccountStore.hasAccessToken()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
-
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
                     // Sets a flag that we need to track a magic link sign up.
