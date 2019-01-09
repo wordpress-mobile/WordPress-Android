@@ -18,6 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -31,6 +32,7 @@ import javax.inject.Inject
  * Calling [setup] is required before using this ViewModel.
  */
 class GiphyPickerViewModel @Inject constructor(
+    private val networkUtils: NetworkUtilsWrapper,
     private val mediaFetcher: GiphyMediaFetcher,
     /**
      * The [GiphyPickerDataSourceFactory] to use
@@ -244,6 +246,14 @@ class GiphyPickerViewModel @Inject constructor(
      */
     fun downloadSelected() = launch {
         if (_state.value != State.IDLE) {
+            return@launch
+        }
+
+        if (!networkUtils.isNetworkAvailable()) {
+            // Network is not available to download the selected media, post the result and return
+            _downloadResult.postValue(
+                    DownloadResult(errorMessageStringResId = R.string.no_network_message)
+            )
             return@launch
         }
 
