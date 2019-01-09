@@ -119,6 +119,8 @@ public class EditPostSettingsFragment extends Fragment {
 
     private PostLocation mPostLocation;
 
+    private ArrayList<String> mDefaultPostFormatKeys;
+    private ArrayList<String> mDefaultPostFormatNames;
     private ArrayList<String> mPostFormatKeys;
     private ArrayList<String> mPostFormatNames;
 
@@ -144,6 +146,14 @@ public class EditPostSettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
+
+        // Early load the default lists for post format keys and names.
+        // Will use it later without needing to have access to the Resources.
+        mDefaultPostFormatKeys =
+                new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
+        mDefaultPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
+                .getStringArray(R.array.post_format_display_names)));
+
     }
 
     @Override
@@ -779,14 +789,14 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updatePostFormatKeysAndNames() {
         final SiteModel site = getSite();
-        if (!isAdded() || site == null) {
+        if (site == null) {
             // Since this method can get called after a callback, we have to make sure we have the site
             return;
         }
-        // Default values
-        mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
-        mPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
-                                                                 .getStringArray(R.array.post_format_display_names)));
+
+        // Initialize the lists from the defaults
+        mPostFormatKeys = new ArrayList<>(mDefaultPostFormatKeys);
+        mPostFormatNames = new ArrayList<>(mDefaultPostFormatNames);
 
         // If we have specific values for this site, use them
         List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(site);
