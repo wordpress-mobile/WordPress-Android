@@ -13,11 +13,13 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
+import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
+import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
@@ -54,13 +56,30 @@ class VisitsAndViewsStoreTest {
         whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE, forced)).thenReturn(
                 fetchInsightsPayload
         )
-        val model = mock<VisitsAndViewsModel>()
-        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(model)
+        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(VISITS_AND_VIEWS_MODEL)
 
         val responseModel = store.fetchVisits(site, PAGE_SIZE, DATE, DAYS, forced)
 
-        assertThat(responseModel.model).isEqualTo(model)
+        assertThat(responseModel.model).isEqualTo(VISITS_AND_VIEWS_MODEL)
         verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, DATE)
+    }
+
+    @Test
+    fun `returns error when invalid data`() = test {
+        val forced = true
+        val fetchInsightsPayload = FetchStatsPayload(
+                VISITS_AND_VIEWS_RESPONSE
+        )
+        whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE, forced)).thenReturn(
+                fetchInsightsPayload
+        )
+        val emptyModel = VisitsAndViewsModel("", emptyList())
+        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(emptyModel)
+
+        val responseModel = store.fetchVisits(site, PAGE_SIZE, DATE, DAYS, forced)
+
+        assertThat(responseModel.error.type).isEqualTo(INVALID_DATA_ERROR.type)
+        assertThat(responseModel.error.message).isEqualTo(INVALID_DATA_ERROR.message)
     }
 
     @Test
