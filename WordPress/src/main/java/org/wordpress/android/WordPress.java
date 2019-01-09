@@ -575,6 +575,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         NotificationsTable.reset();
     }
 
+    private static String mDefaultUserAgent;
+
     /**
      * Device's default User-Agent string.
      * E.g.:
@@ -582,8 +584,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
      * Safari/537.36"
      */
-    private static String mDefaultUserAgent;
-
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
             try {
@@ -601,6 +601,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return mDefaultUserAgent;
     }
 
+
+    public static final String USER_AGENT_APPNAME = "wp-android";
+    private static String mUserAgent;
+
     /**
      * User-Agent string when making HTTP connections, for both API traffic and WebViews.
      * Appends "wp-android/version" to WebView's default User-Agent string for the webservers
@@ -610,9 +614,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * Safari/537.36 wp-android/4.7"
      * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
      **/
-    public static final String USER_AGENT_APPNAME = "wp-android";
-    private static String mUserAgent;
-
     public static String getUserAgent() {
         if (mUserAgent == null) {
             String defaultUserAgent = getDefaultUserAgent();
