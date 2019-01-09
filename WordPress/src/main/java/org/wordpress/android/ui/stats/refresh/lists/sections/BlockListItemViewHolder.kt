@@ -44,6 +44,7 @@ import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
@@ -151,8 +152,16 @@ sealed class BlockListItemViewHolder(
 
     class EmptyViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_empty_item
-    )
+            R.layout.stats_block_empty_item) {
+        private val text = itemView.findViewById<TextView>(R.id.text)
+        fun bind(message: Empty) {
+            when {
+                message.textResource != null -> text.setText(message.textResource)
+                message.text != null -> text.text = message.text
+                else -> text.setText(R.string.stats_no_data_yet)
+            }
+        }
+    }
 
     class DividerViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,

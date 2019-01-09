@@ -81,7 +81,7 @@ class CommentsUseCase
                 )
             }
         } else {
-            items.add(Empty)
+            items.add(Empty())
         }
         return items
     }
@@ -100,7 +100,7 @@ class CommentsUseCase
                 )
             })
         } else {
-            mutableItems.add(Empty)
+            mutableItems.add(Empty())
         }
         return mutableItems
     }
@@ -117,7 +117,7 @@ class CommentsUseCase
                 )
             })
         } else {
-            mutableItems.add(Empty)
+            mutableItems.add(Empty())
         }
         return mutableItems
     }
