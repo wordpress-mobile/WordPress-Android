@@ -778,7 +778,8 @@ public class EditPostSettingsFragment extends Fragment {
     // Post Format Helpers
 
     private void updatePostFormatKeysAndNames() {
-        if (getActivity() == null || getSite() == null) {
+        final SiteModel site = getSite();
+        if (getActivity() == null || site == null) {
             // Since this method can get called after a callback, we have to make sure we have the site
             return;
         }
@@ -788,7 +789,7 @@ public class EditPostSettingsFragment extends Fragment {
                                                                  .getStringArray(R.array.post_format_display_names)));
 
         // If we have specific values for this site, use them
-        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(getSite());
+        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(site);
         for (PostFormatModel postFormatModel : postFormatModels) {
             if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
                 mPostFormatKeys.add(postFormatModel.getSlug());
