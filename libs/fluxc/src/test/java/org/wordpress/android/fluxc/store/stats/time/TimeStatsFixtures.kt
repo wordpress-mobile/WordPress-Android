@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store.stats.time
 
+import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
+import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse.Author
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse.Post
@@ -22,6 +24,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRest
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse.Play
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.stats.DATE
 import org.wordpress.android.fluxc.store.stats.POST_COUNT
 
@@ -132,6 +136,11 @@ val VISITS_AND_VIEWS_RESPONSE = VisitsAndViewsResponse(
         listOf("period", "views", "likes", "comments", "visitors"),
         listOf(listOf("2018-10-09", "10", "15", "20", "25")),
         "day"
+)
+val INVALID_DATA_ERROR = StatsError(INVALID_RESPONSE, "Overview: Required data 'period' or 'dates' missing")
+val VISITS_AND_VIEWS_MODEL = VisitsAndViewsModel(
+        "2018-10-10",
+        listOf<PeriodData>(PeriodData("2018-10-10", 10, 10, 10, 10, 10, 10))
 )
 const val COUNTRY_CODE = "CZ"
 val COUNTRY_VIEWS_RESPONSE = CountryViewsResponse(
