@@ -105,9 +105,9 @@ constructor(
                     )
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
-        }
-        else {
+        } else {
             AppLog.e(T.STATS, "There is no data to be shown in the overview block")
+            selectedDateProvider.notifyMissingDate(statsGranularity)
         }
         return items
     }
