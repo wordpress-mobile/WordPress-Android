@@ -779,7 +779,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updatePostFormatKeysAndNames() {
         final SiteModel site = getSite();
-        if (getActivity() == null || site == null) {
+        if (!isAdded() || site == null) {
             // Since this method can get called after a callback, we have to make sure we have the site
             return;
         }
