@@ -646,15 +646,6 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-    private void checkMagicLinkSignIn() {
-        if (getIntent() != null) {
-            if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
-                mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
-                startWithNewAccount();
-            }
-        }
-    }
-
     private void trackLastVisiblePage(int position, boolean trackAnalytics) {
         switch (position) {
             case PAGE_MY_SITE:
