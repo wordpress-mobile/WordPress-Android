@@ -105,7 +105,7 @@ class FollowersUseCase
                 )
             }
         } else {
-            items.add(Empty)
+            items.add(Empty())
         }
         return items
     }
@@ -125,7 +125,7 @@ class FollowersUseCase
             mutableItems.add(Header(R.string.stats_follower_label, R.string.stats_follower_since_label))
             model.followers.toUserItems().let { mutableItems.addAll(it) }
         } else {
-            mutableItems.add(Empty)
+            mutableItems.add(Empty())
         }
         return mutableItems
     }

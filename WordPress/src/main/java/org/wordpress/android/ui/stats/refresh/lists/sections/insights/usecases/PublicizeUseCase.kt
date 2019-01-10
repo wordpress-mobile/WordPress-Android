@@ -61,7 +61,7 @@ class PublicizeUseCase
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_publicize))
         if (domainModel.services.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty())
         } else {
             items.add(Header(string.stats_publicize_service_label, string.stats_publicize_followers_label))
             items.addAll(domainModel.services.let { mapper.map(it) })

@@ -76,7 +76,7 @@ constructor(
         items.add(Title(R.string.stats_countries))
 
         if (domainModel.countries.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             val stringBuilder = StringBuilder()
             for (country in domainModel.countries) {

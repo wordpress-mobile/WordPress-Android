@@ -86,7 +86,7 @@ constructor(
         items.add(Title(R.string.stats_authors))
 
         if (domainModel.authors.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             items.add(Header(R.string.stats_author_label, R.string.stats_author_views_label))
             domainModel.authors.forEachIndexed { index, author ->

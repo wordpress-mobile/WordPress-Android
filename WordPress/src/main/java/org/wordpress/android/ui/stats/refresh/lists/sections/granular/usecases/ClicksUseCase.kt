@@ -86,7 +86,7 @@ constructor(
         items.add(Title(R.string.stats_clicks))
 
         if (domainModel.groups.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             items.add(Header(R.string.stats_clicks_link_label, R.string.stats_clicks_label))
             domainModel.groups.forEachIndexed { index, group ->

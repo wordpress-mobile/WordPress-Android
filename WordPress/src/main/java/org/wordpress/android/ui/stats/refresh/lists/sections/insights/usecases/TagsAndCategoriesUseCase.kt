@@ -66,7 +66,7 @@ class TagsAndCategoriesUseCase
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_tags_and_categories))
         if (domainModel.tags.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty())
         } else {
             items.add(
                     Header(
