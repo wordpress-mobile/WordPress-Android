@@ -49,7 +49,7 @@ class TodayStatsUseCase
         val hasLikes = domainModel.likes > 0
         val hasComments = domainModel.comments > 0
         if (!hasViews && !hasVisitors && !hasLikes && !hasComments) {
-            items.add(Empty)
+            items.add(Empty())
         } else {
             if (hasViews) {
                 items.add(

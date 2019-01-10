@@ -20,7 +20,7 @@ enum class QuickStartMySitePrompts constructor(
             R.id.my_site_scroll_view_root,
             R.id.row_view_site,
             R.string.quick_start_dialog_view_site_message_short,
-            R.drawable.ic_globe_grey_24dp,
+            R.drawable.ic_globe_white_24dp,
             R.string.quick_start_dialog_view_site_title,
             R.string.quick_start_dialog_view_site_message),
     CHOSE_THEME_TUTORIAL(
@@ -28,7 +28,7 @@ enum class QuickStartMySitePrompts constructor(
             R.id.my_site_scroll_view_root,
             R.id.row_themes,
             R.string.quick_start_dialog_choose_theme_message_short,
-            R.drawable.ic_themes_grey_24dp,
+            R.drawable.ic_themes_white_24dp,
             R.string.quick_start_dialog_choose_theme_title,
             R.string.quick_start_dialog_choose_theme_message),
     CUSTOMIZE_SITE_TUTORIAL(
@@ -36,7 +36,7 @@ enum class QuickStartMySitePrompts constructor(
             R.id.my_site_scroll_view_root,
             R.id.row_themes,
             R.string.quick_start_dialog_customize_site_message_short_themes,
-            R.drawable.ic_themes_grey_24dp,
+            R.drawable.ic_themes_white_24dp,
             R.string.quick_start_dialog_customize_site_title,
             R.string.quick_start_dialog_customize_site_message),
     SHARE_SITE_TUTORIAL(

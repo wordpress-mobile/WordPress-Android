@@ -789,6 +789,7 @@
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
+    <string name="stats_no_data_for_period">No data for this period</string>
     <string name="stats_empty_insights_title">No insights added yet</string>
     <string name="stats_empty_insights_description">Customise your insights and get the low-down on your site’s performance</string>
     <string name="stats_button_manage_insights">Manage insights</string>
@@ -1374,6 +1375,7 @@
     <string name="local_changes_discarded">Local changes discarded</string>
     <string name="local_changes_discarding">Discarding local changes</string>
     <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
+    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
 
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
@@ -1727,10 +1729,6 @@
     <string name="bullet" translatable="false">\u2022</string>
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
-
-    <!-- Noticons -->
-    <string name="noticon_clock" translatable="false">\uf303</string>
-    <string name="noticon_note" translatable="false">\uf814</string>
 
     <!-- Publicize and sharing -->
     <string name="sharing">Sharing</string>
