@@ -173,17 +173,20 @@ class PagesViewModel
     }
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
-        _listState.setOnUi(state)
+        performIfNetworkAvailableAsync {
+            _listState.setOnUi(state)
 
-        val result = pageStore.requestPagesFromServer(site)
-        if (result.isError) {
-            _listState.setOnUi(ERROR)
-            showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
-            AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
-        } else {
-            _listState.setOnUi(DONE)
+            val result = pageStore.requestPagesFromServer(site)
+            if (result.isError) {
+                _listState.setOnUi(ERROR)
+                showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
+                AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
+            } else {
+                _listState.setOnUi(DONE)
+            }
+            refreshPages()
         }
-        refreshPages()
+        _listState.setOnUi(DONE)
     }
 
     private suspend fun refreshPages() {
@@ -346,11 +349,23 @@ class PagesViewModel
         }
     }
 
-    private fun performIfNetworkAvailable(performAction: () -> Unit) {
-        if (networkUtils.isNetworkAvailable()) {
+    private fun performIfNetworkAvailable(performAction: () -> Unit): Boolean {
+        return if (networkUtils.isNetworkAvailable()) {
             performAction()
+            true
         } else {
             _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.no_network_message))
+            false
+        }
+    }
+
+    private suspend fun performIfNetworkAvailableAsync(performAction: suspend () -> Unit): Boolean {
+        return if (networkUtils.isNetworkAvailable()) {
+            performAction()
+            true
+        } else {
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.no_network_message))
+            false
         }
     }
 
