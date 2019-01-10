@@ -605,8 +605,9 @@ public class PostStore extends Store {
             Map<Long, PostModel> posts = getPostsByRemotePostIds(postIds, site);
             for (PostListItem item : payload.postListItems) {
                 PostModel post = posts.get(item.remotePostId);
-                // Dispatch a fetch action for the posts that are changed
-                if (post != null && !post.getLastModified().equals(item.lastModified)) {
+                // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
+                // as we'd otherwise overwrite and lose these local changes forever
+                if (post != null && !post.getLastModified().equals(item.lastModified) && !post.isLocallyChanged()) {
                     mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(new RemotePostPayload(post, site)));
                 }
             }
@@ -695,6 +696,19 @@ public class PostStore extends Store {
         emitChange(onPostChanged);
     }
 
+    private void handleFetchSinglePostCheckLocallyChanged(FetchPostResponsePayload payload) {
+        // Process a fetch action only for a post if it hasn't local changes
+        // as we'd otherwise overwrite and lose these local changes forever
+        PostModel localPost = getPostByRemotePostId(payload.post.getRemotePostId(), payload.site);
+        if (localPost != null) {
+            if (!localPost.isLocallyChanged()) {
+                updatePost(payload.post, false);
+            }
+        } else {
+            updatePost(payload.post, false);
+        }
+    }
+
     private void handleFetchSinglePostCompleted(FetchPostResponsePayload payload) {
         if (payload.origin == PostAction.PUSH_POST) {
             OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
@@ -716,7 +730,11 @@ public class PostStore extends Store {
             event.error = payload.error;
             emitChange(event);
         } else {
-            updatePost(payload.post, false);
+            if (payload.origin == PostAction.FETCH_POST) {
+                handleFetchSinglePostCheckLocallyChanged(payload);
+            } else {
+                updatePost(payload.post, false);
+            }
         }
     }
 
