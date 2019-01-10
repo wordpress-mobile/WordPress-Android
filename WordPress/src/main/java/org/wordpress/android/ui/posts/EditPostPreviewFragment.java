@@ -120,20 +120,11 @@ public class EditPostPreviewFragment extends Fragment {
             String postTitle = "<h1>" + mPost.getTitle() + "</h1>";
             String postContent = postTitle + mPost.getContent();
 
-            if (mPost.isLocalDraft()) {
-                contentSpannable = WPHtml.fromHtml(
-                        postContent.replaceAll("\uFFFC", ""),
-                        getActivity(),
-                        mPost,
-                        Math.min(mTextView.getWidth(), mTextView.getHeight())
-                );
-            } else {
-                String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" "
-                                  + "type=\"text/css\" href=\"webview.css\" /></head><body><div "
-                                  + "id=\"container\">%s</div></body></html>";
-                htmlText = String.format(htmlText, StringUtils.addPTags(postContent));
-                contentSpannable = new SpannableString(htmlText);
-            }
+            String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" "
+                              + "type=\"text/css\" href=\"webview.css\" /></head><body><div "
+                              + "id=\"container\">%s</div></body></html>";
+            htmlText = String.format(htmlText, StringUtils.addPTags(postContent));
+            contentSpannable = new SpannableString(htmlText);
 
             return contentSpannable;
         }
@@ -141,17 +132,11 @@ public class EditPostPreviewFragment extends Fragment {
         @Override
         protected void onPostExecute(Spanned spanned) {
             if (mPost != null && spanned != null) {
-                if (mPost.isLocalDraft()) {
-                    mTextView.setVisibility(View.VISIBLE);
-                    mWebView.setVisibility(View.GONE);
-                    mTextView.setText(spanned);
-                } else {
-                    mTextView.setVisibility(View.GONE);
-                    mWebView.setVisibility(View.VISIBLE);
+                mTextView.setVisibility(View.GONE);
+                mWebView.setVisibility(View.VISIBLE);
 
-                    mWebView.loadDataWithBaseURL("file:///android_asset/", spanned.toString(),
-                                                 "text/html", "utf-8", null);
-                }
+                mWebView.loadDataWithBaseURL("file:///android_asset/", spanned.toString(),
+                        "text/html", "utf-8", null);
             }
 
             mLoadTask = null;
