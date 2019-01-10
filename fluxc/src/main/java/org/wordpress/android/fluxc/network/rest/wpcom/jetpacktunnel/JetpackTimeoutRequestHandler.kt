@@ -56,10 +56,11 @@ class JetpackTimeoutRequestHandler<T>(
                     if (numRetries > 0) {
                         // Delay retries after the first by a bit
                         with(Handler()) {
-                            postDelayed({ jpTimeoutListener(gsonRequest) }, ADDITIONAL_RETRY_DELAY_MS)
+                            postDelayed({ jpTimeoutListener(gsonRequest.apply { increaseManualRetryCount() }) },
+                                    ADDITIONAL_RETRY_DELAY_MS)
                         }
                     } else {
-                        jpTimeoutListener(gsonRequest)
+                        jpTimeoutListener(gsonRequest.apply { increaseManualRetryCount() })
                     }
                     numRetries++
                 } else {

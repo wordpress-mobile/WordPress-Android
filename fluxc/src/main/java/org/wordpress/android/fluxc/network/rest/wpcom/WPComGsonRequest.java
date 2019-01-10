@@ -22,6 +22,8 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
         void onErrorResponse(@NonNull WPComGsonNetworkError error);
     }
 
+    private int mNumManualRetries = 0;
+
     public static final String REST_AUTHORIZATION_HEADER = "Authorization";
     public static final String REST_AUTHORIZATION_FORMAT = "Bearer %s";
 
@@ -103,6 +105,13 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
         return url;
     }
 
+    /**
+     * Mark that this request has been retried manually (by duplicating and re-enqueuing it).
+     */
+    public void increaseManualRetryCount() {
+        mNumManualRetries++;
+    }
+
     public void setAccessToken(String token) {
         if (token == null) {
             mHeaders.remove(REST_AUTHORIZATION_HEADER);
@@ -110,6 +119,7 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
             mHeaders.put(REST_AUTHORIZATION_HEADER, String.format(REST_AUTHORIZATION_FORMAT, token));
         }
     }
+
     @Override
     public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
         WPComGsonNetworkError returnedError = new WPComGsonNetworkError(error);
