@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Test
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import android.arch.core.executor.testing.InstantTaskExecutorRule
@@ -24,7 +23,6 @@ class PagedListWrapperTest {
 
     private val mockLiveData = MutableLiveData<PagedList<PagedListItemType<String>>>()
     private val mockDispatcher = mock<Dispatcher>()
-    private val mockListDescriptor = mock<ListDescriptor>()
     private val mockRefresh = mock<() -> Unit>()
     private val mockInvalidate = mock<() -> Unit>()
     private val mockIsListEmpty = mock<() -> Boolean>()
@@ -32,7 +30,7 @@ class PagedListWrapperTest {
     private fun createPagedListWrapper(lifecycle: Lifecycle = mock()) = PagedListWrapper(
             data = mockLiveData,
             dispatcher = mockDispatcher,
-            listDescriptor = mockListDescriptor,
+            listDescriptor = mock(),
             lifecycle = lifecycle,
             refresh = mockRefresh,
             invalidate = mockInvalidate,
@@ -69,5 +67,23 @@ class PagedListWrapperTest {
         verify(mockDispatcher, onlyOnce()).register(pagedListWrapper)
         verify(mockDispatcher, onlyOnce()).unregister(pagedListWrapper)
         assertThat(lifecycle.observerCount).isEqualTo(0)
+    }
+
+    @Test
+    fun `fetchFirstPage invokes refresh property`() {
+        val pagedListWrapper = createPagedListWrapper()
+
+        pagedListWrapper.fetchFirstPage()
+
+        verify(mockRefresh, onlyOnce()).invoke()
+    }
+
+    @Test
+    fun `invalidateData invokes invalidate property`() {
+        val pagedListWrapper = createPagedListWrapper()
+
+        pagedListWrapper.invalidateData()
+
+        verify(mockInvalidate, onlyOnce()).invoke()
     }
 }
