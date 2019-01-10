@@ -1,19 +1,28 @@
 package org.wordpress.android.fluxc.list
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.arch.paging.PagedList
+import com.nhaarman.mockitokotlin2.firstValue
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Rule
 import org.junit.Test
+import org.mockito.ArgumentCaptor
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.list.ListDescriptor
+import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import org.assertj.core.api.Assertions.assertThat
-import android.arch.lifecycle.LifecycleRegistry
-import com.nhaarman.mockitokotlin2.times
-import org.junit.Rule
+import org.wordpress.android.fluxc.store.ListStore.ListError
+import org.wordpress.android.fluxc.store.ListStore.ListErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
+import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 
 private fun onlyOnce() = times(1)
 
@@ -23,6 +32,7 @@ class PagedListWrapperTest {
 
     private val mockLiveData = MutableLiveData<PagedList<PagedListItemType<String>>>()
     private val mockDispatcher = mock<Dispatcher>()
+    private val mockListDescriptor = mock<ListDescriptor>()
     private val mockRefresh = mock<() -> Unit>()
     private val mockInvalidate = mock<() -> Unit>()
     private val mockIsListEmpty = mock<() -> Boolean>()
@@ -30,7 +40,7 @@ class PagedListWrapperTest {
     private fun createPagedListWrapper(lifecycle: Lifecycle = mock()) = PagedListWrapper(
             data = mockLiveData,
             dispatcher = mockDispatcher,
-            listDescriptor = mock(),
+            listDescriptor = mockListDescriptor,
             lifecycle = lifecycle,
             refresh = mockRefresh,
             invalidate = mockInvalidate,
@@ -85,5 +95,53 @@ class PagedListWrapperTest {
         pagedListWrapper.invalidateData()
 
         verify(mockInvalidate, onlyOnce()).invoke()
+    }
+
+    @Test
+    fun `fetchingFirstPage ListState is propagated correctly`() {
+        testListStateIsPropagatedCorrectly(ListState.FETCHING_FIRST_PAGE)
+    }
+
+    @Test
+    fun `loadingMore ListState is propagated correctly`() {
+        testListStateIsPropagatedCorrectly(ListState.LOADING_MORE)
+    }
+
+    @Test
+    fun `default ListState is propagated correctly`() {
+        testListStateIsPropagatedCorrectly(ListState.defaultState)
+    }
+
+    @Test
+    fun `permission ListError is propagated correctly`() {
+        testListStateIsPropagatedCorrectly(ListState.ERROR, ListError(PERMISSION_ERROR))
+    }
+
+    @Test
+    fun `generic ListError is propagated correctly`() {
+        testListStateIsPropagatedCorrectly(ListState.ERROR, ListError(GENERIC_ERROR))
+    }
+
+    private fun testListStateIsPropagatedCorrectly(listState: ListState, listError: ListError? = null) {
+        val pagedListWrapper = createPagedListWrapper()
+        val isFetchingFirstPageObserver = mock<Observer<Boolean>>()
+        val isLoadingMoreObserver = mock<Observer<Boolean>>()
+        val listErrorObserver = mock<Observer<ListError?>>()
+        pagedListWrapper.isFetchingFirstPage.observeForever(isFetchingFirstPageObserver)
+        pagedListWrapper.isLoadingMore.observeForever(isLoadingMoreObserver)
+        pagedListWrapper.listError.observeForever(listErrorObserver)
+
+        val event = OnListStateChanged(mockListDescriptor, listState, listError)
+        pagedListWrapper.onListStateChanged(event)
+
+        captureAndVerifySingleValue(isFetchingFirstPageObserver, listState.isFetchingFirstPage())
+        captureAndVerifySingleValue(isLoadingMoreObserver, listState.isLoadingMore())
+        captureAndVerifySingleValue(listErrorObserver, listError)
+    }
+
+    private inline fun <reified T> captureAndVerifySingleValue(observer: Observer<T>, result: T) {
+        val captor = ArgumentCaptor.forClass(T::class.java)
+        verify(observer, onlyOnce()).onChanged(captor.capture())
+        assertThat(captor.firstValue).isEqualTo(result)
     }
 }
