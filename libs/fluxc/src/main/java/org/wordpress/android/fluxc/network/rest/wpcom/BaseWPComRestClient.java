@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.OnAuthFailedListener;
 import org.wordpress.android.fluxc.network.BaseRequest.OnParseErrorListener;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.OnJetpackTimeoutError;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.OnJetpackTunnelTimeoutListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountSocialRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
@@ -27,6 +29,7 @@ public abstract class BaseWPComRestClient {
 
     private OnAuthFailedListener mOnAuthFailedListener;
     private OnParseErrorListener mOnParseErrorListener;
+    private OnJetpackTunnelTimeoutListener mOnJetpackTunnelTimeoutListener;
 
     public BaseWPComRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                                AccessToken accessToken, UserAgent userAgent) {
@@ -45,6 +48,12 @@ public abstract class BaseWPComRestClient {
             @Override
             public void onParseError(OnUnexpectedError event) {
                 mDispatcher.emitChange(event);
+            }
+        };
+        mOnJetpackTunnelTimeoutListener = new OnJetpackTunnelTimeoutListener() {
+            @Override
+            public void onJetpackTunnelTimeout(OnJetpackTimeoutError onTimeoutError) {
+                mDispatcher.emitChange(onTimeoutError);
             }
         };
     }
@@ -95,6 +104,7 @@ public abstract class BaseWPComRestClient {
     private WPComGsonRequest setRequestAuthParams(WPComGsonRequest request, boolean shouldAuth) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
         request.setOnParseErrorListener(mOnParseErrorListener);
+        request.setOnJetpackTunnelTimeoutListener(mOnJetpackTunnelTimeoutListener);
         request.setUserAgent(mUserAgent.getUserAgent());
         request.setAccessToken(shouldAuth ? mAccessToken.get() : null);
         return request;
