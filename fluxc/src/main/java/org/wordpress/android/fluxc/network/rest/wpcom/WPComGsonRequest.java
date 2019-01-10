@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.network.rest.GsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTimeoutRequestHandler;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
 
@@ -21,6 +22,22 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
     public interface WPComErrorListener {
         void onErrorResponse(@NonNull WPComGsonNetworkError error);
     }
+
+    public interface OnJetpackTunnelTimeoutListener {
+        void onJetpackTunnelTimeout(OnJetpackTimeoutError event);
+    }
+
+    public static class OnJetpackTimeoutError {
+        public String apiPath;
+        public int timesRetried;
+
+        public OnJetpackTimeoutError(String apiPath, int timesRetried) {
+            this.apiPath = apiPath;
+            this.timesRetried = timesRetried;
+        }
+    }
+
+    private OnJetpackTunnelTimeoutListener mOnJetpackTunnelTimeoutListener;
 
     private int mNumManualRetries = 0;
 
@@ -105,6 +122,10 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
         return url;
     }
 
+    void setOnJetpackTunnelTimeoutListener(OnJetpackTunnelTimeoutListener onJetpackTunnelTimeoutListener) {
+        mOnJetpackTunnelTimeoutListener = onJetpackTunnelTimeoutListener;
+    }
+
     /**
      * Mark that this request has been retried manually (by duplicating and re-enqueuing it).
      */
@@ -162,6 +183,12 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
                         returnedError.message);
                 AuthenticateErrorPayload payload = new AuthenticateErrorPayload(authError);
                 mOnAuthFailedListener.onAuthFailed(payload);
+            }
+
+            if (JetpackTimeoutRequestHandler.isJetpackTimeoutError(returnedError)) {
+                OnJetpackTimeoutError onJetpackTimeoutError =
+                        new OnJetpackTimeoutError(getParams().get("path"), mNumManualRetries);
+                mOnJetpackTunnelTimeoutListener.onJetpackTunnelTimeout(onJetpackTimeoutError);
             }
         }
 
