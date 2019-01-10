@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.test
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
@@ -38,6 +39,7 @@ class PagesViewModelTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var actionPerformer: ActionPerformer
+    @Mock lateinit var networkUtils: NetworkUtilsWrapper
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
@@ -46,7 +48,7 @@ class PagesViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, TEST_SCOPE, TEST_SCOPE)
+        viewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, networkUtils, TEST_SCOPE, TEST_SCOPE)
         listStates = mutableListOf()
         pages = mutableListOf()
         searchPages = mutableListOf()
@@ -54,6 +56,7 @@ class PagesViewModelTest {
         viewModel.pages.observeForever { if (it != null) pages.add(it) }
         viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
         pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null)
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test

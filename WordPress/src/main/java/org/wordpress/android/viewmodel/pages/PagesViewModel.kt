@@ -173,7 +173,7 @@ class PagesViewModel
     }
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
-        performIfNetworkAvailableAsync {
+        if (performIfNetworkAvailableAsync {
             _listState.setOnUi(state)
 
             val result = pageStore.requestPagesFromServer(site)
@@ -185,8 +185,9 @@ class PagesViewModel
                 _listState.setOnUi(DONE)
             }
             refreshPages()
+        }) else {
+            _listState.setOnUi(DONE)
         }
-        _listState.setOnUi(DONE)
     }
 
     private suspend fun refreshPages() {
