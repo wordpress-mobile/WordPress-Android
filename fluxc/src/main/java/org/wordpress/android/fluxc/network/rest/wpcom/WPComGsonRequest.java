@@ -186,9 +186,18 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
             }
 
             if (JetpackTimeoutRequestHandler.isJetpackTimeoutError(returnedError)) {
-                OnJetpackTimeoutError onJetpackTimeoutError =
-                        new OnJetpackTimeoutError(getParams().get("path"), mNumManualRetries);
-                mOnJetpackTunnelTimeoutListener.onJetpackTunnelTimeout(onJetpackTimeoutError);
+                OnJetpackTimeoutError onJetpackTimeoutError = null;
+                if (getMethod() == Method.GET && getParams() != null) {
+                    onJetpackTimeoutError = new OnJetpackTimeoutError(getParams().get("path"), mNumManualRetries);
+                } else if (getMethod() == Method.POST && getBodyAsMap() != null) {
+                    Object pathValue = getBodyAsMap().get("path");
+                    if (pathValue != null) {
+                        onJetpackTimeoutError = new OnJetpackTimeoutError(pathValue.toString(), mNumManualRetries);
+                    }
+                }
+                if (onJetpackTimeoutError != null) {
+                    mOnJetpackTunnelTimeoutListener.onJetpackTunnelTimeout(onJetpackTimeoutError);
+                }
             }
         }
 
