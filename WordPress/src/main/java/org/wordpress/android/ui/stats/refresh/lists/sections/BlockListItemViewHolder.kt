@@ -32,11 +32,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.github.mikephil.charting.charts.BarChart
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
@@ -44,6 +43,7 @@ import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
@@ -151,8 +151,16 @@ sealed class BlockListItemViewHolder(
 
     class EmptyViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_empty_item
-    )
+            R.layout.stats_block_empty_item) {
+        private val text = itemView.findViewById<TextView>(R.id.text)
+        fun bind(message: Empty) {
+            when {
+                message.textResource != null -> text.setText(message.textResource)
+                message.text != null -> text.text = message.text
+                else -> text.setText(R.string.stats_no_data_yet)
+            }
+        }
+    }
 
     class DividerViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Dispatchers
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -103,7 +103,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         (result as BlockList).apply {
             assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(Empty)
+            assertThat(this.items[1]).isEqualTo(Empty())
         }
     }
 
