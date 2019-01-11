@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.util.DateTimeUtils
 import javax.inject.Inject
@@ -78,10 +79,16 @@ class PageStore @Inject constructor(
         updatePostContinuation = cont
 
         val post = postStore.getPostByRemotePostId(page.remoteId, page.site) ?: postStore.getPostByLocalPostId(page.pageId)
-        post.updatePageData(page)
+        if (post != null) {
+            post.updatePageData(page)
 
-        val updateAction = PostActionBuilder.newUpdatePostAction(post)
-        dispatcher.dispatch(updateAction)
+            val updateAction = PostActionBuilder.newUpdatePostAction(post)
+            dispatcher.dispatch(updateAction)
+        } else {
+            val event = OnPostChanged(CauseOfOnPostChanged.UpdatePost(page.pageId, page.remoteId), 0)
+            event.error = PostError(UNKNOWN_POST)
+            cont.resume(event)
+        }
     }
 
     suspend fun uploadPageToServer(page: PageModel): UploadRequestResult = withContext(coroutineContext) {
