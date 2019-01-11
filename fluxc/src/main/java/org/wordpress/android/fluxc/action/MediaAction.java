@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
+import org.wordpress.android.fluxc.store.MediaStore.UploadMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.UploadedStockMediaPayload;
 
@@ -17,7 +18,7 @@ public enum MediaAction implements IAction {
     // Remote actions
     @Action(payloadType = MediaPayload.class)
     PUSH_MEDIA,
-    @Action(payloadType = MediaPayload.class)
+    @Action(payloadType = UploadMediaPayload.class)
     UPLOAD_MEDIA,
     @Action(payloadType = FetchMediaListPayload.class)
     FETCH_MEDIA_LIST,
