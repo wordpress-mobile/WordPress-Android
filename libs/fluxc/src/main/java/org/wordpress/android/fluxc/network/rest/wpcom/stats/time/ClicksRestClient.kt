@@ -29,7 +29,7 @@ class ClicksRestClient
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
-    @param:Named("regular") requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent,
     val gson: Gson,
