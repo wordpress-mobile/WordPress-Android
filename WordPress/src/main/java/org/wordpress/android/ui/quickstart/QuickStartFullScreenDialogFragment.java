@@ -26,7 +26,6 @@ import org.wordpress.android.util.AniUtils.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -80,17 +79,17 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             case CUSTOMIZE:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
-                setCompletedViewIllustration(R.drawable.img_illustration_completed_quick_start_customize_191dp);
+                setCompleteViewImage(R.drawable.img_illustration_completed_quick_start_customize_191dp);
                 break;
             case GROW:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, GROW));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, GROW));
-                setCompletedViewIllustration(R.drawable.img_illustration_completed_quick_start_grow_182dp);
+                setCompleteViewImage(R.drawable.img_illustration_completed_quick_start_grow_182dp);
                 break;
             case UNKNOWN:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
-                setCompletedViewIllustration(R.drawable.img_illustration_completed_quick_start_customize_191dp);
+                setCompleteViewImage(R.drawable.img_illustration_completed_quick_start_customize_191dp);
                 break;
         }
 
@@ -174,7 +173,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         }
     }
 
-    private void setCompletedViewIllustration(int imageResourceId) {
+    private void setCompleteViewImage(int imageResourceId) {
         mQuickStartCompleteView.image.setImageResource(imageResourceId);
         mQuickStartCompleteView.image.setVisibility(View.VISIBLE);
     }
