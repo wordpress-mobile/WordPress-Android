@@ -169,11 +169,9 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
 
     @Override
     public void onCompletedTasksListToggled(boolean isExpanded) {
-        if (!mQuickStartStore.getUncompletedTasksByType(AppPrefs.getSelectedSite(), mTasksType).isEmpty()) {
-            return;
+        if (mQuickStartStore.getUncompletedTasksByType(AppPrefs.getSelectedSite(), mTasksType).isEmpty()) {
+            toggleCompletedView(!isExpanded);
         }
-
-        toggleCompletedView(!isExpanded);
     }
 
     private void setCompletedViewIllustration(int imageResourceId) {
