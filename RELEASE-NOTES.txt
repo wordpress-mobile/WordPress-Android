@@ -1,3 +1,5 @@
 * Add Importing from Giphy in Editor and Media Library
-* Adds support for .blog subdomains on new sites.
+* Add support for .blog subdomains on new sites.
 * First version of the refreshed stats project - all tabs and all the blocks are completely rewritten in new design
+* Fix the coloring issue with Countries map stats block
+* Fix an occasional crash in Stats (date parsing in the Overview block)

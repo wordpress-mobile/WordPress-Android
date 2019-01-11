@@ -37,6 +37,7 @@ import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.Map;
 
@@ -45,7 +46,7 @@ import javax.inject.Inject;
 public class SiteCreationService extends AutoForeground<SiteCreationState> {
     private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
     private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
-    private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
+    private static final String ARG_SITE_ADDRESS = "ARG_SITE_ADDRESS";
     private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
 
     private static final String ARG_RESUME_PHASE = "ARG_RESUME_PHASE";
@@ -158,7 +159,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     private boolean mIsRetry;
 
-    private String mSiteSlug;
+    private String mSiteAddress;
     private String mSiteTagline;
     private ThemeModel mSiteTheme;
     private SiteModel mNewSite;
@@ -168,7 +169,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             SiteCreationState retryFromState,
             String siteTitle,
             String siteTagline,
-            String siteSlug,
+            String siteAddress,
             String siteThemeId) {
         clearSiteCreationServiceState();
 
@@ -180,7 +181,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
         intent.putExtra(ARG_SITE_TITLE, siteTitle);
         intent.putExtra(ARG_SITE_TAGLINE, siteTagline);
-        intent.putExtra(ARG_SITE_SLUG, siteSlug);
+        intent.putExtra(ARG_SITE_ADDRESS, siteAddress);
         intent.putExtra(ARG_SITE_THEME_ID, siteThemeId);
         context.startService(intent);
     }
@@ -280,13 +281,13 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
         setState(SiteCreationStep.IDLE, null);
 
-        mSiteSlug = intent.getStringExtra(ARG_SITE_SLUG);
+        mSiteAddress = intent.getStringExtra(ARG_SITE_ADDRESS);
         mSiteTagline = intent.getStringExtra(ARG_SITE_TAGLINE);
         String themeId = intent.getStringExtra(ARG_SITE_THEME_ID);
         mSiteTheme = mThemeStore.getWpComThemeByThemeId(themeId);
 
         // load site from the DB. Note, this can be null if the site is not yet fetched from the network.
-        mNewSite = getWpcomSiteBySlug(mSiteSlug);
+        mNewSite = getWpcomSiteByAddress(mSiteAddress);
 
         mIsRetry = intent.hasExtra(ARG_RESUME_PHASE);
 
@@ -296,9 +297,9 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
         if (continueFromPhase == SiteCreationStep.IDLE && mNewSite != null) {
             // site already exists but we're not in a retry attempt _after_ having issued the new-site creation call.
-            //  That means the slug requested corresponds to an already existing site! This is an indication that the
-            //  siteslug recommendation service is buggy.
-            AppLog.w(T.NUX, "WPCOM site with slug '" + mSiteSlug + "' already exists! Can't create a new one!");
+            // That means the address requested corresponds to an already existing site! This is an indication that the
+            // siteslug recommendation service is buggy.
+            AppLog.w(T.NUX, "WPCOM site with url '" + mSiteAddress + "' already exists! Can't create a new one!");
             notifyFailure();
             return START_REDELIVER_INTENT;
         }
@@ -307,7 +308,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             throw new RuntimeException("Internal inconsistency: SiteCreationService can't resume a terminal step!");
         } else if (continueFromPhase == SiteCreationStep.IDLE || continueFromPhase == SiteCreationStep.NEW_SITE) {
             setState(SiteCreationStep.NEW_SITE, null);
-            createNewSite(intent.getStringExtra(ARG_SITE_TITLE), intent.getStringExtra(ARG_SITE_SLUG));
+            createNewSite(intent.getStringExtra(ARG_SITE_TITLE), mSiteAddress);
         } else {
             executePhase(continueFromPhase);
         }
@@ -315,10 +316,9 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         return START_REDELIVER_INTENT;
     }
 
-    private SiteModel getWpcomSiteBySlug(String siteSlug) {
-        final String url = siteSlug + ".wordpress.com";
+    private SiteModel getWpcomSiteByAddress(String siteAddress) {
         for (SiteModel site : mSiteStore.getSites()) {
-            if (Uri.parse(site.getUrl()).getHost().equals(url)) {
+            if (Uri.parse(site.getUrl()).getHost().equals(siteAddress)) {
                 return site;
             }
         }
@@ -329,8 +329,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
     private void executePhase(SiteCreationStep phase) {
         switch (phase) {
             case FETCHING_NEW_SITE:
-                if (TextUtils.isEmpty(mSiteSlug)) {
-                    throw new RuntimeException("Internal inconsistency: Cannot resume, site slug is empty!");
+                if (TextUtils.isEmpty(mSiteAddress)) {
+                    throw new RuntimeException("Internal inconsistency: Cannot resume, site address is empty!");
                 }
                 setState(SiteCreationStep.FETCHING_NEW_SITE, null);
                 fetchNewSite();
@@ -379,7 +379,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         executePhase(nextPhase);
     }
 
-    private void createNewSite(String siteTitle, String siteSlug) {
+    private void createNewSite(String siteTitle, String siteAddress) {
         final String deviceLanguageCode = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
         /* Convert the device language code (codes defined by ISO 639-1) to a Language ID.
          * Language IDs, used only by WordPress, are integer values that map to a language code.
@@ -404,14 +404,25 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             langID = deviceLanguageCode;
         }
 
+        /*
+          If a site with a `wordpress.com` domain is being created the server expects just the "name" of the site which
+          is the subdomain, however if a site with `.blog` subdomain is being created such as `example.home.blog` the
+          server expects the full url.
+
+          IMPORTANT: At this point we don't support paid domains and it's unknown whether sending the full url will
+          work when we do. Since this class will be completely replaced before that happens, it's unlikely that this
+          will matter but if a change is required to this call, it might be important to keep all this in mind.
+         */
+        String siteName = siteAddress.contains("wordpress.com") ? UrlUtils.extractSubDomain(siteAddress) : siteAddress;
+
         NewSitePayload newSitePayload = new NewSitePayload(
-                siteSlug,
+                siteName,
                 siteTitle,
                 langID,
                 SiteStore.SiteVisibility.PUBLIC,
                 false);
         mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
-        AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", SiteName: " + siteSlug);
+        AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", SiteName: " + siteName);
     }
 
     private void fetchNewSite() {
@@ -523,7 +534,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             AppLog.e(T.NUX, event.error.type.toString());
         }
 
-        mNewSite = getWpcomSiteBySlug(mSiteSlug);
+        mNewSite = getWpcomSiteByAddress(mSiteAddress);
         if (mNewSite == null) {
             notifyFailure();
             return;
