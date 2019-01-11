@@ -76,7 +76,7 @@ class PageStore @Inject constructor(
     suspend fun updatePageInDb(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
         updatePostContinuation = cont
 
-        val post = postStore.getPostByRemotePostId(page.remoteId, site) ?: postStore.getPostByLocalPostId(page.pageId)
+        val post = postStore.getPostByRemotePostId(page.remoteId, page.site) ?: postStore.getPostByLocalPostId(page.pageId)
         post.updatePageData(page)
 
         val updateAction = PostActionBuilder.newUpdatePostAction(post)
@@ -84,7 +84,7 @@ class PageStore @Inject constructor(
     }
 
     suspend fun uploadPageToServer(page: PageModel): UploadRequestResult = withContext(coroutineContext) {
-        val post = postStore.getPostByRemotePostId(page.remoteId, site) ?: postStore.getPostByLocalPostId(page.pageId)
+        val post = postStore.getPostByRemotePostId(page.remoteId, page.site) ?: postStore.getPostByLocalPostId(page.pageId)
         if (post != null) {
             post.updatePageData(page)
 
