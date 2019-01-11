@@ -1,12 +1,16 @@
 package org.wordpress.android.fluxc.utils;
 
 import android.support.annotation.NonNull;
+import android.support.media.ExifInterface;
 import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.File;
+import java.io.IOException;
 
 public class MediaUtils {
     public static final double MEMORY_LIMIT_FILESIZE_MULTIPLIER = 0.75D;
@@ -143,5 +147,31 @@ public class MediaUtils {
      */
     public static double getMaxFilesizeForMemoryLimit(double mediaMemoryLimit) {
         return MEMORY_LIMIT_FILESIZE_MULTIPLIER * mediaMemoryLimit;
+    }
+
+    /**
+     * Removes location from the Exif information from an image
+     *
+     * @param imagePath image file path
+     * @return success
+     */
+    public static boolean stripLocation(String imagePath) {
+        try {
+            ExifInterface exifInterface = new ExifInterface(imagePath);
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_ALTITUDE, "0/0");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_ALTITUDE_REF, "0");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE, "0/0,0/0000,00000000/00000");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, "0");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, "0/0,0/0,000000/00000 ");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, "0");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_TIMESTAMP, "0:0:0 ");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD, "0");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_DATESTAMP, " ");
+            exifInterface.saveAttributes();
+            return true;
+        } catch (IOException e) {
+            AppLog.e(T.MEDIA, "Removing of GPS info from image failed");
+            return false;
+        }
     }
 }
