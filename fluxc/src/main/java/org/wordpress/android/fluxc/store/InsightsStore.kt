@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPO
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class InsightsStore
