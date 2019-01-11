@@ -76,23 +76,24 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
 
         mQuickStartCompleteView = rootView.findViewById(R.id.quick_start_complete_view);
 
-        switch (Objects.requireNonNull(mTasksType)) {
+        switch (mTasksType) {
             case CUSTOMIZE:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
-                mQuickStartCompleteView.setImage(R.drawable.img_illustration_completed_quick_start_customize_191dp);
+                setCompletedViewIllustration(R.drawable.img_illustration_completed_quick_start_customize_191dp);
                 break;
             case GROW:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, GROW));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, GROW));
-                mQuickStartCompleteView.setImage(R.drawable.img_illustration_completed_quick_start_grow_182dp);
+                setCompletedViewIllustration(R.drawable.img_illustration_completed_quick_start_grow_182dp);
                 break;
             case UNKNOWN:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
-                mQuickStartCompleteView.setImage(R.drawable.img_illustration_completed_quick_start_customize_191dp);
+                setCompletedViewIllustration(R.drawable.img_illustration_completed_quick_start_customize_191dp);
                 break;
         }
+
 
         boolean isCompletedTasksListExpanded = savedInstanceState != null
                                                && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
@@ -173,6 +174,11 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         }
 
         toggleCompletedView(!isExpanded);
+    }
+
+    private void setCompletedViewIllustration(int imageResourceId) {
+        mQuickStartCompleteView.image.setImageResource(imageResourceId);
+        mQuickStartCompleteView.image.setVisibility(View.VISIBLE);
     }
 
     private void toggleCompletedView(boolean isVisible) {

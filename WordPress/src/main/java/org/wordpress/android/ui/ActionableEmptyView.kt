@@ -54,7 +54,10 @@ class ActionableEmptyView : LinearLayout {
             val subtitleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevSubtitle)
             val buttonAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevButton)
 
-            setImage(imageResource)
+            if (imageResource != 0) {
+                image.setImageResource(imageResource)
+                image.visibility = View.VISIBLE
+            }
 
             if (!titleAttribute.isNullOrEmpty()) {
                 title.text = titleAttribute
@@ -100,14 +103,5 @@ class ActionableEmptyView : LinearLayout {
 
         params.topMargin = topMargin
         layout.layoutParams = params
-    }
-
-    fun setImage(imageResource: Int) {
-        if (imageResource != 0) {
-            image.setImageResource(imageResource)
-            image.visibility = View.VISIBLE
-        } else {
-            image.visibility = View.GONE
-        }
     }
 }
