@@ -54,8 +54,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import kotlin.coroutines.experimental.CoroutineContext;
-import kotlinx.coroutines.experimental.Dispatchers;
+import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.Dispatchers;
 import okhttp3.OkHttpClient;
 
 @Module
@@ -211,7 +211,7 @@ public class ReleaseNetworkModule {
     @Singleton
     @Provides
     public CoroutineContext provideCoroutineContext() {
-        return Dispatchers.Default;
+        return Dispatchers.getDefault();
     }
 
     @Singleton
