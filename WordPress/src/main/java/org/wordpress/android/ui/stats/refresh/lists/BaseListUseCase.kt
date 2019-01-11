@@ -2,9 +2,9 @@ package org.wordpress.android.ui.stats.refresh.lists
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
