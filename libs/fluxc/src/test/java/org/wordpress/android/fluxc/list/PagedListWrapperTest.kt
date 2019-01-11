@@ -13,7 +13,9 @@ import com.nhaarman.mockitokotlin2.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
+import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListState
@@ -26,6 +28,7 @@ import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 
 private fun onlyOnce() = times(1)
 
+@RunWith(MockitoJUnitRunner::class)
 class PagedListWrapperTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
