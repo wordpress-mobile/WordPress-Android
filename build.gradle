@@ -16,7 +16,7 @@ buildscript {
 apply plugin: 'com.automattic.android.fetchstyle'
 
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
-project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false)
+project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
 
 allprojects {
     apply plugin: 'checkstyle'

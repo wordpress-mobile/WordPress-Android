@@ -119,7 +119,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         (result as BlockList).apply {
             Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
-            Assertions.assertThat(this.items[1]).isEqualTo(Empty)
+            Assertions.assertThat(this.items[1]).isEqualTo(Empty())
         }
     }
 

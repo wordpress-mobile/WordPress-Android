@@ -86,7 +86,7 @@ constructor(
         items.add(Title(string.stats_posts_and_pages))
 
         if (domainModel.views.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             items.add(Header(R.string.stats_posts_and_pages_title_label, R.string.stats_posts_and_pages_views_label))
             items.addAll(domainModel.views.mapIndexed { index, viewsModel ->

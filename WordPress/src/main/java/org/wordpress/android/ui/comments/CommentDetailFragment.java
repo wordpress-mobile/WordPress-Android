@@ -99,7 +99,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
     private static final String KEY_NOTE_ID = "KEY_NOTE_ID";
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
-    private static final String KEY_FRAGMENT_CONTAINER_ID = "KEY_FRAGMENT_CONTAINER_ID";
 
     private static final int INTENT_COMMENT_EDITOR = 1010;
     private static final int FROM_BLOG_COMMENT = 1;
@@ -109,7 +108,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private SiteModel mSite;
 
     private Note mNote;
-    private int mIdForFragmentContainer;
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
     private TextView mTxtStatus;
@@ -172,14 +170,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from notification list for a comment notification
      */
-    public static CommentDetailFragment newInstance(final String noteId, final String replyText,
-                                                    final int idForFragmentContainer) {
+    public static CommentDetailFragment newInstance(final String noteId, final String replyText) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
         args.putInt(KEY_MODE, FROM_NOTE);
         args.putString(KEY_NOTE_ID, noteId);
         args.putString(KEY_REPLY_TEXT, replyText);
-        args.putInt(KEY_FRAGMENT_CONTAINER_ID, idForFragmentContainer + R.id.note_comment_fragment_container_base_id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -196,12 +192,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             case FROM_NOTE:
                 setNote(getArguments().getString(KEY_NOTE_ID));
                 setReplyText(getArguments().getString(KEY_REPLY_TEXT));
-                setIdForFragmentContainer(getArguments().getInt(KEY_FRAGMENT_CONTAINER_ID));
                 break;
         }
 
         if (savedInstanceState != null) {
-            mIdForFragmentContainer = savedInstanceState.getInt(KEY_FRAGMENT_CONTAINER_ID);
             if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
                 // The note will be set in onResume()
                 // See WordPress.deferredInit()
@@ -227,7 +221,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNote != null) {
             outState.putString(KEY_NOTE_ID, mNote.getId());
         }
-        outState.putInt(KEY_FRAGMENT_CONTAINER_ID, mIdForFragmentContainer);
     }
 
     @Override
@@ -424,8 +417,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mComment = comment;
         mSite = site;
 
-        setIdForCommentContainer();
-
         // is this comment on one of the user's blogs? it won't be if this was displayed from a
         // notification about a reply to a comment this user posted on someone else's blog
         mIsUsersBlog = (comment != null && site != null);
@@ -466,7 +457,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mSite = createDummyWordPressComSite(mNote.getSiteId());
         }
         if (isAdded() && mNote != null) {
-            setIdForCommentContainer();
             showComment();
         }
     }
@@ -484,12 +474,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
         setNote(note);
-    }
-
-    private void setIdForFragmentContainer(int id) {
-        if (id > 0) {
-            mIdForFragmentContainer = id;
-        }
     }
 
     private void setReplyText(String replyText) {
@@ -1111,18 +1095,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private void addDetailFragment(String noteId) {
         // Now we'll add a detail fragment list
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(noteId);
         mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
         fragmentTransaction.replace(mCommentContentLayout.getId(), mNotificationsDetailListFragment);
         fragmentTransaction.commitAllowingStateLoss();
-    }
-
-    private void setIdForCommentContainer() {
-        if (mCommentContentLayout != null) {
-            mCommentContentLayout.setId(mIdForFragmentContainer);
-        }
     }
 
     // Like or unlike a comment via the REST API

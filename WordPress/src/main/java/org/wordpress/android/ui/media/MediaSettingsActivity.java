@@ -850,9 +850,14 @@ public class MediaSettingsActivity extends AppCompatActivity
                 DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 Cursor cursor = dm.query(query);
                 if (cursor != null && cursor.moveToFirst()) {
+                    // meaning of `reason` depends on the value of COLUMN_STATUS
                     int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
-                    if (reason == DownloadManager.STATUS_FAILED) {
+                    int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                    if (status == DownloadManager.STATUS_FAILED) {
                         ToastUtils.showToast(MediaSettingsActivity.this, R.string.error_media_save);
+                        // If an HTTP error occurred, this will hold the HTTP status code as defined in RFC 2616.
+                        // Otherwise, it will hold one of the ERROR_* constants
+                        AppLog.e(AppLog.T.MEDIA, "MediaSettingsActivity > save > STATUS_FAILED - reason: " + reason);
                     }
                 }
                 mDownloadId = 0;
@@ -991,6 +996,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         }
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+        request.addRequestHeader("User-Agent", WordPress.getUserAgent());
 
         mDownloadId = dm.enqueue(request);
         invalidateOptionsMenu();

@@ -84,7 +84,7 @@ constructor(
         items.add(Title(R.string.stats_referrers))
 
         if (domainModel.groups.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             items.add(Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label))
             domainModel.groups.forEachIndexed { index, group ->
