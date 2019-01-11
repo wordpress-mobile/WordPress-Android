@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -70,6 +72,7 @@ class PagesViewModel
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
     private val actionPerfomer: ActionPerformer,
+    private val networkUtils: NetworkUtilsWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -171,17 +174,21 @@ class PagesViewModel
     }
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
-        _listState.setOnUi(state)
+        if (performIfNetworkAvailableAsync {
+            _listState.setOnUi(state)
 
-        val result = pageStore.requestPagesFromServer(site)
-        if (result.isError) {
-            _listState.setOnUi(ERROR)
-            showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
-            AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
-        } else {
+            val result = pageStore.requestPagesFromServer(site)
+            if (result.isError) {
+                _listState.setOnUi(ERROR)
+                showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
+                AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
+            } else {
+                _listState.setOnUi(DONE)
+            }
+            refreshPages()
+        }) else {
             _listState.setOnUi(DONE)
         }
-        refreshPages()
     }
 
     private suspend fun refreshPages() {
@@ -326,19 +333,45 @@ class PagesViewModel
     }
 
     private fun deletePage(page: Page) {
-        _displayDeleteDialog.postValue(page)
+        performIfNetworkAvailable {
+            _displayDeleteDialog.postValue(page)
+        }
     }
 
     private fun setParent(page: Page) {
-        trackMenuSelectionEvent(SET_PARENT)
+        performIfNetworkAvailable {
+            trackMenuSelectionEvent(SET_PARENT)
 
-        _setPageParent.postValue(pageMap[page.id])
+            _setPageParent.postValue(pageMap[page.id])
+        }
     }
 
     private fun previewPage(page: Page) {
-        trackMenuSelectionEvent(VIEW_PAGE)
+        performIfNetworkAvailable {
+            trackMenuSelectionEvent(VIEW_PAGE)
 
-        _previewPage.postValue(pageMap[page.id])
+            _previewPage.postValue(pageMap[page.id])
+        }
+    }
+
+    private fun performIfNetworkAvailable(performAction: () -> Unit): Boolean {
+        return if (networkUtils.isNetworkAvailable()) {
+            performAction()
+            true
+        } else {
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.no_network_message))
+            false
+        }
+    }
+
+    private suspend fun performIfNetworkAvailableAsync(performAction: suspend () -> Unit): Boolean {
+        return if (networkUtils.isNetworkAvailable()) {
+            performAction()
+            true
+        } else {
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.no_network_message))
+            false
+        }
     }
 
     private fun trackMenuSelectionEvent(action: Action) {
@@ -354,8 +387,10 @@ class PagesViewModel
     }
 
     private fun publishPageNow(remoteId: Long) {
-        pageMap[remoteId]?.date = Date()
-        changePageStatus(remoteId, PageStatus.PUBLISHED)
+        performIfNetworkAvailable {
+            pageMap[remoteId]?.date = Date()
+            changePageStatus(remoteId, PageStatus.PUBLISHED)
+        }
     }
 
     fun onDeleteConfirmed(remoteId: Long) {
@@ -476,57 +511,59 @@ class PagesViewModel
     }
 
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
-        if (status == DRAFT) {
-            trackMenuSelectionEvent(MOVE_TO_DRAFT)
-        } else if (status == TRASHED) {
-            trackMenuSelectionEvent(MOVE_TO_TRASH)
-        }
-
-        pageMap[remoteId]?.let { page ->
-            val oldStatus = page.status
-            val action = PageAction(remoteId, UPLOAD) {
-                val updatedPage = updatePageStatus(page, status)
-                pageStore.updatePageInDb(updatedPage)
-
-                refreshPages()
-
-                // Local pages can be trashed locally
-                if (status != TRASHED || remoteId > 0) {
-                    pageStore.uploadPageToServer(updatedPage)
-                }
+        performIfNetworkAvailable {
+            if (status == DRAFT) {
+                trackMenuSelectionEvent(MOVE_TO_DRAFT)
+            } else if (status == TRASHED) {
+                trackMenuSelectionEvent(MOVE_TO_TRASH)
             }
 
-            action.undo = {
-                val updatedPage = updatePageStatus(page.copy(remoteId = action.remoteId), oldStatus)
-                launch(defaultDispatcher) {
+            pageMap[remoteId]?.let { page ->
+                val oldStatus = page.status
+                val action = PageAction(remoteId, UPLOAD) {
+                    val updatedPage = updatePageStatus(page, status)
                     pageStore.updatePageInDb(updatedPage)
+
                     refreshPages()
 
-                    pageStore.uploadPageToServer(updatedPage)
+                    // Local pages can be trashed locally
+                    if (status != TRASHED || remoteId > 0) {
+                        pageStore.uploadPageToServer(updatedPage)
+                    }
                 }
-            }
 
-            action.onSuccess = {
-                launch(defaultDispatcher) {
-                    delay(ACTION_DELAY)
-                    reloadPages()
+                action.undo = {
+                    val updatedPage = updatePageStatus(page.copy(remoteId = action.remoteId), oldStatus)
+                    launch(defaultDispatcher) {
+                        pageStore.updatePageInDb(updatedPage)
+                        refreshPages()
 
-                    val message = prepareStatusChangeSnackbar(status, action.undo)
-                    showSnackbar(message)
+                        pageStore.uploadPageToServer(updatedPage)
+                    }
                 }
-            }
-            action.onError = {
-                launch(defaultDispatcher) {
-                    action.undo?.let { it() }
 
-                    showSnackbar(SnackbarMessageHolder(string.page_status_change_error))
+                action.onSuccess = {
+                    launch(defaultDispatcher) {
+                        delay(ACTION_DELAY)
+                        reloadPages()
+
+                        val message = prepareStatusChangeSnackbar(status, action.undo)
+                        showSnackbar(message)
+                    }
                 }
-            }
+                action.onError = {
+                    launch(defaultDispatcher) {
+                        action.undo?.let { it() }
+
+                        showSnackbar(SnackbarMessageHolder(string.page_status_change_error))
+                    }
+                }
 
             launch {
-                _arePageActionsEnabled = false
-                actionPerfomer.performAction(action)
-                _arePageActionsEnabled = true
+                    _arePageActionsEnabled = false
+                    actionPerfomer.performAction(action)
+                    _arePageActionsEnabled = true
+                }
             }
         }
     }

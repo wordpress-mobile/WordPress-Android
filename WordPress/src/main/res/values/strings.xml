@@ -760,6 +760,7 @@
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
     <string name="preference_experimental">*EXPERIMENTAL*</string>
+    <string name="preference_strip_image_location">Remove location from media</string>
 
     <string name="preference_editor_beta" translatable="false">Beta</string>
     <string name="preference_editor_legacy">Legacy</string>
