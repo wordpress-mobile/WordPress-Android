@@ -19,7 +19,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPHtml;
 
 import javax.inject.Inject;
 
