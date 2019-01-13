@@ -200,8 +200,10 @@ class PagesViewModel
             refreshPages() // show local changes immediately
 
             if (wasPageUpdated) {
-                waitForPageUpdate(remotePageId)
-                reloadPages()
+                performIfNetworkAvailableAsync {
+                    waitForPageUpdate(remotePageId)
+                    reloadPages()
+                }
             }
         }
     }
