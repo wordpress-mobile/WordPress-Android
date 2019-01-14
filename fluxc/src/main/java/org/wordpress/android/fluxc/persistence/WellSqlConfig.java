@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 49;
+        return 50;
     }
 
     @Override
@@ -403,6 +403,12 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 48:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE PostModel ADD REMOTE_LAST_MODIFIED TEXT");
+                oldVersion++;
+            case 49:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE InsightTypes (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,INSIGHT_TYPE TEXT NOT NULL,POSITION INTEGER,STATUS TEXT NOT NULL)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

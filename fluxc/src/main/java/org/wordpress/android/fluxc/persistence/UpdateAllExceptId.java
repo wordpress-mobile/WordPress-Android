@@ -6,10 +6,10 @@ import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
 import com.yarolegovich.wellsql.mapper.SQLiteMapper;
 
-class UpdateAllExceptId<T> implements InsertMapper<T> {
+public class UpdateAllExceptId<T> implements InsertMapper<T> {
     private final SQLiteMapper<T> mMapper;
 
-    UpdateAllExceptId(Class<T> clazz) {
+    public UpdateAllExceptId(Class<T> clazz) {
         mMapper = WellSql.mapperFor(clazz);
     }
 
