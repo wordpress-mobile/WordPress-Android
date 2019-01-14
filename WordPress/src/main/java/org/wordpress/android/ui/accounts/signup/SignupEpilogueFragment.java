@@ -262,10 +262,10 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
-             // Start loading reader tags so they will be available asap
-             ReaderUpdateServiceStarter.startService(getActivity(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
+            // Start loading reader tags so they will be available asap
+            ReaderUpdateServiceStarter.startService(getActivity(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
 
-             if (mIsEmailSignup) {
+            if (mIsEmailSignup) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_VIEWED);
 
                 // Start progress and wait for account to be fetched before populating views when
