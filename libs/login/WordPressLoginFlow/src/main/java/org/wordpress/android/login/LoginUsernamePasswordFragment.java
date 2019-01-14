@@ -86,9 +86,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     private String mInputUsername;
     private String mInputPassword;
     private boolean mIsWpcom;
+    private int mLoggedInSelfHostedSiteId = -1;
 
     public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
-            String siteName, String siteIconUrl, String inputUsername, String inputPassword, boolean isWpcom) {
+                                                            String siteName, String siteIconUrl, String inputUsername,
+                                                            String inputPassword, boolean isWpcom) {
         LoginUsernamePasswordFragment fragment = new LoginUsernamePasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_INPUT_SITE_ADDRESS, inputSiteAddress);
@@ -129,10 +131,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
         if (mSiteIconUrl != null) {
             Glide.with(this)
-                .load(mSiteIconUrl)
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
-                .apply(RequestOptions.errorOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
-                .into(((ImageView) rootView.findViewById(R.id.login_blavatar)));
+                 .load(mSiteIconUrl)
+                 .apply(RequestOptions.placeholderOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
+                 .apply(RequestOptions.errorOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
+                 .into(((ImageView) rootView.findViewById(R.id.login_blavatar)));
         }
 
         TextView siteNameView = (rootView.findViewById(R.id.login_site_title));
@@ -424,7 +426,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
             mAuthFailed = true;
             AppLog.e(T.API, "Login with username/pass onAuthenticationChanged has error: " + event.error.type
-                    + " - " + event.error.message);
+                            + " - " + event.error.message);
             mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
@@ -460,9 +462,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         if (mLoginListener != null) {
             if (mIsWpcom) {
                 saveCredentialsInSmartLock(mLoginListener, mRequestedUsername, mRequestedPassword);
+                mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
+            } else {
+                mLoginListener.loggedInSelfHostedWebsite(mOldSitesIDs, mLoggedInSelfHostedSiteId);
             }
-
-            mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
         }
 
         endProgress();
@@ -499,7 +502,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             }
 
             AppLog.e(T.API, "Login with username/pass onSiteChanged has error: " + event.error.type
-                    + " - " + errorMessage);
+                            + " - " + errorMessage);
 
             if (!mAuthFailed) {
                 // show the error if not already displayed in onAuthenticationChanged (like in username/pass error)
@@ -534,11 +537,13 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             endProgress();
 
             AppLog.e(T.API, "Fetching selfhosted site profile has error: " + event.error.type + " - "
-                    + event.error.message);
+                            + event.error.message);
 
             // continue with success, even if the operation was cancelled since the user got logged in regardless.
             // So, go on with finishing the login process
         }
+
+        mLoggedInSelfHostedSiteId = event.site != null ? event.site.getId() : -1;
         finishLogin();
     }
 }
