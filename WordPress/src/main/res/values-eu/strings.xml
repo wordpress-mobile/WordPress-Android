@@ -263,7 +263,6 @@ Language: eu_ES
     <string name="stats_insights_most_popular_hour">Ordurik jendetsuena</string>
     <string name="stats_insights_most_popular_day">Egunik jendetsuena</string>
     <string name="stats_insights_today">Gaurko estatistikak</string>
-    <string name="stats_insights_popular">Egun eta ordu jendetsuena</string>
     <string name="stats_insights_all_time">Inoizko bidalketa, ikustaldi eta bisitari guztiak</string>
     <string name="stats_insights">Ezagutzak</string>
     <string name="stats_sign_in_jetpack_different_com_account">Zure estatistikak ikusteko, hasi saioa Jetpack konektatzeko erabili zenuen WordPress.com kontuarekin.</string>

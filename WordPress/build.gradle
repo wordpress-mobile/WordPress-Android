@@ -43,8 +43,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-144"
-        versionCode 658
+        versionName "alpha-145"
+        versionCode 660
         minSdkVersion 21
         targetSdkVersion 26
 
@@ -177,8 +177,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.6.1'
     testImplementation 'org.robolectric:shadows-multidex:3.6.1'
-    testImplementation 'org.mockito:mockito-core:2.20.1'
-    testImplementation 'com.nhaarman:mockito-kotlin:1.6.0'
+    testImplementation 'org.mockito:mockito-core:2.23.0'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
     testImplementation 'org.assertj:assertj-core:3.11.1'
 
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
@@ -237,8 +237,8 @@ dependencies {
     debugImplementation 'com.facebook.stetho:stetho:1.5.0'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 }

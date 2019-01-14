@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.pages
 
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -13,7 +14,8 @@ import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventTyp
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPDATE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
 import javax.inject.Inject
-import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
 
 class ActionPerformer
 @Inject constructor(private val dispatcher: Dispatcher) {
@@ -34,7 +36,7 @@ class ActionPerformer
     suspend fun performAction(action: PageAction) {
         val result = suspendCoroutineWithTimeout<Pair<Boolean, Long>>(ACTION_TIMEOUT) { continuation ->
             continuations[action.remoteId to action.event] = continuation
-            launch { action.perform() }
+            GlobalScope.launch { action.perform() }
         }
         continuations.remove(action.remoteId to action.event)
 

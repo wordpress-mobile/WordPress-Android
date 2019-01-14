@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -1010,15 +1011,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setModerateButtonForStatus(CommentStatus status) {
+        int color;
+
         if (status == CommentStatus.APPROVED) {
-            mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_orange_jazzy_24dp);
+            color = ContextCompat.getColor(getActivity(), R.color.orange_jazzy);
             mBtnModerateTextView.setText(R.string.comment_status_approved);
-            mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.orange_jazzy));
         } else {
-            mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_grey_min_24dp);
+            color = ContextCompat.getColor(getActivity(), R.color.grey_text_min);
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
-            mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey_text_min));
         }
+
+        mBtnModerateIcon.setImageTintList(ColorStateList.valueOf(color));
+        mBtnModerateTextView.setTextColor(color);
     }
 
     /*
@@ -1136,19 +1140,24 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void toggleLikeButton(boolean isLiked) {
+        int color;
+        int drawable;
+
         if (isLiked) {
+            color = ContextCompat.getColor(getActivity(), R.color.orange_jazzy);
+            drawable = R.drawable.ic_star_orange_jazzy_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
-            mBtnLikeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.orange_jazzy));
-            mBtnLikeIcon
-                    .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_orange_jazzy_24dp));
             mBtnLikeComment.setActivated(true);
         } else {
+            color = ContextCompat.getColor(getActivity(), R.color.grey_text_min);
+            drawable = R.drawable.ic_star_outline_grey_min_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
-            mBtnLikeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey_text_min));
-            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                    R.drawable.ic_star_outline_grey_min_24dp));
             mBtnLikeComment.setActivated(false);
         }
+
+        mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), drawable));
+        mBtnLikeIcon.setImageTintList(ColorStateList.valueOf(color));
+        mBtnLikeTextView.setTextColor(color);
     }
 
     private void setProgressVisible(boolean visible) {

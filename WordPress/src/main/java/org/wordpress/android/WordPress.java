@@ -485,6 +485,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         if (mCredentialsClient != null && mCredentialsClient.isConnected()) {
             Auth.CredentialsApi.disableAutoSignIn(mCredentialsClient);
         }
+
+        // Once fully logged out refresh the metadata so the user information doesn't persist for logged out events
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
     }
 
     @SuppressWarnings("unused")
