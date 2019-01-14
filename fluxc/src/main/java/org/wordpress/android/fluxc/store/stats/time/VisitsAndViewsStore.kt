@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.store.stats.time
 
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPO
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class VisitsAndViewsStore
@@ -35,7 +35,11 @@ class VisitsAndViewsStore
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, granularity, date)
-                OnStatsFetched(timeStatsMapper.map(payload.response))
+                val overviewResponse = timeStatsMapper.map(payload.response)
+                if (overviewResponse.period.isBlank() || overviewResponse.dates.isEmpty())
+                    OnStatsFetched(StatsError(INVALID_RESPONSE, "Overview: Required data 'period' or 'dates' missing"))
+                else
+                    OnStatsFetched(overviewResponse)
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
