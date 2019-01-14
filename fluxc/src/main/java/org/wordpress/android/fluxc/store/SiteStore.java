@@ -1288,7 +1288,7 @@ public class SiteStore extends Store {
                 handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
                 break;
             case COMPLETE_QUICK_START:
-                completeQuickStart((SiteModel) action.getPayload());
+                completeQuickStart((CompleteQuickStartPayload) action.getPayload());
                 break;
             case COMPLETED_QUICK_START:
                 handleQuickStartCompleted((QuickStartCompletedResponsePayload) action.getPayload());
@@ -1639,8 +1639,8 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void completeQuickStart(@NonNull SiteModel site) {
-        mSiteRestClient.completeQuickStart(site);
+    private void completeQuickStart(@NonNull CompleteQuickStartPayload payload) {
+        mSiteRestClient.completeQuickStart(payload.site, payload.variant);
     }
 
     private void handleQuickStartCompleted(QuickStartCompletedResponsePayload payload) {
