@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.persistence
+package org.wordpress.android.fluxc.persistence.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
@@ -10,21 +10,21 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.F
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.ALL_TIME_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COMMENTS_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAIL_FOLLOWERS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_STATS_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TAGS_AND_CATEGORIES_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TODAYS_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.WP_COM_FOLLOWERS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.INSIGHTS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.ALL_TIME_INSIGHTS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.COMMENTS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.EMAIL_FOLLOWERS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.LATEST_POST_STATS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.TAGS_AND_CATEGORIES_INSIGHTS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.TODAYS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.WP_COM_FOLLOWERS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.StatsType.INSIGHTS
 import javax.inject.Inject
 import javax.inject.Singleton
 

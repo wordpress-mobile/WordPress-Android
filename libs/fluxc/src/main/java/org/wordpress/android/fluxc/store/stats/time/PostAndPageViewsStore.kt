@@ -6,10 +6,10 @@ import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
-import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
-import org.wordpress.android.fluxc.store.StatsStore.StatsError
-import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.persistence.stats.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.store.stats.StatsStore.OnStatsFetched
+import org.wordpress.android.fluxc.store.stats.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.stats.StatsStore.StatsErrorType.INVALID_RESPONSE
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
