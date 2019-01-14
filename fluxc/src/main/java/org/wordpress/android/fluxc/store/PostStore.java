@@ -696,21 +696,6 @@ public class PostStore extends Store {
         emitChange(onPostChanged);
     }
 
-    private void handleFetchSinglePostCheckLocallyChanged(FetchPostResponsePayload payload) {
-        // Process a fetch action for a post only if it doesn't have local changes
-        // as we'd otherwise overwrite and lose these local changes forever
-        PostModel localPost = getPostByRemotePostId(payload.post.getRemotePostId(), payload.site);
-        if (localPost == null || !localPost.isLocallyChanged()) {
-            updatePost(payload.post, false);
-        }
-            if (!localPost.isLocallyChanged()) {
-                updatePost(payload.post, false);
-            }
-        } else {
-            updatePost(payload.post, false);
-        }
-    }
-
     private void handleFetchSinglePostCompleted(FetchPostResponsePayload payload) {
         if (payload.origin == PostAction.PUSH_POST) {
             OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
@@ -732,11 +717,7 @@ public class PostStore extends Store {
             event.error = payload.error;
             emitChange(event);
         } else {
-            if (payload.origin == PostAction.FETCH_POST) {
-                handleFetchSinglePostCheckLocallyChanged(payload);
-            } else {
-                updatePost(payload.post, false);
-            }
+            updatePost(payload.post, false);
         }
     }
 
