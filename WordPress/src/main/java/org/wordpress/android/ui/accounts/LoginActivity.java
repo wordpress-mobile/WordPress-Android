@@ -590,7 +590,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         loggedInAndFinish(oldSitesIds, false);
     }
 
-
     @Override
     public void helpEmailScreen(String email) {
         viewHelpAndSupport(Origin.LOGIN_EMAIL);
