@@ -10,7 +10,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/two_line_list_item_height"
         android:background="?attr/selectableItemBackground">
 
         <ImageButton
@@ -21,24 +21,12 @@
             android:contentDescription="@string/show_more_desc"
             android:paddingEnd="@dimen/page_item_horizontal_padding"
             android:paddingStart="@dimen/page_item_horizontal_padding"
-            android:src="@drawable/ic_ellipsis_white_24dp"
+            android:src="@drawable/ic_ellipsis_vertical_white_48dp"
             android:tint="@color/grey_darken_10"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/large_stretcher"
-            android:layout_width="1dp"
-            android:layout_height="@dimen/two_line_list_item_height"
-            android:visibility="visible" />
-
-        <View
-            android:id="@+id/small_stretcher"
-            android:layout_width="1dp"
-            android:layout_height="@dimen/one_line_list_item_height"
-            android:visibility="gone" />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
@@ -57,24 +45,28 @@
                 android:layout_height="wrap_content"
                 tools:text="First pag ds ds sddsdsds ds ds dsdse adsd"/>
 
-            <include
-                layout="@layout/page_list_tag"
-                android:id="@+id/first_label"
+            <org.wordpress.android.widgets.WPTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:id="@+id/time_posted"
+                android:textSize="14sp"
+                android:textColor="@color/grey_darken_20"
+                android:layout_marginTop="3dp"
+                tools:text="2 days ago"
                 app:layout_constraintStart_toStartOf="@id/page_title"
-                app:layout_constraintTop_toBottomOf="@+id/page_title" />
+                app:layout_constraintTop_toBottomOf="@+id/page_title"/>
 
-            <include
-                android:id="@+id/second_label"
-                layout="@layout/page_list_tag"
+            <org.wordpress.android.widgets.WPTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="6dp"
-                app:layout_constraintStart_toEndOf="@+id/first_label"
-                app:layout_constraintTop_toBottomOf="@+id/page_title"/>
+                android:id="@+id/labels"
+                android:textColor="@color/alert_yellow_dark"
+                android:textSize="14sp"
+                android:layout_marginTop="3dp"
+                android:layout_marginStart="8dp"
+                tools:text="Local Draft"
+                app:layout_constraintStart_toEndOf="@+id/time_posted"
+                app:layout_constraintTop_toBottomOf="@+id/page_title" />
 
         </android.support.constraint.ConstraintLayout>
 
