@@ -3,6 +3,6 @@
 * Update the Me tab layout for tablets and large devices
 * Use a more meaningful message for empty blocks in day/week/month/year Stats tabs
 * Fix the pages menu visibility issue after editing a page
+* Add privacy settings to enable removing of geolocation from the uploaded images
 * Fix the broken offline mode in Pages
 * Fix the error when editing a new page
-* Add privacy settings to enable removing of geolocation from the uploaded images
