@@ -16,14 +16,16 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
+import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener;
+import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AniUtils.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -34,6 +36,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         OnQuickStartAdapterActionListener {
     private FullScreenDialogController mDialogController;
     private QuickStartAdapter mQuickStartAdapter;
+    private ActionableEmptyView mQuickStartCompleteView;
 
     public static final String KEY_COMPLETED_TASKS_LIST_EXPANDED = "completed_tasks_list_expanded";
     public static final String EXTRA_TYPE = "EXTRA_TYPE";
@@ -70,20 +73,26 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         List<QuickStartTask> tasksCompleted = new ArrayList<>();
         int site = AppPrefs.getSelectedSite();
 
-        switch (Objects.requireNonNull(mTasksType)) {
+        mQuickStartCompleteView = rootView.findViewById(R.id.quick_start_complete_view);
+
+        switch (mTasksType) {
             case CUSTOMIZE:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
+                setCompleteViewImage(R.drawable.img_illustration_completed_quick_start_customize_191dp);
                 break;
             case GROW:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, GROW));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, GROW));
+                setCompleteViewImage(R.drawable.img_illustration_completed_quick_start_grow_182dp);
                 break;
             case UNKNOWN:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
+                setCompleteViewImage(R.drawable.img_illustration_completed_quick_start_customize_191dp);
                 break;
         }
+
 
         boolean isCompletedTasksListExpanded = savedInstanceState != null
                                                && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
@@ -93,6 +102,11 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 tasksUncompleted,
                 tasksCompleted,
                 isCompletedTasksListExpanded);
+
+        if (tasksUncompleted.isEmpty()) {
+            mQuickStartCompleteView.setVisibility(!isCompletedTasksListExpanded ? View.VISIBLE : View.GONE);
+        }
+
         mQuickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
         list.setLayoutManager(new LinearLayoutManager(requireContext()));
         list.setAdapter(mQuickStartAdapter);
@@ -139,9 +153,36 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), task, true);
         if (mQuickStartAdapter != null) {
             int site = AppPrefs.getSelectedSite();
+
+            List<QuickStartTask> uncompletedTasks = mQuickStartStore.getUncompletedTasksByType(site, mTasksType);
+
             mQuickStartAdapter.updateContent(
-                    mQuickStartStore.getUncompletedTasksByType(site, mTasksType),
+                    uncompletedTasks,
                     mQuickStartStore.getCompletedTasksByType(site, mTasksType));
+
+            if (uncompletedTasks.isEmpty() && !mQuickStartAdapter.isCompletedTasksListExpanded()) {
+                toggleCompletedView(true);
+            }
+        }
+    }
+
+    @Override
+    public void onCompletedTasksListToggled(boolean isExpanded) {
+        if (mQuickStartStore.getUncompletedTasksByType(AppPrefs.getSelectedSite(), mTasksType).isEmpty()) {
+            toggleCompletedView(!isExpanded);
+        }
+    }
+
+    private void setCompleteViewImage(int imageResourceId) {
+        mQuickStartCompleteView.image.setImageResource(imageResourceId);
+        mQuickStartCompleteView.image.setVisibility(View.VISIBLE);
+    }
+
+    private void toggleCompletedView(boolean isVisible) {
+        if (isVisible) {
+            AniUtils.fadeIn(mQuickStartCompleteView, Duration.SHORT);
+        } else {
+            AniUtils.fadeOut(mQuickStartCompleteView, Duration.SHORT);
         }
     }
 }
