@@ -55,7 +55,6 @@ public interface LoginListener {
     void saveCredentialsInSmartLock(@Nullable String username, @Nullable String password,
                                     @NonNull String displayName, @Nullable Uri profilePicture);
     void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds);
-    void loggedInToSelfHostedWebsite(ArrayList<Integer> oldSitesIds, int siteId);
     void helpUsernamePassword(String url, String username, boolean isWpcom);
 
     // Login 2FA screen callbacks
