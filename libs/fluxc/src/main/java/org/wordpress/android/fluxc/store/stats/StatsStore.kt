@@ -3,9 +3,8 @@ package org.wordpress.android.fluxc.store.stats
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.InsightTypeModel
-import org.wordpress.android.fluxc.model.stats.InsightTypeModel.Status.ADDED
-import org.wordpress.android.fluxc.model.stats.InsightTypeModel.Status.REMOVED
+import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel.Status.REMOVED
+import org.wordpress.android.fluxc.model.stats.InsightTypesModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.CENSORED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.HTTP_AUTH_ERROR
@@ -49,95 +48,70 @@ class StatsStore
     private val coroutineContext: CoroutineContext,
     private val insightTypesSqlUtils: InsightTypesSqlUtils
 ) {
-    private val defaultList = listOf(
-            InsightTypeModel(LATEST_POST_SUMMARY, ADDED, 0),
-            InsightTypeModel(TODAY_STATS, ADDED, 1),
-            InsightTypeModel(ALL_TIME_STATS, ADDED, 2),
-            InsightTypeModel(POSTING_ACTIVITY, ADDED, 3)
-    )
+    private val defaultList = listOf(LATEST_POST_SUMMARY, TODAY_STATS, ALL_TIME_STATS, POSTING_ACTIVITY)
 
     suspend fun getInsights(site: SiteModel): List<InsightsTypes> = withContext(coroutineContext) {
-        val cachedData = insightTypesSqlUtils.getOrderedInsightTypesByStatus(site, ADDED)
-        val data = if (cachedData.isNotEmpty()) {
+        val cachedData = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
+
+        return@withContext if (cachedData.isNotEmpty()) {
             cachedData
         } else {
             defaultList
         }
-
-        return@withContext data.map { it.type }
     }
 
-    private suspend fun getSafeInsightTypes(site: SiteModel) = withContext(coroutineContext) {
-        val cachedData = insightTypesSqlUtils.getInsightTypes(site)
+    suspend fun getInsightsManagementModel(site: SiteModel) = withContext(coroutineContext) {
+        val cachedData = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
         return@withContext if (cachedData.isNotEmpty()) {
-            cachedData
+            InsightTypesModel(cachedData, insightTypesSqlUtils.selectRemovedItemsOrderedByStatus(site))
         } else {
-            val defaultTypes = defaultList.map { it.type }
-            defaultList + InsightsTypes.values().filter { !defaultTypes.contains(it) }.map {
-                InsightTypeModel(
-                        it,
-                        REMOVED,
-                        null
-                )
-            }
+            InsightTypesModel(defaultList, InsightsTypes.values().filter { !defaultList.contains(it) })
         }
     }
 
-    suspend fun updateTypes(
-        site: SiteModel,
-        addedTypes: List<InsightsTypes>,
-        removedTypes: List<InsightsTypes>
-    ) = withContext(coroutineContext) {
-        val mappedAddedTypes = addedTypes.mapIndexed { index, insightsTypes ->
-            InsightTypeModel(
-                    insightsTypes,
-                    ADDED,
-                    index
-            )
-        }
-        val mappedRemovedTypes = removedTypes.map { insightsTypes -> InsightTypeModel(insightsTypes, REMOVED, null) }
-        val insightsTypes = mappedAddedTypes + mappedRemovedTypes
-        insightTypesSqlUtils.insertInsightTypes(site, insightsTypes)
-        return@withContext getSafeInsightTypes(site).map { it.type }
+    suspend fun updateTypes(site: SiteModel, model: InsightTypesModel) = withContext(coroutineContext) {
+        insightTypesSqlUtils.insertOrReplaceAddedItems(site, model.addedTypes)
+        insightTypesSqlUtils.insertOrReplaceRemovedItems(site, model.removedTypes)
     }
 
     suspend fun moveTypeUp(site: SiteModel, type: InsightsTypes) {
-        val insightTypes = getSafeInsightTypes(site)
-        insightTypes.find { it.type == type }?.let { movedType ->
-            val movedTypePosition = movedType.position ?: -1
-            val target = insightTypes.filter {
-                it.position != null && movedType.position != null && it.position < movedType.position
-            }.sortedBy { it.position }.lastOrNull()
-            if (target != null) {
-                val updatedList = insightTypes.filter { it.type != type && it.type != target.type } + movedType.copy(
-                        position = target.position
-                ) + target.copy(position = movedType.position)
-                insightTypesSqlUtils.insertInsightTypes(site, updatedList)
+        val insightTypes = getInsights(site)
+        val indexOfMovedItem = insightTypes.indexOf(type)
+        if (indexOfMovedItem > 0 && indexOfMovedItem < insightTypes.size) {
+            val updatedInsights = mutableListOf<InsightsTypes>()
+            val switchedItemIndex = indexOfMovedItem - 1
+            if (indexOfMovedItem > 1) {
+                updatedInsights.addAll(insightTypes.subList(0, switchedItemIndex))
             }
+            updatedInsights.add(type)
+            updatedInsights.add(insightTypes[switchedItemIndex])
+            if (indexOfMovedItem + 1 < insightTypes.size) {
+                updatedInsights.addAll(insightTypes.subList(indexOfMovedItem + 1, insightTypes.size))
+            }
+            insightTypesSqlUtils.updatePositions(site, updatedInsights)
         }
     }
 
     suspend fun moveTypeDown(site: SiteModel, type: InsightsTypes) {
-        val insightTypes = getSafeInsightTypes(site)
-        insightTypes.find { it.type == type }?.let { movedType ->
-            val target = insightTypes.filter {
-                it.position != null && movedType.position != null && it.position > movedType.position
-            }.sortedBy { it.position }.firstOrNull()
-            if (target != null) {
-                val updatedList = insightTypes.filter { it.type != type && it.type != target.type } + movedType.copy(
-                        position = target.position
-                ) + target.copy(position = movedType.position)
-                insightTypesSqlUtils.insertInsightTypes(site, updatedList)
+        val insightTypes = getInsights(site)
+        val indexOfMovedItem = insightTypes.indexOf(type)
+        if (indexOfMovedItem >= 0 && indexOfMovedItem < insightTypes.size - 1) {
+            val updatedInsights = mutableListOf<InsightsTypes>()
+            val switchedItemIndex = indexOfMovedItem + 1
+            if (indexOfMovedItem > 0) {
+                updatedInsights.addAll(insightTypes.subList(0, indexOfMovedItem))
             }
+            updatedInsights.add(insightTypes[switchedItemIndex])
+            updatedInsights.add(type)
+            if (switchedItemIndex + 1 < insightTypes.size) {
+                updatedInsights.addAll(insightTypes.subList(switchedItemIndex + 1, insightTypes.size))
+            }
+            insightTypesSqlUtils.updatePositions(site, updatedInsights)
         }
     }
 
-    suspend fun removeType(site: SiteModel, type: InsightsTypes) {
-        val insightTypes = getSafeInsightTypes(site)
-        insightTypes.find { it.type == type }?.let { movedType ->
-            val updatedList = insightTypes.filter { it.type != type } + movedType.copy(status = REMOVED)
-            insightTypesSqlUtils.insertInsightTypes(site, updatedList)
-        }
+    suspend fun removeType(site: SiteModel, type: InsightsTypes) = withContext(coroutineContext) {
+        insightTypesSqlUtils.updateStatus(site, type, REMOVED)
     }
 
     suspend fun getTimeStatsTypes(): List<TimeStatsTypes> = withContext(coroutineContext) {
