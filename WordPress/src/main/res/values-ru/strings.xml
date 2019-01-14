@@ -1,11 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-04 13:36:11+0000
+Translation-Revision-Date: 2018-12-21 20:52:52+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">Выберите доступный адрес для вашего сайта.</string>
+    <string name="giphy_powered_by_giphy">Работает с GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">Некоторые медиафайлы не загрузились из-за ошибки сети.</string>
+    <string name="giphy_picker_empty_search_list">Мультимедиа по критериям поиска не найдены</string>
+    <string name="giphy_picker_initial_empty_text">Найдите GIF изображения и добавьте их в медиатеку!</string>
+    <string name="giphy_picker_search_hint">Поиск в Giphy</string>
+    <string name="photo_picker_giphy">Выберите из Giphy</string>
+    <string name="stats_author_views_label">Просмотры</string>
+    <string name="stats_author_label">Автор</string>
+    <string name="stats_authors">Авторы</string>
+    <string name="stats_search_terms_views_label">Просмотры</string>
+    <string name="stats_search_terms_label">Поисковая фраза</string>
+    <string name="stats_search_terms">Поисковые фразы</string>
+    <string name="stats_videos_views_label">Просмотры</string>
+    <string name="stats_videos_title_label">Название</string>
+    <string name="stats_videos">Видео</string>
+    <string name="stats_country_views_label">Просмотры</string>
+    <string name="stats_country_label">Страна</string>
+    <string name="stats_countries">Страны</string>
+    <string name="stats_clicks_label">Переходы</string>
+    <string name="stats_clicks_link_label">Ссылка</string>
+    <string name="stats_clicks">Переходы</string>
+    <string name="stats_referrer_views_label">Просмотры</string>
+    <string name="stats_referrer_label">Ссылающийся сайт</string>
+    <string name="stats_referrers">Ссылающиеся сайты</string>
+    <string name="stats_posts_and_pages">Страницы и записи</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">Путь</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">Посмотреть больше</string>
+    <string name="stats_insights_share_post">Поделиться записью</string>
+    <string name="stats_insights_create_post">Создать запись</string>
+    <string name="stats_insights_latest_post_message">Прошло уже %1$s с публикации %2$s. Вот статистика по этой записи</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Прошло уже %1$s с публикации %2$s. Мяч на вашей стороне, поделитесь записью и увеличьте число просмотров.</string>
+    <string name="stats_insights_latest_post_empty">Вы еще не опубликовали ни одной записи. Как только вы это сделаете, статистика по последней записи появится здесь.</string>
+    <string name="stats_insights_tags_and_categories">Метки и рубрики</string>
+    <string name="stats_insights_all_time_stats">Статистика за всё время</string>
+    <string name="stats_insights_most_popular_views_label">Просмотры</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">День/час</string>
+    <string name="stats_insights_today_stats">Статистика за сегодня</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">Подписчики</string>
+    <string name="stats_publicize_service_label">Служба</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">Просмотры</string>
+    <string name="stats_tags_and_categories_title_label">Название</string>
+    <string name="stats_posts_and_pages_views_label">Просмотры</string>
+    <string name="stats_posts_and_pages_title_label">Название</string>
+    <string name="stats_comments_label">Комментарии</string>
+    <string name="stats_comments_title_label">Название</string>
+    <string name="stats_comments_author_label">Автор</string>
+    <string name="stats_comments_posts_and_pages">Записи и страницы</string>
+    <string name="stats_comments_authors">Авторы</string>
+    <string name="stats_follower_since_label">с</string>
+    <string name="stats_follower_label">Подписчик</string>
+    <string name="stats_followers_count_message">Всего %1$s Подписчики: %2$s</string>
+    <string name="stats_followers_email">Email</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">Настроить статистику</string>
+    <string name="stats_empty_insights_description">Настройте вашу статистику и узнайте важное чем живет ваш сайт.</string>
+    <string name="stats_empty_insights_title">Еще нет статистики</string>
+    <string name="stats_no_data_yet">Пока нет данных</string>
     <string name="menu_debug">Меню отладки</string>
     <string name="preference_experimental">* ЭКСПЕРИМЕНТ *</string>
     <string name="site_settings_enable_gutenberg_summary">Это пока еще экспериментальная версия Gutenberg</string>
@@ -482,7 +548,6 @@ Language: ru
     <string name="site_creation_title_hint">Название сайта</string>
     <string name="site_creation_domain_finish_button">Создать сайт</string>
     <string name="site_creation_domain_keywords_hint">Введите ключевое слово для большего количества идей</string>
-    <string name="site_creation_label_domain_selection">Выберите доступный адрес \"вашеимя.wordpress.com\".</string>
     <string name="site_creation_label_domain_selection_title">Шаг 4 из 4</string>
     <string name="site_creation_label_site_details">Расскажите нам больше о том, что создаете. Какое будет название и слоган?</string>
     <string name="site_creation_label_site_details_title">Шаг 3 из 4</string>
