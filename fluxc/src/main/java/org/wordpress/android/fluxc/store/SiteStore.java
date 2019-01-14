@@ -52,9 +52,12 @@ import javax.inject.Singleton;
 public class SiteStore extends Store {
     // Payloads
     public static class CompleteQuickStartPayload extends Payload<BaseNetworkError> {
-        public CompleteQuickStartPayload() {}
         public SiteModel site;
         public String variant;
+        public CompleteQuickStartPayload(@NonNull SiteModel site, String variant) {
+            this.site = site;
+            this.variant = variant;
+        }
     }
 
     public static class RefreshSitesXMLRPCPayload extends Payload<BaseNetworkError> {
