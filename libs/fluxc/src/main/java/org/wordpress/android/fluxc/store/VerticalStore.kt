@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.vertical.VerticalRestClien
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 private const val DEFAULT_FETCH_VERTICAL_LIMIT = 5
 

@@ -1,9 +1,9 @@
 package org.wordpress.android.fluxc.store.stats.time
 
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Dispatchers.Unconfined
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.Dispatchers.Unconfined
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -54,13 +54,30 @@ class VisitsAndViewsStoreTest {
         whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE, forced)).thenReturn(
                 fetchInsightsPayload
         )
-        val model = mock<VisitsAndViewsModel>()
-        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(model)
+        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(VISITS_AND_VIEWS_MODEL)
 
         val responseModel = store.fetchVisits(site, PAGE_SIZE, DATE, DAYS, forced)
 
-        assertThat(responseModel.model).isEqualTo(model)
+        assertThat(responseModel.model).isEqualTo(VISITS_AND_VIEWS_MODEL)
         verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, DATE)
+    }
+
+    @Test
+    fun `returns error when invalid data`() = test {
+        val forced = true
+        val fetchInsightsPayload = FetchStatsPayload(
+                VISITS_AND_VIEWS_RESPONSE
+        )
+        whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE, forced)).thenReturn(
+                fetchInsightsPayload
+        )
+        val emptyModel = VisitsAndViewsModel("", emptyList())
+        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(emptyModel)
+
+        val responseModel = store.fetchVisits(site, PAGE_SIZE, DATE, DAYS, forced)
+
+        assertThat(responseModel.error.type).isEqualTo(INVALID_DATA_ERROR.type)
+        assertThat(responseModel.error.message).isEqualTo(INVALID_DATA_ERROR.message)
     }
 
     @Test
