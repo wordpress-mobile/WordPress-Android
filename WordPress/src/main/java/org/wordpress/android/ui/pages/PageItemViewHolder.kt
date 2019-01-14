@@ -11,14 +11,14 @@ import android.widget.PopupMenu
 import android.widget.RadioButton
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
+import java.util.Date
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -28,17 +28,15 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         parentView: ViewGroup,
         private val onMenuAction: (PageItem.Action, Page) -> Boolean,
         private val onItemTapped: (Page) -> Unit
-    ) : PageItemViewHolder(parentView, layout.page_list_item) {
-        private val pageTitle = itemView.findViewById<TextView>(id.page_title)
-        private val pageMore = itemView.findViewById<ImageButton>(id.page_more)
-        private val firstLabel = itemView.findViewById<TextView>(id.first_label)
-        private val secondLabel = itemView.findViewById<TextView>(id.second_label)
-        private val pageItemContainer = itemView.findViewById<ViewGroup>(id.page_item)
-        private val largeStretcher = itemView.findViewById<View>(id.large_stretcher)
-        private val smallStretcher = itemView.findViewById<View>(id.small_stretcher)
+    ) : PageItemViewHolder(parentView, R.layout.page_list_item) {
+        private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
+        private val pageMore = itemView.findViewById<ImageButton>(R.id.page_more)
+        private val time = itemView.findViewById<TextView>(R.id.time_posted)
+        private val labels = itemView.findViewById<TextView>(R.id.labels)
+        private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
 
         override fun onBind(pageItem: PageItem) {
-            (pageItem as Page).apply {
+            (pageItem as Page).let {
                 val indentWidth = DisplayUtils.dpToPx(parent.context, 16 * pageItem.indent)
                 val marginLayoutParams = pageItemContainer.layoutParams as ViewGroup.MarginLayoutParams
                 marginLayoutParams.leftMargin = indentWidth
@@ -49,27 +47,14 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 else
                     pageItem.title
 
-                if (pageItem.labels.isEmpty()) {
-                    firstLabel.visibility = View.GONE
-                    smallStretcher.visibility = View.VISIBLE
-                    largeStretcher.visibility = View.GONE
-                } else {
-                    firstLabel.text = parent.context.getString(pageItem.labels.first())
-                    firstLabel.visibility = View.VISIBLE
-                    smallStretcher.visibility = View.GONE
-                    largeStretcher.visibility = View.VISIBLE
-                }
+                val date = if (pageItem.date == Date(0)) Date() else pageItem.date
+                time.text = DateTimeUtils.javaDateToTimeSpan(date, parent.context).capitalize()
 
-                if (pageItem.labels.size <= 1) {
-                    secondLabel.visibility = View.GONE
-                } else {
-                    secondLabel.text = parent.context.getString(pageItem.labels[1])
-                    secondLabel.visibility = View.VISIBLE
-                }
+                labels.text = pageItem.labels.map { parent.context.getString(it) }.sorted().joinToString(" · ")
 
                 itemView.setOnClickListener { onItemTapped(pageItem) }
 
-                pageMore.setOnClickListener { moreClick(pageItem, it) }
+                pageMore.setOnClickListener { view -> moreClick(pageItem, view) }
                 pageMore.visibility =
                         if (pageItem.actions.isNotEmpty() && pageItem.actionsEnabled) View.VISIBLE else View.INVISIBLE
             }
@@ -89,8 +74,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         }
     }
 
-    class PageDividerViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, layout.page_divider_item) {
-        private val dividerTitle = itemView.findViewById<TextView>(id.divider_text)
+    class PageDividerViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, R.layout.page_divider_item) {
+        private val dividerTitle = itemView.findViewById<TextView>(R.id.divider_text)
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as Divider).apply {
@@ -104,8 +89,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val onParentSelected: (ParentPage) -> Unit,
         @LayoutRes layout: Int
     ) : PageItemViewHolder(parentView, layout) {
-        private val pageTitle = itemView.findViewById<TextView>(id.page_title)
-        private val radioButton = itemView.findViewById<RadioButton>(id.radio_button)
+        private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
+        private val radioButton = itemView.findViewById<RadioButton>(R.id.radio_button)
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as ParentPage).apply {
@@ -131,8 +116,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
     class EmptyViewHolder(
         parentView: ViewGroup,
         private val onActionButtonClicked: () -> Unit
-    ) : PageItemViewHolder(parentView, layout.page_empty_item) {
-        private val emptyView = itemView.findViewById<ActionableEmptyView>(id.actionable_empty_view)
+    ) : PageItemViewHolder(parentView, R.layout.page_empty_item) {
+        private val emptyView = itemView.findViewById<ActionableEmptyView>(R.id.actionable_empty_view)
 
         @Suppress("DEPRECATION")
         override fun onBind(pageItem: PageItem) {
