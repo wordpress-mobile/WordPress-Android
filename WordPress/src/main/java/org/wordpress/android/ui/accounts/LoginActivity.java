@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -107,13 +108,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsJetpackConnect;
     private boolean mSignupSheetDisplayed;
-    private int mLoggedInSelfHostedSiteId = -1;
 
     private LoginMode mLoginMode;
 
     @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ZendeskHelper mZendeskHelper;
+    @Inject protected SiteStore mSiteStore;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -251,10 +252,25 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
-                // skip the epilogue when only added a self-hosted site or sharing to WordPress
+                // We are comparing list of site ID's before self-hosted site was added and after in hopes of finding
+                // newly added self-hosted site's ID, so it can be used to mark it as selected
+                ArrayList<Integer> currentSiteIds = new ArrayList<>();
+                int newlyAddedSiteId = -1;
+
+                for (SiteModel site : mSiteStore.getSites()) {
+                    currentSiteIds.add(site.getId());
+                }
+
+                currentSiteIds.removeAll(oldSitesIds);
+
+                if (currentSiteIds.size() == 1) {
+                    newlyAddedSiteId = currentSiteIds.get(0);
+                }
+
                 Intent intent = new Intent();
-                intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, mLoggedInSelfHostedSiteId);
+                intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, newlyAddedSiteId);
                 setResult(Activity.RESULT_OK, intent);
+                // skip the epilogue when only added a self-hosted site or sharing to WordPress
                 finish();
                 break;
         }
@@ -574,11 +590,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         loggedInAndFinish(oldSitesIds, false);
     }
 
-    @Override
-    public void loggedInToSelfHostedWebsite(ArrayList<Integer> oldSitesIds, int siteId) {
-        mLoggedInSelfHostedSiteId = siteId;
-        loggedInAndFinish(oldSitesIds, false);
-    }
 
     @Override
     public void helpEmailScreen(String email) {
