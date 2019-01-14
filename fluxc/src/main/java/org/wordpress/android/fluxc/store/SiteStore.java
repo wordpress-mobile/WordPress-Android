@@ -850,6 +850,21 @@ public class SiteStore extends Store {
         }
     }
 
+    public enum CompleteQuickStartVariant {
+        NEXT_STEPS("next-steps");
+
+        private final String mString;
+
+        CompleteQuickStartVariant(final String s) {
+            mString = s;
+        }
+
+        @Override
+        public String toString() {
+            return mString;
+        }
+    }
+
     private SiteRestClient mSiteRestClient;
     private SiteXMLRPCClient mSiteXMLRPCClient;
 
