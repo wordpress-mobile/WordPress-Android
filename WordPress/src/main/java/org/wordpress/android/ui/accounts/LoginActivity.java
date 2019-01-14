@@ -252,8 +252,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
-                // We are comparing list of site ID's before self-hosted site was added and after in hopes of finding
-                // newly added self-hosted site's ID, so it can be used to mark it as selected
+                // We are comparing list of site ID's before self-hosted site was added and after, trying to find a
+                // newly added self-hosted site's ID, so we can select it
                 ArrayList<Integer> currentSiteIds = new ArrayList<>();
                 int newlyAddedSiteId = -1;
 
