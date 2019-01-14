@@ -5,3 +5,4 @@
 * Fix the pages menu visibility issue after editing a page
 * Add privacy settings to enable removing of geolocation from the uploaded images
 * Fix the broken offline mode in Pages
+* Fix the error when editing a new page
