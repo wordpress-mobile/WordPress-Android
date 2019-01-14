@@ -700,7 +700,9 @@ public class PostStore extends Store {
         // Process a fetch action for a post only if it doesn't have local changes
         // as we'd otherwise overwrite and lose these local changes forever
         PostModel localPost = getPostByRemotePostId(payload.post.getRemotePostId(), payload.site);
-        if (localPost != null) {
+        if (localPost == null || !localPost.isLocallyChanged()) {
+            updatePost(payload.post, false);
+        }
             if (!localPost.isLocallyChanged()) {
                 updatePost(payload.post, false);
             }
