@@ -160,14 +160,14 @@ class PageListViewModel @Inject constructor() : ViewModel() {
                     if (it.hasLocalChanges)
                         labels.add(string.local_changes)
 
-                    PublishedPage(it.remoteId, it.title, labels, getPageItemIndent(it), actionsEnabled)
+                    PublishedPage(it.remoteId, it.title, it.date, labels, getPageItemIndent(it), actionsEnabled)
                 }
     }
 
     private fun prepareScheduledPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.asSequence().groupBy { it.date.toFormattedDateString() }
                 .map { (date, results) -> listOf(Divider(date)) +
-                        results.map { ScheduledPage(it.remoteId, it.title, actionsEnabled) }
+                        results.map { ScheduledPage(it.remoteId, it.title, it.date, actionsEnabled) }
                 }
                 .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
                     acc.addAll(list)
@@ -183,13 +183,13 @@ class PageListViewModel @Inject constructor() : ViewModel() {
             if (it.hasLocalChanges)
                 labels.add(string.local_draft)
 
-            DraftPage(it.remoteId, it.title, labels, actionsEnabled)
+            DraftPage(it.remoteId, it.title, it.date, labels, actionsEnabled)
         }
     }
 
     private fun prepareTrashedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.map {
-            TrashedPage(it.remoteId, it.title, actionsEnabled)
+            TrashedPage(it.remoteId, it.title, it.date, actionsEnabled)
         }
     }
 
