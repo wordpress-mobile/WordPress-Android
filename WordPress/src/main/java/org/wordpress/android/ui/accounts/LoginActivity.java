@@ -260,7 +260,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         AppLog.d(T.MAIN, "LoginActivity: onActivity Result - requestCode" + requestCode);
@@ -576,8 +575,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void loggedInSelfHostedWebsite(ArrayList<Integer> oldSitesIds, int remoteSiteId) {
-        mLoggedInSelfHostedSiteId = remoteSiteId;
+    public void loggedInToSelfHostedWebsite(ArrayList<Integer> oldSitesIds, int siteId) {
+        mLoggedInSelfHostedSiteId = siteId;
         loggedInAndFinish(oldSitesIds, false);
     }
 

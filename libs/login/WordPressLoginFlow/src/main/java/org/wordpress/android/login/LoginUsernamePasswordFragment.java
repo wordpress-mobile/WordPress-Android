@@ -464,7 +464,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
                 saveCredentialsInSmartLock(mLoginListener, mRequestedUsername, mRequestedPassword);
                 mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
             } else {
-                mLoginListener.loggedInSelfHostedWebsite(mOldSitesIDs, mLoggedInSelfHostedSiteId);
+                mLoginListener.loggedInToSelfHostedWebsite(mOldSitesIDs, mLoggedInSelfHostedSiteId);
             }
         }
 
