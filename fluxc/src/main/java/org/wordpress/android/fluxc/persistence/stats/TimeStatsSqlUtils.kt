@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.persistence
+package org.wordpress.android.fluxc.persistence.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
@@ -15,15 +15,15 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.AUTHORS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.CLICKS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COUNTRY_VIEWS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.REFERRERS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.SEARCH_TERMS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.VIDEO_PLAYS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.VISITS_AND_VIEWS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.AUTHORS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.CLICKS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.COUNTRY_VIEWS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.REFERRERS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.SEARCH_TERMS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.VIDEO_PLAYS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.BlockType.VISITS_AND_VIEWS
+import org.wordpress.android.fluxc.persistence.stats.StatsSqlUtils.StatsType
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton

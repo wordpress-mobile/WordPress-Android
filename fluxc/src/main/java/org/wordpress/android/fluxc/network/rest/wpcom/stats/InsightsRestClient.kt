@@ -14,8 +14,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
-import org.wordpress.android.fluxc.store.toStatsError
+import org.wordpress.android.fluxc.store.stats.StatsStore.FetchStatsPayload
+import org.wordpress.android.fluxc.store.stats.toStatsError
 import java.util.Date
 import javax.inject.Singleton
 
