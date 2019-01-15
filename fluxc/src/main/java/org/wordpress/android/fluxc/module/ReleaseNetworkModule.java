@@ -330,6 +330,7 @@ public class ReleaseNetworkModule {
         gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrFalse.class, new JsonObjectOrFalseDeserializer());
         gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrEmptyArray.class,
                 new JsonObjectOrEmptyArrayDeserializer());
+        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         return gsonBuilder.create();
     }
 }
