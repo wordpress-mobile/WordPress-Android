@@ -82,7 +82,6 @@ Language: da_DK
     <string name="stats_insights_most_popular_hour">Mest populære time</string>
     <string name="stats_insights_most_popular_day">Mest populære dag</string>
     <string name="stats_insights_today">Dagens statistikker</string>
-    <string name="stats_insights_popular">Mest populære dag og time</string>
     <string name="stats_insights_all_time">Totale indlæg, visninger og besøgende</string>
     <string name="stats_insights">Indsigt</string>
     <string name="me_disconnect_from_wordpress_com">Afbryd forbindelse til WordPress.com</string>

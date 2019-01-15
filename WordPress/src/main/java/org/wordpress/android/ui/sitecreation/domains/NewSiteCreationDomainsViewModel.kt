@@ -5,11 +5,11 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
 import android.support.annotation.VisibleForTesting
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
@@ -34,10 +34,10 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
-private const val THROTTLE_DELAY: Int = 500
+private const val THROTTLE_DELAY = 500L
 
 class NewSiteCreationDomainsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,

@@ -8,8 +8,9 @@ import org.wordpress.android.fluxc.store.VerticalStore
 import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentPromptPayload
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentPromptFetched
 import javax.inject.Inject
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Transforms newFetchSegmentPromptAction EventBus event to a coroutine.

@@ -3,11 +3,11 @@ package org.wordpress.android.ui.sitecreation
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -35,10 +35,10 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
-private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000
-private const val DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER = 1000
+private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
+private const val DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER = 1000L
 
 class NewSitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -158,6 +158,7 @@ class NewSitePreviewViewModel @Inject constructor(
      * to the EventBus from the ViewModel and we have to use `sticky` events instead.
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND, sticky = true)
+    @Suppress("unused")
     fun onSiteCreationServiceStateUpdated(event: NewSiteCreationServiceState) {
         if (lastReceivedServiceState == event) return // filter out events which we've already received
         lastReceivedServiceState = event

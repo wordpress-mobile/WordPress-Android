@@ -1,11 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-11 13:54:06+0000
+Translation-Revision-Date: 2019-01-02 10:54:07+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">حدد عنوانًا متاحًا للسماح للأشخاص بالبحث عنك على الويب.</string>
+    <string name="giphy_powered_by_giphy">مدعون من GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">فشل تحميل بعض الوسائط بسبب وجود خطأ في الشبكة.</string>
+    <string name="giphy_picker_empty_search_list">لا توجد وسائط مطابقة لبحثك</string>
+    <string name="giphy_picker_initial_empty_text">ابحث للعثور على صور بتنسيق GIF لإضافتها إلى مكتبة الوسائط الخاصة بك!</string>
+    <string name="giphy_picker_search_hint">البحث في Giphy</string>
+    <string name="photo_picker_giphy">اختيار من Giphy</string>
+    <string name="stats_author_views_label">مشاهدات</string>
+    <string name="stats_author_label">الكاتب</string>
+    <string name="stats_authors">الكُتّاب</string>
+    <string name="stats_search_terms_views_label">مشاهدات</string>
+    <string name="stats_search_terms_label">مصطلح البحث</string>
+    <string name="stats_search_terms">مصطلحات البحث</string>
+    <string name="stats_videos_views_label">مشاهدات</string>
+    <string name="stats_videos_title_label">العنوان</string>
+    <string name="stats_videos">الفيديوهات</string>
+    <string name="stats_country_views_label">مشاهدات</string>
+    <string name="stats_country_label">البلد</string>
+    <string name="stats_countries">البلدان</string>
+    <string name="stats_clicks_label">نقرات</string>
+    <string name="stats_clicks_link_label">الرابط</string>
+    <string name="stats_clicks">نقرات</string>
+    <string name="stats_referrer_views_label">مشاهدات</string>
+    <string name="stats_referrer_label">توجيه</string>
+    <string name="stats_referrers">التوجيهات</string>
+    <string name="stats_posts_and_pages">المقالات والصفحات</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">مسار</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+‎</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">تويتر</string>
+    <string name="stats_insights_facebook">فيسبوك</string>
+    <string name="stats_insights_view_more">عرض المزيد</string>
+    <string name="stats_insights_share_post">مشاركة المقالة</string>
+    <string name="stats_insights_create_post">إنشاء مقالة</string>
+    <string name="stats_insights_latest_post_message">مَرت %1$s منذ نشر %2$s. فيما يلي طريقة تنفيذ المقالة حتى الآن.</string>
+    <string name="stats_insights_latest_post_with_no_engagement">مَرت %1$s منذ نشر %2$s. ابدأ العمل وقم بزيادة مشاهدات مقالتك عن طريق مشاركة مقالتك.</string>
+    <string name="stats_insights_latest_post_empty">لم تنشر أي مقالات بعد. بعد أن تبدأ في النشر، سيظهر آخر ملخص للمقالة هنا.</string>
+    <string name="stats_insights_tags_and_categories">العلامات والتصنيفات</string>
+    <string name="stats_insights_all_time_stats">جميع إحصاءات الوقت</string>
+    <string name="stats_insights_most_popular_views_label">مشاهدات</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">يوم/ساعة</string>
+    <string name="stats_insights_today_stats">إحصاءات اليوم</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">المتابعون</string>
+    <string name="stats_publicize_service_label">الخدمة</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">مشاهدات</string>
+    <string name="stats_tags_and_categories_title_label">العنوان</string>
+    <string name="stats_posts_and_pages_views_label">مشاهدات</string>
+    <string name="stats_posts_and_pages_title_label">العنوان</string>
+    <string name="stats_comments_label">التعليقات</string>
+    <string name="stats_comments_title_label">العنوان</string>
+    <string name="stats_comments_author_label">الكاتب</string>
+    <string name="stats_comments_posts_and_pages">المقالات والصفحات</string>
+    <string name="stats_comments_authors">الكُتّاب</string>
+    <string name="stats_follower_since_label">منذ</string>
+    <string name="stats_follower_label">المتابع</string>
+    <string name="stats_followers_count_message">إجمالي %1$s من المتابعين: %2$s</string>
+    <string name="stats_followers_email">البريد الإلكتروني</string>
+    <string name="stats_followers_wordpress_com">وردبرس.كوم</string>
+    <string name="stats_button_manage_insights">إدارة الرؤى</string>
+    <string name="stats_empty_insights_description">تخصيص الرؤى الخاصة بك والحصول على معلومات حول أداء موقعك</string>
+    <string name="stats_empty_insights_title">لم تتم إضافة رى حتى الآن</string>
+    <string name="stats_no_data_yet">لا توجد بيانات حتى الآن</string>
     <string name="menu_debug">قائمة تصحيح الأخطاء</string>
     <string name="preference_experimental">*تجريبي*</string>
     <string name="site_settings_enable_gutenberg_summary">لا يزال هذا إصدارًا تجريبيًّا من Gutenberg</string>
@@ -30,7 +96,6 @@ Language: ar
     <string name="dialog_gutenberg_compatibility_message">نحن نعمل على محرر وردبرس الجديد تمامًا. لا يزال بإمكانك تحرير هذه المقالة، ولكننا نوصي بمعاينتها قبل النشر.</string>
     <string name="dialog_gutenberg_compatibility_title">قبل المتابعة</string>
     <string name="media_space_used">تم استخدام %1$s</string>
-    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">يرجى إدخال موقع وردبرس.كوم أو موقع وردبرس مُستضاف ذاتيًّا ومتصل بـ Jetpack</string>
     <string name="history_loading_revision">جارٍ تحميل المراجعة</string>
     <string name="history_loaded_revision">تم تحميل المراجعة</string>
@@ -446,7 +511,6 @@ Language: ar
     <string name="site_creation_tagline_hint">سطر وصف الموقع (اختياري)</string>
     <string name="site_creation_title_hint">عنوان الموقع</string>
     <string name="site_creation_domain_keywords_hint">كتابة كلمة أساسية لمزيد من الأفكار</string>
-    <string name="site_creation_label_domain_selection">حدد عنوان \"yourname.wordpress.com\" متاحًا للسماح للأشخاص بالبحث عنك على الويب.</string>
     <string name="site_creation_label_domain_selection_title">خطوة 4 من 4</string>
     <string name="site_creation_label_site_details">أخبرنا المزيد عمّا تقوم بإنشائه. ما العنوان والعلامة؟</string>
     <string name="site_creation_label_site_details_title">خطوة 3 من 4</string>
@@ -1380,7 +1444,6 @@ Language: ar
     <string name="stats_insights_most_popular_hour">الساعة الأكثر شيوعًا</string>
     <string name="stats_insights_most_popular_day">اليوم الأكثر شيوعًا</string>
     <string name="stats_insights_today">إحصاءات اليوم</string>
-    <string name="stats_insights_popular">اليوم والساعة الأكثر شيوعًا</string>
     <string name="stats_insights_all_time">مقالات ومشاهدات وزوار كل الأوقات</string>
     <string name="stats_insights">الرؤى</string>
     <string name="stats_sign_in_jetpack_different_com_account">لعرض إحصاءاتك، سجّل الدخول إلى حساب وردبرس.كوم الذي استخدمته للاتصال بـ Jetpack.</string>

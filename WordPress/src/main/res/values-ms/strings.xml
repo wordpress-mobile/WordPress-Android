@@ -783,7 +783,6 @@ Language: ms
     <string name="stats_insights_most_popular_hour">Jam paling popular </string>
     <string name="stats_insights_most_popular_day">Hari paling popular</string>
     <string name="stats_insights_today">Statistik Hari Ini</string>
-    <string name="stats_insights_popular">Hari dan jam paling popular</string>
     <string name="stats_insights_all_time">Kiriman, pandangan, dan pelawat sepanjang masa</string>
     <string name="stats_insights">Wawasan</string>
     <string name="stats_sign_in_jetpack_different_com_account">Untuk melihat statistik anda, log masuk ke akaun WordPress.com anda untuk menyambungkan JetPack.</string>

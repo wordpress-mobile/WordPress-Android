@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -76,11 +76,11 @@ constructor(
         items.add(Title(R.string.stats_countries))
 
         if (domainModel.countries.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             val stringBuilder = StringBuilder()
             for (country in domainModel.countries) {
-                stringBuilder.append("['").append(country.fullName).append("',").append(country.views).append("],")
+                stringBuilder.append("['").append(country.countryCode).append("',").append(country.views).append("],")
             }
             items.add(MapItem(stringBuilder.toString(), R.string.stats_country_views_label))
             items.add(Header(string.stats_country_label, string.stats_country_views_label))

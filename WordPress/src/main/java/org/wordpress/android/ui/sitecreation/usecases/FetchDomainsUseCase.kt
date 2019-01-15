@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.sitecreation.usecases
 
-import kotlinx.coroutines.experimental.suspendCancellableCoroutine
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -9,7 +9,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import javax.inject.Inject
-import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
 
 private const val FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS = true
 private const val FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS = true
@@ -56,7 +57,7 @@ class FetchDomainsUseCase @Inject constructor(
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     fun onSuggestedDomains(event: OnSuggestedDomains) {
         pair?.let {
             if (event.query == it.first) {

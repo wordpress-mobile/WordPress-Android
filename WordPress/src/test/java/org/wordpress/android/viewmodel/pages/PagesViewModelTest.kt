@@ -1,9 +1,10 @@
 package org.wordpress.android.viewmodel.pages
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.runBlocking
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -11,7 +12,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.SiteModel
@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.test
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
@@ -38,6 +39,7 @@ class PagesViewModelTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var actionPerformer: ActionPerformer
+    @Mock lateinit var networkUtils: NetworkUtilsWrapper
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
@@ -46,7 +48,14 @@ class PagesViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, TEST_SCOPE, TEST_SCOPE)
+        viewModel = PagesViewModel(
+                pageStore,
+                dispatcher,
+                actionPerformer,
+                networkUtils,
+                Dispatchers.Unconfined,
+                Dispatchers.Unconfined
+        )
         listStates = mutableListOf()
         pages = mutableListOf()
         searchPages = mutableListOf()
@@ -54,13 +63,15 @@ class PagesViewModelTest {
         viewModel.pages.observeForever { if (it != null) pages.add(it) }
         viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
         pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null)
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test
     fun clearsResultAndLoadsDataOnStart() = test {
         val pageModel = initPageRepo()
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(
-                OnPostChanged(CauseOfOnPostChanged.FetchPages, 1, false))
+                OnPostChanged(CauseOfOnPostChanged.FetchPages, 1, false)
+        )
 
         viewModel.start(site)
 
@@ -83,7 +94,8 @@ class PagesViewModelTest {
     fun onSiteWithoutPages() = test {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(
-                OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false))
+                OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false)
+        )
 
         viewModel.start(site)
 
@@ -134,7 +146,8 @@ class PagesViewModelTest {
     private suspend fun initSearch() {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(
-                OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false))
+                OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false)
+        )
         viewModel.start(site)
     }
 }

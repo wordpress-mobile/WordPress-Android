@@ -657,8 +657,10 @@
 
         <service
             android:name=".util.analytics.service.InstallationReferrerService"
-            android:exported="false"
+            android:exported="true"
+            android:permission="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
             android:label="Installation Referrer Service" />
+
         <service
             android:name=".util.analytics.service.InstallationReferrerJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"

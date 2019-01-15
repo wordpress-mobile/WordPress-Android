@@ -5,8 +5,8 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
@@ -14,7 +14,7 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoVi
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
 class NewSiteCreationSiteInfoViewModel @Inject constructor(
