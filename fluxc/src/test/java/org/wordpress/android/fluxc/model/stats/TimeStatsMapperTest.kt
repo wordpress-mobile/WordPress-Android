@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.model.stats
 
 import com.google.gson.Gson
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -22,7 +21,6 @@ class TimeStatsMapperTest {
     @Mock lateinit var gson: Gson
     private lateinit var timeStatsMapper: TimeStatsMapper
 
-    @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         timeStatsMapper = TimeStatsMapper(gson)
