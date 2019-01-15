@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 47;
+        return 48;
     }
 
     @Override
@@ -393,6 +393,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                         "CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT NOT NULL,JSON TEXT NOT NULL)");
                 oldVersion++;
+            case 47:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("ALTER TABLE PostModel ADD REMOTE_LAST_MODIFIED TEXT");
+                oldVersion++;
+
         }
         db.setTransactionSuccessful();
         db.endTransaction();
