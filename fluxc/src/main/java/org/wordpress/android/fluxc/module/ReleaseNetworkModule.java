@@ -62,6 +62,7 @@ import okhttp3.OkHttpClient;
 public class ReleaseNetworkModule {
     private static final String DEFAULT_CACHE_DIR = "volley-fluxc";
     private static final int NETWORK_THREAD_POOL_SIZE = 10;
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     private RequestQueue newRequestQueue(OkHttpClient.Builder okHttpClientBuilder, Context appContext) {
         File cacheDir = new File(appContext.getCacheDir(), DEFAULT_CACHE_DIR);
@@ -330,7 +331,7 @@ public class ReleaseNetworkModule {
         gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrFalse.class, new JsonObjectOrFalseDeserializer());
         gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrEmptyArray.class,
                 new JsonObjectOrEmptyArrayDeserializer());
-        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        gsonBuilder.setDateFormat(DATE_FORMAT);
         return gsonBuilder.create();
     }
 }
