@@ -263,7 +263,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
         if (savedInstanceState == null) {
             // Start loading reader tags so they will be available asap
-            ReaderUpdateServiceStarter.startService(getActivity(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
+            ReaderUpdateServiceStarter.startService(WordPress.getContext(),
+                    EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
 
             if (mIsEmailSignup) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_VIEWED);
