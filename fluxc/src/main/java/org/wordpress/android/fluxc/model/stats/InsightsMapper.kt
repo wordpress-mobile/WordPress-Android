@@ -84,8 +84,12 @@ class InsightsMapper
     }
 
     fun map(response: VisitResponse): VisitsModel {
-        val result: Map<String, String> = response.fields.mapIndexed { index, value ->
-            value to response.data[0][index]
+        val result: Map<String, String> = response.fields.mapIndexedNotNull { index, value ->
+            if (response.data.isNotEmpty() && response.data[0].size > index) {
+                value to response.data[0][index]
+            } else {
+                null
+            }
         }.toMap()
         return VisitsModel(
                 result[PERIOD] ?: "",
