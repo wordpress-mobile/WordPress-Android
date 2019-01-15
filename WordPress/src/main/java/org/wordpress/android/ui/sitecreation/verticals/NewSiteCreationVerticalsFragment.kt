@@ -200,6 +200,9 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     }
 
     private fun updateSuggestions(suggestions: List<VerticalsListItemUiState>) {
+        if (suggestions.isNotEmpty()) {
+            view?.announceForAccessibility(getString(R.string.new_site_creation_verticals_suggestions_updated))
+        }
         (recyclerView.adapter as NewSiteCreationVerticalsAdapter).update(suggestions)
     }
 

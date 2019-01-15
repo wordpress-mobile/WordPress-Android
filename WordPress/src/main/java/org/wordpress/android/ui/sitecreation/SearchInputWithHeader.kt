@@ -20,6 +20,7 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
     private val searchInput = rootView.findViewById<EditText>(R.id.input)
     private val progressBar = rootView.findViewById<View>(R.id.progress_bar)
     private val clearAllButton = rootView.findViewById<View>(R.id.clear_all_btn)
+    private val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
 
     var onTextChanged: ((String) -> Unit)? = null
 
@@ -73,7 +74,7 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
     fun updateSearchInput(context: Context, uiState: SiteCreationSearchInputUiState) {
         searchInput.hint = uiHelpers.getTextOfUiString(context, uiState.hint)
         uiHelpers.updateVisibility(progressBar, uiState.showProgress)
-        uiHelpers.updateVisibility(clearAllButton, uiState.showClearButton)
+        uiHelpers.updateVisibility(clearAllLayout, uiState.showClearButton)
     }
 
     fun requestInputFocus() {
