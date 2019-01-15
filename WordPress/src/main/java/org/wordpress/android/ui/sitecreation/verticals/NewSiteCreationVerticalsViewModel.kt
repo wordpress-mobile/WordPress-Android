@@ -4,11 +4,11 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.apache.commons.lang3.StringUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
@@ -37,10 +37,10 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
-private const val THROTTLE_DELAY: Int = 500
-private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000
+private const val THROTTLE_DELAY = 500L
+private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 
 class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,

@@ -12,9 +12,10 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_centerVertical="true"
-        tools:background="@drawable/ic_reader_blue_wordpress_18dp"
         android:layout_marginEnd="@dimen/margin_extra_large"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        tools:src="@drawable/ic_my_sites_24dp"
+        tools:tint="@color/blue_wordpress"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_feature_title"

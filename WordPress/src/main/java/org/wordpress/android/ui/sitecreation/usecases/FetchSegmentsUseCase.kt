@@ -7,8 +7,9 @@ import org.wordpress.android.fluxc.generated.VerticalActionBuilder
 import org.wordpress.android.fluxc.store.VerticalStore
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import javax.inject.Inject
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Transforms EventBus event to a coroutines.

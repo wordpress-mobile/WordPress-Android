@@ -203,7 +203,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         if (note == null) {
             return;
         }
-        noteViewHolder.itemView.setTag(note.getId());
+        noteViewHolder.mContentView.setTag(note.getId());
 
         // Display group header
         Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(note.getTimestamp());
@@ -215,8 +215,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
 
         if (previousTimeGroup != null && previousTimeGroup == timeGroup) {
-            noteViewHolder.mHeaderView.setVisibility(View.GONE);
+            noteViewHolder.mHeaderText.setVisibility(View.GONE);
         } else {
+            noteViewHolder.mHeaderText.setVisibility(View.VISIBLE);
+
             if (timeGroup == Note.NoteTimeGroup.GROUP_TODAY) {
                 noteViewHolder.mHeaderText.setText(R.string.stats_timeframe_today);
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_YESTERDAY) {
@@ -228,8 +230,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             } else {
                 noteViewHolder.mHeaderText.setText(R.string.older_month);
             }
-
-            noteViewHolder.mHeaderView.setVisibility(View.VISIBLE);
         }
 
         CommentStatus commentStatus = CommentStatus.ALL;
@@ -347,10 +347,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     class NoteViewHolder extends RecyclerView.ViewHolder {
-        private final View mHeaderView;
         private final View mContentView;
         private final TextView mHeaderText;
-
         private final TextView mTxtSubject;
         private final TextView mTxtSubjectNoticon;
         private final TextView mTxtDetail;
@@ -359,16 +357,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         NoteViewHolder(View view) {
             super(view);
-            mHeaderView = view.findViewById(R.id.time_header);
             mContentView = view.findViewById(R.id.note_content_container);
-            mHeaderText = view.findViewById(R.id.header_date_text);
+            mHeaderText = view.findViewById(R.id.header_text);
             mTxtSubject = view.findViewById(R.id.note_subject);
             mTxtSubjectNoticon = view.findViewById(R.id.note_subject_noticon);
             mTxtDetail = view.findViewById(R.id.note_detail);
             mImgAvatar = view.findViewById(R.id.note_avatar);
             mNoteIcon = view.findViewById(R.id.note_icon);
 
-            itemView.setOnClickListener(mOnClickListener);
+            mContentView.setOnClickListener(mOnClickListener);
         }
     }
 

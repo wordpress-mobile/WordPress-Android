@@ -2,7 +2,8 @@ package org.wordpress.android.ui.sitecreation.siteinfo
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockitokotlin2.verify
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -21,6 +22,7 @@ private const val TAG_LINE = "Test Tag Line"
 
 private val EMPTY_UI_STATE = SiteInfoUiState(siteTitle = "", tagLine = "")
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class NewSiteCreationSiteInfoViewModelTest {
     @Rule

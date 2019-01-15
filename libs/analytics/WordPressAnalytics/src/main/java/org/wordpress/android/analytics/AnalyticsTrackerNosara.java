@@ -849,6 +849,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "account_logout";
             case STATS_ACCESSED:
                 return "stats_accessed";
+            case STATS_ACCESS_ERROR:
+                return "stats_access_error";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
             case STATS_PERIOD_DAYS_ACCESSED:

@@ -54,6 +54,7 @@
     <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>
     <string name="pref_key_optimize_media" translatable="false">wp_pref_optimize_media</string>
     <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
+    <string name="pref_key_strip_image_location" translatable="false">wp_pref_key_strip_image_location</string>
     <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
     <string name="pref_key_site_image_quality" translatable="false">wp_pref_site_default_image_quality</string>
     <string name="pref_key_optimize_video" translatable="false">wp_pref_key_optimize_video</string>
