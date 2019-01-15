@@ -59,8 +59,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
                 android:hint="@string/new_site_creation_site_title_hint"
-                android:importantForAccessibility="no"
                 android:textColorHint="@color/wp_grey"
+                android:labelFor="@+id/site_info_site_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/site_info_header_subtitle">
@@ -70,7 +70,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/wp_grey"
-                    android:contentDescription="@string/new_site_creation_site_title_hint"
                     android:inputType="text"
                     android:singleLine="true"
                     android:textColor="@color/wp_grey_dark">
@@ -83,8 +82,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
                 android:hint="@string/new_site_creation_tag_line_hint"
-                android:importantForAccessibility="no"
                 android:textColorHint="@color/wp_grey"
+                android:labelFor="@+id/site_info_tag_line"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/site_info_site_title_layout">
@@ -94,7 +93,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/wp_grey"
-                    android:contentDescription="@string/new_site_creation_tag_line_hint"
                     android:inputType="text"
                     android:singleLine="true"
                     android:textColor="@color/wp_grey_dark">
