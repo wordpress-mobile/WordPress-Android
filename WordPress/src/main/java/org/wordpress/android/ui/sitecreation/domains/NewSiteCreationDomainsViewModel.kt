@@ -1,9 +1,10 @@
-package org.wordpress.android.ui.sitecreation.domain
+package org.wordpress.android.ui.sitecreation.domains
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
+import android.support.annotation.VisibleForTesting
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
@@ -13,7 +14,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
@@ -23,11 +23,11 @@ import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -36,12 +36,6 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.properties.Delegates
-
-private const val FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS = true
-private const val FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS = true
-private const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS = false
-private const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR = false
-private const val FETCH_DOMAINS_SIZE = 20
 
 private const val THROTTLE_DELAY: Int = 500
 
@@ -72,7 +66,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val _createSiteBtnClicked = SingleLiveEvent<String>()
     val createSiteBtnClicked: LiveData<String> = _createSiteBtnClicked
 
-    private val _clearBtnClicked = SingleLiveEvent<Void>()
+    private val _clearBtnClicked = SingleLiveEvent<Unit>()
     val clearBtnClicked = _clearBtnClicked
 
     private val _onHelpClicked = SingleLiveEvent<Unit>()
@@ -144,15 +138,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
-                val payload = SuggestDomainsPayload(
-                        query.value,
-                        FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS,
-                        FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS,
-                        FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS,
-                        FETCH_DOMAINS_SIZE,
-                        FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR
-                )
-                val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(payload)
+                val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value)
                 withContext(MAIN) {
                     onDomainsFetched(query, onSuggestedDomains)
                 }
@@ -242,7 +228,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                         showDivider = index != lastItemIndex,
                         checked = domainName == selectedDomain
                 )
-                itemUiState.onItemTapped = { selectedDomain = domainName }
+                itemUiState.onItemTapped = { setSelectedDomainName(domainName) }
                 items.add(itemUiState)
             }
         }
@@ -267,6 +253,11 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                 showProgress = showProgress,
                 showClearButton = showClearButton
         )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun setSelectedDomainName(domainName: String) {
+        selectedDomain = domainName
     }
 
     private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?): Boolean =

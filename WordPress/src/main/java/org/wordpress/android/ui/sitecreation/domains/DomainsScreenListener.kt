@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.domain
+package org.wordpress.android.ui.sitecreation.domains
 
 interface DomainsScreenListener {
     fun onDomainSelected(domain: String)

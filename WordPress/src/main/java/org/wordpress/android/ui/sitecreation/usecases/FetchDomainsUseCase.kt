@@ -11,6 +11,12 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
 
+private const val FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS = true
+private const val FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS = true
+private const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS = false
+private const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR = false
+private const val FETCH_DOMAINS_SIZE = 20
+
 /**
  * Transforms newSuggestDomainsAction EventBus event to a coroutine.
  *
@@ -27,7 +33,22 @@ class FetchDomainsUseCase @Inject constructor(
      */
     private var pair: Pair<String, Continuation<OnSuggestedDomains>>? = null
 
-    suspend fun fetchDomains(payload: SuggestDomainsPayload): OnSuggestedDomains {
+    suspend fun fetchDomains(
+        query: String,
+        onlyWordPressCom: Boolean = FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS,
+        includeWordPressCom: Boolean = FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS,
+        includeDotBlogSubdomain: Boolean = FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS,
+        includeVendorDot: Boolean = FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR,
+        size: Int = FETCH_DOMAINS_SIZE
+    ): OnSuggestedDomains {
+        val payload = SuggestDomainsPayload(
+                query,
+                onlyWordPressCom,
+                includeWordPressCom,
+                includeDotBlogSubdomain,
+                size,
+                includeVendorDot
+        )
         return suspendCancellableCoroutine { cont ->
             pair = Pair(payload.query, cont)
             dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload))
