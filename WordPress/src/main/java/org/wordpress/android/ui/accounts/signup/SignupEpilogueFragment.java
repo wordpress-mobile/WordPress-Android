@@ -59,6 +59,8 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.prefs.AppPrefsWrapper;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.GravatarUtils;
@@ -74,6 +76,7 @@ import org.wordpress.android.widgets.WPTextView;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -259,6 +262,10 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
+            // Start loading reader tags so they will be available asap
+            ReaderUpdateServiceStarter.startService(WordPress.getContext(),
+                    EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
+
             if (mIsEmailSignup) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_VIEWED);
 
