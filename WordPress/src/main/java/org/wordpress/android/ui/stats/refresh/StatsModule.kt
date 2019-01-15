@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
-import org.wordpress.android.fluxc.store.StatsStore
+import org.wordpress.android.fluxc.store.stats.StatsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -120,8 +120,8 @@ class StatsModule {
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         @Named(INSIGHTS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher, useCases) {
-            statsStore.getInsights()
+        return BaseListUseCase(bgDispatcher, mainDispatcher, useCases) { site ->
+            statsStore.getInsights(site)
         }
     }
 

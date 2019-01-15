@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
+import org.wordpress.android.fluxc.store.stats.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -19,7 +19,7 @@ constructor(
     private val bgDispatcher: CoroutineDispatcher,
     private val mainDispatcher: CoroutineDispatcher,
     private val useCases: List<BaseStatsUseCase<*, *>>,
-    private val getStatsTypes: suspend (() -> List<StatsTypes>)
+    private val getStatsTypes: suspend ((site: SiteModel) -> List<StatsTypes>)
 ) {
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
@@ -52,7 +52,7 @@ constructor(
                 throw RuntimeException("Duplicate stats type in a use case")
             }
             useCases.forEach { block -> launch { block.fetch(site, refresh, forced) } }
-            val items = getStatsTypes()
+            val items = getStatsTypes(site)
             withContext(mainDispatcher) {
                 statsTypes.value = items
             }
