@@ -2304,6 +2304,7 @@
     <string name="reader_blavatar_desc">site icon</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
+    <string name="suggestions_updated_content_description">Suggestions updated</string>
 
 
     <!-- Site Creation -->
@@ -2469,5 +2470,4 @@
     <string name="cancel_new_site_wizard_content_description">Cancel Site Creation Wizard</string>
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
-    <string name="new_site_creation_verticals_suggestions_updated">Suggestions updated</string>
 </resources>
