@@ -4,6 +4,3 @@
 * Add privacy settings to enable removing of geolocation from the uploaded images.
 * Now gives a better message when there is no data to show in the stats screen.
 * Fixed an issue where only admins of self hosted sites could update their password.
-* Fixed an issue where the menu icon would not be shown when editing a page.
-* Fixed a problem with the site pages screen that caused it to work incorrectly while offline.
-* Fix a crash that could happen when editing a new page.
