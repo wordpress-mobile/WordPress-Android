@@ -37,7 +37,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private String mContent;
     @Column private String mDateCreated; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column private String mLastModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
-    @Column private String mRemoteLastModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column private String mCategoryIds;
     @Column private String mCustomFields;
     @Column private String mLink;
@@ -60,6 +59,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private boolean mIsLocalDraft;
     @Column private boolean mIsLocallyChanged;
     @Column private String mDateLocallyChanged; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
+    @Column private boolean mIsConflicted;
 
     // XML-RPC only, needed to work around a bug with the API:
     // https://github.com/wordpress-mobile/WordPress-Android/pull/3425
@@ -137,14 +137,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     public void setLastModified(String lastModified) {
         mLastModified = lastModified;
-    }
-
-    public @NonNull String getRemoteLastModified() {
-        return StringUtils.notNullStr(mRemoteLastModified);
-    }
-
-    public void setRemoteLastModified(String remoteLastModified) {
-        mRemoteLastModified = remoteLastModified;
     }
 
     public @NonNull String getCategoryIds() {
@@ -357,6 +349,14 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     public void setDateLocallyChanged(String dateLocallyChanged) {
         mDateLocallyChanged = dateLocallyChanged;
+    }
+
+    public boolean isConflicted() {
+        return mIsConflicted;
+    }
+
+    public void setIsConflicted(boolean isConflicted) {
+        mIsConflicted = isConflicted;
     }
 
     @Override
