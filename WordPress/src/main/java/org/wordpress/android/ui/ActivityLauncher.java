@@ -257,9 +257,13 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
+        if (site == null) {
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+        } else {
+            Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        }
     }
 
     public static void viewFollowersStats(Context context, SiteModel site) {
