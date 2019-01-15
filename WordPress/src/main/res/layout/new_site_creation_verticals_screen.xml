@@ -58,6 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
+            android:importantForAccessibility="no"
             app:layout_constraintTop_toBottomOf="@+id/search_input_layout"/>
 
         <include
