@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.hamcrest.CoreMatchers.`is` as Is
@@ -45,7 +46,7 @@ class NewSiteCreationDomainsViewModelTest {
     @Mock private lateinit var createSiteBtnObserver: Observer<String>
     @Mock private lateinit var clearBtnObserver: Observer<Unit>
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
-    @Mock private lateinit var onInputFocusRequestedObserver: Observer<Unit>
+    @Mock private lateinit var onInputFocusRequestedObserver: Observer<RequestFocusMode>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
 
     private lateinit var viewModel: NewSiteCreationDomainsViewModel
