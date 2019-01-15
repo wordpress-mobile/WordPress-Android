@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
@@ -49,7 +49,7 @@ class TodayStatsUseCase
         val hasLikes = domainModel.likes > 0
         val hasComments = domainModel.comments > 0
         if (!hasViews && !hasVisitors && !hasLikes && !hasComments) {
-            items.add(Empty)
+            items.add(Empty())
         } else {
             if (hasViews) {
                 items.add(

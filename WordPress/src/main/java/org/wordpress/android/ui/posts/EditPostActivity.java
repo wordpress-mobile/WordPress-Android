@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.Fragment;
@@ -226,6 +227,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
+    private static final String TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG = "tag_discarding_changes_no_network_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
 
@@ -1064,23 +1066,7 @@ public class EditPostActivity extends AppCompatActivity implements
             settingsMenuItem.setVisible(showMenuItems);
         }
 
-        if (discardChanges != null) {
-            if (mPost != null && showMenuItems) {
-                boolean showDiscardChanges = mPost.isLocallyChanged();
-                if (mEditorFragment instanceof AztecEditorFragment) {
-                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
-                        && ((AztecEditorFragment) mEditorFragment).canUndo()) {
-                        showDiscardChanges = true;
-                    } else {
-                        // we don't have history, so hide/show depending on the original post flag value
-                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
-                    }
-                }
-                discardChanges.setVisible(showDiscardChanges);
-            } else {
-                discardChanges.setVisible(false);
-            }
-        }
+        showHideDiscardLocalChangesMenuOption(showMenuItems, discardChanges);
 
         // Set text of the save button in the ActionBar
         if (mPost != null) {
@@ -1092,6 +1078,35 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void showHideDiscardLocalChangesMenuOption(boolean showMenuItems, MenuItem discardChanges) {
+        if (discardChanges != null) {
+            if (mIsNewPost) {
+                // by "local changes" we mean changes that are only local (that is to say, are not in the remote yet).
+                // if this is a new Post, then there aren't any local changes to discard yet (everything is local).
+                discardChanges.setVisible(false);
+                return;
+            }
+
+            if (mPost != null && showMenuItems) {
+                // don't show Discard Local Changes option if it's a completely local draft
+                boolean showDiscardChanges = mPost.isLocallyChanged() && !mPost.isLocalDraft();
+                if (mEditorFragment instanceof AztecEditorFragment) {
+                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
+                        && ((AztecEditorFragment) mEditorFragment).canUndo()
+                            && !mPost.isLocalDraft()) {
+                        showDiscardChanges = true;
+                    } else {
+                        // we don't have history, so hide/show depending on the original post flag value
+                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
+                    }
+                }
+                discardChanges.setVisible(showDiscardChanges);
+            } else {
+                discardChanges.setVisible(false);
+            }
+        }
     }
 
     @Override
@@ -1240,12 +1255,19 @@ public class EditPostActivity extends AppCompatActivity implements
                     });
                 }
             } else if (itemId == R.id.menu_discard_changes) {
-                AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
-                showDialogProgress(true);
-                mPostForUndo = mPost.clone();
-                mIsDiscardingChanges = true;
-                RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
-                mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                    AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
+                    showDialogProgress(true);
+                    mPostForUndo = mPost.clone();
+                    mIsDiscardingChanges = true;
+                    RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
+                    mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                } else {
+                    showDialogError(R.string.local_changes_discarding_no_connection,
+                            R.string.dialog_button_ok,
+                            TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG,
+                            false);
+                }
             }
         }
         return false;
@@ -1264,11 +1286,12 @@ public class EditPostActivity extends AppCompatActivity implements
         fillContentEditorFields();
     }
 
-    private void showDialogError() {
+    private void showDialogError(@StringRes int resIdMessage, @StringRes int resIdPositiveButton, String tag,
+                                 boolean showCancel) {
         BasicFragmentDialog dialog = new BasicFragmentDialog();
-        dialog.initialize(TAG_DISCARDING_CHANGES_ERROR_DIALOG, "", getString(R.string.local_changes_discarding_error),
-                getString(R.string.contact_support), getString(R.string.cancel), null);
-        dialog.show(getSupportFragmentManager(), TAG_DISCARDING_CHANGES_ERROR_DIALOG);
+        dialog.initialize(tag, "", getString(resIdMessage),
+                getString(resIdPositiveButton), showCancel ? getString(R.string.cancel) : null, null);
+        dialog.show(getSupportFragmentManager(), tag);
     }
 
     private void showDialogProgress(boolean show) {
@@ -1521,6 +1544,7 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
+            case TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
                 break;
@@ -1538,6 +1562,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
+            case TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG:
+                // no op
+                break;
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
                 break;
@@ -3599,7 +3626,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             } else {
                 if (mIsDiscardingChanges) {
-                    showDialogError();
+                    showDialogError(R.string.local_changes_discarding_error, R.string.contact_support,
+                            TAG_DISCARDING_CHANGES_ERROR_DIALOG,
+                            true);
                 }
 
                 mIsDiscardingChanges = false;

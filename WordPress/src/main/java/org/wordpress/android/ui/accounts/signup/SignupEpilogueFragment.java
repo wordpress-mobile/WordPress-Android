@@ -429,7 +429,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             AppLog.e(T.API, "SignupEpilogueFragment.onAccountChanged: "
                             + event.error.type + " - " + event.error.message);
             endProgress();
-            showErrorDialog(getString(R.string.signup_epilogue_error_generic));
+
+            if (isPasswordInErrorMessage(event.error.message)) {
+                showErrorDialogWithCloseButton(event.error.message);
+            } else {
+                showErrorDialog(getString(R.string.signup_epilogue_error_generic));
+            }
         // Wait to populate epilogue for email interface until account is fetched and email address
         // is available since flow is coming from magic link with no instance argument values.
         } else if (mIsEmailSignup && event.causeOfChange == AccountAction.FETCH_ACCOUNT
@@ -510,6 +515,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         return mEmailAddress.split("@")[0].replaceAll("[^A-Za-z0-9]", "").toLowerCase(Locale.ROOT);
     }
 
+    private boolean isPasswordInErrorMessage(String message) {
+        String lowercaseMessage = message.toLowerCase(Locale.getDefault());
+        String lowercasePassword = getString(R.string.password).toLowerCase(Locale.getDefault());
+        return lowercaseMessage.contains(lowercasePassword);
+    }
+
     protected void launchDialog() {
         AnalyticsTracker.track(mIsEmailSignup
                 ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_USERNAME_TAPPED
@@ -550,7 +561,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         @Override
                         public void onLoadFailed(@Nullable Exception e) {
                             AppLog.e(T.NUX, "Uploading image to Gravatar succeeded, but setting image view failed");
-                            showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar_view));
+                            showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar_view));
                         }
 
                         @Override
@@ -610,7 +621,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         dialog.show();
     }
 
-    protected void showErrorDialogAvatar(String message) {
+    protected void showErrorDialogWithCloseButton(String message) {
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
                 .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)
@@ -658,7 +669,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             @Override
                             public void onError() {
                                 endProgress();
-                                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar));
+                                showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar));
                                 AppLog.e(T.NUX, "Uploading image to Gravatar failed");
                             }
                         });

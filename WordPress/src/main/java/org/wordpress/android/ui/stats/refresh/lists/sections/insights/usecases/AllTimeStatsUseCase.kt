@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
@@ -51,7 +51,7 @@ class AllTimeStatsUseCase
         val hasVisitors = domainModel.visitors > 0
         val hasViewsBestDayTotal = domainModel.viewsBestDayTotal > 0
         if (!hasPosts && !hasViews && !hasVisitors && !hasViewsBestDayTotal) {
-            items.add(Empty)
+            items.add(Empty())
         } else {
             if (hasPosts) {
                 items.add(

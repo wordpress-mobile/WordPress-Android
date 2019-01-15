@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Dispatchers
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -266,13 +266,13 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
         assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_followers_wordpress_com)
         assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_followers_email)
-        assertThat(this.items[2]).isEqualTo(Empty)
+        assertThat(this.items[2]).isEqualTo(Empty())
         return tabsItem
     }
 
     private fun BlockList.assertEmpty() {
         assertThat(this.items).hasSize(2)
         assertTitle(this.items[0])
-        assertThat(this.items[1]).isEqualTo(Empty)
+        assertThat(this.items[1]).isEqualTo(Empty())
     }
 }

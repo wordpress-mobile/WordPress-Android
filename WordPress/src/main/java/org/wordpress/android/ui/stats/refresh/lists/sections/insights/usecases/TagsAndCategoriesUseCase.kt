@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
@@ -66,7 +66,7 @@ class TagsAndCategoriesUseCase
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_tags_and_categories))
         if (domainModel.tags.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty())
         } else {
             items.add(
                     Header(

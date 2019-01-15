@@ -63,7 +63,7 @@ public class ReaderSiteSearchAdapter extends RecyclerView.Adapter<RecyclerView.V
             && position >= getItemCount() - 1
             && getItemCount() >= ReaderConstants.READER_MAX_SEARCH_RESULTS_TO_REQUEST) {
             mIsLoadingMore = true;
-            mListener.onLoadMore(getItemCount() - 1);
+            mListener.onLoadMore(getItemCount());
         }
     }
 

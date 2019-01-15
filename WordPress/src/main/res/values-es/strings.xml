@@ -96,7 +96,6 @@ Language: es
     <string name="dialog_gutenberg_compatibility_message">Estamos trabajando en un editor WordPress totalmente nuevo. Aún puedes editar esta entrada pero te recomendamos previsualizarla antes de publicar.</string>
     <string name="dialog_gutenberg_compatibility_title">Antes de seguir</string>
     <string name="media_space_used">%1$s utilizado</string>
-    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Por favor, introduce un sitio WordPress WordPress.com o alojado conectado a Jetpack</string>
     <string name="history_loading_revision">Cargando revisión</string>
     <string name="history_loaded_revision">Revisión cargada</string>

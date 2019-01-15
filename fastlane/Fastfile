@@ -35,7 +35,7 @@ import "./ScreenshotFastfile"
 # Environment
 ########################################################################
 Dotenv.load('~/.wpandroid-env.default')
-ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
+ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 
 ########################################################################
 # Release Lanes
@@ -138,10 +138,11 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
     }
 
     delete_old_changelogs(build: options[:build_number])
-    download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
+    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
       target_files: files, 
-      locales: SUPPORTED_LOCALES,
-      download_path: Dir.pwd + "/fastlane/metadata/android")
+      locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]},
+      source_locale: "en-US",
+      download_path: Dir.pwd + "/metadata/android")
   end 
 
 #####################################################################################
