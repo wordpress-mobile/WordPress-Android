@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import org.jetbrains.annotations.Nullable;
 import org.wordpress.android.fluxc.network.BaseRequest;
 
 import java.io.UnsupportedEncodingException;
@@ -73,6 +74,11 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
         }
 
         return mGson.toJson(mBody).getBytes(Charset.forName("UTF-8"));
+    }
+
+    @Nullable
+    protected Map<String, Object> getBodyAsMap() {
+        return mBody;
     }
 
     @Override
