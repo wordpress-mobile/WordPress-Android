@@ -2,10 +2,13 @@ package org.wordpress.android;
 
 import android.app.Activity;
 import android.app.Application;
-import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
+import android.arch.lifecycle.ProcessLifecycleOwner;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -29,8 +32,6 @@ import android.webkit.WebSettings;
 import com.android.volley.RequestQueue;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
@@ -67,7 +68,6 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -108,7 +108,8 @@ import dagger.android.support.HasSupportFragmentInjector;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
-public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector {
+public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
+        LifecycleObserver {
     public static final String SITE = "SITE";
     public static String versionName;
     public static WordPressDB wpDB;
@@ -126,6 +127,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
+    private static ApplicationLifecycleMonitor mApplicationLifecycleMonitor;
 
     private static GoogleApiClient mCredentialsClient;
 
@@ -266,9 +268,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
                 BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
 
-        ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
-        registerComponentCallbacks(applicationLifecycleMonitor);
-        registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
+        MemoryAndConfigChangeMonitor memoryAndConfigChangeMonitor = new MemoryAndConfigChangeMonitor();
+        registerComponentCallbacks(memoryAndConfigChangeMonitor);
+
+        // initialize our ApplicationLifecycleMonitor, which is the App's LifecycleObserver implementation
+        mApplicationLifecycleMonitor = new ApplicationLifecycleMonitor();
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
@@ -387,14 +392,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
      * screen for the first time. This allows us to have heavy calls on first activity startup instead of app startup.
      */
-    public void deferredInit(Activity activity) {
+    public void deferredInit() {
         AppLog.i(T.UTILS, "Deferred Initialisation");
-
-        if (isGooglePlayServicesAvailable(activity)) {
-            // Register for Cloud messaging
-            GCMRegistrationIntentService.enqueueWork(activity,
-                    new Intent(activity, GCMRegistrationIntentService.class));
-        }
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
@@ -473,30 +472,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return sRestClientUtilsVersion0;
     }
 
-    public boolean isGooglePlayServicesAvailable(Activity activity) {
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
-        switch (connectionResult) {
-            // Success: return true
-            case ConnectionResult.SUCCESS:
-                return true;
-            // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
-            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
-                Dialog dialog = googleApiAvailability.getErrorDialog(activity, connectionResult, 0);
-                if (dialog != null) {
-                    dialog.show();
-                }
-                // fall through
-            default:
-            case ConnectionResult.SERVICE_MISSING:
-            case ConnectionResult.SERVICE_DISABLED:
-            case ConnectionResult.SERVICE_INVALID:
-                AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
-                                   + googleApiAvailability.getErrorString(connectionResult));
-        }
-        return false;
-    }
-
     /**
      * Sign out from wpcom account.
      * Note: This method must not be called on UI Thread.
@@ -510,6 +485,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         if (mCredentialsClient != null && mCredentialsClient.isConnected()) {
             Auth.CredentialsApi.disableAutoSignIn(mCredentialsClient);
         }
+
+        // Once fully logged out refresh the metadata so the user information doesn't persist for logged out events
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
     }
 
     @SuppressWarnings("unused")
@@ -600,6 +578,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         NotificationsTable.reset();
     }
 
+    private static String mDefaultUserAgent;
+
     /**
      * Device's default User-Agent string.
      * E.g.:
@@ -607,8 +587,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
      * Safari/537.36"
      */
-    private static String mDefaultUserAgent;
-
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
             try {
@@ -626,6 +604,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return mDefaultUserAgent;
     }
 
+
+    public static final String USER_AGENT_APPNAME = "wp-android";
+    private static String mUserAgent;
+
     /**
      * User-Agent string when making HTTP connections, for both API traffic and WebViews.
      * Appends "wp-android/version" to WebView's default User-Agent string for the webservers
@@ -635,9 +617,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * Safari/537.36 wp-android/4.7"
      * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
      **/
-    public static final String USER_AGENT_APPNAME = "wp-android";
-    private static String mUserAgent;
-
     public static String getUserAgent() {
         if (mUserAgent == null) {
             String defaultUserAgent = getDefaultUserAgent();
@@ -724,16 +703,17 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return mSupportFragmentInjector;
     }
 
-    /**
-     * Detect when the app goes to the background and come back to the foreground.
-     * <p>
-     * Turns out that when your app has no more visible UI, a callback is triggered.
-     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two).
-     * <p>
-     * This class also uses ActivityLifecycleCallbacks
-     * to make sure to detect the send to background event and not other events.
-     */
-    private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    void onAppComesFromBackground() {
+        mApplicationLifecycleMonitor.onAppComesFromBackground();
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    void onAppGoesToBackground() {
+        mApplicationLifecycleMonitor.onAppGoesToBackground();
+    }
+
+    private class ApplicationLifecycleMonitor {
         private static final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
 
         private Date mLastPingDate;
@@ -741,41 +721,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         private boolean mConnectionReceiverRegistered;
 
         boolean mFirstActivityResumed = true;
-
-        @Override
-        public void onConfigurationChanged(final Configuration newConfig) {
-            // Reapply locale on configuration change
-            LocaleManager.setLocale(getContext());
-        }
-
-        @Override
-        public void onLowMemory() {
-        }
-
-        @Override
-        public void onTrimMemory(final int level) {
-            boolean evictBitmaps = false;
-            switch (level) {
-                case TRIM_MEMORY_COMPLETE:
-                case TRIM_MEMORY_MODERATE:
-                case TRIM_MEMORY_RUNNING_MODERATE:
-                case TRIM_MEMORY_RUNNING_CRITICAL:
-                case TRIM_MEMORY_RUNNING_LOW:
-                    evictBitmaps = true;
-                    break;
-                case TRIM_MEMORY_UI_HIDDEN:
-                    // See https://goo.gl/DuKVfX
-                    onAppGoesToBackground();
-                    break;
-                case TRIM_MEMORY_BACKGROUND:
-                default:
-                    break;
-            }
-
-            if (evictBitmaps && mBitmapCache != null) {
-                mBitmapCache.evictAll();
-            }
-        }
 
         private boolean isPushNotificationPingNeeded() {
             if (mLastPingDate == null) {
@@ -804,7 +749,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             }
         }
 
-        private void onAppGoesToBackground() {
+        public void onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background");
             if (sAppIsInTheBackground) {
                 return;
@@ -841,8 +786,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
-        private void onAppComesFromBackground(Activity activity) {
+        public void onAppComesFromBackground() {
             AppLog.i(T.UTILS, "App comes from background");
+            if (!sAppIsInTheBackground) {
+                return;
+            }
+            sAppIsInTheBackground = false;
+
             // https://developer.android.com/reference/android/net/ConnectivityManager.html
             // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they
             // declare the broadcast receiver in their manifest. Apps will still receive broadcasts if they
@@ -850,7 +800,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             if (!mConnectionReceiverRegistered) {
                 mConnectionReceiverRegistered = true;
                 registerReceiver(ConnectionChangeReceiver.getInstance(),
-                                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+                        new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
             }
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
@@ -858,14 +808,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Refresh account informations and Notifications
                 if (mAccountStore.hasAccessToken()) {
-                    Intent intent = activity.getIntent();
-                    if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
-                        NotificationsUpdateServiceStarter.startService(getContext(),
-                                                                getNoteIdFromNoteDetailActivityIntent(
-                                                                        activity.getIntent()));
-                    } else {
-                        NotificationsUpdateServiceStarter.startService(getContext());
-                    }
+                    NotificationsUpdateServiceStarter.startService(getContext());
                 }
 
                 // verify media is sanitized
@@ -881,55 +824,48 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 mUpdateSelectedSite.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
-        }
 
-        // gets the note id from the extras that started this activity, so
-        // we can remember to re-set that to unread once the note fetch update takes place
-        private String getNoteIdFromNoteDetailActivityIntent(Intent intent) {
-            String noteId = "";
-            if (intent != null) {
-                noteId = intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
-            }
-            return noteId;
-        }
-
-        @Override
-        public void onActivityResumed(Activity activity) {
-            if (sAppIsInTheBackground) {
-                // was in background before
-                onAppComesFromBackground(activity);
-            }
-
-            sAppIsInTheBackground = false;
             if (mFirstActivityResumed) {
-                deferredInit(activity);
+                deferredInit();
             }
             mFirstActivityResumed = false;
         }
+    }
 
+    /**
+     * Uses ComponentCallbacks2 is used for memory-related event handling and configuration changes
+     */
+    private class MemoryAndConfigChangeMonitor implements ComponentCallbacks2 {
         @Override
-        public void onActivityCreated(Activity arg0, Bundle arg1) {
+        public void onConfigurationChanged(final Configuration newConfig) {
+            // Reapply locale on configuration change
+            LocaleManager.setLocale(getContext());
         }
 
         @Override
-        public void onActivityDestroyed(Activity arg0) {
+        public void onLowMemory() {
         }
 
         @Override
-        public void onActivityPaused(Activity arg0) {
-            mLastPingDate = new Date();
-        }
+        public void onTrimMemory(final int level) {
+            boolean evictBitmaps = false;
+            switch (level) {
+                case TRIM_MEMORY_COMPLETE:
+                case TRIM_MEMORY_MODERATE:
+                case TRIM_MEMORY_RUNNING_MODERATE:
+                case TRIM_MEMORY_RUNNING_CRITICAL:
+                case TRIM_MEMORY_RUNNING_LOW:
+                    evictBitmaps = true;
+                    break;
+                case TRIM_MEMORY_BACKGROUND:
+                case TRIM_MEMORY_UI_HIDDEN:
+                default:
+                    break;
+            }
 
-        @Override
-        public void onActivitySaveInstanceState(Activity arg0, Bundle arg1) {
-        }
-
-        @Override
-        public void onActivityStarted(Activity arg0) {
-        }
-
-        @Override
-        public void onActivityStopped(Activity arg0) {
+            if (evictBitmaps && mBitmapCache != null) {
+                mBitmapCache.evictAll();
+            }
         }
     }
 }
