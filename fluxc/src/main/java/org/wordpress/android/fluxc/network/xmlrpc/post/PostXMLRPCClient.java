@@ -389,7 +389,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified_gmt");
         String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
         post.setLastModified(lastModifiedAsIso8601);
-        post.setRemoteLastModified(lastModifiedAsIso8601);
 
         post.setContent(MapUtils.getMapStr(postMap, "post_content"));
         post.setLink(MapUtils.getMapStr(postMap, "link"));

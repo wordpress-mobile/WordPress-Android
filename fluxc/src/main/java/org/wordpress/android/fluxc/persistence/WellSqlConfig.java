@@ -395,7 +395,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 47:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("ALTER TABLE PostModel ADD REMOTE_LAST_MODIFIED TEXT");
+                db.execSQL("ALTER TABLE PostModel ADD IS_CONFLICTED boolean;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
