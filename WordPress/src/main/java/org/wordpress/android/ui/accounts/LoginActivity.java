@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -255,21 +256,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 // We are comparing list of site ID's before self-hosted site was added and after, trying to find a
                 // newly added self-hosted site's ID, so we can select it
                 ArrayList<Integer> currentSiteIds = new ArrayList<>();
-                int newlyAddedSiteId = -1;
-
                 for (SiteModel site : mSiteStore.getSites()) {
                     currentSiteIds.add(site.getId());
                 }
-
                 currentSiteIds.removeAll(oldSitesIds);
 
                 if (currentSiteIds.size() == 1) {
-                    newlyAddedSiteId = currentSiteIds.get(0);
+                    Intent intent = new Intent();
+                    intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, currentSiteIds.get(0));
+                    setResult(Activity.RESULT_OK, intent);
+                } else {
+                    AppLog.e(T.MAIN, "Couldn't detect newly added self-hosted site. "
+                                     + "Expected 1 site ID but was " + currentSiteIds.size());
+                    ToastUtils.showToast(this, R.string.site_picker_failed_selecting_added_site);
+                    setResult(Activity.RESULT_OK);
                 }
 
-                Intent intent = new Intent();
-                intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, newlyAddedSiteId);
-                setResult(Activity.RESULT_OK, intent);
                 // skip the epilogue when only added a self-hosted site or sharing to WordPress
                 finish();
                 break;
