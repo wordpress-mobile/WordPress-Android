@@ -324,6 +324,7 @@ public class PostRestClient extends BaseWPComRestClient {
         post.setLink(from.URL); // Is this right?
         post.setDateCreated(from.date);
         post.setLastModified(from.modified);
+        post.setRemoteLastModified(from.modified);
         post.setTitle(from.title);
         post.setContent(from.content);
         post.setExcerpt(from.excerpt);
