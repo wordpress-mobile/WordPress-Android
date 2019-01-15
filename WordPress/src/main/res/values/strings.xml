@@ -1701,7 +1701,7 @@
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
-    <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site!</string>
+    <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
