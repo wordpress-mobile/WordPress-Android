@@ -53,7 +53,6 @@ Language: gd_GB
     <string name="stats_insights_most_popular_hour">An uair as fhèillmhoire</string>
     <string name="stats_insights_most_popular_day">An latha as fhèillmhoire</string>
     <string name="stats_insights_today">Stats an latha</string>
-    <string name="stats_insights_popular">An latha ’s uair as fhèillmhoire</string>
     <string name="stats_insights_all_time">Puist, seallaidhean is aoighean air fad</string>
     <string name="stats_insights">Insights</string>
     <string name="stats_other_recent_stats_moved_label">A bheil an corr dhe na stats a bha agad o chionn goirid a dhìth ort? Chaidh an gluasad gu duilleag nan Insights.</string>

@@ -1,11 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-04 16:40:43+0000
+Translation-Revision-Date: 2018-12-29 15:32:38+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">Alege o adresă disponibilă pentru a permite oamenilor să te găsească pe web.</string>
+    <string name="giphy_powered_by_giphy">Propulsat de GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">Unele elemente media au eșuat la încărcare din cauza unei erori de rețea.</string>
+    <string name="giphy_picker_empty_search_list">Nu s-a potrivit niciun element media cu căutarea ta</string>
+    <string name="giphy_picker_initial_empty_text">Caută pentru a găsi imagini GIF pe care să le adaugi în Biblioteca ta media!</string>
+    <string name="giphy_picker_search_hint">Caută cu Giphy</string>
+    <string name="photo_picker_giphy">Alege din Giphy</string>
+    <string name="stats_author_views_label">Vizualizări</string>
+    <string name="stats_author_label">Autor</string>
+    <string name="stats_authors">Autori</string>
+    <string name="stats_search_terms_views_label">Vizualizări</string>
+    <string name="stats_search_terms_label">Termen de căutare</string>
+    <string name="stats_search_terms">Termeni de căutare</string>
+    <string name="stats_videos_views_label">Vizualizări</string>
+    <string name="stats_videos_title_label">Titlu</string>
+    <string name="stats_videos">Videouri</string>
+    <string name="stats_country_views_label">Vizualizări</string>
+    <string name="stats_country_label">Țară</string>
+    <string name="stats_countries">Țări</string>
+    <string name="stats_clicks_label">Clicuri</string>
+    <string name="stats_clicks_link_label">Legătură</string>
+    <string name="stats_clicks">Clicuri</string>
+    <string name="stats_referrer_views_label">Vizualizări</string>
+    <string name="stats_referrer_label">Referent</string>
+    <string name="stats_referrers">Referenți</string>
+    <string name="stats_posts_and_pages">Articole și pagini</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">Cale</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">Vezi mai multe</string>
+    <string name="stats_insights_share_post">Partajează articolul</string>
+    <string name="stats_insights_create_post">Creează un articol</string>
+    <string name="stats_insights_latest_post_message">Au trecut %1$s de când a fost publicat %2$s. Iată ce a realizat articolul până acum</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Au trecut %1$s de când a fost publicat %2$s. Începe să-ți mărești vizualizările de articol prin partajarea lui</string>
+    <string name="stats_insights_latest_post_empty">Nu ai publicat încă niciun articol. După ce începi să publici, rezumatul ultimului articol va apărea aici</string>
+    <string name="stats_insights_tags_and_categories">Etichete și categorii</string>
+    <string name="stats_insights_all_time_stats">Toate vizualizările</string>
+    <string name="stats_insights_most_popular_views_label">Vizualizări</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Zi/oră</string>
+    <string name="stats_insights_today_stats">Statisticile zilei</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">Urmăritori</string>
+    <string name="stats_publicize_service_label">Serviciu</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">Vizualizări</string>
+    <string name="stats_tags_and_categories_title_label">Titlu</string>
+    <string name="stats_posts_and_pages_views_label">Vizualizări</string>
+    <string name="stats_posts_and_pages_title_label">Titlu</string>
+    <string name="stats_comments_label">Comentarii</string>
+    <string name="stats_comments_title_label">Titlu</string>
+    <string name="stats_comments_author_label">Autor</string>
+    <string name="stats_comments_posts_and_pages">Articole și pagini</string>
+    <string name="stats_comments_authors">Autori</string>
+    <string name="stats_follower_since_label">De când</string>
+    <string name="stats_follower_label">Urmăritor</string>
+    <string name="stats_followers_count_message">Total urmăritori %1$s: %2$s</string>
+    <string name="stats_followers_email">Prin email</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">Administrează perspectivele</string>
+    <string name="stats_empty_insights_description">Personalizează-ți perspectivele și primești informații prețioase despre performanța sitului</string>
+    <string name="stats_empty_insights_title">Nu ai adăugat perspective până acum</string>
+    <string name="stats_no_data_yet">Încă nu există date</string>
     <string name="menu_debug">Meniu de depanare</string>
     <string name="preference_experimental">*EXPERIMENTALĂ*</string>
     <string name="site_settings_enable_gutenberg_summary">Aceasta este totuși o versiune experimentală pentru Gutenberg</string>
@@ -482,7 +548,6 @@ Language: ro
     <string name="site_creation_title_hint">Titlu sit</string>
     <string name="site_creation_domain_finish_button">Creează situl</string>
     <string name="site_creation_domain_keywords_hint">Tastează un cuvânt cheie pentru mai multe idei</string>
-    <string name="site_creation_label_domain_selection">Alege o adresă disponibilă pentru „numeletău.wordpress.com” pentru a permite oamenilor să te găsească pe web.</string>
     <string name="site_creation_label_domain_selection_title">Pasul 4 din 4</string>
     <string name="site_creation_label_site_details">Spune-ne mai multe despre ceea ce creezi. Care este titlul și sloganul?</string>
     <string name="site_creation_label_site_details_title">Pasul 3 din 4</string>
@@ -1267,7 +1332,7 @@ Language: ro
     <string name="site_settings_rp_show_images_title">Arată imaginile</string>
     <string name="site_settings_rp_show_header_title">Arată antetul</string>
     <string name="site_settings_rp_switch_summary">Articole similare afișează conținut relevant de pe situl tău sub articolele tale.</string>
-    <string name="site_settings_rp_switch_title">Arată articolele similare</string>
+    <string name="site_settings_rp_switch_title">Arată articole similare</string>
     <string name="site_settings_blacklist_hint">Comentariile care corespund unui filtru sunt marcate ca spam</string>
     <string name="site_settings_moderation_hold_hint">Comentariile care corespund unui filtru sunt puse în coada de moderare</string>
     <string name="site_settings_multiple_links_hint">Ignoră limita de legături pentru utilizatorii cunoscuți</string>

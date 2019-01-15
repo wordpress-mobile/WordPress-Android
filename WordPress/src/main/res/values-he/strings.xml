@@ -1,11 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-11 06:54:07+0000
+Translation-Revision-Date: 2019-01-01 14:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">יש לבחור כתובת זמינה כדי לאפשר לאנשים למצוא אותך ברשת.</string>
+    <string name="giphy_powered_by_giphy">מופעל באמצעות GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">הטעינה של חלק מקובצי המדיה נכשלה עקב שגיאת רשת.</string>
+    <string name="giphy_picker_empty_search_list">לא נמצאו פרטי מדיה שמתאימים לחיפוש שלך</string>
+    <string name="giphy_picker_initial_empty_text">חיפוש קובצי GIF שניתן להוסיף לספריית מדיה שלך!</string>
+    <string name="giphy_picker_search_hint">חיפוש ב-Giphy</string>
+    <string name="photo_picker_giphy">בחירת קובץ ב-Giphy</string>
+    <string name="stats_author_views_label">צפיות</string>
+    <string name="stats_author_label">מחבר</string>
+    <string name="stats_authors">מחברים</string>
+    <string name="stats_search_terms_views_label">צפיות</string>
+    <string name="stats_search_terms_label">מונח חיפוש</string>
+    <string name="stats_search_terms">מונחי חיפוש</string>
+    <string name="stats_videos_views_label">צפיות</string>
+    <string name="stats_videos_title_label">כותרת</string>
+    <string name="stats_videos">סרטונים</string>
+    <string name="stats_country_views_label">צפיות</string>
+    <string name="stats_country_label">מדינה</string>
+    <string name="stats_countries">מדינות</string>
+    <string name="stats_clicks_label">קליקים</string>
+    <string name="stats_clicks_link_label">קישור</string>
+    <string name="stats_clicks">קליקים</string>
+    <string name="stats_referrer_views_label">צפיות</string>
+    <string name="stats_referrer_label">הפניה</string>
+    <string name="stats_referrers">מפנים</string>
+    <string name="stats_posts_and_pages">פוסטים ועמודים</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">נתיב</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">‎Google+‎</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">טוויטר</string>
+    <string name="stats_insights_facebook">פייסבוק</string>
+    <string name="stats_insights_view_more">הצגת פריטים נוספים</string>
+    <string name="stats_insights_share_post">שיתוף פוסט</string>
+    <string name="stats_insights_create_post">יצירת פוסט</string>
+    <string name="stats_insights_latest_post_message">%2$s התפרסם לפני %1$s. אלו הביצועים של הפוסט עד כה</string>
+    <string name="stats_insights_latest_post_with_no_engagement">%2$s התפרסם לפני %1$s. אפשר לקבל חשיפה רבה יותר לפוסט שלך על ידי שיתוף</string>
+    <string name="stats_insights_latest_post_empty">עדיין לא פרסמת אף פוסט. לאחר פרסום של תוכן, סיכום הפוסטים האחרונים שלך יופיע כאן</string>
+    <string name="stats_insights_tags_and_categories">תגיות וקטגוריות</string>
+    <string name="stats_insights_all_time_stats">נתונים סטטיסטיים של כל הזמנים</string>
+    <string name="stats_insights_most_popular_views_label">צפיות</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">יום/שעה</string>
+    <string name="stats_insights_today_stats">הנתונים הסטטיסטיים של היום</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">עוקבים</string>
+    <string name="stats_publicize_service_label">שירות</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">צפיות</string>
+    <string name="stats_tags_and_categories_title_label">כותרת</string>
+    <string name="stats_posts_and_pages_views_label">צפיות</string>
+    <string name="stats_posts_and_pages_title_label">כותרת</string>
+    <string name="stats_comments_label">תגובות</string>
+    <string name="stats_comments_title_label">כותרת</string>
+    <string name="stats_comments_author_label">מחבר</string>
+    <string name="stats_comments_posts_and_pages">פוסטים ועמודים</string>
+    <string name="stats_comments_authors">מחברים</string>
+    <string name="stats_follower_since_label">מאז</string>
+    <string name="stats_follower_label">עוקב</string>
+    <string name="stats_followers_count_message">סך הכול %1$s עוקבים: %2$s</string>
+    <string name="stats_followers_email">אימייל</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">ניהול תובנות</string>
+    <string name="stats_empty_insights_description">בעזרת התאמה אישית של התובנות אפשר לקבל תמונה שמייצגת את הביצועים באתר</string>
+    <string name="stats_empty_insights_title">עדיין לא נוספו תובנות</string>
+    <string name="stats_no_data_yet">עדיין אין נתונים</string>
     <string name="menu_debug">תפריט איתור באגים</string>
     <string name="preference_experimental">*ניסיוני*</string>
     <string name="site_settings_enable_gutenberg_summary">זוהי גרסה ניסיונית של Gutenberg</string>
@@ -482,7 +548,6 @@ Language: he_IL
     <string name="site_creation_title_hint">כותרת האתר</string>
     <string name="site_creation_domain_finish_button">יצירת אתר</string>
     <string name="site_creation_domain_keywords_hint">יש להקליד מילת מפתח לרעיונות נוספים</string>
-    <string name="site_creation_label_domain_selection">יש לבחור כתובת \"yourname.wordpress.com\" זמינה כדי שאנשים יוכלו למצוא אותך ברחבי הרשת.</string>
     <string name="site_creation_label_domain_selection_title">שלב 4 מתוך 4</string>
     <string name="site_creation_label_site_details">יש לרשום תיאור על מה שברצונך ליצור. מהם הכותרת והתיאור קצר?</string>
     <string name="site_creation_label_site_details_title">שלב 3 מתוך 4</string>
@@ -1434,7 +1499,6 @@ Language: he_IL
     <string name="stats_insights_most_popular_hour">השעה הפופולרית ביותר</string>
     <string name="stats_insights_most_popular_day">היום הפופולרי ביותר</string>
     <string name="stats_insights_today">הנתונים הסטטיסטיים של היום</string>
-    <string name="stats_insights_popular">היום והשעה הפופולרים ביותר</string>
     <string name="stats_insights_all_time">פוסטים, צפיות ומבקרים מההתחלה ועד היום</string>
     <string name="stats_insights">תובנות</string>
     <string name="stats_sign_in_jetpack_different_com_account">להצגת הנתונים הסטטיסטיים שלך, יש להיכנס לחשבון וורדפרס.קום שבו השתמשת כדי לחבר את Jetpack.</string>
