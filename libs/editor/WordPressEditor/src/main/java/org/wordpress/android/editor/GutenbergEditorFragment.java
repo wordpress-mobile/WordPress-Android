@@ -109,12 +109,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 view.findViewById(R.id.gutenberg),
                 mHtmlModeEnabled,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryButtonClick() {
+                    @Override public void onMediaLibraryButtonClicked() {
                         onToolbarMediaButtonClicked();
                     }
 
                     @Override
-                    public void onUploadMediaButtonClick() {
+                    public void onUploadMediaButtonClicked() {
                         mEditorFragmentListener.onAddPhotoClicked();
                     }
                 },
