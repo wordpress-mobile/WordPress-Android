@@ -22,7 +22,7 @@
             android:paddingEnd="@dimen/page_item_horizontal_padding"
             android:paddingStart="@dimen/page_item_horizontal_padding"
             android:src="@drawable/ic_ellipsis_vertical_white_48dp"
-            android:tint="@color/grey_darken_10"
+            android:tint="@color/grey_darken_20"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
