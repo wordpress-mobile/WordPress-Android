@@ -608,9 +608,10 @@ public class PostStore extends Store {
                 if (post != null) {
                     // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
                     // as we'd otherwise overwrite and lose these local changes forever
-                    if (!post.getLastModified().equals(item.lastModified) && !post.isLocallyChanged()) {
+                    boolean postNotTheSameLocalAndRemote = !post.getLastModified().equals(item.lastModified);
+                    if (postNotTheSameLocalAndRemote && !post.isLocallyChanged()) {
                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(new RemotePostPayload(post, site)));
-                    } else {
+                    } else if (postNotTheSameLocalAndRemote && post.isLocallyChanged()) {
                         // at this point we know there's a potential version conflict (the post has been modified
                         // both locally and on the remote), so flag the local version of the Post so the
                         // hosting app can inform the user and the user can decide and take action
