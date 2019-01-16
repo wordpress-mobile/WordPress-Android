@@ -287,6 +287,6 @@ class PageStoreTest {
 
     private fun createPageFromPost(post: PostModel, site: SiteModel, parent: PageModel? = null): PageModel {
         return PageModel(site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
-                post.remotePostId, parent)
+                post.remotePostId, parent, 0)
     }
 }
