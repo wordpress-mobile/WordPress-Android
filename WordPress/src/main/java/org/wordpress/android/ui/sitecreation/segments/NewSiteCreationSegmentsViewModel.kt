@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
@@ -18,6 +17,7 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
@@ -37,6 +37,7 @@ class NewSiteCreationSegmentsViewModel
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchSegmentsUseCase: FetchSegmentsUseCase,
+    private val tracker: NewSiteCreationTracker,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -60,7 +61,6 @@ class NewSiteCreationSegmentsViewModel
     fun start() {
         if (isStarted) return
         isStarted = true
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_CATEGORY_VIEWED)
         fetchCategories()
     }
 
@@ -95,6 +95,7 @@ class NewSiteCreationSegmentsViewModel
             launch {
                 // We show the loading screen for a bit so the user has some feedback when they press the retry button
                 delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
+                tracker.trackConnectionErrorShown()
                 withContext(MAIN) {
                     updateUiStateToError(
                             ListState.Error(listState, null),
@@ -107,11 +108,13 @@ class NewSiteCreationSegmentsViewModel
 
     private fun onCategoriesFetched(event: OnSegmentsFetched) {
         if (event.isError) {
+            tracker.trackGenericErrorShown()
             updateUiStateToError(
                     ListState.Error(listState, event.error.message),
                     SegmentsErrorUiState.SegmentsGenericErrorUiState
             )
         } else {
+            tracker.trackSegmentsViewed()
             updateUiStateToContent(ListState.Success(event.segmentList))
         }
     }
@@ -124,11 +127,10 @@ class NewSiteCreationSegmentsViewModel
         _onHelpClicked.call()
     }
 
-    private fun onSegmentSelected(segmentId: Long) {
+    private fun onSegmentSelected(segmentTitle: String, segmentId: Long) {
+        tracker.trackSegmentSelected(segmentTitle, segmentId)
         _segmentSelected.value = segmentId
     }
-
-    // TODO analytics
 
     private fun updateUiStateToError(state: ListState<VerticalSegmentModel>, segmentError: SegmentsErrorUiState) {
         listState = state
@@ -181,7 +183,7 @@ class NewSiteCreationSegmentsViewModel
                     model.iconColor,
                     showDivider = !isLastItem
             )
-            segment.onItemTapped = { onSegmentSelected(model.segmentId) }
+            segment.onItemTapped = { onSegmentSelected(model.title, model.segmentId) }
             items.add(segment)
         }
     }

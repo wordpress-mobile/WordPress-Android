@@ -22,6 +22,7 @@ import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
@@ -47,6 +48,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val fetchSegmentPromptUseCase: FetchSegmentPromptUseCase,
     private val fetchVerticalsUseCase: FetchVerticalsUseCase,
+    private val tracker: NewSiteCreationTracker,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -119,6 +121,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
+            tracker.trackConnectionErrorShown()
             withContext(MAIN) {
                 updateUiState(VerticalsFullscreenErrorUiState.VerticalsConnectionErrorUiState)
             }
@@ -127,8 +130,10 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onSegmentsPromptFetched(event: OnSegmentPromptFetched) {
         if (event.isError) {
+            tracker.trackGenericErrorShown()
             updateUiState(VerticalsFullscreenErrorUiState.VerticalsGenericErrorUiState)
         } else {
+            tracker.trackVerticalsViewed()
             segmentPrompt = event.prompt!!
             updateUiStateToContent("", ListState.Ready(emptyList()))
             // Show the keyboard
@@ -172,15 +177,16 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                 }
             }
         } else {
-            showFullscreenConnectionErrorWithDelay(query)
+            showConnectionErrorWithDelay(query)
         }
     }
 
-    private fun showFullscreenConnectionErrorWithDelay(query: String) {
+    private fun showConnectionErrorWithDelay(query: String) {
         updateUiStateToContent(query, Loading(Ready(emptyList()), false))
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
+            tracker.trackConnectionErrorShown()
             withContext(MAIN) {
                 updateUiStateToContent(
                         query,
@@ -195,6 +201,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onVerticalsFetched(query: String, event: OnVerticalsFetched) {
         if (event.isError) {
+            tracker.trackGenericErrorShown()
             updateUiStateToContent(
                     query,
                     ListState.Error(
@@ -259,7 +266,10 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                             R.string.new_site_creation_verticals_custom_subtitle,
                             showDivider = index != lastItemIndex
                     )
-                    itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
+                    itemUiState.onItemTapped = {
+                        tracker.trackVerticalSelected(itemUiState.title, itemUiState.id, false)
+                        _verticalSelected.value = itemUiState.id
+                    }
                     items.add(itemUiState)
                 } else {
                     val itemUiState = VerticalsModelUiState(
@@ -267,7 +277,10 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                             model.name,
                             showDivider = index != lastItemIndex
                     )
-                    itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
+                    itemUiState.onItemTapped = {
+                        tracker.trackVerticalSelected(itemUiState.title, itemUiState.id, true)
+                        _verticalSelected.value = itemUiState.id
+                    }
                     items.add(itemUiState)
                 }
             }

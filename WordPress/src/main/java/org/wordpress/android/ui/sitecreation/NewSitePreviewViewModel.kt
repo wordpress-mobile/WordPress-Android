@@ -43,6 +43,7 @@ class NewSitePreviewViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val fetchWpComSiteUseCase: FetchWpComSiteUseCase,
     private val networkUtils: NetworkUtilsWrapper,
+    private val tracker: NewSiteCreationTracker,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -131,6 +132,7 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     fun onOkButtonClicked() {
+        tracker.trackCreationCompleted()
         _onOkButtonClicked.value = createSiteState
     }
 
@@ -139,6 +141,7 @@ class NewSitePreviewViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
+            tracker.trackConnectionErrorShown()
             withContext(MAIN) {
                 updateUiState(SitePreviewConnectionErrorUiState)
             }
@@ -161,6 +164,7 @@ class NewSitePreviewViewModel @Inject constructor(
             IDLE, CREATE_SITE -> {
             } // do nothing
             SUCCESS -> {
+                tracker.trackSuccessViewed()
                 startPreLoadingWebView()
                 val remoteSiteId = event.payload as Long
                 createSiteState = SiteNotInLocalDb(remoteSiteId)
@@ -168,6 +172,7 @@ class NewSitePreviewViewModel @Inject constructor(
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
+                tracker.trackGenericErrorShown()
                 updateUiStateAsync(SitePreviewGenericErrorUiState)
             }
         }
@@ -218,6 +223,7 @@ class NewSitePreviewViewModel @Inject constructor(
          * In other words don't update it after a configuration change.
          */
         if (uiState.value !is SitePreviewContentUiState) {
+            tracker.trackSuccessPreviewLoaded()
             updateUiState(SitePreviewContentUiState(createSitePreviewData()))
         }
     }

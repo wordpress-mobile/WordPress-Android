@@ -45,20 +45,16 @@ class NewSiteCreationActivity : AppCompatActivity(),
         SitePreviewScreenListener,
         OnSkipClickedListener,
         OnHelpClickedListener {
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: NewSiteCreationMainVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-
         setContentView(R.layout.new_site_creation_activity)
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(NewSiteCreationMainVM::class.java)
         mainViewModel.start(savedInstanceState)
 
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED)
-        }
         observeVMState()
     }
 

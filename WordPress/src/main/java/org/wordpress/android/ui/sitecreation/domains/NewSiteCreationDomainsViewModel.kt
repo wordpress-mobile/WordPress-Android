@@ -21,6 +21,7 @@ import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
@@ -45,6 +46,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
+    private val tracker: NewSiteCreationTracker,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -91,6 +93,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             return
         }
         isStarted = true
+        tracker.trackDomainsAccessed()
         // isNullOrBlank not smart-casting for some reason..
         if (siteTitle == null || siteTitle.isBlank()) {
             resetUiState()
@@ -102,10 +105,12 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     }
 
     fun createSiteBtnClicked() {
-        requireNotNull(selectedDomain) {
+        val domain = selectedDomain
+        requireNotNull(domain) {
             "Create site button should not be visible if a domain is not selected"
         }
-        _createSiteBtnClicked.value = selectedDomain
+        tracker.trackDomainSelected(domain, currentQuery?.value ?: "")
+        _createSiteBtnClicked.value = domain
     }
 
     fun onClearTextBtnClicked() {
@@ -146,6 +151,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                 }
             }
         } else {
+            tracker.trackConnectionErrorShown()
             updateUiStateToContent(query, ListState.Error(listState, errorMessageResId = R.string.no_network_message))
         }
     }
@@ -153,6 +159,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {
         // We want to treat `INVALID_QUERY` as if it's an empty result, so we'll ignore it
         if (event.isError && event.error.type != SuggestDomainErrorType.INVALID_QUERY) {
+            tracker.trackGenericErrorShown()
             updateUiStateToContent(
                     query,
                     ListState.Error(

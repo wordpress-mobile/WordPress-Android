@@ -83,8 +83,18 @@ class NewSiteCreationTracker @Inject constructor() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_COMPLETED)
     }
 
-    fun trackErrorShown(message: String) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ERROR_SHOWN, mapOf("error_info" to message))
+    fun trackConnectionErrorShown() {
+        AnalyticsTracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ERROR_SHOWN,
+                mapOf("error_info" to "connection error")
+        )
+    }
+
+    fun trackGenericErrorShown() {
+        AnalyticsTracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ERROR_SHOWN,
+                mapOf("error_info" to "generic error")
+        )
     }
 
     fun trackSiteCreationServiceStateUpdated(props: Map<String, *>) {
