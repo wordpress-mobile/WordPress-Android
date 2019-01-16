@@ -140,9 +140,9 @@ sealed class BlockListItem(val type: Type) {
             get() = header.itemId
     }
 
-    data class MapItem(val mapData: String, @StringRes val label: Int) : BlockListItem(MAP)
+    data class Empty(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(EMPTY)
 
-    object Empty : BlockListItem(EMPTY)
+    data class MapItem(val mapData: String, @StringRes val label: Int) : BlockListItem(MAP)
 
     object Divider : BlockListItem(DIVIDER)
 

@@ -91,8 +91,9 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
+            val wasPageUpdated = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false)
             if (pageId != -1L) {
-                onPageEditFinished(pageId)
+                onPageEditFinished(pageId, wasPageUpdated)
             }
         } else if (requestCode == RequestCodes.PAGE_PARENT && resultCode == Activity.RESULT_OK && data != null) {
             val parentId = data.getLongExtra(EXTRA_PAGE_PARENT_ID_KEY, -1)
@@ -112,8 +113,8 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         viewModel.onSpecificPageRequested(remotePageId)
     }
 
-    private fun onPageEditFinished(pageId: Long) {
-        viewModel.onPageEditFinished(pageId)
+    private fun onPageEditFinished(pageId: Long, wasPageUpdated: Boolean) {
+        viewModel.onPageEditFinished(pageId, wasPageUpdated)
     }
 
     private fun onPageParentSet(pageId: Long, parentId: Long) {

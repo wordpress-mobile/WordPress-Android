@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.MONTH_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
