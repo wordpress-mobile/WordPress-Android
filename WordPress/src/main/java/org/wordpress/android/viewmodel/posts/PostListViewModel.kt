@@ -298,6 +298,7 @@ class PostListViewModel @Inject constructor(
                 tag = CONFIRM_DELETE_POST_DIALOG_TAG,
                 titleRes = R.string.delete_post,
                 messageRes = messageRes,
+                customMessageString = null,
                 positiveButtonTextRes = R.string.delete,
                 negativeButtonTextRes = R.string.cancel
         )
@@ -317,6 +318,7 @@ class PostListViewModel @Inject constructor(
                 tag = CONFIRM_PUBLISH_POST_DIALOG_TAG,
                 titleRes = R.string.dialog_confirm_publish_title,
                 messageRes = R.string.dialog_confirm_publish_message_post,
+                customMessageString = null,
                 positiveButtonTextRes = R.string.dialog_confirm_publish_yes,
                 negativeButtonTextRes = R.string.cancel
         )
@@ -327,10 +329,11 @@ class PostListViewModel @Inject constructor(
     private fun showConflictedPostResolutionDialog(post: PostModel) {
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
-                titleRes = R.string.load_remote_post,
-                messageRes = R.string.dialog_confirm_load_remote_post,
-                positiveButtonTextRes = R.string.dialog_confirm_load_remote_post_do_load,
-                negativeButtonTextRes = R.string.dialog_confirm_load_remote_post_open_local
+                titleRes = R.string.dialog_confirm_load_remote_post_title,
+                messageRes = R.string.dialog_confirm_load_remote_post_body,
+                customMessageString = null,
+                positiveButtonTextRes = R.string.dialog_confirm_load_remote_post_keep_cloud,
+                negativeButtonTextRes = R.string.dialog_confirm_load_remote_post_keep_local
         )
         localPostIdForConflictResolutionDialog = post.id
         _dialogAction.postValue(dialogHolder)

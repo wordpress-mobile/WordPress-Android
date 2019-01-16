@@ -9,6 +9,7 @@ class DialogHolder(
     val tag: String,
     @StringRes val titleRes: Int,
     @StringRes val messageRes: Int,
+    val customMessageString: String?,
     @StringRes val positiveButtonTextRes: Int,
     @StringRes val negativeButtonTextRes: Int
 ) {
@@ -16,7 +17,7 @@ class DialogHolder(
         val dialog = BasicFragmentDialog()
         dialog.initialize(tag,
                 context.getString(titleRes),
-                context.getString(messageRes),
+                if (customMessageString != null) customMessageString else context.getString(messageRes),
                 context.getString(positiveButtonTextRes),
                 context.getString(negativeButtonTextRes),
                 null)
