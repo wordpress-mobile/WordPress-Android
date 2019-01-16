@@ -37,7 +37,6 @@ Language: az
     <string name="stats_insights_most_popular_percent_views">Baxışlarda %1$d%% </string>
     <string name="stats_insights_most_popular_hour">Ən populyar saat</string>
     <string name="stats_insights_most_popular_day">Ən populyar gün</string>
-    <string name="stats_insights_popular">Ən populyar gün və saat</string>
     <string name="stats_insights_today">Bugünkü Statistikalar</string>
     <string name="stats_insights_all_time">Bütün zamanlardakı yazılar, baxışlar və ziyarətçilər</string>
     <string name="stats_insights">Tək Baxışda</string>

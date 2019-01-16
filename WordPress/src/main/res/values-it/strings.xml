@@ -1,11 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-04 18:24:11+0000
+Translation-Revision-Date: 2019-01-03 10:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">Scegli un indirizzo tra quelli disponibili per consentire alle persone di trovarti nel web.</string>
+    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">Alcuni caricamenti multimediali non sono riusciti a causa di un errore di rete.</string>
+    <string name="giphy_picker_empty_search_list">Nessun media corrispondente alla tua ricerca</string>
+    <string name="giphy_picker_initial_empty_text">Cerca per trovare GIF da aggiungere alla tua Libreria multimediale!</string>
+    <string name="giphy_picker_search_hint">Cerca in Giphy</string>
+    <string name="photo_picker_giphy">Scegli da Giphy</string>
+    <string name="stats_author_views_label">Visualizzazioni</string>
+    <string name="stats_author_label">Autore</string>
+    <string name="stats_authors">Autori</string>
+    <string name="stats_search_terms_views_label">Visualizzazioni</string>
+    <string name="stats_search_terms_label">Cerca termine</string>
+    <string name="stats_search_terms">Cerca termini</string>
+    <string name="stats_videos_views_label">Visualizzazioni</string>
+    <string name="stats_videos_title_label">Titolo</string>
+    <string name="stats_videos">Video</string>
+    <string name="stats_country_views_label">Visualizzazioni</string>
+    <string name="stats_country_label">Nazione</string>
+    <string name="stats_countries">Nazioni</string>
+    <string name="stats_clicks_label">Clic</string>
+    <string name="stats_clicks_link_label">Link</string>
+    <string name="stats_clicks">Clic</string>
+    <string name="stats_referrer_views_label">Visualizzazioni</string>
+    <string name="stats_referrer_label">Referrer</string>
+    <string name="stats_referrers">Referrer</string>
+    <string name="stats_posts_and_pages">Articoli e pagine</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">Percorso</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">Visualizza altro</string>
+    <string name="stats_insights_share_post">Condividi articolo</string>
+    <string name="stats_insights_create_post">Crea articolo</string>
+    <string name="stats_insights_latest_post_message">Sono passati %1$s dalla pubblicazione di %2$s. Ecco come il tuo articolo è andato finora</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Sono passati %1$s dalla pubblicazione di %2$s. Sblocca la situazione e incrementa le visualizzazioni condividendo il tuo articolo.</string>
+    <string name="stats_insights_latest_post_empty">Non hai ancora pubblicato alcun articolo. Una volta avviata la pubblicazione, il riepilogo del tuo ultimo articolo verrà visualizzato qui.</string>
+    <string name="stats_insights_tags_and_categories">Tag e Categorie</string>
+    <string name="stats_insights_all_time_stats">Tutte le statistiche</string>
+    <string name="stats_insights_most_popular_views_label">Visualizzazioni</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Giorno/Ora</string>
+    <string name="stats_insights_today_stats">Statistiche odierne</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">Follower</string>
+    <string name="stats_publicize_service_label">Servizio</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">Visualizzazioni</string>
+    <string name="stats_tags_and_categories_title_label">Titolo</string>
+    <string name="stats_posts_and_pages_views_label">Visualizzazioni</string>
+    <string name="stats_posts_and_pages_title_label">Titolo</string>
+    <string name="stats_comments_label">Commenti</string>
+    <string name="stats_comments_title_label">Titolo</string>
+    <string name="stats_comments_author_label">Autore</string>
+    <string name="stats_comments_posts_and_pages">Articoli e pagine</string>
+    <string name="stats_comments_authors">Autori</string>
+    <string name="stats_follower_since_label">Da</string>
+    <string name="stats_follower_label">Follower</string>
+    <string name="stats_followers_count_message">Totale follower da %1$s: %2$s</string>
+    <string name="stats_followers_email">Email</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">Gestisci insight</string>
+    <string name="stats_empty_insights_description">Personalizza i tuoi insight e ottieni le ultime notizie sulle prestazioni del tuo sito</string>
+    <string name="stats_empty_insights_title">Nessun insight aggiunto</string>
+    <string name="stats_no_data_yet">Nessun dato</string>
     <string name="menu_debug">Menu di debug</string>
     <string name="preference_experimental">*SPERIMENTALE*</string>
     <string name="site_settings_enable_gutenberg_summary">Questa è ancora una versione sperimentale di Gutenberg</string>
@@ -30,7 +96,6 @@ Language: it
     <string name="dialog_gutenberg_compatibility_message">Stiamo lavorando al nuovissimo editor di WordPress. Puoi ancora modificare questo articolo, ma ti consigliamo di visualizzare l\'anteprima prima della pubblicazione.</string>
     <string name="dialog_gutenberg_compatibility_title">Prima di continuare</string>
     <string name="media_space_used">%1$s usato</string>
-    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Inserisci un sito WordPress ospitato su WordPress.com o auto gestito connesso con Jetpack</string>
     <string name="history_loading_revision">Caricamento della revisione</string>
     <string name="history_loaded_revision">Revisione caricata</string>
@@ -482,7 +547,6 @@ Language: it
     <string name="site_creation_title_hint">Titolo sito</string>
     <string name="site_creation_domain_finish_button">Crea il sito</string>
     <string name="site_creation_domain_keywords_hint">Digita una parola chiave per ulteriori idee</string>
-    <string name="site_creation_label_domain_selection">Scegli un indirizzo \"yourname.wordpress.com\" disponibile per consentire alle persone di trovarti sul web.</string>
     <string name="site_creation_label_domain_selection_title">Passaggio 4 di 4</string>
     <string name="site_creation_label_site_details">Raccontaci di più su quello che stai creando. Quali sono il titolo e la tagline?</string>
     <string name="site_creation_label_site_details_title">Passaggio 3 di 4</string>
@@ -729,7 +793,7 @@ Language: it
     <string name="notification_settings_master_off_title">Per ricevere le notifiche su questo dispositivo, attivare le impostazioni di notifica.</string>
     <string name="notification_settings_master_hint_off">Attiva notifiche</string>
     <string name="notification_settings_master_hint_on">Disabilita notifiche</string>
-    <string name="notification_settings_master_status_off">Disattivata</string>
+    <string name="notification_settings_master_status_off">Disattivato</string>
     <string name="notification_settings_master_status_on">Attivo</string>
     <string name="max_video_resolution">Dimensione video massima</string>
     <string name="max_thumbnail_px_size">Dimensione immagine massima</string>
@@ -1218,7 +1282,7 @@ Language: it
     <string name="comments_empty_list_filtered_spam">Nessun commento spam</string>
     <string name="comment_status_all">Tutti</string>
     <string name="could_not_load_page">Impossibile caricare la pagina</string>
-    <string name="off">Disattivata</string>
+    <string name="off">Disattivato</string>
     <string name="interface_language">Lingua dell\'interfaccia</string>
     <string name="about_the_app">Info sull\'app</string>
     <string name="error_post_account_settings">Impossibile salvare le impostazioni del tuo account</string>
@@ -1434,7 +1498,7 @@ Language: it
     <string name="stats_insights_best_ever">Le migliore visualizzazioni di sempre</string>
     <string name="stats_insights_most_popular_hour">Ora più popolare.</string>
     <string name="stats_insights_most_popular_day">Giorno più popolare.</string>
-    <string name="stats_insights_today">Statistiche odierne.</string>
+    <string name="stats_insights_today">Statistiche odierne</string>
     <string name="stats_insights_popular">Giorno e ora più popolari.</string>
     <string name="stats_insights_all_time">Articoli, visualizzazioni e visitatori dall\'inizio</string>
     <string name="stats_insights">Approfondimenti</string>

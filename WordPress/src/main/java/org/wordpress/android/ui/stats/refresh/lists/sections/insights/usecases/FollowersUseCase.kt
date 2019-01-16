@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -105,7 +105,7 @@ class FollowersUseCase
                 )
             }
         } else {
-            items.add(Empty)
+            items.add(Empty())
         }
         return items
     }
@@ -125,7 +125,7 @@ class FollowersUseCase
             mutableItems.add(Header(R.string.stats_follower_label, R.string.stats_follower_since_label))
             model.followers.toUserItems().let { mutableItems.addAll(it) }
         } else {
-            mutableItems.add(Empty)
+            mutableItems.add(Empty())
         }
         return mutableItems
     }

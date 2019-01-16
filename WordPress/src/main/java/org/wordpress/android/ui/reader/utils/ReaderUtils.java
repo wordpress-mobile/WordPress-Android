@@ -76,7 +76,7 @@ public class ReaderUtils {
                     .replaceAll("&[^\\s]*;", "") // remove html entities
                     .replaceAll("[\\.\\s]+", "-") // replace periods and whitespace with a dash
                     .replaceAll("[^\\p{L}\\p{Nd}\\-]+",
-                                "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
+                            "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
                     .replaceAll("--", "-"); // reduce double dashes potentially added above
     }
 
@@ -214,12 +214,16 @@ public class ReaderUtils {
      * the user hasn't already chosen one
      */
     public static ReaderTag getDefaultTag() {
-        return getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT);
+        ReaderTag defaultTag = getTagFromEndpoint(ReaderTag.TAG_ENDPOINT_DEFAULT);
+        if (defaultTag == null) {
+            defaultTag = getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT);
+        }
+        return defaultTag;
     }
 
     /*
-  * used when storing search results in the reader post table
-  */
+     * used when storing search results in the reader post table
+     */
     public static ReaderTag getTagForSearchQuery(@NonNull String query) {
         String trimQuery = query != null ? query.trim() : "";
         String slug = ReaderUtils.sanitizeWithDashes(trimQuery);
