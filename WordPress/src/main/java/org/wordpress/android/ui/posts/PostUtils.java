@@ -373,4 +373,10 @@ public class PostUtils {
                    || contentContainsGutenbergBlocks(post.getContent())
                    || TextUtils.isEmpty(post.getContent()));
     }
+
+    public static boolean isPostInConflictWithRemote(PostModel post) {
+        // at this point we know there's a potential version conflict (the post has been modified
+        // both locally and on the remote)
+        return !post.getLastModified().equals(post.getRemoteLastModified()) && post.isLocallyChanged();
+    }
 }

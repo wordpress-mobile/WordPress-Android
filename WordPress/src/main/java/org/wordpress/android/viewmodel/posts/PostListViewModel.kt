@@ -350,7 +350,7 @@ class PostListViewModel @Inject constructor(
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state.
-        if (post.isConflicted) {
+        if (PostUtils.isPostInConflictWithRemote(post)) {
             showConflictedPostResolutionDialog(post)
             return
         }
@@ -547,7 +547,7 @@ class PostListViewModel @Inject constructor(
                 date = PostUtils.getFormattedDate(post),
                 postStatus = postStatus,
                 isLocallyChanged = post.isLocallyChanged,
-                isConflicted = post.isConflicted,
+                isConflicted = PostUtils.isPostInConflictWithRemote(post),
                 canShowStats = canShowStats,
                 canPublishPost = canPublishPost,
                 canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
