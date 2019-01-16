@@ -523,6 +523,7 @@ class PostListViewModel @Inject constructor(
                 date = PostUtils.getFormattedDate(post),
                 postStatus = postStatus,
                 isLocallyChanged = post.isLocallyChanged,
+                isConflicted = post.isConflicted,
                 canShowStats = canShowStats,
                 canPublishPost = canPublishPost,
                 canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
