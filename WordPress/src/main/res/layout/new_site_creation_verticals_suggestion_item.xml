@@ -17,6 +17,7 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_large"
+        android:textAlignment="viewStart"
         android:textColor="@color/wp_grey_dark"
         android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,8 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:text="1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4"
-        tools:ignore="RtlSymmetry"/>
+        tools:text="1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4"/>
 
     <View
         android:id="@+id/divider"
