@@ -5,8 +5,8 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceManager.NewSiteCreationServiceManagerListener
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
@@ -24,6 +24,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
     @Inject lateinit var manager: NewSiteCreationServiceManager
 
     @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var tracker: NewSiteCreationTracker
 
     override fun onCreate() {
         super.onCreate()
@@ -77,7 +78,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
     }
 
     override fun trackStateUpdate(props: Map<String, *>) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NEW_SITE_CREATION_BACKGROUND_SERVICE_UPDATE, props)
+        tracker.trackSiteCreationServiceStateUpdated(props)
     }
 
     override fun logError(message: String) {
