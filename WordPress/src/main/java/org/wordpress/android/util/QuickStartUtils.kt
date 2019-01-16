@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_P
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
@@ -197,6 +198,8 @@ class QuickStartUtils {
             if (isEveryQuickStartTaskDone(quickStartStore)) {
                 AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
+            }else{
+                AppPrefs.setQuickStartNoticeRequired(true)
             }
         }
 
@@ -231,6 +234,39 @@ class QuickStartUtils {
                     Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
                 }
             }
+        }
+
+        /**
+         * This method tries to return the next uncompleted task of taskType
+         * if no uncompleted task of taskType remain it tries to find and return uncompleted task of other task type
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun getNextUncompletedQuickStartTask(
+            quickStartStore: QuickStartStore,
+            siteId: Long,
+            taskType: QuickStartTaskType
+        ): QuickStartTask? {
+            val uncompletedTasksOfPreferredType = quickStartStore.getUncompletedTasksByType(siteId, taskType)
+
+            var nextTask: QuickStartTask? = null
+
+            if (uncompletedTasksOfPreferredType.isEmpty()) {
+                val otherQuickStartTaskTypes = QuickStartTaskType.values()
+                        .filter { it != taskType && it != QuickStartTaskType.UNKNOWN }
+
+                otherQuickStartTaskTypes.forEach {
+                    val otherUncompletedTasks = quickStartStore.getUncompletedTasksByType(siteId, it)
+                    if (otherUncompletedTasks.isNotEmpty()) {
+                        nextTask = quickStartStore.getUncompletedTasksByType(siteId, it).first()
+                        return@forEach
+                    }
+                }
+            } else {
+                nextTask = uncompletedTasksOfPreferredType.first()
+            }
+
+            return nextTask
         }
     }
 }
