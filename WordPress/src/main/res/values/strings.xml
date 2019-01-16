@@ -1384,7 +1384,7 @@
     <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
 
     <!-- Remote Post has conflicts with local post -->
-    <string name="local_post_is_conflicted">Conflicted</string>
+    <string name="local_post_is_conflicted">Conflict</string>
 
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
