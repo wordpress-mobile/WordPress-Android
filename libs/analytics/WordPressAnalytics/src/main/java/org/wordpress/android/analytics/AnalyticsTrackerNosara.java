@@ -1093,6 +1093,34 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_creation_creating_viewed";
             case SITE_CREATION_SUCCESS_VIEWED:
                 return "site_creation_success_viewed";
+            case ENHANCED_SITE_CREATION_ACCESSED:
+                return "enhanced_site_creation_accessed";
+            case ENHANCED_SITE_CREATION_SEGMENTS_VIEWED:
+                return "enhanced_site_creation_segments_viewed";
+            case ENHANCED_SITE_CREATION_SEGMENTS_SELECTED:
+                return "enhanced_site_creation_segments_selected";
+            case ENHANCED_SITE_CREATION_VERTICALS_VIEWED:
+                return "enhanced_site_creation_verticals_viewed";
+            case ENHANCED_SITE_CREATION_VERTICALS_SELECTED:
+                return "enhanced_site_creation_verticals_selected";
+            case ENHANCED_SITE_CREATION_BASIC_INFORMATION_VIEWED:
+                return "enhanced_site_creation_basic_information_viewed";
+            case ENHANCED_SITE_CREATION_BASIC_INFORMATION_COMPLETED:
+                return "enhanced_site_creation_basic_information_completed";
+            case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
+                return "enhanced_site_creation_domains_accessed";
+            case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
+                return "enhanced_site_creation_domains_selected";
+            case ENHANCED_SITE_CREATION_SUCCESS_VIEWED:
+                return "enhanced_site_creation_success_viewed";
+            case ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED:
+                return "enhanced_site_creation_success_preview_viewed";
+            case ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED:
+                return "enhanced_site_creation_success_preview_loaded";
+            case ENHANCED_SITE_CREATION_COMPLETED:
+                return "enhanced_site_creation_completed";
+            case ENHANCED_SITE_CREATION_ERROR_SHOWN:
+                return "enhanced_site_creation_error_shown";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
