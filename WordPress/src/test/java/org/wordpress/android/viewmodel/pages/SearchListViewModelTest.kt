@@ -112,7 +112,7 @@ class SearchListViewModelTest {
 
     @Test
     fun `passes action to page view model on menu action`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null,false)
+        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null, false)
         val action = VIEW_PAGE
 
         viewModel.onMenuAction(action, clickedPage)
@@ -122,7 +122,7 @@ class SearchListViewModelTest {
 
     @Test
     fun `passes page to page view model on item tapped`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null,false)
+        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null, false)
 
         viewModel.onItemTapped(clickedPage)
 
