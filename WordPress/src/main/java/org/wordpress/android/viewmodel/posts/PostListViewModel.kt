@@ -77,6 +77,7 @@ import javax.inject.Inject
 
 const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
+const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 
 enum class PostListEmptyViewState {
     EMPTY_LIST,
@@ -109,9 +110,10 @@ class PostListViewModel @Inject constructor(
 
     // Keep a reference to the currently being trashed post, so we can hide it during Undo Snackbar
     private var postIdToTrash: Pair<Int, Long>? = null
-    // Since we are using DialogFragments we need to hold onto which post will be published or trashed
+    // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForTrashDialog: Int? = null
+    private var localPostIdForConflictResolutionDialog: Int? = null
     // Initial target post to scroll to
     private var targetLocalPostId: Int? = null
 
@@ -322,6 +324,19 @@ class PostListViewModel @Inject constructor(
         _dialogAction.postValue(dialogHolder)
     }
 
+    private fun showConflictedPostResolutionDialog(post: PostModel) {
+        val dialogHolder = DialogHolder(
+                tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
+                titleRes = R.string.load_remote_post,
+                messageRes = R.string.dialog_confirm_load_remote_post,
+                positiveButtonTextRes = R.string.dialog_confirm_load_remote_post_do_load,
+                negativeButtonTextRes = R.string.dialog_confirm_load_remote_post_open_local
+        )
+        localPostIdForConflictResolutionDialog = post.id
+        _dialogAction.postValue(dialogHolder)
+    }
+
+
     private fun publishPost(localPostId: Int) {
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
@@ -335,6 +350,16 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
+        // first of all, check whether this post is in Conflicted state.
+        if (post.isConflicted) {
+            showConflictedPostResolutionDialog(post)
+            return
+        }
+
+        checkGutenbergOrEdit(site, post)
+    }
+
+    private fun checkGutenbergOrEdit(site: SiteModel, post: PostModel) {
         // Show Gutenberg Warning Dialog if post contains GB blocks and it's not disabled
         if (!isGutenbergEnabled() &&
                 PostUtils.contentContainsGutenbergBlocks(post.content) &&
@@ -600,6 +625,11 @@ class PostListViewModel @Inject constructor(
                 localPostIdForPublishDialog = null
                 publishPost(it)
             }
+            CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
+                localPostIdForConflictResolutionDialog = null
+                // here load version from remote
+                loadPostFromRemote(it)
+            }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
@@ -608,6 +638,10 @@ class PostListViewModel @Inject constructor(
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
+            CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
+                localPostIdForConflictResolutionDialog = null
+                loadPostFromLocal(it)
+            }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
     }
@@ -659,6 +693,27 @@ class PostListViewModel @Inject constructor(
             }
             PostUtils.trackGutenbergDialogEvent(trackValue, post, site)
         }
+    }
+
+    private fun loadPostFromRemote(localPostId: Int) {
+        // We need network connection to load a remote post
+        if (!checkNetworkConnection()) {
+            return
+        }
+
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
+        }
+        localPostIdForConflictResolutionDialog = null
+    }
+
+    private fun loadPostFromLocal(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            checkGutenbergOrEdit(site, post)
+        }
+        localPostIdForConflictResolutionDialog = null
     }
 
     // Utils

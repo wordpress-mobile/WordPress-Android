@@ -312,9 +312,13 @@
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
     <string name="delete_post">Delete post?</string>
     <string name="delete_page">Delete page?</string>
+    <string name="load_remote_post">Load from remote?</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
+    <string name="dialog_confirm_load_remote_post">This post is in conflict with remote. Would you like to load the remote version, discarding local changes?</string>
+    <string name="dialog_confirm_load_remote_post_do_load">Load remote</string>
+    <string name="dialog_confirm_load_remote_post_open_local">Edit local</string>
     <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
     <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
