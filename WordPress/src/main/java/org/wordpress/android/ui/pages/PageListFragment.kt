@@ -17,6 +17,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PagesViewModel
@@ -26,6 +28,7 @@ import javax.inject.Named
 
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var imageManager: ImageManager
     @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
@@ -107,6 +110,8 @@ class PageListFragment : Fragment() {
                     onMenuAction = { action, page -> viewModel.onMenuAction(action, page) },
                     onItemTapped = { page -> viewModel.onItemTapped(page) },
                     onEmptyActionButtonTapped = { viewModel.onEmptyListNewPageButtonTapped() },
+                    imageManager = imageManager,
+                    isSitePhotonCapable = SiteUtils.isPhotonCapable(viewModel.site),
                     uiScope = uiScope
             )
             recyclerView.adapter = adapter
