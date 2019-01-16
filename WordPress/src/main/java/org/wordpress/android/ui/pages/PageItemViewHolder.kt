@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.ImageView.ScaleType
 import android.widget.PopupMenu
 import android.widget.RadioButton
 import android.widget.TextView
@@ -16,8 +18,12 @@ import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
+import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
 import java.util.Date
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
@@ -27,13 +33,20 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
     class PageViewHolder(
         parentView: ViewGroup,
         private val onMenuAction: (PageItem.Action, Page) -> Boolean,
-        private val onItemTapped: (Page) -> Unit
+        private val onItemTapped: (Page) -> Unit,
+        private val imageManager: ImageManager,
+        private val isSitePhotonCapable: Boolean
     ) : PageItemViewHolder(parentView, R.layout.page_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(R.id.page_more)
         private val time = itemView.findViewById<TextView>(R.id.time_posted)
         private val labels = itemView.findViewById<TextView>(R.id.labels)
+        private val featuredImage = itemView.findViewById<ImageView>(R.id.featured_image)
         private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
+
+        companion object {
+            const val FEATURED_IMAGE_THUMBNAIL_SIZE_DP = 40
+        }
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as Page).let {
@@ -57,6 +70,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 pageMore.setOnClickListener { view -> moreClick(pageItem, view) }
                 pageMore.visibility =
                         if (pageItem.actions.isNotEmpty() && pageItem.actionsEnabled) View.VISIBLE else View.INVISIBLE
+
+                showFeaturedImage(pageItem.imageUrl)
             }
         }
 
@@ -71,6 +86,27 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 popup.menu.findItem(it.itemId).isVisible = pageItem.actions.contains(it)
             }
             popup.show()
+        }
+
+        private fun showFeaturedImage(imageUrl: String?) {
+            val imageSize = DisplayUtils.dpToPx(parent.context, FEATURED_IMAGE_THUMBNAIL_SIZE_DP)
+            if (imageUrl == null) {
+                featuredImage.visibility = View.GONE
+                imageManager.cancelRequestAndClearImageView(featuredImage)
+            } else if (imageUrl.startsWith("http")) {
+                featuredImage.visibility = View.VISIBLE
+                val photonUrl = ReaderUtils.getResizedImageUrl(imageUrl, imageSize, imageSize, !isSitePhotonCapable)
+                imageManager.load(featuredImage, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
+            } else {
+                val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(featuredImage.context, imageUrl, imageSize)
+                if (bmp != null) {
+                    featuredImage.visibility = View.VISIBLE
+                    imageManager.load(featuredImage, bmp)
+                } else {
+                    featuredImage.visibility = View.GONE
+                    imageManager.cancelRequestAndClearImageView(featuredImage)
+                }
+            }
         }
     }
 
