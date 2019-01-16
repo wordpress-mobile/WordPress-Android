@@ -32,7 +32,7 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override val labels: List<Int> = emptyList(),
         override var indent: Int = 0,
-        override var imageUrl: String?,
+        override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true
     ) : Page(id, title, date, labels, indent, imageUrl, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
             actionsEnabled)
@@ -42,7 +42,7 @@ sealed class PageItem(open val type: Type) {
         override val title: String,
         override val date: Date,
         override val labels: List<Int> = emptyList(),
-        override var imageUrl: String?,
+        override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true
     ) : Page(id, title, date, labels, 0, imageUrl, setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH),
             actionsEnabled)
@@ -51,7 +51,7 @@ sealed class PageItem(open val type: Type) {
         override val id: Long,
         override val title: String,
         override val date: Date,
-        override var imageUrl: String?,
+        override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true
     ) : Page(id, title, date, emptyList(), 0, imageUrl,
             setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH), actionsEnabled)
@@ -60,7 +60,7 @@ sealed class PageItem(open val type: Type) {
         override val id: Long,
         override val title: String,
         override val date: Date,
-        override var imageUrl: String?,
+        override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true
     ) : Page(id, title, date, emptyList(), 0, imageUrl, setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY),
             actionsEnabled)
