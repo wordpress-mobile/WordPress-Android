@@ -45,7 +45,7 @@ class SearchListViewModelTest {
 
     @Before
     fun setUp() {
-        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null)
+        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
         viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE)
         searchPages = MutableLiveData()
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
@@ -112,7 +112,7 @@ class SearchListViewModelTest {
 
     @Test
     fun `passes action to page view model on menu action`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", listOf(), 0, false)
+        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null,false)
         val action = VIEW_PAGE
 
         viewModel.onMenuAction(action, clickedPage)
@@ -122,7 +122,7 @@ class SearchListViewModelTest {
 
     @Test
     fun `passes page to page view model on item tapped`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", listOf(), 0, false)
+        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null,false)
 
         viewModel.onItemTapped(clickedPage)
 
