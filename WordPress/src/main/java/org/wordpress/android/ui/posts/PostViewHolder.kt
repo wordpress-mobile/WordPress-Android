@@ -175,8 +175,8 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
             } else if (postAdapterItem.isConflicted) {
                 statusTextResId = R.string.local_post_is_conflicted
-                statusIconResId = R.drawable.ic_gridicons_page
-                statusColorResId = R.color.alert_yellow_dark
+                statusIconResId = R.drawable.ic_gridicons_notice_outline
+                statusColorResId = R.color.alert_red
             } else if (postAdapterItem.isLocalDraft) {
                 statusTextResId = R.string.local_draft
                 statusIconResId = R.drawable.ic_gridicons_page
