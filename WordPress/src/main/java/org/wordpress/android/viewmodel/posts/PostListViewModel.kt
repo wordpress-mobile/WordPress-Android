@@ -647,8 +647,11 @@ class PostListViewModel @Inject constructor(
     }
 
     fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
-        // Cancel and outside touch dismiss works the same way
-        onNegativeClickedForBasicDialog(instanceTag)
+        // Cancel and outside touch dismiss works the same way for all, except for conflict resolution dialog,
+        // for which tapping outside and actively tapping the "edit local" have different meanings
+        if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG) {
+            onNegativeClickedForBasicDialog(instanceTag)
+        }
     }
 
     // Gutenberg Events
