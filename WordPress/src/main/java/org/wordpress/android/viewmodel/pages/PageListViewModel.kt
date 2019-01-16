@@ -265,6 +265,7 @@ class PageListViewModel @Inject constructor(
 
     private fun invalidateFeaturedMedia(vararg featuredImageIds: Long) {
         featuredImageIds.forEach { featuredImageMap.remove(it) }
+        pagesViewModel.onImagesChanged()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)

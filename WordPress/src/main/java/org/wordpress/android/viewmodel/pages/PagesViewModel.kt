@@ -396,6 +396,12 @@ class PagesViewModel
         }
     }
 
+    fun onImagesChanged() {
+        launch {
+            refreshPages()
+        }
+    }
+
     fun onDeleteConfirmed(remoteId: Long) {
         launch(defaultDispatcher) {
             pageMap[remoteId]?.let { deletePage(it) }
