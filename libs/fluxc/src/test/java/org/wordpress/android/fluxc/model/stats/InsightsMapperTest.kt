@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.store.stats.ALL_TIME_RESPONSE
 import org.wordpress.android.fluxc.store.stats.COMMENT_COUNT
 import org.wordpress.android.fluxc.store.stats.FIRST_DAY
@@ -87,5 +88,13 @@ class InsightsMapperTest {
         assertThat(model.reblogs).isEqualTo(REBLOG_COUNT)
         assertThat(model.views).isEqualTo(VIEWS)
         assertThat(model.visitors).isEqualTo(org.wordpress.android.fluxc.store.stats.VISITORS)
+    }
+
+    @Test
+    fun `maps visits response with empty data`() {
+        val model = mapper.map(VisitResponse(null, null, listOf("views", "comments"), listOf(listOf("10"))))
+
+        assertThat(model.views).isEqualTo(10)
+        assertThat(model.comments).isEqualTo(0)
     }
 }
