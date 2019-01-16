@@ -401,7 +401,7 @@ public class PostUtils {
      */
     public static String getFormattedDateForLastModified(long ms) {
         Date date = new Date(ms);
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy '@' HH:mm", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy '@' hh:mm a", Locale.ENGLISH);
 
         // The timezone on the website is at GMT
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
