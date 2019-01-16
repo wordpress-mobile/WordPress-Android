@@ -336,7 +336,6 @@ class PostListViewModel @Inject constructor(
         _dialogAction.postValue(dialogHolder)
     }
 
-
     private fun publishPost(localPostId: Int) {
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
