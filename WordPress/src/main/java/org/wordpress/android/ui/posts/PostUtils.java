@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -21,12 +22,15 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.text.BreakIterator;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -379,4 +383,30 @@ public class PostUtils {
         // both locally and on the remote)
         return !post.getLastModified().equals(post.getRemoteLastModified()) && post.isLocallyChanged();
     }
+
+    public static String getConflictedPostCustomStringForDialog(PostModel post) {
+        Context context = WordPress.getContext();
+        String firstPart = context.getString(R.string.dialog_confirm_load_remote_post_body);
+        String secondPart =
+                String.format(context.getString(R.string.dialog_confirm_load_remote_post_body_2),
+                        getFormattedDateForLastModified(
+                                DateTimeUtils.timestampFromIso8601Millis(post.getLastModified())),
+                        getFormattedDateForLastModified(
+                                DateTimeUtils.timestampFromIso8601Millis(post.getRemoteLastModified())));
+        return firstPart + secondPart;
+    }
+
+    /**
+     * E.g. Jul 2, 2013 @ 21:57
+     */
+    public static String getFormattedDateForLastModified(long ms) {
+        Date date = new Date(ms);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy '@' HH:mm", Locale.ENGLISH);
+
+        // The timezone on the website is at GMT
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        return sdf.format(date);
+    }
+
 }

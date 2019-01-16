@@ -331,7 +331,7 @@ class PostListViewModel @Inject constructor(
                 tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
                 titleRes = R.string.dialog_confirm_load_remote_post_title,
                 messageRes = R.string.dialog_confirm_load_remote_post_body,
-                customMessageString = null,
+                customMessageString = PostUtils.getConflictedPostCustomStringForDialog(post),
                 positiveButtonTextRes = R.string.dialog_confirm_load_remote_post_keep_cloud,
                 negativeButtonTextRes = R.string.dialog_confirm_load_remote_post_keep_local
         )

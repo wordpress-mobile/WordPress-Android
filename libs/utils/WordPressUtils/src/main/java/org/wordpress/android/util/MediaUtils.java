@@ -97,19 +97,6 @@ public class MediaUtils {
         return "gif".equals(MimeTypeMap.getFileExtensionFromUrl(url));
     }
 
-    /**
-     * E.g. Jul 2, 2013 @ 21:57
-     */
-    public static String getDate(long ms) {
-        Date date = new Date(ms);
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy '@' HH:mm", Locale.ENGLISH);
-
-        // The timezone on the website is at GMT
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        return sdf.format(date);
-    }
-
     public static boolean isLocalFile(String state) {
         if (state == null) {
             return false;
