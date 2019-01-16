@@ -51,15 +51,15 @@
             android:layout_height="@dimen/stats_block_icon_size"
             android:contentDescription="@string/icon"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_share_blue_medium_24dp"/>
+            android:src="@drawable/ic_share_blue_medium_24dp"/>
 
         <ImageView
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
             android:contentDescription="@string/reader_avatar_desc"
-            android:visibility="gone"
-            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"/>
+            android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <TextView
@@ -83,14 +83,15 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="4dp"
         android:contentDescription="@string/icon"
+        android:src="@drawable/ic_chevron_down_white_24dp"
+        android:tint="@color/grey_dark"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/value"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_chevron_down_grey_dark_24dp"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/subtext"

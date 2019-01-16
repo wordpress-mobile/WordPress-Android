@@ -133,7 +133,7 @@ import org.wordpress.android.ui.sitecreation.NewSiteCreationThemeAdapter;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationThemeFragment;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationService;
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsFragment;
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsFragment;
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;

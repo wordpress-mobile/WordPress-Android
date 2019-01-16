@@ -3,16 +3,17 @@ package org.wordpress.android.ui.sitecreation.verticals
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.anyOrNull
-import com.nhaarman.mockito_kotlin.firstValue
-import com.nhaarman.mockito_kotlin.lastValue
-import com.nhaarman.mockito_kotlin.secondValue
-import com.nhaarman.mockito_kotlin.thirdValue
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.CoroutineScope
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.firstValue
+import com.nhaarman.mockitokotlin2.lastValue
+import com.nhaarman.mockitokotlin2.secondValue
+import com.nhaarman.mockitokotlin2.thirdValue
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -110,6 +111,7 @@ private val ERROR_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         FetchVerticalsError(GENERIC_ERROR, message = null)
 )
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class NewSiteCreationVerticalsViewModelTest {
     @Rule

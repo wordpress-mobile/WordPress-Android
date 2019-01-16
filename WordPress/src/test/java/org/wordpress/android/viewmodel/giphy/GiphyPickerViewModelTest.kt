@@ -2,24 +2,29 @@ package org.wordpress.android.viewmodel.giphy
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.paging.PositionalDataSource.LoadInitialCallback
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.doNothing
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.runBlocking
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.doNothing
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
 import java.util.Random
 import java.util.UUID
 
+@RunWith(MockitoJUnitRunner::class)
 class GiphyPickerViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -29,10 +34,17 @@ class GiphyPickerViewModelTest {
     private val dataSourceFactory = mock<GiphyPickerDataSourceFactory>()
     private val mediaFetcher = mock<GiphyMediaFetcher>()
 
+    @Mock private lateinit var networkUtils: NetworkUtilsWrapper
+
     @Before
     fun setUp() {
-        viewModel = GiphyPickerViewModel(dataSourceFactory = dataSourceFactory, mediaFetcher = mediaFetcher)
+        viewModel = GiphyPickerViewModel(
+                dataSourceFactory = dataSourceFactory,
+                networkUtils = networkUtils,
+                mediaFetcher = mediaFetcher
+        )
         viewModel.setup(site = mock())
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test
@@ -165,7 +177,6 @@ class GiphyPickerViewModelTest {
         val dataSource = mock<GiphyPickerDataSource>()
 
         whenever(dataSourceFactory.create()).thenReturn(dataSource)
-        whenever(dataSourceFactory.searchQuery).thenReturn("dummy")
         whenever(dataSourceFactory.initialLoadError).thenReturn(mock())
 
         val callbackCaptor = argumentCaptor<LoadInitialCallback<GiphyMediaViewModel>>()
@@ -207,6 +218,21 @@ class GiphyPickerViewModelTest {
             assertThat(mediaModels).isEqualTo(expectedResult)
 
             assertThat(errorMessageStringResId).isNull()
+        }
+    }
+
+    @Test
+    fun `when download fails due to network error, it posts an error string resource id`() {
+        // Arrange
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
+
+        // Act
+        runBlocking { viewModel.downloadSelected().join() }
+
+        // Assert
+        with(checkNotNull(viewModel.downloadResult.value)) {
+            assertThat(errorMessageStringResId).isNotNull()
+            assertThat(mediaModels).isNull()
         }
     }
 

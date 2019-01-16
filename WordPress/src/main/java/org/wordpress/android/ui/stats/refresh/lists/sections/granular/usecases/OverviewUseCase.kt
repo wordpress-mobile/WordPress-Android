@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
@@ -16,6 +16,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFac
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -75,33 +77,37 @@ constructor(
 
     override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        val selectedDate = uiState.selectedDate ?: domainModel.dates.lastOrNull()?.period
-        if (selectedDateProvider.getSelectedDate(statsGranularity) == null && selectedDate != null) {
-            selectedDateProvider.selectDate(
-                    statsDateFormatter.parseStatsDate(statsGranularity, selectedDate),
-                    statsGranularity
-            )
-        }
-        val selectedItem = domainModel.dates.find { it.period == uiState.selectedDate }
-                ?: domainModel.dates.lastOrNull()
-        items.add(
-                overviewMapper.buildTitle(
-                        selectedItem?.period,
-                        selectedDate,
-                        domainModel.period,
+        if (domainModel.dates.isNotEmpty()) {
+            val selectedDate = uiState.selectedDate ?: domainModel.dates.last().period
+            if (selectedDateProvider.getSelectedDate(statsGranularity) == null) {
+                selectedDateProvider.selectDate(
+                        statsDateFormatter.parseStatsDate(statsGranularity, selectedDate),
                         statsGranularity
                 )
-        )
-        items.add(
-                overviewMapper.buildChart(
-                        domainModel,
-                        statsGranularity,
-                        this::onBarSelected,
-                        uiState.selectedPosition,
-                        selectedDate
-                )
-        )
-        items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
+            }
+            val selectedItem = domainModel.dates.find { it.period == uiState.selectedDate }
+                    ?: domainModel.dates.last()
+            items.add(
+                    overviewMapper.buildTitle(
+                            selectedItem.period,
+                            selectedDate,
+                            domainModel.period,
+                            statsGranularity
+                    )
+            )
+            items.add(
+                    overviewMapper.buildChart(
+                            domainModel,
+                            statsGranularity,
+                            this::onBarSelected,
+                            uiState.selectedPosition,
+                            selectedDate
+                    )
+            )
+            items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
+        } else {
+            AppLog.e(T.STATS, "There is no data to be shown in the overview block")
+        }
         return items
     }
 

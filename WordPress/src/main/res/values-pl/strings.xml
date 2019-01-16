@@ -1,11 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-23 14:24:51+0000
+Translation-Revision-Date: 2018-12-24 14:10:02+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">Wybierz dostępny adres internetowy aby ludzie mogli znaleźć ciebie w sieci.</string>
+    <string name="giphy_powered_by_giphy">Wspierane przez GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">Niektórych plików mediów nie udało się przesłać z powodu błędu sieci. </string>
+    <string name="giphy_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
+    <string name="giphy_picker_initial_empty_text">Przeszukaj aby znaleźć pliki GIF które możesz dodać do swojej biblioteki mediów!</string>
+    <string name="giphy_picker_search_hint">Przeszukaj Giphy</string>
+    <string name="photo_picker_giphy">Wybierz z Giphy</string>
+    <string name="stats_author_views_label">Wyświetleń</string>
+    <string name="stats_author_label">Autor</string>
+    <string name="stats_authors">Autorzy</string>
+    <string name="stats_search_terms_views_label">Wyświetleń</string>
+    <string name="stats_search_terms_label">Słowo wyszukiwane</string>
+    <string name="stats_search_terms">Słowa wyszukiwane</string>
+    <string name="stats_videos_views_label">Wyświetleń</string>
+    <string name="stats_videos_title_label">Tytuł</string>
+    <string name="stats_videos">Filmy</string>
+    <string name="stats_country_views_label">Wyświetleń</string>
+    <string name="stats_country_label">Państwo</string>
+    <string name="stats_countries">Państwa</string>
+    <string name="stats_clicks_label">Kliknięcia</string>
+    <string name="stats_clicks_link_label">Odnośnik</string>
+    <string name="stats_clicks">Kliknięcia</string>
+    <string name="stats_referrer_views_label">Wyświetleń</string>
+    <string name="stats_referrer_label">Odsyłający</string>
+    <string name="stats_referrers">Odsyłający</string>
+    <string name="stats_posts_and_pages">Wpisy i Strony</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">Ścieżka</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">Zobacz więcej</string>
+    <string name="stats_insights_share_post">Udostępnij wpis</string>
+    <string name="stats_insights_create_post">Stwórz wpis</string>
+    <string name="stats_insights_latest_post_message">Minęło %1$s od kiedy wpis %2$s został opublikowany. Oto jak wpis radził sobie jak dotychczas.</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis</string>
+    <string name="stats_insights_latest_post_empty">Nie opublikowałeś jeszcze żadnych wpisów. Kiedy zaczniesz publikować, pojawi się tu podsumowanie twojego ostatniego wpisu</string>
+    <string name="stats_insights_tags_and_categories">Tagi i kategorie</string>
+    <string name="stats_insights_all_time_stats">Statystyki od początku</string>
+    <string name="stats_insights_most_popular_views_label">Wyświetleń</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Dzień/Godzina</string>
+    <string name="stats_insights_today_stats">Dzisiejsze statystyki</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">Obserwujący</string>
+    <string name="stats_publicize_service_label">Usługa</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">Wyświetleń</string>
+    <string name="stats_tags_and_categories_title_label">Tytuł</string>
+    <string name="stats_posts_and_pages_views_label">Wyświetleń</string>
+    <string name="stats_posts_and_pages_title_label">Tytuł</string>
+    <string name="stats_comments_label">Komentarze</string>
+    <string name="stats_comments_title_label">Tytuł</string>
+    <string name="stats_comments_author_label">Autor</string>
+    <string name="stats_comments_posts_and_pages">Wpisy i strony</string>
+    <string name="stats_comments_authors">Autorzy</string>
+    <string name="stats_follower_since_label">Od</string>
+    <string name="stats_follower_label">Obserwujący</string>
+    <string name="stats_followers_count_message">Całkowita liczba obserwujących %1$s: %2$s</string>
+    <string name="stats_followers_email">Email</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">Zarządzaj trendami</string>
+    <string name="stats_empty_insights_description">Spersonalizuj swoje trendy i uzyskaj pełną informację o wynikach swojej witryny</string>
+    <string name="stats_empty_insights_title">Brak trendów, jak dotąd</string>
+    <string name="stats_no_data_yet">Brak danych, jak dotąd</string>
+    <string name="menu_debug">Menu Debugowania</string>
+    <string name="preference_experimental">*OPCJA EKSPERYMENTALNA*</string>
+    <string name="site_settings_enable_gutenberg_summary">To jest nadal eksperymentalna wersja Gutenberga</string>
+    <string name="site_settings_enable_gutenberg">Włącz Gutenberga</string>
     <string name="change_password_dialog_message">Zmiana hasła…</string>
     <string name="change_password_dialog_hint">Twoje hasło powinno zawierać co najmniej 6 znaków. Aby było to silne hasło, użyj małych i wielkich liter, cyfr oraz znaków specjalnych takich jak  ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Zmiana hasła zakończona powodzeniem</string>
@@ -26,7 +96,6 @@ Language: pl
     <string name="dialog_gutenberg_compatibility_message">Pracujemy nad nowym WordPressowym edytorem. Możesz edytować ten wpis, ale zalecane jest włączenie podglądu przed publikacją.</string>
     <string name="dialog_gutenberg_compatibility_title">Zanim przejdziesz dalej</string>
     <string name="media_space_used">%1$s wykorzystano</string>
-    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Proszę wprowadzić witrynę WordPress.com lub witrynę z własnym hostingiem z podłączonym Jetpackiem.</string>
     <string name="history_loading_revision">Wczytywanie rewizji</string>
     <string name="history_loaded_revision">Rewizja wczytana</string>
@@ -478,7 +547,6 @@ Language: pl
     <string name="site_creation_title_hint">Tytuł witryny</string>
     <string name="site_creation_domain_finish_button">Utwórz witrynę</string>
     <string name="site_creation_domain_keywords_hint">Wprowadź słowo kluczowe aby zaczerpnąć więcej pomysłów</string>
-    <string name="site_creation_label_domain_selection">Wybierz dostępny adres \"twojanazwa.wordpress.com\" aby pozwolić ludziom na znalezienie ciebie w sieci.</string>
     <string name="site_creation_label_domain_selection_title">Krok 4 z 4</string>
     <string name="site_creation_label_site_details">Powiedz nam więcej o tym co tworzysz. Jaki jest tytuł i opis?</string>
     <string name="site_creation_label_site_details_title">Krok 3 z 4</string>

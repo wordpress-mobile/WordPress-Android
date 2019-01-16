@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -135,6 +139,9 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_EDITOR = "show_editor";
     public static final String ARG_ME = "show_me";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
+
+    // Track the first `onResume` event for the current session so we can use it for Analytics tracking
+    private static boolean mFirstResume = true;
 
     private WPMainNavigationView mBottomNav;
     private WPDialogSnackbar mQuickStartSnackbar;
@@ -292,6 +299,36 @@ public class WPMainActivity extends AppCompatActivity implements
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         }
+
+        if (isGooglePlayServicesAvailable(this)) {
+            // Register for Cloud messaging
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
+        }
+    }
+
+    public boolean isGooglePlayServicesAvailable(Activity activity) {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
+        switch (connectionResult) {
+            // Success: return true
+            case ConnectionResult.SUCCESS:
+                return true;
+            // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
+            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+                Dialog dialog = googleApiAvailability.getErrorDialog(activity, connectionResult, 0);
+                if (dialog != null) {
+                    dialog.show();
+                }
+                // fall through
+            default:
+            case ConnectionResult.SERVICE_MISSING:
+            case ConnectionResult.SERVICE_DISABLED:
+            case ConnectionResult.SERVICE_INVALID:
+                AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
+                                   + googleApiAvailability.getErrorString(connectionResult));
+        }
+        return false;
     }
 
     private @Nullable String getAuthToken() {
@@ -434,7 +471,8 @@ public class WPMainActivity extends AppCompatActivity implements
                     boolean shouldShowKeyboard =
                             getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
                     NotificationsListFragment
-                            .openNoteForReply(this, noteId, shouldShowKeyboard, null, NotesAdapter.FILTERS.FILTER_ALL);
+                            .openNoteForReply(this, noteId, shouldShowKeyboard, null,
+                                    NotesAdapter.FILTERS.FILTER_ALL, true);
                 }
             } else {
                 AppLog.e(T.NOTIFS, "app launched from a PN that doesn't have a note_id in it!!");
@@ -496,7 +534,7 @@ public class WPMainActivity extends AppCompatActivity implements
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
         int currentItem = mBottomNav.getCurrentPosition();
-        trackLastVisiblePage(currentItem, false);
+        trackLastVisiblePage(currentItem, mFirstResume);
 
         if (currentItem == PAGE_NOTIFS) {
             // if we are presenting the notifications list, it's safe to clear any outstanding
@@ -518,6 +556,8 @@ public class WPMainActivity extends AppCompatActivity implements
         ProfilingUtils.split("WPMainActivity.onResume");
         ProfilingUtils.dump();
         ProfilingUtils.stop();
+
+        mFirstResume = false;
     }
 
     private void checkQuickStartNotificationStatus() {
@@ -608,15 +648,6 @@ public class WPMainActivity extends AppCompatActivity implements
         } else {
             ((MainToolbarFragment) mBottomNav.getActiveFragment())
                     .setTitle(mBottomNav.getTitleForPosition(position).toString());
-        }
-    }
-
-    private void checkMagicLinkSignIn() {
-        if (getIntent() != null) {
-            if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
-                mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
-                startWithNewAccount();
-            }
         }
     }
 
@@ -845,8 +876,6 @@ public class WPMainActivity extends AppCompatActivity implements
         }
 
         if (mAccountStore.hasAccessToken()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
-
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
                     // Sets a flag that we need to track a magic link sign up.

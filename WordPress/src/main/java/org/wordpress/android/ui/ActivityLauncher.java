@@ -77,6 +77,7 @@ import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -88,6 +89,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
@@ -259,9 +261,20 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
+        if (site == null) {
+            AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
+            AnalyticsTracker.track(
+                    STATS_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Stats because of the null SiteModel"
+                                  );
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+        } else {
+            Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        }
     }
 
     public static void viewFollowersStats(Context context, SiteModel site) {
@@ -332,7 +345,7 @@ public class ActivityLauncher {
     }
 
     public static void viewClicksStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
-                                          String selectedDate) {
+                                       String selectedDate) {
         Intent intent = new Intent(context, StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.CLICKS);
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
@@ -360,7 +373,7 @@ public class ActivityLauncher {
     }
 
     public static void viewVideoPlays(Context context, SiteModel site, StatsTimeframe statsTimeframe,
-                                          String selectedDate) {
+                                      String selectedDate) {
         Intent intent = new Intent(context, StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.VIDEO_PLAYS);
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
@@ -374,7 +387,7 @@ public class ActivityLauncher {
     }
 
     public static void viewSearchTerms(Context context, SiteModel site, StatsTimeframe statsTimeframe,
-                                          String selectedDate) {
+                                       String selectedDate) {
         Intent intent = new Intent(context, StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.SEARCH_TERMS);
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
@@ -388,7 +401,7 @@ public class ActivityLauncher {
     }
 
     public static void viewAuthorsStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
-                                          String selectedDate) {
+                                        String selectedDate) {
         Intent intent = new Intent(context, StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.AUTHORS);
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);

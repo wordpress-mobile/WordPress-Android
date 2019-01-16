@@ -110,7 +110,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
                 for (int i = 0; i < countries.size(); i++) {
                     final GeoviewModel currentCountry = countries.get(i);
-                    dataToLoad.append("['").append(currentCountry.getCountryFullName()).append("',")
+                    dataToLoad.append("['").append(currentCountry.getCountryShortName()).append("',")
                             .append(currentCountry.getViews()).append("],");
                 }
 
