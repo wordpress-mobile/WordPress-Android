@@ -254,19 +254,19 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             case SELFHOSTED_ONLY:
                 // We are comparing list of site ID's before self-hosted site was added and after, trying to find a
                 // newly added self-hosted site's ID, so we can select it
-                ArrayList<Integer> currentSiteIds = new ArrayList<>();
+                ArrayList<Integer> newSitesIds = new ArrayList<>();
                 for (SiteModel site : mSiteStore.getSites()) {
-                    currentSiteIds.add(site.getId());
+                    newSitesIds.add(site.getId());
                 }
-                currentSiteIds.removeAll(oldSitesIds);
+                newSitesIds.removeAll(oldSitesIds);
 
-                if (currentSiteIds.size() == 1) {
+                if (newSitesIds.size() > 0) {
                     Intent intent = new Intent();
-                    intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, currentSiteIds.get(0));
+                    intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, newSitesIds.get(0));
                     setResult(Activity.RESULT_OK, intent);
                 } else {
                     AppLog.e(T.MAIN, "Couldn't detect newly added self-hosted site. "
-                                     + "Expected 1 site ID but was " + currentSiteIds.size());
+                                     + "Expected at least 1 site ID but was 0.");
                     ToastUtils.showToast(this, R.string.site_picker_failed_selecting_added_site);
                     setResult(Activity.RESULT_OK);
                 }
