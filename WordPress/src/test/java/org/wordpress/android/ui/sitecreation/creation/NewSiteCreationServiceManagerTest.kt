@@ -1,10 +1,11 @@
 package org.wordpress.android.ui.sitecreation.creation
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -42,6 +43,7 @@ private val CREATE_SITE_STATE = NewSiteCreationServiceState(CREATE_SITE)
 private val SUCCESS_STATE = NewSiteCreationServiceState(SUCCESS, NEW_SITE_REMOTE_ID)
 private val FAILURE_STATE = NewSiteCreationServiceState(FAILURE)
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class NewSiteCreationServiceManagerTest {
     @Rule

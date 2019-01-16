@@ -2,11 +2,12 @@ package org.wordpress.android.ui.sitecreation.segments
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
-import com.nhaarman.mockito_kotlin.anyOrNull
-import com.nhaarman.mockito_kotlin.inOrder
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -93,6 +94,7 @@ private val SECOND_MODEL_EVENT = OnSegmentsFetched(listOf(SECOND_MODEL))
 private val FIRST_AND_SECOND_MODEL_EVENT = OnSegmentsFetched(listOf(FIRST_MODEL, SECOND_MODEL))
 private val ERROR_EVENT = OnSegmentsFetched(emptyList(), FetchSegmentsError(GENERIC_ERROR, ERROR_MESSAGE))
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class NewSiteCreationSegmentsViewModelTest {
     @Rule

@@ -2,12 +2,13 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
-import com.nhaarman.mockito_kotlin.firstValue
-import com.nhaarman.mockito_kotlin.secondValue
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.CoroutineScope
+import com.nhaarman.mockitokotlin2.firstValue
+import com.nhaarman.mockitokotlin2.secondValue
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -32,6 +33,7 @@ private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair("multi_result_query", MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE)
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = Pair("empty_result_query", 0)
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class NewSiteCreationDomainsViewModelTest {
     @Rule
