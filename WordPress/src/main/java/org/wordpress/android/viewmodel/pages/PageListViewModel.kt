@@ -6,9 +6,18 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.MediaActionBuilder
+import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -18,7 +27,9 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
@@ -28,7 +39,10 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import javax.inject.Inject
 
-class PageListViewModel @Inject constructor() : ViewModel() {
+class PageListViewModel @Inject constructor(
+    private val mediaStore: MediaStore,
+    private val dispatcher: Dispatcher
+) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
 
@@ -39,6 +53,11 @@ class PageListViewModel @Inject constructor() : ViewModel() {
     private lateinit var listType: PageListType
 
     private lateinit var pagesViewModel: PagesViewModel
+
+    private val featuredImageMap = HashMap<Long, String>()
+
+    val site: SiteModel
+        get() = pagesViewModel.site
 
     enum class PageListType(val pageStatuses: List<PageStatus>) {
         PUBLISHED(listOf(PageStatus.PUBLISHED, PageStatus.PRIVATE)),
@@ -80,11 +99,15 @@ class PageListViewModel @Inject constructor() : ViewModel() {
             isStarted = true
 
             pagesViewModel.pages.observeForever(pagesObserver)
+
+            dispatcher.register(this)
         }
     }
 
     override fun onCleared() {
         pagesViewModel.pages.removeObserver(pagesObserver)
+
+        dispatcher.unregister(this)
     }
 
     fun onMenuAction(action: Action, pageItem: Page): Boolean {
@@ -151,6 +174,27 @@ class PageListViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    private fun getFeaturedImageUrl(featuredImageId: Long): String? {
+        if (featuredImageId == 0L) {
+            return ReaderImageScanner("", !SiteUtils.isPhotonCapable(pagesViewModel.site)).largestImage
+        }
+        featuredImageMap[featuredImageId]?.let { return it }
+        mediaStore.getSiteMediaWithId(pagesViewModel.site, featuredImageId)?.let { media ->
+            // This should be a pretty rare case, but some media seems to be missing url
+            return if (media.url != null) {
+                featuredImageMap[featuredImageId] = media.url
+                media.url
+            } else null
+        }
+        // Media is not in the Store, we need to download it
+        val mediaToDownload = MediaModel()
+        mediaToDownload.mediaId = featuredImageId
+        mediaToDownload.localSiteId = pagesViewModel.site.id
+        val payload = MediaPayload(pagesViewModel.site, mediaToDownload)
+        dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
+        return null
+    }
+
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return topologicalSort(pages, listType = PUBLISHED)
                 .map {
@@ -160,14 +204,16 @@ class PageListViewModel @Inject constructor() : ViewModel() {
                     if (it.hasLocalChanges)
                         labels.add(string.local_changes)
 
-                    PublishedPage(it.remoteId, it.title, it.date, labels, getPageItemIndent(it), actionsEnabled)
+                    PublishedPage(it.remoteId, it.title, it.date, labels, getPageItemIndent(it),
+                            getFeaturedImageUrl(it.featuredImageId), actionsEnabled)
                 }
     }
 
     private fun prepareScheduledPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.asSequence().groupBy { it.date.toFormattedDateString() }
                 .map { (date, results) -> listOf(Divider(date)) +
-                        results.map { ScheduledPage(it.remoteId, it.title, it.date, actionsEnabled) }
+                        results.map { ScheduledPage(it.remoteId, it.title, it.date,
+                                getFeaturedImageUrl(it.featuredImageId), actionsEnabled) }
                 }
                 .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
                     acc.addAll(list)
@@ -183,13 +229,14 @@ class PageListViewModel @Inject constructor() : ViewModel() {
             if (it.hasLocalChanges)
                 labels.add(string.local_draft)
 
-            DraftPage(it.remoteId, it.title, it.date, labels, actionsEnabled)
+            DraftPage(it.remoteId, it.title, it.date, labels,
+                    getFeaturedImageUrl(it.featuredImageId), actionsEnabled)
         }
     }
 
     private fun prepareTrashedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.map {
-            TrashedPage(it.remoteId, it.title, it.date, actionsEnabled)
+            TrashedPage(it.remoteId, it.title, it.date, getFeaturedImageUrl(it.featuredImageId), actionsEnabled)
         }
     }
 
@@ -214,5 +261,16 @@ class PageListViewModel @Inject constructor() : ViewModel() {
             -1
         else
             getPageItemIndent(page.parent) + 1
+    }
+
+    private fun invalidateFeaturedMedia(vararg featuredImageIds: Long) {
+        featuredImageIds.forEach { featuredImageMap.remove(it) }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onMediaChanged(event: OnMediaChanged) {
+        if (!event.isError && event.mediaList != null) {
+            invalidateFeaturedMedia(*event.mediaList.map { it.mediaId }.toLongArray())
+        }
     }
 }
