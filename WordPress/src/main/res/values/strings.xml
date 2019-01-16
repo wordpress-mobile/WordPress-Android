@@ -760,6 +760,7 @@
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
     <string name="preference_experimental">*EXPERIMENTAL*</string>
+    <string name="preference_strip_image_location">Remove location from media</string>
 
     <string name="preference_editor_beta" translatable="false">Beta</string>
     <string name="preference_editor_legacy">Legacy</string>
@@ -786,6 +787,32 @@
     <string name="stats_jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our <u>terms and conditions</u></string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
+
+    <!-- Stats refresh -->
+    <string name="stats_no_data_yet">No data yet</string>
+    <string name="stats_no_data_for_period">No data for this period</string>
+    <string name="stats_empty_insights_title">No insights added yet</string>
+    <string name="stats_empty_insights_description">Customize your insights and get the low-down on your site’s performance</string>
+    <string name="stats_button_manage_insights">Manage insights</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_followers_email">Email</string>
+    <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
+    <string name="stats_follower_label">Follower</string>
+    <string name="stats_follower_since_label">Since</string>
+    <string name="stats_comments_authors">Authors</string>
+    <string name="stats_comments_posts_and_pages">Posts and pages</string>
+    <string name="stats_comments_author_label">Author</string>
+    <string name="stats_comments_title_label">Title</string>
+    <string name="stats_comments_label">Comments</string>
+    <string name="stats_posts_and_pages_title_label">Title</string>
+    <string name="stats_posts_and_pages_views_label">Views</string>
+    <string name="stats_tags_and_categories_title_label">Title</string>
+    <string name="stats_tags_and_categories_views_label">Views</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_publicize_service_label">Service</string>
+    <string name="stats_publicize_followers_label">Followers</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
@@ -968,11 +995,51 @@
     <string name="stats_insights_latest_post_no_title">(no title)</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
-    <string name="stats_insights_popular">Most popular day and hour</string>
+    <string name="stats_insights_popular">Most Popular Day and Hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
+    <string name="stats_insights_today_stats">Today\'s Stats</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Day/Hour</string>
+    <string name="stats_insights_most_popular_views_label">Views</string>
+
+    <!-- Stats refreshed insights -->
+    <string name="stats_insights_all_time_stats">All Time Stats</string>
+    <string name="stats_insights_tags_and_categories">Tags and Categories</string>
+    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here</string>
+    <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post</string>
+    <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far</string>
+    <string name="stats_insights_create_post">Create post</string>
+    <string name="stats_insights_share_post">Share post</string>
+    <string name="stats_insights_view_more">View more</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_path">Path</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+
+    <string name="stats_posts_and_pages">Posts and Pages</string>
+    <string name="stats_referrers">Referrers</string>
+    <string name="stats_referrer_label">Referrer</string>
+    <string name="stats_referrer_views_label">Views</string>
+    <string name="stats_clicks">Clicks</string>
+    <string name="stats_clicks_link_label">Link</string>
+    <string name="stats_clicks_label">Clicks</string>
+    <string name="stats_countries">Countries</string>
+    <string name="stats_country_label">Country</string>
+    <string name="stats_country_views_label">Views</string>
+    <string name="stats_videos">Videos</string>
+    <string name="stats_videos_title_label">Title</string>
+    <string name="stats_videos_views_label">Views</string>
+    <string name="stats_search_terms">Search Terms</string>
+    <string name="stats_search_terms_label">Search Term</string>
+    <string name="stats_search_terms_views_label">Views</string>
+    <string name="stats_authors">Authors</string>
+    <string name="stats_author_label">Author</string>
+    <string name="stats_author_views_label">Views</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
@@ -1310,6 +1377,7 @@
     <string name="local_changes_discarded">Local changes discarded</string>
     <string name="local_changes_discarding">Discarding local changes</string>
     <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
+    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
 
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
@@ -1663,10 +1731,6 @@
     <string name="bullet" translatable="false">\u2022</string>
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
-
-    <!-- Noticons -->
-    <string name="noticon_clock" translatable="false">\uf303</string>
-    <string name="noticon_note" translatable="false">\uf814</string>
 
     <!-- Publicize and sharing -->
     <string name="sharing">Sharing</string>
@@ -2156,7 +2220,7 @@
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
-    <string name="login_notification_channel_id">@string/notification_channel_normal_id</string>
+    <string name="login_notification_channel_id" translatable="false">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>

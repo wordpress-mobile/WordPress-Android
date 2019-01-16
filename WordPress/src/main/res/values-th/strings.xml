@@ -179,7 +179,6 @@ Language: th
     <string name="stats_insights_most_popular_percent_views">%1$d%% ของการดู</string>
     <string name="stats_insights_most_popular_hour">ชั่วโมงยอดนิยมที่สุด</string>
     <string name="stats_insights_most_popular_day">วันยอดนิยมที่สุด</string>
-    <string name="stats_insights_popular">วันและชั่วโมงยอดนิยมที่สุด</string>
     <string name="stats_insights_today">สถิติวันนี้</string>
     <string name="stats_insights_all_time">เรื่อง การดูและผู้เยี่ยมชมของเวลาทั้งหมด</string>
     <string name="stats_insights">แบบละเอียด</string>

@@ -131,6 +131,7 @@ import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
+import org.wordpress.android.ui.stats.refresh.StatsModule;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
@@ -161,6 +162,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         ReleaseToolsModule.class,
         AndroidSupportInjectionModule.class,
         ViewModelModule.class,
+        StatsModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,

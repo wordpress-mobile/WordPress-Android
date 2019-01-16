@@ -105,6 +105,7 @@
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
     <dimen name="text_sz_large">16sp</dimen>
+    <dimen name="text_sz_larger">18sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
     <dimen name="text_sz_triple_extra_large">26sp</dimen>
@@ -210,9 +211,8 @@
     <dimen name="my_site_margin_general">10dp</dimen>
 
     <!--me-->
-    <dimen name="me_content_margin">@dimen/margin_large</dimen>
     <dimen name="me_list_row_icon_size">24dp</dimen>
-    <dimen name="me_list_row_padding_horizontal">@dimen/me_content_margin</dimen>
+    <dimen name="me_list_row_padding_horizontal">@dimen/content_margin</dimen>
 
     <!--site picker-->
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
@@ -349,5 +349,7 @@
     <dimen name="post_list_row_skeleton_view_excerpt_height">@dimen/margin_extra_medium_large</dimen>
     <dimen name="post_list_row_skeleton_view_date_width">80dp</dimen>
     <dimen name="post_list_row_skeleton_view_date_height">@dimen/margin_extra_large</dimen>
+    <dimen name="stats_bar_chart_height">180dp</dimen>
+    <dimen name="stats_block_icon_size">24dp</dimen>
 
 </resources>

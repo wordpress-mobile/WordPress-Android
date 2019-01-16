@@ -70,7 +70,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         if (isExpandableList()) {
             view = inflater.inflate(R.layout.stats_expandable_list_fragment, container, false);
         } else {
-            view = inflater.inflate(R.layout.stats_list_fragment, container, false);
+            view = inflater.inflate(R.layout.stats_list_item_fragment, container, false);
         }
 
         mEmptyModulePlaceholder = (LinearLayout) view.findViewById(R.id.stats_empty_module_placeholder);

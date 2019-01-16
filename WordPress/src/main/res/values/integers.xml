@@ -37,4 +37,7 @@
     <integer name="image_size_medium_px">300</integer>
     <integer name="image_size_large_px">1024</integer>
 
+    <!-- Stats -->
+    <integer name="stats_number_of_columns">1</integer>
+
 </resources>

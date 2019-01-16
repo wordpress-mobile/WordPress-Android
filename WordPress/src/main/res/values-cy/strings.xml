@@ -445,7 +445,6 @@ Language: cy_GB
     <string name="stats_insights_most_popular_hour">Awr mwyaf poblogaidd</string>
     <string name="stats_insights_most_popular_day">Diwrnod mwyaf poblogaidd</string>
     <string name="stats_insights_today">Ystadegau Heddiw</string>
-    <string name="stats_insights_popular">Diwrnod ac awr mwyaf poblogaidd</string>
     <string name="stats_insights_all_time">Cofnodion, golygon ac ymwelwyr erioed</string>
     <string name="stats_insights">Mewnwelediadau</string>
     <string name="stats_sign_in_jetpack_different_com_account">I weld eich ystadegau, mewngofnodwch i\'r cyfrif WordPress.com rydych wedi ei ddefnyddio i gysylltu Jetpack.</string>
