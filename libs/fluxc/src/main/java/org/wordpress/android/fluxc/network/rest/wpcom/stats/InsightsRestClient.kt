@@ -135,7 +135,7 @@ constructor(
         val params = mapOf(
                 "unit" to period.toString(),
                 "quantity" to "1",
-                "date" to getFormattedDate(site, date, period)
+                "date" to getFormattedDate(site, date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
