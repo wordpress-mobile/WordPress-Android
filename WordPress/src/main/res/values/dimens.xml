@@ -370,4 +370,7 @@
     <dimen name="new_site_creation_domains_create_site_button_height">36dp</dimen>
     <dimen name="new_site_creation_domains_radio_button_padding_start">28dp</dimen>
     <dimen name="new_site_creation_domains_divider_padding_start">60dp</dimen>
+
+    <dimen name="new_site_creation_preview_skeleton_mid_size_width">174dp</dimen>
+    <dimen name="new_site_creation_preview_skeleton_large_block_height">136dp</dimen>
 </resources>
