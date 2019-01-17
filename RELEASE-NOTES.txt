@@ -1,1 +1,1 @@
-
+* Added a dialog for user to resolve a conflicted Post (different local / web version)
