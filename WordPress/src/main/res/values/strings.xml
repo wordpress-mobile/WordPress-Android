@@ -325,7 +325,7 @@
     <!-- post version sync conflict dialog -->
     <string name="dialog_confirm_load_remote_post_title">Resolve version sync conflict</string>
     <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to keep.\n\n</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Local: saved on %s\n\nWeb: saved on %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Local\nsaved on %s\n\nWeb\nsaved on %s\n</string>
     <string name="dialog_confirm_load_remote_post_keep_cloud">Keep Web</string>
     <string name="dialog_confirm_load_remote_post_keep_local">Keep Local</string>
 
