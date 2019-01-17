@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.persistance.stats.time
 
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -41,7 +40,7 @@ class VisitAndViewsSqlUtilsTest {
     @Before
     fun setUp() {
         timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils, statsUtils)
-        whenever(statsUtils.getFormattedDate(eq(site), any(), eq(DATE))).thenReturn(DATE_VALUE)
+        whenever(statsUtils.getFormattedDate(eq(site), eq(DATE))).thenReturn(DATE_VALUE)
     }
 
     @Test
