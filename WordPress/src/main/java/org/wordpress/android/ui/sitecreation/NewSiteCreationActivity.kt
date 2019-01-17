@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.main.SitePickerActivity
@@ -45,7 +44,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
         SitePreviewScreenListener,
         OnSkipClickedListener,
         OnHelpClickedListener {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: NewSiteCreationMainVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
