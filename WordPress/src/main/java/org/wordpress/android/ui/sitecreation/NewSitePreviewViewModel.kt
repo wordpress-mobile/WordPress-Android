@@ -51,6 +51,7 @@ class NewSitePreviewViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = IO + job
     private var isStarted = false
+    private var webviewFullyLoadedTracked = false
 
     private lateinit var siteCreationState: SiteCreationState
     private lateinit var urlWithoutScheme: String
@@ -164,7 +165,7 @@ class NewSitePreviewViewModel @Inject constructor(
             IDLE, CREATE_SITE -> {
             } // do nothing
             SUCCESS -> {
-                tracker.trackSuccessViewed()
+                tracker.trackPreviewLoading()
                 startPreLoadingWebView()
                 val remoteSiteId = event.payload as Long
                 createSiteState = SiteNotInLocalDb(remoteSiteId)
@@ -208,6 +209,7 @@ class NewSitePreviewViewModel @Inject constructor(
              */
             withContext(MAIN) {
                 if (uiState.value !is SitePreviewContentUiState) {
+                    tracker.trackPreviewWebviewShown()
                     updateUiState(SitePreviewLoadingShimmerState(createSitePreviewData()))
                 }
             }
@@ -218,12 +220,16 @@ class NewSitePreviewViewModel @Inject constructor(
 
     fun onUrlLoaded() {
         _hideGetStartedBar.call()
+        if(!webviewFullyLoadedTracked) {
+            webviewFullyLoadedTracked = true
+            tracker.trackPreviewWebviewFullyLoaded()
+        }
         /**
          * Update the ui state if the loading or error screen is being shown.
          * In other words don't update it after a configuration change.
          */
         if (uiState.value !is SitePreviewContentUiState) {
-            tracker.trackSuccessPreviewLoaded()
+            tracker.trackPreviewWebviewShown()
             updateUiState(SitePreviewContentUiState(createSitePreviewData()))
         }
     }

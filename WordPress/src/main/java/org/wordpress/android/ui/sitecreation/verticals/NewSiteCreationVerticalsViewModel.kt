@@ -150,6 +150,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     }
 
     fun onSkipStepBtnClicked() {
+        tracker.trackVerticalsSkipped()
         _skipBtnClicked.call()
     }
 

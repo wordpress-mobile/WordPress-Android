@@ -1103,16 +1103,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_verticals_viewed";
             case ENHANCED_SITE_CREATION_VERTICALS_SELECTED:
                 return "enhanced_site_creation_verticals_selected";
+            case ENHANCED_SITE_CREATION_VERTICALS_SKIPPED:
+                return "enhanced_site_creation_verticals_skipped";
             case ENHANCED_SITE_CREATION_BASIC_INFORMATION_VIEWED:
                 return "enhanced_site_creation_basic_information_viewed";
             case ENHANCED_SITE_CREATION_BASIC_INFORMATION_COMPLETED:
                 return "enhanced_site_creation_basic_information_completed";
+            case ENHANCED_SITE_CREATION_BASIC_INFORMATION_SKIPPED:
+                return "enhanced_site_creation_basic_information_skipped";
             case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
                 return "enhanced_site_creation_domains_accessed";
             case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
                 return "enhanced_site_creation_domains_selected";
-            case ENHANCED_SITE_CREATION_SUCCESS_VIEWED:
-                return "enhanced_site_creation_success_viewed";
+            case ENHANCED_SITE_CREATION_SUCCESS_LOADING:
+                return "enhanced_site_creation_success_loading";
             case ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED:
                 return "enhanced_site_creation_success_preview_viewed";
             case ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED:

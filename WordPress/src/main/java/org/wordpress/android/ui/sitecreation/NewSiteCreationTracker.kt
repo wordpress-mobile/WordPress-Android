@@ -39,6 +39,10 @@ class NewSiteCreationTracker @Inject constructor() {
         )
     }
 
+    fun trackVerticalsSkipped() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_VERTICALS_SKIPPED)
+    }
+
     fun trackBasicInformationViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_BASIC_INFORMATION_VIEWED)
     }
@@ -51,6 +55,10 @@ class NewSiteCreationTracker @Inject constructor() {
                         "tagline" to siteTagLine
                 )
         )
+    }
+
+    fun trackBasicInformationSkipped() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_BASIC_INFORMATION_SKIPPED)
     }
 
     fun trackDomainsAccessed() {
@@ -67,15 +75,15 @@ class NewSiteCreationTracker @Inject constructor() {
         )
     }
 
-    fun trackSuccessViewed() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_VIEWED)
+    fun trackPreviewLoading() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING)
     }
 
-    fun trackSuccessPreviewViewed() {
+    fun trackPreviewWebviewShown() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED)
     }
 
-    fun trackSuccessPreviewLoaded() {
+    fun trackPreviewWebviewFullyLoaded() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
     }
 

@@ -83,7 +83,10 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
 
     fun onSkipNextClicked() {
         when (currentUiState.skipButtonState) {
-            SKIP -> _skipBtnClicked.call()
+            SKIP -> {
+                tracker.trackBasicInformationSkipped()
+                _skipBtnClicked.call()
+            }
             NEXT -> {
                 tracker.trackBasicInformationCompleted(currentUiState.siteTitle, currentUiState.tagLine)
                 _nextBtnClicked.value = currentUiState
