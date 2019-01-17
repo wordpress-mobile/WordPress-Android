@@ -35,8 +35,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
                 is Data -> BlockList(type, buildUiModel(data.model, uiState ?: defaultUiState))
                 is Empty, null -> null
             }
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, e)
             Error(type, "An error occurred (${e.message ?: "Unknown"})")
         }
