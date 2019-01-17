@@ -102,7 +102,7 @@
             android:layout_height="@dimen/new_site_creation_preview_ok_button_container_height"
             android:layout_alignParentBottom="true"
             app:cardBackgroundColor="@color/wp_grey_lighten_30"
-            app:cardElevation="@dimen/new_site_creation_preview_ok_button_container_elevation">
+            app:cardElevation="@dimen/new_site_creation_container_elevation">
 
             <Button
                 android:id="@+id/okButton"
