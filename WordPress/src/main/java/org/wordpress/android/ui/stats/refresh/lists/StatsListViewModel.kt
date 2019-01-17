@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.stats.StatsStore
+import org.wordpress.android.fluxc.store.stats.StatsStore.StatsTypes
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher, private val statsUseCase: BaseListUseCase) :
@@ -20,10 +22,24 @@ abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher, privat
 
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
 
+    val menuClick: LiveData<MenuClick> = statsUseCase.menuClick
+
     val data: LiveData<List<StatsBlock>> = _data
 
     override fun onCleared() {
         statsUseCase.onCleared()
         super.onCleared()
+    }
+
+    fun onMoveDownClick(type: StatsTypes) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun onMoveUpClick(type: StatsTypes) {
+        TODO()
+    }
+
+    fun onRemoveClick(type: StatsTypes) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

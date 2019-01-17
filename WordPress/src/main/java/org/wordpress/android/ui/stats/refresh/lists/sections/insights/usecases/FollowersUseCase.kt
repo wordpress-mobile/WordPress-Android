@@ -9,8 +9,8 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
-import org.wordpress.android.fluxc.store.InsightsStore
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
+import org.wordpress.android.fluxc.store.stats.InsightsStore
+import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats
@@ -77,7 +77,7 @@ class FollowersUseCase
         val wpComModel = domainModel.first
         val emailModel = domainModel.second
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(string.stats_view_followers))
+        items.add(Title(string.stats_view_followers, menuAction = this::onMenuClick))
         if (domainModel.first.followers.isNotEmpty() || domainModel.second.followers.isNotEmpty()) {
             items.add(
                     TabsItem(

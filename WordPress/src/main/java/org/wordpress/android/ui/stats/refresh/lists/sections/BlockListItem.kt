@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.view.View
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Alignment.CENTER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BACKGROUND_INFO
@@ -47,7 +48,11 @@ sealed class BlockListItem(val type: Type) {
         DIVIDER
     }
 
-    data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
+    data class Title(
+        @StringRes val textResource: Int? = null,
+        val text: String? = null,
+        val menuAction: ((View) -> Unit)? = null
+    ) : BlockListItem(TITLE)
 
     data class ListItem(
         val text: String,

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView.LayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.fluxc.store.stats.StatsStore.StatsTypes
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.stats.StatsConstants
@@ -273,6 +275,36 @@ class StatsListFragment : DaggerFragment() {
             }
             true
         }
+
+        viewModel.menuClick.observe(this, Observer { menuClick ->
+            if (menuClick != null) {
+                val popup = PopupMenu(activity, menuClick.view)
+                val popupMenu = popup.menu
+                popup.inflate(R.menu.menu_stats_item)
+                popupMenu.findItem(R.id.action_move_up).isEnabled = menuClick.showUpAction
+                popupMenu.findItem(R.id.action_move_down).isEnabled = menuClick.showDownAction
+                popup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.action_move_up -> {
+                            viewModel.onMoveUpClick(menuClick.type)
+                            true
+                        }
+                        R.id.action_move_down -> {
+                            viewModel.onMoveDownClick(menuClick.type)
+                            true
+                        }
+                        R.id.action_remove -> {
+                            viewModel.onRemoveClick(menuClick.type)
+                            true
+                        }
+                        else -> {
+                            false
+                        }
+                    }
+                }
+                popup.show()
+            }
+        })
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {
@@ -326,3 +358,5 @@ fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
         YEARS -> StatsTimeframe.YEAR
     }
 }
+
+data class MenuClick(val view: View, val type: StatsTypes, val showUpAction: Boolean, val showDownAction: Boolean)

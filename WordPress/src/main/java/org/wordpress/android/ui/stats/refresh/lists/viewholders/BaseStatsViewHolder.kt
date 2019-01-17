@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView.ViewHolder
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.DATE
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
+import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
+import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.DATE
+import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.OVERVIEW
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 
 abstract class BaseStatsViewHolder<T : StatsBlock>(

@@ -44,7 +44,7 @@ class AllTimeStatsUseCase
 
     override fun buildUiModel(domainModel: InsightsAllTimeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_insights_all_time_stats))
+        items.add(Title(R.string.stats_insights_all_time_stats, menuAction = this::onMenuClick))
 
         val hasPosts = domainModel.posts > 0
         val hasViews = domainModel.views > 0

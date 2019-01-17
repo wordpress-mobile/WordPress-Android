@@ -28,6 +28,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -71,8 +72,16 @@ sealed class BlockListItemViewHolder(
             R.layout.stats_block_title_item
     ) {
         private val text = itemView.findViewById<TextView>(R.id.text)
+        private val menu = itemView.findViewById<ImageButton>(R.id.menu)
         fun bind(item: Title) {
             text.setTextOrHide(item.textResource, item.text)
+            if (item.menuAction != null) {
+                menu.visibility = View.VISIBLE
+                menu.setOnClickListener { item.menuAction.invoke(menu) }
+            } else {
+                menu.visibility = View.GONE
+                menu.setOnClickListener(null)
+            }
         }
     }
 

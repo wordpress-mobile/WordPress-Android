@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
@@ -27,6 +28,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 ) {
     private val domainModel = MutableLiveData<State<DOMAIN_MODEL>>()
     private val uiState = MutableLiveData<UI_STATE>()
+
     val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { data, uiState ->
         try {
             when (data) {
@@ -43,6 +45,8 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
+    private val mutableMenuClick = MutableLiveData<Pair<View, StatsTypes>>()
+    val menuClick: LiveData<Pair<View, StatsTypes>> = mutableMenuClick
 
     /**
      * Fetches data either from a local cache or from remote API
@@ -98,6 +102,13 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      */
     fun onUiState(newState: UI_STATE?) {
         uiState.value = newState ?: uiState.value
+    }
+
+    /**
+     * Trigger this method when the item menu button is clicked
+     */
+    fun onMenuClick(view: View) {
+        mutableMenuClick.value = view to type
     }
 
     /**

@@ -12,6 +12,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
+import org.wordpress.android.util.merge
 import org.wordpress.android.util.mergeNotNull
 
 class BaseListUseCase
@@ -37,6 +38,14 @@ constructor(
     }
 
     val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(useCases.map { it.navigationTarget })
+    val menuClick: LiveData<MenuClick> = merge(mergeNotNull(useCases.map { it.menuClick }), data) { click, viewModel ->
+        if (click != null && viewModel != null) {
+            val indexOfBlock = viewModel.indexOfFirst { it.type == click.second }
+            MenuClick(click.first, click.second, indexOfBlock == 0, indexOfBlock == viewModel.size - 1)
+        } else {
+            null
+        }
+    }
 
     suspend fun loadData(site: SiteModel) {
         loadData(site, false, false)

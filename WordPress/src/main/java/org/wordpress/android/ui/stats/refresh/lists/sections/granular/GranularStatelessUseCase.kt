@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
+import org.wordpress.android.fluxc.store.stats.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import java.util.Date
 

@@ -4,8 +4,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
-import org.wordpress.android.fluxc.store.InsightsStore
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
+import org.wordpress.android.fluxc.store.stats.InsightsStore
+import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -42,7 +42,7 @@ class TodayStatsUseCase
 
     override fun buildUiModel(domainModel: VisitsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_insights_today_stats))
+        items.add(Title(R.string.stats_insights_today_stats, menuAction = this::onMenuClick))
 
         val hasViews = domainModel.views > 0
         val hasVisitors = domainModel.visitors > 0

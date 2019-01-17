@@ -6,8 +6,8 @@ import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
-import org.wordpress.android.fluxc.store.InsightsStore
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
+import org.wordpress.android.fluxc.store.stats.InsightsStore
+import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.PUBLICIZE
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublicizeStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
@@ -59,7 +59,7 @@ class PublicizeUseCase
 
     override fun buildUiModel(domainModel: PublicizeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(string.stats_view_publicize))
+        items.add(Title(string.stats_view_publicize, menuAction = this::onMenuClick))
         if (domainModel.services.isEmpty()) {
             items.add(Empty())
         } else {
