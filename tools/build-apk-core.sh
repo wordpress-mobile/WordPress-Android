@@ -1,5 +1,13 @@
 #!/bin/sh
 
+# Exit if any command fails
+set -eu
+# Print the logs on failure
+function cleanup {
+  cat "$LOGFILE"
+}
+trap cleanup EXIT
+
 # This script defines some shared functions that are used by the build-apk* set.
 
 function gradle_version_name {
