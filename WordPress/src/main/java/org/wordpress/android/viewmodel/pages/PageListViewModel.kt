@@ -56,8 +56,9 @@ class PageListViewModel @Inject constructor(
 
     private val featuredImageMap = HashMap<Long, String>()
 
-    val site: SiteModel
-        get() = pagesViewModel.site
+    val isSitePhotonCapable: Boolean by lazy {
+        SiteUtils.isPhotonCapable(pagesViewModel.site)
+    }
 
     enum class PageListType(val pageStatuses: List<PageStatus>) {
         PUBLISHED(listOf(PageStatus.PUBLISHED, PageStatus.PRIVATE)),

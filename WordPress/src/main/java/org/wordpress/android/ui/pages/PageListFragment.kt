@@ -111,7 +111,7 @@ class PageListFragment : Fragment() {
                     onItemTapped = { page -> viewModel.onItemTapped(page) },
                     onEmptyActionButtonTapped = { viewModel.onEmptyListNewPageButtonTapped() },
                     imageManager = imageManager,
-                    isSitePhotonCapable = SiteUtils.isPhotonCapable(viewModel.site),
+                    isSitePhotonCapable = viewModel.isSitePhotonCapable,
                     uiScope = uiScope
             )
             recyclerView.adapter = adapter
