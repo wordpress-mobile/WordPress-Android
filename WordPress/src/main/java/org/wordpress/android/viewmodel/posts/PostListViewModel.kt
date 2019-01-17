@@ -419,6 +419,22 @@ class PostListViewModel @Inject constructor(
         _snackbarAction.postValue(snackbarHolder)
     }
 
+    private fun onRemoteCopyLoaded(post: PostModel) {
+        localPostIdForConflictResolutionDialog = null
+        val openAction = {
+            // here open the Post on the Editor
+            if (post != null) {
+                checkGutenbergOrEdit(site, post)
+            }
+        }
+        val onDismissAction = {
+            // no op
+        }
+        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_post_loaded_message,
+                R.string.snackbar_open_post, openAction, onDismissAction)
+        _snackbarAction.postValue(snackbarHolder)
+    }
+
     // FluxC Events
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -558,6 +574,15 @@ class PostListViewModel @Inject constructor(
                 featuredImageUrl = getFeaturedImageUrl(post.featuredImageId, post.content),
                 uploadStatus = uploadStatus
         )
+
+        // A conflicted Post to be fixed by loading the remote version:
+        // the remote copy has just been loaded and the list is looking to create an item for it
+        if (localPostIdForConflictResolutionDialog != null &&
+                post.id == localPostIdForConflictResolutionDialog &&
+                !PostUtils.isPostInConflictWithRemote(post)) {
+            onRemoteCopyLoaded(post)
+        }
+
         return PostAdapterItem(
                 data = postData,
                 onSelected = { handlePostButton(PostListButton.BUTTON_EDIT, post) },
@@ -628,7 +653,6 @@ class PostListViewModel @Inject constructor(
                 publishPost(it)
             }
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
-                localPostIdForConflictResolutionDialog = null
                 // here load version from remote
                 loadPostFromRemote(it)
             }
@@ -709,8 +733,10 @@ class PostListViewModel @Inject constructor(
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
+            _toastMessage.postValue(ToastMessageHolder(R.string.toast_remote_load_shortly, Duration.SHORT))
+        } else {
+            localPostIdForConflictResolutionDialog = null
         }
-        localPostIdForConflictResolutionDialog = null
     }
 
     private fun loadPostFromLocal(localPostId: Int) {
