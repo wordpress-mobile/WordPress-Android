@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitecreation.creation
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.capture
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
