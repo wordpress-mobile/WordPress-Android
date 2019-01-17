@@ -30,7 +30,7 @@ function build_apk {
   echo "Cleaning in branch: $branch" | tee -a $LOGFILE
   ./gradlew clean >> $LOGFILE 2>&1
   echo "Running lint in branch: $branch" | tee -a $LOGFILE
-  ./gradlew lint >> $LOGFILE 2>&1
+  ./gradlew lint"$flavor"Release >> $LOGFILE 2>&1
   echo "Building $version_name / $version_code - $apk..." | tee -a $LOGFILE
   ./gradlew assemble"$flavor"Release >> $LOGFILE 2>&1
   cp -v $OUTDIR/$flavor/release/$apk $BUILDDIR/$name | tee -a $LOGFILE
