@@ -752,7 +752,7 @@ class PostListViewModel @Inject constructor(
 
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
-            PostUtils.trackSavePostAnalytics(post, site);
+            PostUtils.trackSavePostAnalytics(post, site)
             dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
             _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
         }
