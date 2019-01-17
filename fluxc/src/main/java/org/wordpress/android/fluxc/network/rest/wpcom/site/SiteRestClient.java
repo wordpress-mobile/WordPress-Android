@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.site;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
@@ -190,7 +191,8 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
-                        @NonNull SiteVisibility visibility, final boolean dryRun) {
+                        @NonNull SiteVisibility visibility, @Nullable String verticalId, @Nullable Long segmentId,
+                        @Nullable String tagLine, final boolean dryRun) {
         String url = WPCOMREST.sites.new_.getUrlV1();
         Map<String, Object> body = new HashMap<>();
         body.put("blog_name", siteName);
@@ -200,6 +202,23 @@ public class SiteRestClient extends BaseWPComRestClient {
         body.put("validate", dryRun ? "1" : "0");
         body.put("client_id", mAppSecrets.getAppId());
         body.put("client_secret", mAppSecrets.getAppSecret());
+
+        // Add site options if available
+        Map<String, Object> options = new HashMap<>();
+        if (verticalId != null) {
+            options.put("site_vertical", verticalId);
+        }
+        if (segmentId != null) {
+            options.put("site_segment", segmentId);
+        }
+        if (tagLine != null) {
+            Map<String, Object> siteInformation = new HashMap<>();
+            siteInformation.put("site_tagline", tagLine);
+            options.put("site_information", siteInformation);
+        }
+        if (options.size() > 0) {
+            body.put("options", options);
+        }
 
         WPComGsonRequest<NewSiteResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 NewSiteResponse.class,
