@@ -142,7 +142,7 @@ class NewSitePreviewViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            tracker.trackConnectionErrorShown()
+            tracker.trackConnectionErrorShown(ORIGIN_PREVIEW_ERROR)
             withContext(MAIN) {
                 updateUiState(SitePreviewConnectionErrorUiState)
             }
@@ -173,7 +173,7 @@ class NewSitePreviewViewModel @Inject constructor(
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
-                tracker.trackGenericErrorShown()
+                tracker.trackGenericErrorShown(ORIGIN_PREVIEW_ERROR)
                 updateUiStateAsync(SitePreviewGenericErrorUiState)
             }
         }
@@ -220,7 +220,7 @@ class NewSitePreviewViewModel @Inject constructor(
 
     fun onUrlLoaded() {
         _hideGetStartedBar.call()
-        if(!webviewFullyLoadedTracked) {
+        if (!webviewFullyLoadedTracked) {
             webviewFullyLoadedTracked = true
             tracker.trackPreviewWebviewFullyLoaded()
         }
@@ -229,8 +229,10 @@ class NewSitePreviewViewModel @Inject constructor(
          * In other words don't update it after a configuration change.
          */
         if (uiState.value !is SitePreviewContentUiState) {
-            tracker.trackPreviewWebviewShown()
             updateUiState(SitePreviewContentUiState(createSitePreviewData()))
+        }
+        if (uiState.value is SitePreviewFullscreenProgressUiState) {
+            tracker.trackPreviewWebviewShown()
         }
     }
 

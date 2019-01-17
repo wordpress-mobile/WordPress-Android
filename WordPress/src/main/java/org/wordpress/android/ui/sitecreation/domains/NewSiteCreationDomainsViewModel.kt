@@ -22,6 +22,7 @@ import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.ORIGIN_DOMAINS_ERROR
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
@@ -151,7 +152,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                 }
             }
         } else {
-            tracker.trackConnectionErrorShown()
+            tracker.trackConnectionErrorShown(ORIGIN_DOMAINS_ERROR)
             updateUiStateToContent(query, ListState.Error(listState, errorMessageResId = R.string.no_network_message))
         }
     }
@@ -159,7 +160,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {
         // We want to treat `INVALID_QUERY` as if it's an empty result, so we'll ignore it
         if (event.isError && event.error.type != SuggestDomainErrorType.INVALID_QUERY) {
-            tracker.trackGenericErrorShown()
+            tracker.trackGenericErrorShown(ORIGIN_DOMAINS_ERROR)
             updateUiStateToContent(
                     query,
                     ListState.Error(

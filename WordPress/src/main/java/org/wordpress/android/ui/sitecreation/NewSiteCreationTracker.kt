@@ -4,6 +4,12 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import javax.inject.Inject
 import javax.inject.Singleton
 
+const val ORIGIN_VERTICALS_FULLSCREEN_ERROR = "Verticals - fullscreen"
+const val ORIGIN_VERTICALS_LIST_ITEM_ERROR = "Verticals - list item"
+const val ORIGIN_SEGMENTS_ERROR = "Segments"
+const val ORIGIN_DOMAINS_ERROR = "Domains"
+const val ORIGIN_PREVIEW_ERROR = "Preview"
+
 @Singleton
 class NewSiteCreationTracker @Inject constructor() {
     fun trackSiteCreationAccessed() {
@@ -91,17 +97,17 @@ class NewSiteCreationTracker @Inject constructor() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_COMPLETED)
     }
 
-    fun trackConnectionErrorShown() {
+    fun trackConnectionErrorShown(origin: String) {
         AnalyticsTracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ERROR_SHOWN,
-                mapOf("error_info" to "connection error")
+                mapOf("error_info" to "connection error - $origin")
         )
     }
 
-    fun trackGenericErrorShown() {
+    fun trackGenericErrorShown(origin: String) {
         AnalyticsTracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ERROR_SHOWN,
-                mapOf("error_info" to "generic error")
+                mapOf("error_info" to "generic error - $origin")
         )
     }
 

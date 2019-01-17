@@ -23,6 +23,8 @@ import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.ORIGIN_VERTICALS_FULLSCREEN_ERROR
+import org.wordpress.android.ui.sitecreation.ORIGIN_VERTICALS_LIST_ITEM_ERROR
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
@@ -121,7 +123,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            tracker.trackConnectionErrorShown()
+            tracker.trackConnectionErrorShown(ORIGIN_VERTICALS_FULLSCREEN_ERROR)
             withContext(MAIN) {
                 updateUiState(VerticalsFullscreenErrorUiState.VerticalsConnectionErrorUiState)
             }
@@ -130,7 +132,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onSegmentsPromptFetched(event: OnSegmentPromptFetched) {
         if (event.isError) {
-            tracker.trackGenericErrorShown()
+            tracker.trackGenericErrorShown(ORIGIN_VERTICALS_FULLSCREEN_ERROR)
             updateUiState(VerticalsFullscreenErrorUiState.VerticalsGenericErrorUiState)
         } else {
             tracker.trackVerticalsViewed()
@@ -187,7 +189,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            tracker.trackConnectionErrorShown()
+            tracker.trackConnectionErrorShown(ORIGIN_VERTICALS_LIST_ITEM_ERROR)
             withContext(MAIN) {
                 updateUiStateToContent(
                         query,
@@ -202,7 +204,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onVerticalsFetched(query: String, event: OnVerticalsFetched) {
         if (event.isError) {
-            tracker.trackGenericErrorShown()
+            tracker.trackGenericErrorShown(ORIGIN_VERTICALS_LIST_ITEM_ERROR)
             updateUiStateToContent(
                     query,
                     ListState.Error(
