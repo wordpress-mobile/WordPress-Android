@@ -157,7 +157,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
         @Suppress("DEPRECATION")
         override fun onBind(pageItem: PageItem) {
-            if (pageItem is Empty) {
+            (pageItem as Empty).apply {
                 emptyView.title.text = emptyView.resources.getString(pageItem.textResource)
 
                 if (pageItem.isButtonVisible) {
