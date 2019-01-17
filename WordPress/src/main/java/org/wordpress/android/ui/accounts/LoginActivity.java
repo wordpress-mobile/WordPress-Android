@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -53,6 +54,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
+import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
@@ -112,6 +114,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ZendeskHelper mZendeskHelper;
+    @Inject protected SiteStore mSiteStore;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -191,7 +194,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private void slideInFragment(Fragment fragment, boolean shouldAddToBackStack, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                                                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
+                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         if (shouldAddToBackStack) {
             fragmentTransaction.addToBackStack(null);
@@ -249,8 +252,26 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
+                // We are comparing list of site ID's before self-hosted site was added and after, trying to find a
+                // newly added self-hosted site's ID, so we can select it
+                ArrayList<Integer> newSitesIds = new ArrayList<>();
+                for (SiteModel site : mSiteStore.getSites()) {
+                    newSitesIds.add(site.getId());
+                }
+                newSitesIds.removeAll(oldSitesIds);
+
+                if (newSitesIds.size() > 0) {
+                    Intent intent = new Intent();
+                    intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, newSitesIds.get(0));
+                    setResult(Activity.RESULT_OK, intent);
+                } else {
+                    AppLog.e(T.MAIN, "Couldn't detect newly added self-hosted site. "
+                                     + "Expected at least 1 site ID but was 0.");
+                    ToastUtils.showToast(this, R.string.site_picker_failed_selecting_added_site);
+                    setResult(Activity.RESULT_OK);
+                }
+
                 // skip the epilogue when only added a self-hosted site or sharing to WordPress
-                setResult(Activity.RESULT_OK);
                 finish();
                 break;
         }
@@ -501,8 +522,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         dismissSignupSheet();
         mLoginAnalyticsListener.trackLoginSocial2faNeeded();
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
-                                                                               nonceAuthenticator, nonceBackup,
-                                                                               nonceSms);
+                nonceAuthenticator, nonceBackup,
+                nonceSms);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
     }
 
@@ -665,7 +686,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         }
 
         mSmartLockHelper.saveCredentialsInSmartLock(StringUtils.notNullStr(username), StringUtils.notNullStr(password),
-                                                    displayName, profilePicture);
+                displayName, profilePicture);
     }
 
     @Override
