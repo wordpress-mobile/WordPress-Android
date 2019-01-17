@@ -34,8 +34,16 @@ sealed class PageItem(open val type: Type) {
         override var indent: Int = 0,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true
-    ) : Page(id, title, date, labels, indent, imageUrl, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
-            actionsEnabled)
+    ) : Page(
+            id = id,
+            title = title,
+            date = date,
+            labels = labels,
+            indent = indent,
+            imageUrl = imageUrl,
+            actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
+            actionsEnabled = actionsEnabled
+    )
 
     data class DraftPage(
         override val id: Long,
@@ -44,8 +52,16 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true
-    ) : Page(id, title, date, labels, 0, imageUrl, setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH),
-            actionsEnabled)
+    ) : Page(
+            id = id,
+            title = title,
+            date = date,
+            labels = labels,
+            indent = 0,
+            imageUrl = imageUrl,
+            actions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH),
+            actionsEnabled = actionsEnabled
+    )
 
     data class ScheduledPage(
         override val id: Long,
@@ -53,8 +69,16 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true
-    ) : Page(id, title, date, emptyList(), 0, imageUrl,
-            setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH), actionsEnabled)
+    ) : Page(
+            id = id,
+            title = title,
+            date = date,
+            labels = emptyList(),
+            indent = 0,
+            imageUrl = imageUrl,
+            actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
+            actionsEnabled = actionsEnabled
+    )
 
     data class TrashedPage(
         override val id: Long,
@@ -62,8 +86,16 @@ sealed class PageItem(open val type: Type) {
         override val date: Date,
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true
-    ) : Page(id, title, date, emptyList(), 0, imageUrl, setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY),
-            actionsEnabled)
+    ) : Page(
+            id = id,
+            title = title,
+            date = date,
+            labels = emptyList(),
+            indent = 0,
+            imageUrl = imageUrl,
+            actions = setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY),
+            actionsEnabled = actionsEnabled
+    )
 
     data class ParentPage(
         val id: Long,
