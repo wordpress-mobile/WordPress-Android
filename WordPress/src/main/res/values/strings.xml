@@ -323,14 +323,15 @@
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
 
     <!-- post version sync conflict dialog -->
-    <string name="dialog_confirm_load_remote_post_title">Resolve version sync conflict</string>
-    <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to keep.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
+    <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
     <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %s\n\nWeb\nSaved on %s\n</string>
-    <string name="dialog_confirm_load_remote_post_keep_cloud">Keep Web</string>
-    <string name="dialog_confirm_load_remote_post_keep_local">Keep Local</string>
-    <string name="toast_remote_load_shortly">Your Post will load shortly</string>
-    <string name="snackbar_post_loaded_message">Post loaded from Web</string>
-    <string name="snackbar_open_post">Open</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Discard Local</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Discard Web</string>
+    <string name="toast_conflict_updating_post">Updating post</string>
+    <string name="snackbar_conflict_local_version_discarded">Local version discarded</string>
+    <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
+    <string name="snackbar_conflict_undo">Undo</string>
 
     <!-- gutenberg compatibility dialog -->
     <string name="dialog_gutenberg_compatibility_title">Before you continue</string>

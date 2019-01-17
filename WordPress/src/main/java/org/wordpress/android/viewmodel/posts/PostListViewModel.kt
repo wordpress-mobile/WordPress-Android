@@ -114,6 +114,7 @@ class PostListViewModel @Inject constructor(
     private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForTrashDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
+    private var originalPostCopyForConflictUndo: PostModel? = null
     // Initial target post to scroll to
     private var targetLocalPostId: Int? = null
 
@@ -332,8 +333,8 @@ class PostListViewModel @Inject constructor(
                 titleRes = R.string.dialog_confirm_load_remote_post_title,
                 messageRes = R.string.dialog_confirm_load_remote_post_body,
                 customMessageString = PostUtils.getConflictedPostCustomStringForDialog(post),
-                positiveButtonTextRes = R.string.dialog_confirm_load_remote_post_keep_cloud,
-                negativeButtonTextRes = R.string.dialog_confirm_load_remote_post_keep_local
+                positiveButtonTextRes = R.string.dialog_confirm_load_remote_post_discard_local,
+                negativeButtonTextRes = R.string.dialog_confirm_load_remote_post_discard_web
         )
         localPostIdForConflictResolutionDialog = post.id
         _dialogAction.postValue(dialogHolder)
@@ -420,18 +421,19 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun onRemoteCopyLoaded(post: PostModel) {
-        localPostIdForConflictResolutionDialog = null
-        val openAction = {
-            // here open the Post on the Editor
-            if (post != null) {
-                checkGutenbergOrEdit(site, post)
+        val undoAction = {
+            // here replace the post with whatever we had before, again
+            if (originalPostCopyForConflictUndo != null) {
+                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
             }
         }
         val onDismissAction = {
             // no op
+            localPostIdForConflictResolutionDialog = null
+            originalPostCopyForConflictUndo = null
         }
-        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_post_loaded_message,
-                R.string.snackbar_open_post, openAction, onDismissAction)
+        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_local_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
         _snackbarAction.postValue(snackbarHolder)
     }
 
@@ -665,8 +667,7 @@ class PostListViewModel @Inject constructor(
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
-                localPostIdForConflictResolutionDialog = null
-                loadPostFromLocal(it)
+                savePostFromLocal(it)
             }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
@@ -732,19 +733,29 @@ class PostListViewModel @Inject constructor(
 
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
+            originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
-            _toastMessage.postValue(ToastMessageHolder(R.string.toast_remote_load_shortly, Duration.SHORT))
+            _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
         } else {
             localPostIdForConflictResolutionDialog = null
         }
     }
 
-    private fun loadPostFromLocal(localPostId: Int) {
+    private fun savePostFromLocal(localPostId: Int) {
+        // We need network connection to push local version to remote
+        if (!checkNetworkConnection()) {
+            return
+        }
+
+        // set the id to null so we don't overlap the Snackbar for the PostsListActivity
+        localPostIdForConflictResolutionDialog = null
+
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
-            checkGutenbergOrEdit(site, post)
+            PostUtils.trackSavePostAnalytics(post, site);
+            dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
+            _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
         }
-        localPostIdForConflictResolutionDialog = null
     }
 
     // Utils
