@@ -119,16 +119,10 @@ class TimeStatsMapper
                     null
                 }
             }
-        } ?: if (response.date != null) {
-            listOf(PeriodData(response.date, 0, 0, 0, 0, 0, 0))
-        } else {
-            null
         }
-
         if (response.data == null || response.date == null || dataPerPeriod == null) {
             AppLog.e(STATS, "VisitsAndViewsResponse: data, date & dataPerPeriod fields should never be null")
         }
-
         return VisitsAndViewsModel(response.date ?: "", dataPerPeriod ?: listOf())
     }
 
