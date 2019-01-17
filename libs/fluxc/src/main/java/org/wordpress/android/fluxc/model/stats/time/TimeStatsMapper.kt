@@ -105,7 +105,7 @@ class TimeStatsMapper
         val dataPerPeriod = response.data?.mapNotNull { periodData ->
             periodData?.let {
                 val period = periodIndex?.let { periodData[it] }
-                if (period != null) {
+                if (period != null && period.isNotBlank()) {
                     PeriodData(
                             period,
                             periodData.getLongOrZero(viewsIndex),
