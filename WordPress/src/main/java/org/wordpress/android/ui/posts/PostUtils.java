@@ -408,5 +408,4 @@ public class PostUtils {
 
         return sdf.format(date);
     }
-
 }
