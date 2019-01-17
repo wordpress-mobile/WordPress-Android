@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.persistance.stats.time
 
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
