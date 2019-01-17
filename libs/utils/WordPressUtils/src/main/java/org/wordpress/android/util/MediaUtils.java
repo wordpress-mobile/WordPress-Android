@@ -30,10 +30,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
