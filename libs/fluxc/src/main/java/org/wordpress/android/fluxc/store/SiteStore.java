@@ -58,18 +58,32 @@ public class SiteStore extends Store {
         public String url;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class NewSitePayload extends Payload<BaseNetworkError> {
-        public String siteName;
-        public String siteTitle;
-        public String language;
-        public SiteVisibility visibility;
-        public boolean dryRun;
+        @NonNull public String siteName;
+        @NonNull public String siteTitle;
+        @NonNull public String language;
+        @NonNull public SiteVisibility visibility;
+        @Nullable public String verticalId;
+        @Nullable public Long segmentId;
+        @Nullable public String tagLine;
+        @NonNull public boolean dryRun;
+
         public NewSitePayload(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
-                              SiteVisibility visibility, boolean dryRun) {
+                              @NonNull SiteVisibility visibility, boolean dryRun) {
+            this(siteName, siteTitle, language, visibility, null, null, null, dryRun);
+        }
+
+        public NewSitePayload(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
+                              @NonNull SiteVisibility visibility, @Nullable String verticalId, @Nullable Long segmentId,
+                              @Nullable String tagLine, boolean dryRun) {
             this.siteName = siteName;
             this.siteTitle = siteTitle;
             this.language = language;
             this.visibility = visibility;
+            this.verticalId = verticalId;
+            this.segmentId = segmentId;
+            this.tagLine = tagLine;
             this.dryRun = dryRun;
         }
     }
@@ -1450,7 +1464,7 @@ public class SiteStore extends Store {
 
     private void createNewSite(NewSitePayload payload) {
         mSiteRestClient.newSite(payload.siteName, payload.siteTitle, payload.language, payload.visibility,
-                payload.dryRun);
+                payload.verticalId, payload.segmentId, payload.tagLine, payload.dryRun);
     }
 
     private void handleCreateNewSiteCompleted(NewSiteResponsePayload payload) {
