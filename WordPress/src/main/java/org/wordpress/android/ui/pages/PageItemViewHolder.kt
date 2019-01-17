@@ -49,29 +49,29 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         }
 
         override fun onBind(pageItem: PageItem) {
-            (pageItem as Page).let {
-                val indentWidth = DisplayUtils.dpToPx(parent.context, 16 * pageItem.indent)
+            (pageItem as Page).let { page ->
+                val indentWidth = DisplayUtils.dpToPx(parent.context, 16 * page.indent)
                 val marginLayoutParams = pageItemContainer.layoutParams as ViewGroup.MarginLayoutParams
                 marginLayoutParams.leftMargin = indentWidth
                 pageItemContainer.layoutParams = marginLayoutParams
 
-                pageTitle.text = if (pageItem.title.isEmpty())
+                pageTitle.text = if (page.title.isEmpty())
                     parent.context.getString(R.string.untitled_in_parentheses)
                 else
-                    pageItem.title
+                    page.title
 
-                val date = if (pageItem.date == Date(0)) Date() else pageItem.date
+                val date = if (page.date == Date(0)) Date() else page.date
                 time.text = DateTimeUtils.javaDateToTimeSpan(date, parent.context).capitalize()
 
-                labels.text = pageItem.labels.map { parent.context.getString(it) }.sorted().joinToString(" · ")
+                labels.text = page.labels.map { parent.context.getString(it) }.sorted().joinToString(" · ")
 
-                itemView.setOnClickListener { onItemTapped(pageItem) }
+                itemView.setOnClickListener { onItemTapped(page) }
 
-                pageMore.setOnClickListener { view -> moreClick(pageItem, view) }
+                pageMore.setOnClickListener { view -> moreClick(page, view) }
                 pageMore.visibility =
-                        if (pageItem.actions.isNotEmpty() && pageItem.actionsEnabled) View.VISIBLE else View.INVISIBLE
+                        if (page.actions.isNotEmpty() && page.actionsEnabled) View.VISIBLE else View.INVISIBLE
 
-                showFeaturedImage(pageItem.imageUrl)
+                showFeaturedImage(page.imageUrl)
             }
         }
 
