@@ -605,7 +605,7 @@ public class PostStore extends Store {
             Map<Long, PostModel> posts = getPostsByRemotePostIds(postIds, site);
             for (PostListItem item : payload.postListItems) {
                 PostModel post = posts.get(item.remotePostId);
-                if (post != null) {
+                if (post != null && !post.getLastModified().equals(item.lastModified)) {
                     // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
                     // as we'd otherwise overwrite and lose these local changes forever
                     boolean postNotTheSameLocalAndRemote = !post.getLastModified().equals(item.lastModified);
