@@ -17,6 +17,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AutoForeground
 import org.wordpress.android.util.CrashlyticsUtils
 import org.wordpress.android.util.LocaleManager
+import java.util.HashMap
 import javax.inject.Inject
 
 class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSiteCreationServiceState(IDLE)),
@@ -79,6 +80,13 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
 
     override fun trackStateUpdate(props: Map<String, *>) {
         tracker.trackSiteCreationServiceStateUpdated(props)
+    }
+
+    override fun track(state: ServiceState?) {
+        val props = HashMap<String, Any>()
+        props["phase"] = state?.stepName ?: "null"
+        props["is_foreground"] = isForeground
+        trackStateUpdate(props)
     }
 
     override fun logError(message: String) {
