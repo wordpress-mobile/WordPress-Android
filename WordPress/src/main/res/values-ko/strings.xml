@@ -96,7 +96,6 @@ Language: ko_KR
     <string name="dialog_gutenberg_compatibility_message">워드프레스는 완전히 새로운 워드프레스 편집기를 개발하기 위해 노력하고 있습니다. 이 글을 계속 편집할 수 있으나 공개하기 전에 글을 미리 보는 것이 좋습니다.</string>
     <string name="dialog_gutenberg_compatibility_title">계속하기 전에</string>
     <string name="media_space_used">%1$s 사용</string>
-    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">워드프레스닷컴 또는 젯팩에 연결된 독립 호스트 워드프레스 사이트를 입력하세요.</string>
     <string name="history_loading_revision">리비전 로드하는 중</string>
     <string name="history_loaded_revision">리비전 로드됨</string>

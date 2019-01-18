@@ -12,21 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPHtml;
 
 import javax.inject.Inject;
 
 public class EditPostPreviewFragment extends Fragment {
     private static final String ARG_LOCAL_POST_ID = "local_post_id";
     private WebView mWebView;
-    private TextView mTextView;
     private int mLocalPostId;
     private LoadPostPreviewTask mLoadTask;
 
@@ -49,22 +46,21 @@ public class EditPostPreviewFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.edit_post_preview_fragment, container, false);
-        mWebView = rootView.findViewById(R.id.post_preview_webview);
-        mTextView = rootView.findViewById(R.id.post_preview_textview);
-        mTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        mWebView = rootView.findViewById(R.id.post_preview_web_view);
+        mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if (getActivity() != null) {
                     loadPost();
                 }
-                mTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                mWebView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
         });
 
@@ -75,7 +71,7 @@ public class EditPostPreviewFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (getActivity() != null && !mTextView.isLayoutRequested()) {
+        if (getActivity() != null && !mWebView.isLayoutRequested()) {
             loadPost();
         }
     }
@@ -120,20 +116,11 @@ public class EditPostPreviewFragment extends Fragment {
             String postTitle = "<h1>" + mPost.getTitle() + "</h1>";
             String postContent = postTitle + mPost.getContent();
 
-            if (mPost.isLocalDraft()) {
-                contentSpannable = WPHtml.fromHtml(
-                        postContent.replaceAll("\uFFFC", ""),
-                        getActivity(),
-                        mPost,
-                        Math.min(mTextView.getWidth(), mTextView.getHeight())
-                );
-            } else {
-                String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" "
-                                  + "type=\"text/css\" href=\"webview.css\" /></head><body><div "
-                                  + "id=\"container\">%s</div></body></html>";
-                htmlText = String.format(htmlText, StringUtils.addPTags(postContent));
-                contentSpannable = new SpannableString(htmlText);
-            }
+            String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" "
+                              + "type=\"text/css\" href=\"webview.css\" /></head><body><div "
+                              + "id=\"container\">%s</div></body></html>";
+            htmlText = String.format(htmlText, StringUtils.addPTags(postContent));
+            contentSpannable = new SpannableString(htmlText);
 
             return contentSpannable;
         }
@@ -141,17 +128,8 @@ public class EditPostPreviewFragment extends Fragment {
         @Override
         protected void onPostExecute(Spanned spanned) {
             if (mPost != null && spanned != null) {
-                if (mPost.isLocalDraft()) {
-                    mTextView.setVisibility(View.VISIBLE);
-                    mWebView.setVisibility(View.GONE);
-                    mTextView.setText(spanned);
-                } else {
-                    mTextView.setVisibility(View.GONE);
-                    mWebView.setVisibility(View.VISIBLE);
-
-                    mWebView.loadDataWithBaseURL("file:///android_asset/", spanned.toString(),
-                                                 "text/html", "utf-8", null);
-                }
+                mWebView.loadDataWithBaseURL("file:///android_asset/", spanned.toString(),
+                        "text/html", "utf-8", null);
             }
 
             mLoadTask = null;
