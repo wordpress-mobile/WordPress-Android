@@ -111,7 +111,10 @@ constructor(
                                     text = post.title,
                                     value = post.views.toFormattedString(),
                                     showDivider = false,
-                                    navigationAction = create(PostClickParams(post.id, post.url, post.title), this::onPostClicked)
+                                    navigationAction = create(
+                                            PostClickParams(post.id, post.url, post.title),
+                                            this::onPostClicked
+                                    )
                             )
                         })
                         items.add(Divider)
