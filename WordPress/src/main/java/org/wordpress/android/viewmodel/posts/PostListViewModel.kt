@@ -747,15 +747,38 @@ class PostListViewModel @Inject constructor(
             return
         }
 
-        // set the id to null so we don't overlap the Snackbar for the PostsListActivity
-        localPostIdForConflictResolutionDialog = null
-
         val post = postStore.getPostByLocalPostId(localPostId)
-        if (post != null) {
-            PostUtils.trackSavePostAnalytics(post, site)
-            dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
-            _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
+        if (post == null) {
+            return;
         }
+
+        localPostIdForConflictResolutionDialog = null
+        // keep a copy for undoing
+        originalPostCopyForConflictUndo = post.clone()
+
+        // we make remoteLastModified match local lastModified to clear the "conflicted" flag in the Post list only
+        post.remoteLastModified = post.lastModified
+        dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
+
+        // and now show a snackbar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
+        var isUndoed = false
+        val undoAction = {
+            isUndoed = true
+            // no op, fake
+            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
+            originalPostCopyForConflictUndo = null
+        }
+
+        val onDismissAction = {
+            if (!isUndoed) {
+                originalPostCopyForConflictUndo = null
+                PostUtils.trackSavePostAnalytics(post, site)
+                dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
+            }
+        }
+        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_web_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        _snackbarAction.postValue(snackbarHolder)
     }
 
     // Utils
