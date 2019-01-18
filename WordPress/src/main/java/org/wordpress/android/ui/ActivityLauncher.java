@@ -425,6 +425,23 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewItemStatsDetails(
+            Context context,
+            final long siteId,
+            final String postId,
+            @Nullable final String itemType,
+            final String itemTitle,
+            final String itemUrl
+                                       ) {
+        Intent statsPostViewIntent = new Intent(context, StatsSingleItemDetailsActivity.class);
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_BLOG_ID, siteId);
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_ID, postId);
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_TYPE, itemType);
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_TITLE, itemTitle);
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_URL, itemUrl);
+        context.startActivity(statsPostViewIntent);
+    }
+
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
