@@ -42,7 +42,7 @@ class VisitAndViewsRestClient
         val params = mapOf(
                 "unit" to granularity.toString(),
                 "quantity" to pageSize.toString(),
-                "date" to statsUtils.getFormattedDate(site, granularity, date)
+                "date" to statsUtils.getFormattedDate(site, date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
