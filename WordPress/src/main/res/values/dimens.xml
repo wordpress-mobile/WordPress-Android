@@ -51,6 +51,9 @@
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
 
+    <dimen name="site_creation_content_margin_normal">0dp</dimen>
+    <dimen name="site_creation_content_margin">@dimen/site_creation_content_margin_normal</dimen>
+
     <!--
         native reader dimens
     -->
