@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.network
 import com.android.volley.NetworkResponse
 import com.android.volley.Response.Listener
 import com.android.volley.VolleyError
-import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockitokotlin2.mock
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner

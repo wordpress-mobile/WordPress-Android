@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -21,9 +21,10 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.util.DateTimeUtils
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.CoroutineContext
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class PageStore @Inject constructor(
