@@ -62,6 +62,7 @@ import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -866,14 +867,11 @@ public class EditPostSettingsFragment extends Fragment {
         // Get max width for photon thumbnail
         int width = DisplayUtils.getDisplayPixelWidth(getActivity());
         int height = DisplayUtils.getDisplayPixelHeight(getActivity());
-        int size = Math.max(width, height);
 
         String mediaUri = StringUtils.notNullStr(media.getThumbnailUrl());
-        if (SiteUtils.isPhotonCapable(siteModel)) {
-            mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
-        }
-
-        mImageManager.load(mFeaturedImageView, ImageType.PHOTO, mediaUri, ScaleType.FIT_CENTER);
+        String photonUrl = ReaderUtils.getResizedImageUrl(
+                mediaUri, width, height, !SiteUtils.isPhotonCapable(siteModel));
+        mImageManager.load(mFeaturedImageView, ImageType.PHOTO, photonUrl, ScaleType.FIT_CENTER);
     }
 
     private void launchFeaturedMediaPicker() {
