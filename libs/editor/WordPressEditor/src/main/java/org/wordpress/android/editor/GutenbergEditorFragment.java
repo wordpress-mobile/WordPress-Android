@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -108,8 +109,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 view.findViewById(R.id.gutenberg),
                 mHtmlModeEnabled,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryButtonClick() {
+                    @Override public void onMediaLibraryButtonClicked() {
                         onToolbarMediaButtonClicked();
+                    }
+
+                    @Override
+                    public void onUploadMediaButtonClicked() {
+                        mEditorFragmentListener.onAddPhotoClicked();
                     }
                 },
                 getActivity().getApplication(),
@@ -444,7 +450,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        mWPAndroidGlueCode.appendMediaFile(mediaUrl);
+        if (URLUtil.isNetworkUrl(mediaUrl)) {
+            mWPAndroidGlueCode.appendMediaFile(mediaUrl);
+        } else {
+            mWPAndroidGlueCode.appendUploadMediaFile(String.valueOf(mediaFile.getId()), "file://" + mediaUrl);
+        }
     }
 
     @Override
@@ -496,15 +506,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+        mWPAndroidGlueCode.mediaFileUploadSucceeded(localMediaId, mediaFile.getFileURL());
     }
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
+        mWPAndroidGlueCode.mediaFileUploadProgress(localMediaId, progress);
     }
 
     @Override
     public void onMediaUploadFailed(final String localMediaId, final MediaType
             mediaType, final String errorMessage) {
+        mWPAndroidGlueCode.mediaFileUploadFailed(localMediaId);
     }
 
     @Override
