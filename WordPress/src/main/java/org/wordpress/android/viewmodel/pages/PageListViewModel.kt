@@ -4,7 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
@@ -115,7 +116,7 @@ class PageListViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun loadPagesAsync(pages: List<PageModel>) = launch {
+    private fun loadPagesAsync(pages: List<PageModel>) = GlobalScope.launch {
         val pageItems = pages
                 .sortedBy { it.title }
                 .filter { listType.pageStatuses.contains(it.status) }

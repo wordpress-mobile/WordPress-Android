@@ -9,10 +9,11 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
 
+import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
+        .IS_TAPPED_ON_NOTIFICATION;
+
 public class NotificationsUpdateJobService extends JobService
         implements NotificationsUpdateLogic.ServiceCompletionListener {
-    public static final String IS_TAPPED_ON_NOTIFICATION = "is-tapped-on-notification";
-
     private NotificationsUpdateLogic mNotificationsUpdateLogic;
 
     @Override

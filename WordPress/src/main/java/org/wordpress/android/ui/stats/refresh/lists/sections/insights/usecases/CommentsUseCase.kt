@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -81,7 +81,7 @@ class CommentsUseCase
                 )
             }
         } else {
-            items.add(Empty)
+            items.add(Empty())
         }
         return items
     }
@@ -100,7 +100,7 @@ class CommentsUseCase
                 )
             })
         } else {
-            mutableItems.add(Empty)
+            mutableItems.add(Empty())
         }
         return mutableItems
     }
@@ -117,7 +117,7 @@ class CommentsUseCase
                 )
             })
         } else {
-            mutableItems.add(Empty)
+            mutableItems.add(Empty())
         }
         return mutableItems
     }

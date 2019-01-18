@@ -99,6 +99,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
         mTitle = view.findViewById(R.id.title);
+
+        if (getArguments() != null) {
+            mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
+        }
+
         mWPAndroidGlueCode.onCreateView(
                 view.findViewById(R.id.gutenberg),
                 mHtmlModeEnabled,
@@ -109,7 +114,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
-                BuildConfig.BUILD_GUTENBERG_FROM_SOURCE);
+                BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
+                mIsNewPost);
         mSource = view.findViewById(R.id.source);
 
         mTitle.addTextChangedListener(mTextWatcher);
@@ -164,12 +170,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
-        if (getArguments() != null) {
-            mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
-            if (mIsNewPost) {
-                mTitle.requestFocus();
-                showImplicitKeyboard();
-            }
+        if (mIsNewPost) {
+            mTitle.requestFocus();
+            showImplicitKeyboard();
         }
 
         return view;

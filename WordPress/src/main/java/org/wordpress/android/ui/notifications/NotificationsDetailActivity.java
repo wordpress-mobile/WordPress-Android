@@ -62,6 +62,8 @@ import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
 import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
 import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
+import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
+        .IS_TAPPED_ON_NOTIFICATION;
 
 public class NotificationsDetailActivity extends AppCompatActivity implements
         CommentActions.OnNoteCommentActionListener,
@@ -73,6 +75,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Inject SiteStore mSiteStore;
 
     private String mNoteId;
+    private boolean mIsTappedOnNotification;
 
     private WPViewPager mViewPager;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
@@ -98,11 +101,13 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             mNoteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+            mIsTappedOnNotification = getIntent().getBooleanExtra(IS_TAPPED_ON_NOTIFICATION, false);
         } else {
             if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
                 getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
             }
             mNoteId = savedInstanceState.getString(NotificationsListFragment.NOTE_ID_EXTRA);
+            mIsTappedOnNotification = savedInstanceState.getBoolean(IS_TAPPED_ON_NOTIFICATION);
         }
 
         // set up the viewpager and adapter for lateral navigation
@@ -111,7 +116,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                                       new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
         Note note = NotificationsTable.getNoteById(mNoteId);
-        updateUIAndNote(note == null);
+        // if this is coming from a tapped push notification, let's try refreshing it as its contents may have been
+        // updated since the notification was first received and created on the system's dashboard
+        updateUIAndNote((note == null) || mIsTappedOnNotification);
 
         // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
@@ -219,6 +226,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             outState.putString(ARG_TITLE, getSupportActionBar().getTitle().toString());
         }
         outState.putString(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
+        outState.putBoolean(IS_TAPPED_ON_NOTIFICATION, mIsTappedOnNotification);
         super.onSaveInstanceState(outState);
     }
 
@@ -309,7 +317,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
      * Tries to pick the correct fragment detail type for a given note
      * Defaults to NotificationDetailListFragment
      */
-    private Fragment getDetailFragmentForNote(Note note, int idForFragmentContainer) {
+    private Fragment getDetailFragmentForNote(Note note) {
         if (note == null) {
             return null;
         }
@@ -321,8 +329,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                                                                  false);
             fragment = CommentDetailFragment.newInstance(note.getId(),
                                                          getIntent().getStringExtra(
-                                                                 NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA),
-                                                         idForFragmentContainer);
+                                                                 NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
 
             if (isInstantReply) {
                 ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
@@ -470,7 +477,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         @Override
         public Fragment getItem(int position) {
-            return getDetailFragmentForNote(mNoteList.get(position), position);
+            return getDetailFragmentForNote(mNoteList.get(position));
         }
 
         @Override
