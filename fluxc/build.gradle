@@ -71,6 +71,8 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
 
+    implementation "com.android.support:exifinterface:$supportLibraryVersion"
+
     // WordPress libs
     implementation ('org.wordpress:utils:1.20.0') {
         // Using official volley package
@@ -101,8 +103,8 @@ dependencies {
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
 }
 
 version = android.defaultConfig.versionName

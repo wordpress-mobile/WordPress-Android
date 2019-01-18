@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.wellsql.generated.StatsBlockTable
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.core.Identifiable
@@ -11,9 +12,16 @@ import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
+
 @Singleton
 class StatsSqlUtils
-@Inject constructor(private val gson: Gson) {
+@Inject constructor() {
+    private val gson: Gson by lazy {
+        val builder = GsonBuilder()
+        builder.setDateFormat(DATE_FORMAT)
+        builder.create()
+    }
     fun <T> insert(site: SiteModel, blockType: BlockType, statsType: StatsType, item: T, date: String = "") {
         val json = gson.toJson(item)
         WellSql.delete(StatsBlockBuilder::class.java)

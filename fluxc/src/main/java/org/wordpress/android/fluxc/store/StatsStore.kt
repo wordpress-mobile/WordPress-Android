@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.CENSORED
@@ -38,7 +38,7 @@ import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.SEARCH_TERMS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.VIDEOS
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class StatsStore
