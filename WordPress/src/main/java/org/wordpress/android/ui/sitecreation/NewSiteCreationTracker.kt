@@ -71,11 +71,11 @@ class NewSiteCreationTracker @Inject constructor() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_ACCESSED)
     }
 
-    fun trackDomainSelected(choosenDomain: String, searchTerm: String) {
+    fun trackDomainSelected(chosenDomain: String, searchTerm: String) {
         AnalyticsTracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
                 mapOf(
-                        "chosen_domain" to choosenDomain,
+                        "chosen_domain" to chosenDomain,
                         "search_term" to searchTerm
                 )
         )
