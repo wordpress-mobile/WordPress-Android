@@ -105,7 +105,7 @@ class TimeStatsMapper
         val dataPerPeriod = response.data?.mapNotNull { periodData ->
             periodData?.let {
                 val period = periodIndex?.let { periodData[it] }
-                if (period != null) {
+                if (period != null && period.isNotBlank()) {
                     PeriodData(
                             period,
                             periodData.getLongOrZero(viewsIndex),
@@ -120,7 +120,7 @@ class TimeStatsMapper
                 }
             }
         }
-        if (response.data == null || response.date == null || dataPerPeriod != null) {
+        if (response.data == null || response.date == null || dataPerPeriod == null) {
             AppLog.e(STATS, "VisitsAndViewsResponse: data, date & dataPerPeriod fields should never be null")
         }
         return VisitsAndViewsModel(response.date ?: "", dataPerPeriod ?: listOf())
