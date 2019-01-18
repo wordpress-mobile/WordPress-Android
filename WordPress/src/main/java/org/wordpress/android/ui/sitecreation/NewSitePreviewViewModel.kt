@@ -166,7 +166,6 @@ class NewSitePreviewViewModel @Inject constructor(
             IDLE, CREATE_SITE -> {
             } // do nothing
             SUCCESS -> {
-                tracker.trackPreviewLoading()
                 startPreLoadingWebView()
                 val remoteSiteId = event.payload as Long
                 createSiteState = SiteNotInLocalDb(remoteSiteId)
@@ -198,6 +197,7 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     private fun startPreLoadingWebView() {
+        tracker.trackPreviewLoading()
         launch(IO) {
             /**
              * Keep showing the full screen loading screen for 1 more second or until the webview is loaded whichever
@@ -225,15 +225,15 @@ class NewSitePreviewViewModel @Inject constructor(
             webviewFullyLoadedTracked = true
             tracker.trackPreviewWebviewFullyLoaded()
         }
+        if (uiState.value is SitePreviewFullscreenProgressUiState) {
+            tracker.trackPreviewWebviewShown()
+        }
         /**
          * Update the ui state if the loading or error screen is being shown.
          * In other words don't update it after a configuration change.
          */
         if (uiState.value !is SitePreviewContentUiState) {
             updateUiState(SitePreviewContentUiState(createSitePreviewData()))
-        }
-        if (uiState.value is SitePreviewFullscreenProgressUiState) {
-            tracker.trackPreviewWebviewShown()
         }
     }
 
