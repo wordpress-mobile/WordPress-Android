@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:aevImage="@drawable/img_illustration_stats_226dp"
+        app:aevSubtitle="@string/stats_loading_error_hint"
+        app:aevTitle="@string/stats_loading_error_title"
+        tools:visibility="visible"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -12,4 +24,4 @@
         android:clipToPadding="false"
         android:scrollbars="vertical"/>
 
-</FrameLayout>
+</RelativeLayout>

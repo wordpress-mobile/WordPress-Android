@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher, private val statsUseCase: BaseListUseCase) :
@@ -20,10 +22,22 @@ abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher, privat
 
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
 
-    val data: LiveData<List<StatsBlock>> = _data
+    val uiModel: LiveData<UiModel<List<StatsBlock>>> = _data.map {
+        val allFailing = it.fold(true) { acc, statsBlock -> acc && statsBlock.type == ERROR }
+        if (!allFailing) {
+            UiModel.Success(it)
+        } else {
+            UiModel.Error<List<StatsBlock>>()
+        }
+    }
 
     override fun onCleared() {
         statsUseCase.onCleared()
         super.onCleared()
+    }
+
+    sealed class UiModel<T> {
+        data class Success<T>(val data: T) : UiModel<T>()
+        class Error<T> : UiModel<T>()
     }
 }
