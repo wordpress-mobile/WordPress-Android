@@ -21,8 +21,8 @@ import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.ui.sitecreation.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
-import org.wordpress.android.ui.sitecreation.ORIGIN_DOMAINS_ERROR
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
@@ -42,6 +42,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
 private const val THROTTLE_DELAY = 500L
+private const val ERROR_CONTEXT = "domains"
 
 class NewSiteCreationDomainsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
@@ -151,7 +152,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                 }
             }
         } else {
-            tracker.trackConnectionErrorShown(ORIGIN_DOMAINS_ERROR)
+            tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR)
             updateUiStateToContent(query, ListState.Error(listState, errorMessageResId = R.string.no_network_message))
         }
     }
@@ -159,7 +160,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {
         // We want to treat `INVALID_QUERY` as if it's an empty result, so we'll ignore it
         if (event.isError && event.error.type != SuggestDomainErrorType.INVALID_QUERY) {
-            tracker.trackGenericErrorShown(ORIGIN_DOMAINS_ERROR)
+            tracker.trackErrorShown(ERROR_CONTEXT, event.error.type.toString(), event.error.message.toString())
             updateUiStateToContent(
                     query,
                     ListState.Error(

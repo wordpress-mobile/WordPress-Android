@@ -37,6 +37,7 @@ import kotlin.coroutines.CoroutineContext
 
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 private const val DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER = 1000L
+private const val ERROR_CONTEXT = "site_preview"
 
 class NewSitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -142,7 +143,7 @@ class NewSitePreviewViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            tracker.trackConnectionErrorShown(ORIGIN_PREVIEW_ERROR)
+            tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR)
             withContext(MAIN) {
                 updateUiState(SitePreviewConnectionErrorUiState)
             }
@@ -173,7 +174,7 @@ class NewSitePreviewViewModel @Inject constructor(
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
-                tracker.trackGenericErrorShown(ORIGIN_PREVIEW_ERROR)
+                tracker.trackErrorShown(ERROR_CONTEXT, "unknown", "NewSiteCreation service failed")
                 updateUiStateAsync(SitePreviewGenericErrorUiState)
             }
         }
