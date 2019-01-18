@@ -262,30 +262,26 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         } else {
             val lastItemIndex = data.size - 1
             data.forEachIndexed { index, model ->
-                if (model.isUserInputVertical) {
-                    val itemUiState = VerticalsCustomModelUiState(
+                val onItemTapped = {
+                    tracker.trackVerticalSelected(model.name, model.verticalId, model.isUserInputVertical)
+                    _verticalSelected.value = model.verticalId
+                }
+                val itemUiState = if (model.isUserInputVertical) {
+                    VerticalsCustomModelUiState(
                             model.verticalId,
                             model.name,
                             R.string.new_site_creation_verticals_custom_subtitle,
                             showDivider = index != lastItemIndex
                     )
-                    itemUiState.onItemTapped = {
-                        tracker.trackVerticalSelected(itemUiState.title, itemUiState.id, false)
-                        _verticalSelected.value = itemUiState.id
-                    }
-                    items.add(itemUiState)
                 } else {
-                    val itemUiState = VerticalsModelUiState(
+                    VerticalsModelUiState(
                             model.verticalId,
                             model.name,
                             showDivider = index != lastItemIndex
                     )
-                    itemUiState.onItemTapped = {
-                        tracker.trackVerticalSelected(itemUiState.title, itemUiState.id, true)
-                        _verticalSelected.value = itemUiState.id
-                    }
-                    items.add(itemUiState)
                 }
+                itemUiState.onItemTapped = onItemTapped
+                items.add(itemUiState)
             }
         }
         return items
