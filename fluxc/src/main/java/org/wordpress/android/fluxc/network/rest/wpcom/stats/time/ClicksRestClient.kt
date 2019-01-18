@@ -46,7 +46,7 @@ class ClicksRestClient
         val params = mapOf(
                 "period" to granularity.toString(),
                 "max" to pageSize.toString(),
-                "date" to statsUtils.getFormattedDate(site, granularity, date)
+                "date" to statsUtils.getFormattedDate(site, date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
