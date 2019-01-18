@@ -44,7 +44,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     public static void openTheme(Activity activity, SiteModel site, ThemeModel theme, ThemeWebActivityType type) {
-        String url = getUrl(site, theme, type, false);
+        String url = getUrl(site, theme, type, !theme.isFree());
         if (TextUtils.isEmpty(url)) {
             ToastUtils.showToast(activity, R.string.could_not_load_theme);
             return;

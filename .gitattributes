@@ -5,3 +5,4 @@ gradlew text eol=lf
 *.bat text eol=crlf
 *.png binary
 *.jpg binary
+RELEASE-NOTES.txt merge=union

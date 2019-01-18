@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -75,7 +75,7 @@ constructor(
         items.add(Title(R.string.stats_search_terms))
 
         if (domainModel.searchTerms.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             items.add(Header(string.stats_search_terms_label, string.stats_search_terms_views_label))
             val hasEncryptedCount = domainModel.unknownSearchCount > 0
