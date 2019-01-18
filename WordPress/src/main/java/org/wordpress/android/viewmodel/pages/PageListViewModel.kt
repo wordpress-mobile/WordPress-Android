@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.pages
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -12,7 +13,6 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.MediaStore
@@ -44,7 +44,9 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher
 ) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<List<PageItem>> = _pages
+    val pages: LiveData<Pair<List<PageItem>, Boolean>> = Transformations.map(_pages) {
+        Pair(it, isSitePhotonCapable)
+    }
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
@@ -56,7 +58,7 @@ class PageListViewModel @Inject constructor(
 
     private val featuredImageMap = HashMap<Long, String>()
 
-    val isSitePhotonCapable: Boolean by lazy {
+    private val isSitePhotonCapable: Boolean by lazy {
         SiteUtils.isPhotonCapable(pagesViewModel.site)
     }
 
@@ -124,7 +126,7 @@ class PageListViewModel @Inject constructor(
     }
 
     fun onScrollToPageRequested(remotePageId: Long) {
-        val position = pages.value?.indexOfFirst { it is Page && it.id == remotePageId } ?: -1
+        val position = _pages.value?.indexOfFirst { it is Page && it.id == remotePageId } ?: -1
         if (position != -1) {
             _scrollToPosition.postValue(position)
         } else {

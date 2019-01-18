@@ -17,7 +17,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -93,7 +92,7 @@ class PageListFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.pages.observe(this, Observer { data ->
-            data?.let { setPages(data) }
+            data?.let { setPages(data.first, data.second) }
         })
 
         viewModel.scrollToPosition.observe(this, Observer { position ->
@@ -103,7 +102,7 @@ class PageListFragment : Fragment() {
         })
     }
 
-    private fun setPages(pages: List<PageItem>) {
+    private fun setPages(pages: List<PageItem>, isSitePhotonCapable: Boolean) {
         val adapter: PagesAdapter
         if (recyclerView.adapter == null) {
             adapter = PagesAdapter(
@@ -111,7 +110,7 @@ class PageListFragment : Fragment() {
                     onItemTapped = { page -> viewModel.onItemTapped(page) },
                     onEmptyActionButtonTapped = { viewModel.onEmptyListNewPageButtonTapped() },
                     imageManager = imageManager,
-                    isSitePhotonCapable = viewModel.isSitePhotonCapable,
+                    isSitePhotonCapable = isSitePhotonCapable,
                     uiScope = uiScope
             )
             recyclerView.adapter = adapter
