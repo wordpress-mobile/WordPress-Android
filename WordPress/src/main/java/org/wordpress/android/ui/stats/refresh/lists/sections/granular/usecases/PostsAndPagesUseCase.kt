@@ -27,7 +27,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -118,7 +117,12 @@ constructor(
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewPostsAndPages(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(
+                ViewPostsAndPages(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+                )
+        )
     }
 
     private fun onLinkClicked(params: LinkClickParams) {
