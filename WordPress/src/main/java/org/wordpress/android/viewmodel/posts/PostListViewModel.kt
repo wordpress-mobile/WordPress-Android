@@ -749,7 +749,7 @@ class PostListViewModel @Inject constructor(
 
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post == null) {
-            return;
+            return
         }
 
         localPostIdForConflictResolutionDialog = null
