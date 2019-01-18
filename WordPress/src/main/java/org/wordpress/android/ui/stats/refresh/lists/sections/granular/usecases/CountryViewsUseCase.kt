@@ -38,7 +38,6 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: CountryViewsStore,
     selectedDateProvider: SelectedDateProvider,
-    private val statsDateFormatter: StatsDateFormatter,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatelessUseCase<CountryViewsModel>(COUNTRIES, mainDispatcher, selectedDateProvider, statsGranularity) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_countries))
@@ -109,7 +108,7 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_COUNTRIES_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewCountries(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
+        navigateTo(ViewCountries(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
     }
 
     class CountryViewsUseCaseFactory
@@ -117,7 +116,6 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: CountryViewsStore,
         private val selectedDateProvider: SelectedDateProvider,
-        private val statsDateFormatter: StatsDateFormatter,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
@@ -126,7 +124,6 @@ constructor(
                         mainDispatcher,
                         store,
                         selectedDateProvider,
-                        statsDateFormatter,
                         analyticsTracker
                 )
     }

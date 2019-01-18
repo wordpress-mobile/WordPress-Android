@@ -45,7 +45,6 @@ private val selectedDate = Date(0)
 class SearchTermsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: SearchTermsStore
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: SearchTermsUseCase
@@ -57,7 +56,6 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 store,
                 selectedDateProvider,
-                statsDateFormatter,
                 tracker
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)

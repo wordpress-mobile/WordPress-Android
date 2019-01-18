@@ -46,7 +46,6 @@ private val selectedDate = Date(0)
 class CountryViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: CountryViewsStore
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: CountryViewsUseCase
@@ -58,7 +57,6 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 store,
                 selectedDateProvider,
-                statsDateFormatter,
                 tracker
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)

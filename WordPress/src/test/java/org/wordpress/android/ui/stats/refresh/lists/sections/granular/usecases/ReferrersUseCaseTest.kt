@@ -48,7 +48,6 @@ private val selectedDate = Date(0)
 class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: ReferrersStore
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: ReferrersUseCase
@@ -63,7 +62,6 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 statsGranularity,
                 Dispatchers.Unconfined,
                 store,
-                statsDateFormatter,
                 selectedDateProvider,
                 tracker
         )

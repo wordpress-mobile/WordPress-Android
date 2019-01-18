@@ -42,7 +42,6 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: ClicksStore,
     selectedDateProvider: SelectedDateProvider,
-    private val statsDateFormatter: StatsDateFormatter,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatefulUseCase<ClicksModel, SelectedClicksGroup>(
         CLICKS,
@@ -133,7 +132,7 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_CLICKS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewClicks(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
+        navigateTo(ViewClicks(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
     }
 
     private fun onItemClick(url: String) {
@@ -148,7 +147,6 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: ClicksStore,
         private val selectedDateProvider: SelectedDateProvider,
-        private val statsDateFormatter: StatsDateFormatter,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
@@ -157,7 +155,6 @@ constructor(
                         mainDispatcher,
                         store,
                         selectedDateProvider,
-                        statsDateFormatter,
                         analyticsTracker
                 )
     }

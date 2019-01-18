@@ -38,7 +38,6 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: VideoPlaysStore,
     selectedDateProvider: SelectedDateProvider,
-    private val statsDateFormatter: StatsDateFormatter,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatelessUseCase<VideoPlaysModel>(VIDEOS, mainDispatcher, selectedDateProvider, statsGranularity) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(string.stats_videos))
@@ -102,7 +101,7 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewVideoPlays(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
+        navigateTo(ViewVideoPlays(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
     }
 
     private fun onItemClick(url: String) {
@@ -115,7 +114,6 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: VideoPlaysStore,
         private val selectedDateProvider: SelectedDateProvider,
-        private val statsDateFormatter: StatsDateFormatter,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
@@ -124,7 +122,6 @@ constructor(
                         mainDispatcher,
                         store,
                         selectedDateProvider,
-                        statsDateFormatter,
                         analyticsTracker
                 )
     }
