@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.activitylog
 
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.NonCancellable.isActive
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
@@ -42,7 +42,7 @@ class RewindProgressChecker
             delay(checkDelay)
         }
         var result: OnRewindStatusFetched? = null
-        while (isActive) {
+        while (coroutineContext.isActive) {
             val rewindStatusForSite = activityLogStore.getRewindStatusForSite(site)
             val rewind = rewindStatusForSite?.rewind
             if (rewind != null && rewind.restoreId == restoreId) {

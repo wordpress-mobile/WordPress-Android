@@ -95,9 +95,10 @@ platform :android do
       "play_store_screenshot_5" => {desc: "play_store_screenshot_4.txt"},
     }
 
-    download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
+    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
       target_files: files, 
-      locales: SUPPORTED_LOCALES,
+      locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]},
+      source_locale: "en-US",
       download_path: File.join(Dir.pwd, "/playstoreres/metadata"))
   end 
 
