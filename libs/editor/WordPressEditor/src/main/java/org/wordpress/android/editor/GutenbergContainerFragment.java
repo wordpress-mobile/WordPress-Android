@@ -42,7 +42,7 @@ public class GutenbergContainerFragment extends Fragment {
                 mHtmlModeEnabled,
                 new OnMediaLibraryButtonListener() {
                     @Override public void onMediaLibraryButtonClick() {
-//                        onToolbarMediaButtonClicked();
+                        ((GutenbergEditorFragment) getParentFragment()).onToolbarMediaButtonClicked();
                     }
                 },
                 getActivity().getApplication(),
