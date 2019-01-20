@@ -33,15 +33,9 @@
         style="@style/DividerSourceView"/>
 
     <FrameLayout
+        android:id="@+id/gutenberg_container"
         android:layout_height="match_parent"
         android:layout_width="match_parent" >
-
-        <com.facebook.react.ReactRootView
-            android:id="@+id/gutenberg"
-            android:hint="@string/editor_content_hint"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-        />
 
         <org.wordpress.aztec.source.SourceViewEditText
             android:id="@+id/source"

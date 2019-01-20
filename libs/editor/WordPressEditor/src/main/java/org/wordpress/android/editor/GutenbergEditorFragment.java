@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -32,7 +34,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.source.SourceViewEditText;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 
@@ -43,8 +44,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
-
-    private static boolean mIsToolbarExpanded = false;
 
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
@@ -58,19 +57,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
-    private WPAndroidGlueCode mWPAndroidGlueCode;
-
     private boolean mIsNewPost;
-
-    public GutenbergEditorFragment() {
-        mWPAndroidGlueCode = new WPAndroidGlueCode();
-    }
+    private boolean mIsRotating;
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
-                                                      boolean isExpanded,
                                                       boolean isNewPost) {
-        mIsToolbarExpanded = isExpanded;
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -80,11 +72,26 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return fragment;
     }
 
+    private GutenbergContainerFragment getGutenbergContainerFragment() {
+        return (GutenbergContainerFragment) getChildFragmentManager()
+                .findFragmentByTag(GutenbergContainerFragment.TAG);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mWPAndroidGlueCode.onCreate(getContext());
+        if (savedInstanceState == null) {
+            boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
+
+            FragmentManager fragmentManager = getChildFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            GutenbergContainerFragment gutenbergContainerFragment =
+                    GutenbergContainerFragment.newInstance(isNewPost);
+            gutenbergContainerFragment.setRetainInstance(true);
+            fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
+            fragmentTransaction.commitNow();
+        }
 
         ProfilingUtils.start("Visual Editor Startup");
         ProfilingUtils.split("EditorFragment.onCreate");
@@ -96,6 +103,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mIsRotating = savedInstanceState != null;
+
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
         mTitle = view.findViewById(R.id.title);
@@ -104,18 +113,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
         }
 
-        mWPAndroidGlueCode.onCreateView(
-                view.findViewById(R.id.gutenberg),
-                mHtmlModeEnabled,
-                new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryButtonClick() {
-                        onToolbarMediaButtonClicked();
-                    }
-                },
-                getActivity().getApplication(),
-                BuildConfig.DEBUG,
-                BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
-                mIsNewPost);
+        ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
+        getGutenbergContainerFragment().attachToContainer(gutenbergContainer);
+
         mSource = view.findViewById(R.id.source);
 
         mTitle.addTextChangedListener(mTextWatcher);
@@ -183,8 +183,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         super.onPause();
         mEditorWasPaused = true;
 
-        mWPAndroidGlueCode.onPause(getActivity());
-
         // Reset soft input mode to default as we have change it in onResume()
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
                 | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -214,8 +212,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             hideActionBarIfNeeded();
         }
 
-        mWPAndroidGlueCode.onResume(this, getActivity());
-
         // In AndroidManifest for EditActivity we have set android:windowSoftInputMode="stateHidden|adjustResize"
         // which doesn't allow us to present the keyboard programmatically.
         // Ugly way to allow showing the keyboard would be to change soft input mode.
@@ -231,12 +227,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EditorDragAndDropListener");
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mWPAndroidGlueCode.onDestroy(getActivity());
     }
 
     @Override
@@ -262,7 +252,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.debugmenu) {
-            mWPAndroidGlueCode.showDevOptionsDialog();
+            getGutenbergContainerFragment().showDevOptionsDialog();
             return true;
         }
 
@@ -317,12 +307,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setContent(CharSequence text) {
-        if (text == null) {
-            text = "";
+        if (mIsRotating) {
+            return;
         }
 
-        if (!mWPAndroidGlueCode.hasReactRootView() || mSource == null) {
-            return;
+        if (text == null) {
+            text = "";
         }
 
         String postContent = removeVisualEditorProgressTag(text.toString());
@@ -336,7 +326,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         //  their content diffing algorithm is the same. That's assumed by the Toolbar's mode-switching logic too.
         mSource.displayStyledAndFormattedHtml(postContent);
 
-        mWPAndroidGlueCode.setContent(postContent);
+        getGutenbergContainerFragment().setContent(postContent);
     }
 
     public void onToggleHtmlMode() {
@@ -353,7 +343,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
         mEditorFragmentListener.onHtmlModeToggledInToolbar();
 
-        mWPAndroidGlueCode.toggleEditorMode();
+        getGutenbergContainerFragment().toggleHtmlMode();
     }
 
     /*
@@ -421,7 +411,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
      */
     @Override
     public CharSequence getContent(CharSequence originalContent) {
-        return mWPAndroidGlueCode.getContent(originalContent, new OnGetContentTimeout() {
+        return getGutenbergContainerFragment().getContent(originalContent, new OnGetContentTimeout() {
             @Override public void onGetContentTimeout(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
@@ -444,7 +434,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        mWPAndroidGlueCode.appendMediaFile(mediaUrl);
+        getGutenbergContainerFragment().appendMediaFile(mediaUrl);
     }
 
     @Override
