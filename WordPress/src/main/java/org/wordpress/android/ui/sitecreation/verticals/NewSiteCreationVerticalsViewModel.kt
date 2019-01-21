@@ -254,12 +254,12 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             data.forEachIndexed { index, model ->
                 if (model.isUserInputVertical) {
                     val itemUiState = VerticalsCustomModelUiState(
-                            model.name.toLowerCase(),
+                            model.verticalId,
                             model.name,
                             R.string.new_site_creation_verticals_custom_subtitle,
                             showDivider = index != lastItemIndex
                     )
-                    itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
+                    itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.title.toLowerCase() }
                     items.add(itemUiState)
                 } else {
                     val itemUiState = VerticalsModelUiState(
