@@ -27,7 +27,6 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
-import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.toFormattedDateString
@@ -179,9 +178,11 @@ class PageListViewModel @Inject constructor(
 
     private fun getFeaturedImageUrl(featuredImageId: Long): String? {
         if (featuredImageId == 0L) {
-            return ReaderImageScanner("", !SiteUtils.isPhotonCapable(pagesViewModel.site)).largestImage
+            return null
+        } else if (featuredImageMap.containsKey(featuredImageId)) {
+            return featuredImageMap[featuredImageId]
         }
-        featuredImageMap[featuredImageId]?.let { return it }
+
         mediaStore.getSiteMediaWithId(pagesViewModel.site, featuredImageId)?.let { media ->
             // This should be a pretty rare case, but some media seems to be missing url
             return if (media.url != null) {
@@ -189,12 +190,15 @@ class PageListViewModel @Inject constructor(
                 media.url
             } else null
         }
+
         // Media is not in the Store, we need to download it
         val mediaToDownload = MediaModel()
         mediaToDownload.mediaId = featuredImageId
         mediaToDownload.localSiteId = pagesViewModel.site.id
+
         val payload = MediaPayload(pagesViewModel.site, mediaToDownload)
         dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
+
         return null
     }
 
