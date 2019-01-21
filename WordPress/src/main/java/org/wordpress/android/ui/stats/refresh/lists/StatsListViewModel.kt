@@ -3,7 +3,9 @@ package org.wordpress.android.ui.stats.refresh.lists
 import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -34,6 +36,12 @@ abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher, privat
     override fun onCleared() {
         statsUseCase.onCleared()
         super.onCleared()
+    }
+
+    fun onRetryClick(site: SiteModel) {
+        launch {
+            statsUseCase.refreshData(site, true)
+        }
     }
 
     sealed class UiModel<T> {

@@ -167,6 +167,9 @@ class StatsListFragment : DaggerFragment() {
                     is UiModel.Error -> {
                         recyclerView.visibility = View.GONE
                         actionable_empty_view.visibility = View.VISIBLE
+                        actionable_empty_view.button.setOnClickListener {
+                            viewModel.onRetryClick(site)
+                        }
                     }
                 }
             }

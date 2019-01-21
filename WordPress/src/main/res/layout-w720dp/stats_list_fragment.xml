@@ -12,9 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
-        app:aevSubtitle="@string/stats_loading_error_hint"
-        app:aevTitle="@string/stats_loading_error_title"
+        app:aevTitle="@string/stats_loading_error"
+        app:aevButton="@string/retry"
         tools:visibility="visible"/>
 
     <android.support.v7.widget.RecyclerView
