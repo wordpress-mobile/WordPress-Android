@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.test
+import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode
@@ -42,6 +43,7 @@ class NewSiteCreationDomainsViewModelTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchDomainsUseCase: FetchDomainsUseCase
+    @Mock private lateinit var tracker: NewSiteCreationTracker
     @Mock private lateinit var uiStateObserver: Observer<DomainsUiState>
     @Mock private lateinit var createSiteBtnObserver: Observer<String>
     @Mock private lateinit var clearBtnObserver: Observer<Unit>
@@ -57,6 +59,7 @@ class NewSiteCreationDomainsViewModelTest {
                 networkUtils = networkUtils,
                 dispatcher = dispatcher,
                 fetchDomainsUseCase = fetchDomainsUseCase,
+                tracker = tracker,
                 IO = TEST_DISPATCHER,
                 MAIN = TEST_DISPATCHER
         )
