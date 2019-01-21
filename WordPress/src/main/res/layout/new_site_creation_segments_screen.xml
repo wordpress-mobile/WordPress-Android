@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingEnd="@dimen/site_creation_screen_horizontal_padding"
-    android:paddingStart="@dimen/site_creation_screen_horizontal_padding">
+    android:orientation="vertical">
 
     <include
         layout="@layout/site_creation_error_with_retry"
@@ -16,6 +14,5 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        />
+        android:scrollbars="vertical"/>
 </LinearLayout>

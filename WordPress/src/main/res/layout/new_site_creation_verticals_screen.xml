@@ -5,9 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingEnd="@dimen/site_creation_screen_horizontal_padding"
-    android:paddingStart="@dimen/site_creation_screen_horizontal_padding">
+    android:orientation="vertical">
 
     <include
         layout="@layout/site_creation_error_with_retry"
@@ -25,7 +23,7 @@
 
         <include
             android:id="@+id/header_layout"
-            layout="@layout/new_site_creation_verticals_header_item"
+            layout="@layout/new_site_creation_header_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/search_input_layout"

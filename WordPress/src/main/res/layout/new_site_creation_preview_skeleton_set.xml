@@ -24,10 +24,10 @@
         android:layout_marginEnd="@dimen/margin_extra_extra_large"/>
 
     <View
-        android:layout_width="174dp"
+        android:layout_width="@dimen/new_site_creation_preview_skeleton_mid_size_width"
         android:layout_height="@dimen/margin_extra_large"/>
    
     <View
         style="@style/SitePreviewSkeletonView"
-        android:layout_height="136dp"/>
+        android:layout_height="@dimen/new_site_creation_preview_skeleton_large_block_height"/>
 </LinearLayout>
