@@ -19,7 +19,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel
-import org.wordpress.android.util.ActivityUtils
 import javax.inject.Inject
 
 class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
@@ -72,7 +71,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     private fun initSkipNextButton(rootView: ViewGroup) {
-        skipNextButton = rootView.findViewById(R.id.site_info_skip_or_next_button)
+        skipNextButton = rootView.findViewById(R.id.btn_skip)
         skipNextButton.setOnClickListener { viewModel.onSkipNextClicked() }
     }
 
@@ -122,7 +121,6 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
         })
         viewModel.onTitleInputFocusRequested.observe(this, Observer {
             siteTitleEditText.requestFocus()
-            ActivityUtils.showKeyboard(siteTitleEditText)
         })
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_SITE_INFO)

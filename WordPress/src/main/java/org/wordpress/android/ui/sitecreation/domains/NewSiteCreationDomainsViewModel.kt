@@ -28,6 +28,8 @@ import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewM
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_AND_KEYBOARD
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_ONLY
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -72,8 +74,8 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
-    private val _onInputFocusRequested = SingleLiveEvent<Unit>()
-    val onInputFocusRequested: LiveData<Unit> = _onInputFocusRequested
+    private val _onInputFocusRequested = SingleLiveEvent<RequestFocusMode>()
+    val onInputFocusRequested: LiveData<RequestFocusMode> = _onInputFocusRequested
 
     init {
         dispatcher.register(fetchDomainsUseCase)
@@ -92,11 +94,11 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         // isNullOrBlank not smart-casting for some reason..
         if (siteTitle == null || siteTitle.isBlank()) {
             resetUiState()
+            _onInputFocusRequested.value = FOCUS_AND_KEYBOARD
         } else {
             updateQueryInternal(TitleQuery(siteTitle))
+            _onInputFocusRequested.value = FOCUS_ONLY
         }
-        // Show keyboard
-        _onInputFocusRequested.call()
     }
 
     fun createSiteBtnClicked() {
@@ -159,7 +161,14 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                     )
             )
         } else {
-            updateUiStateToContent(query, ListState.Success(event.suggestions.map { it.domain_name }))
+            /**
+             * We would like to show the domains that matches the current query at the top. For this, we split the
+             * domain names into two, one part for the domain names that start with the current query plus `.` and the
+             * other part for the others. We then combine them back again into a single list.
+             */
+            val domainNames = event.suggestions.map { it.domain_name }.partition { it.startsWith("${query.value}.") }
+                    .toList().flatten()
+            updateUiStateToContent(query, ListState.Success(domainNames))
         }
     }
 
@@ -315,5 +324,10 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
          * Automatic search initiated for the site title.
          */
         class TitleQuery(value: String) : DomainSuggestionsQuery(value)
+    }
+
+    enum class RequestFocusMode {
+        FOCUS_ONLY,
+        FOCUS_AND_KEYBOARD
     }
 }

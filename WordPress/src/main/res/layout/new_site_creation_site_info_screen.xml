@@ -21,8 +21,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:maxWidth="@dimen/new_site_creation_site_info_tablet_max_width">
+            android:layout_gravity="center_horizontal">
 
             <TextView
                 android:id="@+id/site_info_header_title"
@@ -30,7 +29,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
                 android:lineSpacingMultiplier="1.1"
-                android:maxWidth="@dimen/new_site_creation_site_info_tablet_max_text_width"
                 android:text="@string/new_site_creation_site_info_header_title"
                 android:textColor="@color/wp_grey_dark"
                 android:textSize="@dimen/text_sz_large"
@@ -45,7 +43,6 @@
                 android:layout_marginBottom="@dimen/margin_extra_medium_large"
                 android:layout_marginTop="@dimen/margin_small"
                 android:lineSpacingMultiplier="1.1"
-                android:maxWidth="@dimen/new_site_creation_site_info_tablet_max_text_width"
                 android:text="@string/new_site_creation_site_info_header_subtitle"
                 android:textColor="@color/wp_grey_darken_20"
                 android:textSize="@dimen/text_sz_large"
@@ -97,7 +94,7 @@
                 </android.support.design.widget.TextInputEditText>
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/site_info_tag_line_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -106,6 +103,7 @@
                 android:text="@string/new_site_creation_tag_line_description"
                 android:textColor="@color/wp_grey_darken_20"
                 android:textSize="@dimen/text_sz_medium"
+                app:fixWidowWords="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/site_info_tag_line_layout"/>
@@ -113,26 +111,13 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.v7.widget.CardView
+    <include
         android:id="@+id/site_info_skip_or_next_button_container"
+        layout="@layout/new_site_creation_skip_button_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/wp_grey_lighten_30"
-        app:cardElevation="@dimen/card_elevation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/site_info_scroll_view">
+        app:layout_constraintStart_toStartOf="parent"/>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/site_info_skip_or_next_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_large"
-            android:text="@string/new_site_creation_button_skip"
-            android:theme="@style/WordPress.Button"/>
-    </android.support.v7.widget.CardView>
 </android.support.constraint.ConstraintLayout>

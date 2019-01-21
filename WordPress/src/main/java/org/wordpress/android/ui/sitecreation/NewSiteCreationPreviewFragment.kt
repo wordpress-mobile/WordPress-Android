@@ -154,9 +154,6 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 sitePreviewScreenListener.onSitePreviewScreenDismissed(createSiteState)
             }
         })
-        viewModel.toastMessage.observe(this, Observer {
-            it?.show(requireNotNull(activity))
-        })
 
         viewModel.start(arguments!![ARG_DATA] as SiteCreationState)
     }
@@ -372,7 +369,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 private class PreviewWebViewClient internal constructor(
     val pageLoadedListener: PageFullyLoadedListener,
     siteAddress: String
-) : URLFilteredWebViewClient(siteAddress, false) {
+) : URLFilteredWebViewClient(siteAddress) {
     interface PageFullyLoadedListener {
         fun onPageFullyLoaded()
     }

@@ -54,7 +54,7 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
 
     class SegmentsHeaderViewHolder(
         parentView: ViewGroup
-    ) : NewSiteCreationSegmentViewHolder(parentView, R.layout.new_site_creation_segments_header_item) {
+    ) : NewSiteCreationSegmentViewHolder(parentView, R.layout.new_site_creation_header_item) {
         private val title = itemView.findViewById<TextView>(R.id.title)
         private val subtitle = itemView.findViewById<TextView>(R.id.subtitle)
 
