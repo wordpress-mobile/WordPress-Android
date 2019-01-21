@@ -254,7 +254,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             data.forEachIndexed { index, model ->
                 if (model.isUserInputVertical) {
                     val itemUiState = VerticalsCustomModelUiState(
-                            model.verticalId,
+                            model.name.toLowerCase(),
                             model.name,
                             R.string.new_site_creation_verticals_custom_subtitle,
                             showDivider = index != lastItemIndex
