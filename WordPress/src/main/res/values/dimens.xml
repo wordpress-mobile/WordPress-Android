@@ -51,6 +51,9 @@
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
 
+    <dimen name="site_creation_content_margin_normal">0dp</dimen>
+    <dimen name="site_creation_content_margin">@dimen/site_creation_content_margin_normal</dimen>
+
     <!--
         native reader dimens
     -->
@@ -364,10 +367,13 @@
 
     <dimen name="new_site_creation_preview_web_view_side_margin">40dp</dimen>
     <dimen name="new_site_creation_preview_ok_button_container_height">68dp</dimen>
-    <dimen name="new_site_creation_preview_ok_button_container_elevation">6dp</dimen>
+    <dimen name="new_site_creation_container_elevation">6dp</dimen>
     <dimen name="new_site_creation_verticals_search_input_text_padding">32dp</dimen>
 
     <dimen name="new_site_creation_domains_create_site_button_height">36dp</dimen>
     <dimen name="new_site_creation_domains_radio_button_padding_start">28dp</dimen>
     <dimen name="new_site_creation_domains_divider_padding_start">60dp</dimen>
+
+    <dimen name="new_site_creation_preview_skeleton_mid_size_width">174dp</dimen>
+    <dimen name="new_site_creation_preview_skeleton_large_block_height">136dp</dimen>
 </resources>

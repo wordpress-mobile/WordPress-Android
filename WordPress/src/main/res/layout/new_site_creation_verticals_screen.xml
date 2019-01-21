@@ -23,7 +23,7 @@
 
         <include
             android:id="@+id/header_layout"
-            layout="@layout/new_site_creation_verticals_header_item"
+            layout="@layout/new_site_creation_header_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/search_input_layout"
