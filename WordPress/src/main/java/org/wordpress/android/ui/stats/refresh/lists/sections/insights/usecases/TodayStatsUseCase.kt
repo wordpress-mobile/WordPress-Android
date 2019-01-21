@@ -33,10 +33,13 @@ class TodayStatsUseCase
 
         when {
             error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
+            model != null && model.hasData() -> onModel(model)
             else -> onEmpty()
         }
     }
+
+    private fun VisitsModel.hasData() =
+            this.comments > 0 || this.views > 0 && this.likes > 0 && this.visitors > 0
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_today_stats))
 

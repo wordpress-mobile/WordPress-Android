@@ -70,7 +70,7 @@ constructor(
 
         when {
             error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
+            model != null && model.dates.isNotEmpty() -> onModel(model)
             else -> onEmpty()
         }
     }

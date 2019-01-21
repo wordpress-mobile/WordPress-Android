@@ -64,7 +64,7 @@ constructor(
 
         when {
             error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
+            model != null && model.plays.isNotEmpty() -> onModel(model)
             else -> onEmpty()
         }
     }

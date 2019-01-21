@@ -4,13 +4,13 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase.NotUsedUiState
@@ -30,14 +30,14 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { data, uiState ->
         try {
             when (data) {
-                is State.Loading -> Loading(type, buildLoadingItem())
-                is State.Error -> Error(type, data.error)
-                is Data -> BlockList(type, buildUiModel(data.model, uiState ?: defaultUiState))
-                is Empty, null -> null
+                is State.Loading -> StatsBlock.Loading(type, buildLoadingItem())
+                is State.Error -> StatsBlock.Error(type, buildErrorItem())
+                is Data -> Success(type, buildUiModel(data.model, uiState ?: defaultUiState))
+                is Empty, null -> EmptyBlock(type, buildEmptyItem())
             }
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, e)
-            Error(type, "An error occurred (${e.message ?: "Unknown"})")
+            StatsBlock.Error(type, buildErrorItem())
         }
     }
 
@@ -149,6 +149,14 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     protected abstract fun buildUiModel(domainModel: DOMAIN_MODEL, uiState: UI_STATE): List<BlockListItem>
 
     protected abstract fun buildLoadingItem(): List<BlockListItem>
+
+    protected open fun buildErrorItem(): List<BlockListItem> {
+        return buildLoadingItem() + listOf(BlockListItem.Text(textResource = R.string.stats_loading_block_error))
+    }
+
+    protected open fun buildEmptyItem(): List<BlockListItem> {
+        return buildLoadingItem() + listOf(BlockListItem.Empty(textResource = R.string.stats_no_data_yet))
+    }
 
     private sealed class State<DOMAIN_MODEL> {
         data class Error<DOMAIN_MODEL>(val error: String) : State<DOMAIN_MODEL>()

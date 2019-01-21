@@ -53,11 +53,19 @@ class LatestPostSummaryUseCase
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_latest_post_summary))
 
+    override fun buildEmptyItem(): List<BlockListItem> {
+        return buildNullableUiModel(null)
+    }
+
     override fun buildUiModel(domainModel: InsightsLatestPostModel): List<BlockListItem> {
+        return buildNullableUiModel(domainModel)
+    }
+
+    private fun buildNullableUiModel(domainModel: InsightsLatestPostModel?): MutableList<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
         items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
-        if (domainModel.hasData()) {
+        if (domainModel != null && domainModel.hasData()) {
             items.add(
                     latestPostSummaryMapper.buildColumnItem(
                             domainModel.postViewsCount,

@@ -37,10 +37,15 @@ class AllTimeStatsUseCase
 
         return when {
             error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
+            model != null && model.hasData() -> onModel(
+                    model
+            )
             else -> onEmpty()
         }
     }
+
+    private fun InsightsAllTimeModel.hasData() =
+            this.posts > 0 || this.views > 0 || this.visitors > 0 || this.viewsBestDayTotal > 0
 
     override fun buildUiModel(domainModel: InsightsAllTimeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()

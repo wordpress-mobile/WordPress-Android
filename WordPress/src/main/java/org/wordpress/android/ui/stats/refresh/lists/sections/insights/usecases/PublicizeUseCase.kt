@@ -50,7 +50,7 @@ class PublicizeUseCase
             error != null -> onError(
                     error.message ?: error.type.name
             )
-            model != null -> onModel(model)
+            model != null && model.services.isNotEmpty() -> onModel(model)
             else -> onEmpty()
         }
     }

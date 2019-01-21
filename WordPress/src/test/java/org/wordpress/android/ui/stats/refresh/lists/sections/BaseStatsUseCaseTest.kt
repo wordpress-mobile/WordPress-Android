@@ -12,9 +12,9 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Loading
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import javax.inject.Provider
@@ -93,7 +93,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     }
 
     private fun assertData(position: Int, data: String) {
-        val blockList = result[position] as BlockList
+        val blockList = result[position] as Success
         val firstItem = blockList.items[0] as Text
         assertThat(firstItem.text).isEqualTo(data)
     }

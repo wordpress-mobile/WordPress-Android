@@ -50,7 +50,7 @@ class TagsAndCategoriesUseCase
 
         when {
             error != null -> onError(error.message ?: error.type.name)
-            model != null -> model.let { onModel(model) }
+            model != null && model.tags.isNotEmpty() -> onModel(model)
             else -> onEmpty()
         }
     }

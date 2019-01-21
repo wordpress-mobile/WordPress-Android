@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.support.v7.util.DiffUtil.Callback
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 
 class StatsBlockDiffCallback(
     private val oldList: List<StatsBlock>,
@@ -26,13 +27,13 @@ class StatsBlockDiffCallback(
 
     /**
      * This method gets called when the items are the same and the contents changed. In this case we want to send
-     * the change payload for BlockList items which causes the Adapter to reuse the same ViewHolder and thus prevents
+     * the change payload for Success items which causes the Adapter to reuse the same ViewHolder and thus prevents
      * the blinking of the item being redrawed. Use this method if you want to manually only change a part of View.
      */
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
-        if (oldItem is BlockList && newItem is BlockList) {
+        if (oldItem is Success && newItem is Success) {
             return Payload
         }
         return null

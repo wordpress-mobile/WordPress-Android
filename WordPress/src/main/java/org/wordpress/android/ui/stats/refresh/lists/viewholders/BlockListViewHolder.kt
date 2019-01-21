@@ -8,17 +8,17 @@ import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.DATE
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.util.image.ImageManager
 
-class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BaseStatsViewHolder<BlockList>(
+class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BaseStatsViewHolder<StatsBlock>(
         parent,
         layout.stats_list_block
 ) {
     private val container: CardView = itemView.findViewById(R.id.container)
     private val list: RecyclerView = itemView.findViewById(R.id.stats_block_list)
-    override fun bind(item: BlockList) {
+    override fun bind(item: StatsBlock) {
         super.bind(item)
         if (item.statsTypes == DATE) {
             container.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.transparent))

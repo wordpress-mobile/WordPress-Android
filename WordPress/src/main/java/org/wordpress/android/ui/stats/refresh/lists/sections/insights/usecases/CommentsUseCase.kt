@@ -43,7 +43,7 @@ class CommentsUseCase
 
         when {
             error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
+            model != null && (model.authors.isNotEmpty() || model.posts.isNotEmpty()) -> onModel(model)
             else -> onEmpty()
         }
     }

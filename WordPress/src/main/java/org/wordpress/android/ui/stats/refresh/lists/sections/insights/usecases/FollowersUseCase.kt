@@ -63,7 +63,10 @@ class FollowersUseCase
 
         when {
             error != null -> onError(error.message ?: error.type.name)
-            wpComModel != null && emailModel != null -> onModel(wpComModel to emailModel)
+            wpComModel != null && emailModel != null &&
+                    (wpComModel.followers.isNotEmpty() || emailModel.followers.isNotEmpty()) -> onModel(
+                    wpComModel to emailModel
+            )
             else -> onEmpty()
         }
     }
