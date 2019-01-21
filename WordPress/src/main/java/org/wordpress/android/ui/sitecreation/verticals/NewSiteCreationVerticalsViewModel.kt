@@ -22,7 +22,7 @@ import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.INTERNET_UNAVAILABLE_ERROR
+import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
@@ -43,7 +43,8 @@ import kotlin.coroutines.CoroutineContext
 
 private const val THROTTLE_DELAY = 500L
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
-private const val ERROR_CONTEXT = "verticals"
+private const val ERROR_CONTEXT_LIST_ITEM = "verticals_list_item"
+private const val ERROR_CONTEXT_FULLSCREEN = "verticals_fullscreen"
 
 class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
@@ -123,7 +124,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, "fullscreen error")
+            tracker.trackErrorShown(ERROR_CONTEXT_FULLSCREEN, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             withContext(MAIN) {
                 updateUiState(VerticalsFullscreenErrorUiState.VerticalsConnectionErrorUiState)
             }
@@ -132,7 +133,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onSegmentsPromptFetched(event: OnSegmentPromptFetched) {
         if (event.isError) {
-            tracker.trackErrorShown(ERROR_CONTEXT, event.error.type.toString(), event.error.message)
+            tracker.trackErrorShown(ERROR_CONTEXT_FULLSCREEN, event.error.type.toString(), event.error.message)
             updateUiState(VerticalsFullscreenErrorUiState.VerticalsGenericErrorUiState)
         } else {
             tracker.trackVerticalsViewed()
@@ -189,7 +190,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, "List item error")
+            tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             withContext(MAIN) {
                 updateUiStateToContent(
                         query,
@@ -204,7 +205,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onVerticalsFetched(query: String, event: OnVerticalsFetched) {
         if (event.isError) {
-            tracker.trackErrorShown(ERROR_CONTEXT, event.error.type.toString(), event.error.message)
+            tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, event.error.type.toString(), event.error.message)
             updateUiStateToContent(
                     query,
                     ListState.Error(

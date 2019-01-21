@@ -5,7 +5,10 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
-const val INTERNET_UNAVAILABLE_ERROR = "internet_unavailable"
+enum class NewSiteCreationErrorType {
+    INTERNET_UNAVAILABLE_ERROR,
+    UNKNOWN;
+}
 
 @Singleton
 class NewSiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) {
@@ -94,11 +97,15 @@ class NewSiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWr
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_COMPLETED)
     }
 
+    fun trackErrorShown(errorContext: String, errorType: NewSiteCreationErrorType, errorDescription: String? = null) {
+        trackErrorShown(errorContext, errorType.toString().toLowerCase(), errorDescription)
+    }
+
     fun trackErrorShown(errorContext: String, errorType: String, errorDescription: String? = null) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ERROR_SHOWN,
                 errorContext,
-                errorType,
+                errorType.toLowerCase(),
                 errorDescription ?: ""
         )
     }

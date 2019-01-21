@@ -143,7 +143,7 @@ class NewSitePreviewViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR)
+            tracker.trackErrorShown(ERROR_CONTEXT, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             withContext(MAIN) {
                 updateUiState(SitePreviewConnectionErrorUiState)
             }
@@ -173,7 +173,11 @@ class NewSitePreviewViewModel @Inject constructor(
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
-                tracker.trackErrorShown(ERROR_CONTEXT, "unknown", "NewSiteCreation service failed")
+                tracker.trackErrorShown(
+                        ERROR_CONTEXT,
+                        NewSiteCreationErrorType.UNKNOWN,
+                        "NewSiteCreation service failed"
+                )
                 updateUiStateAsync(SitePreviewGenericErrorUiState)
             }
         }

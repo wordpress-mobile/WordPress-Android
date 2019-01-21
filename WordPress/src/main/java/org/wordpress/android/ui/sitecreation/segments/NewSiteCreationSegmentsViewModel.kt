@@ -17,7 +17,7 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.INTERNET_UNAVAILABLE_ERROR
+import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
@@ -97,7 +97,7 @@ class NewSiteCreationSegmentsViewModel
             launch {
                 // We show the loading screen for a bit so the user has some feedback when they press the retry button
                 delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-                tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR)
+                tracker.trackErrorShown(ERROR_CONTEXT, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
                 withContext(MAIN) {
                     updateUiStateToError(
                             ListState.Error(listState, null),
@@ -110,7 +110,11 @@ class NewSiteCreationSegmentsViewModel
 
     private fun onCategoriesFetched(event: OnSegmentsFetched) {
         if (event.isError) {
-            tracker.trackErrorShown(ERROR_CONTEXT, event.error.type.toString(), event.error.message)
+            tracker.trackErrorShown(
+                    ERROR_CONTEXT,
+                    event.error.type.toString(),
+                    event.error.message
+            )
             updateUiStateToError(
                     ListState.Error(listState, event.error.message),
                     SegmentsErrorUiState.SegmentsGenericErrorUiState
