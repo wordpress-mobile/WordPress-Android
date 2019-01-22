@@ -82,7 +82,7 @@ class StatsStoreTest {
 
         store.moveTypeUp(site, COMMENTS)
 
-        verify(insightTypesSqlUtils).updatePositions(site, listOf(LATEST_POST_SUMMARY, COMMENTS, FOLLOWERS))
+        verify(insightTypesSqlUtils).insertOrReplaceAddedItems(site, listOf(LATEST_POST_SUMMARY, COMMENTS, FOLLOWERS))
     }
 
     @Test
@@ -96,7 +96,7 @@ class StatsStoreTest {
 
         store.moveTypeUp(site, COMMENTS)
 
-        verify(insightTypesSqlUtils, never()).updatePositions(eq(site), any())
+        verify(insightTypesSqlUtils, never()).insertOrReplaceAddedItems(eq(site), any())
     }
 
     @Test
@@ -110,7 +110,7 @@ class StatsStoreTest {
 
         store.moveTypeDown(site, LATEST_POST_SUMMARY)
 
-        verify(insightTypesSqlUtils).updatePositions(site, listOf(FOLLOWERS, LATEST_POST_SUMMARY, COMMENTS))
+        verify(insightTypesSqlUtils).insertOrReplaceAddedItems(site, listOf(FOLLOWERS, LATEST_POST_SUMMARY, COMMENTS))
     }
 
     @Test
@@ -124,7 +124,7 @@ class StatsStoreTest {
 
         store.moveTypeDown(site, LATEST_POST_SUMMARY)
 
-        verify(insightTypesSqlUtils, never()).updatePositions(eq(site), any())
+        verify(insightTypesSqlUtils, never()).insertOrReplaceAddedItems(eq(site), any())
     }
 
     @Test

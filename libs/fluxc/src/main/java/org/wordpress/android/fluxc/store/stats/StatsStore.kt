@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store.stats
 
+import android.util.Log
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
@@ -78,6 +79,7 @@ class StatsStore
         val insightTypes = getInsights(site)
         val indexOfMovedItem = insightTypes.indexOf(type)
         if (indexOfMovedItem > 0 && indexOfMovedItem < insightTypes.size) {
+            Log.e("vojta", insightTypes.fold("before update: ") {acc, item -> "$acc - ${item.name}" } )
             val updatedInsights = mutableListOf<InsightsTypes>()
             val switchedItemIndex = indexOfMovedItem - 1
             if (indexOfMovedItem > 1) {
@@ -88,7 +90,8 @@ class StatsStore
             if (indexOfMovedItem + 1 < insightTypes.size) {
                 updatedInsights.addAll(insightTypes.subList(indexOfMovedItem + 1, insightTypes.size))
             }
-            insightTypesSqlUtils.updatePositions(site, updatedInsights)
+            insightTypesSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
+            Log.e("vojta", updatedInsights.fold("result: ") {acc, item -> "$acc - ${item.name}" } )
         }
     }
 
@@ -106,7 +109,7 @@ class StatsStore
             if (switchedItemIndex + 1 < insightTypes.size) {
                 updatedInsights.addAll(insightTypes.subList(switchedItemIndex + 1, insightTypes.size))
             }
-            insightTypesSqlUtils.updatePositions(site, updatedInsights)
+            insightTypesSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
         }
     }
 
