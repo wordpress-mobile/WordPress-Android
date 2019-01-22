@@ -4,7 +4,6 @@ import android.util.Log
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel.Status.REMOVED
 import org.wordpress.android.fluxc.model.stats.InsightTypesModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.CENSORED
@@ -71,8 +70,7 @@ class StatsStore
     }
 
     suspend fun updateTypes(site: SiteModel, model: InsightTypesModel) = withContext(coroutineContext) {
-        insightTypesSqlUtils.insertOrReplaceAddedItems(site, model.addedTypes)
-        insightTypesSqlUtils.insertOrReplaceRemovedItems(site, model.removedTypes)
+        insertOrReplaceItems(site, model.addedTypes, model.removedTypes)
     }
 
     suspend fun moveTypeUp(site: SiteModel, type: InsightsTypes) {
@@ -114,7 +112,26 @@ class StatsStore
     }
 
     suspend fun removeType(site: SiteModel, type: InsightsTypes) = withContext(coroutineContext) {
-        insightTypesSqlUtils.updateStatus(site, type, REMOVED)
+        val insightsModel = getInsightsManagementModel(site)
+        val addedItems = insightsModel.addedTypes.filter { it != type }
+        val removedItems = insightsModel.removedTypes + listOf(type)
+        insertOrReplaceItems(site, addedItems, removedItems)
+    }
+
+    suspend fun addType(site: SiteModel, type: InsightsTypes) = withContext(coroutineContext) {
+        val insightsModel = getInsightsManagementModel(site)
+        val addedItems = insightsModel.addedTypes + listOf(type)
+        val removedItems = insightsModel.removedTypes.filter { it != type }
+        insertOrReplaceItems(site, addedItems, removedItems)
+    }
+
+    private fun insertOrReplaceItems(
+        site: SiteModel,
+        addedItems: List<InsightsTypes>,
+        removedItems: List<InsightsTypes>
+    ) {
+        insightTypesSqlUtils.insertOrReplaceAddedItems(site, addedItems)
+        insightTypesSqlUtils.insertOrReplaceRemovedItems(site, removedItems)
     }
 
     suspend fun getTimeStatsTypes(): List<TimeStatsTypes> = withContext(coroutineContext) {
