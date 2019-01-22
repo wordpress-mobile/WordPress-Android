@@ -46,20 +46,22 @@ private const val ERROR_MESSAGE = "dummy_error_message"
 
 private val FIRST_MODEL =
         VerticalSegmentModel(
-                FIRST_MODEL_TITLE,
-                FIRST_MODEL_SUBTITLE,
-                FIRST_MODEL_ICON_URL,
-                FIRST_MODEL_ICON_COLOR,
-                FIRST_MODEL_SEGMENT_ID
+                title = FIRST_MODEL_TITLE,
+                subtitle = FIRST_MODEL_SUBTITLE,
+                iconUrl = FIRST_MODEL_ICON_URL,
+                iconColor = FIRST_MODEL_ICON_COLOR,
+                segmentId = FIRST_MODEL_SEGMENT_ID,
+                isMobileSegment = true
         )
 
 private val SECOND_MODEL =
         VerticalSegmentModel(
-                SECOND_MODEL_TITLE,
-                SECOND_MODEL_SUBTITLE,
-                SECOND_MODEL_ICON_URL,
-                SECOND_MODEL_ICON_COLOR,
-                SECOND_MODEL_SEGMENT_ID
+                title = SECOND_MODEL_TITLE,
+                subtitle = SECOND_MODEL_SUBTITLE,
+                iconUrl = SECOND_MODEL_ICON_URL,
+                iconColor = SECOND_MODEL_ICON_COLOR,
+                segmentId = SECOND_MODEL_SEGMENT_ID,
+                isMobileSegment = true
         )
 
 private val PROGRESS_STATE = SegmentsContentUiState(listOf(HeaderUiState, ProgressUiState))
