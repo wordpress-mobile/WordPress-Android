@@ -17,7 +17,7 @@ msgid ""
 "* The Notifications list layout is more readable, as is the Me tab on tablets and large devices.\n"
 "* New privacy settings let you remove of geolocation from uploaded images.\n"
 "* Better messaging when there is no data to show in the stats screen adds clarity.\n"
-"* There was an issue where only admins of self-hosted sites could update their password. Now all users can.\n"
+"* There was an issue where some users of self-hosted sites couldn’t update their password. Now all users can.\n"
 msgstr ""
 
 msgctxt "release_note_115"
