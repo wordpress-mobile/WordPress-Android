@@ -130,7 +130,7 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_CLICKS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewClicks(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(ViewClicks(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()))
     }
 
     private fun onItemClick(url: String) {

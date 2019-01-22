@@ -106,7 +106,7 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_COUNTRIES_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewCountries(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(ViewCountries(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()))
     }
 
     class CountryViewsUseCaseFactory

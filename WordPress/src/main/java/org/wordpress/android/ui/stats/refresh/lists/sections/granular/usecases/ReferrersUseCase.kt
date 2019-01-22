@@ -126,7 +126,12 @@ constructor(
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewReferrers(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(
+                ViewReferrers(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()
+                )
+        )
     }
 
     data class SelectedGroup(val groupId: String? = null)

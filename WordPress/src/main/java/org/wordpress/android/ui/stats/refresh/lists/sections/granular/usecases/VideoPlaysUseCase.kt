@@ -99,7 +99,12 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewVideoPlays(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(
+                ViewVideoPlays(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()
+                )
+        )
     }
 
     private fun onItemClick(url: String) {

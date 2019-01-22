@@ -114,7 +114,12 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_SEARCH_TERMS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewSearchTerms(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(
+                ViewSearchTerms(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()
+                )
+        )
     }
 
     class SearchTermsUseCaseFactory
