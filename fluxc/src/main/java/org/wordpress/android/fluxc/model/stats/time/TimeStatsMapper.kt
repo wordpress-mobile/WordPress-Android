@@ -21,9 +21,9 @@ import javax.inject.Inject
 
 class TimeStatsMapper
 @Inject constructor(val gson: Gson) {
-    fun map(response: PostAndPageViewsResponse, pageSize: Int): PostAndPageViewsModel {
+    fun map(response: PostAndPageViewsResponse, pageSize: Int, page: Int): PostAndPageViewsModel {
         val postViews = response.days.entries.firstOrNull()?.value?.postViews ?: listOf()
-        val stats = postViews.take(pageSize).mapNotNull { item ->
+        val stats = postViews.drop((page - 1) * pageSize).take(pageSize).mapNotNull { item ->
             val type = when (item.type) {
                 "post" -> ViewsType.POST
                 "page" -> ViewsType.PAGE
@@ -43,10 +43,10 @@ class TimeStatsMapper
         return PostAndPageViewsModel(stats, postViews.size > pageSize)
     }
 
-    fun map(response: ReferrersResponse, pageSize: Int): ReferrersModel {
+    fun map(response: ReferrersResponse, pageSize: Int, page: Int): ReferrersModel {
         val first = response.groups.values.firstOrNull()
         val groups = first?.let {
-            first.groups.take(pageSize).map { group ->
+            first.groups.drop((page - 1) * pageSize).take(pageSize).map { group ->
                 val children = group.referrers?.mapNotNull { result ->
                     if (result.name != null && result.views != null) {
                         val firstChildUrl = result.children?.firstOrNull()?.url
@@ -70,10 +70,10 @@ class TimeStatsMapper
         return ReferrersModel(first?.otherViews ?: 0, first?.totalViews ?: 0, groups ?: listOf(), hasMore)
     }
 
-    fun map(response: ClicksResponse, pageSize: Int): ClicksModel {
+    fun map(response: ClicksResponse, pageSize: Int, page: Int): ClicksModel {
         val first = response.groups.values.firstOrNull()
         val groups = first?.let {
-            first.clicks.take(pageSize).map { group ->
+            first.clicks.drop((page - 1) * pageSize).take(pageSize).map { group ->
                 val children = group.clicks?.mapNotNull { result ->
                     if (result.name != null && result.views != null) {
                         Click(result.name, result.views, result.icon, result.url)
@@ -133,11 +133,11 @@ class TimeStatsMapper
         } ?: 0
     }
 
-    fun map(response: CountryViewsResponse, pageSize: Int): CountryViewsModel {
+    fun map(response: CountryViewsResponse, pageSize: Int, page: Int): CountryViewsModel {
         val first = response.days.values.firstOrNull()
         val countriesInfo = response.countryInfo
         val groups = first?.let {
-            first.views.take(pageSize).mapNotNull { countryViews ->
+            first.views.drop((page - 1) * pageSize).take(pageSize).mapNotNull { countryViews ->
                 val countryInfo = countriesInfo[countryViews.countryCode]
                 if (countryViews.countryCode != null && countryInfo != null && countryInfo.countryFull != null) {
                     CountryViewsModel.Country(
@@ -162,10 +162,10 @@ class TimeStatsMapper
         )
     }
 
-    fun map(response: AuthorsResponse, pageSize: Int): AuthorsModel {
+    fun map(response: AuthorsResponse, pageSize: Int, page: Int): AuthorsModel {
         val first = response.groups.values.firstOrNull()
         val authors = first?.let {
-            first.authors.take(pageSize).map { author ->
+            first.authors.drop((page - 1) * pageSize).take(pageSize).map { author ->
                 val posts = author.mappedPosts?.mapNotNull { result ->
                     if (result.postId != null && result.title != null) {
                         Post(result.postId, result.title, result.views ?: 0, result.url)
@@ -184,7 +184,7 @@ class TimeStatsMapper
         return AuthorsModel(first?.otherViews ?: 0, authors ?: listOf(), hasMore)
     }
 
-    fun map(response: SearchTermsResponse, pageSize: Int): SearchTermsModel {
+    fun map(response: SearchTermsResponse, pageSize: Int, page: Int): SearchTermsModel {
         val first = response.days.values.firstOrNull()
         val groups = first?.let {
             first.searchTerms.mapNotNull { searchTerm ->
@@ -194,7 +194,7 @@ class TimeStatsMapper
                     AppLog.e(STATS, "SearchTermsResponse: Missing term field on a Search terms object")
                     null
                 }
-            }.take(pageSize)
+            }.drop((page - 1) * pageSize).take(pageSize)
         }
         val hasMore = if (first != null && groups != null) first.searchTerms.size > groups.size else false
         return SearchTermsModel(
@@ -206,10 +206,10 @@ class TimeStatsMapper
         )
     }
 
-    fun map(response: VideoPlaysResponse, pageSize: Int): VideoPlaysModel {
+    fun map(response: VideoPlaysResponse, pageSize: Int, page: Int): VideoPlaysModel {
         val first = response.days.values.firstOrNull()
         val groups = first?.let {
-            first.plays.take(pageSize).mapNotNull { result ->
+            first.plays.drop((page - 1) * pageSize).take(pageSize).mapNotNull { result ->
                 if (result.postId != null && result.title != null) {
                     VideoPlaysModel.VideoPlays(result.postId, result.title, result.url, result.plays ?: 0)
                 } else {
