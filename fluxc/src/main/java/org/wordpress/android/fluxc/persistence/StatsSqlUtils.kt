@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.persistence.stats
+package org.wordpress.android.fluxc.persistence
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.store.stats
+package org.wordpress.android.fluxc.store
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
@@ -16,13 +16,13 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel.Status.REMOVED
 import org.wordpress.android.fluxc.model.stats.InsightTypesModel
-import org.wordpress.android.fluxc.persistence.stats.InsightTypesSqlUtils
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.ALL_TIME_STATS
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.COMMENTS
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.FOLLOWERS
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.POSTING_ACTIVITY
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.TODAY_STATS
+import org.wordpress.android.fluxc.persistence.InsightTypesSqlUtils
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVITY
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.fluxc.test
 
 @RunWith(MockitoJUnitRunner::class)
