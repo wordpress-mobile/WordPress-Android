@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.persistence.stats
+package org.wordpress.android.fluxc.persistence
 
 import android.content.ContentValues
 import com.wellsql.generated.InsightTypesTable
@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel
 import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel.Status
 import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel.Status.ADDED
 import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel.Status.REMOVED
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import javax.inject.Inject
 import javax.inject.Singleton
 

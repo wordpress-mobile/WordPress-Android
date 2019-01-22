@@ -16,10 +16,10 @@ import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.stats.TimeStatsSqlUtils
-import org.wordpress.android.fluxc.store.stats.StatsStore.FetchStatsPayload
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsError
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsErrorType.API_ERROR
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
 import java.util.Date
 import kotlin.test.assertEquals
