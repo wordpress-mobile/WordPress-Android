@@ -41,17 +41,16 @@ constructor(
 ) : GranularStatelessUseCase<CountryViewsModel>(COUNTRIES, mainDispatcher, selectedDateProvider, statsGranularity) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_countries))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = store.getCountryViews(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): CountryViewsModel? {
+        return store.getCountryViews(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
                 selectedDate
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<CountryViewsModel> {
         val response = store.fetchCountryViews(
                 site,
                 PAGE_SIZE,
@@ -62,10 +61,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null && model.countries.isNotEmpty() -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.countries.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 

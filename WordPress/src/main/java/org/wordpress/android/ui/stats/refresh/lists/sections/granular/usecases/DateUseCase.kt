@@ -35,16 +35,21 @@ constructor(
                     )
             )
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        onModel(selectedDate)
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): Date {
+        return selectedDate
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
-        onModel(selectedDate)
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<Date> {
+        return State.Data(selectedDate)
     }
 
     override fun buildUiModel(domainModel: Date): List<BlockListItem> {
         return listOf(getUiModel(domainModel))
+    }
+
+    override fun buildErrorItem(): List<BlockListItem> {
+        val selectedDate = selectedDateProvider.getSelectedDate(statsGranularity)
+        return buildUiModel(selectedDate.date ?: selectedDateProvider.getCurrentDate())
     }
 
     private fun getUiModel(domainModel: Date): BackgroundInformation {

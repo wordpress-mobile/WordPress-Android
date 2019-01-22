@@ -20,13 +20,14 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -58,7 +60,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 tracker
         )
-        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
+        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(SelectedDate(selectedDate))
     }
 
     @Test
@@ -78,9 +80,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is Error).isTrue()
+        assertThat(result is StatsBlock.Error).isTrue()
         assertThat(result.type).isEqualTo(ERROR)
-        assertThat((result as Error).errorMessage).isEqualTo(message)
     }
 
     @Test
@@ -100,9 +101,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result is EmptyBlock).isTrue()
+        assertThat(result.type).isEqualTo(Type.EMPTY)
+        val items = (result as EmptyBlock).items
         assertThat(items.size).isEqualTo(2)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
@@ -127,9 +128,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result is Success).isTrue()
+        assertThat(result.type).isEqualTo(SUCCESS)
+        val items = (result as Success).items
         assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
@@ -161,9 +162,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result is Success).isTrue()
+        assertThat(result.type).isEqualTo(SUCCESS)
+        val items = (result as Success).items
         assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
@@ -195,9 +196,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result is Success).isTrue()
+        assertThat(result.type).isEqualTo(SUCCESS)
+        val items = (result as Success).items
         assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
@@ -228,9 +229,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result is Success).isTrue()
+        assertThat(result.type).isEqualTo(SUCCESS)
+        val items = (result as Success).items
         assertThat(items.size).isEqualTo(4)
         assertHeader(items[1])
         assertThat(items[2] is ListItemWithIcon).isTrue()
@@ -260,9 +261,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result is Success).isTrue()
+        assertThat(result.type).isEqualTo(SUCCESS)
+        val items = (result as Success).items
         assertThat(items.size).isEqualTo(4)
         assertThat(items[2] is ListItemWithIcon).isTrue()
         assertThat(items[3] is Link).isTrue()

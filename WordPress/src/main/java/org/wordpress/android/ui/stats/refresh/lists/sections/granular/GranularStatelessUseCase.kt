@@ -15,19 +15,23 @@ abstract class GranularStatelessUseCase<DOMAIN_MODEL>(
     val selectedDateProvider: SelectedDateProvider,
     val statsGranularity: StatsGranularity
 ) : StatelessUseCase<DOMAIN_MODEL>(type, mainDispatcher) {
-    abstract suspend fun loadCachedData(selectedDate: Date, site: SiteModel)
+    abstract suspend fun loadCachedData(selectedDate: Date, site: SiteModel): DOMAIN_MODEL?
 
-    final override suspend fun loadCachedData(site: SiteModel) {
-        selectedDateProvider.getSelectedDate(statsGranularity)?.let { date ->
-            loadCachedData(date, site)
-        }
+    final override suspend fun loadCachedData(site: SiteModel): DOMAIN_MODEL? {
+        val selectedDate = selectedDateProvider.getSelectedDate(statsGranularity)
+        return selectedDate.date?.let { loadCachedData(selectedDate.date, site) }
     }
 
-    abstract suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean)
+    abstract suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<DOMAIN_MODEL>
 
-    final override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        selectedDateProvider.getSelectedDate(statsGranularity)?.let { date ->
-            fetchRemoteData(date, site, forced)
+    final override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<DOMAIN_MODEL> {
+        return selectedDateProvider.getSelectedDate(statsGranularity).let { date ->
+            when {
+                date.error -> State.Error("Missing date")
+                date.date != null ->fetchRemoteData(date.date, site, forced)
+                date.loading -> State.Loading()
+                else -> State.Loading()
+            }
         }
     }
 

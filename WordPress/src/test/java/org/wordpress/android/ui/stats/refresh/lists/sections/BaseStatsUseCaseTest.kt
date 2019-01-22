@@ -13,8 +13,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Loading
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import javax.inject.Provider
@@ -115,16 +115,16 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
             return listOf(Text(domainModel))
         }
 
-        override suspend fun loadCachedData(site: SiteModel) {
-            localDataProvider.get()?.let { onModel(it) }
+        override suspend fun loadCachedData(site: SiteModel): String? {
+            return localDataProvider.get()
         }
 
-        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<String> {
             val domainModel = remoteDataProvider.get()
-            if (domainModel != null) {
-                onModel(domainModel)
+            return if (domainModel != null) {
+                State.Data(domainModel)
             } else {
-                onEmpty()
+                State.Empty()
             }
         }
     }

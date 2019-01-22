@@ -16,9 +16,9 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -55,9 +55,8 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is Error)
+        assertTrue(result is StatsBlock.Error)
         assertEquals(result.type, Type.ERROR)
-        assertEquals((result as Error).errorMessage, message)
     }
 
     @Test
@@ -74,9 +73,9 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertTrue(result is EmptyBlock)
+        assertEquals(result.type, Type.EMPTY)
+        val items = (result as EmptyBlock).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
@@ -98,9 +97,9 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertTrue(result is Success)
+        assertEquals(result.type, Type.SUCCESS)
+        val items = (result as Success).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
@@ -126,9 +125,9 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertTrue(result is Success)
+        assertEquals(result.type, Type.SUCCESS)
+        val items = (result as Success).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
@@ -154,9 +153,9 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertTrue(result is Success)
+        assertEquals(result.type, Type.SUCCESS)
+        val items = (result as Success).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
@@ -183,9 +182,9 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertTrue(result is Success)
+        assertEquals(result.type, Type.SUCCESS)
+        val items = (result as Success).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
@@ -211,9 +210,9 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertTrue(result is Success)
+        assertEquals(result.type, Type.SUCCESS)
+        val items = (result as Success).items
         assertEquals(items.size, 3)
         assertTrue(items[1] is ListItemWithIcon)
         assertTrue(items[2] is ListItemWithIcon)

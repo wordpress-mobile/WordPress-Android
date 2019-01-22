@@ -8,7 +8,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel.Post
@@ -17,11 +16,12 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -74,14 +74,14 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val result = loadComments(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val tabsItem = (result as BlockList).assertEmptyTab(0)
+        assertThat(result.type).isEqualTo(SUCCESS)
+        val tabsItem = (result as Success).assertEmptyTab(0)
 
         tabsItem.onTabSelected(1)
 
         val updatedResult = loadComments(true, forced)
 
-        (updatedResult as BlockList).assertTabWithPosts(1)
+        (updatedResult as Success).assertTabWithPosts(1)
     }
 
     @Test
@@ -100,8 +100,8 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val result = loadComments(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        assertThat(result.type).isEqualTo(SUCCESS)
+        (result as Success).apply {
             assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
             assertThat(this.items[3] is Link).isTrue()
@@ -124,8 +124,8 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val result = loadComments(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        assertThat(result.type).isEqualTo(SUCCESS)
+        (result as Success).apply {
             assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
             assertThat(this.items[3] is Link).isTrue()
@@ -148,15 +148,15 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val result = loadComments(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
+        assertThat(result.type).isEqualTo(SUCCESS)
 
-        val tabsItem = (result as BlockList).assertTabWithUsers(0)
+        val tabsItem = (result as Success).assertTabWithUsers(0)
 
         tabsItem.onTabSelected(1)
 
         val updatedResult = loadComments(true, forced)
 
-        (updatedResult as BlockList).assertEmptyTab(1)
+        (updatedResult as Success).assertEmptyTab(1)
     }
 
     @Test
@@ -170,8 +170,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val result = loadComments(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).assertEmpty()
+        assertThat(result.type).isEqualTo(Type.EMPTY)
     }
 
     @Test
@@ -187,19 +186,16 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
     }
 
-    private fun BlockList.assertTabWithPosts(position: Int): TabsItem {
+    private fun Success.assertTabWithPosts(position: Int): TabsItem {
         assertThat(this.items).hasSize(4)
         assertTitle(this.items[0])
         val tabsItem = this.items[1] as TabsItem
 
-        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_comments_authors)
+        assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_comments_authors)
 
-        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_comments_posts_and_pages)
+        assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_comments_posts_and_pages)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
 
         val headerItem = this.items[2]
@@ -215,14 +211,14 @@ class CommentsUseCaseTest : BaseUnitTest() {
         return tabsItem
     }
 
-    private fun BlockList.assertTabWithUsers(position: Int): TabsItem {
+    private fun Success.assertTabWithUsers(position: Int): TabsItem {
         assertThat(this.items).hasSize(4)
         assertTitle(this.items[0])
         val tabsItem = this.items[1] as TabsItem
 
-        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_comments_authors)
+        assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_comments_authors)
 
-        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_comments_posts_and_pages)
+        assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_comments_posts_and_pages)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
 
         val headerItem = this.items[2]
@@ -240,21 +236,21 @@ class CommentsUseCaseTest : BaseUnitTest() {
         return tabsItem
     }
 
-    private fun BlockList.assertEmptyTab(position: Int): TabsItem {
+    private fun Success.assertEmptyTab(position: Int): TabsItem {
         assertThat(this.items).hasSize(3)
         assertTitle(this.items[0])
         val tabsItem = this.items[1] as TabsItem
 
-        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_comments_authors)
+        assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_comments_authors)
 
-        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_comments_posts_and_pages)
+        assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_comments_posts_and_pages)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
 
         assertThat(this.items[2]).isEqualTo(Empty())
         return tabsItem
     }
 
-    private fun BlockList.assertEmpty() {
+    private fun Success.assertEmpty() {
         assertThat(this.items).hasSize(2)
         assertTitle(this.items[0])
         assertThat(this.items[1]).isEqualTo(Empty())

@@ -32,22 +32,21 @@ class LatestPostSummaryUseCase
     private val latestPostSummaryMapper: LatestPostSummaryMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getLatestPostInsights(site)
-        dbModel?.let { onModel(it) }
+    override suspend fun loadCachedData(site: SiteModel): InsightsLatestPostModel? {
+        return insightsStore.getLatestPostInsights(site)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<InsightsLatestPostModel> {
         val response = insightsStore.fetchLatestPostInsights(site, forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(
+        return when {
+            error != null -> State.Error(
                     error.message ?: error.type.name
             )
-            model != null -> onModel(model)
-            else -> onEmpty()
+            model != null -> State.Data(model)
+            else -> State.Empty()
         }
     }
 

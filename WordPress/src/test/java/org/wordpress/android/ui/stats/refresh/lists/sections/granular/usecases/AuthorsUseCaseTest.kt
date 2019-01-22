@@ -18,11 +18,12 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -65,7 +67,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 tracker
         )
-        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
+        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(SelectedDate(selectedDate))
     }
 
     @Test
@@ -80,17 +82,17 @@ class AuthorsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val expandableItem = (result as BlockList).assertNonExpandedList()
+        Assertions.assertThat(result.type).isEqualTo(SUCCESS)
+        val expandableItem = (result as Success).assertNonExpandedList()
 
         expandableItem.onExpandClicked(true)
 
         val updatedResult = loadData(true, forced)
 
-        (updatedResult as BlockList).assertExpandedList()
+        (updatedResult as Success).assertExpandedList()
     }
 
-    private fun BlockList.assertNonExpandedList(): ExpandableItem {
+    private fun Success.assertNonExpandedList(): ExpandableItem {
         Assertions.assertThat(this.items).hasSize(4)
         assertTitle(this.items[0])
         assertLabel(this.items[1])
@@ -108,7 +110,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         )
     }
 
-    private fun BlockList.assertExpandedList(): ExpandableItem {
+    private fun Success.assertExpandedList(): ExpandableItem {
         Assertions.assertThat(this.items).hasSize(6)
         assertTitle(this.items[0])
         assertLabel(this.items[1])
@@ -140,8 +142,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        Assertions.assertThat(result.type).isEqualTo(SUCCESS)
+        (result as Success).apply {
             Assertions.assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
             assertLabel(this.items[1])
@@ -164,8 +166,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        Assertions.assertThat(result.type).isEqualTo(Type.EMPTY)
+        (result as EmptyBlock).apply {
             Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             Assertions.assertThat(this.items[1]).isEqualTo(Empty(R.string.stats_no_data_for_period))
@@ -193,9 +195,6 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         Assertions.assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            Assertions.assertThat(this.errorMessage).isEqualTo(message)
-        }
     }
 
     private fun assertTitle(item: BlockListItem) {

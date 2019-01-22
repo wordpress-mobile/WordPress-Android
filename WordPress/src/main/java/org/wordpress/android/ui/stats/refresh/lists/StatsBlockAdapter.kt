@@ -4,7 +4,7 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Loading
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.LOADING
@@ -30,7 +30,7 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseStatsViewHolder<*> {
         return when (values()[viewType]) {
-            BLOCK_LIST, ERROR, EMPTY -> BlockListViewHolder(parent, imageManager)
+            SUCCESS, ERROR, EMPTY -> BlockListViewHolder(parent, imageManager)
             LOADING -> LoadingViewHolder(parent, imageManager)
         }
     }

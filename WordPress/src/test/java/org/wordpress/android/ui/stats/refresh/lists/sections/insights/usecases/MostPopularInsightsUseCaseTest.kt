@@ -15,11 +15,10 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
@@ -78,8 +77,8 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
 
         val result = loadMostPopularInsights(refresh, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        assertThat(result.type).isEqualTo(SUCCESS)
+        (result as Success).apply {
             assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
             assertLabel(this.items[1])
@@ -102,9 +101,6 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         val result = loadMostPopularInsights(refresh, forced)
 
         assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
     }
 
     private fun assertTitle(item: BlockListItem) {

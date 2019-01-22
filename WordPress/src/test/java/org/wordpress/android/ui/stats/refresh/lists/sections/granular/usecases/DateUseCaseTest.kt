@@ -12,11 +12,12 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BACKGROUND_INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -40,7 +41,7 @@ class DateUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined
         )
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(selectedDate)
-        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
+        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(SelectedDate(selectedDate))
     }
 
     @Test
@@ -51,7 +52,7 @@ class DateUseCaseTest : BaseUnitTest() {
         whenever(resourceProvider.getString(R.string.stats_for, granularDate)).thenReturn(label)
         val result = loadData(true, false)
 
-        (result as BlockList).apply {
+        (result as Success).apply {
             Assertions.assertThat(this.items).hasSize(1)
             val item = this.items[0]
             assertThat(item.type).isEqualTo(BACKGROUND_INFO)

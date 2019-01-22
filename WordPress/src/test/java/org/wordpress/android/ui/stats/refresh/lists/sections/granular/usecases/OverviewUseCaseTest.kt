@@ -18,11 +18,10 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -77,8 +76,8 @@ class OverviewUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        Assertions.assertThat(result.type).isEqualTo(SUCCESS)
+        (result as Success).apply {
             assertThat(this.items[0]).isEqualTo(title)
             assertThat(this.items[1]).isEqualTo(barChartItem)
             assertThat(this.items[2]).isEqualTo(columns)
@@ -98,9 +97,6 @@ class OverviewUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         Assertions.assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            Assertions.assertThat(this.errorMessage).isEqualTo(message)
-        }
     }
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {

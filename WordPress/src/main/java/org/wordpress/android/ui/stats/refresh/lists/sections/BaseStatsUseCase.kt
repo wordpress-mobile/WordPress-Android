@@ -11,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase.NotUsedUiState
@@ -31,7 +32,15 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         try {
             when (data) {
                 is State.Loading -> StatsBlock.Loading(type, buildLoadingItem())
-                is State.Error -> StatsBlock.Error(type, buildErrorItem())
+                is State.Error -> {
+                    val previousModel = value()
+                    val items = if (previousModel != null && previousModel.type == SUCCESS) {
+                        previousModel.items
+                    } else {
+                        buildErrorItem()
+                    }
+                    StatsBlock.Error(type, items)
+                }
                 is Data -> Success(type, buildUiModel(data.model, uiState ?: defaultUiState))
                 is Empty, null -> EmptyBlock(type, buildEmptyItem())
             }
@@ -40,6 +49,8 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             StatsBlock.Error(type, buildErrorItem())
         }
     }
+
+    private fun value() = liveData.value
 
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
@@ -56,10 +67,17 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             withContext(mainDispatcher) {
                 this@BaseStatsUseCase.domainModel.value = State.Loading()
             }
-            loadCachedData(site)
+            loadCachedData(site)?.let {
+                withContext(mainDispatcher) {
+                    domainModel.value = Data(model = it)
+                }
+            }
         }
         if (refresh || emptyData) {
-            fetchRemoteData(site, forced)
+            val state = fetchRemoteData(site, forced)
+            withContext(mainDispatcher) {
+                this@BaseStatsUseCase.domainModel.value = state
+            }
         }
     }
 
@@ -131,14 +149,14 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * Loads data from a local cache. Returns a null value when the cache is empty.
      * @param site for which we load the data
      */
-    protected abstract suspend fun loadCachedData(site: SiteModel)
+    protected abstract suspend fun loadCachedData(site: SiteModel): DOMAIN_MODEL?
 
     /**
      * Fetches remote data from the endpoint.
      * @param site for which we fetch the data
      * @param forced is true when we want to get the fresh data
      */
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean)
+    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<DOMAIN_MODEL>
 
     /**
      * Transforms given domain model and ui state into the UI model
@@ -158,7 +176,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         return buildLoadingItem() + listOf(BlockListItem.Empty(textResource = R.string.stats_no_data_yet))
     }
 
-    private sealed class State<DOMAIN_MODEL> {
+    sealed class State<DOMAIN_MODEL> {
         data class Error<DOMAIN_MODEL>(val error: String) : State<DOMAIN_MODEL>()
         data class Data<DOMAIN_MODEL>(val model: DOMAIN_MODEL) : State<DOMAIN_MODEL>()
         class Empty<DOMAIN_MODEL> : State<DOMAIN_MODEL>()

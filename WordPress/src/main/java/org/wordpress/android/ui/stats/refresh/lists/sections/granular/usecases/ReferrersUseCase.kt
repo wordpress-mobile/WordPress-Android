@@ -49,17 +49,16 @@ constructor(
 ) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_referrers))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = referrersStore.getReferrers(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): ReferrersModel? {
+        return referrersStore.getReferrers(
                 site,
                 statsGranularity,
                 selectedDate,
                 PAGE_SIZE
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<ReferrersModel> {
         val response = referrersStore.fetchReferrers(
                 site,
                 PAGE_SIZE,
@@ -70,10 +69,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null && model.groups.isNotEmpty() -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.groups.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 

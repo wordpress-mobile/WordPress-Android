@@ -18,11 +18,12 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.CountryViewsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -58,7 +60,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 tracker
         )
-        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
+        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(SelectedDate(selectedDate))
     }
 
     @Test
@@ -73,7 +75,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        (result as BlockList).apply {
+        (result as Success).apply {
             Assertions.assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
             val mapItem = (this.items[1] as MapItem)
@@ -97,8 +99,8 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        Assertions.assertThat(result.type).isEqualTo(SUCCESS)
+        (result as Success).apply {
             Assertions.assertThat(this.items).hasSize(5)
             assertLink(this.items[4])
         }
@@ -115,8 +117,8 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        Assertions.assertThat(result.type).isEqualTo(Type.EMPTY)
+        (result as EmptyBlock).apply {
             Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             Assertions.assertThat(this.items[1]).isEqualTo(Empty(R.string.stats_no_data_for_period))
@@ -138,9 +140,6 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         Assertions.assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            Assertions.assertThat(this.errorMessage).isEqualTo(message)
-        }
     }
 
     private fun assertTitle(item: BlockListItem) {

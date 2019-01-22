@@ -15,11 +15,12 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -55,8 +56,8 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        assertThat(result.type).isEqualTo(SUCCESS)
+        (result as Success).apply {
             assertThat(this.items).hasSize(5)
             assertTitle(this.items[0])
             assertViews(this.items[1], showDivider = true)
@@ -78,8 +79,8 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        assertThat(result.type).isEqualTo(Type.SUCCESS)
+        (result as Success).apply {
             assertThat(this.items).hasSize(3)
             assertTitle(this.items[0])
             assertVisitors(this.items[1], showDivider = true)
@@ -99,11 +100,10 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
+        assertThat(result.type).isEqualTo(Type.EMPTY)
+        (result as EmptyBlock).apply {
             assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(Empty())
         }
     }
 
@@ -121,9 +121,6 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         val result = loadTodayStats(refresh, forced)
 
         assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
     }
 
     private fun assertTitle(item: BlockListItem) {

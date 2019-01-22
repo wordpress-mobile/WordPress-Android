@@ -48,16 +48,15 @@ constructor(
                     )
             )
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = visitsAndViewsStore.getVisits(
+    override suspend fun loadCachedData(site: SiteModel): VisitsAndViewsModel? {
+        return visitsAndViewsStore.getVisits(
                 site,
                 selectedDateProvider.getCurrentDate(),
                 statsGranularity
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
                 site,
                 PAGE_SIZE,
@@ -68,18 +67,23 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null && model.dates.isNotEmpty() -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.dates.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
+    }
+
+    override fun buildErrorItem(): List<BlockListItem> {
+        selectedDateProvider.dateLoadingFailed(statsGranularity)
+        return super.buildErrorItem()
     }
 
     override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
             val selectedDate = uiState.selectedDate ?: domainModel.dates.last().period
-            if (selectedDateProvider.getSelectedDate(statsGranularity) == null) {
+            if (!selectedDateProvider.hasSelectedDate(statsGranularity)) {
                 selectedDateProvider.selectDate(
                         statsDateFormatter.parseStatsDate(statsGranularity, selectedDate),
                         statsGranularity
@@ -106,6 +110,7 @@ constructor(
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
         } else {
+            selectedDateProvider.dateLoadingFailed(statsGranularity)
             AppLog.e(T.STATS, "There is no data to be shown in the overview block")
         }
         return items

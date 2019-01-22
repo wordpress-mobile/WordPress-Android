@@ -25,22 +25,21 @@ class AllTimeStatsUseCase
 ) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_all_time_stats))
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getAllTimeInsights(site)
-        dbModel?.let { onModel(it) }
+    override suspend fun loadCachedData(site: SiteModel): InsightsAllTimeModel? {
+        return insightsStore.getAllTimeInsights(site)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<InsightsAllTimeModel> {
         val response = insightsStore.fetchAllTimeInsights(site, forced)
         val model = response.model
         val error = response.error
 
         return when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null && model.hasData() -> onModel(
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.hasData() -> State.Data(
                     model
             )
-            else -> onEmpty()
+            else -> State.Empty()
         }
     }
 
