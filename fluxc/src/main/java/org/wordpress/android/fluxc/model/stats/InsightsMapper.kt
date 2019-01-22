@@ -102,7 +102,7 @@ class InsightsMapper
         )
     }
 
-    fun map(response: FollowersResponse, followerType: FollowerType, pageSize: Int): FollowersModel {
+    fun map(response: FollowersResponse, followerType: FollowerType, pageSize: Int, page: Int): FollowersModel {
         val followers = response.subscribers.mapNotNull {
             if (it.avatar != null && it.label != null && it.dateSubscribed != null) {
                 FollowerModel(
@@ -115,7 +115,7 @@ class InsightsMapper
                 AppLog.e(STATS, "CommentsResponse.posts: Non-null field is coming as null from API")
                 null
             }
-        }.take(pageSize)
+        }.drop((page - 1) * pageSize).take(pageSize)
         val total = when (followerType) {
             WP_COM -> response.totalWpCom
             EMAIL -> response.totalEmail
@@ -123,8 +123,8 @@ class InsightsMapper
         return FollowersModel(total ?: 0, followers, response.subscribers.size > pageSize)
     }
 
-    fun map(response: CommentsResponse, pageSize: Int): CommentsModel {
-        val authors = response.authors?.take(pageSize)?.mapNotNull {
+    fun map(response: CommentsResponse, pageSize: Int, page: Int): CommentsModel {
+        val authors = response.authors?.drop((page - 1) * pageSize)?.take(pageSize)?.mapNotNull {
             if (it.name != null && it.comments != null && it.link != null && it.gravatar != null) {
                 CommentsModel.Author(it.name, it.comments, it.link, it.gravatar)
             } else {
@@ -132,7 +132,7 @@ class InsightsMapper
                 null
             }
         }
-        val posts = response.posts?.take(pageSize)?.mapNotNull {
+        val posts = response.posts?.drop((page - 1) * pageSize)?.take(pageSize)?.mapNotNull {
             if (it.id != null && it.name != null && it.comments != null && it.link != null) {
                 CommentsModel.Post(it.id, it.name, it.comments, it.link)
             } else {
@@ -145,8 +145,8 @@ class InsightsMapper
         return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
 
-    fun map(response: TagsResponse, pageSize: Int): TagsModel {
-        return TagsModel(response.tags.take(pageSize).map { tag ->
+    fun map(response: TagsResponse, pageSize: Int, page: Int): TagsModel {
+        return TagsModel(response.tags.drop((page - 1) * pageSize).take(pageSize).map { tag ->
             TagModel(tag.tags.mapNotNull { it.toItem() }.take(pageSize), tag.views ?: 0)
         }, response.tags.size > pageSize)
     }
@@ -160,10 +160,13 @@ class InsightsMapper
         }
     }
 
-    fun map(response: PublicizeResponse, pageSize: Int): PublicizeModel {
+    fun map(response: PublicizeResponse, pageSize: Int, page: Int): PublicizeModel {
         return PublicizeModel(
-                response.services.take(pageSize).map { PublicizeModel.Service(it.service, it.followers) },
-                response.services.size > pageSize
+                response.services.drop((page - 1) * pageSize).take(pageSize)
+                        .map {
+                            PublicizeModel.Service(it.service, it.followers)
+                        }
+                ,response.services.size > pageSize
         )
     }
 }
