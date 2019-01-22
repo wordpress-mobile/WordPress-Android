@@ -1,1 +1,1 @@
-
+* Introduced new site creation wizard
