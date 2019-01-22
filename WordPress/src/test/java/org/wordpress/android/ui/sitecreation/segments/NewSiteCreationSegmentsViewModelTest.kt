@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentsError
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
@@ -106,6 +107,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
+    @Mock private lateinit var tracker: NewSiteCreationTracker
     @Mock private lateinit var uiStateObserver: Observer<SegmentsUiState>
     @Mock private lateinit var segmentSelectedObserver: Observer<Long>
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
@@ -116,6 +118,7 @@ class NewSiteCreationSegmentsViewModelTest {
                 networkUtils,
                 dispatcher,
                 fetchSegmentsUseCase,
+                tracker,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )

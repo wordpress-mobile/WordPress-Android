@@ -37,12 +37,14 @@ import kotlin.coroutines.CoroutineContext
 
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 private const val DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER = 1000L
+private const val ERROR_CONTEXT = "site_preview"
 
 class NewSitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
     private val fetchWpComSiteUseCase: FetchWpComSiteUseCase,
     private val networkUtils: NetworkUtilsWrapper,
+    private val tracker: NewSiteCreationTracker,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -50,6 +52,7 @@ class NewSitePreviewViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = IO + job
     private var isStarted = false
+    private var webviewFullyLoadedTracked = false
 
     private lateinit var siteCreationState: SiteCreationState
     private lateinit var urlWithoutScheme: String
@@ -131,6 +134,7 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     fun onOkButtonClicked() {
+        tracker.trackCreationCompleted()
         _onOkButtonClicked.value = createSiteState
     }
 
@@ -139,6 +143,7 @@ class NewSitePreviewViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
+            tracker.trackErrorShown(ERROR_CONTEXT, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             withContext(MAIN) {
                 updateUiState(SitePreviewConnectionErrorUiState)
             }
@@ -168,6 +173,11 @@ class NewSitePreviewViewModel @Inject constructor(
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
+                tracker.trackErrorShown(
+                        ERROR_CONTEXT,
+                        NewSiteCreationErrorType.UNKNOWN,
+                        "NewSiteCreation service failed"
+                )
                 updateUiStateAsync(SitePreviewGenericErrorUiState)
             }
         }
@@ -191,6 +201,7 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     private fun startPreLoadingWebView() {
+        tracker.trackPreviewLoading()
         launch(IO) {
             /**
              * Keep showing the full screen loading screen for 1 more second or until the webview is loaded whichever
@@ -203,6 +214,7 @@ class NewSitePreviewViewModel @Inject constructor(
              */
             withContext(MAIN) {
                 if (uiState.value !is SitePreviewContentUiState) {
+                    tracker.trackPreviewWebviewShown()
                     updateUiState(SitePreviewLoadingShimmerState(createSitePreviewData()))
                 }
             }
@@ -213,6 +225,13 @@ class NewSitePreviewViewModel @Inject constructor(
 
     fun onUrlLoaded() {
         _hideGetStartedBar.call()
+        if (!webviewFullyLoadedTracked) {
+            webviewFullyLoadedTracked = true
+            tracker.trackPreviewWebviewFullyLoaded()
+        }
+        if (uiState.value is SitePreviewFullscreenProgressUiState) {
+            tracker.trackPreviewWebviewShown()
+        }
         /**
          * Update the ui state if the loading or error screen is being shown.
          * In other words don't update it after a configuration change.

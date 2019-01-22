@@ -44,7 +44,7 @@ data class SiteCreationState(
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
-class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
+class NewSiteCreationMainVM @Inject constructor(private val tracker: NewSiteCreationTracker) : ViewModel() {
     private var isStarted = false
     private lateinit var wizardManager: WizardManager<SiteCreationStep>
     private lateinit var siteCreationState: SiteCreationState
@@ -63,6 +63,7 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
         if (savedInstanceState == null) {
+            tracker.trackSiteCreationAccessed()
             siteCreationState = SiteCreationState()
             wizardManager = WizardManager(SITE_CREATION_STEPS)
         } else {
