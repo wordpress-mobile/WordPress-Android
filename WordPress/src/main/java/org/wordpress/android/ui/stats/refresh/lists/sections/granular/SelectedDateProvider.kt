@@ -25,21 +25,15 @@ class SelectedDateProvider
     val selectedDateChanged: LiveData<StatsGranularity> = mutableSelectedDateChanged
 
     fun selectDate(date: Date, statsGranularity: StatsGranularity) {
-        val selectedDate = getSelectedDate(statsGranularity)
-        if (selectedDate.date != date) {
-            mutableDates[statsGranularity] = SelectedDate(date)
-            mutableSelectedDateChanged.value = statsGranularity
-        }
+        updateSelectedDate(SelectedDate(date), statsGranularity)
     }
 
     fun dateLoadingFailed(statsGranularity: StatsGranularity) {
         val selectedDate = getSelectedDate(statsGranularity)
         if (selectedDate.date != null && !selectedDate.error) {
-            mutableDates[statsGranularity] = selectedDate.copy(error = true)
-            mutableSelectedDateChanged.value = statsGranularity
+            updateSelectedDate(selectedDate.copy(error = true), statsGranularity)
         } else if (selectedDate.date == null) {
-            mutableDates[statsGranularity] = SelectedDate(error = true)
-            mutableSelectedDateChanged.value = statsGranularity
+            updateSelectedDate(SelectedDate(error = true), statsGranularity)
         }
     }
 
@@ -50,6 +44,14 @@ class SelectedDateProvider
     }
 
     fun getCurrentDate() = Date()
+
+    private fun updateSelectedDate(selectedDate: SelectedDate, statsGranularity: StatsGranularity) {
+        val previousDate = getSelectedDate(statsGranularity)
+        if (selectedDate != previousDate) {
+            mutableDates[statsGranularity] = selectedDate
+            mutableSelectedDateChanged.value = statsGranularity
+        }
+    }
 
     data class SelectedDate(val date: Date? = null, val loading: Boolean = false, val error: Boolean = false)
 }
