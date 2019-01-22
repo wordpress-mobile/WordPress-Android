@@ -265,7 +265,11 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             data.forEachIndexed { index, model ->
                 val onItemTapped = {
                     tracker.trackVerticalSelected(model.name, model.verticalId, model.isUserInputVertical)
-                    _verticalSelected.value = model.verticalId
+                    _verticalSelected.value = if (model.isUserInputVertical) {
+                        model.name.toLowerCase()
+                    } else {
+                        model.verticalId
+                    }
                 }
                 val itemUiState = if (model.isUserInputVertical) {
                     VerticalsCustomModelUiState(
