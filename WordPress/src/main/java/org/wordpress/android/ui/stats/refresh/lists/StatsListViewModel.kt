@@ -3,8 +3,9 @@ package org.wordpress.android.ui.stats.refresh.lists
 import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.stats.StatsStore
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.stats.StatsStore.StatsTypes
 import org.wordpress.android.viewmodel.ScopedViewModel
 
@@ -31,15 +32,14 @@ abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher, privat
         super.onCleared()
     }
 
-    fun onMoveDownClick(type: StatsTypes) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun onAction(site: SiteModel, type: StatsTypes, action: Action) {
+        launch {
+            statsUseCase.onAction(site, type, action)
+            statsUseCase.refreshTypes(site)
+        }
     }
 
-    fun onMoveUpClick(type: StatsTypes) {
-        TODO()
-    }
-
-    fun onRemoveClick(type: StatsTypes) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    enum class Action {
+        MOVE_DOWN, MOVE_UP, REMOVE
     }
 }

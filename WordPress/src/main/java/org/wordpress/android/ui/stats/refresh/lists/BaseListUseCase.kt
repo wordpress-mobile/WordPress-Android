@@ -7,6 +7,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.stats.StatsStore.StatsTypes
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action.MOVE_DOWN
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action.MOVE_UP
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action.REMOVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -20,7 +24,10 @@ constructor(
     private val bgDispatcher: CoroutineDispatcher,
     private val mainDispatcher: CoroutineDispatcher,
     private val useCases: List<BaseStatsUseCase<*, *>>,
-    private val getStatsTypes: suspend ((site: SiteModel) -> List<StatsTypes>)
+    private val getStatsTypes: suspend ((site: SiteModel) -> List<StatsTypes>),
+    private val moveTypeUp: suspend ((site: SiteModel, type: StatsTypes) -> Unit) = { _, _ -> },
+    private val moveTypeDown: suspend ((site: SiteModel, type: StatsTypes) -> Unit) = { _, _ -> },
+    private val removeType: suspend ((site: SiteModel, type: StatsTypes) -> Unit) = { _, _ -> }
 ) {
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
@@ -40,8 +47,10 @@ constructor(
     val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(useCases.map { it.navigationTarget })
     val menuClick: LiveData<MenuClick> = merge(mergeNotNull(useCases.map { it.menuClick }), data) { click, viewModel ->
         if (click != null && viewModel != null) {
-            val indexOfBlock = viewModel.indexOfFirst { it.type == click.second }
-            MenuClick(click.first, click.second, indexOfBlock == 0, indexOfBlock == viewModel.size - 1)
+            val indexOfBlock = viewModel.indexOfFirst { it.statsTypes == click.type }
+            click.showUpAction = indexOfBlock > 0
+            click.showDownAction = indexOfBlock < viewModel.size - 1
+            click
         } else {
             null
         }
@@ -55,20 +64,32 @@ constructor(
         loadData(site, true, forced)
     }
 
+    suspend fun refreshTypes(site: SiteModel) {
+        val items = getStatsTypes(site)
+        withContext(mainDispatcher) {
+            statsTypes.value = items
+        }
+    }
+
     private suspend fun loadData(site: SiteModel, refresh: Boolean, forced: Boolean) {
         withContext(bgDispatcher) {
             if (PackageUtils.isDebugBuild() && useCases.distinctBy { it.type }.size < useCases.size) {
                 throw RuntimeException("Duplicate stats type in a use case")
             }
             useCases.forEach { block -> launch { block.fetch(site, refresh, forced) } }
-            val items = getStatsTypes(site)
-            withContext(mainDispatcher) {
-                statsTypes.value = items
-            }
+            refreshTypes(site)
         }
     }
 
     fun onCleared() {
         useCases.forEach { it.clear() }
+    }
+
+    suspend fun onAction(site: SiteModel, type: StatsTypes, action: Action) {
+        when (action) {
+            MOVE_UP -> moveTypeUp(site, type)
+            MOVE_DOWN -> moveTypeDown(site, type)
+            REMOVE -> removeType(site, type)
+        }
     }
 }

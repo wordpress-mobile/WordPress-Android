@@ -14,6 +14,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
@@ -50,6 +51,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewVideoPlays
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel
@@ -276,35 +278,34 @@ class StatsListFragment : DaggerFragment() {
             true
         }
 
-        viewModel.menuClick.observe(this, Observer { menuClick ->
-            if (menuClick != null) {
-                val popup = PopupMenu(activity, menuClick.view)
-                val popupMenu = popup.menu
-                popup.inflate(R.menu.menu_stats_item)
-                popupMenu.findItem(R.id.action_move_up).isEnabled = menuClick.showUpAction
-                popupMenu.findItem(R.id.action_move_down).isEnabled = menuClick.showDownAction
-                popup.setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.itemId) {
-                        R.id.action_move_up -> {
-                            viewModel.onMoveUpClick(menuClick.type)
-                            true
-                        }
-                        R.id.action_move_down -> {
-                            viewModel.onMoveDownClick(menuClick.type)
-                            true
-                        }
-                        R.id.action_remove -> {
-                            viewModel.onRemoveClick(menuClick.type)
-                            true
-                        }
-                        else -> {
-                            false
-                        }
+        viewModel.menuClick.observeEvent(this) { menuClick ->
+            val popup = PopupMenu(activity, menuClick.view)
+            val popupMenu = popup.menu
+            popup.inflate(R.menu.menu_stats_item)
+            popupMenu.findItem(R.id.action_move_up).isVisible = menuClick.showUpAction
+            popupMenu.findItem(R.id.action_move_down).isVisible = menuClick.showDownAction
+            popup.show()
+            popup.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.action_move_up -> {
+                        viewModel.onAction(site, menuClick.type, Action.MOVE_UP)
+                        true
+                    }
+                    R.id.action_move_down -> {
+                        viewModel.onAction(site, menuClick.type, Action.MOVE_DOWN)
+                        true
+                    }
+                    R.id.action_remove -> {
+                        viewModel.onAction(site, menuClick.type, Action.REMOVE)
+                        true
+                    }
+                    else -> {
+                        false
                     }
                 }
-                popup.show()
             }
-        })
+            true
+        }
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {
@@ -359,4 +360,10 @@ fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
     }
 }
 
-data class MenuClick(val view: View, val type: StatsTypes, val showUpAction: Boolean, val showDownAction: Boolean)
+data class MenuClick(
+    val view: View,
+    val type: StatsTypes,
+    var showUpAction: Boolean = true,
+    var showDownAction: Boolean = true
+) :
+        Event()

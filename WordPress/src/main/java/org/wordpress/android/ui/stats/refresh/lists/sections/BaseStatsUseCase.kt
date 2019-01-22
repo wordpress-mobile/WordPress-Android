@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.store.stats.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.Loading
+import org.wordpress.android.ui.stats.refresh.lists.MenuClick
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
@@ -45,8 +46,8 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
-    private val mutableMenuClick = MutableLiveData<Pair<View, StatsTypes>>()
-    val menuClick: LiveData<Pair<View, StatsTypes>> = mutableMenuClick
+    private val mutableMenuClick = MutableLiveData<MenuClick>()
+    val menuClick: LiveData<MenuClick> = mutableMenuClick
 
     /**
      * Fetches data either from a local cache or from remote API
@@ -108,7 +109,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * Trigger this method when the item menu button is clicked
      */
     fun onMenuClick(view: View) {
-        mutableMenuClick.value = view to type
+        mutableMenuClick.value = MenuClick(view, type)
     }
 
     /**
