@@ -39,15 +39,6 @@ class InsightTypesSqlUtils
                 .map { InsightsTypes.valueOf(it.insightType) }
     }
 
-    fun selectAll(site: SiteModel): List<InsightTypeDataModel> {
-        return WellSql.select(InsightTypesBuilder::class.java)
-                .where()
-                .equals(InsightTypesTable.LOCAL_SITE_ID, site.id)
-                .endWhere()
-                .asModel
-                .map { it.build() }
-    }
-
     fun insertOrReplaceAddedItems(site: SiteModel, insightsTypes: List<InsightsTypes>) {
         insertOrReplaceList(site, insightsTypes, ADDED)
     }
@@ -75,29 +66,12 @@ class InsightTypesSqlUtils
         WellSql.update(InsightTypesBuilder::class.java)
                 .where()
                 .equals(InsightTypesTable.LOCAL_SITE_ID, site.id)
-                .equals(InsightTypesTable.INSIGHT_TYPE, type)
+                .equals(InsightTypesTable.INSIGHT_TYPE, type.name)
                 .endWhere()
                 .put(status.name) {
                     val cv = ContentValues()
                     cv.put(InsightTypesTable.STATUS, it)
                     cv.put(InsightTypesTable.POSITION, position)
-                    cv
-                }
-    }
-
-    fun updatePositions(site: SiteModel, types: List<InsightsTypes>) {
-        types.forEachIndexed { index, type -> updatePosition(site, type, index) }
-    }
-
-    private fun updatePosition(site: SiteModel, type: InsightsTypes, position: Int = -1) {
-        WellSql.update(InsightTypesBuilder::class.java)
-                .where()
-                .equals(InsightTypesTable.LOCAL_SITE_ID, site.id)
-                .equals(InsightTypesTable.INSIGHT_TYPE, type)
-                .endWhere()
-                .put(position) {
-                    val cv = ContentValues()
-                    cv.put(InsightTypesTable.POSITION, it)
                     cv
                 }
     }
