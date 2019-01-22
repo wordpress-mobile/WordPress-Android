@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
 class QuickStartUtils {
@@ -68,8 +69,10 @@ class QuickStartUtils {
                 val endOfHighlight = mutableSpannedMessage.getSpanEnd(foregroundColorSpan)
 
                 mutableSpannedMessage.removeSpan(foregroundColorSpan)
-                mutableSpannedMessage.setSpan(ForegroundColorSpan(highlightColor),
-                        startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                mutableSpannedMessage.setSpan(
+                        ForegroundColorSpan(highlightColor),
+                        startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
 
                 val icon: Drawable? = try {
                     // .mutate() allows us to avoid sharing the state of drawables
@@ -89,8 +92,10 @@ class QuickStartUtils {
                         mutableSpannedMessage.insert(startOfHighlight, "  ")
                     }
 
-                    mutableSpannedMessage.setSpan(ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    mutableSpannedMessage.setSpan(
+                            ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
             }
 
@@ -179,11 +184,13 @@ class QuickStartUtils {
         }
 
         @JvmStatic
+        @JvmOverloads
         fun completeTask(
             quickStartStore: QuickStartStore,
             task: QuickStartTask,
             dispatcher: Dispatcher,
-            site: SiteModel
+            site: SiteModel,
+            quickStartEvent: QuickStartEvent? = null
         ) {
             val siteId = site.id.toLong()
 
@@ -198,7 +205,7 @@ class QuickStartUtils {
             if (isEveryQuickStartTaskDone(quickStartStore)) {
                 AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
-            }else{
+            } else if (quickStartEvent?.task == task) {
                 AppPrefs.setQuickStartNoticeRequired(true)
             }
         }
@@ -241,7 +248,6 @@ class QuickStartUtils {
          * if no uncompleted task of taskType remain it tries to find and return uncompleted task of other task type
          */
         @JvmStatic
-        @JvmOverloads
         fun getNextUncompletedQuickStartTask(
             quickStartStore: QuickStartStore,
             siteId: Long,

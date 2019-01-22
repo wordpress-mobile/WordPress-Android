@@ -218,71 +218,72 @@ public class MySiteFragment extends Fragment implements
             showQuickStartDialogMigration();
         }
 
-        showQuickStartTaskPromptIfNecessary();
+        showQuickStartNoticeIfNecessary();
     }
 
-    private void showQuickStartTaskPromptIfNecessary() {
-        if (QuickStartUtils.isQuickStartInProgress(mQuickStartStore) && AppPrefs.isQuickStartNoticeRequired()) {
-            final QuickStartTask taskToPrompt = QuickStartUtils.getNextUncompletedQuickStartTask(mQuickStartStore,
-                    AppPrefs.getSelectedSite(), CUSTOMIZE);
-
-
-            // if we finished prompted task - reset the dialog counter and pick the next task
-            if (taskToPrompt != null && !mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), taskToPrompt)) {
-
-                mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
-                mQuickStartSnackBarHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        showQuickStartDialogTaskPrompt(taskToPrompt);
-                    }
-                }, AUTO_QUICK_START_SNACKBAR_DELAY_MS);
-            }
-
-        }
-    }
-
-    private void showQuickStartDialogTaskPrompt(final QuickStartTask task) {
-        if (!isAdded() || getView() == null) {
+    private void showQuickStartNoticeIfNecessary() {
+        if (!QuickStartUtils.isQuickStartInProgress(mQuickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
             return;
         }
 
-        final QuickStartNoticeDetails noticeDetails = QuickStartNoticeDetails.getNoticeForTask(task);
+        final QuickStartTask taskToPrompt = QuickStartUtils.getNextUncompletedQuickStartTask(mQuickStartStore,
+                AppPrefs.getSelectedSite(), CUSTOMIZE); // CUSTOMIZE is default type
 
-        String title = getString(noticeDetails.getTitleResId());
-        String message = getString(noticeDetails.getMessageResId());
-
-        WPDialogSnackbar
-                mQuickStartTaskPromptSnackBar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator),
-                message,
-                AccessibilityUtils.getSnackbarDuration(getActivity(),
-                        getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
-
-        mQuickStartTaskPromptSnackBar.setTitle(title);
-
-        mQuickStartTaskPromptSnackBar.setPositiveButton(
-                getString(R.string.quick_start_button_positive), new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED);
-                        mActiveTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(task);
-                        showActiveQuickStartTutorial();
+        if (taskToPrompt != null) {
+            mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
+            mQuickStartSnackBarHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isAdded() || getView() == null) {
+                        return;
                     }
-                });
 
-        mQuickStartTaskPromptSnackBar
-                .setNegativeButton(getString(R.string.quick_start_button_negative), new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED);
+                    QuickStartNoticeDetails noticeDetails = QuickStartNoticeDetails.getNoticeForTask(taskToPrompt);
+                    if (noticeDetails == null) {
+                        return;
                     }
-                });
 
-        mQuickStartTaskPromptSnackBar.show();
+                    String noticeTitle = getString(noticeDetails.getTitleResId());
+                    String noticeMessage = getString(noticeDetails.getMessageResId());
 
-        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED);
-        AppPrefs.setQuickStartNoticeRequired(false);
+                    WPDialogSnackbar mQuickStartTaskPromptSnackBar =
+                            WPDialogSnackbar.make(
+                                    requireActivity().findViewById(R.id.coordinator),
+                                    noticeMessage,
+                                    AccessibilityUtils.getSnackbarDuration(getActivity(),
+                                            getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+
+                    mQuickStartTaskPromptSnackBar.setTitle(noticeTitle);
+
+                    mQuickStartTaskPromptSnackBar.setPositiveButton(
+                            getString(R.string.quick_start_button_positive), new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED);
+                                    mActiveTutorialPrompt =
+                                            QuickStartMySitePrompts.getPromptDetailsForTask(taskToPrompt);
+                                    showActiveQuickStartTutorial();
+                                }
+                            });
+
+                    mQuickStartTaskPromptSnackBar
+                            .setNegativeButton(getString(R.string.quick_start_button_negative),
+                                    new OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED);
+                                        }
+                                    });
+
+                    mQuickStartTaskPromptSnackBar.show();
+
+                    AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED);
+                    AppPrefs.setQuickStartNoticeRequired(false);
+                }
+            }, AUTO_QUICK_START_SNACKBAR_DELAY_MS);
+        }
     }
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -1218,11 +1219,17 @@ public class MySiteFragment extends Fragment implements
 
     private void completeQuickStarTask(QuickStartTask quickStartTask) {
         if (getSelectedSite() != null) {
+            boolean isUploadSiteIconTask = quickStartTask == QuickStartTask.UPLOAD_SITE_ICON;
+            if (isUploadSiteIconTask) {
+                AppPrefs.setQuickStartNoticeRequired(
+                        !mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), quickStartTask));
+            }
             QuickStartUtils.completeTask(mQuickStartStore, quickStartTask, mDispatcher, getSelectedSite());
             // We update completed tasks counter onResume, but UPLOAD_SITE_ICON can be completed without navigating
             // away from the activity, so we are updating counter here
-            if (quickStartTask == QuickStartTask.UPLOAD_SITE_ICON) {
+            if (isUploadSiteIconTask) {
                 updateQuickStartContainer();
+                showQuickStartNoticeIfNecessary();
             }
             if (mActiveTutorialPrompt != null && mActiveTutorialPrompt.getTask() == quickStartTask) {
                 removeQuickStartFocusPoint();
