@@ -6,7 +6,7 @@ import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.Loading

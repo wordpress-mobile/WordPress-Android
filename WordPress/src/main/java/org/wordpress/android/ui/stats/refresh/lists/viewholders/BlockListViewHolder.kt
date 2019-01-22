@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.DATE
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.DATE
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.util.image.ImageManager

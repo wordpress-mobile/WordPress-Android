@@ -9,8 +9,8 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
-import org.wordpress.android.fluxc.store.stats.InsightsStore
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.FOLLOWERS
+import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats

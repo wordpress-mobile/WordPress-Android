@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher, private val statsUseCase: BaseListUseCase) :

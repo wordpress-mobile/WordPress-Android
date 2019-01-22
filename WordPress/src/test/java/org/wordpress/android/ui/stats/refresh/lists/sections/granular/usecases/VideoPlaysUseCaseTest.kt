@@ -12,9 +12,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel.VideoPlays
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.store.stats.StatsStore.OnStatsFetched
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsError
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.VideoPlaysStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.BlockList

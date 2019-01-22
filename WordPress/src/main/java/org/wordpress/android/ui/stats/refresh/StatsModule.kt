@@ -7,8 +7,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
-import org.wordpress.android.fluxc.store.stats.StatsStore
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase

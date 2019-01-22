@@ -7,7 +7,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.REFERRERS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.REFERRERS
 import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewReferrers
