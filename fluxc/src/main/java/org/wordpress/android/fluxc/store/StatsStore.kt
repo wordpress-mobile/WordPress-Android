@@ -1,6 +1,5 @@
-package org.wordpress.android.fluxc.store.stats
+package org.wordpress.android.fluxc.store
 
-import android.util.Log
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
@@ -19,25 +18,25 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.SERVER_E
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.TIMEOUT
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
-import org.wordpress.android.fluxc.persistence.stats.InsightTypesSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightTypesSqlUtils
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVITY
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.CLICKS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.COUNTRIES
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.DATE
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAGES
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.REFERRERS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.SEARCH_TERMS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.VIDEOS
 import org.wordpress.android.fluxc.store.Store.OnChanged
 import org.wordpress.android.fluxc.store.Store.OnChangedError
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.ALL_TIME_STATS
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.POSTING_ACTIVITY
-import org.wordpress.android.fluxc.store.stats.StatsStore.InsightsTypes.TODAY_STATS
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsError
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsErrorType
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.AUTHORS
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.CLICKS
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.COUNTRIES
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.DATE
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.OVERVIEW
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.POSTS_AND_PAGES
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.REFERRERS
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.SEARCH_TERMS
-import org.wordpress.android.fluxc.store.stats.StatsStore.TimeStatsTypes.VIDEOS
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -77,7 +76,6 @@ class StatsStore
         val insightTypes = getInsights(site)
         val indexOfMovedItem = insightTypes.indexOf(type)
         if (indexOfMovedItem > 0 && indexOfMovedItem < insightTypes.size) {
-            Log.e("vojta", insightTypes.fold("before update: ") {acc, item -> "$acc - ${item.name}" } )
             val updatedInsights = mutableListOf<InsightsTypes>()
             val switchedItemIndex = indexOfMovedItem - 1
             if (indexOfMovedItem > 1) {
@@ -89,7 +87,6 @@ class StatsStore
                 updatedInsights.addAll(insightTypes.subList(indexOfMovedItem + 1, insightTypes.size))
             }
             insightTypesSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
-            Log.e("vojta", updatedInsights.fold("result: ") {acc, item -> "$acc - ${item.name}" } )
         }
     }
 

@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.store.stats
+package org.wordpress.android.fluxc.store
 
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
@@ -16,10 +16,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.F
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.stats.InsightsSqlUtils
-import org.wordpress.android.fluxc.store.stats.StatsStore.OnStatsFetched
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsError
-import org.wordpress.android.fluxc.store.stats.StatsStore.StatsErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
+import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import javax.inject.Inject
 import javax.inject.Singleton
