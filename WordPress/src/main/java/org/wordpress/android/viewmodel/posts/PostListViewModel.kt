@@ -667,7 +667,7 @@ class PostListViewModel @Inject constructor(
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
-                savePostFromLocal(it)
+                updateConflictedPostWithItsLocalVersion(it)
             }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
@@ -739,7 +739,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    private fun savePostFromLocal(localPostId: Int) {
+    private fun updateConflictedPostWithItsLocalVersion(localPostId: Int) {
         // We need network connection to push local version to remote
         if (!checkNetworkConnection()) {
             return
