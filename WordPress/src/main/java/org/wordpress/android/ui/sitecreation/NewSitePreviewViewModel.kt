@@ -13,7 +13,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.modules.IO_DISPATCHER
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
@@ -45,12 +45,12 @@ class NewSitePreviewViewModel @Inject constructor(
     private val fetchWpComSiteUseCase: FetchWpComSiteUseCase,
     private val networkUtils: NetworkUtilsWrapper,
     private val tracker: NewSiteCreationTracker,
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     override val coroutineContext: CoroutineContext
-        get() = IO + job
+        get() = bgDispatcher + job
     private var isStarted = false
     private var webviewFullyLoadedTracked = false
 
@@ -202,7 +202,7 @@ class NewSitePreviewViewModel @Inject constructor(
 
     private fun startPreLoadingWebView() {
         tracker.trackPreviewLoading()
-        launch(IO) {
+        launch(bgDispatcher) {
             /**
              * Keep showing the full screen loading screen for 1 more second or until the webview is loaded whichever
              * happens first. This will give us some more time to fetch the newly created site.

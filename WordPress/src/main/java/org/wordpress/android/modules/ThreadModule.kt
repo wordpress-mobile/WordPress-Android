@@ -11,7 +11,6 @@ import kotlin.coroutines.CoroutineContext
 const val UI_SCOPE = "UI_SCOPE"
 const val DEFAULT_SCOPE = "DEFAULT_SCOPE"
 const val MAIN_DISPATCHER = "MAIN"
-const val IO_DISPATCHER = "IO"
 const val UI_THREAD = "UI_THREAD"
 const val BG_THREAD = "BG_THREAD"
 
@@ -39,12 +38,6 @@ class ThreadModule {
     @Named(MAIN_DISPATCHER)
     fun provideMainDispatcher(): CoroutineContext {
         return Dispatchers.Main
-    }
-
-    @Provides
-    @Named(IO_DISPATCHER)
-    fun provideIODispatcher(): CoroutineContext {
-        return Dispatchers.IO
     }
 
     @Provides

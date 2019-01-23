@@ -20,7 +20,7 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
-import org.wordpress.android.modules.IO_DISPATCHER
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
@@ -52,13 +52,13 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val fetchSegmentPromptUseCase: FetchSegmentPromptUseCase,
     private val fetchVerticalsUseCase: FetchVerticalsUseCase,
     private val tracker: NewSiteCreationTracker,
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     private var fetchVerticalsJob: Job? = null
     override val coroutineContext: CoroutineContext
-        get() = IO + job
+        get() = bgDispatcher + job
     private var isStarted = false
 
     private val _uiState: MutableLiveData<VerticalsUiState> = MutableLiveData()

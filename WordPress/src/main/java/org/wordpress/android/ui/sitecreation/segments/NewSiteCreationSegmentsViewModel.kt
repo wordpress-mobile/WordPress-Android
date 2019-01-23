@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Loading
-import org.wordpress.android.modules.IO_DISPATCHER
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
@@ -41,11 +41,11 @@ class NewSiteCreationSegmentsViewModel
     private val fetchSegmentsUseCase: FetchSegmentsUseCase,
     private val tracker: NewSiteCreationTracker,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext,
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineContext
 ) : ViewModel(), CoroutineScope {
     private val fetchCategoriesJob: Job = Job()
     override val coroutineContext: CoroutineContext
-        get() = IO + fetchCategoriesJob
+        get() = bgDispatcher + fetchCategoriesJob
 
     private var isStarted = false
     /* Should be updated only within updateUIState(). */

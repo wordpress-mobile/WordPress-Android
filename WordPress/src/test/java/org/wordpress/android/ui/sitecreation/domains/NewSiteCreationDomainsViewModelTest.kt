@@ -60,7 +60,7 @@ class NewSiteCreationDomainsViewModelTest {
                 dispatcher = dispatcher,
                 fetchDomainsUseCase = fetchDomainsUseCase,
                 tracker = tracker,
-                IO = TEST_DISPATCHER,
+                bgDispatcher = TEST_DISPATCHER,
                 MAIN = TEST_DISPATCHER
         )
         viewModel.uiState.observeForever(uiStateObserver)
