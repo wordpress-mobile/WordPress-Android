@@ -19,6 +19,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.text.BreakIterator;
@@ -390,18 +391,19 @@ public class PostUtils {
         String secondPart =
                 String.format(context.getString(R.string.dialog_confirm_load_remote_post_body_2),
                         getFormattedDateForLastModified(
-                                DateTimeUtils.timestampFromIso8601Millis(post.getLastModified())),
+                                context, DateTimeUtils.timestampFromIso8601Millis(post.getLastModified())),
                         getFormattedDateForLastModified(
-                                DateTimeUtils.timestampFromIso8601Millis(post.getRemoteLastModified())));
+                                context, DateTimeUtils.timestampFromIso8601Millis(post.getRemoteLastModified())));
         return firstPart + secondPart;
     }
 
     /**
      * E.g. Jul 2, 2013 @ 21:57
      */
-    public static String getFormattedDateForLastModified(long ms) {
+    public static String getFormattedDateForLastModified(Context context, long ms) {
         Date date = new Date(ms);
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy '@' hh:mm a", Locale.ENGLISH);
+        SimpleDateFormat sdf =
+                new SimpleDateFormat("MMM d, yyyy '@' hh:mm a", LocaleManager.getSafeLocale(context));
 
         // The timezone on the website is at GMT
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
