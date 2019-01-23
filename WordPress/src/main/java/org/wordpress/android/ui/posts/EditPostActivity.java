@@ -3187,6 +3187,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onCapturePhotoClicked() {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+    }
+
+    @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
         mDroppedMediaUris = mediaUris;
         if (PermissionUtils

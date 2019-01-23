@@ -180,6 +180,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onSettingsClicked();
         void onAddMediaClicked();
         void onAddPhotoClicked();
+        void onCapturePhotoClicked();
         boolean onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId);
         void onMediaDeleted(String mediaId);

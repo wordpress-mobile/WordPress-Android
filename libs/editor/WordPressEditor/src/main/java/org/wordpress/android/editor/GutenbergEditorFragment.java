@@ -117,6 +117,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onUploadMediaButtonClicked() {
                         mEditorFragmentListener.onAddPhotoClicked();
                     }
+
+                    @Override
+                    public void onCapturePhotoButtonClicked() {
+                        mEditorFragmentListener.onCapturePhotoClicked();
+                    }
                 },
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
