@@ -190,6 +190,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         // The view is about to become visible
         if (contentLayout.visibility == View.GONE) {
             animateContentTransition()
+            view?.announceForAccessibility(getString(R.string.new_site_creation_preview_title)
+                    + getString(R.string.new_site_creation_site_preview_content_description))
         }
     }
 
