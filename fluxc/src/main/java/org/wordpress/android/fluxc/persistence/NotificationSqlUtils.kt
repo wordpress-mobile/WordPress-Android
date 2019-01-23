@@ -120,6 +120,39 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .map { it.build(formattableContentMapper) }
     }
 
+    fun hasUnreadNotificationsForSite(
+        site: SiteModel,
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null): Boolean {
+        val conditionClauseBuilder = WellSql.select(NotificationModelBuilder::class.java)
+                .where()
+                .equals(NotificationModelTable.LOCAL_SITE_ID, site.id)
+                .equals(NotificationModelTable.READ, 0)
+
+        if (filterByType != null || filterBySubtype != null) {
+            conditionClauseBuilder.beginGroup()
+
+            filterByType?.let {
+                conditionClauseBuilder.isIn(NotificationModelTable.TYPE, it)
+            }
+
+            if (filterByType != null && filterBySubtype != null) {
+                conditionClauseBuilder.or()
+            }
+
+            filterBySubtype?.let {
+                conditionClauseBuilder.isIn(NotificationModelTable.SUBTYPE, it)
+            }
+
+            conditionClauseBuilder.endGroup()
+        }
+
+        val unreadNotifs = conditionClauseBuilder.endWhere()
+                .asModel
+                .map { it.build(formattableContentMapper) }
+        return unreadNotifs.size > 0
+    }
+
     fun getNotificationByIdSet(idSet: NoteIdSet): NotificationModel? {
         val (id, remoteNoteId, localSiteId) = idSet
         return WellSql.select(NotificationModelBuilder::class.java)
