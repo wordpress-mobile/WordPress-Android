@@ -108,7 +108,7 @@ class LatestPostSummaryUseCase
 
     private fun onViewMore(params: ViewMoreParams) {
         analyticsTracker.track(STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED)
-        navigateTo(ViewPostDetailStats(params.postId, params.postTitle, params.postUrl))
+        navigateTo(ViewPostDetailStats(params.postId.toString(), params.postTitle, params.postUrl))
     }
 
     private fun onSharePost(params: SharePostParams) {

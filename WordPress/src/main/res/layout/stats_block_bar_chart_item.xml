@@ -17,22 +17,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-10dp"
+        android:layoutDirection="ltr"
         android:paddingEnd="15dp"
         android:paddingStart="25dp">
 
         <TextView
             android:id="@+id/label_start"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             style="@style/StatsGraphLabel"/>
-
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
         <TextView
             android:id="@+id/label_end"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
             style="@style/StatsGraphLabel"/>
     </LinearLayout>
 </LinearLayout>
