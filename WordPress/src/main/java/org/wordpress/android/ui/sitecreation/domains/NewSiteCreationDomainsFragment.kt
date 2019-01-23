@@ -17,7 +17,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
-import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.ui.sitecreation.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.SearchInputWithHeader
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -27,7 +26,7 @@ import javax.inject.Inject
 
 private const val KEY_LIST_STATE = "list_state"
 
-class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
+class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment() {
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var searchInputWithHeader: SearchInputWithHeader
