@@ -161,7 +161,7 @@ dependencies {
     implementation 'org.wordpress:graphview:3.4.0'
     implementation 'org.wordpress:persistentedittext:1.0.2'
     implementation 'org.wordpress:emailchecker2:1.1.0'
-    implementation 'com.squareup.okio:okio:1.13.0'
+    implementation 'com.squareup.okio:okio:1.14.0'
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.airbnb.android:lottie:2.0.0-rc2'
     implementation 'com.facebook.shimmer:shimmer:0.3.0'
@@ -185,7 +185,7 @@ dependencies {
     androidTestImplementation 'org.objenesis:objenesis:2.1'
     androidTestImplementation 'org.mockito:mockito-core:1.10.19'
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
-    androidTestImplementation 'com.squareup.okio:okio:1.13.0'
+    androidTestImplementation 'com.squareup.okio:okio:1.14.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
