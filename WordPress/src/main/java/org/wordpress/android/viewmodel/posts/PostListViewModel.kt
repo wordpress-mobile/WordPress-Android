@@ -736,8 +736,6 @@ class PostListViewModel @Inject constructor(
             originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
             _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
-        } else {
-            localPostIdForConflictResolutionDialog = null
         }
     }
 
