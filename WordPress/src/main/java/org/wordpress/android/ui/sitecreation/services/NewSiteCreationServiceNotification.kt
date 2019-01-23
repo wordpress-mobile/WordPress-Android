@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.creation
+package org.wordpress.android.ui.sitecreation.services
 
 import android.app.Notification
 import android.content.Context

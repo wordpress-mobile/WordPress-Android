@@ -21,10 +21,10 @@ import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
-import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
-import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
-import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState

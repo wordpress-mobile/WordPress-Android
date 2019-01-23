@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation
+package org.wordpress.android.ui.sitecreation.previews
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -25,14 +25,16 @@ import kotlinx.android.synthetic.main.new_site_creation_preview_screen.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewData
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
-import org.wordpress.android.ui.sitecreation.PreviewWebViewClient.PageFullyLoadedListener
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationService
-import org.wordpress.android.ui.sitecreation.creation.SitePreviewScreenListener
+import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
+import org.wordpress.android.ui.sitecreation.SiteCreationState
+import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewData
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
+import org.wordpress.android.ui.sitecreation.previews.PreviewWebViewClient.PageFullyLoadedListener
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationService
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.URLFilteredWebViewClient
@@ -41,7 +43,7 @@ import javax.inject.Inject
 private const val ARG_DATA = "arg_site_creation_data"
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
 
-class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>(),
+class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
         PageFullyLoadedListener {
     /**
      * We need to connect to the service, so the service knows when the app is in the background. The service
@@ -287,9 +289,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     }
 
     override fun onHelp() {
-        if (mSiteCreationListener != null) {
-            mSiteCreationListener.helpCategoryScreen()
-        }
+        viewModel.onHelpClicked()
     }
 
     override fun getScreenTitle(): String {
@@ -358,7 +358,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         ): NewSiteCreationPreviewFragment {
             val fragment = NewSiteCreationPreviewFragment()
             val bundle = Bundle()
-            bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
             bundle.putParcelable(ARG_DATA, siteCreationData)
             fragment.arguments = bundle
             return fragment

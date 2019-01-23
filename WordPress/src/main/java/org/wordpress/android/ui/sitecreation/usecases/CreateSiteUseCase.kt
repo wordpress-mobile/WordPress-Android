@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.creation
+package org.wordpress.android.ui.sitecreation.usecases
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceData
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume

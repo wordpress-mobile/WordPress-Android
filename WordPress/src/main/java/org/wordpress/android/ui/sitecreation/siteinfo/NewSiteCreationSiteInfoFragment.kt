@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation
+package org.wordpress.android.ui.sitecreation.siteinfo
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -18,10 +18,13 @@ import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
+import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
+import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel
 import javax.inject.Inject
 
-class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
+class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var nonNullActivity: FragmentActivity
@@ -154,7 +157,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
         fun newInstance(screenTitle: String): NewSiteCreationSiteInfoFragment {
             val fragment = NewSiteCreationSiteInfoFragment()
             val bundle = Bundle()
-            bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
             fragment.arguments = bundle
             return fragment
         }

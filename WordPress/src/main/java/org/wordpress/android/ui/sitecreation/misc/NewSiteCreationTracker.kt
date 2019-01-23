@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation
+package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper

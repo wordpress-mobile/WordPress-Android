@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.SKIP
 import org.wordpress.android.viewmodel.SingleLiveEvent

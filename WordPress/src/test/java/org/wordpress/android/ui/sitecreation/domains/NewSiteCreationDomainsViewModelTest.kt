@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode

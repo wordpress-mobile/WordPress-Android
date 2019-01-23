@@ -14,7 +14,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState
 
