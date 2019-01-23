@@ -656,7 +656,7 @@ class PostListViewModel @Inject constructor(
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 localPostIdForConflictResolutionDialog = null
                 // here load version from remote
-                loadPostFromRemote(it)
+                updateConflictedPostWithItsRemoteVersion(it)
             }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
@@ -725,7 +725,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    private fun loadPostFromRemote(localPostId: Int) {
+    private fun updateConflictedPostWithItsRemoteVersion(localPostId: Int) {
         // We need network connection to load a remote post
         if (!checkNetworkConnection()) {
             return
