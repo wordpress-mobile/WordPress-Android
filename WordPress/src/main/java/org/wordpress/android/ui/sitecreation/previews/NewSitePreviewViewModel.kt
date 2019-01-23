@@ -207,7 +207,7 @@ class NewSitePreviewViewModel @Inject constructor(
 
     private fun startPreLoadingWebView() {
         tracker.trackPreviewLoading()
-        launch(bgDispatcher) {
+        launch {
             /**
              * Keep showing the full screen loading screen for 1 more second or until the webview is loaded whichever
              * happens first. This will give us some more time to fetch the newly created site.
