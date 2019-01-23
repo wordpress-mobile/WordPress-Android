@@ -400,8 +400,8 @@ public class PostUtils {
     /**
      * E.g. Jul 2, 2013 @ 21:57
      */
-    public static String getFormattedDateForLastModified(Context context, long ms) {
-        Date date = new Date(ms);
+    public static String getFormattedDateForLastModified(Context context, long timeSinceLastModified) {
+        Date date = new Date(timeSinceLastModified);
         SimpleDateFormat sdf =
                 new SimpleDateFormat("MMM d, yyyy '@' hh:mm a", LocaleManager.getSafeLocale(context));
 
