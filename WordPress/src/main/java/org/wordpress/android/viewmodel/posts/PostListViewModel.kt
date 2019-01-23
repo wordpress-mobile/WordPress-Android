@@ -654,6 +654,7 @@ class PostListViewModel @Inject constructor(
                 publishPost(it)
             }
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
+                localPostIdForConflictResolutionDialog = null
                 // here load version from remote
                 loadPostFromRemote(it)
             }
