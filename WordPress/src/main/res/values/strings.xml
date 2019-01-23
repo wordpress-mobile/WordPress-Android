@@ -1395,7 +1395,7 @@
     <!-- Error Messages -->
     <!-- The following messages can\'t be factorized due to i18n -->
     <string name="error_refresh_posts">Posts couldn\'t be refreshed at this time</string>
-    <string name="error_refresh_pages">Pages couldn\'t be refreshed at this time</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">Pages couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
