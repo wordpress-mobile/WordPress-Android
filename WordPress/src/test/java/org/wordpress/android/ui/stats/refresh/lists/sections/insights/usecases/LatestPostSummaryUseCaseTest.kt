@@ -152,7 +152,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 assertThat(this).isInstanceOf(ViewPostDetailStats::class.java)
                 assertThat((this as ViewPostDetailStats).postUrl).isEqualTo(model.postURL)
                 assertThat(this.postTitle).isEqualTo(model.postTitle)
-                assertThat(this.postId).isEqualTo(model.postId)
+                assertThat(this.postId).isEqualTo(model.postId.toString())
             }
         }
     }
