@@ -123,7 +123,8 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     fun hasUnreadNotificationsForSite(
         site: SiteModel,
         filterByType: List<String>? = null,
-        filterBySubtype: List<String>? = null): Boolean {
+        filterBySubtype: List<String>? = null
+    ): Boolean {
         val conditionClauseBuilder = WellSql.select(NotificationModelBuilder::class.java)
                 .where()
                 .equals(NotificationModelTable.LOCAL_SITE_ID, site.id)
