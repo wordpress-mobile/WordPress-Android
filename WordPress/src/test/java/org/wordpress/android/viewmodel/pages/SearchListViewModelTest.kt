@@ -45,7 +45,7 @@ class SearchListViewModelTest {
 
     @Before
     fun setUp() {
-        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null)
+        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
         viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE)
         searchPages = MutableLiveData()
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)

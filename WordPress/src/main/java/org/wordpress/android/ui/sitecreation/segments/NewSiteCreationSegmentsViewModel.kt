@@ -121,7 +121,8 @@ class NewSiteCreationSegmentsViewModel
             )
         } else {
             tracker.trackSegmentsViewed()
-            updateUiStateToContent(ListState.Success(event.segmentList))
+            val segments = event.segmentList.filter { it.isMobileSegment }
+            updateUiStateToContent(ListState.Success(segments))
         }
     }
 
