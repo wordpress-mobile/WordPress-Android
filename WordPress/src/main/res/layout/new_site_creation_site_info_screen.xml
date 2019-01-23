@@ -91,7 +91,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/wp_grey"
-                    android:inputType="textMultiLine"
                     android:textColor="@color/wp_grey_dark">
                 </android.support.design.widget.TextInputEditText>
             </android.support.design.widget.TextInputLayout>
