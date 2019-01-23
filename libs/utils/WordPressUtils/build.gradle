@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
@@ -31,7 +31,7 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         versionName "1.22"

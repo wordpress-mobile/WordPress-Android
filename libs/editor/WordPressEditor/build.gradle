@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
@@ -26,7 +26,7 @@ apply from: 'https://gist.githubusercontent.com/hypest/f526fe0775dedce0ce0133f14
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         versionCode 13
@@ -66,12 +66,14 @@ dependencies {
     if (rootProject.ext.buildGutenbergFromSource) {
         implementation (project(':react-native-gutenberg-bridge')) {
             exclude group: 'com.squareup.okhttp3'
+            exclude group: 'com.google.code.findbugs'
         }
     } else {
         implementation (waitJitpack('com.github.wordpress-mobile', 'gutenberg-mobile', submoduleGitHash('../../../', 'libs/gutenberg-mobile'))) {
             // Inheriting RN's okhttp version can interfere with FluxC SSL handling
             // See https://github.com/wordpress-mobile/WordPress-Android/issues/9032 and https://github.com/wordpress-mobile/WordPress-FluxC-Android/issues/919
             exclude group: 'com.squareup.okhttp3'
+            exclude group: 'com.google.code.findbugs'
         }
     }
 
