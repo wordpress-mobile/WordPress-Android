@@ -1,11 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-04 13:58:45+0000
+Translation-Revision-Date: 2018-12-21 21:21:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">Pick an available address to let people find you on the web.</string>
+    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
+    <string name="giphy_picker_empty_search_list">No media matching your search</string>
+    <string name="giphy_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
+    <string name="giphy_picker_search_hint">Search Giphy</string>
+    <string name="photo_picker_giphy">Choose from Giphy</string>
+    <string name="stats_author_views_label">Views</string>
+    <string name="stats_author_label">Author</string>
+    <string name="stats_authors">Authors</string>
+    <string name="stats_search_terms_views_label">Views</string>
+    <string name="stats_search_terms_label">Search Term</string>
+    <string name="stats_search_terms">Search Terms</string>
+    <string name="stats_videos_views_label">Views</string>
+    <string name="stats_videos_title_label">Title</string>
+    <string name="stats_videos">Videos</string>
+    <string name="stats_country_views_label">Views</string>
+    <string name="stats_country_label">Country</string>
+    <string name="stats_countries">Countries</string>
+    <string name="stats_clicks_label">Clicks</string>
+    <string name="stats_clicks_link_label">Link</string>
+    <string name="stats_clicks">Clicks</string>
+    <string name="stats_referrer_views_label">Views</string>
+    <string name="stats_referrer_label">Referrer</string>
+    <string name="stats_referrers">Referrers</string>
+    <string name="stats_posts_and_pages">Posts and Pages</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">Path</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">View more</string>
+    <string name="stats_insights_share_post">Share post</string>
+    <string name="stats_insights_create_post">Create post</string>
+    <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far</string>
+    <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post</string>
+    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here</string>
+    <string name="stats_insights_tags_and_categories">Tags and Categories</string>
+    <string name="stats_insights_all_time_stats">All Time Stats</string>
+    <string name="stats_insights_most_popular_views_label">Views</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Day/Hour</string>
+    <string name="stats_insights_today_stats">Today\'s Stats</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">Followers</string>
+    <string name="stats_publicize_service_label">Service</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">Views</string>
+    <string name="stats_tags_and_categories_title_label">Title</string>
+    <string name="stats_posts_and_pages_views_label">Views</string>
+    <string name="stats_posts_and_pages_title_label">Title</string>
+    <string name="stats_comments_label">Comments</string>
+    <string name="stats_comments_title_label">Title</string>
+    <string name="stats_comments_author_label">Author</string>
+    <string name="stats_comments_posts_and_pages">Posts and pages</string>
+    <string name="stats_comments_authors">Authors</string>
+    <string name="stats_follower_since_label">Since</string>
+    <string name="stats_follower_label">Follower</string>
+    <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
+    <string name="stats_followers_email">E-mail</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">Manage insights</string>
+    <string name="stats_empty_insights_description">Customise your insights and get the low-down on your site’s performance</string>
+    <string name="stats_empty_insights_title">No insights added yet</string>
+    <string name="stats_no_data_yet">No data yet</string>
     <string name="preference_experimental">*EXPERIMENTAL*</string>
     <string name="site_settings_enable_gutenberg_summary">This is still an experimental version of Gutenberg</string>
     <string name="site_settings_enable_gutenberg">Enable Gutenberg</string>
@@ -30,7 +96,6 @@ Language: en_GB
     <string name="dialog_gutenberg_compatibility_message">We are working on the brand new WordPress editor. You can still edit this post, but we recommend previewing it before publishing.</string>
     <string name="dialog_gutenberg_compatibility_title">Before you continue</string>
     <string name="media_space_used">%1$s used</string>
-    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
     <string name="history_loading_revision">Loading revision</string>
     <string name="history_loaded_revision">Revision loaded</string>
@@ -482,7 +547,6 @@ Language: en_GB
     <string name="site_creation_title_hint">Site title</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="site_creation_domain_keywords_hint">Type a keyword for more ideas</string>
-    <string name="site_creation_label_domain_selection">Pick an available \"yourname.wordpress.com\" address to let people find you on the web.</string>
     <string name="site_creation_label_domain_selection_title">Step 4 of 4</string>
     <string name="site_creation_label_site_details">Tell us more about what you\'re creating. What\'s the title and tagline?</string>
     <string name="site_creation_label_site_details_title">Step 3 of 4</string>
@@ -1434,8 +1498,8 @@ Language: en_GB
     <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
-    <string name="stats_insights_popular">Most popular day and hour</string>
     <string name="stats_insights_today">Today\'s Stats</string>
+    <string name="stats_insights_popular">Most Popular Day and Hour</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights">Insights</string>
     <string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>

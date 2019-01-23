@@ -104,14 +104,21 @@ public class GravatarApi {
 
                     @Override
                     public void onFailure(okhttp3.Call call, final IOException e) {
-                        Map<String, Object> properties = new HashMap<>();
-                        properties.put("network_exception_class", e != null ? e.getClass().getCanonicalName() : "null");
-                        properties.put("network_exception_message", e != null ? e.getMessage() : "null");
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
-                        CrashlyticsUtils
-                                .logException(e, AppLog.T.API, "Network call failure trying to upload Gravatar!");
-                        AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + (e != null
-                                ? e.getMessage() : "null"));
+                        String exceptionClass = e != null ? e.getClass().getCanonicalName() : "null";
+                        String exceptionMessage = e != null ? e.getMessage() : "null";
+
+                        AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!"
+                                               + exceptionMessage);
+
+                        // Don't track exceptions caused by poor internet connectivity
+                        if (!(e instanceof java.net.UnknownHostException)) {
+                            Map<String, Object> properties = new HashMap<>();
+                            properties.put("network_exception_class", exceptionClass);
+                            properties.put("network_exception_message", exceptionMessage);
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
+                            CrashlyticsUtils
+                                    .logException(e, AppLog.T.API, "Network call failure trying to upload Gravatar!");
+                        }
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override

@@ -3,14 +3,13 @@ package org.wordpress.android.ui.sitecreation.segments
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
@@ -18,6 +17,8 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
+import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
@@ -28,15 +29,17 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
-private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000
+private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
+private const val ERROR_CONTEXT = "segments"
 
 class NewSiteCreationSegmentsViewModel
 @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchSegmentsUseCase: FetchSegmentsUseCase,
+    private val tracker: NewSiteCreationTracker,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -60,7 +63,6 @@ class NewSiteCreationSegmentsViewModel
     fun start() {
         if (isStarted) return
         isStarted = true
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_CATEGORY_VIEWED)
         fetchCategories()
     }
 
@@ -95,6 +97,7 @@ class NewSiteCreationSegmentsViewModel
             launch {
                 // We show the loading screen for a bit so the user has some feedback when they press the retry button
                 delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
+                tracker.trackErrorShown(ERROR_CONTEXT, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
                 withContext(MAIN) {
                     updateUiStateToError(
                             ListState.Error(listState, null),
@@ -107,12 +110,19 @@ class NewSiteCreationSegmentsViewModel
 
     private fun onCategoriesFetched(event: OnSegmentsFetched) {
         if (event.isError) {
+            tracker.trackErrorShown(
+                    ERROR_CONTEXT,
+                    event.error.type.toString(),
+                    event.error.message
+            )
             updateUiStateToError(
                     ListState.Error(listState, event.error.message),
                     SegmentsErrorUiState.SegmentsGenericErrorUiState
             )
         } else {
-            updateUiStateToContent(ListState.Success(event.segmentList))
+            tracker.trackSegmentsViewed()
+            val segments = event.segmentList.filter { it.isMobileSegment }
+            updateUiStateToContent(ListState.Success(segments))
         }
     }
 
@@ -124,11 +134,10 @@ class NewSiteCreationSegmentsViewModel
         _onHelpClicked.call()
     }
 
-    private fun onSegmentSelected(segmentId: Long) {
+    private fun onSegmentSelected(segmentTitle: String, segmentId: Long) {
+        tracker.trackSegmentSelected(segmentTitle, segmentId)
         _segmentSelected.value = segmentId
     }
-
-    // TODO analytics
 
     private fun updateUiStateToError(state: ListState<VerticalSegmentModel>, segmentError: SegmentsErrorUiState) {
         listState = state
@@ -181,7 +190,7 @@ class NewSiteCreationSegmentsViewModel
                     model.iconColor,
                     showDivider = !isLastItem
             )
-            segment.onItemTapped = { onSegmentSelected(model.segmentId) }
+            segment.onItemTapped = { onSegmentSelected(model.title, model.segmentId) }
             items.add(segment)
         }
     }

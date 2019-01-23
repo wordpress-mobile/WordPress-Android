@@ -3,11 +3,11 @@ package org.wordpress.android.ui.sitecreation
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -29,22 +29,22 @@ import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceStat
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
-private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000
-private const val DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER = 1000
+private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
+private const val DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER = 1000L
+private const val ERROR_CONTEXT = "site_preview"
 
 class NewSitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
     private val fetchWpComSiteUseCase: FetchWpComSiteUseCase,
     private val networkUtils: NetworkUtilsWrapper,
+    private val tracker: NewSiteCreationTracker,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -52,6 +52,7 @@ class NewSitePreviewViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = IO + job
     private var isStarted = false
+    private var webviewFullyLoadedTracked = false
 
     private lateinit var siteCreationState: SiteCreationState
     private lateinit var urlWithoutScheme: String
@@ -79,9 +80,6 @@ class NewSitePreviewViewModel @Inject constructor(
 
     private val _onOkButtonClicked = SingleLiveEvent<CreateSiteState>()
     val onOkButtonClicked: LiveData<CreateSiteState> = _onOkButtonClicked
-
-    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
-    val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
 
     init {
         dispatcher.register(fetchWpComSiteUseCase)
@@ -136,6 +134,7 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     fun onOkButtonClicked() {
+        tracker.trackCreationCompleted()
         _onOkButtonClicked.value = createSiteState
     }
 
@@ -144,6 +143,7 @@ class NewSitePreviewViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
+            tracker.trackErrorShown(ERROR_CONTEXT, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             withContext(MAIN) {
                 updateUiState(SitePreviewConnectionErrorUiState)
             }
@@ -158,6 +158,7 @@ class NewSitePreviewViewModel @Inject constructor(
      * to the EventBus from the ViewModel and we have to use `sticky` events instead.
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND, sticky = true)
+    @Suppress("unused")
     fun onSiteCreationServiceStateUpdated(event: NewSiteCreationServiceState) {
         if (lastReceivedServiceState == event) return // filter out events which we've already received
         lastReceivedServiceState = event
@@ -172,6 +173,11 @@ class NewSitePreviewViewModel @Inject constructor(
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
+                tracker.trackErrorShown(
+                        ERROR_CONTEXT,
+                        NewSiteCreationErrorType.UNKNOWN,
+                        "NewSiteCreation service failed"
+                )
                 updateUiStateAsync(SitePreviewGenericErrorUiState)
             }
         }
@@ -195,6 +201,7 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     private fun startPreLoadingWebView() {
+        tracker.trackPreviewLoading()
         launch(IO) {
             /**
              * Keep showing the full screen loading screen for 1 more second or until the webview is loaded whichever
@@ -207,6 +214,7 @@ class NewSitePreviewViewModel @Inject constructor(
              */
             withContext(MAIN) {
                 if (uiState.value !is SitePreviewContentUiState) {
+                    tracker.trackPreviewWebviewShown()
                     updateUiState(SitePreviewLoadingShimmerState(createSitePreviewData()))
                 }
             }
@@ -217,13 +225,19 @@ class NewSitePreviewViewModel @Inject constructor(
 
     fun onUrlLoaded() {
         _hideGetStartedBar.call()
+        if (!webviewFullyLoadedTracked) {
+            webviewFullyLoadedTracked = true
+            tracker.trackPreviewWebviewFullyLoaded()
+        }
+        if (uiState.value is SitePreviewFullscreenProgressUiState) {
+            tracker.trackPreviewWebviewShown()
+        }
         /**
          * Update the ui state if the loading or error screen is being shown.
          * In other words don't update it after a configuration change.
          */
         if (uiState.value !is SitePreviewContentUiState) {
             updateUiState(SitePreviewContentUiState(createSitePreviewData()))
-            _toastMessage.value = ToastMessageHolder(R.string.preview_screen_links_disabled, Duration.SHORT)
         }
     }
 

@@ -5,19 +5,21 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.IO_DISPATCHER
+import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.SKIP
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
 class NewSiteCreationSiteInfoViewModel @Inject constructor(
+    private val tracker: NewSiteCreationTracker,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext
 ) : ViewModel(), CoroutineScope {
     private var currentUiState: SiteInfoUiState by Delegates.observable(
@@ -58,6 +60,7 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
             return
         }
         isStarted = true
+        tracker.trackBasicInformationViewed()
         // Show keyboard
         _onTitleInputFocusRequested.call()
     }
@@ -80,8 +83,14 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
 
     fun onSkipNextClicked() {
         when (currentUiState.skipButtonState) {
-            SKIP -> _skipBtnClicked.call()
-            NEXT -> _nextBtnClicked.value = currentUiState
+            SKIP -> {
+                tracker.trackBasicInformationSkipped()
+                _skipBtnClicked.call()
+            }
+            NEXT -> {
+                tracker.trackBasicInformationCompleted(currentUiState.siteTitle, currentUiState.tagLine)
+                _nextBtnClicked.value = currentUiState
+            }
         }
     }
 

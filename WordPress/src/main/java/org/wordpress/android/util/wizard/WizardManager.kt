@@ -4,13 +4,15 @@ import android.arch.lifecycle.LiveData
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
 class WizardManager<T : WizardStep>(
-    private val steps: List<T>
+    private val steps: List<T>,
+    private var currentStepIndex: Int = -1
 ) {
     val stepsCount = steps.size
+    val currentStep: Int
+        get() = currentStepIndex
 
     private val _navigatorLiveData = SingleLiveEvent<T>()
     val navigatorLiveData: LiveData<T> = _navigatorLiveData
-    private var currentStepIndex: Int = -1
 
     fun showNextStep() {
         if (isIndexValid(++currentStepIndex)) {

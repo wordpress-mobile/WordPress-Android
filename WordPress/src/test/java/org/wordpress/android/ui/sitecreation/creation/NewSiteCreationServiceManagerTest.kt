@@ -1,10 +1,11 @@
 package org.wordpress.android.ui.sitecreation.creation
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -19,7 +20,6 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.GENERIC_ERRO
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_EXISTS
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceManager.NewSiteCreationServiceManagerListener
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
@@ -42,13 +42,13 @@ private val CREATE_SITE_STATE = NewSiteCreationServiceState(CREATE_SITE)
 private val SUCCESS_STATE = NewSiteCreationServiceState(SUCCESS, NEW_SITE_REMOTE_ID)
 private val FAILURE_STATE = NewSiteCreationServiceState(FAILURE)
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class NewSiteCreationServiceManagerTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var useCase: CreateSiteUseCase
-    @Mock lateinit var tracker: NewSiteCreationTracker
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var serviceListener: NewSiteCreationServiceManagerListener
 
@@ -60,7 +60,7 @@ class NewSiteCreationServiceManagerTest {
 
     @Before
     fun setUp() {
-        manager = NewSiteCreationServiceManager(useCase, dispatcher, tracker, TEST_DISPATCHER)
+        manager = NewSiteCreationServiceManager(useCase, dispatcher, TEST_DISPATCHER)
         successEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
         siteExistsErrorEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
         genericErrorEvent.error = NewSiteError(GENERIC_ERROR, "")
