@@ -750,7 +750,6 @@ class PostListViewModel @Inject constructor(
             return
         }
 
-        localPostIdForConflictResolutionDialog = null
         // keep a copy for undoing
         originalPostCopyForConflictUndo = post.clone()
 
