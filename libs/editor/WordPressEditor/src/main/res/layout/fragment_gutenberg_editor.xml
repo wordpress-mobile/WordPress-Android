@@ -12,23 +12,4 @@
         android:layout_height="match_parent"
         android:hint="@string/editor_content_hint"
         />
-
-    <org.wordpress.aztec.source.SourceViewEditText
-        android:id="@+id/source"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@null"
-        android:fontFamily="monospace"
-        android:gravity="top|start"
-        android:imeOptions="flagNoExtractUi"
-        android:inputType="textNoSuggestions|textMultiLine"
-        android:paddingEnd="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="16dp"
-        android:scrollbars="vertical"
-        android:textColorHint="@color/hint_text"
-        android:textSize="14sp"
-        android:visibility="gone"/>
 </LinearLayout>

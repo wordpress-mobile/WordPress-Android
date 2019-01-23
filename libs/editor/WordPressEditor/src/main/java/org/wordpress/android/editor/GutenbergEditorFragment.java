@@ -28,7 +28,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
-import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
@@ -46,8 +45,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
     private boolean mHtmlModeEnabled;
-
-    private SourceViewEditText mSource;
 
     private Handler mInvalidateOptionsHandler;
     private Runnable mInvalidateOptionsRunnable;
@@ -110,18 +107,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 BuildConfig.DEBUG,
                 BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
                 mIsNewPost);
-        mSource = view.findViewById(R.id.source);
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
-
-        mSource.setOnTouchListener(this);
-
-
-        // We need to intercept the "Enter" key on the title field, and replace it with a space instead
-        mSource.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
         setHasOptionsMenu(true);
 
@@ -260,7 +250,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             title = "";
         }
 
-        if (!mWPAndroidGlueCode.hasReactRootView() || mSource == null) {
+        if (!mWPAndroidGlueCode.hasReactRootView()) {
             return;
         }
 
@@ -273,21 +263,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             text = "";
         }
 
-        if (!mWPAndroidGlueCode.hasReactRootView() || mSource == null) {
+        if (!mWPAndroidGlueCode.hasReactRootView()) {
             return;
         }
 
         String postContent = removeVisualEditorProgressTag(text.toString());
-        if (contentContainsGutenbergBlocks(postContent)) {
-            mSource.setCalypsoMode(false);
-        } else {
-            mSource.setCalypsoMode(true);
-        }
-
-        // Initialize both editors (visual, source) with the same content. Need to do that so the starting point used in
-        //  their content diffing algorithm is the same. That's assumed by the Toolbar's mode-switching logic too.
-        mSource.displayStyledAndFormattedHtml(postContent);
-
         mWPAndroidGlueCode.setContent(null, postContent);
     }
 
@@ -542,16 +522,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
         }
 
-        if (mSource.isFocused()) {
-            ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
-        } else {
-            getActivity().runOnUiThread(new Runnable() {
+
+        getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mEditorFragmentListener.onAddMediaClicked();
                 }
             });
-        }
 
         return true;
     }
