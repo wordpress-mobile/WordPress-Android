@@ -1,11 +1,15 @@
 package org.wordpress.android.editor;
 
+import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -24,11 +28,8 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.*;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
@@ -46,6 +47,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
 
     private static boolean mIsToolbarExpanded = false;
+
+    private static String[] sPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
 
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
@@ -120,6 +124,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override
                     public void onCapturePhotoButtonClicked() {
+                        if (!hasPermissions(sPermissions)) {
+                            requestCameraandStoragePermissions();
+                            return;
+                        }
+
                         mEditorFragmentListener.onCapturePhotoClicked();
                     }
                 },
@@ -187,6 +196,35 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return view;
+    }
+
+    private void requestCameraandStoragePermissions() {
+        requestPermissions(sPermissions, CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
+    }
+
+    public boolean hasPermissions(String... permissions) {
+        if (getActivity() != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
+            if (hasPermissions(permissions)) {
+                mEditorFragmentListener.onCapturePhotoClicked();
+            }
+            else {
+                requestCameraandStoragePermissions();
+            }
+        }
     }
 
     @Override
