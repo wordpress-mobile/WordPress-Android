@@ -761,7 +761,6 @@ class PostListViewModel @Inject constructor(
         var isUndoed = false
         val undoAction = {
             isUndoed = true
-            // no op, fake
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
             originalPostCopyForConflictUndo = null
         }
