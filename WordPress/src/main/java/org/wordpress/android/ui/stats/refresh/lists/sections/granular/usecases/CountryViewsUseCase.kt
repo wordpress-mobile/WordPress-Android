@@ -50,7 +50,11 @@ constructor(
         )
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<CountryViewsModel> {
+    override suspend fun fetchRemoteData(
+        selectedDate: Date,
+        site: SiteModel,
+        forced: Boolean
+    ): State<CountryViewsModel> {
         val response = store.fetchCountryViews(
                 site,
                 PAGE_SIZE,
@@ -106,7 +110,12 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_COUNTRIES_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewCountries(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()))
+        navigateTo(
+                ViewCountries(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()
+                )
+        )
     }
 
     class CountryViewsUseCaseFactory

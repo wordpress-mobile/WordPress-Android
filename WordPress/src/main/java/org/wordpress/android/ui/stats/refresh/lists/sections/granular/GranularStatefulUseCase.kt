@@ -29,7 +29,7 @@ abstract class GranularStatefulUseCase<DOMAIN_MODEL, UI_STATE>(
         return selectedDateProvider.getSelectedDate(statsGranularity).let { date ->
             when {
                 date.error -> State.Error("Missing date")
-                date.date != null ->fetchRemoteData(date.date, site, forced)
+                date.date != null -> fetchRemoteData(date.date, site, forced)
                 date.loading -> State.Loading()
                 else -> State.Loading()
             }
