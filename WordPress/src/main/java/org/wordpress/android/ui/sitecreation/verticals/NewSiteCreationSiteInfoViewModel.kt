@@ -7,12 +7,8 @@ import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.R
 import org.wordpress.android.modules.IO_DISPATCHER
-import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.SKIP
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -21,11 +17,8 @@ import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.properties.Delegates
 
-private const val REQUEST_INPUT_FOCUS_DELAY: Long = 500L
-
 class NewSiteCreationSiteInfoViewModel @Inject constructor(
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
+    @Named(IO_DISPATCHER) private val IO: CoroutineContext
 ) : ViewModel(), CoroutineScope {
     private var currentUiState: SiteInfoUiState by Delegates.observable(
             SiteInfoUiState(
@@ -65,7 +58,8 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
             return
         }
         isStarted = true
-        requestTitleInputFocus()
+        // Show keyboard
+        _onTitleInputFocusRequested.call()
     }
 
     fun onHelpClicked() {

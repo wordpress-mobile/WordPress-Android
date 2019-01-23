@@ -10,9 +10,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.ui.utils.getTextOfUiString
+import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ActivityUtils
 
-class SearchInputWithHeader(rootView: View, onClear: () -> Unit) {
+class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, onClear: () -> Unit) {
     private val headerLayout = rootView.findViewById<ViewGroup>(R.id.header_layout)
     private val headerTitle = rootView.findViewById<TextView>(R.id.title)
     private val headerSubtitle = rootView.findViewById<TextView>(R.id.subtitle)
@@ -63,19 +64,20 @@ class SearchInputWithHeader(rootView: View, onClear: () -> Unit) {
             headerLayout.animate().translationY(0f)
         }
         uiState?.let {
-            updateVisibility(headerLayout, true)
-            headerTitle.text = getTextOfUiString(context, uiState.title)
-            headerSubtitle.text = getTextOfUiString(context, uiState.subtitle)
-        } ?: updateVisibility(headerLayout, false)
+            uiHelpers.updateVisibility(headerLayout, true)
+            headerTitle.text = uiHelpers.getTextOfUiString(context, uiState.title)
+            headerSubtitle.text = uiHelpers.getTextOfUiString(context, uiState.subtitle)
+        } ?: uiHelpers.updateVisibility(headerLayout, false)
     }
 
     fun updateSearchInput(context: Context, uiState: SiteCreationSearchInputUiState) {
-        searchInput.hint = getTextOfUiString(context, uiState.hint)
-        updateVisibility(progressBar, uiState.showProgress)
-        updateVisibility(clearAllButton, uiState.showClearButton)
+        searchInput.hint = uiHelpers.getTextOfUiString(context, uiState.hint)
+        uiHelpers.updateVisibility(progressBar, uiState.showProgress)
+        uiHelpers.updateVisibility(clearAllButton, uiState.showClearButton)
     }
 
-    private fun updateVisibility(view: View, visible: Boolean) {
-        view.visibility = if (visible) View.VISIBLE else View.GONE
+    fun requestInputFocusAndShowKeyboard() {
+        searchInput.requestFocus()
+        ActivityUtils.showKeyboard(searchInput)
     }
 }
