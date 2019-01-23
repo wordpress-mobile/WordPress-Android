@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.AppCompatButton
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.ViewGroup
 import org.wordpress.android.R
@@ -66,7 +67,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     override fun setupContent(rootView: ViewGroup) {
         initSkipNextButton(rootView)
         siteTitleEditText = rootView.findViewById(R.id.site_info_site_title)
-        tagLineEditText = rootView.findViewById(R.id.site_info_tag_line)
+        initTaglineEditText(rootView)
         initViewModel()
         initTextWatchers()
     }
@@ -74,6 +75,15 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     private fun initSkipNextButton(rootView: ViewGroup) {
         skipNextButton = rootView.findViewById(R.id.site_info_skip_or_next_button)
         skipNextButton.setOnClickListener { viewModel.onSkipNextClicked() }
+    }
+
+    private fun initTaglineEditText(rootView: ViewGroup) {
+        tagLineEditText = rootView.findViewById(R.id.site_info_tag_line)
+        // Attributes must be assigned in this order or else behavior will change.
+        tagLineEditText.inputType = InputType.TYPE_CLASS_TEXT
+        tagLineEditText.setSingleLine(true)
+        tagLineEditText.maxLines = Integer.MAX_VALUE
+        tagLineEditText.setHorizontallyScrolling(false)
     }
 
     private fun initTextWatchers() {
