@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:aevTitle="@string/stats_loading_error"
-        app:aevButton="@string/retry"
-        tools:visibility="visible"/>
+    <include layout="@layout/stats_error_view" />
+
+    <include layout="@layout/stats_empty_view" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
