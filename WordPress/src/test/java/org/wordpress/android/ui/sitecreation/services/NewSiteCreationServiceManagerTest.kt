@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.creation
+package org.wordpress.android.ui.sitecreation.services
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.argumentCaptor
@@ -20,11 +20,12 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.GENERIC_ERRO
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_EXISTS
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceManager.NewSiteCreationServiceManagerListener
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceManager.NewSiteCreationServiceManagerListener
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
+import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 
 private const val LANGUAGE_ID = "lang_id"
 private const val NEW_SITE_REMOTE_ID = 1234L

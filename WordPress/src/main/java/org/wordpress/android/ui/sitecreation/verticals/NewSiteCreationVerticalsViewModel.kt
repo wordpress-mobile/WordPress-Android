@@ -22,10 +22,10 @@ import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
-import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
-import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
-import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState

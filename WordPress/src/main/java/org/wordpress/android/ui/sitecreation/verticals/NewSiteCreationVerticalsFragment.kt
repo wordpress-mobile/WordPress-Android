@@ -19,9 +19,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
-import org.wordpress.android.ui.sitecreation.OnHelpClickedListener
-import org.wordpress.android.ui.sitecreation.OnSkipClickedListener
-import org.wordpress.android.ui.sitecreation.SearchInputWithHeader
+import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
+import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
+import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState

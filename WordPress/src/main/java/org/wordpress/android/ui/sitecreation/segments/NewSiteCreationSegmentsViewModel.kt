@@ -17,8 +17,8 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
-import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
