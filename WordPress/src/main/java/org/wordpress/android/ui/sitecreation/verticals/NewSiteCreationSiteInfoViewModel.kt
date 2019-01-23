@@ -87,7 +87,7 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
     fun onSkipNextClicked() {
         when (currentUiState.skipButtonState) {
             SKIP -> _skipBtnClicked.call()
-            NEXT -> _nextBtnClicked.value = removeNewlinesFromTagline()
+            NEXT -> _nextBtnClicked.value = currentUiState
         }
     }
 
@@ -98,10 +98,6 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
                 _onTitleInputFocusRequested.call()
             }
         }
-    }
-
-    private fun removeNewlinesFromTagline(): SiteInfoUiState {
-        return SiteInfoUiState(currentUiState.siteTitle, currentUiState.tagLine.replace("\n", ""))
     }
 
     data class SiteInfoUiState(
