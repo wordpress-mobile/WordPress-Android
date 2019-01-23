@@ -6,12 +6,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Named
-import kotlin.coroutines.CoroutineContext
 
 const val UI_SCOPE = "UI_SCOPE"
 const val DEFAULT_SCOPE = "DEFAULT_SCOPE"
-const val MAIN_DISPATCHER = "MAIN"
-const val IO_DISPATCHER = "IO"
 const val UI_THREAD = "UI_THREAD"
 const val BG_THREAD = "BG_THREAD"
 
@@ -33,18 +30,6 @@ class ThreadModule {
     @Named(DEFAULT_SCOPE)
     fun provideBackgroundScope(): CoroutineScope {
         return CoroutineScope(Dispatchers.Default)
-    }
-
-    @Provides
-    @Named(MAIN_DISPATCHER)
-    fun provideMainDispatcher(): CoroutineContext {
-        return Dispatchers.Main
-    }
-
-    @Provides
-    @Named(IO_DISPATCHER)
-    fun provideIODispatcher(): CoroutineContext {
-        return Dispatchers.IO
     }
 
     @Provides

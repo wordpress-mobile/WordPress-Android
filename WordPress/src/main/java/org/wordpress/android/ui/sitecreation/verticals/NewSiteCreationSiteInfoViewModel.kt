@@ -5,10 +5,12 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
-import org.wordpress.android.modules.IO_DISPATCHER
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.SKIP
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -18,7 +20,8 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
 class NewSiteCreationSiteInfoViewModel @Inject constructor(
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext
+    private val tracker: NewSiteCreationTracker,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private var currentUiState: SiteInfoUiState by Delegates.observable(
             SiteInfoUiState(
@@ -31,7 +34,7 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
 
     private val job = Job()
     override val coroutineContext: CoroutineContext
-        get() = IO + job
+        get() = bgDispatcher + job
     private var isStarted = false
 
     private val _uiState: MutableLiveData<SiteInfoUiState> = MutableLiveData()
@@ -58,6 +61,7 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
             return
         }
         isStarted = true
+        tracker.trackBasicInformationViewed()
         // Show keyboard
         _onTitleInputFocusRequested.call()
     }
@@ -80,8 +84,14 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
 
     fun onSkipNextClicked() {
         when (currentUiState.skipButtonState) {
-            SKIP -> _skipBtnClicked.call()
-            NEXT -> _nextBtnClicked.value = currentUiState
+            SKIP -> {
+                tracker.trackBasicInformationSkipped()
+                _skipBtnClicked.call()
+            }
+            NEXT -> {
+                tracker.trackBasicInformationCompleted(currentUiState.siteTitle, currentUiState.tagLine)
+                _nextBtnClicked.value = currentUiState
+            }
         }
     }
 

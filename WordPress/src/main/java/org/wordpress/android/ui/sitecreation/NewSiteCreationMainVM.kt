@@ -12,7 +12,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -44,7 +45,7 @@ data class SiteCreationState(
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
-class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
+class NewSiteCreationMainVM @Inject constructor(private val tracker: NewSiteCreationTracker) : ViewModel() {
     private var isStarted = false
     private lateinit var wizardManager: WizardManager<SiteCreationStep>
     private lateinit var siteCreationState: SiteCreationState
@@ -63,6 +64,7 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
         if (savedInstanceState == null) {
+            tracker.trackSiteCreationAccessed()
             siteCreationState = SiteCreationState()
             wizardManager = WizardManager(SITE_CREATION_STEPS)
         } else {

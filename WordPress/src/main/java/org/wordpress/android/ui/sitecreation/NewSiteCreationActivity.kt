@@ -11,27 +11,31 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState.SiteCreationCompleted
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState.SiteNotCreated
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteNotCreated
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
-import org.wordpress.android.ui.sitecreation.creation.SitePreviewScreenListener
+import org.wordpress.android.ui.sitecreation.previews.NewSiteCreationPreviewFragment
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsFragment
+import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
+import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
+import org.wordpress.android.ui.sitecreation.siteinfo.NewSiteCreationSiteInfoFragment
+import org.wordpress.android.ui.sitecreation.siteinfo.SiteInfoScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
 import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -51,14 +55,10 @@ class NewSiteCreationActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-
         setContentView(R.layout.new_site_creation_activity)
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(NewSiteCreationMainVM::class.java)
         mainViewModel.start(savedInstanceState)
 
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED)
-        }
         observeVMState()
     }
 

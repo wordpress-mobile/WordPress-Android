@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentPromptFetched
 import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
 import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
@@ -120,6 +121,7 @@ class NewSiteCreationVerticalsViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchVerticalsUseCase: FetchVerticalsUseCase
     @Mock lateinit var fetchSegmentsPromptUseCase: FetchSegmentPromptUseCase
+    @Mock lateinit var tracker: NewSiteCreationTracker
     @Mock private lateinit var uiStateObserver: Observer<VerticalsUiState>
     @Mock private lateinit var clearBtnObserver: Observer<Unit>
     @Mock private lateinit var verticalSelectedObserver: Observer<String?>
@@ -137,6 +139,7 @@ class NewSiteCreationVerticalsViewModelTest {
                 dispatcher,
                 fetchSegmentsPromptUseCase,
                 fetchVerticalsUseCase,
+                tracker,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )

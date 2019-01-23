@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentsError
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
@@ -45,20 +46,22 @@ private const val ERROR_MESSAGE = "dummy_error_message"
 
 private val FIRST_MODEL =
         VerticalSegmentModel(
-                FIRST_MODEL_TITLE,
-                FIRST_MODEL_SUBTITLE,
-                FIRST_MODEL_ICON_URL,
-                FIRST_MODEL_ICON_COLOR,
-                FIRST_MODEL_SEGMENT_ID
+                title = FIRST_MODEL_TITLE,
+                subtitle = FIRST_MODEL_SUBTITLE,
+                iconUrl = FIRST_MODEL_ICON_URL,
+                iconColor = FIRST_MODEL_ICON_COLOR,
+                segmentId = FIRST_MODEL_SEGMENT_ID,
+                isMobileSegment = true
         )
 
 private val SECOND_MODEL =
         VerticalSegmentModel(
-                SECOND_MODEL_TITLE,
-                SECOND_MODEL_SUBTITLE,
-                SECOND_MODEL_ICON_URL,
-                SECOND_MODEL_ICON_COLOR,
-                SECOND_MODEL_SEGMENT_ID
+                title = SECOND_MODEL_TITLE,
+                subtitle = SECOND_MODEL_SUBTITLE,
+                iconUrl = SECOND_MODEL_ICON_URL,
+                iconColor = SECOND_MODEL_ICON_COLOR,
+                segmentId = SECOND_MODEL_SEGMENT_ID,
+                isMobileSegment = true
         )
 
 private val PROGRESS_STATE = SegmentsContentUiState(listOf(HeaderUiState, ProgressUiState))
@@ -106,6 +109,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
+    @Mock private lateinit var tracker: NewSiteCreationTracker
     @Mock private lateinit var uiStateObserver: Observer<SegmentsUiState>
     @Mock private lateinit var segmentSelectedObserver: Observer<Long>
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
@@ -116,6 +120,7 @@ class NewSiteCreationSegmentsViewModelTest {
                 networkUtils,
                 dispatcher,
                 fetchSegmentsUseCase,
+                tracker,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )

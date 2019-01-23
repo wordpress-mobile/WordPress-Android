@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -20,10 +21,12 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
-import org.wordpress.android.modules.IO_DISPATCHER
-import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
-import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
@@ -41,19 +44,22 @@ import kotlin.coroutines.CoroutineContext
 
 private const val THROTTLE_DELAY = 500L
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
+private const val ERROR_CONTEXT_LIST_ITEM = "verticals_list_item"
+private const val ERROR_CONTEXT_FULLSCREEN = "verticals_fullscreen"
 
 class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchSegmentPromptUseCase: FetchSegmentPromptUseCase,
     private val fetchVerticalsUseCase: FetchVerticalsUseCase,
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
+    private val tracker: NewSiteCreationTracker,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     private var fetchVerticalsJob: Job? = null
     override val coroutineContext: CoroutineContext
-        get() = IO + job
+        get() = bgDispatcher + job
     private var isStarted = false
 
     private val _uiState: MutableLiveData<VerticalsUiState> = MutableLiveData()
@@ -105,7 +111,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             updateUiState(VerticalsFullscreenProgressUiState)
             launch {
                 val onSegmentsPromptFetchedEvent = fetchSegmentPromptUseCase.fetchSegmentsPrompt(segmentId!!)
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     onSegmentsPromptFetched(onSegmentsPromptFetchedEvent)
                 }
             }
@@ -119,7 +125,8 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            withContext(MAIN) {
+            tracker.trackErrorShown(ERROR_CONTEXT_FULLSCREEN, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
+            withContext(mainDispatcher) {
                 updateUiState(VerticalsFullscreenErrorUiState.VerticalsConnectionErrorUiState)
             }
         }
@@ -127,8 +134,10 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onSegmentsPromptFetched(event: OnSegmentPromptFetched) {
         if (event.isError) {
+            tracker.trackErrorShown(ERROR_CONTEXT_FULLSCREEN, event.error.type.toString(), event.error.message)
             updateUiState(VerticalsFullscreenErrorUiState.VerticalsGenericErrorUiState)
         } else {
+            tracker.trackVerticalsViewed()
             segmentPrompt = event.prompt!!
             updateUiStateToContent("", ListState.Ready(emptyList()))
             // Show the keyboard
@@ -145,6 +154,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     }
 
     fun onSkipStepBtnClicked() {
+        tracker.trackVerticalsSkipped()
         _skipBtnClicked.call()
     }
 
@@ -167,21 +177,22 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             fetchVerticalsJob = launch {
                 delay(THROTTLE_DELAY)
                 val fetchedVerticals = fetchVerticalsUseCase.fetchVerticals(query)
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     onVerticalsFetched(query, fetchedVerticals)
                 }
             }
         } else {
-            showFullscreenConnectionErrorWithDelay(query)
+            showConnectionErrorWithDelay(query)
         }
     }
 
-    private fun showFullscreenConnectionErrorWithDelay(query: String) {
+    private fun showConnectionErrorWithDelay(query: String) {
         updateUiStateToContent(query, Loading(Ready(emptyList()), false))
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            withContext(MAIN) {
+            tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
+            withContext(mainDispatcher) {
                 updateUiStateToContent(
                         query,
                         Error(
@@ -195,6 +206,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onVerticalsFetched(query: String, event: OnVerticalsFetched) {
         if (event.isError) {
+            tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, event.error.type.toString(), event.error.message)
             updateUiStateToContent(
                     query,
                     ListState.Error(
@@ -252,24 +264,30 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         } else {
             val lastItemIndex = data.size - 1
             data.forEachIndexed { index, model ->
-                if (model.isUserInputVertical) {
-                    val itemUiState = VerticalsCustomModelUiState(
+                val onItemTapped = {
+                    tracker.trackVerticalSelected(model.name, model.verticalId, model.isUserInputVertical)
+                    _verticalSelected.value = if (model.isUserInputVertical) {
+                        model.name.toLowerCase()
+                    } else {
+                        model.verticalId
+                    }
+                }
+                val itemUiState = if (model.isUserInputVertical) {
+                    VerticalsCustomModelUiState(
                             model.verticalId,
                             model.name,
                             R.string.new_site_creation_verticals_custom_subtitle,
                             showDivider = index != lastItemIndex
                     )
-                    itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
-                    items.add(itemUiState)
                 } else {
-                    val itemUiState = VerticalsModelUiState(
+                    VerticalsModelUiState(
                             model.verticalId,
                             model.name,
                             showDivider = index != lastItemIndex
                     )
-                    itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
-                    items.add(itemUiState)
                 }
+                itemUiState.onItemTapped = onItemTapped
+                items.add(itemUiState)
             }
         }
         return items

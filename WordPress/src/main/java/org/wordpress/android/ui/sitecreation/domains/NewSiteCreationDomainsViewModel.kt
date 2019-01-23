@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
 import android.support.annotation.VisibleForTesting
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -19,10 +20,8 @@ import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.models.networkresource.ListState.Success
-import org.wordpress.android.modules.IO_DISPATCHER
-import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
-import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
@@ -30,6 +29,10 @@ import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewM
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_AND_KEYBOARD
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_ONLY
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -40,18 +43,20 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
 private const val THROTTLE_DELAY = 500L
+private const val ERROR_CONTEXT = "domains"
 
 class NewSiteCreationDomainsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
+    private val tracker: NewSiteCreationTracker,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     private var fetchDomainsJob: Job? = null
     override val coroutineContext: CoroutineContext
-        get() = IO + job
+        get() = bgDispatcher + job
     private var isStarted = false
 
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
@@ -91,6 +96,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             return
         }
         isStarted = true
+        tracker.trackDomainsAccessed()
         // isNullOrBlank not smart-casting for some reason..
         if (siteTitle == null || siteTitle.isBlank()) {
             resetUiState()
@@ -102,10 +108,11 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     }
 
     fun createSiteBtnClicked() {
-        requireNotNull(selectedDomain) {
+        val domain = requireNotNull(selectedDomain) {
             "Create site button should not be visible if a domain is not selected"
         }
-        _createSiteBtnClicked.value = selectedDomain
+        tracker.trackDomainSelected(domain, currentQuery?.value ?: "")
+        _createSiteBtnClicked.value = domain
     }
 
     fun onClearTextBtnClicked() {
@@ -141,11 +148,12 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
                 val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value)
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     onDomainsFetched(query, onSuggestedDomains)
                 }
             }
         } else {
+            tracker.trackErrorShown(ERROR_CONTEXT, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             updateUiStateToContent(query, ListState.Error(listState, errorMessageResId = R.string.no_network_message))
         }
     }
@@ -153,6 +161,11 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {
         // We want to treat `INVALID_QUERY` as if it's an empty result, so we'll ignore it
         if (event.isError && event.error.type != SuggestDomainErrorType.INVALID_QUERY) {
+            tracker.trackErrorShown(
+                    ERROR_CONTEXT,
+                    event.error.type?.toString() ?: NewSiteCreationErrorType.UNKNOWN.toString(),
+                    event.error.message
+            )
             updateUiStateToContent(
                     query,
                     ListState.Error(
