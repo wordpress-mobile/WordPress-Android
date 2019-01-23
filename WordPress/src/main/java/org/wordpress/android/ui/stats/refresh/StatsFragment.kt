@@ -57,8 +57,8 @@ class StatsFragment : DaggerFragment() {
 
         val nonNullActivity = checkNotNull(activity)
 
-        initializeViews(nonNullActivity)
         initializeViewModels(nonNullActivity, savedInstanceState == null)
+        initializeViews(nonNullActivity)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -67,6 +67,7 @@ class StatsFragment : DaggerFragment() {
     private fun initializeViews(activity: FragmentActivity) {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
+        statsPager.setCurrentItem(viewModel.getSelectedSection().ordinal, false)
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabReselected(tab: Tab?) {
             }
