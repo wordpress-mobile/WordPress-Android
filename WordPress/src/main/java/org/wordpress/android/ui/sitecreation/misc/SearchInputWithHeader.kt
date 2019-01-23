@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation
+package org.wordpress.android.ui.sitecreation.misc
 
 import android.content.Context
 import android.support.v4.content.ContextCompat

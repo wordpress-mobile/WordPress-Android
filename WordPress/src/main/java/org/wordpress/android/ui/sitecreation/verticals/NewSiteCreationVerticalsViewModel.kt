@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -20,12 +21,12 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
-import org.wordpress.android.modules.IO_DISPATCHER
-import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
-import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
-import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
-import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
@@ -52,13 +53,13 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val fetchSegmentPromptUseCase: FetchSegmentPromptUseCase,
     private val fetchVerticalsUseCase: FetchVerticalsUseCase,
     private val tracker: NewSiteCreationTracker,
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     private var fetchVerticalsJob: Job? = null
     override val coroutineContext: CoroutineContext
-        get() = IO + job
+        get() = bgDispatcher + job
     private var isStarted = false
 
     private val _uiState: MutableLiveData<VerticalsUiState> = MutableLiveData()
@@ -110,7 +111,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             updateUiState(VerticalsFullscreenProgressUiState)
             launch {
                 val onSegmentsPromptFetchedEvent = fetchSegmentPromptUseCase.fetchSegmentsPrompt(segmentId!!)
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     onSegmentsPromptFetched(onSegmentsPromptFetchedEvent)
                 }
             }
@@ -125,7 +126,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT_FULLSCREEN, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
-            withContext(MAIN) {
+            withContext(mainDispatcher) {
                 updateUiState(VerticalsFullscreenErrorUiState.VerticalsConnectionErrorUiState)
             }
         }
@@ -176,7 +177,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             fetchVerticalsJob = launch {
                 delay(THROTTLE_DELAY)
                 val fetchedVerticals = fetchVerticalsUseCase.fetchVerticals(query)
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     onVerticalsFetched(query, fetchedVerticals)
                 }
             }
@@ -191,7 +192,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
-            withContext(MAIN) {
+            withContext(mainDispatcher) {
                 updateUiStateToContent(
                         query,
                         Error(
