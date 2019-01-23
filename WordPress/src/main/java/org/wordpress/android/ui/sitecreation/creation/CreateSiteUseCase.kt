@@ -10,8 +10,9 @@ import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import javax.inject.Inject
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Transforms OnNewSiteCreated EventBus event to a coroutine.
@@ -37,6 +38,9 @@ class CreateSiteUseCase @Inject constructor(
                     siteData.siteTitle ?: "",
                     languageWordPressId,
                     siteVisibility,
+                    siteData.verticalId,
+                    siteData.segmentId,
+                    siteData.siteTagLine,
                     dryRun
             )
             continuation = cont

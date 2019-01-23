@@ -1,23 +1,28 @@
 package org.wordpress.android
 
-import kotlinx.coroutines.experimental.CancellableContinuation
-import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Delay
-import kotlinx.coroutines.experimental.runBlocking
-import java.util.concurrent.TimeUnit
-import kotlin.coroutines.experimental.CoroutineContext
-import kotlin.coroutines.experimental.EmptyCoroutineContext
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Delay
+import kotlinx.coroutines.Dispatchers.Unconfined
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.coroutines.resume
 
 fun <T> test(context: CoroutineContext = EmptyCoroutineContext, block: suspend CoroutineScope.() -> T) {
     runBlocking(context, block)
 }
 
-val TEST_DISPATCHER: CoroutineDispatcher = TestDispatcher()
-val TEST_SCOPE = CoroutineScope(TEST_DISPATCHER)
+@ExperimentalCoroutinesApi val TEST_SCOPE = CoroutineScope(Unconfined)
+@InternalCoroutinesApi val TEST_DISPATCHER: CoroutineDispatcher = TestDispatcher()
 
+@InternalCoroutinesApi
 private class TestDispatcher : CoroutineDispatcher(), Delay {
-    override fun scheduleResumeAfterDelay(time: Long, unit: TimeUnit, continuation: CancellableContinuation<Unit>) {
+    @InternalCoroutinesApi
+    override fun scheduleResumeAfterDelay(timeMillis: Long, continuation: CancellableContinuation<Unit>) {
         continuation.resume(Unit)
     }
 

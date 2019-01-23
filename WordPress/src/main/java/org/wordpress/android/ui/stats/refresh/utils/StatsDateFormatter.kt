@@ -125,6 +125,8 @@ class StatsDateFormatter
                 calendar.time = parsedDate
                 // last day of this month
                 calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+                calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY))
+                calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE))
                 calendar.time
             }
             YEARS -> {
@@ -147,6 +149,8 @@ class StatsDateFormatter
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
         // last day of this week
         calendar.add(Calendar.DAY_OF_WEEK, +6)
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY))
+        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE))
         return calendar.time
     }
 

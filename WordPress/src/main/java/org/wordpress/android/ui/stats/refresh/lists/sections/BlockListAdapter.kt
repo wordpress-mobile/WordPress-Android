@@ -10,6 +10,7 @@ import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
@@ -130,6 +131,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
                     item as ExpandableItem,
                     payloads.contains(EXPAND_CHANGED))
             is MapViewHolder -> holder.bind(item as MapItem)
+            is EmptyViewHolder -> holder.bind(item as Empty)
         }
     }
 

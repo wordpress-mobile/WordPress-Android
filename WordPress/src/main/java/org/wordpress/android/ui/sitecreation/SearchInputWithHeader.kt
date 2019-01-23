@@ -76,8 +76,11 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
         uiHelpers.updateVisibility(clearAllButton, uiState.showClearButton)
     }
 
-    fun requestInputFocusAndShowKeyboard() {
+    fun requestInputFocus() {
         searchInput.requestFocus()
+    }
+
+    fun showKeyboard() {
         ActivityUtils.showKeyboard(searchInput)
     }
 }

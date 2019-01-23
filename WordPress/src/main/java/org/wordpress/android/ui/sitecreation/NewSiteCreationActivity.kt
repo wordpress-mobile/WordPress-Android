@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.main.SitePickerActivity
@@ -28,8 +27,8 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.creation.SitePreviewScreenListener
-import org.wordpress.android.ui.sitecreation.domain.DomainsScreenListener
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsFragment
+import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
@@ -51,15 +50,16 @@ class NewSiteCreationActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-
         setContentView(R.layout.new_site_creation_activity)
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(NewSiteCreationMainVM::class.java)
-        mainViewModel.start()
+        mainViewModel.start(savedInstanceState)
 
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED)
-        }
         observeVMState()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mainViewModel.writeToBundle(outState)
     }
 
     private fun observeVMState() {

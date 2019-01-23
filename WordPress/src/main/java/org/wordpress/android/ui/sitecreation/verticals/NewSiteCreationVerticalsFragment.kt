@@ -170,7 +170,8 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_VERTICALS)
         })
         viewModel.onInputFocusRequested.observe(this, Observer {
-            searchInputWithHeader.requestInputFocusAndShowKeyboard()
+            searchInputWithHeader.requestInputFocus()
+            searchInputWithHeader.showKeyboard()
         })
         viewModel.start(segmentId)
     }

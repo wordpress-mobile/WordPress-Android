@@ -1,13 +1,12 @@
 package org.wordpress.android.ui.sitecreation.creation
 
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.modules.IO_DISPATCHER
-import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
@@ -15,13 +14,12 @@ import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceStat
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 import kotlin.properties.Delegates
 
 class NewSiteCreationServiceManager @Inject constructor(
     private val createSiteUseCase: CreateSiteUseCase,
     private val dispatcher: Dispatcher,
-    private val tracker: NewSiteCreationTracker,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext
 ) : CoroutineScope {
     private val job = Job()
@@ -125,7 +123,6 @@ class NewSiteCreationServiceManager @Inject constructor(
                     executePhase(FAILURE)
                 }
             } else {
-                tracker.trackSiteCreated()
                 executePhase(SUCCESS)
             }
         }

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -58,7 +62,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
-import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -135,6 +138,9 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_EDITOR = "show_editor";
     public static final String ARG_ME = "show_me";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
+
+    // Track the first `onResume` event for the current session so we can use it for Analytics tracking
+    private static boolean mFirstResume = true;
 
     private WPMainNavigationView mBottomNav;
     private WPDialogSnackbar mQuickStartSnackbar;
@@ -292,6 +298,36 @@ public class WPMainActivity extends AppCompatActivity implements
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         }
+
+        if (isGooglePlayServicesAvailable(this)) {
+            // Register for Cloud messaging
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
+        }
+    }
+
+    public boolean isGooglePlayServicesAvailable(Activity activity) {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
+        switch (connectionResult) {
+            // Success: return true
+            case ConnectionResult.SUCCESS:
+                return true;
+            // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
+            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+                Dialog dialog = googleApiAvailability.getErrorDialog(activity, connectionResult, 0);
+                if (dialog != null) {
+                    dialog.show();
+                }
+                // fall through
+            default:
+            case ConnectionResult.SERVICE_MISSING:
+            case ConnectionResult.SERVICE_DISABLED:
+            case ConnectionResult.SERVICE_INVALID:
+                AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
+                                   + googleApiAvailability.getErrorString(connectionResult));
+        }
+        return false;
     }
 
     private @Nullable String getAuthToken() {
@@ -434,7 +470,8 @@ public class WPMainActivity extends AppCompatActivity implements
                     boolean shouldShowKeyboard =
                             getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
                     NotificationsListFragment
-                            .openNoteForReply(this, noteId, shouldShowKeyboard, null, NotesAdapter.FILTERS.FILTER_ALL);
+                            .openNoteForReply(this, noteId, shouldShowKeyboard, null,
+                                    NotesAdapter.FILTERS.FILTER_ALL, true);
                 }
             } else {
                 AppLog.e(T.NOTIFS, "app launched from a PN that doesn't have a note_id in it!!");
@@ -496,7 +533,7 @@ public class WPMainActivity extends AppCompatActivity implements
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
         int currentItem = mBottomNav.getCurrentPosition();
-        trackLastVisiblePage(currentItem, false);
+        trackLastVisiblePage(currentItem, mFirstResume);
 
         if (currentItem == PAGE_NOTIFS) {
             // if we are presenting the notifications list, it's safe to clear any outstanding
@@ -518,6 +555,8 @@ public class WPMainActivity extends AppCompatActivity implements
         ProfilingUtils.split("WPMainActivity.onResume");
         ProfilingUtils.dump();
         ProfilingUtils.stop();
+
+        mFirstResume = false;
     }
 
     private void checkQuickStartNotificationStatus() {
@@ -611,15 +650,6 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-    private void checkMagicLinkSignIn() {
-        if (getIntent() != null) {
-            if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
-                mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
-                startWithNewAccount();
-            }
-        }
-    }
-
     private void trackLastVisiblePage(int position, boolean trackAnalytics) {
         switch (position) {
             case PAGE_MY_SITE:
@@ -672,12 +702,6 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-    private void jumpNewPost(Intent data) {
-        if (data != null && data.getBooleanExtra(SiteCreationActivity.KEY_DO_NEW_POST, false)) {
-            ActivityLauncher.addNewPostForResult(this, mSelectedSite, false);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -711,7 +735,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 }
 
                 setSite(data);
-                jumpNewPost(data);
                 showQuickStartDialog();
                 break;
             case RequestCodes.ADD_ACCOUNT:
@@ -735,7 +758,6 @@ public class WPMainActivity extends AppCompatActivity implements
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
 
                     setSite(data);
-                    jumpNewPost(data);
 
                     if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
@@ -845,8 +867,6 @@ public class WPMainActivity extends AppCompatActivity implements
         }
 
         if (mAccountStore.hasAccessToken()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
-
             if (mIsMagicLinkLogin) {
                 if (mIsMagicLinkSignup) {
                     // Sets a flag that we need to track a magic link sign up.

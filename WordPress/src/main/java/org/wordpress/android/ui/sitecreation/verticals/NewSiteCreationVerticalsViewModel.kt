@@ -4,11 +4,11 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.apache.commons.lang3.StringUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
@@ -22,6 +22,8 @@ import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
+import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
@@ -37,16 +39,19 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
-private const val THROTTLE_DELAY: Int = 500
-private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000
+private const val THROTTLE_DELAY = 500L
+private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
+private const val ERROR_CONTEXT_LIST_ITEM = "verticals_list_item"
+private const val ERROR_CONTEXT_FULLSCREEN = "verticals_fullscreen"
 
 class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchSegmentPromptUseCase: FetchSegmentPromptUseCase,
     private val fetchVerticalsUseCase: FetchVerticalsUseCase,
+    private val tracker: NewSiteCreationTracker,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -119,6 +124,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
+            tracker.trackErrorShown(ERROR_CONTEXT_FULLSCREEN, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             withContext(MAIN) {
                 updateUiState(VerticalsFullscreenErrorUiState.VerticalsConnectionErrorUiState)
             }
@@ -127,8 +133,10 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onSegmentsPromptFetched(event: OnSegmentPromptFetched) {
         if (event.isError) {
+            tracker.trackErrorShown(ERROR_CONTEXT_FULLSCREEN, event.error.type.toString(), event.error.message)
             updateUiState(VerticalsFullscreenErrorUiState.VerticalsGenericErrorUiState)
         } else {
+            tracker.trackVerticalsViewed()
             segmentPrompt = event.prompt!!
             updateUiStateToContent("", ListState.Ready(emptyList()))
             // Show the keyboard
@@ -145,6 +153,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     }
 
     fun onSkipStepBtnClicked() {
+        tracker.trackVerticalsSkipped()
         _skipBtnClicked.call()
     }
 
@@ -172,15 +181,16 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                 }
             }
         } else {
-            showFullscreenConnectionErrorWithDelay(query)
+            showConnectionErrorWithDelay(query)
         }
     }
 
-    private fun showFullscreenConnectionErrorWithDelay(query: String) {
+    private fun showConnectionErrorWithDelay(query: String) {
         updateUiStateToContent(query, Loading(Ready(emptyList()), false))
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
+            tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
             withContext(MAIN) {
                 updateUiStateToContent(
                         query,
@@ -195,6 +205,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onVerticalsFetched(query: String, event: OnVerticalsFetched) {
         if (event.isError) {
+            tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, event.error.type.toString(), event.error.message)
             updateUiStateToContent(
                     query,
                     ListState.Error(
@@ -252,24 +263,30 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         } else {
             val lastItemIndex = data.size - 1
             data.forEachIndexed { index, model ->
-                if (model.isUserInputVertical) {
-                    val itemUiState = VerticalsCustomModelUiState(
+                val onItemTapped = {
+                    tracker.trackVerticalSelected(model.name, model.verticalId, model.isUserInputVertical)
+                    _verticalSelected.value = if (model.isUserInputVertical) {
+                        model.name.toLowerCase()
+                    } else {
+                        model.verticalId
+                    }
+                }
+                val itemUiState = if (model.isUserInputVertical) {
+                    VerticalsCustomModelUiState(
                             model.verticalId,
                             model.name,
                             R.string.new_site_creation_verticals_custom_subtitle,
                             showDivider = index != lastItemIndex
                     )
-                    itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
-                    items.add(itemUiState)
                 } else {
-                    val itemUiState = VerticalsModelUiState(
+                    VerticalsModelUiState(
                             model.verticalId,
                             model.name,
                             showDivider = index != lastItemIndex
                     )
-                    itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
-                    items.add(itemUiState)
                 }
+                itemUiState.onItemTapped = onItemTapped
+                items.add(itemUiState)
             }
         }
         return items

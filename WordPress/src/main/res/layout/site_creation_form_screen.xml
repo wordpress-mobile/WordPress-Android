@@ -13,8 +13,10 @@
         android:id="@+id/site_creation_form_content_stub"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_buttons"
         android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/bottom_buttons"/>
+        android:layout_marginEnd="@dimen/site_creation_content_margin"
+        android:layout_marginStart="@dimen/site_creation_content_margin"/>
 
     <View
         android:id="@+id/bottom_shadow"

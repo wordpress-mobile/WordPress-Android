@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="@dimen/stats_widget_icon_size"
             android:layout_height="@dimen/stats_widget_icon_size"
-            android:background="@drawable/ic_my_sites_white_32dp"
+            android:background="@drawable/ic_my_sites_white_24dp"
             android:contentDescription="@null"/>
 
         <TextView

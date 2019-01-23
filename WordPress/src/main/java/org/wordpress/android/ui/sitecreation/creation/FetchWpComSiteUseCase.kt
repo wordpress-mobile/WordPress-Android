@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.sitecreation.creation
 
-import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -9,10 +9,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import javax.inject.Inject
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-private const val FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS = 1000
+private const val FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS = 1000L
 private const val DEFAULT_NUMBER_OF_RETRIES = 3
 
 /**
@@ -56,7 +57,7 @@ class FetchWpComSiteUseCase @Inject constructor(
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     fun onSiteFetched(event: OnSiteChanged) {
         continuation?.resume(event)
         continuation = null

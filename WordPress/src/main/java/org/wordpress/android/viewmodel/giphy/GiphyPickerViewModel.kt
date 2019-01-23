@@ -6,18 +6,19 @@ import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedList.BoundaryCallback
-import kotlinx.coroutines.experimental.CancellationException
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.channels.Channel
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
-import kotlinx.coroutines.experimental.channels.consumeEach
-import kotlinx.coroutines.experimental.channels.produce
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.produce
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -31,6 +32,7 @@ import javax.inject.Inject
  * Calling [setup] is required before using this ViewModel.
  */
 class GiphyPickerViewModel @Inject constructor(
+    private val networkUtils: NetworkUtilsWrapper,
     private val mediaFetcher: GiphyMediaFetcher,
     /**
      * The [GiphyPickerDataSourceFactory] to use
@@ -247,6 +249,14 @@ class GiphyPickerViewModel @Inject constructor(
             return@launch
         }
 
+        if (!networkUtils.isNetworkAvailable()) {
+            // Network is not available to download the selected media, post the result and return
+            _downloadResult.postValue(
+                    DownloadResult(errorMessageStringResId = R.string.no_network_message)
+            )
+            return@launch
+        }
+
         _state.postValue(State.DOWNLOADING)
 
         val result = try {
@@ -315,7 +325,7 @@ class GiphyPickerViewModel @Inject constructor(
      *
      * This works like Rx's [Debounce operator](http://reactivex.io/documentation/operators/debounce.html).
      */
-    private fun <T> ReceiveChannel<T>.debounce(timeout: Int = 300): ReceiveChannel<T> = produce {
+    private fun <T> ReceiveChannel<T>.debounce(timeout: Long = 300): ReceiveChannel<T> = produce {
         var job: Job? = null
 
         consumeEach {

@@ -22,6 +22,7 @@
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/new_site_creation_domains_radio_button_padding_start"
         android:paddingTop="@dimen/margin_medium"
+        android:textAlignment="viewStart"
         android:textColor="@color/wp_grey_dark"
         android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toBottomOf="parent"
