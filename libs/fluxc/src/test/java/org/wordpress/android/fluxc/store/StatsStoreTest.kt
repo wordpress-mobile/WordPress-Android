@@ -34,6 +34,7 @@ class StatsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var insightTypesSqlUtils: InsightTypesSqlUtils
     private lateinit var store: StatsStore
+
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
@@ -134,7 +135,6 @@ class StatsStoreTest {
     @Test
     fun `removes type from list`() = test {
         store.removeType(site, LATEST_POST_SUMMARY)
-
 
         verify(insightTypesSqlUtils).insertOrReplaceAddedItems(
                 site,
