@@ -549,7 +549,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
-        mWPAndroidGlueCode.mediaFileUploadSucceeded(Integer.valueOf(localMediaId), mediaFile.getFileURL());
+        mWPAndroidGlueCode.mediaFileUploadSucceeded(Integer.valueOf(localMediaId), mediaFile.getFileURL(),
+                Integer.valueOf(mediaFile.getMediaId()));
     }
 
     @Override
