@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.services
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -21,7 +22,7 @@ import kotlin.properties.Delegates
 class NewSiteCreationServiceManager @Inject constructor(
     private val createSiteUseCase: CreateSiteUseCase,
     private val dispatcher: Dispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineContext
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     private val job = Job()
     override val coroutineContext: CoroutineContext

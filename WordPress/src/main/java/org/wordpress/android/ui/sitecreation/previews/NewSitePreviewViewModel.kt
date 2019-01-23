@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation.previews
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -49,8 +50,8 @@ class NewSitePreviewViewModel @Inject constructor(
     private val fetchWpComSiteUseCase: FetchWpComSiteUseCase,
     private val networkUtils: NetworkUtilsWrapper,
     private val tracker: NewSiteCreationTracker,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineContext,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineContext
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     override val coroutineContext: CoroutineContext

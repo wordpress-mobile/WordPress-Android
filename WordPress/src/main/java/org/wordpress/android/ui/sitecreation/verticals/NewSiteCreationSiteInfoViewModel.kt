@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
@@ -20,7 +21,7 @@ import kotlin.properties.Delegates
 
 class NewSiteCreationSiteInfoViewModel @Inject constructor(
     private val tracker: NewSiteCreationTracker,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineContext
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private var currentUiState: SiteInfoUiState by Delegates.observable(
             SiteInfoUiState(
