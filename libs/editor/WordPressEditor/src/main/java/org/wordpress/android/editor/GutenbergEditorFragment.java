@@ -35,7 +35,6 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
