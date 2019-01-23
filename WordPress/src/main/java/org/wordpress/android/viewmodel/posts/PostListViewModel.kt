@@ -428,7 +428,6 @@ class PostListViewModel @Inject constructor(
             }
         }
         val onDismissAction = {
-            // no op
             localPostIdForConflictResolutionDialog = null
             originalPostCopyForConflictUndo = null
         }
