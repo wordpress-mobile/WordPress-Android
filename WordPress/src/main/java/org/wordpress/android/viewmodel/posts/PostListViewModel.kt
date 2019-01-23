@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -63,6 +64,8 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.VideoOptimizer
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
@@ -297,11 +300,10 @@ class PostListViewModel @Inject constructor(
         }
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_DELETE_POST_DIALOG_TAG,
-                titleRes = R.string.delete_post,
-                messageRes = messageRes,
-                customMessageString = null,
-                positiveButtonTextRes = R.string.delete,
-                negativeButtonTextRes = R.string.cancel
+                title = UiStringRes(R.string.delete_post),
+                message = UiStringRes(messageRes),
+                positiveButton = UiStringRes(R.string.delete),
+                negativeButton = UiStringRes(R.string.cancel)
         )
         localPostIdForTrashDialog = post.id
         _dialogAction.postValue(dialogHolder)
@@ -317,11 +319,10 @@ class PostListViewModel @Inject constructor(
         }
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_PUBLISH_POST_DIALOG_TAG,
-                titleRes = R.string.dialog_confirm_publish_title,
-                messageRes = R.string.dialog_confirm_publish_message_post,
-                customMessageString = null,
-                positiveButtonTextRes = R.string.dialog_confirm_publish_yes,
-                negativeButtonTextRes = R.string.cancel
+                title = UiStringRes(R.string.dialog_confirm_publish_title),
+                message = UiStringRes(string.dialog_confirm_publish_message_post),
+                positiveButton = UiStringRes(R.string.dialog_confirm_publish_yes),
+                negativeButton = UiStringRes(R.string.cancel)
         )
         localPostIdForPublishDialog = post.id
         _dialogAction.postValue(dialogHolder)
@@ -330,11 +331,10 @@ class PostListViewModel @Inject constructor(
     private fun showConflictedPostResolutionDialog(post: PostModel) {
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
-                titleRes = R.string.dialog_confirm_load_remote_post_title,
-                messageRes = R.string.dialog_confirm_load_remote_post_body,
-                customMessageString = PostUtils.getConflictedPostCustomStringForDialog(post),
-                positiveButtonTextRes = R.string.dialog_confirm_load_remote_post_discard_local,
-                negativeButtonTextRes = R.string.dialog_confirm_load_remote_post_discard_web
+                title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
+                message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
+                positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
+                negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
         )
         localPostIdForConflictResolutionDialog = post.id
         _dialogAction.postValue(dialogHolder)

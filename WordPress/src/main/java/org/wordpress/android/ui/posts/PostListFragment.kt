@@ -29,6 +29,7 @@ import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
@@ -53,6 +54,7 @@ import javax.inject.Inject
 class PostListFragment : Fragment() {
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: PostListViewModel
 
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
@@ -143,7 +145,8 @@ class PostListFragment : Fragment() {
             it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
         })
         viewModel.dialogAction.observe(this, Observer {
-            it?.show(nonNullActivity, requireNotNull(fragmentManager) { "FragmentManager can't be null at this point" })
+            val fragmentManager = requireNotNull(fragmentManager) { "FragmentManager can't be null at this point" }
+            it?.show(nonNullActivity, fragmentManager, uiHelpers)
         })
     }
 
