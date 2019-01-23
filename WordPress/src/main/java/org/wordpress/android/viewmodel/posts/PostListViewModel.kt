@@ -745,7 +745,7 @@ class PostListViewModel @Inject constructor(
             return
         }
 
-        val post = postStore.getPostByLocalPostId(localPostId)
+        val post = postStore.getPostByLocalPostId(localPostId) ?: return
         if (post == null) {
             return
         }
