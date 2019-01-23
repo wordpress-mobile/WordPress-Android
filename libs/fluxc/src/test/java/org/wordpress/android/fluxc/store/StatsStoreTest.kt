@@ -14,14 +14,18 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel.Status.REMOVED
 import org.wordpress.android.fluxc.model.stats.InsightTypesModel
 import org.wordpress.android.fluxc.persistence.InsightTypesSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ANNUAL_SITE_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWER_TOTALS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVITY
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.fluxc.test
 
@@ -129,8 +133,26 @@ class StatsStoreTest {
 
     @Test
     fun `removes type from list`() = test {
-        store.removeType(site, COMMENTS)
+        store.removeType(site, LATEST_POST_SUMMARY)
 
-        verify(insightTypesSqlUtils).updateStatus(site, COMMENTS, REMOVED)
+
+        verify(insightTypesSqlUtils).insertOrReplaceAddedItems(
+                site,
+                listOf(TODAY_STATS, ALL_TIME_STATS, POSTING_ACTIVITY)
+        )
+
+        verify(insightTypesSqlUtils).insertOrReplaceRemovedItems(
+                site,
+                listOf(
+                        MOST_POPULAR_DAY_AND_HOUR,
+                        FOLLOWER_TOTALS,
+                        TAGS_AND_CATEGORIES,
+                        ANNUAL_SITE_STATS,
+                        COMMENTS,
+                        FOLLOWERS,
+                        PUBLICIZE,
+                        LATEST_POST_SUMMARY
+                )
+        )
     }
 }
