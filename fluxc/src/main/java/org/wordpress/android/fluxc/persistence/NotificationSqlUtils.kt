@@ -9,9 +9,9 @@ import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
-import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.notification.NoteIdSet
+import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.notification.NotificationModel.Kind
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableContentMapper
@@ -126,6 +126,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         filterBySubtype: List<String>? = null
     ): Boolean {
         val conditionClauseBuilder = WellSql.select(NotificationModelBuilder::class.java)
+                .columns("1")
                 .where()
                 .equals(NotificationModelTable.LOCAL_SITE_ID, site.id)
                 .equals(NotificationModelTable.READ, 0)
