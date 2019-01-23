@@ -17,7 +17,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
-import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.ui.sitecreation.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsContentUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsErrorUiState
@@ -26,7 +25,7 @@ import javax.inject.Inject
 
 private const val KEY_LIST_STATE = "list_state"
 
-class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
+class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel

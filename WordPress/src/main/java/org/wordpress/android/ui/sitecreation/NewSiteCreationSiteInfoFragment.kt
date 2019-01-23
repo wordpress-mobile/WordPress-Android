@@ -21,7 +21,7 @@ import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel
 import javax.inject.Inject
 
-class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
+class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var nonNullActivity: FragmentActivity

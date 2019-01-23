@@ -41,7 +41,7 @@ import javax.inject.Inject
 private const val ARG_DATA = "arg_site_creation_data"
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
 
-class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>(),
+class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
         PageFullyLoadedListener {
     /**
      * We need to connect to the service, so the service knows when the app is in the background. The service
@@ -287,9 +287,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     }
 
     override fun onHelp() {
-        if (mSiteCreationListener != null) {
-            mSiteCreationListener.helpCategoryScreen()
-        }
+        viewModel.onHelpClicked()
     }
 
     override fun getScreenTitle(): String {

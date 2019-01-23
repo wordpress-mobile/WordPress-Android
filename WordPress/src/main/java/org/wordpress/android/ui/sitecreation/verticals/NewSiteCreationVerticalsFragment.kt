@@ -19,7 +19,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
-import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.ui.sitecreation.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.SearchInputWithHeader
@@ -33,7 +32,7 @@ import kotlin.properties.Delegates
 
 private const val KEY_LIST_STATE = "list_state"
 
-class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
+class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment() {
     private lateinit var nonNullActivity: FragmentActivity
     private var segmentId by Delegates.notNull<Long>()
     private lateinit var linearLayoutManager: LinearLayoutManager
