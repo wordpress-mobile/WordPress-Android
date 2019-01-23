@@ -496,7 +496,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             mWPAndroidGlueCode.appendMediaFile(mediaUrl);
         } else {
-            mWPAndroidGlueCode.appendUploadMediaFile(String.valueOf(mediaFile.getId()), "file://" + mediaUrl);
+            mWPAndroidGlueCode.appendUploadMediaFile(mediaFile.getId(), "file://" + mediaUrl);
         }
     }
 
@@ -549,18 +549,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
-        mWPAndroidGlueCode.mediaFileUploadSucceeded(localMediaId, mediaFile.getFileURL());
+        mWPAndroidGlueCode.mediaFileUploadSucceeded(Integer.valueOf(localMediaId), mediaFile.getFileURL());
     }
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
-        mWPAndroidGlueCode.mediaFileUploadProgress(localMediaId, progress);
+        mWPAndroidGlueCode.mediaFileUploadProgress(Integer.valueOf(localMediaId), progress);
     }
 
     @Override
     public void onMediaUploadFailed(final String localMediaId, final MediaType
             mediaType, final String errorMessage) {
-        mWPAndroidGlueCode.mediaFileUploadFailed(localMediaId);
+        mWPAndroidGlueCode.mediaFileUploadFailed(Integer.valueOf(localMediaId));
     }
 
     @Override
