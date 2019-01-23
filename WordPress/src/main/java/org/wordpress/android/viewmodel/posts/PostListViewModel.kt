@@ -746,9 +746,6 @@ class PostListViewModel @Inject constructor(
         }
 
         val post = postStore.getPostByLocalPostId(localPostId) ?: return
-        if (post == null) {
-            return
-        }
 
         // keep a copy for undoing
         originalPostCopyForConflictUndo = post.clone()
