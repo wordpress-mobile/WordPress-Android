@@ -148,10 +148,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
             conditionClauseBuilder.endGroup()
         }
 
-        val unreadNotifs = conditionClauseBuilder.endWhere()
-                .asModel
-                .map { it.build(formattableContentMapper) }
-        return unreadNotifs.size > 0
+        return conditionClauseBuilder.endWhere().asCursor.count > 0
     }
 
     fun getNotificationByIdSet(idSet: NoteIdSet): NotificationModel? {
