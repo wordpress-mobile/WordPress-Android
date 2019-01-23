@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import android.widget.EditText
 import android.widget.TextView
 import org.wordpress.android.R
@@ -79,6 +80,8 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
 
     fun requestInputFocus() {
         searchInput.requestFocus()
+        // announce header when the input focus is forced
+        headerLayout.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
     }
 
     fun showKeyboard() {
