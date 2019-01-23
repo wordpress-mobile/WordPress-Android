@@ -120,7 +120,7 @@ public class FluxCUtils {
         String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
 
         if (TextUtils.isEmpty(mimeType)) {
-            mimeType = context.getContentResolver().getType(uri);
+            mimeType = UrlUtils.getUrlMimeType(uri.toString());
             if (mimeType == null) {
                 mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
                 if (mimeType == null) {
