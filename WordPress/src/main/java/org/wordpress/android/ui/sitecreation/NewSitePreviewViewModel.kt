@@ -14,7 +14,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
@@ -46,7 +46,7 @@ class NewSitePreviewViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val tracker: NewSiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineContext,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineContext
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     override val coroutineContext: CoroutineContext
@@ -144,7 +144,7 @@ class NewSitePreviewViewModel @Inject constructor(
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
-            withContext(MAIN) {
+            withContext(mainDispatcher) {
                 updateUiState(SitePreviewConnectionErrorUiState)
             }
         }
@@ -212,7 +212,7 @@ class NewSitePreviewViewModel @Inject constructor(
              * If the webview is still not loaded after some delay, we'll show the loading shimmer animation instead
              * of the full screen progress, so the user is not blocked for taking actions.
              */
-            withContext(MAIN) {
+            withContext(mainDispatcher) {
                 if (uiState.value !is SitePreviewContentUiState) {
                     tracker.trackPreviewWebviewShown()
                     updateUiState(SitePreviewLoadingShimmerState(createSitePreviewData()))

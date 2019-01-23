@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
@@ -40,7 +40,7 @@ class NewSiteCreationSegmentsViewModel
     private val dispatcher: Dispatcher,
     private val fetchSegmentsUseCase: FetchSegmentsUseCase,
     private val tracker: NewSiteCreationTracker,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineContext,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineContext
 ) : ViewModel(), CoroutineScope {
     private val fetchCategoriesJob: Job = Job()
@@ -88,7 +88,7 @@ class NewSiteCreationSegmentsViewModel
             updateUiStateToContent(ListState.Loading(listState))
             launch {
                 val event = fetchSegmentsUseCase.fetchCategories()
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     onCategoriesFetched(event)
                 }
             }
@@ -98,7 +98,7 @@ class NewSiteCreationSegmentsViewModel
                 // We show the loading screen for a bit so the user has some feedback when they press the retry button
                 delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
                 tracker.trackErrorShown(ERROR_CONTEXT, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     updateUiStateToError(
                             ListState.Error(listState, null),
                             SegmentsErrorUiState.SegmentsConnectionErrorUiState

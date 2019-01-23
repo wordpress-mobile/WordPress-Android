@@ -61,7 +61,7 @@ class NewSiteCreationDomainsViewModelTest {
                 fetchDomainsUseCase = fetchDomainsUseCase,
                 tracker = tracker,
                 bgDispatcher = TEST_DISPATCHER,
-                MAIN = TEST_DISPATCHER
+                mainDispatcher = TEST_DISPATCHER
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.createSiteBtnClicked.observeForever(createSiteBtnObserver)

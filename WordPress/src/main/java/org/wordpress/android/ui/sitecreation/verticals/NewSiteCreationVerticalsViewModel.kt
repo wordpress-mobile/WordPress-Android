@@ -21,7 +21,7 @@ import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
@@ -53,7 +53,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val fetchVerticalsUseCase: FetchVerticalsUseCase,
     private val tracker: NewSiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineContext,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineContext
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     private var fetchVerticalsJob: Job? = null
@@ -110,7 +110,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             updateUiState(VerticalsFullscreenProgressUiState)
             launch {
                 val onSegmentsPromptFetchedEvent = fetchSegmentPromptUseCase.fetchSegmentsPrompt(segmentId!!)
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     onSegmentsPromptFetched(onSegmentsPromptFetchedEvent)
                 }
             }
@@ -125,7 +125,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT_FULLSCREEN, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
-            withContext(MAIN) {
+            withContext(mainDispatcher) {
                 updateUiState(VerticalsFullscreenErrorUiState.VerticalsConnectionErrorUiState)
             }
         }
@@ -176,7 +176,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             fetchVerticalsJob = launch {
                 delay(THROTTLE_DELAY)
                 val fetchedVerticals = fetchVerticalsUseCase.fetchVerticals(query)
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     onVerticalsFetched(query, fetchedVerticals)
                 }
             }
@@ -191,7 +191,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
-            withContext(MAIN) {
+            withContext(mainDispatcher) {
                 updateUiStateToContent(
                         query,
                         Error(

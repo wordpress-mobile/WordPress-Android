@@ -20,7 +20,7 @@ import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.NewSiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
@@ -50,7 +50,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val fetchDomainsUseCase: FetchDomainsUseCase,
     private val tracker: NewSiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineContext,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineContext
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     private var fetchDomainsJob: Job? = null
@@ -147,7 +147,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
                 val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value)
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     onDomainsFetched(query, onSuggestedDomains)
                 }
             }
