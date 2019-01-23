@@ -192,7 +192,7 @@ public class MediaUtils {
         if (context == null || imageUri == null) {
             return null;
         }
-        String mimeType = context.getContentResolver().getType(imageUri);
+        String mimeType = UrlUtils.getUrlMimeType(imageUri.toString());
         File cacheDir = context.getCacheDir();
 
         if (cacheDir != null && !cacheDir.exists()) {

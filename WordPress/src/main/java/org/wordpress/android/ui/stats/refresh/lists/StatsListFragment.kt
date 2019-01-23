@@ -54,15 +54,18 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsList
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.YearsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.Event
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.observeEvent
+import java.util.Date
 import javax.inject.Inject
 
 class StatsListFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var viewModel: StatsListViewModel
 
     private var layoutManager: LayoutManager? = null
@@ -186,7 +189,7 @@ class StatsListFragment : DaggerFragment() {
                 is ViewPostDetailStats -> {
                     val postModel = StatsPostModel(
                             site.siteId,
-                            it.postId.toString(),
+                            it.postId,
                             it.postTitle,
                             it.postUrl,
                             it.postType
@@ -213,7 +216,7 @@ class StatsListFragment : DaggerFragment() {
                             activity,
                             site,
                             it.statsGranularity.toStatsTimeFrame(),
-                            it.selectedDate
+                            statsDateFormatter.printStatsDate(it.selectedDate)
                     )
                 }
                 is ViewReferrers -> {
@@ -221,7 +224,7 @@ class StatsListFragment : DaggerFragment() {
                             activity,
                             site,
                             it.statsGranularity.toStatsTimeFrame(),
-                            it.selectedDate
+                            statsDateFormatter.printStatsDate(it.selectedDate)
                     )
                 }
                 is ViewClicks -> {
@@ -229,7 +232,7 @@ class StatsListFragment : DaggerFragment() {
                             activity,
                             site,
                             it.statsGranularity.toStatsTimeFrame(),
-                            it.selectedDate
+                            statsDateFormatter.printStatsDate(it.selectedDate)
                     )
                 }
                 is ViewCountries -> {
@@ -237,7 +240,7 @@ class StatsListFragment : DaggerFragment() {
                             activity,
                             site,
                             it.statsGranularity.toStatsTimeFrame(),
-                            it.selectedDate
+                            statsDateFormatter.printStatsDate(it.selectedDate)
                     )
                 }
                 is ViewVideoPlays -> {
@@ -245,7 +248,7 @@ class StatsListFragment : DaggerFragment() {
                             activity,
                             site,
                             it.statsGranularity.toStatsTimeFrame(),
-                            it.selectedDate
+                            statsDateFormatter.printStatsDate(it.selectedDate)
                     )
                 }
                 is ViewSearchTerms -> {
@@ -253,7 +256,7 @@ class StatsListFragment : DaggerFragment() {
                             activity,
                             site,
                             it.statsGranularity.toStatsTimeFrame(),
-                            it.selectedDate
+                            statsDateFormatter.printStatsDate(it.selectedDate)
                     )
                 }
                 is ViewAuthors -> {
@@ -261,7 +264,7 @@ class StatsListFragment : DaggerFragment() {
                             activity,
                             site,
                             it.statsGranularity.toStatsTimeFrame(),
-                            it.selectedDate
+                            statsDateFormatter.printStatsDate(it.selectedDate)
                     )
                 }
                 is ViewUrl -> {
@@ -294,9 +297,9 @@ sealed class NavigationTarget : Event() {
 
     data class SharePost(val url: String, val title: String) : NavigationTarget()
     data class ViewPostDetailStats(
-        val postId: Long,
+        val postId: String,
         val postTitle: String,
-        val postUrl: String,
+        val postUrl: String?,
         val postType: String = StatsConstants.ITEM_TYPE_POST
     ) : NavigationTarget()
 
@@ -305,13 +308,13 @@ sealed class NavigationTarget : Event() {
     class ViewTagsAndCategoriesStats : NavigationTarget()
     class ViewPublicizeStats : NavigationTarget()
     data class ViewTag(val link: String) : NavigationTarget()
-    data class ViewPostsAndPages(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
-    data class ViewReferrers(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
-    data class ViewClicks(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
-    data class ViewCountries(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
-    data class ViewVideoPlays(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
-    data class ViewSearchTerms(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
-    data class ViewAuthors(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
+    data class ViewPostsAndPages(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
+    data class ViewReferrers(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
+    data class ViewClicks(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
+    data class ViewCountries(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
+    data class ViewVideoPlays(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
+    data class ViewSearchTerms(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
+    data class ViewAuthors(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
     data class ViewUrl(val url: String) : NavigationTarget()
 }
 
