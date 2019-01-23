@@ -654,7 +654,6 @@ class PostListViewModel @Inject constructor(
                 publishPost(it)
             }
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
-                localPostIdForConflictResolutionDialog = null
                 // here load version from remote
                 updateConflictedPostWithItsRemoteVersion(it)
             }
@@ -736,6 +735,8 @@ class PostListViewModel @Inject constructor(
             originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
             _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
+        } else {
+            localPostIdForConflictResolutionDialog = null
         }
     }
 
@@ -746,6 +747,8 @@ class PostListViewModel @Inject constructor(
         }
 
         val post = postStore.getPostByLocalPostId(localPostId) ?: return
+
+        localPostIdForConflictResolutionDialog = null
 
         // keep a copy for undoing
         originalPostCopyForConflictUndo = post.clone()
