@@ -1,11 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-11 10:54:07+0000
+Translation-Revision-Date: 2019-01-07 13:40:49+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">Choisissez une adresse disponible pour que tout le monde puisse vous trouver sur le Web.</string>
+    <string name="giphy_powered_by_giphy">Optimisé par GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">Échec de chargement de certains médias à cause d’une erreur réseau.</string>
+    <string name="giphy_picker_empty_search_list">Aucun média ne correspond à votre recherche.</string>
+    <string name="giphy_picker_initial_empty_text">Recherchez des GIF à ajouter à votre bibliothèque de médias !</string>
+    <string name="giphy_picker_search_hint">Rechercher Giphy</string>
+    <string name="photo_picker_giphy">Choisir à partir de Giphy</string>
+    <string name="stats_author_views_label">Vues</string>
+    <string name="stats_author_label">Auteur</string>
+    <string name="stats_authors">Auteurs</string>
+    <string name="stats_search_terms_views_label">Vues</string>
+    <string name="stats_search_terms_label">Terme de recherche</string>
+    <string name="stats_search_terms">Termes de recherche</string>
+    <string name="stats_videos_views_label">Vues</string>
+    <string name="stats_videos_title_label">Titre</string>
+    <string name="stats_videos">Vidéos</string>
+    <string name="stats_country_views_label">Vues</string>
+    <string name="stats_country_label">Pays</string>
+    <string name="stats_countries">Pays</string>
+    <string name="stats_clicks_label">Clics</string>
+    <string name="stats_clicks_link_label">Lien</string>
+    <string name="stats_clicks">Clics</string>
+    <string name="stats_referrer_views_label">Vues</string>
+    <string name="stats_referrer_label">Référent</string>
+    <string name="stats_referrers">Référents</string>
+    <string name="stats_posts_and_pages">Articles et pages</string>
+    <string name="stats_most_popular_percent_views">%1$d %%</string>
+    <string name="stats_insights_path">Path</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">Voir plus</string>
+    <string name="stats_insights_share_post">Partager lʼarticle</string>
+    <string name="stats_insights_create_post">Créer une publication</string>
+    <string name="stats_insights_latest_post_message">%2$s est publié depuis %1$s. Voilà les performances de l’article</string>
+    <string name="stats_insights_latest_post_with_no_engagement">%2$s est publié depuis %1$s. Lancez-vous et augmentez le nombre de vues de votre article en le partageant</string>
+    <string name="stats_insights_latest_post_empty">Vous n’avez pas encore publié d’articles. Lorsque vous commencez à publier, le résumé de votre dernier article apparaît ici</string>
+    <string name="stats_insights_tags_and_categories">Étiquettes et catégories</string>
+    <string name="stats_insights_all_time_stats">Statistiques globales</string>
+    <string name="stats_insights_most_popular_views_label">Vues</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Jour/Heure</string>
+    <string name="stats_insights_today_stats">Statistiques du jour</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">Abonnés</string>
+    <string name="stats_publicize_service_label">Service</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">Vues</string>
+    <string name="stats_tags_and_categories_title_label">Titre</string>
+    <string name="stats_posts_and_pages_views_label">Vues</string>
+    <string name="stats_posts_and_pages_title_label">Titre</string>
+    <string name="stats_comments_label">Commentaires</string>
+    <string name="stats_comments_title_label">Titre</string>
+    <string name="stats_comments_author_label">Auteur</string>
+    <string name="stats_comments_posts_and_pages">Articles et pages</string>
+    <string name="stats_comments_authors">Auteurs</string>
+    <string name="stats_follower_since_label">Depuis</string>
+    <string name="stats_follower_label">Abonné</string>
+    <string name="stats_followers_count_message">Total des abonnés %1$s : %2$s</string>
+    <string name="stats_followers_email">E-mail</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">Gérer les tendances</string>
+    <string name="stats_empty_insights_description">Personnalisez vos tendances et les dernières informations sur les performances de votre site</string>
+    <string name="stats_empty_insights_title">Aucune tendance n’a encore été ajoutée</string>
+    <string name="stats_no_data_yet">Aucune donnée pour le moment.</string>
     <string name="menu_debug">Menu de débogage</string>
     <string name="preference_experimental">*EXPÉRIMENTAL*</string>
     <string name="site_settings_enable_gutenberg_summary">Il s\'agit toujours d\'une version expérimentale de Gutenberg</string>
@@ -481,7 +547,6 @@ Language: fr
     <string name="site_creation_title_hint">Titre du site</string>
     <string name="site_creation_domain_finish_button">Créer un site</string>
     <string name="site_creation_domain_keywords_hint">Saisir un mot-clé pour obtenir davantage d\'idées</string>
-    <string name="site_creation_label_domain_selection">Choisissez une adresse « votrenom.wordpress.com » disponible pour que tout le monde puisse vous trouver sur le Web.</string>
     <string name="site_creation_label_domain_selection_title">Étape 4 sur 4</string>
     <string name="site_creation_label_site_details">Dites-nous en plus à propos de votre création. Quels sont le titre et la description ?</string>
     <string name="site_creation_label_site_details_title">Étape 3 sur 4</string>
@@ -528,7 +593,7 @@ Language: fr
     <string name="signup_epilogue_hint_username">Nom d\'utilisateur</string>
     <string name="signup_epilogue_hint_password_detail">Vous pouvez toujours vous connecter avec un lien de connexion sans mot de passe comme celui que vous venez d\'utiliser. Vous pouvez également définir un mot de passe si vous le préférez.</string>
     <string name="signup_epilogue_hint_password">Mot de passe (facultatif)</string>
-    <string name="signup_epilogue_hint_display">Nom à afficher</string>
+    <string name="signup_epilogue_hint_display">Nom affiché</string>
     <string name="signup_epilogue_heading">Nouveau compte</string>
     <string name="signup_epilogue_error_button_positive">Réessayer</string>
     <string name="signup_epilogue_error_button_negative">Annuler les modifications</string>
@@ -824,10 +889,10 @@ Language: fr
     <string name="now">Maintenant</string>
     <string name="post_settings_password_dialog_hint">Seules les personnes disposant de ce mot de passe peuvent consulter cet article.</string>
     <string name="post_settings_excerpt_dialog_hint">Les extraits sont des résumés manuels facultatifs de votre contenu.</string>
-    <string name="post_settings_slug_dialog_hint">L’identifiant est la version « compatible URL » du titre du contenu.</string>
+    <string name="post_settings_slug_dialog_hint">Le slug est la version « compatible URL » du titre de la publication.</string>
     <string name="post_settings_post_format">Format d’article</string>
     <string name="post_settings_tags">Etiquettes</string>
-    <string name="post_settings_slug">Identifiant</string>
+    <string name="post_settings_slug">Slug</string>
     <string name="post_settings_excerpt">Extrait</string>
     <string name="post_settings_not_set">Non configuré</string>
     <string name="post_settings_more_options">Plus d’options</string>
@@ -880,7 +945,7 @@ Language: fr
     <string name="sharing_edit_more_buttons">Modifier les boutons « Plus »</string>
     <string name="sharing_more_description">Le bouton « Plus » permet d\'afficher les boutons de partage dans une liste déroulante.</string>
     <string name="sharing_sharing_buttons_description">Choisissez quels boutons seront affichés sous vos articles</string>
-    <string name="twitter_username">Nom d’utilisateur Twitter</string>
+    <string name="twitter_username">Identifiant Twitter</string>
     <string name="sharing_comment_likes">Mentions J\'aime pour les commentaires</string>
     <string name="button_style">Style de bouton</string>
     <string name="label">Nom</string>
@@ -1045,7 +1110,7 @@ Language: fr
     <string name="people_dropdown_item_email_followers">Abonnés par E-mail</string>
     <string name="people_dropdown_item_followers">Abonnés</string>
     <string name="people_dropdown_item_team">Équipe</string>
-    <string name="invite_message_usernames_limit">Invitez jusqu’à 10 adresses de messagerie ou noms d’utilisateurs WordPress.com. Ceux nécessitant un nom d’utilisateur recevront les indications pour le créer.</string>
+    <string name="invite_message_usernames_limit">Invitez jusqu’à 10 adresses e-mail ou identifiants WordPress.com. Ceux nécessitant un identifiant recevront les indications pour le créer.</string>
     <string name="viewer_remove_confirmation_message">Si vous supprimez ce compte de lecteur/trice, il ou elle ne pourra plus se rendre sur ce site.\n\nVoulez-vous toujours supprimer ce compte ?</string>
     <string name="follower_remove_confirmation_message">Une fois supprimé, cet abonné ne recevra plus de notifications à propos de ce site, à moins de se réabonner.\n\nVoulez-vous vraiment supprimer cet abonné ?</string>
     <string name="follower_subscribed_since">Depuis le %1$s</string>
@@ -1090,7 +1155,7 @@ Language: fr
     <string name="invite_message_remaining_zero">Reste 0 caractère</string>
     <string name="invite_message_title">Message personnalisé</string>
     <string name="invite">Invitation</string>
-    <string name="invite_names_title">Noms d\'utilisateurs ou adresses de messagerie</string>
+    <string name="invite_names_title">Identifiants ou adresses e-mail</string>
     <string name="invite_people">Inviter des personnes</string>
     <string name="my_site_header_external">Externe</string>
     <string name="send_link">Envoyer le lien</string>
@@ -1238,7 +1303,7 @@ Language: fr
     <string name="privacy_public">Votre site est visible par tous et peut être indexé par les moteurs de recherche</string>
     <string name="about_me_hint">Quelques mots à propos de vous…</string>
     <string name="about_me">À propos de moi</string>
-    <string name="public_display_name_hint">Le nom d\'affichage par défaut est votre nom d\'utilisateur s\'il n\'est pas défini.</string>
+    <string name="public_display_name_hint">Le nom affiché par défaut est votre identifiant s\'il n\'est pas défini.</string>
     <string name="public_display_name">Public</string>
     <string name="last_name">Nom</string>
     <string name="first_name">Prénom</string>
@@ -1434,7 +1499,7 @@ Language: fr
     <string name="stats_insights_most_popular_hour">Heure la plus prisée</string>
     <string name="stats_insights_most_popular_day">Jour le plus prisé</string>
     <string name="stats_insights_today">Statistiques du jour</string>
-    <string name="stats_insights_popular">Jour et heure les plus prisés</string>
+    <string name="stats_insights_popular">Jour et heure les plus populaires</string>
     <string name="stats_insights_all_time">Articles, vues et visiteurs depuis la création</string>
     <string name="stats_insights">Tendances</string>
     <string name="stats_sign_in_jetpack_different_com_account">Pour afficher vos statistiques, connectez-vous au compte WordPress.com que vous avez utilisé pour vous connecter Jetpack.</string>
@@ -1762,7 +1827,7 @@ Language: fr
     <string name="error_media_upload">Désolé, une erreur est survenue pendant le téléversement du média</string>
     <string name="publish_date">Publié le</string>
     <string name="post_content">Contenu (touchez pour ajouter du texte et des médias)</string>
-    <string name="incorrect_credentials">Le nom d\'utilisateur ou le mot de passe ne sont pas valides.</string>
+    <string name="incorrect_credentials">L\'identifiant ou le mot de passe sont incorrects.</string>
     <string name="log_in">Connexion</string>
     <string name="username">Identifiant</string>
     <string name="password">Mot de passe</string>

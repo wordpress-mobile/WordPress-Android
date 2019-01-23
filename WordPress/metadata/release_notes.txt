@@ -1,3 +1,5 @@
-* You can now register a .blog subdomain when you start a new site on the app!
-* Looking to add GIFs to your content? Giphy support is here (while a few rare bugs are gone).
-* Content you publish with the new WordPress Editor now works smoothly on the app.
+* This is the first version of our refreshed stats! It’s completely rebuilt in the new design.
+* The Notifications list layout is more readable, as is the Me tab on tablets and large devices.
+* New privacy settings let you remove of geolocation from uploaded images.
+* Better messaging when there is no data to show in the stats screen adds clarity.
+* There was an issue where some users of self-hosted sites couldn’t update their password. Now all users can.

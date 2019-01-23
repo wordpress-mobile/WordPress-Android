@@ -44,6 +44,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPDATE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -522,15 +523,22 @@ class PagesViewModel
 
             pageMap[remoteId]?.let { page ->
                 val oldStatus = page.status
-                val action = PageAction(remoteId, UPLOAD) {
-                    val updatedPage = updatePageStatus(page, status)
-                    pageStore.updatePageInDb(updatedPage)
 
-                    refreshPages()
+                val action = if (status != TRASHED || remoteId > 0) {
+                    PageAction(remoteId, UPLOAD) {
+                        val updatedPage = updatePageStatus(page, status)
+                        pageStore.updatePageInDb(updatedPage)
 
-                    // Local pages can be trashed locally
-                    if (status != TRASHED || remoteId > 0) {
+                        refreshPages()
                         pageStore.uploadPageToServer(updatedPage)
+                    }
+                } else {
+                    // Local pages are trashed locally
+                    PageAction(remoteId, UPDATE) {
+                        val updatedPage = updatePageStatus(page, status)
+                        pageStore.updatePageInDb(updatedPage)
+
+                        refreshPages()
                     }
                 }
 

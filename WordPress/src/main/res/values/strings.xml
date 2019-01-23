@@ -792,7 +792,7 @@
     <string name="stats_no_data_yet">No data yet</string>
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="stats_empty_insights_title">No insights added yet</string>
-    <string name="stats_empty_insights_description">Customise your insights and get the low-down on your site’s performance</string>
+    <string name="stats_empty_insights_description">Customize your insights and get the low-down on your site’s performance</string>
     <string name="stats_button_manage_insights">Manage insights</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_followers_email">Email</string>
@@ -812,6 +812,7 @@
     <string name="stats_publicize_service_label">Service</string>
     <string name="stats_publicize_followers_label">Followers</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
@@ -1701,6 +1702,7 @@
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
+    <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>

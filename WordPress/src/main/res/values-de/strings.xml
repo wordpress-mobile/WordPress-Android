@@ -1,11 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-05 21:16:40+0000
+Translation-Revision-Date: 2019-01-07 14:38:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">Wähle eine verfügbare Adresse aus, damit andere dich im Web finden.</string>
+    <string name="giphy_powered_by_giphy">Bereitgestellt von GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">Einige Medien konnten aufgrund eines Netzwerkfehlers nicht geladen werden.</string>
+    <string name="giphy_picker_empty_search_list">Keine Medien entsprechen deiner Suche</string>
+    <string name="giphy_picker_initial_empty_text">Suche nach GIFs, die du deiner Mediathek hinzufügen kannst!</string>
+    <string name="giphy_picker_search_hint">Giphy durchsuchen</string>
+    <string name="photo_picker_giphy">Von Giphy auswählen</string>
+    <string name="stats_author_views_label">Aufrufe</string>
+    <string name="stats_author_label">Autor</string>
+    <string name="stats_authors">Autoren</string>
+    <string name="stats_search_terms_views_label">Aufrufe</string>
+    <string name="stats_search_terms_label">Suchbegriff</string>
+    <string name="stats_search_terms">Suchbegriffe</string>
+    <string name="stats_videos_views_label">Aufrufe</string>
+    <string name="stats_videos_title_label">Titel</string>
+    <string name="stats_videos">Videos</string>
+    <string name="stats_country_views_label">Aufrufe</string>
+    <string name="stats_country_label">Land</string>
+    <string name="stats_countries">Länder</string>
+    <string name="stats_clicks_label">Klicks</string>
+    <string name="stats_clicks_link_label">Link</string>
+    <string name="stats_clicks">Klicks</string>
+    <string name="stats_referrer_views_label">Aufrufe</string>
+    <string name="stats_referrer_label">Referrer</string>
+    <string name="stats_referrers">Referrer</string>
+    <string name="stats_posts_and_pages">Beiträge und Seiten</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">Path</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">Mehr anzeigen</string>
+    <string name="stats_insights_share_post">Beitrag teilen</string>
+    <string name="stats_insights_create_post">Beitrag erstellen</string>
+    <string name="stats_insights_latest_post_message">%2$s wurde vor %1$s veröffentlicht. Hier siehst du, wie der Beitrag bislang abschneidet</string>
+    <string name="stats_insights_latest_post_with_no_engagement">%2$s wurde vor %1$s veröffentlicht. Erhalte mehr Aufrufe deines Beitrags, indem du ihn teilst</string>
+    <string name="stats_insights_latest_post_empty">Du hast noch keine Beiträge veröffentlicht. Sobald du Beiträge veröffentlichst, wird hier eine Übersicht zum aktuellsten Beitrag angezeigt</string>
+    <string name="stats_insights_tags_and_categories">Schlagwörter und Kategorien</string>
+    <string name="stats_insights_all_time_stats">Gesamtstatistik</string>
+    <string name="stats_insights_most_popular_views_label">Aufrufe</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Tag/Stunde</string>
+    <string name="stats_insights_today_stats">Statistiken von heute</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">Follower</string>
+    <string name="stats_publicize_service_label">Dienst</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">Aufrufe</string>
+    <string name="stats_tags_and_categories_title_label">Titel</string>
+    <string name="stats_posts_and_pages_views_label">Aufrufe</string>
+    <string name="stats_posts_and_pages_title_label">Titel</string>
+    <string name="stats_comments_label">Kommentare</string>
+    <string name="stats_comments_title_label">Titel</string>
+    <string name="stats_comments_author_label">Autor</string>
+    <string name="stats_comments_posts_and_pages">Beiträge und Seiten</string>
+    <string name="stats_comments_authors">Autoren</string>
+    <string name="stats_follower_since_label">Seit</string>
+    <string name="stats_follower_label">Follower</string>
+    <string name="stats_followers_count_message">%1$s-Follower insgesamt: %2$s</string>
+    <string name="stats_followers_email">E-Mail</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">Einsichten verwalten</string>
+    <string name="stats_empty_insights_description">Passe deine Einsichten an und erhalte Details zur Performance deiner Website</string>
+    <string name="stats_empty_insights_title">Noch keine Einsichten hinzugefügt</string>
+    <string name="stats_no_data_yet">Noch keine Daten</string>
     <string name="menu_debug">Debug-Menü</string>
     <string name="preference_experimental">*EXPERIMENTELL*</string>
     <string name="site_settings_enable_gutenberg_summary">Dies ist nach wie vor eine experimentelle Version von Gutenberg</string>
@@ -481,7 +547,6 @@ Language: de
     <string name="site_creation_title_hint">Website-Titel</string>
     <string name="site_creation_domain_finish_button">Website erstellen</string>
     <string name="site_creation_domain_keywords_hint">Gib ein Stichwort ein, um weitere Vorschläge zu erhalten</string>
-    <string name="site_creation_label_domain_selection">Wähle eine verfügbare „deinname.wordpress.com“-Adresse, damit Personen dich im Web finden.</string>
     <string name="site_creation_label_domain_selection_title">Schritt 4 von 4</string>
     <string name="site_creation_label_site_details">Erzähle uns mehr von der Website, die du erstellen möchtest. Was sollen ihr Titel und Untertitel sein?</string>
     <string name="site_creation_label_site_details_title">Schritt 3 von 4</string>
@@ -585,7 +650,7 @@ Language: de
     <string name="plugin_byline">von %s</string>
     <string name="change_photo">Foto ändern</string>
     <string name="plugin_fetch_error">Plugins konnten nicht geladen werden</string>
-    <string name="my_site_btn_site_pages">Website-Seiten</string>
+    <string name="my_site_btn_site_pages">Seiten</string>
     <string name="site_settings_tags_hint">Verwalte deine Website-Schlagwörter</string>
     <string name="dlg_saving_tag">Wird gespeichert …</string>
     <string name="dlg_deleting_tag">Wird gelöscht …</string>
@@ -1106,7 +1171,7 @@ Language: de
     <string name="user_remove_confirmation_message">Falls du %1$s entfernst, kann dieser Benutzer nicht länger auf die Website zugreifen, aber alle von %1$s erstellten Beiträge verbleiben auf der Website.\n\nMöchtest du diesen Benutzter noch immer entfernen?</string>
     <string name="person_remove_confirmation_title">Entferne %1$s</string>
     <string name="role">Rolle</string>
-    <string name="people">Menschen</string>
+    <string name="people">Personen</string>
     <string name="reader_empty_posts_in_custom_list">Die Websites dieser Liste haben keine neuen Beiträge</string>
     <string name="error_remove_user">Benutzer konnte nicht entfernt werden</string>
     <string name="error_update_role">Benutzerrolle konnte nicht aktualisiert werden</string>
@@ -1434,7 +1499,6 @@ Language: de
     <string name="stats_insights_most_popular_hour">Beliebteste Uhrzeit</string>
     <string name="stats_insights_most_popular_day">Beliebtester Tag</string>
     <string name="stats_insights_today">Heutige Statistiken</string>
-    <string name="stats_insights_popular">Beliebtester Tag und Uhrzeit</string>
     <string name="stats_insights_all_time">Beiträge, Aufrufe und Besucher für den gesamten Zeitraum</string>
     <string name="stats_insights">Einsichten</string>
     <string name="stats_sign_in_jetpack_different_com_account">Um deine Statistiken anzuzeigen, melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendest.</string>
