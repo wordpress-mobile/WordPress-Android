@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation
+package org.wordpress.android.ui.sitecreation.previews
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -15,19 +15,25 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewGenericErrorUiState
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
-import org.wordpress.android.ui.sitecreation.creation.FetchWpComSiteUseCase
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceData
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType.UNKNOWN
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.SiteCreationState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewGenericErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteNotCreated
+import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceData
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -58,7 +64,7 @@ class NewSitePreviewViewModel @Inject constructor(
     private lateinit var urlWithoutScheme: String
     private var lastReceivedServiceState: NewSiteCreationServiceState? = null
     private var serviceStateForRetry: NewSiteCreationServiceState? = null
-    private var createSiteState: CreateSiteState = CreateSiteState.SiteNotCreated
+    private var createSiteState: CreateSiteState = SiteNotCreated
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
@@ -113,7 +119,10 @@ class NewSitePreviewViewModel @Inject constructor(
                         siteTagLine,
                         UrlUtils.extractSubDomain(urlWithoutScheme)
                 )
-                _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)
+                _startCreateSiteService.value = SitePreviewStartServiceData(
+                        serviceData,
+                        previousState
+                )
             }
         } else {
             showFullscreenErrorWithDelay()
@@ -143,7 +152,10 @@ class NewSitePreviewViewModel @Inject constructor(
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
-            tracker.trackErrorShown(ERROR_CONTEXT, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
+            tracker.trackErrorShown(
+                    ERROR_CONTEXT,
+                    INTERNET_UNAVAILABLE_ERROR
+            )
             withContext(MAIN) {
                 updateUiState(SitePreviewConnectionErrorUiState)
             }
@@ -175,7 +187,7 @@ class NewSitePreviewViewModel @Inject constructor(
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
                 tracker.trackErrorShown(
                         ERROR_CONTEXT,
-                        NewSiteCreationErrorType.UNKNOWN,
+                        UNKNOWN,
                         "NewSiteCreation service failed"
                 )
                 updateUiStateAsync(SitePreviewGenericErrorUiState)
@@ -193,7 +205,9 @@ class NewSitePreviewViewModel @Inject constructor(
                 val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
                     "Site successfully fetched but has not been found in the local db."
                 }
-                CreateSiteState.SiteCreationCompleted(siteBySiteId.id)
+                SiteCreationCompleted(
+                        siteBySiteId.id
+                )
             } else {
                 CreateSiteState.SiteNotInLocalDb(remoteSiteId)
             }

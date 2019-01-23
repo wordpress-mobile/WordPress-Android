@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM;
-import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel;
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel;
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel;

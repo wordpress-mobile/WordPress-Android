@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.creation
+package org.wordpress.android.ui.sitecreation.services
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.argumentCaptor
@@ -20,11 +20,12 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.GENERIC_ERRO
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_EXISTS
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceManager.NewSiteCreationServiceManagerListener
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceManager.NewSiteCreationServiceManagerListener
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
+import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
+import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 
 private const val LANGUAGE_ID = "lang_id"
 private const val NEW_SITE_REMOTE_ID = 1234L
@@ -39,7 +40,10 @@ private val DUMMY_SITE_DATA: NewSiteCreationServiceData = NewSiteCreationService
 
 private val IDLE_STATE = NewSiteCreationServiceState(IDLE)
 private val CREATE_SITE_STATE = NewSiteCreationServiceState(CREATE_SITE)
-private val SUCCESS_STATE = NewSiteCreationServiceState(SUCCESS, NEW_SITE_REMOTE_ID)
+private val SUCCESS_STATE = NewSiteCreationServiceState(
+        SUCCESS,
+        NEW_SITE_REMOTE_ID
+)
 private val FAILURE_STATE = NewSiteCreationServiceState(FAILURE)
 
 @InternalCoroutinesApi
@@ -60,7 +64,11 @@ class NewSiteCreationServiceManagerTest {
 
     @Before
     fun setUp() {
-        manager = NewSiteCreationServiceManager(useCase, dispatcher, TEST_DISPATCHER)
+        manager = NewSiteCreationServiceManager(
+                useCase,
+                dispatcher,
+                TEST_DISPATCHER
+        )
         successEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
         siteExistsErrorEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
         genericErrorEvent.error = NewSiteError(GENERIC_ERROR, "")
@@ -89,7 +97,11 @@ class NewSiteCreationServiceManagerTest {
             verify(serviceListener, times(3)).updateState(capture())
             assertThat(allValues[0]).isEqualTo(IDLE_STATE)
             assertThat(allValues[1]).isEqualTo(CREATE_SITE_STATE)
-            assertThat(allValues[2]).isEqualTo(NewSiteCreationServiceState(FAILURE))
+            assertThat(allValues[2]).isEqualTo(
+                    NewSiteCreationServiceState(
+                            FAILURE
+                    )
+            )
         }
     }
 
@@ -182,37 +194,57 @@ class NewSiteCreationServiceManagerTest {
 
     @Test
     fun verifyIllegalStateExceptionInUseCaseResultsInServiceErrorState() = test {
-        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
+        whenever(useCase.createSite(
+                DUMMY_SITE_DATA,
+                LANGUAGE_ID
+        ))
                 .thenThrow(IllegalStateException("Error"))
         startFlow()
         argumentCaptor<NewSiteCreationServiceState>().apply {
             verify(serviceListener, times(3)).updateState(capture())
             assertThat(allValues[0]).isEqualTo(IDLE_STATE)
             assertThat(allValues[1]).isEqualTo(CREATE_SITE_STATE)
-            assertThat(allValues[2]).isEqualTo(NewSiteCreationServiceState(FAILURE))
+            assertThat(allValues[2]).isEqualTo(
+                    NewSiteCreationServiceState(
+                            FAILURE
+                    )
+            )
         }
     }
 
     private fun startFlow() {
-        manager.onStart(LANGUAGE_ID, null, DUMMY_SITE_DATA, serviceListener)
+        manager.onStart(
+                LANGUAGE_ID, null,
+                DUMMY_SITE_DATA, serviceListener)
     }
 
     private fun retryFlow(previousState: String) {
-        manager.onStart(LANGUAGE_ID, previousState, DUMMY_SITE_DATA, serviceListener)
+        manager.onStart(
+                LANGUAGE_ID, previousState,
+                DUMMY_SITE_DATA, serviceListener)
     }
 
     private suspend fun setSuccessfulResponses() = test {
-        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
+        whenever(useCase.createSite(
+                DUMMY_SITE_DATA,
+                LANGUAGE_ID
+        ))
                 .thenReturn(successEvent)
     }
 
     private suspend fun setGenericErrorResponses() = test {
-        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
+        whenever(useCase.createSite(
+                DUMMY_SITE_DATA,
+                LANGUAGE_ID
+        ))
                 .thenReturn(genericErrorEvent)
     }
 
     private suspend fun setSiteExistsErrorResponses() = test {
-        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
+        whenever(useCase.createSite(
+                DUMMY_SITE_DATA,
+                LANGUAGE_ID
+        ))
                 .thenReturn(siteExistsErrorEvent)
     }
 }

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.creation
+package org.wordpress.android.ui.sitecreation.services
 
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
