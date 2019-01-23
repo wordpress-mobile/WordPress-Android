@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation.previews
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -13,8 +14,8 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.modules.IO_DISPATCHER
-import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType.UNKNOWN
@@ -49,12 +50,12 @@ class NewSitePreviewViewModel @Inject constructor(
     private val fetchWpComSiteUseCase: FetchWpComSiteUseCase,
     private val networkUtils: NetworkUtilsWrapper,
     private val tracker: NewSiteCreationTracker,
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     override val coroutineContext: CoroutineContext
-        get() = IO + job
+        get() = bgDispatcher + job
     private var isStarted = false
     private var webviewFullyLoadedTracked = false
 
@@ -148,7 +149,7 @@ class NewSitePreviewViewModel @Inject constructor(
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR)
-            withContext(MAIN) {
+            withContext(mainDispatcher) {
                 updateUiState(SitePreviewConnectionErrorUiState)
             }
         }
@@ -206,7 +207,7 @@ class NewSitePreviewViewModel @Inject constructor(
 
     private fun startPreLoadingWebView() {
         tracker.trackPreviewLoading()
-        launch(IO) {
+        launch {
             /**
              * Keep showing the full screen loading screen for 1 more second or until the webview is loaded whichever
              * happens first. This will give us some more time to fetch the newly created site.
@@ -216,7 +217,7 @@ class NewSitePreviewViewModel @Inject constructor(
              * If the webview is still not loaded after some delay, we'll show the loading shimmer animation instead
              * of the full screen progress, so the user is not blocked for taking actions.
              */
-            withContext(MAIN) {
+            withContext(mainDispatcher) {
                 if (uiState.value !is SitePreviewContentUiState) {
                     tracker.trackPreviewWebviewShown()
                     updateUiState(SitePreviewLoadingShimmerState(createSitePreviewData()))

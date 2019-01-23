@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.sitecreation.services
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
-import org.wordpress.android.modules.IO_DISPATCHER
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
@@ -21,11 +22,11 @@ import kotlin.properties.Delegates
 class NewSiteCreationServiceManager @Inject constructor(
     private val createSiteUseCase: CreateSiteUseCase,
     private val dispatcher: Dispatcher,
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     private val job = Job()
     override val coroutineContext: CoroutineContext
-        get() = IO + job
+        get() = bgDispatcher + job
 
     private lateinit var siteData: NewSiteCreationServiceData
     private lateinit var languageId: String

@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
 import android.support.annotation.VisibleForTesting
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -19,12 +20,8 @@ import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.models.networkresource.ListState.Success
-import org.wordpress.android.modules.IO_DISPATCHER
-import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType
-import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
@@ -32,6 +29,10 @@ import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewM
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_AND_KEYBOARD
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_ONLY
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -49,13 +50,13 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
     private val tracker: NewSiteCreationTracker,
-    @Named(IO_DISPATCHER) private val IO: CoroutineContext,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
     private var fetchDomainsJob: Job? = null
     override val coroutineContext: CoroutineContext
-        get() = IO + job
+        get() = bgDispatcher + job
     private var isStarted = false
 
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
@@ -147,7 +148,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
                 val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value)
-                withContext(MAIN) {
+                withContext(mainDispatcher) {
                     onDomainsFetched(query, onSuggestedDomains)
                 }
             }
