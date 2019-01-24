@@ -64,7 +64,7 @@ import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
-import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.OldStatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
@@ -89,7 +89,7 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
-import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
+import static org.wordpress.android.ui.stats.OldStatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
@@ -223,7 +223,7 @@ public class ActivityLauncher {
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        Intent statsIntent = new Intent(context, StatsActivity.class);
+        Intent statsIntent = new Intent(context, OldStatsActivity.class);
         statsIntent.putExtra(WordPress.SITE, site);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
@@ -281,7 +281,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_followers);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -294,7 +294,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_comments);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -307,7 +307,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_tags_and_categories);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -321,7 +321,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_tags_and_categories);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -335,7 +335,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_referrers);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -349,7 +349,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_clicks);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -363,7 +363,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_countries);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -377,7 +377,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_videos);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -391,7 +391,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_search_terms);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -405,7 +405,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_authors);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -418,7 +418,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
         intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
         String title = context.getResources().getString(R.string.stats_view_publicize);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
@@ -426,7 +426,7 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
-        Intent intent = new Intent(context, StatsActivity.class);
+        Intent intent = new Intent(context, OldStatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(LOGGED_INTO_JETPACK, true);
         context.startActivity(intent);

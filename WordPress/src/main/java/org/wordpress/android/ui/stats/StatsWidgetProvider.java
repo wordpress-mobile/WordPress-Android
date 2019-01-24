@@ -127,10 +127,10 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             // Update Likes
             updateTabValue(context, remoteViews, R.id.stats_widget_likes, data.optString("likes", " 0"));
 
-            Intent intent = new Intent(context, StatsActivity.class);
+            Intent intent = new Intent(context, OldStatsActivity.class);
             intent.putExtra(WordPress.SITE, site);
-            intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsActivity.StatsLaunchedFrom.STATS_WIDGET);
-            intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY);
+            intent.putExtra(OldStatsActivity.ARG_LAUNCHED_FROM, OldStatsActivity.StatsLaunchedFrom.STATS_WIDGET);
+            intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, site.getId(), intent, PendingIntent
                     .FLAG_UPDATE_CURRENT);
