@@ -224,7 +224,7 @@ public class ActivityLauncher {
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        Intent statsIntent = new Intent(context, OldStatsActivity.class);
+        Intent statsIntent = new Intent(context, StatsActivity.class);
         statsIntent.putExtra(WordPress.SITE, site);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
