@@ -429,7 +429,6 @@ class PostListViewModel @Inject constructor(
             }
         }
         val onDismissAction = {
-            localPostIdForConflictResolutionDialog = null
             originalPostCopyForConflictUndo = null
         }
         val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_local_version_discarded,
@@ -655,6 +654,7 @@ class PostListViewModel @Inject constructor(
                 publishPost(it)
             }
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
+                localPostIdForConflictResolutionDialog = null
                 // here load version from remote
                 updateConflictedPostWithItsRemoteVersion(it)
             }
@@ -736,8 +736,6 @@ class PostListViewModel @Inject constructor(
             originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
             _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
-        } else {
-            localPostIdForConflictResolutionDialog = null
         }
     }
 
@@ -746,8 +744,6 @@ class PostListViewModel @Inject constructor(
         if (!checkNetworkConnection()) {
             return
         }
-
-        localPostIdForConflictResolutionDialog = null
 
         // Keep a reference to which post is being updated with the local version so we can avoid showing the conflicted
         // label during the undo snackbar.
