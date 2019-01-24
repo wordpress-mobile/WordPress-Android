@@ -14,6 +14,7 @@ if [ x"$3" == x ]; then
 fi
 
 mkdir -p $BUILDDIR
+> "$LOGFILE"
 
 current_branch=`git rev-parse --abbrev-ref HEAD`
 release_branch=$1

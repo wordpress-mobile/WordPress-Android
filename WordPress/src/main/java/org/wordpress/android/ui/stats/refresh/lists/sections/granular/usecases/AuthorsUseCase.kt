@@ -10,8 +10,9 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewAuthors
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -108,7 +109,10 @@ constructor(
                                     text = post.title,
                                     value = post.views.toFormattedString(),
                                     showDivider = false,
-                                    navigationAction = post.url?.let { create(it, this::onPostClicked) }
+                                    navigationAction = create(
+                                            PostClickParams(post.id, post.url, post.title),
+                                            this::onPostClicked
+                                    )
                             )
                         })
                         items.add(Divider)
@@ -133,12 +137,25 @@ constructor(
         navigateTo(ViewAuthors(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
     }
 
-    private fun onPostClicked(url: String) {
+    private fun onPostClicked(params: PostClickParams) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_POST_TAPPED, statsGranularity)
-        navigateTo(ViewUrl(url))
+        navigateTo(
+                ViewPostDetailStats(
+                        postId = params.postId,
+                        postTitle = params.postTitle,
+                        postUrl = params.postUrl,
+                        postType = StatsConstants.ITEM_TYPE_POST
+                )
+        )
     }
 
     data class SelectedAuthor(val author: AuthorsModel.Author? = null)
+
+    private data class PostClickParams(
+        val postId: String,
+        val postUrl: String?,
+        val postTitle: String
+    )
 
     class AuthorsUseCaseFactory
     @Inject constructor(

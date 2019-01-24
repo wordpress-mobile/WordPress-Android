@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
@@ -213,5 +216,11 @@ class StatsModule {
         return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(YEARS) }, {
             statsStore.getTimeStatsTypes()
         })
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPrefs(context: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)
     }
 }
