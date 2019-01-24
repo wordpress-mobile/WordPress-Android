@@ -714,7 +714,7 @@ public class ActivityLauncher {
 
     public static void newBlogForResult(Activity activity) {
         Intent intent = new Intent(activity,
-                BuildConfig.DEBUG ? NewSiteCreationActivity.class : SiteCreationActivity.class);
+                BuildConfig.NEW_SITE_CREATION_ENABLED ? NewSiteCreationActivity.class : SiteCreationActivity.class);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
