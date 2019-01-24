@@ -14,6 +14,7 @@ if [ x"$2" == x ]; then
 fi
 
 mkdir -p $BUILDDIR
+> "$LOGFILE"
 
 current_branch=`git rev-parse --abbrev-ref HEAD`
 beta_branch=$1
