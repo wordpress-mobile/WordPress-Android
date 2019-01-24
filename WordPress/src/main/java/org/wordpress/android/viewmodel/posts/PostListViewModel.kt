@@ -118,6 +118,7 @@ class PostListViewModel @Inject constructor(
     private var localPostIdForTrashDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
     private var originalPostCopyForConflictUndo: PostModel? = null
+    private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
     // Initial target post to scroll to
     private var targetLocalPostId: Int? = null
 
@@ -354,7 +355,7 @@ class PostListViewModel @Inject constructor(
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state.
-        if (PostUtils.isPostInConflictWithRemote(post)) {
+        if (doesPostHaveUnhandledConflict(post)) {
             showConflictedPostResolutionDialog(post)
             return
         }
@@ -567,7 +568,7 @@ class PostListViewModel @Inject constructor(
                 date = PostUtils.getFormattedDate(post),
                 postStatus = postStatus,
                 isLocallyChanged = post.isLocallyChanged,
-                isConflicted = PostUtils.isPostInConflictWithRemote(post),
+                isConflicted = doesPostHaveUnhandledConflict(post),
                 canShowStats = canShowStats,
                 canPublishPost = canPublishPost,
                 canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
@@ -746,28 +747,28 @@ class PostListViewModel @Inject constructor(
             return
         }
 
-        val post = postStore.getPostByLocalPostId(localPostId) ?: return
-
         localPostIdForConflictResolutionDialog = null
 
-        // keep a copy for undoing
-        originalPostCopyForConflictUndo = post.clone()
+        // Keep a reference to which post is being updated with the local version so we can avoid showing the conflicted
+        // label during the undo snackbar.
+        localPostIdForFetchingRemoteVersionOfConflictedPost = localPostId
+        pagedListWrapper.invalidateData()
 
-        // we make remoteLastModified match local lastModified to clear the "conflicted" flag in the Post list only
-        post.remoteLastModified = post.lastModified
-        dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
+        val post = postStore.getPostByLocalPostId(localPostId) ?: return
 
         // and now show a snackbar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
         var isUndoed = false
         val undoAction = {
             isUndoed = true
-            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
-            originalPostCopyForConflictUndo = null
+
+            // Remove the reference for the post being updated and re-show the conflicted label on undo
+            localPostIdForFetchingRemoteVersionOfConflictedPost = null
+            pagedListWrapper.invalidateData()
         }
 
         val onDismissAction = {
             if (!isUndoed) {
-                originalPostCopyForConflictUndo = null
+                localPostIdForFetchingRemoteVersionOfConflictedPost = null
                 PostUtils.trackSavePostAnalytics(post, site)
                 dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
             }
@@ -778,6 +779,13 @@ class PostListViewModel @Inject constructor(
     }
 
     // Utils
+
+    private fun doesPostHaveUnhandledConflict(post: PostModel): Boolean {
+        // If we are fetching the remote version of a conflicted post, it means it's already being handled
+        val isFetchingConflictedPost = localPostIdForFetchingRemoteVersionOfConflictedPost != null &&
+                localPostIdForFetchingRemoteVersionOfConflictedPost == post.id
+        return !isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post)
+    }
 
     private fun checkNetworkConnection(): Boolean =
             if (isNetworkAvailable) {
