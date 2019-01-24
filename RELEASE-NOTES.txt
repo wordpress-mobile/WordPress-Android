@@ -1,5 +1,4 @@
 * Added a dialog for user to resolve a conflicted Post (different local / web version)
-* Introduced new site creation wizard
 * Refreshed page list layout that includes a timestamp and a featured image thumbnail
 * Fixed a bug causing disappearance of old saved posts
 * Add Importing from Giphy in Editor and Media Library
