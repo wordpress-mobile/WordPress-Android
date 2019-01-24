@@ -470,15 +470,6 @@ public class MySiteFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if ((getActivity() != null && getActivity().getIntent().hasExtra(ARG_QUICK_START_TASK))) {
-            QuickStartTask taskFromNotification =
-                    (QuickStartTask) getActivity().getIntent().getSerializableExtra(ARG_QUICK_START_TASK);
-            getActivity().getIntent().removeExtra(ARG_QUICK_START_TASK);
-
-            mActiveTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(taskFromNotification);
-            showActiveQuickStartTutorial();
-        }
-
         if (mActiveTutorialPrompt != null) {
             showQuickStartFocusPoint();
         }
