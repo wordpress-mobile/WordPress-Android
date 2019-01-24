@@ -40,7 +40,7 @@ class AuthorsSqlUtilsTest {
     @Before
     fun setUp() {
         timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils, statsUtils)
-        whenever(statsUtils.getFormattedDate(eq(site), eq(DATE))).thenReturn(STRING_DATE)
+        whenever(statsUtils.getFormattedDate(eq(DATE))).thenReturn(STRING_DATE)
     }
 
     @Test

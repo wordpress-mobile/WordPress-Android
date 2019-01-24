@@ -68,7 +68,7 @@ class AuthorsRestClientTest {
                 gson,
                 statsUtils
         )
-        whenever(statsUtils.getFormattedDate(eq(site), eq(requestedDate))).thenReturn(stringDate)
+        whenever(statsUtils.getFormattedDate(eq(requestedDate))).thenReturn(stringDate)
     }
 
     @Test
