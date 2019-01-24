@@ -16,6 +16,7 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -34,6 +35,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment() {
     private lateinit var skipNextButton: AppCompatButton
     private lateinit var siteTitleEditText: TextInputEditText
     private lateinit var tagLineEditText: TextInputEditText
+    private lateinit var headerContainer: ViewGroup
 
     private lateinit var skipClickedListener: OnSkipClickedListener
     private lateinit var helpClickedListener: OnHelpClickedListener
@@ -70,6 +72,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment() {
         initSkipNextButton(rootView)
         siteTitleEditText = rootView.findViewById(R.id.site_info_site_title)
         initTaglineEditText(rootView)
+        headerContainer = rootView.findViewById(R.id.header_container)
         initViewModel()
         initTextWatchers()
     }
@@ -134,6 +137,8 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment() {
         })
         viewModel.onTitleInputFocusRequested.observe(this, Observer {
             siteTitleEditText.requestFocus()
+            // announce header when the input focus is forced
+            headerContainer.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
         })
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_SITE_INFO)
