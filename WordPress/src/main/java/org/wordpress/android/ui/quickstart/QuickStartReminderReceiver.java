@@ -50,7 +50,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
             return;
         }
 
-
         Intent resultIntent = new Intent(context, WPMainActivity.class);
         resultIntent.putExtra(MySiteFragment.ARG_QUICK_START_TASK, quickStartTaskDetails.getTask());
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -59,7 +58,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         resultIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         PendingIntent notificationContentIntent = PendingIntent.getActivity(context, QUICK_START_REMINDER_NOTIFICATION,
                 resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         Notification notification = new NotificationCompat.Builder(context,
@@ -71,7 +69,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .setContentIntent(notificationContentIntent)
                 .build();
-
 
         if (notificationManager != null) {
             notificationManager.notify(QUICK_START_REMINDER_NOTIFICATION, notification);
