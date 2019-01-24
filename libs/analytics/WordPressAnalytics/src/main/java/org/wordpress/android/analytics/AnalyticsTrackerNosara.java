@@ -877,6 +877,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_posts_and_pages_item_tapped";
             case STATS_REFERRERS_VIEW_MORE_TAPPED:
                 return "stats_referrers_view_more_tapped";
+            case STATS_REFERRERS_ITEM_TAPPED:
+                return "stats_referrers_item_tapped";
             case STATS_CLICKS_VIEW_MORE_TAPPED:
                 return "stats_clicks_view_more_tapped";
             case STATS_COUNTRIES_VIEW_MORE_TAPPED:
