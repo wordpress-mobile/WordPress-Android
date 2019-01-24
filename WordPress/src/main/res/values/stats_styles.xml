@@ -177,7 +177,6 @@
     <style name="StatsBlockColumnSmallValue" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/stats_block_column</item>
         <item name="android:textSize">@dimen/text_sz_post_content</item>
-        <item name="android:paddingBottom">@dimen/margin_medium</item>
     </style>
 
     <style name="StatsGraphLabel">
