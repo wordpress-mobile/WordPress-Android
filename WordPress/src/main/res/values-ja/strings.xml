@@ -1,11 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-30 13:54:07+0000
+Translation-Revision-Date: 2019-01-03 19:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">有効なアドレスを選んで、訪問者がウェブでサイトを見つけられるようにしてください。</string>
+    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">ネットワークエラーにより一部のメディアが読み込めませんでした。</string>
+    <string name="giphy_picker_empty_search_list">検索と一致するメディアがありません</string>
+    <string name="giphy_picker_initial_empty_text">GIF を検索して、メディアライブラリに追加してください。</string>
+    <string name="giphy_picker_search_hint">Giphy を検索する</string>
+    <string name="photo_picker_giphy">Giphy から選択する</string>
+    <string name="stats_author_views_label">表示回数</string>
+    <string name="stats_author_label">投稿者</string>
+    <string name="stats_authors">投稿者</string>
+    <string name="stats_search_terms_views_label">表示回数</string>
+    <string name="stats_search_terms_label">検索キーワード</string>
+    <string name="stats_search_terms">検索キーワード</string>
+    <string name="stats_videos_views_label">表示回数</string>
+    <string name="stats_videos_title_label">タイトル</string>
+    <string name="stats_videos">動画</string>
+    <string name="stats_country_views_label">表示回数</string>
+    <string name="stats_country_label">国名</string>
+    <string name="stats_countries">国</string>
+    <string name="stats_clicks_label">クリック数</string>
+    <string name="stats_clicks_link_label">リンク</string>
+    <string name="stats_clicks">クリック数</string>
+    <string name="stats_referrer_views_label">表示回数</string>
+    <string name="stats_referrer_label">リファラ</string>
+    <string name="stats_referrers">リファラ</string>
+    <string name="stats_posts_and_pages">投稿とページ</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">パス</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">詳細を表示</string>
+    <string name="stats_insights_share_post">投稿をシェア</string>
+    <string name="stats_insights_create_post">投稿を作成</string>
+    <string name="stats_insights_latest_post_message">「%2$s」が公開されてから%1$sが経過しました。投稿のこれまでのパフォーマンスは次のとおりです</string>
+    <string name="stats_insights_latest_post_with_no_engagement">「%2$s」が公開されてから%1$sが経過しました。投稿をシェアして閲覧数を増やしましょう</string>
+    <string name="stats_insights_latest_post_empty">公開した投稿はまだありません公開を開始すると、最新の投稿のサマリーがここに表示されます</string>
+    <string name="stats_insights_tags_and_categories">タグとカテゴリー</string>
+    <string name="stats_insights_all_time_stats">一般的な統計</string>
+    <string name="stats_insights_most_popular_views_label">表示回数</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">日/時間</string>
+    <string name="stats_insights_today_stats">本日の統計情報</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">フォロワー</string>
+    <string name="stats_publicize_service_label">サービス</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">表示回数</string>
+    <string name="stats_tags_and_categories_title_label">タイトル</string>
+    <string name="stats_posts_and_pages_views_label">表示回数</string>
+    <string name="stats_posts_and_pages_title_label">タイトル</string>
+    <string name="stats_comments_label">コメント</string>
+    <string name="stats_comments_title_label">タイトル</string>
+    <string name="stats_comments_author_label">投稿者</string>
+    <string name="stats_comments_posts_and_pages">Posts and pages</string>
+    <string name="stats_comments_authors">投稿者</string>
+    <string name="stats_follower_since_label">開始日:</string>
+    <string name="stats_follower_label">フォロワー</string>
+    <string name="stats_followers_count_message">Total %1$s Followers:%2$s</string>
+    <string name="stats_followers_email">メール</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">インサイトを管理</string>
+    <string name="stats_empty_insights_description">インサイトをカスタマイズして、サイトのパフォーマンスを安定させましょう</string>
+    <string name="stats_empty_insights_title">インサイトは追加されていません</string>
+    <string name="stats_no_data_yet">データはまだありません</string>
+    <string name="menu_debug">デバッグメニュー</string>
+    <string name="preference_experimental">* 試験用 *</string>
+    <string name="site_settings_enable_gutenberg_summary">この Gutenberg はまだ試験用です</string>
+    <string name="site_settings_enable_gutenberg">Gutenberg を有効にする</string>
     <string name="change_password_dialog_message">パスワードを変更しています…</string>
     <string name="change_password_dialog_hint">パスワードは6文字以上にする必要があります。さらに強力なパスワードを作成するには、大文字小文字、数字、! \" ? $ % ^ &amp; ) などの記号を使用してください。</string>
     <string name="change_password_confirmation">パスワードを変更しました</string>
@@ -26,7 +96,6 @@ Language: ja_JP
     <string name="dialog_gutenberg_compatibility_message">現在、新しい WordPress エディターを準備中です。この投稿は引き続き編集できますが、公開する前にプレビューすることをお勧めします。</string>
     <string name="dialog_gutenberg_compatibility_title">続行する前に</string>
     <string name="media_space_used">%1$s を使用</string>
-    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">WordPress.com または Jetpack と連携したインストール型 WordPress サイトを入力してください</string>
     <string name="history_loading_revision">変更履歴を読み込んでいます</string>
     <string name="history_loaded_revision">変更履歴の読み取りが完了しました</string>
@@ -478,7 +547,6 @@ Language: ja_JP
     <string name="site_creation_title_hint">サイトのタイトル</string>
     <string name="site_creation_domain_finish_button">サイトの作成</string>
     <string name="site_creation_domain_keywords_hint">その他のアイデアについてはキーワードを入力します</string>
-    <string name="site_creation_label_domain_selection">有効な「yourname.wordpress.com」アドレスを選んで、訪問者がウェブでサイトを見つけられるようにしてください。</string>
     <string name="site_creation_label_domain_selection_title">ステップ4/4</string>
     <string name="site_creation_label_site_details">作成するサイトについて詳しく教えてください。タイトルとタグラインは何ですか ?</string>
     <string name="site_creation_label_site_details_title">ステップ3/4</string>
@@ -1430,7 +1498,6 @@ Language: ja_JP
     <string name="stats_insights_most_popular_hour">最も人気の時間</string>
     <string name="stats_insights_most_popular_day">最も人気の日</string>
     <string name="stats_insights_today">今日の統計情報</string>
-    <string name="stats_insights_popular">最も人気の日と時間</string>
     <string name="stats_insights_all_time">全期間の投稿、表示数、訪問者</string>
     <string name="stats_insights">まとめ</string>
     <string name="stats_sign_in_jetpack_different_com_account">統計情報を表示するには、Jetpack 連携の際に使用した WordPress.com アカウントにログインしてください。</string>

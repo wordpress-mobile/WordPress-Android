@@ -13,29 +13,10 @@ buildscript {
 repositories {
     google()
     jcenter()
-    maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
+    maven { url "https://giphy.bintray.com/giphy-sdk" }
     maven { url "https://jitpack.io" }
-
-    if (!rootProject.ext.buildGutenbergFromSource) {
-        // When building from binaries, add the RN maven repos here instead of the top level, to minimize false negatives
-        //  when gradle tries to get artifacts we know don't exist in the NPM CDNS (example: Zendesk artifacts)
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "https://cdn.jsdelivr.net/npm/react-native@0.57.5/android"
-        }
-        maven {
-            // Local Maven repo containing AARs with JSC library built for Android
-            url "https://cdn.jsdelivr.net/npm/jsc-android@224109.1.0/dist/"
-        }
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        force 'org.webkit:android-jsc:r224109'
-    }
 }
 
 apply plugin: 'com.android.application'
@@ -62,8 +43,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-142"
-        versionCode 653
+        versionName "alpha-149"
+        versionCode 671
         minSdkVersion 21
         targetSdkVersion 26
 
@@ -196,9 +177,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.6.1'
     testImplementation 'org.robolectric:shadows-multidex:3.6.1'
-    testImplementation 'org.mockito:mockito-core:2.20.1'
-    testImplementation 'com.nhaarman:mockito-kotlin:1.6.0'
-    testImplementation 'org.assertj:assertj-core:2.9.1'
+    testImplementation 'org.mockito:mockito-core:2.23.0'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
+    testImplementation 'org.assertj:assertj-core:3.11.1'
 
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestImplementation 'org.objenesis:objenesis:2.1'
@@ -216,7 +197,7 @@ dependencies {
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestCompile 'tools.fastlane:screengrab:1.2.0',  {
+    androidTestImplementation 'tools.fastlane:screengrab:1.2.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
 
@@ -246,14 +227,20 @@ dependencies {
         exclude group: 'com.google.dagger'
     }
 
+    implementation('com.giphy.sdk:core:1.0.2@aar') {
+        transitive = true
+    }
+
     lintChecks 'org.wordpress:lint:1.0.1'
 
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.5.0'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 }
 
 configurations.all {

@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
@@ -73,12 +74,16 @@ public class ReaderFollowButton extends LinearLayout {
         // show green icon if site is followed, gray icon if not followed and there's a caption,
         // blue icon if not followed and there is no caption
         int drawableId;
+        int colorId;
         if (mIsFollowed) {
-            drawableId = R.drawable.ic_reader_following_alert_green_24dp;
+            drawableId = R.drawable.ic_reader_following_white_24dp;
+            colorId = R.color.alert_green;
         } else {
-            drawableId = R.drawable.ic_reader_follow_blue_medium_24dp;
+            drawableId = R.drawable.ic_reader_follow_white_24dp;
+            colorId = R.color.blue_medium;
         }
         mImageFollow.setImageResource(drawableId);
+        mImageFollow.setImageTintList(ColorStateList.valueOf(getContext().getResources().getColor(colorId)));
     }
 
     @Override

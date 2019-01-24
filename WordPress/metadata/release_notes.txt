@@ -1,4 +1,5 @@
-This release takes care of a pair of pesky bugs:
-
-* If your site had no title set, you’d see an empty field where the title would ordinarily go. Now, you’ll see “WordPress” there. (Also: you should give your site a title! It’s good for SEO.)
-* Sometimes the History screens for pages and posts wouldn’t actually show the differences between revisions, making the screen a little pointless. That’s fixed, so the History screen is once again useful.
+* This is the first version of our refreshed stats! It’s completely rebuilt in the new design.
+* The Notifications list layout is more readable, as is the Me tab on tablets and large devices.
+* New privacy settings let you remove of geolocation from uploaded images.
+* Better messaging when there is no data to show in the stats screen adds clarity.
+* There was an issue where some users of self-hosted sites couldn’t update their password. Now all users can.

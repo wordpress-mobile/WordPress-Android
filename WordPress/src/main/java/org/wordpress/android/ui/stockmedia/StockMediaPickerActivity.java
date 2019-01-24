@@ -111,7 +111,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
-        setContentView(R.layout.stock_media_picker_activity);
+        setContentView(R.layout.media_picker_activity);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -590,7 +590,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         @NonNull
         @Override
         public StockViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.stock_media_picker_thumbnail, parent, false);
+            View view = getLayoutInflater().inflate(R.layout.media_picker_thumbnail, parent, false);
             return new StockViewHolder(view);
         }
 

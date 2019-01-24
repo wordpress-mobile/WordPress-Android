@@ -2,9 +2,9 @@ package org.wordpress.android.viewmodel.pages
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -45,7 +45,7 @@ class SearchListViewModelTest {
 
     @Before
     fun setUp() {
-        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null)
+        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null, 0)
         viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE)
         searchPages = MutableLiveData()
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
@@ -62,12 +62,14 @@ class SearchListViewModelTest {
     @Test
     fun `adds divider to published group`() {
         val expectedTitle = "title"
+        var searchResult: List<PageItem>? = null
+        viewModel.searchResult.observeForever { searchResult = it }
         for (status in PageListType.values()) {
             whenever(resourceProvider.getString(status.title)).thenReturn(expectedTitle)
 
             searchPages.value = sortedMapOf(status to listOf())
 
-            assertThat(viewModel.searchResult.value).containsOnly(Divider(expectedTitle))
+            assertThat(searchResult).containsOnly(Divider(expectedTitle))
         }
     }
 
@@ -110,7 +112,7 @@ class SearchListViewModelTest {
 
     @Test
     fun `passes action to page view model on menu action`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", listOf(), 0, false)
+        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null, false)
         val action = VIEW_PAGE
 
         viewModel.onMenuAction(action, clickedPage)
@@ -120,7 +122,7 @@ class SearchListViewModelTest {
 
     @Test
     fun `passes page to page view model on item tapped`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", listOf(), 0, false)
+        val clickedPage = PageItem.PublishedPage(1, "title", Date(), listOf(), 0, null, false)
 
         viewModel.onItemTapped(clickedPage)
 

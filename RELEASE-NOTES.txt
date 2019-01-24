@@ -1,0 +1,9 @@
+* Introduced new site creation wizard
+* Refreshed page list layout that includes a timestamp and a featured image thumbnail
+* Fixed a bug causing disappearance of old saved posts
+* Add Importing from Giphy in Editor and Media Library
+* Add support for .blog subdomains on new sites.
+* First version of the refreshed stats project - all tabs and all the blocks are completely rewritten in new design
+* Fix the coloring issue with Countries map stats block
+* Fix a crash in Stats for new sites with no data (date parsing in the Overview block)
+
