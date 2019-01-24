@@ -61,6 +61,10 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
                         R.color.dialog_compound_button_track));
             }
         }
+
+        // Add padding to start of switch.
+        ViewCompat.setPaddingRelative(getSwitch((ViewGroup) view),
+                getContext().getResources().getDimensionPixelSize(R.dimen.margin_extra_large), 0, 0, 0);
     }
 
     private Switch getSwitch(ViewGroup parentView) {

@@ -749,6 +749,8 @@
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_collect_information">Collect information</string>
+    <string name="preference_crash_reports">Crash reports</string>
+    <string name="preference_crash_reports_summary">Allow automatic crash reports to help us improve the app\'s performance.</string>
     <string name="preference_privacy_settings">Privacy settings</string>
     <string name="cookie_policy_learn_more_header">Cookie Policy</string>
     <string name="cookie_policy_learn_more_caption">Share information with our analytics tool about your use of services while logged in to your WordPress.com account.</string>

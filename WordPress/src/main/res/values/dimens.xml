@@ -373,4 +373,7 @@
     <dimen name="stats_header_height">32dp</dimen>
     <dimen name="stats_bar_chart_height">180dp</dimen>
     <dimen name="stats_block_icon_size">24dp</dimen>
+
+    <dimen name="settings_icon_size">24dp</dimen>
+
 </resources>
