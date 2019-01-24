@@ -79,7 +79,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             case CUSTOMIZE:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
-                setCompleteViewImage(R.drawable.img_illustration_completed_quick_start_customize_191dp);
+                setCompleteViewImage(R.drawable.img_illustration_site_brush_191dp);
                 break;
             case GROW:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, GROW));
@@ -89,10 +89,9 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             case UNKNOWN:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
-                setCompleteViewImage(R.drawable.img_illustration_completed_quick_start_customize_191dp);
+                setCompleteViewImage(R.drawable.img_illustration_site_brush_191dp);
                 break;
         }
-
 
         boolean isCompletedTasksListExpanded = savedInstanceState != null
                                                && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
