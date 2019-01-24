@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
+import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -711,7 +713,8 @@ public class ActivityLauncher {
     }
 
     public static void newBlogForResult(Activity activity) {
-        Intent intent = new Intent(activity, NewSiteCreationActivity.class);
+        Intent intent = new Intent(activity,
+                BuildConfig.DEBUG ? NewSiteCreationActivity.class : SiteCreationActivity.class);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
