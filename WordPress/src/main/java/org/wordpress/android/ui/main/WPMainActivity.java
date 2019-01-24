@@ -62,6 +62,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
+import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -702,6 +703,12 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
+    private void jumpNewPost(Intent data) {
+        if (data != null && data.getBooleanExtra(SiteCreationActivity.KEY_DO_NEW_POST, false)) {
+            ActivityLauncher.addNewPostForResult(this, mSelectedSite, false);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -735,6 +742,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 }
 
                 setSite(data);
+                jumpNewPost(data);
                 showQuickStartDialog();
                 break;
             case RequestCodes.ADD_ACCOUNT:
@@ -758,6 +766,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
 
                     setSite(data);
+                    jumpNewPost(data);
 
                     if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
