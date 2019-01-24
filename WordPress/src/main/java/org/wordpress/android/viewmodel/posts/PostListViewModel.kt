@@ -421,21 +421,6 @@ class PostListViewModel @Inject constructor(
         _snackbarAction.postValue(snackbarHolder)
     }
 
-    private fun onRemoteCopyLoaded(post: PostModel) {
-        val undoAction = {
-            // here replace the post with whatever we had before, again
-            if (originalPostCopyForConflictUndo != null) {
-                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
-            }
-        }
-        val onDismissAction = {
-            originalPostCopyForConflictUndo = null
-        }
-        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_local_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
-        _snackbarAction.postValue(snackbarHolder)
-    }
-
     // FluxC Events
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -448,6 +433,14 @@ class PostListViewModel @Inject constructor(
                             T.POSTS,
                             "Error updating the post with type: ${event.error.type} and message: ${event.error.message}"
                     )
+                } else {
+                    originalPostCopyForConflictUndo?.id?.let {
+                        val updatedPost = postStore.getPostByLocalPostId(it)
+                        // Conflicted post has been successfully updated with its remote version
+                        if (!PostUtils.isPostInConflictWithRemote(updatedPost)) {
+                            conflictedPostUpdatedWithItsRemoteVersion()
+                        }
+                    }
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {
@@ -575,14 +568,6 @@ class PostListViewModel @Inject constructor(
                 featuredImageUrl = getFeaturedImageUrl(post.featuredImageId, post.content),
                 uploadStatus = uploadStatus
         )
-
-        // A conflicted Post to be fixed by loading the remote version:
-        // the remote copy has just been loaded and the list is looking to create an item for it
-        if (localPostIdForConflictResolutionDialog != null &&
-                post.id == localPostIdForConflictResolutionDialog &&
-                !PostUtils.isPostInConflictWithRemote(post)) {
-            onRemoteCopyLoaded(post)
-        }
 
         return PostAdapterItem(
                 data = postData,
@@ -725,6 +710,8 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    // Post Conflict Resolution
+
     private fun updateConflictedPostWithItsRemoteVersion(localPostId: Int) {
         // We need network connection to load a remote post
         if (!checkNetworkConnection()) {
@@ -737,6 +724,21 @@ class PostListViewModel @Inject constructor(
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
             _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
         }
+    }
+
+    private fun conflictedPostUpdatedWithItsRemoteVersion() {
+        val undoAction = {
+            // here replace the post with whatever we had before, again
+            if (originalPostCopyForConflictUndo != null) {
+                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
+            }
+        }
+        val onDismissAction = {
+            originalPostCopyForConflictUndo = null
+        }
+        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_local_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        _snackbarAction.postValue(snackbarHolder)
     }
 
     private fun updateConflictedPostWithItsLocalVersion(localPostId: Int) {
