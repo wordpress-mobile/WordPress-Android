@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/error_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/cancel_wizard_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/cancel_new_site_wizard_content_description"
+        android:padding="@dimen/margin_extra_large"
+        android:src="@drawable/ic_close_white_24dp"
+        android:tint="@color/wp_blue"
+        android:visibility="gone"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/error_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:gravity="center"
+        android:textColor="@color/wp_grey_darken_10"
+        android:textSize="@dimen/text_sz_extra_large"
+        app:fixWidowWords="true"
+        app:layout_constraintBottom_toTopOf="@+id/error_subtitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="No internet connection"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/error_subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:gravity="center"
+        android:textColor="@color/wp_grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        app:fixWidowWords="true"
+        app:layout_constraintBottom_toTopOf="@+id/error_retry"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/error_title"
+        tools:text="Error communicating with the server, please try again"/>
+
+    <Button
+        android:id="@+id/error_retry"
+        style="@style/WordPress.Button.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:text="@string/retry"
+        app:layout_constraintBottom_toTopOf="@+id/contact_support"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/error_subtitle"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/contact_support"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="@string/contact_support"
+        android:textAllCaps="true"
+        android:textColor="@color/wp_blue_medium"
+        android:visibility="gone"
+        app:fixWidowWords="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/error_retry"/>
+
+</android.support.constraint.ConstraintLayout>
