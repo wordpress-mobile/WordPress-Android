@@ -64,7 +64,7 @@ class SearchTermsRestClientTest {
                 userAgent,
                 statsUtils
         )
-        whenever(statsUtils.getFormattedDate(eq(site), eq(currentDate))).thenReturn(currentDateValue)
+        whenever(statsUtils.getFormattedDate(eq(currentDate))).thenReturn(currentDateValue)
     }
 
     @Test
