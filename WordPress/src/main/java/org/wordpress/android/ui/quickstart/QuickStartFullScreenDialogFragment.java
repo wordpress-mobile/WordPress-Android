@@ -84,7 +84,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             case GROW:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, GROW));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, GROW));
-                setCompleteViewImage(R.drawable.img_illustration_completed_quick_start_grow_182dp);
+                setCompleteViewImage(R.drawable.img_illustration_site_about_182dp);
                 break;
             case UNKNOWN:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
