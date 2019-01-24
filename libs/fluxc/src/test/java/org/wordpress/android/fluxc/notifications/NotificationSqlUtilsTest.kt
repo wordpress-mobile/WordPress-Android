@@ -354,7 +354,7 @@ class NotificationSqlUtilsTest {
     }
 
     @Test
-    fun testHasUnreadNotifications () {
+    fun testHasUnreadNotifications() {
         val notificationSqlUtils = NotificationSqlUtils(FormattableContentMapper(Gson()))
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
