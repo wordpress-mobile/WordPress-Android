@@ -111,17 +111,22 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
             retryFromState: NewSiteCreationServiceState?,
             data: NewSiteCreationServiceData
         ) {
-            clearSiteCreationServiceState()
+            val currentState = AutoForeground.getState(NewSiteCreationServiceState::class.java)
+            if (currentState == null || currentState.step == FAILURE) {
+                clearSiteCreationServiceState()
 
-            val intent = Intent(context, NewSiteCreationService::class.java)
+                val intent = Intent(context, NewSiteCreationService::class.java)
 
-            intent.putExtra(ARG_DATA, data)
+                intent.putExtra(ARG_DATA, data)
 
-            if (retryFromState != null) {
-                intent.putExtra(ARG_RESUME_PHASE, retryFromState.stepName)
+                if (retryFromState != null) {
+                    intent.putExtra(ARG_RESUME_PHASE, retryFromState.stepName)
+                }
+
+                context.startService(intent)
+            } else {
+                AppLog.w(T.SITE_CREATION, "Service not started - it seems it's already running.")
             }
-
-            context.startService(intent)
         }
 
         fun clearSiteCreationServiceState() {
