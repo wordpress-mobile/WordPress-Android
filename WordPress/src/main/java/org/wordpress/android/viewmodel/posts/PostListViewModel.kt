@@ -118,6 +118,7 @@ class PostListViewModel @Inject constructor(
     private var localPostIdForTrashDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
     private var originalPostCopyForConflictUndo: PostModel? = null
+    private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
     // Initial target post to scroll to
     private var targetLocalPostId: Int? = null
 
@@ -354,7 +355,7 @@ class PostListViewModel @Inject constructor(
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state.
-        if (PostUtils.isPostInConflictWithRemote(post)) {
+        if (doesPostHaveUnhandledConflict(post)) {
             showConflictedPostResolutionDialog(post)
             return
         }
@@ -420,22 +421,6 @@ class PostListViewModel @Inject constructor(
         _snackbarAction.postValue(snackbarHolder)
     }
 
-    private fun onRemoteCopyLoaded(post: PostModel) {
-        val undoAction = {
-            // here replace the post with whatever we had before, again
-            if (originalPostCopyForConflictUndo != null) {
-                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
-            }
-        }
-        val onDismissAction = {
-            localPostIdForConflictResolutionDialog = null
-            originalPostCopyForConflictUndo = null
-        }
-        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_local_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
-        _snackbarAction.postValue(snackbarHolder)
-    }
-
     // FluxC Events
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -448,6 +433,14 @@ class PostListViewModel @Inject constructor(
                             T.POSTS,
                             "Error updating the post with type: ${event.error.type} and message: ${event.error.message}"
                     )
+                } else {
+                    originalPostCopyForConflictUndo?.id?.let {
+                        val updatedPost = postStore.getPostByLocalPostId(it)
+                        // Conflicted post has been successfully updated with its remote version
+                        if (!PostUtils.isPostInConflictWithRemote(updatedPost)) {
+                            conflictedPostUpdatedWithItsRemoteVersion()
+                        }
+                    }
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {
@@ -567,7 +560,7 @@ class PostListViewModel @Inject constructor(
                 date = PostUtils.getFormattedDate(post),
                 postStatus = postStatus,
                 isLocallyChanged = post.isLocallyChanged,
-                isConflicted = PostUtils.isPostInConflictWithRemote(post),
+                isConflicted = doesPostHaveUnhandledConflict(post),
                 canShowStats = canShowStats,
                 canPublishPost = canPublishPost,
                 canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
@@ -575,14 +568,6 @@ class PostListViewModel @Inject constructor(
                 featuredImageUrl = getFeaturedImageUrl(post.featuredImageId, post.content),
                 uploadStatus = uploadStatus
         )
-
-        // A conflicted Post to be fixed by loading the remote version:
-        // the remote copy has just been loaded and the list is looking to create an item for it
-        if (localPostIdForConflictResolutionDialog != null &&
-                post.id == localPostIdForConflictResolutionDialog &&
-                !PostUtils.isPostInConflictWithRemote(post)) {
-            onRemoteCopyLoaded(post)
-        }
 
         return PostAdapterItem(
                 data = postData,
@@ -654,6 +639,7 @@ class PostListViewModel @Inject constructor(
                 publishPost(it)
             }
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
+                localPostIdForConflictResolutionDialog = null
                 // here load version from remote
                 updateConflictedPostWithItsRemoteVersion(it)
             }
@@ -724,6 +710,8 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    // Post Conflict Resolution
+
     private fun updateConflictedPostWithItsRemoteVersion(localPostId: Int) {
         // We need network connection to load a remote post
         if (!checkNetworkConnection()) {
@@ -735,9 +723,22 @@ class PostListViewModel @Inject constructor(
             originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
             _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
-        } else {
-            localPostIdForConflictResolutionDialog = null
         }
+    }
+
+    private fun conflictedPostUpdatedWithItsRemoteVersion() {
+        val undoAction = {
+            // here replace the post with whatever we had before, again
+            if (originalPostCopyForConflictUndo != null) {
+                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
+            }
+        }
+        val onDismissAction = {
+            originalPostCopyForConflictUndo = null
+        }
+        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_local_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        _snackbarAction.postValue(snackbarHolder)
     }
 
     private fun updateConflictedPostWithItsLocalVersion(localPostId: Int) {
@@ -746,28 +747,26 @@ class PostListViewModel @Inject constructor(
             return
         }
 
+        // Keep a reference to which post is being updated with the local version so we can avoid showing the conflicted
+        // label during the undo snackbar.
+        localPostIdForFetchingRemoteVersionOfConflictedPost = localPostId
+        pagedListWrapper.invalidateData()
+
         val post = postStore.getPostByLocalPostId(localPostId) ?: return
-
-        localPostIdForConflictResolutionDialog = null
-
-        // keep a copy for undoing
-        originalPostCopyForConflictUndo = post.clone()
-
-        // we make remoteLastModified match local lastModified to clear the "conflicted" flag in the Post list only
-        post.remoteLastModified = post.lastModified
-        dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
 
         // and now show a snackbar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
         var isUndoed = false
         val undoAction = {
             isUndoed = true
-            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
-            originalPostCopyForConflictUndo = null
+
+            // Remove the reference for the post being updated and re-show the conflicted label on undo
+            localPostIdForFetchingRemoteVersionOfConflictedPost = null
+            pagedListWrapper.invalidateData()
         }
 
         val onDismissAction = {
             if (!isUndoed) {
-                originalPostCopyForConflictUndo = null
+                localPostIdForFetchingRemoteVersionOfConflictedPost = null
                 PostUtils.trackSavePostAnalytics(post, site)
                 dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
             }
@@ -778,6 +777,13 @@ class PostListViewModel @Inject constructor(
     }
 
     // Utils
+
+    private fun doesPostHaveUnhandledConflict(post: PostModel): Boolean {
+        // If we are fetching the remote version of a conflicted post, it means it's already being handled
+        val isFetchingConflictedPost = localPostIdForFetchingRemoteVersionOfConflictedPost != null &&
+                localPostIdForFetchingRemoteVersionOfConflictedPost == post.id
+        return !isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post)
+    }
 
     private fun checkNetworkConnection(): Boolean =
             if (isNetworkAvailable) {
