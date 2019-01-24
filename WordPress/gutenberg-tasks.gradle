@@ -5,19 +5,23 @@ apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462
 def gutenbergMobileJsBundleFilename = 'index.android.bundle'
 
 task downloadJSBundle {
+    def gutenbergHash = submoduleGitHash("${project.projectDir}/../", 'libs/gutenberg-mobile')
+    def assetsFolderName = "${project.projectDir}/src/main/assets"
+    def gutenbergMobileJsBundlePath = new File("${assetsFolderName}/${gutenbergMobileJsBundleFilename}")
+
+    inputs.property("JS Bundle Hash", gutenbergHash)
+    outputs.file(gutenbergMobileJsBundlePath)
+
     doLast {
-        def assetsFolderName = "${project.projectDir}/src/main/assets"
         File assetsFolder = new File(assetsFolderName)
         if (! assetsFolder.exists()){
-            assetsFolder.mkdirs();
+            assetsFolder.mkdirs()
         }
 
-        def targetFile = new File("${assetsFolderName}/${gutenbergMobileJsBundleFilename}")
-        def hash = submoduleGitHash("${project.projectDir}/../", 'libs/gutenberg-mobile')
-        def url = new URL("https://s3-us-west-1.amazonaws.com/gutenberg-mobile-js-bundle/wordpress-mobile/gutenberg-mobile/${hash}/android/App.js")
+        def url = new URL("https://s3-us-west-1.amazonaws.com/gutenberg-mobile-js-bundle/wordpress-mobile/gutenberg-mobile/${gutenbergHash}/android/App.js")
 
         println "Downloading JS bundle from ${url}"
-        url.withInputStream{ i -> targetFile.withOutputStream{ it << i }}
+        url.withInputStream{ i -> gutenbergMobileJsBundlePath.withOutputStream{ it << i }}
     }
 }
 

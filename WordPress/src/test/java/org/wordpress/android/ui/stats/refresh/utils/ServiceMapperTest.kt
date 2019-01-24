@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -20,7 +20,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
     @Test
     fun `maps facebook item correctly`() {
-        val service = Service("facebook", 5000)
+        val service = Service("facebook", 15000)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -34,13 +34,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("5k")
+            assertThat(this.value).isEqualTo("15k")
         }
     }
 
     @Test
     fun `maps twitter item correctly`() {
-        val service = Service("twitter", 5000)
+        val service = Service("twitter", 15000)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -54,13 +54,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("5k")
+            assertThat(this.value).isEqualTo("15k")
         }
     }
 
     @Test
     fun `maps tumblr item correctly`() {
-        val service = Service("tumblr", 5000)
+        val service = Service("tumblr", 15000)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -74,13 +74,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("5k")
+            assertThat(this.value).isEqualTo("15k")
         }
     }
 
     @Test
     fun `maps path item correctly`() {
-        val service = Service("path", 5000)
+        val service = Service("path", 15000)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -94,13 +94,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("5k")
+            assertThat(this.value).isEqualTo("15k")
         }
     }
 
     @Test
     fun `maps google plus item correctly`() {
-        val service = Service("google_plus", 5000)
+        val service = Service("google_plus", 15000)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -114,13 +114,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("5k")
+            assertThat(this.value).isEqualTo("15k")
         }
     }
 
     @Test
     fun `maps linkedin item correctly`() {
-        val service = Service("linkedin", 5000)
+        val service = Service("linkedin", 15000)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -134,14 +134,14 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isNull()
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("5k")
+            assertThat(this.value).isEqualTo("15k")
         }
     }
 
     @Test
     fun `maps unknown item correctly`() {
         val serviceName = "unknown"
-        val service = Service(serviceName, 5000)
+        val service = Service(serviceName, 15000)
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
@@ -154,13 +154,13 @@ class ServiceMapperTest : BaseUnitTest() {
             assertThat(this.text).isEqualTo(serviceName)
             assertThat(this.icon).isNull()
             assertThat(this.showDivider).isFalse()
-            assertThat(this.value).isEqualTo("5k")
+            assertThat(this.value).isEqualTo("15k")
         }
     }
 
     @Test
     fun `shows divider on all items but last`() {
-        val service1 = Service("facebook", 5000)
+        val service1 = Service("facebook", 15000)
         val service2 = Service("twitter", 500)
         val service3 = Service("tumblr", 50)
         val pixelSize = 10

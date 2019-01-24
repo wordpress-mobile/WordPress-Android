@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists
 
 import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.viewmodel.ScopedViewModel
 

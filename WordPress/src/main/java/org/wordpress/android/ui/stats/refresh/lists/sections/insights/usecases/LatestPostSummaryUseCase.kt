@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED
@@ -108,7 +108,7 @@ class LatestPostSummaryUseCase
 
     private fun onViewMore(params: ViewMoreParams) {
         analyticsTracker.track(STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED)
-        navigateTo(ViewPostDetailStats(params.postId, params.postTitle, params.postUrl))
+        navigateTo(ViewPostDetailStats(params.postId.toString(), params.postTitle, params.postUrl))
     }
 
     private fun onSharePost(params: SharePostParams) {

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Dispatchers
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -34,7 +34,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -45,7 +44,6 @@ private val selectedDate = Date(0)
 class SearchTermsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: SearchTermsStore
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: SearchTermsUseCase
@@ -57,7 +55,6 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 store,
                 selectedDateProvider,
-                statsDateFormatter,
                 tracker
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -155,7 +152,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         (result as BlockList).apply {
             Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
-            Assertions.assertThat(this.items[1]).isEqualTo(Empty)
+            Assertions.assertThat(this.items[1]).isEqualTo(Empty(R.string.stats_no_data_for_period))
         }
     }
 

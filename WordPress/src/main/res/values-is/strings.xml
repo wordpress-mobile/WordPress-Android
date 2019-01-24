@@ -479,7 +479,6 @@ Language: is
     <string name="stats_insights_most_popular_percent_views">%1$d%% af flettingum</string>
     <string name="stats_insights_most_popular_hour">Vinsælasti klukkutíminn</string>
     <string name="stats_insights_most_popular_day">Vinsælasti dagurinn</string>
-    <string name="stats_insights_popular">Vinsælasti dagur og klukkutími</string>
     <string name="stats_insights_today">Tölfræði dagsins í dag</string>
     <string name="stats_insights_all_time">Færslur, flettingar og gestir frá upphafi</string>
     <string name="stats_insights">Innsýn</string>

@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
@@ -195,5 +198,11 @@ class StatsModule {
         return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(YEARS) }) {
             statsStore.getTimeStatsTypes()
         }
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPrefs(context: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)
     }
 }

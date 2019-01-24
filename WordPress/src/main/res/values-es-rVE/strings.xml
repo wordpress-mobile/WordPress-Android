@@ -417,7 +417,6 @@ Language: es_VE
     <string name="stats_insights_most_popular_percent_views">%1$d%% de vistas</string>
     <string name="stats_insights_most_popular_hour">Hora más popular</string>
     <string name="stats_insights_most_popular_day">Día más popular</string>
-    <string name="stats_insights_popular">Hora y día más populares</string>
     <string name="stats_insights_today">Estadísticas de hoy</string>
     <string name="stats_insights_all_time">Entradas, vistas y visitantes de todos los tiempos</string>
     <string name="stats_insights">Detalles</string>

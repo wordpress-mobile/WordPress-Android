@@ -69,6 +69,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private DetailListPreference mVideoWidthPref;
     private DetailListPreference mVideoEncorderBitratePref;
     private PreferenceScreen mPrivacySettings;
+    private WPSwitchPreference mStripImageLocation;
 
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
@@ -146,6 +147,10 @@ public class AppSettingsFragment extends PreferenceFragment
         mPrivacySettings = (PreferenceScreen) WPPrefUtils
                 .getPrefAndSetClickListener(this, R.string.pref_key_privacy_settings, this);
 
+        mStripImageLocation =
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_strip_image_location, this);
+
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
         setDetailListPreferenceValue(mImageMaxSizePref,
@@ -164,6 +169,7 @@ public class AppSettingsFragment extends PreferenceFragment
                                      getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
 
         mEnableGutenberg.setChecked(AppPrefs.isGutenbergEditorEnabled());
+        mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
 
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
@@ -303,6 +309,8 @@ public class AppSettingsFragment extends PreferenceFragment
                                          getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
         } else if (preference == mEnableGutenberg) {
             AppPrefs.enableGutenbergEditor((Boolean) newValue);
+        } else if (preference == mStripImageLocation) {
+            AppPrefs.setStripImageLocation((Boolean) newValue);
         }
         return true;
     }

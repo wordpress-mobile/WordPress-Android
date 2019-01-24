@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Dispatchers
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -152,7 +152,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 assertThat(this).isInstanceOf(ViewPostDetailStats::class.java)
                 assertThat((this as ViewPostDetailStats).postUrl).isEqualTo(model.postURL)
                 assertThat(this.postTitle).isEqualTo(model.postTitle)
-                assertThat(this.postId).isEqualTo(model.postId)
+                assertThat(this.postId).isEqualTo(model.postId.toString())
             }
         }
     }

@@ -714,7 +714,6 @@ Language: bg
     <string name="stats_insights_best_ever">Най-добри преглеждания</string>
     <string name="stats_insights_most_popular_hour">Най-популярен час</string>
     <string name="stats_insights_most_popular_day">Най-популярен ден</string>
-    <string name="stats_insights_popular">Най-популярен ден и час</string>
     <string name="stats_insights_today">Статистики от днес</string>
     <string name="stats_insights_all_time">Всички публикации, преглеждания и посетители</string>
     <string name="stats_insights">Данни</string>

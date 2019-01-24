@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Dispatchers
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -32,7 +32,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -43,7 +42,6 @@ private val selectedDate = Date(0)
 class VideoPlaysUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: VideoPlaysStore
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: VideoPlaysUseCase
@@ -55,7 +53,6 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 store,
                 selectedDateProvider,
-                statsDateFormatter,
                 tracker
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -119,7 +116,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         (result as BlockList).apply {
             assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(BlockListItem.Empty)
+            assertThat(this.items[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
         }
     }
 

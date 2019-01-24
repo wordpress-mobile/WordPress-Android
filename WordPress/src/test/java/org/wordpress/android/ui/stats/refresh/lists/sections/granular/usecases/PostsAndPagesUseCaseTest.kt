@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Dispatchers
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -35,7 +35,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -47,7 +46,6 @@ private val selectedDate = Date(0)
 class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: PostAndPageViewsStore
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: PostsAndPagesUseCase
@@ -57,7 +55,6 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 statsGranularity,
                 Dispatchers.Unconfined,
                 store,
-                statsDateFormatter,
                 selectedDateProvider,
                 tracker
         )
@@ -251,7 +248,6 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val page = ViewsModel(id, "Page 1", 10, PAGE, url)
         val hasMore = true
         val model = PostAndPageViewsModel(listOf(page), hasMore)
-        whenever(statsDateFormatter.todaysDateInStatsFormat()).thenReturn("2018-10-10")
         whenever(
                 store.fetchPostAndPageViews(
                         site,

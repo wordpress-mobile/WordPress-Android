@@ -116,6 +116,13 @@
             app:longClickHint="@string/site_settings_image_quality_hint"/>
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_strip_image_location"
+            android:defaultValue="false"
+            android:layout="@layout/wp_preference_layout"
+            android:key="@string/pref_key_strip_image_location"
+            android:title="@string/preference_strip_image_location"/>
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_video"
             android:key="@string/pref_key_optimize_video"
             android:layout="@layout/wp_preference_layout"

@@ -1,28 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white">
 
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        tools:ignore="ScrollViewSize">
-
-        <WebView
-            android:id="@+id/post_preview_webview"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-
-        <TextView
-            android:id="@+id/post_preview_textview"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="#FFFFFF"
-            android:padding="@dimen/margin_extra_large"
-            android:textSize="@dimen/text_sz_large" />
-    </FrameLayout>
-
-</ScrollView>
+    <WebView
+        android:id="@+id/post_preview_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</FrameLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-10 09:04:00+0000
+Translation-Revision-Date: 2018-12-22 20:23:03+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -430,7 +430,6 @@ Language: cs_CZ
     <string name="site_creation_title_hint">Název webové stránky</string>
     <string name="site_creation_domain_finish_button">Vytvořit stránku</string>
     <string name="site_creation_domain_keywords_hint">Napište klíčové slovo pro více nápadů</string>
-    <string name="site_creation_label_domain_selection">Zvolte dostupnou adresu \"yourname.wordpress.com\", aby vás lidé mohli najít na webu.</string>
     <string name="site_creation_label_domain_selection_title">Krok 4 ze 4</string>
     <string name="site_creation_label_site_details">Řekněte nám více o tom, co vytváříte. Jaký je název a slogan?</string>
     <string name="site_creation_label_site_details_title">Krok 3 ze 4</string>

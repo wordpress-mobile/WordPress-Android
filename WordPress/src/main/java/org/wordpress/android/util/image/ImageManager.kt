@@ -1,9 +1,12 @@
 package org.wordpress.android.util.image
 
+import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
+import android.support.v4.app.FragmentActivity
 import android.support.v7.content.res.AppCompatResources
 import android.text.TextUtils
 import android.widget.ImageView
@@ -34,6 +37,25 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     }
 
     /**
+     * Return true if this [Context] is available.
+     * Availability is defined as the following:
+     * + [Context] is not null
+     * + [Context] is not destroyed (tested with [FragmentActivity.isDestroyed] or [Activity.isDestroyed])
+     */
+    private fun Context?.isAvailable(): Boolean {
+        if (this == null) {
+            return false
+        } else if (this !is Application) {
+            if (this is FragmentActivity) {
+                return !this.isDestroyed
+            } else if (this is Activity) {
+                return !this.isDestroyed
+            }
+        }
+        return true
+    }
+
+    /**
      * Loads an image from the "imgUrl" into the ImageView. Adds a placeholder and an error placeholder depending
      * on the ImageType.
      *
@@ -42,6 +64,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     @JvmOverloads
     fun load(imageView: ImageView, imageType: ImageType, imgUrl: String = "", scaleType: ImageView.ScaleType = CENTER) {
         val context = imageView.context
+        if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(imgUrl)
                 .addFallback(context, imageType)
@@ -64,6 +87,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         version: Int? = null
     ) {
         val context = imageView.context
+        if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(imgUrl)
                 .addFallback(context, imageType)
@@ -91,6 +115,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         requestListener: RequestListener<Drawable>
     ) {
         val context = imageView.context
+        if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(imgUrl)
                 .addFallback(context, imageType)
@@ -107,6 +132,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     @JvmOverloads
     fun load(imageView: ImageView, bitmap: Bitmap, scaleType: ImageView.ScaleType = CENTER) {
         val context = imageView.context
+        if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(bitmap)
                 .applyScaleType(scaleType)
@@ -120,6 +146,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     @JvmOverloads
     fun load(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType = CENTER) {
         val context = imageView.context
+        if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(drawable)
                 .applyScaleType(scaleType)
@@ -133,6 +160,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     @JvmOverloads
     fun load(imageView: ImageView, @DrawableRes resourceId: Int, scaleType: ImageView.ScaleType = CENTER) {
         val context = imageView.context
+        if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(resourceId)
                 .applyScaleType(scaleType)
@@ -149,6 +177,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
      */
     fun loadIntoCustomTarget(viewTarget: ViewTarget<TextView, Drawable>, imageType: ImageType, imgUrl: String) {
         val context = WordPress.getContext()
+        if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(imgUrl)
                 .addFallback(context, imageType)
@@ -169,6 +198,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         imgUrl: String,
         scaleType: ImageView.ScaleType = CENTER
     ) {
+        if (!context.isAvailable()) return
         GlideApp.with(context)
                 .asBitmap()
                 .load(imgUrl)

@@ -849,6 +849,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "account_logout";
             case STATS_ACCESSED:
                 return "stats_accessed";
+            case STATS_ACCESS_ERROR:
+                return "stats_access_error";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
             case STATS_PERIOD_DAYS_ACCESSED:
@@ -875,6 +877,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_posts_and_pages_item_tapped";
             case STATS_REFERRERS_VIEW_MORE_TAPPED:
                 return "stats_referrers_view_more_tapped";
+            case STATS_REFERRERS_ITEM_TAPPED:
+                return "stats_referrers_item_tapped";
             case STATS_CLICKS_VIEW_MORE_TAPPED:
                 return "stats_clicks_view_more_tapped";
             case STATS_COUNTRIES_VIEW_MORE_TAPPED:
@@ -1077,20 +1081,38 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_success";
             case SIGNUP_SOCIAL_TO_LOGIN:
                 return "signup_social_to_login";
-            case SITE_CREATION_ACCESSED:
-                return "site_creation_accessed";
-            case SITE_CREATION_CATEGORY_VIEWED:
-                return "site_creation_category_viewed";
-            case SITE_CREATION_THEME_VIEWED:
-                return "site_creation_theme_viewed";
-            case SITE_CREATION_DETAILS_VIEWED:
-                return "site_creation_details_viewed";
-            case SITE_CREATION_DOMAIN_VIEWED:
-                return "site_creation_domain_viewed";
-            case SITE_CREATION_CREATING_VIEWED:
-                return "site_creation_creating_viewed";
-            case SITE_CREATION_SUCCESS_VIEWED:
-                return "site_creation_success_viewed";
+            case ENHANCED_SITE_CREATION_ACCESSED:
+                return "enhanced_site_creation_accessed";
+            case ENHANCED_SITE_CREATION_SEGMENTS_VIEWED:
+                return "enhanced_site_creation_segments_viewed";
+            case ENHANCED_SITE_CREATION_SEGMENTS_SELECTED:
+                return "enhanced_site_creation_segments_selected";
+            case ENHANCED_SITE_CREATION_VERTICALS_VIEWED:
+                return "enhanced_site_creation_verticals_viewed";
+            case ENHANCED_SITE_CREATION_VERTICALS_SELECTED:
+                return "enhanced_site_creation_verticals_selected";
+            case ENHANCED_SITE_CREATION_VERTICALS_SKIPPED:
+                return "enhanced_site_creation_verticals_skipped";
+            case ENHANCED_SITE_CREATION_BASIC_INFORMATION_VIEWED:
+                return "enhanced_site_creation_basic_information_viewed";
+            case ENHANCED_SITE_CREATION_BASIC_INFORMATION_COMPLETED:
+                return "enhanced_site_creation_basic_information_completed";
+            case ENHANCED_SITE_CREATION_BASIC_INFORMATION_SKIPPED:
+                return "enhanced_site_creation_basic_information_skipped";
+            case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
+                return "enhanced_site_creation_domains_accessed";
+            case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
+                return "enhanced_site_creation_domains_selected";
+            case ENHANCED_SITE_CREATION_SUCCESS_LOADING:
+                return "enhanced_site_creation_success_loading";
+            case ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED:
+                return "enhanced_site_creation_success_preview_viewed";
+            case ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED:
+                return "enhanced_site_creation_success_preview_loaded";
+            case ENHANCED_SITE_CREATION_COMPLETED:
+                return "enhanced_site_creation_completed";
+            case ENHANCED_SITE_CREATION_ERROR_SHOWN:
+                return "enhanced_site_creation_error_shown";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
@@ -1167,6 +1189,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "account_settings_language_changed";
             case SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
                 return "site_creation_background_service_update";
+            case NEW_SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
+                return "new_site_creation_background_service_update";
             case SITE_SETTINGS_ACCESSED:
                 return "site_settings_accessed";
             case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:

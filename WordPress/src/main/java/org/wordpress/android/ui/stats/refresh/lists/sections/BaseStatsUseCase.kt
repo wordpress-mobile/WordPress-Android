@@ -2,8 +2,8 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
@@ -14,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase.NotUsedUiState
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.merge
 
 /**
@@ -27,11 +28,16 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private val domainModel = MutableLiveData<State<DOMAIN_MODEL>>()
     private val uiState = MutableLiveData<UI_STATE>()
     val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { data, uiState ->
-        when (data) {
-            is State.Loading -> Loading(type, buildLoadingItem())
-            is State.Error -> Error(type, data.error)
-            is Data -> BlockList(type, buildUiModel(data.model, uiState ?: defaultUiState))
-            is Empty, null -> null
+        try {
+            when (data) {
+                is State.Loading -> Loading(type, buildLoadingItem())
+                is State.Error -> Error(type, data.error)
+                is Data -> BlockList(type, buildUiModel(data.model, uiState ?: defaultUiState))
+                is Empty, null -> null
+            }
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, e)
+            Error(type, "An error occurred (${e.message ?: "Unknown"})")
         }
     }
 

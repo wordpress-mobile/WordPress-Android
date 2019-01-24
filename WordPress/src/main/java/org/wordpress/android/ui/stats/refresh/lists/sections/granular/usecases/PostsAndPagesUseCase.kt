@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_HOME_PAGE
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_POST
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -27,11 +27,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
-import java.util.Date
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -42,7 +41,6 @@ constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore,
-    private val statsDateFormatter: StatsDateFormatter,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatelessUseCase<PostAndPageViewsModel>(
@@ -86,7 +84,7 @@ constructor(
         items.add(Title(string.stats_posts_and_pages))
 
         if (domainModel.views.isEmpty()) {
-            items.add(Empty)
+            items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             items.add(Header(R.string.stats_posts_and_pages_title_label, R.string.stats_posts_and_pages_views_label))
             items.addAll(domainModel.views.mapIndexed { index, viewsModel ->
@@ -100,7 +98,7 @@ constructor(
                         value = viewsModel.views.toFormattedString(),
                         showDivider = index < domainModel.views.size - 1,
                         navigationAction = create(
-                                LinkClickParams(viewsModel.id, viewsModel.url, viewsModel.type),
+                                LinkClickParams(viewsModel.id, viewsModel.url, viewsModel.title, viewsModel.type),
                                 this::onLinkClicked
                         )
                 )
@@ -119,7 +117,12 @@ constructor(
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewPostsAndPages(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
+        navigateTo(
+                ViewPostsAndPages(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+                )
+        )
     }
 
     private fun onLinkClicked(params: LinkClickParams) {
@@ -128,12 +131,20 @@ constructor(
             PAGE, HOMEPAGE -> ITEM_TYPE_HOME_PAGE
         }
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, statsGranularity)
-        navigateTo(ViewPost(params.postId, params.postUrl, type))
+        navigateTo(
+                ViewPostDetailStats(
+                        postId = params.postId.toString(),
+                        postTitle = params.postTitle,
+                        postUrl = params.postUrl,
+                        postType = type
+                )
+        )
     }
 
     private data class LinkClickParams(
         val postId: Long,
         val postUrl: String,
+        val postTitle: String,
         val postType: PostAndPageViewsModel.ViewsType
     )
 
@@ -141,7 +152,6 @@ constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val postsAndPageViewsStore: PostAndPageViewsStore,
-        private val statsDateFormatter: StatsDateFormatter,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
@@ -150,7 +160,6 @@ constructor(
                         granularity,
                         mainDispatcher,
                         postsAndPageViewsStore,
-                        statsDateFormatter,
                         selectedDateProvider,
                         analyticsTracker
                 )
