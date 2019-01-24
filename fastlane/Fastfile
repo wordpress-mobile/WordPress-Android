@@ -92,7 +92,7 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
       play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
     }
 
-    update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 
+    android_update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 
       source_files: files, 
       release_version: options[:version])
   end 

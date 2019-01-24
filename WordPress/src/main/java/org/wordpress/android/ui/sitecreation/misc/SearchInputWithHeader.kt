@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import android.widget.EditText
 import android.widget.TextView
 import org.wordpress.android.R
@@ -20,6 +21,7 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
     private val searchInput = rootView.findViewById<EditText>(R.id.input)
     private val progressBar = rootView.findViewById<View>(R.id.progress_bar)
     private val clearAllButton = rootView.findViewById<View>(R.id.clear_all_btn)
+    private val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
 
     var onTextChanged: ((String) -> Unit)? = null
 
@@ -73,11 +75,13 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
     fun updateSearchInput(context: Context, uiState: SiteCreationSearchInputUiState) {
         searchInput.hint = uiHelpers.getTextOfUiString(context, uiState.hint)
         uiHelpers.updateVisibility(progressBar, uiState.showProgress)
-        uiHelpers.updateVisibility(clearAllButton, uiState.showClearButton)
+        uiHelpers.updateVisibility(clearAllLayout, uiState.showClearButton)
     }
 
     fun requestInputFocus() {
         searchInput.requestFocus()
+        // announce header when the input focus is forced
+        headerLayout.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
     }
 
     fun showKeyboard() {
