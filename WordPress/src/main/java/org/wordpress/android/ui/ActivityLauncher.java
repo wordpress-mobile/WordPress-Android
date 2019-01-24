@@ -427,7 +427,7 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
-        Intent intent = new Intent(context, OldStatsActivity.class);
+        Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(LOGGED_INTO_JETPACK, true);
         context.startActivity(intent);
