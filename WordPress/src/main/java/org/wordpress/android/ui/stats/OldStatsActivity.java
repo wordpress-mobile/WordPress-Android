@@ -63,7 +63,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
  * By pressing a spinner on the action bar, the user can select which timeframe they wish to see.
  * </p>
  */
-public class StatsActivity extends AppCompatActivity
+public class OldStatsActivity extends AppCompatActivity
         implements NestedScrollViewExt.ScrollViewListener,
         StatsVisitorsAndViewsFragment.OnDateChangeListener,
         StatsVisitorsAndViewsFragment.OnOverviewItemChangeListener,
@@ -605,7 +605,7 @@ public class StatsActivity extends AppCompatActivity
         }
         mRequestedDate = date;
         updateTimeframeAndDateAndStartRefreshOfFragments(false);
-        if (NetworkUtils.checkConnection(StatsActivity.this)) {
+        if (NetworkUtils.checkConnection(OldStatsActivity.this)) {
             mSwipeToRefreshHelper.setRefreshing(true);
         } else {
             mSwipeToRefreshHelper.setRefreshing(false);
