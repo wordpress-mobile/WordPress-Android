@@ -34,10 +34,11 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
@@ -62,7 +63,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
 
-    private HashMap<String, Float> mUploadingMediaProgressMax = new HashMap<>();
+    private ConcurrentHashMap<String, Float> mUploadingMediaProgressMax = new ConcurrentHashMap<>();
     private Set<String> mFailedMediaIds = new HashSet<>();
 
     private boolean mIsNewPost;
@@ -119,9 +120,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onUploadMediaButtonClicked() {
                         mEditorFragmentListener.onAddPhotoClicked();
                     }
+
                     @Override
                     public void onCapturePhotoButtonClicked() {
                         checkAndRequestCameraAndStoragePermissions();
+                    }
+                },
+                new OnReattachQueryListener() {
+                    @Override
+                    public void onQueryCurrentProgressForUploadingMedia() {
+                        for (String mediaId : mUploadingMediaProgressMax.keySet()) {
+                            mWPAndroidGlueCode.mediaFileUploadProgress(Integer.valueOf(mediaId),
+                                    mUploadingMediaProgressMax.get(mediaId));
+                        }
                     }
                 },
                 getActivity().getApplication(),
@@ -492,6 +503,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
+        mUploadingMediaProgressMax.put(localMediaId, progress);
         mWPAndroidGlueCode.mediaFileUploadProgress(Integer.valueOf(localMediaId), progress);
     }
 
