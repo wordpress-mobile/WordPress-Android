@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-29 15:32:38+0000
+Translation-Revision-Date: 2019-01-17 09:31:43+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">Pentru a efectua această acțiune este necesară o conexiune. Te rog verifică-ți conexiunea și reîncearcă.</string>
+    <string name="stats_no_data_for_period">Nu există date pentru această perioadă</string>
+    <string name="preference_strip_image_location">Înlătură locația din Media</string>
+    <string name="stats_cannot_be_started">Pentru moment, nu putem deschide statisticile. Te rog reîncearcă mai târziu</string>
     <string name="site_creation_label_domain_selection">Alege o adresă disponibilă pentru a permite oamenilor să te găsească pe web.</string>
     <string name="giphy_powered_by_giphy">Propulsat de GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Unele elemente media au eșuat la încărcare din cauza unei erori de rețea.</string>
@@ -69,7 +73,7 @@ Language: ro
     <string name="stats_followers_email">Prin email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">Administrează perspectivele</string>
-    <string name="stats_empty_insights_description">Personalizează-ți perspectivele și primești informații prețioase despre performanța sitului</string>
+    <string name="stats_empty_insights_description">Personalizează-ți perspectivele și primești informații relevante despre performanța sitului</string>
     <string name="stats_empty_insights_title">Nu ai adăugat perspective până acum</string>
     <string name="stats_no_data_yet">Încă nu există date</string>
     <string name="menu_debug">Meniu de depanare</string>

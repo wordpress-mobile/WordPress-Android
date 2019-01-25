@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-03 10:54:07+0000
+Translation-Revision-Date: 2019-01-22 10:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">需要網路連線才能執行此動作。請檢查你的連線並再試一次。</string>
+    <string name="stats_no_data_for_period">此期間沒有資料</string>
+    <string name="preference_strip_image_location">從媒體移除位置資訊</string>
+    <string name="stats_cannot_be_started">目前我們無法開啟統計資料。請稍後再試一次</string>
     <string name="site_creation_label_domain_selection">挑選一個可用的位址，讓大家能夠在網路中找到你。</string>
     <string name="giphy_powered_by_giphy">由 GIPHY 建置</string>
     <string name="giphy_picker_endless_scroll_network_error">網路發生錯誤，導致部份媒體載入失敗。</string>
@@ -69,7 +73,6 @@ Language: zh_TW
     <string name="stats_followers_email">電子郵件</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">管理洞察報告</string>
-    <string name="stats_empty_insights_description">自訂洞察報告，並掌握有關網站成效的重要資訊</string>
     <string name="stats_empty_insights_title">尚未新增任何洞察報告</string>
     <string name="stats_no_data_yet">尚無資料</string>
     <string name="menu_debug">除錯選單</string>
