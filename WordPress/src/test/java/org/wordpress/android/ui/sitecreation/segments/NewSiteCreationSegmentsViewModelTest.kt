@@ -6,8 +6,11 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.Assert.assertFalse
+import junit.framework.Assert.assertNull
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.InternalCoroutinesApi
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,12 +38,21 @@ private const val FIRST_MODEL_SUBTITLE = "first_subtitle"
 private const val FIRST_MODEL_ICON_URL = "http://first_url.com"
 private const val FIRST_MODEL_ICON_COLOR = "first_icon_color"
 private const val FIRST_MODEL_SEGMENT_ID = 1L
+private const val FIRST_MODEL_IS_MOBILE_SEGMENT = true
 
 private const val SECOND_MODEL_TITLE = "second_title"
 private const val SECOND_MODEL_SUBTITLE = "second_subtitle"
 private const val SECOND_MODEL_ICON_URL = "http://second_url.com"
 private const val SECOND_MODEL_ICON_COLOR = "second_icon_color"
 private const val SECOND_MODEL_SEGMENT_ID = 2L
+private const val SECOND_MODEL_IS_MOBILE_SEGMENT = true
+
+private const val THIRD_MODEL_TITLE = "third_title"
+private const val THIRD_MODEL_SUBTITLE = "third_subtitle"
+private const val THIRD_MODEL_ICON_URL = "http://third_url.com"
+private const val THIRD_MODEL_ICON_COLOR = "third_icon_color"
+private const val THIRD_MODEL_SEGMENT_ID = 3L
+private const val THIRD_MODEL_IS_MOBILE_SEGMENT = false
 
 private const val ERROR_MESSAGE = "dummy_error_message"
 
@@ -51,7 +63,7 @@ private val FIRST_MODEL =
                 iconUrl = FIRST_MODEL_ICON_URL,
                 iconColor = FIRST_MODEL_ICON_COLOR,
                 segmentId = FIRST_MODEL_SEGMENT_ID,
-                isMobileSegment = true
+                isMobileSegment = FIRST_MODEL_IS_MOBILE_SEGMENT
         )
 
 private val SECOND_MODEL =
@@ -61,7 +73,17 @@ private val SECOND_MODEL =
                 iconUrl = SECOND_MODEL_ICON_URL,
                 iconColor = SECOND_MODEL_ICON_COLOR,
                 segmentId = SECOND_MODEL_SEGMENT_ID,
-                isMobileSegment = true
+                isMobileSegment = SECOND_MODEL_IS_MOBILE_SEGMENT
+        )
+
+private val THIRD_MODEL =
+        VerticalSegmentModel(
+                title = THIRD_MODEL_TITLE,
+                subtitle = THIRD_MODEL_SUBTITLE,
+                iconUrl = THIRD_MODEL_ICON_URL,
+                iconColor = THIRD_MODEL_ICON_COLOR,
+                segmentId = THIRD_MODEL_SEGMENT_ID,
+                isMobileSegment = THIRD_MODEL_IS_MOBILE_SEGMENT
         )
 
 private val PROGRESS_STATE = SegmentsContentUiState(listOf(HeaderUiState, ProgressUiState))
@@ -95,6 +117,7 @@ private val HEADER_AND_SECOND_ITEM_STATE = SegmentsContentUiState(
 private val FIRST_MODEL_EVENT = OnSegmentsFetched(listOf(FIRST_MODEL))
 private val SECOND_MODEL_EVENT = OnSegmentsFetched(listOf(SECOND_MODEL))
 private val FIRST_AND_SECOND_MODEL_EVENT = OnSegmentsFetched(listOf(FIRST_MODEL, SECOND_MODEL))
+private val FIRST_SECOND_AND_THIRD_MODEL_EVENT = OnSegmentsFetched(listOf(FIRST_MODEL, SECOND_MODEL, THIRD_MODEL))
 private val ERROR_EVENT = OnSegmentsFetched(emptyList(), FetchSegmentsError(GENERIC_ERROR, ERROR_MESSAGE))
 
 @InternalCoroutinesApi
@@ -136,6 +159,20 @@ class NewSiteCreationSegmentsViewModelTest {
         viewModel.start()
 
         assertTrue(viewModel.segmentsUiState.value!! == HEADER_AND_FIRST_ITEM_STATE)
+    }
+
+    @Test
+    fun onlyMobileSegmentsAreShown() = test {
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(FIRST_SECOND_AND_THIRD_MODEL_EVENT)
+        viewModel.start()
+
+        // Find the segment items
+        val items = (viewModel.segmentsUiState.value!! as SegmentsContentUiState).items
+        val segmentUiStates = items.mapNotNull { it as? SegmentUiState }
+
+        // Verify that there are only 2 segments items and third segment is filtered out since it's not a mobile segment
+        assertThat(segmentUiStates.size, `is`(2))
+        assertNull(segmentUiStates.find { it.segmentId == THIRD_MODEL_SEGMENT_ID })
     }
 
     @Test

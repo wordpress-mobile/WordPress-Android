@@ -83,10 +83,6 @@
         <ignore regexp="java-common-1.13.jar" />
     </issue>
 
-    <issue id="IconLauncherFormat">
-        <ignore path="src/main/res/mipmap-anydpi-v26/app_icon.xml" />
-    </issue>
-
     <issue id="UnusedResources" severity="error">
         <ignore path="**/WordPressEditor/**" />
         <ignore path="**/WordPressLoginFlow/**" />

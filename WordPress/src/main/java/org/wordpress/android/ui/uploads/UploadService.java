@@ -87,6 +87,18 @@ public class UploadService extends Service {
         mDispatcher.register(this);
         sInstance = this;
         // TODO: Recover any posts/media uploads that were interrupted by the service being stopped
+
+        if (mMediaUploadHandler == null) {
+            mMediaUploadHandler = new MediaUploadHandler();
+        }
+
+        if (mPostUploadNotifier == null) {
+            mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this);
+        }
+
+        if (mPostUploadHandler == null) {
+            mPostUploadHandler = new PostUploadHandler(mPostUploadNotifier);
+        }
     }
 
     @Override
@@ -126,18 +138,6 @@ public class UploadService extends Service {
             AppLog.e(T.MAIN, "UploadService > Killed and restarted with an empty intent");
             stopServiceIfUploadsComplete();
             return START_NOT_STICKY;
-        }
-
-        if (mMediaUploadHandler == null) {
-            mMediaUploadHandler = new MediaUploadHandler();
-        }
-
-        if (mPostUploadNotifier == null) {
-            mPostUploadNotifier = new PostUploadNotifier(getApplicationContext(), this);
-        }
-
-        if (mPostUploadHandler == null) {
-            mPostUploadHandler = new PostUploadHandler(mPostUploadNotifier);
         }
 
         if (intent.hasExtra(KEY_MEDIA_LIST)) {
