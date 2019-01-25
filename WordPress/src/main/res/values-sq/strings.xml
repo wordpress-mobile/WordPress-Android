@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-22 18:35:39+0000
+Translation-Revision-Date: 2019-01-16 19:07:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">Për kryerjen e këtij veprimi lypset një lidhje në internet. Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>
+    <string name="stats_no_data_for_period">S’ka të dhëna për këtë periudhë</string>
+    <string name="preference_strip_image_location">Hiqe vendndodhjen prej mediash</string>
+    <string name="stats_cannot_be_started">S’i hapim dot statistikat tani. Ju lutemi, riprovoni më vonë</string>
     <string name="site_creation_label_domain_selection">Zgjidhni një adresë të gatshme për t’u dhënë mundësinë njerëzve t’ju gjejnë në web.</string>
     <string name="giphy_powered_by_giphy">Bazuar në Giphy</string>
     <string name="giphy_picker_endless_scroll_network_error">Dështoi ngarkimi për ca media, për shkak të një gabimi rrjeti.</string>

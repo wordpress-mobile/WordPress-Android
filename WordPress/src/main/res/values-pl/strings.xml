@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-24 14:10:02+0000
+Translation-Revision-Date: 2019-01-19 06:54:23+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">Wymagane jest połączenie aby wykonać tą akcję. Proszę sprawdź swoje połączenie i spróbuj ponownie. </string>
+    <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
+    <string name="preference_strip_image_location">Usuń lokalizację z plików mediów</string>
+    <string name="stats_cannot_be_started">Nie możemy w tym momencie otworzyć statystyk. Spróbuj ponownie później</string>
     <string name="site_creation_label_domain_selection">Wybierz dostępny adres internetowy aby ludzie mogli znaleźć ciebie w sieci.</string>
     <string name="giphy_powered_by_giphy">Wspierane przez GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Niektórych plików mediów nie udało się przesłać z powodu błędu sieci. </string>
@@ -69,7 +73,7 @@ Language: pl
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">Zarządzaj trendami</string>
-    <string name="stats_empty_insights_description">Spersonalizuj swoje trendy i uzyskaj pełną informację o wynikach swojej witryny</string>
+    <string name="stats_empty_insights_description">Spersonalizuj kartę Trendy i uzyskaj pełną informację o wynikach swojej witryny</string>
     <string name="stats_empty_insights_title">Brak trendów, jak dotąd</string>
     <string name="stats_no_data_yet">Brak danych, jak dotąd</string>
     <string name="menu_debug">Menu Debugowania</string>

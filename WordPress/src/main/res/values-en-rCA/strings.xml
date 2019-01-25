@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-21 20:34:09+0000
+Translation-Revision-Date: 2019-01-16 18:16:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_CA
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
+    <string name="stats_no_data_for_period">No data for this period</string>
+    <string name="preference_strip_image_location">Remove location from media</string>
+    <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
     <string name="site_creation_label_domain_selection">Pick an available address to let people find you on the web.</string>
     <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
