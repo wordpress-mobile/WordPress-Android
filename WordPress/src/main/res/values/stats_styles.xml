@@ -152,22 +152,6 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="StatsBlockColumnHeader" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/stats_block_column</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
-    </style>
-
-    <style name="StatsBlockColumnValue" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/stats_block_column</item>
-        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
-    </style>
-
     <style name="StatsBlockColumnSmallHeader" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/stats_block_column</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
