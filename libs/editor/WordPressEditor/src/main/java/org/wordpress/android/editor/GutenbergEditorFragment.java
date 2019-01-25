@@ -28,11 +28,8 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.*;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -52,8 +49,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static boolean mIsToolbarExpanded = false;
 
-    private static final String[] sCameraAndExternalStoragePermissions = new String[]{Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
 
     private boolean mEditorWasPaused = false;
@@ -129,12 +124,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override
                     public void onCapturePhotoButtonClicked() {
-                        if (!hasPermissions(sCameraAndExternalStoragePermissions)) {
-                            requestCameraAndStoragePermissions();
-                            return;
-                        }
-
-                        mEditorFragmentListener.onCapturePhotoClicked();
+                       checkAndRequestCameraAndStoragePermissions();
                     }
                 },
                 getActivity().getApplication(),
@@ -203,30 +193,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return view;
     }
 
-    private void requestCameraAndStoragePermissions() {
-        requestPermissions(sCameraAndExternalStoragePermissions, CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
-    }
-
-    public boolean hasPermissions(String... permissions) {
-        if (getActivity() != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
-            if (hasPermissions(permissions)) {
-                mEditorFragmentListener.onCapturePhotoClicked();
-            } else {
-                requestCameraAndStoragePermissions();
-            }
+            checkAndRequestCameraAndStoragePermissions();
+        }
+    }
+
+    private void checkAndRequestCameraAndStoragePermissions() {
+        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
+            mEditorFragmentListener.onCapturePhotoClicked();
         }
     }
 
