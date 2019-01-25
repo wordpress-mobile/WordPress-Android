@@ -219,7 +219,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 }
 
                 Intent viewAllIntent = new Intent(getActivity(), StatsViewAllActivity.class);
-                viewAllIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, getLocalTableBlogID());
+                viewAllIntent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, getLocalTableBlogID());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, getTimeframe());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, getDate());
