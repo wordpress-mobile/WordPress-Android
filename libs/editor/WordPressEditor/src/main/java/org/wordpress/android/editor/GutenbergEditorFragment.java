@@ -444,7 +444,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public boolean hasFailedMediaUploads() {
-        return false;
+        return (mFailedMediaIds.size() > 0);
     }
 
     @Override
