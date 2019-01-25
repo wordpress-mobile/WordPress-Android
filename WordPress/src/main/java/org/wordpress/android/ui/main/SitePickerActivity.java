@@ -47,6 +47,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DeviceUtils;
@@ -56,6 +57,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -72,6 +74,7 @@ public class SitePickerActivity extends AppCompatActivity
         SitePickerAdapter.OnSelectedCountChangedListener,
         SearchView.OnQueryTextListener {
     public static final String KEY_LOCAL_ID = "local_id";
+    public static final String KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched";
     private static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String KEY_LAST_SEARCH = "last_search";
     private static final String KEY_REFRESHING = "refreshing_sites";
@@ -203,15 +206,16 @@ public class SitePickerActivity extends AppCompatActivity
             case RequestCodes.CREATE_SITE:
                 if (resultCode == RESULT_OK) {
                     debounceLoadSites();
-
                     if (data == null) {
                         data = new Intent();
                     }
-
-                    data.putExtra(WPMainActivity.ARG_CREATE_SITE, RequestCodes.CREATE_SITE);
-
-                    setResult(resultCode, data);
-                    finish();
+                    if (data.getBooleanExtra(KEY_SITE_CREATED_BUT_NOT_FETCHED, false)) {
+                        showSiteCreatedButNotFetchedSnackbar();
+                    } else {
+                        data.putExtra(WPMainActivity.ARG_CREATE_SITE, RequestCodes.CREATE_SITE);
+                        setResult(resultCode, data);
+                        finish();
+                    }
                 }
                 break;
         }
@@ -683,5 +687,12 @@ public class SitePickerActivity extends AppCompatActivity
         dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
         dialogBuilder.setCancelable(false);
         dialogBuilder.create().show();
+    }
+
+    private void showSiteCreatedButNotFetchedSnackbar() {
+        int duration = AccessibilityUtils
+                .getSnackbarDuration(this, getResources().getInteger(R.integer.site_creation_snackbar_duration));
+        String message = getString(R.string.site_created_but_not_fetched_snackbar_message);
+        WPDialogSnackbar.make(findViewById(R.id.coordinatorLayout), message, duration).show();
     }
 }

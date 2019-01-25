@@ -7,18 +7,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.ImageView.ScaleType
 import android.widget.PopupMenu
 import android.widget.RadioButton
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
+import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
+import java.util.Date
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -27,51 +33,45 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
     class PageViewHolder(
         parentView: ViewGroup,
         private val onMenuAction: (PageItem.Action, Page) -> Boolean,
-        private val onItemTapped: (Page) -> Unit
-    ) : PageItemViewHolder(parentView, layout.page_list_item) {
-        private val pageTitle = itemView.findViewById<TextView>(id.page_title)
-        private val pageMore = itemView.findViewById<ImageButton>(id.page_more)
-        private val firstLabel = itemView.findViewById<TextView>(id.first_label)
-        private val secondLabel = itemView.findViewById<TextView>(id.second_label)
-        private val pageItemContainer = itemView.findViewById<ViewGroup>(id.page_item)
-        private val largeStretcher = itemView.findViewById<View>(id.large_stretcher)
-        private val smallStretcher = itemView.findViewById<View>(id.small_stretcher)
+        private val onItemTapped: (Page) -> Unit,
+        private val imageManager: ImageManager,
+        private val isSitePhotonCapable: Boolean
+    ) : PageItemViewHolder(parentView, R.layout.page_list_item) {
+        private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
+        private val pageMore = itemView.findViewById<ImageButton>(R.id.page_more)
+        private val time = itemView.findViewById<TextView>(R.id.time_posted)
+        private val labels = itemView.findViewById<TextView>(R.id.labels)
+        private val featuredImage = itemView.findViewById<ImageView>(R.id.featured_image)
+        private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
+
+        companion object {
+            const val FEATURED_IMAGE_THUMBNAIL_SIZE_DP = 40
+        }
 
         override fun onBind(pageItem: PageItem) {
-            (pageItem as Page).apply {
-                val indentWidth = DisplayUtils.dpToPx(parent.context, 16 * pageItem.indent)
+            (pageItem as Page).let { page ->
+                val indentWidth = DisplayUtils.dpToPx(parent.context, 16 * page.indent)
                 val marginLayoutParams = pageItemContainer.layoutParams as ViewGroup.MarginLayoutParams
                 marginLayoutParams.leftMargin = indentWidth
                 pageItemContainer.layoutParams = marginLayoutParams
 
-                pageTitle.text = if (pageItem.title.isEmpty())
+                pageTitle.text = if (page.title.isEmpty())
                     parent.context.getString(R.string.untitled_in_parentheses)
                 else
-                    pageItem.title
+                    page.title
 
-                if (pageItem.labels.isEmpty()) {
-                    firstLabel.visibility = View.GONE
-                    smallStretcher.visibility = View.VISIBLE
-                    largeStretcher.visibility = View.GONE
-                } else {
-                    firstLabel.text = parent.context.getString(pageItem.labels.first())
-                    firstLabel.visibility = View.VISIBLE
-                    smallStretcher.visibility = View.GONE
-                    largeStretcher.visibility = View.VISIBLE
-                }
+                val date = if (page.date == Date(0)) Date() else page.date
+                time.text = DateTimeUtils.javaDateToTimeSpan(date, parent.context).capitalize()
 
-                if (pageItem.labels.size <= 1) {
-                    secondLabel.visibility = View.GONE
-                } else {
-                    secondLabel.text = parent.context.getString(pageItem.labels[1])
-                    secondLabel.visibility = View.VISIBLE
-                }
+                labels.text = page.labels.map { parent.context.getString(it) }.sorted().joinToString(" · ")
 
-                itemView.setOnClickListener { onItemTapped(pageItem) }
+                itemView.setOnClickListener { onItemTapped(page) }
 
-                pageMore.setOnClickListener { moreClick(pageItem, it) }
+                pageMore.setOnClickListener { view -> moreClick(page, view) }
                 pageMore.visibility =
-                        if (pageItem.actions.isNotEmpty() && pageItem.actionsEnabled) View.VISIBLE else View.INVISIBLE
+                        if (page.actions.isNotEmpty() && page.actionsEnabled) View.VISIBLE else View.INVISIBLE
+
+                showFeaturedImage(page.imageUrl)
             }
         }
 
@@ -87,10 +87,31 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             }
             popup.show()
         }
+
+        private fun showFeaturedImage(imageUrl: String?) {
+            val imageSize = DisplayUtils.dpToPx(parent.context, FEATURED_IMAGE_THUMBNAIL_SIZE_DP)
+            if (imageUrl == null) {
+                featuredImage.visibility = View.GONE
+                imageManager.cancelRequestAndClearImageView(featuredImage)
+            } else if (imageUrl.startsWith("http")) {
+                featuredImage.visibility = View.VISIBLE
+                val photonUrl = ReaderUtils.getResizedImageUrl(imageUrl, imageSize, imageSize, !isSitePhotonCapable)
+                imageManager.load(featuredImage, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
+            } else {
+                val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(featuredImage.context, imageUrl, imageSize)
+                if (bmp != null) {
+                    featuredImage.visibility = View.VISIBLE
+                    imageManager.load(featuredImage, bmp)
+                } else {
+                    featuredImage.visibility = View.GONE
+                    imageManager.cancelRequestAndClearImageView(featuredImage)
+                }
+            }
+        }
     }
 
-    class PageDividerViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, layout.page_divider_item) {
-        private val dividerTitle = itemView.findViewById<TextView>(id.divider_text)
+    class PageDividerViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, R.layout.page_divider_item) {
+        private val dividerTitle = itemView.findViewById<TextView>(R.id.divider_text)
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as Divider).apply {
@@ -104,8 +125,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val onParentSelected: (ParentPage) -> Unit,
         @LayoutRes layout: Int
     ) : PageItemViewHolder(parentView, layout) {
-        private val pageTitle = itemView.findViewById<TextView>(id.page_title)
-        private val radioButton = itemView.findViewById<RadioButton>(id.radio_button)
+        private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
+        private val radioButton = itemView.findViewById<RadioButton>(R.id.radio_button)
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as ParentPage).apply {
@@ -131,12 +152,12 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
     class EmptyViewHolder(
         parentView: ViewGroup,
         private val onActionButtonClicked: () -> Unit
-    ) : PageItemViewHolder(parentView, layout.page_empty_item) {
-        private val emptyView = itemView.findViewById<ActionableEmptyView>(id.actionable_empty_view)
+    ) : PageItemViewHolder(parentView, R.layout.page_empty_item) {
+        private val emptyView = itemView.findViewById<ActionableEmptyView>(R.id.actionable_empty_view)
 
         @Suppress("DEPRECATION")
         override fun onBind(pageItem: PageItem) {
-            if (pageItem is Empty) {
+            (pageItem as Empty).apply {
                 emptyView.title.text = emptyView.resources.getString(pageItem.textResource)
 
                 if (pageItem.isButtonVisible) {

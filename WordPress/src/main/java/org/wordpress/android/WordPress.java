@@ -591,11 +591,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         if (mDefaultUserAgent == null) {
             try {
                 mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
-            } catch (AndroidRuntimeException | NullPointerException e) {
+            } catch (AndroidRuntimeException | NullPointerException | IllegalArgumentException e) {
                 // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
                 // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
                 // Catch NullPointerException that could be raised by WebSettings.getDefaultUserAgent()
                 // See https://github.com/wordpress-mobile/WordPress-Android/issues/3838
+                // Catch IllegalArgumentException that could be raised by WebSettings.getDefaultUserAgent()
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/9015
 
                 // init with the empty string, it's a rare issue
                 mDefaultUserAgent = "";
