@@ -61,7 +61,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         Notification notification = new NotificationCompat.Builder(context,
-                context.getString(R.string.notification_channel_normal_id))
+                context.getString(R.string.notification_channel_quick_start_id))
                 .setSmallIcon(R.drawable.ic_my_sites_24dp)
                 .setContentTitle(context.getString(quickStartTaskDetails.getTitleResId()))
                 .setContentText(context.getString(quickStartTaskDetails.getSubtitleResId()))
