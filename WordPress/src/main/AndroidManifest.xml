@@ -267,7 +267,7 @@
 
         <!-- Stats Activities -->
         <activity
-            android:name=".ui.stats.StatsActivity"
+            android:name=".ui.stats.OldStatsActivity"
             android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
