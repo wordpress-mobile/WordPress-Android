@@ -246,9 +246,8 @@ public class WPMainActivity extends AppCompatActivity implements
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
-                    // when app is opened from Quick Start reminder switch to MySite fragment and let it handle the rest
+                    // when app is opened from Quick Start reminder switch to MySite fragment
                     mBottomNav.setCurrentPosition(PAGE_MY_SITE);
-                    getIntent().removeExtra(MySiteFragment.ARG_QUICK_START_TASK);
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
