@@ -62,7 +62,7 @@ class PagesViewModelTest {
         viewModel.listState.observeForever { if (it != null) listStates.add(it) }
         viewModel.pages.observeForever { if (it != null) pages.add(it) }
         viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
-        pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null)
+        pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null, 0)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
@@ -107,7 +107,7 @@ class PagesViewModelTest {
     fun onSearchReturnsResultsFromStore() = test {
         initSearch()
         val query = "query"
-        val drafts = listOf(PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
+        val drafts = listOf(PageModel(site, 1, "title", DRAFT, Date(), false, 1, null, 0))
         val expectedResult = sortedMapOf(DRAFTS to drafts)
         whenever(pageStore.search(site, query)).thenReturn(drafts)
 
