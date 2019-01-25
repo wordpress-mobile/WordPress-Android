@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spanned;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +17,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -26,12 +24,10 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
-import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
@@ -49,9 +45,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
     private boolean mHtmlModeEnabled;
-
-    private EditTextWithKeyBackListener mTitle;
-    private SourceViewEditText mSource;
 
     private Handler mInvalidateOptionsHandler;
     private Runnable mInvalidateOptionsRunnable;
@@ -98,8 +91,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
-        mTitle = view.findViewById(R.id.title);
-
         if (getArguments() != null) {
             mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
         }
@@ -116,45 +107,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 BuildConfig.DEBUG,
                 BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
                 mIsNewPost);
-        mSource = view.findViewById(R.id.source);
-
-        mTitle.addTextChangedListener(mTextWatcher);
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
-
-        mTitle.setOnTouchListener(this);
-        mSource.setOnTouchListener(this);
-
-        mTitle.setOnImeBackListener(new OnImeBackListener() {
-            public void onImeBack() {
-                showActionBarIfNeeded();
-            }
-        });
-
-        mTitle.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                for (int i = s.length(); i > 0; i--) {
-                    if (s.subSequence(i - 1, i).toString().equals("\n")) {
-                        s.replace(i - 1, i, " ");
-                    }
-                }
-            }
-        });
-
-        // We need to intercept the "Enter" key on the title field, and replace it with a space instead
-        mSource.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
         setHasOptionsMenu(true);
 
@@ -171,7 +128,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onEditorFragmentInitialized();
 
         if (mIsNewPost) {
-            mTitle.requestFocus();
             showImplicitKeyboard();
         }
 
@@ -184,16 +140,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorWasPaused = true;
 
         mWPAndroidGlueCode.onPause(getActivity());
-
-        // Reset soft input mode to default as we have change it in onResume()
-        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
-                | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-    }
-
-    private void setSoftInputMode(int mode) {
-        if (mIsNewPost && mTitle.hasFocus()) {
-            getActivity().getWindow().setSoftInputMode(mode);
-        }
     }
 
     private void showImplicitKeyboard() {
@@ -215,11 +161,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         mWPAndroidGlueCode.onResume(this, getActivity());
-
-        // In AndroidManifest for EditActivity we have set android:windowSoftInputMode="stateHidden|adjustResize"
-        // which doesn't allow us to present the keyboard programmatically.
-        // Ugly way to allow showing the keyboard would be to change soft input mode.
-        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override
@@ -304,15 +245,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void setTitle(CharSequence text) {
-        if (text == null) {
-            text = "";
+    public void setTitle(CharSequence title) {
+        if (title == null) {
+            title = "";
         }
 
-        if (mTitle == null) {
+        if (!mWPAndroidGlueCode.hasReactRootView()) {
             return;
         }
-        mTitle.setText(text);
+
+        mWPAndroidGlueCode.setContent(title.toString(), null);
     }
 
     @Override
@@ -321,22 +263,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             text = "";
         }
 
-        if (!mWPAndroidGlueCode.hasReactRootView() || mSource == null) {
+        if (!mWPAndroidGlueCode.hasReactRootView()) {
             return;
         }
 
         String postContent = removeVisualEditorProgressTag(text.toString());
-        if (contentContainsGutenbergBlocks(postContent)) {
-            mSource.setCalypsoMode(false);
-        } else {
-            mSource.setCalypsoMode(true);
-        }
-
-        // Initialize both editors (visual, source) with the same content. Need to do that so the starting point used in
-        //  their content diffing algorithm is the same. That's assumed by the Toolbar's mode-switching logic too.
-        mSource.displayStyledAndFormattedHtml(postContent);
-
-        mWPAndroidGlueCode.setContent(postContent);
+        mWPAndroidGlueCode.setContent(null, postContent);
     }
 
     public void onToggleHtmlMode() {
@@ -405,9 +337,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (!isAdded()) {
             return "";
         }
-
-        // TODO: Aztec returns a ZeroWidthJoiner when empty so, strip it. Aztec needs fixing to return empty string.
-        return StringUtils.notNullStr(mTitle.getText().toString().replaceAll("&nbsp;$", "").replaceAll("\u200B", ""));
+        return mWPAndroidGlueCode.getTitle(new OnGetContentTimeout() {
+            @Override public void onGetContentTimeout(InterruptedException ie) {
+                AppLog.e(T.EDITOR, ie);
+                Thread.currentThread().interrupt();
+            }
+        });
     }
 
     @Override
@@ -587,16 +522,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
         }
 
-        if (mSource.isFocused()) {
-            ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
-        } else {
-            getActivity().runOnUiThread(new Runnable() {
+
+        getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mEditorFragmentListener.onAddMediaClicked();
                 }
             });
-        }
 
         return true;
     }
