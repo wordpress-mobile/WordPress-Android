@@ -2211,7 +2211,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // Set post title and content
         if (mPost != null) {
-            if (!TextUtils.isEmpty(mPost.getContent()) && !mHasSetPostContent) {
+            // don't avoid calling setContent() for GutenbergEditorFragment so RN gets initialized
+            if ((!TextUtils.isEmpty(mPost.getContent()) || mEditorFragment instanceof GutenbergEditorFragment)
+                && !mHasSetPostContent) {
                 mHasSetPostContent = true;
                 if (mPost.isLocalDraft() && !isModernEditor()) {
                     // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
@@ -3184,6 +3186,11 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onAddPhotoClicked() {
         onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+    }
+
+    @Override
+    public void onCapturePhotoClicked() {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
     }
 
     @Override

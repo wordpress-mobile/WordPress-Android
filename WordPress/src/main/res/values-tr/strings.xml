@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-03 12:54:07+0000
+Translation-Revision-Date: 2019-01-24 11:41:41+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">Bu işlemi gerçekleştirmek için bir bağlantı gereklidir. Lütfen bağlantınızı kontrol edin ve tekrar deneyin.</string>
+    <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
+    <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
+    <string name="stats_cannot_be_started">Şu anda istatistikleri açamıyoruz. Lütfen daha sonra tekrar deneyiniz.</string>
     <string name="site_creation_label_domain_selection">İnsanların sizi webde bulabilmesini sağlamak için mevcut bir adres seçin.</string>
     <string name="giphy_powered_by_giphy">GIPHY tarafından sağlanır</string>
     <string name="giphy_picker_endless_scroll_network_error">Ağ hatası nedeniyle bazı ortam dosyaları yüklenemedi.</string>
@@ -69,7 +73,7 @@ Language: tr
     <string name="stats_followers_email">E-posta</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">İçgörüleri yönet</string>
-    <string name="stats_empty_insights_description">İçgörülerinizi özelleştirin ve sitenizin performansıyla ilgili tüm bilgileri edinin</string>
+    <string name="stats_empty_insights_description">Analizlerinizi özelleştirin ve sitenizin performansındaki düşüş hakkında bilgi edinin</string>
     <string name="stats_empty_insights_title">Henüz içgörü eklenmedi</string>
     <string name="stats_no_data_yet">Henüz veri yok</string>
     <string name="menu_debug">Hata ayıklama menüsü</string>
@@ -1167,11 +1171,11 @@ Language: tr
     <string name="preview_screen_links_disabled">Önizleme ekranında bağlantılar etkisiz durumdadır</string>
     <string name="draft_explainer">Bu yazı henüz yayınlanmamış bir taslak</string>
     <string name="send">Gönder</string>
-    <string name="person_removed">\@%1$s başarıyla kaldırıldı</string>
+    <string name="person_removed">%1$s başarıyla kaldırıldı</string>
     <string name="user_remove_confirmation_message">Eğer %1$s kullanıcısını kaldırırsanız, o kullanıcı bu siteye artık erişemez fakat %1$s kullanıcı tarafından oluşturulmuş içerik sitede kalır.\n\nHala bu kullanıcıyı kaldırmak istiyor musunuz?</string>
     <string name="person_remove_confirmation_title">%1$s kullanıcısını kaldır</string>
     <string name="role">Rol</string>
-    <string name="people">İnsanlar</string>
+    <string name="people">Kişiler</string>
     <string name="reader_empty_posts_in_custom_list">Bu listedeki siteler yakın zamanda herhangi bir gönderide bulunmadı</string>
     <string name="error_remove_user">Kullanıcı kaldırılamıyor</string>
     <string name="error_update_role">Kullanıcı rolü güncellenemiyor</string>
@@ -1293,7 +1297,7 @@ Language: tr
     <string name="stats_widget_promo_title">Ana ekran istatistik bileşeni</string>
     <string name="site_settings_unknown_language_code_error">Dil kodu tanınmadı</string>
     <string name="site_settings_threading_dialog_description">Yorumların zincirler halinde kademelenmesine izin ver</string>
-    <string name="site_settings_threading_dialog_header">Zincirdeki maksimum yorum sayısı:</string>
+    <string name="site_settings_threading_dialog_header">Zincirdeki azami yorum sayısı:</string>
     <string name="disabled">Devre dışı</string>
     <string name="search">Ara</string>
     <string name="remove">Kaldır</string>
@@ -1305,7 +1309,7 @@ Language: tr
     <string name="about_me">Hakkımda</string>
     <string name="public_display_name_hint">Ayarlanmazsa, görünen ad varsayılan olarak kullanıcı adınız şeklinde belirlenir</string>
     <string name="public_display_name">Herkese açık görünen ad</string>
-    <string name="last_name">Soyadı</string>
+    <string name="last_name">Soyad</string>
     <string name="first_name">Ad</string>
     <string name="my_profile">Profilim</string>
     <string name="cd_related_post_preview_image">İlgili yazı önizleme görseli</string>
@@ -1799,7 +1803,7 @@ Language: tr
     <string name="stats_timeframe_yesterday">Dün</string>
     <string name="stats_timeframe_today">Bugün</string>
     <string name="stats_view_referrers">Gönderenler</string>
-    <string name="stats_view_tags_and_categories">Etiketler ve Kategoriler</string>
+    <string name="stats_view_tags_and_categories">Etiketler ve kategoriler</string>
     <string name="stats_view_clicks">Tıklamalar</string>
     <string name="stats_view_visitors_and_views">Ziyaretçiler ve görüntülemeler</string>
     <string name="stats">İstatistikler</string>

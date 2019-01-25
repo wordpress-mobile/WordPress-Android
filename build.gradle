@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.3'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.automattic.android:fetchstyle:1.1'
     }
 }
@@ -92,5 +92,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = 'b5f72ff5a2e6657ea6cd5301e07d9c3bd42100e2'
+    fluxCVersion = '2a2715aa06dbbb0e2760d435a5cee3d18bd6d871'
 }

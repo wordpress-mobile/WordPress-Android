@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.REFERRERS
 import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewReferrers
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -86,15 +87,22 @@ constructor(
         } else {
             items.add(Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label))
             domainModel.groups.forEachIndexed { index, group ->
-                val headerItem = ListItemWithIcon(
-                        iconUrl = group.icon,
-                        text = group.name,
-                        value = group.total?.toFormattedString(),
-                        showDivider = index < domainModel.groups.size - 1
-                )
                 if (group.referrers.isEmpty()) {
+                    val headerItem = ListItemWithIcon(
+                            iconUrl = group.icon,
+                            text = group.name,
+                            value = group.total?.toFormattedString(),
+                            showDivider = index < domainModel.groups.size - 1,
+                            navigationAction = group.url?.let { create(it, this::onItemClick) }
+                    )
                     items.add(headerItem)
                 } else {
+                    val headerItem = ListItemWithIcon(
+                            iconUrl = group.icon,
+                            text = group.name,
+                            value = group.total?.toFormattedString(),
+                            showDivider = index < domainModel.groups.size - 1
+                    )
                     val isExpanded = group.groupId == uiState.groupId
                     items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
                         onUiState(SelectedGroup(if (changedExpandedState) group.groupId else null))
@@ -105,12 +113,14 @@ constructor(
                                     iconUrl = referrer.icon,
                                     text = referrer.name,
                                     value = referrer.views.toFormattedString(),
-                                    showDivider = false
+                                    showDivider = false,
+                                    navigationAction = referrer.url?.let { create(it, this::onItemClick) }
                             )
                         })
                         items.add(Divider)
                     }
                 }
+                null
             }
 
             if (domainModel.hasMore) {
@@ -128,6 +138,11 @@ constructor(
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(ViewReferrers(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+    }
+
+    private fun onItemClick(url: String) {
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_TAPPED, statsGranularity)
+        navigateTo(ViewUrl(url))
     }
 
     data class SelectedGroup(val groupId: String? = null)
