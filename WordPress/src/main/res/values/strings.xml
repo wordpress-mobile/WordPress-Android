@@ -310,17 +310,28 @@
     <string name="width">Width</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
+    <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
     <string name="delete_post">Delete post?</string>
     <string name="delete_page">Delete page?</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
     <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
     <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_yes">Publish now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
+
+    <!-- post version sync conflict dialog -->
+    <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
+    <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %s\n\nWeb\nSaved on %s\n</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Discard Local</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Discard Web</string>
+    <string name="toast_conflict_updating_post">Updating post</string>
+    <string name="snackbar_conflict_local_version_discarded">Local version discarded</string>
+    <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
+    <string name="snackbar_conflict_undo">Undo</string>
 
     <!-- gutenberg compatibility dialog -->
     <string name="dialog_gutenberg_compatibility_title">Before you continue</string>
@@ -749,6 +760,8 @@
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_collect_information">Collect information</string>
+    <string name="preference_crash_reports">Crash reports</string>
+    <string name="preference_crash_reports_summary">Allow automatic crash reports to help us improve the app\'s performance.</string>
     <string name="preference_privacy_settings">Privacy settings</string>
     <string name="cookie_policy_learn_more_header">Cookie Policy</string>
     <string name="cookie_policy_learn_more_caption">Share information with our analytics tool about your use of services while logged in to your WordPress.com account.</string>
@@ -1007,9 +1020,9 @@
     <!-- Stats refreshed insights -->
     <string name="stats_insights_all_time_stats">All Time Stats</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
-    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here</string>
-    <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post</string>
-    <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far</string>
+    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
+    <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
     <string name="stats_insights_create_post">Create post</string>
     <string name="stats_insights_share_post">Share post</string>
     <string name="stats_insights_view_more">View more</string>
@@ -1379,6 +1392,9 @@
     <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
     <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
 
+    <!-- Remote Post has conflicts with local post -->
+    <string name="local_post_is_conflicted">Version conflict</string>
+
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
     <string name="local_draft_explainer">This post is a local draft which hasn\'t been published</string>
@@ -1702,6 +1718,7 @@
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
+    <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
@@ -2303,6 +2320,7 @@
     <string name="reader_blavatar_desc">site icon</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
+    <string name="suggestions_updated_content_description">Suggestions updated</string>
 
 
     <!-- Site Creation -->
@@ -2439,4 +2457,34 @@
     <!--suppress UnusedResources -->
     <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://en.blog.wordpress.com/2018/06/21/bookmark-posts-with-save-for-later/</string>
     <!-- END (News Card) -->
+
+    <!-- Site Creation -->
+    <string name="new_site_creation_screen_title_general">Create Site</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
+    <string name="new_site_creation_preview_title">Your site has been created!</string>
+    <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
+    <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
+    <string name="new_site_creation_site_info_header_title">Basic Information</string>
+    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
+    <string name="new_site_creation_site_title_hint">Site Title</string>
+    <string name="new_site_creation_tag_line_hint">Tagline</string>
+    <string name="new_site_creation_tag_line_description">The tagline is a short line of text shown right below the title.</string>
+    <string name="new_site_creation_button_skip">Skip</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
+    <string name="site_creation_error_generic_title">There was a problem</string>
+    <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
+    <string name="new_site_creation_domain_header_title">Choose a domain name for your site</string>
+    <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
+    <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
+    <string name="new_site_creation_create_site_button">Create Site</string>
+    <string name="notification_new_site_creation_title">Create Site</string>
+    <string name="notification_new_site_creation_failed">There was a problem</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+    <string name="cancel_new_site_wizard_content_description">Cancel Site Creation Wizard</string>
+    <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
+    <string name="new_site_creation_clear_all_content_description">Clear</string>
+    <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
 </resources>

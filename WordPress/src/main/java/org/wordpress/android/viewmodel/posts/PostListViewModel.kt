@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -63,6 +64,8 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.VideoOptimizer
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
@@ -77,6 +80,7 @@ import javax.inject.Inject
 
 const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
+const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 
 enum class PostListEmptyViewState {
     EMPTY_LIST,
@@ -109,9 +113,12 @@ class PostListViewModel @Inject constructor(
 
     // Keep a reference to the currently being trashed post, so we can hide it during Undo Snackbar
     private var postIdToTrash: Pair<Int, Long>? = null
-    // Since we are using DialogFragments we need to hold onto which post will be published or trashed
+    // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForTrashDialog: Int? = null
+    private var localPostIdForConflictResolutionDialog: Int? = null
+    private var originalPostCopyForConflictUndo: PostModel? = null
+    private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
     // Initial target post to scroll to
     private var targetLocalPostId: Int? = null
 
@@ -294,10 +301,10 @@ class PostListViewModel @Inject constructor(
         }
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_DELETE_POST_DIALOG_TAG,
-                titleRes = R.string.delete_post,
-                messageRes = messageRes,
-                positiveButtonTextRes = R.string.delete,
-                negativeButtonTextRes = R.string.cancel
+                title = UiStringRes(R.string.delete_post),
+                message = UiStringRes(messageRes),
+                positiveButton = UiStringRes(R.string.delete),
+                negativeButton = UiStringRes(R.string.cancel)
         )
         localPostIdForTrashDialog = post.id
         _dialogAction.postValue(dialogHolder)
@@ -313,12 +320,24 @@ class PostListViewModel @Inject constructor(
         }
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_PUBLISH_POST_DIALOG_TAG,
-                titleRes = R.string.dialog_confirm_publish_title,
-                messageRes = R.string.dialog_confirm_publish_message_post,
-                positiveButtonTextRes = R.string.dialog_confirm_publish_yes,
-                negativeButtonTextRes = R.string.cancel
+                title = UiStringRes(R.string.dialog_confirm_publish_title),
+                message = UiStringRes(string.dialog_confirm_publish_message_post),
+                positiveButton = UiStringRes(R.string.dialog_confirm_publish_yes),
+                negativeButton = UiStringRes(R.string.cancel)
         )
         localPostIdForPublishDialog = post.id
+        _dialogAction.postValue(dialogHolder)
+    }
+
+    private fun showConflictedPostResolutionDialog(post: PostModel) {
+        val dialogHolder = DialogHolder(
+                tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
+                message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
+                positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
+                negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
+        )
+        localPostIdForConflictResolutionDialog = post.id
         _dialogAction.postValue(dialogHolder)
     }
 
@@ -335,6 +354,16 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
+        // first of all, check whether this post is in Conflicted state.
+        if (doesPostHaveUnhandledConflict(post)) {
+            showConflictedPostResolutionDialog(post)
+            return
+        }
+
+        checkGutenbergOrEdit(site, post)
+    }
+
+    private fun checkGutenbergOrEdit(site: SiteModel, post: PostModel) {
         // Show Gutenberg Warning Dialog if post contains GB blocks and it's not disabled
         if (!isGutenbergEnabled() &&
                 PostUtils.contentContainsGutenbergBlocks(post.content) &&
@@ -404,6 +433,14 @@ class PostListViewModel @Inject constructor(
                             T.POSTS,
                             "Error updating the post with type: ${event.error.type} and message: ${event.error.message}"
                     )
+                } else {
+                    originalPostCopyForConflictUndo?.id?.let {
+                        val updatedPost = postStore.getPostByLocalPostId(it)
+                        // Conflicted post has been successfully updated with its remote version
+                        if (!PostUtils.isPostInConflictWithRemote(updatedPost)) {
+                            conflictedPostUpdatedWithItsRemoteVersion()
+                        }
+                    }
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {
@@ -523,6 +560,7 @@ class PostListViewModel @Inject constructor(
                 date = PostUtils.getFormattedDate(post),
                 postStatus = postStatus,
                 isLocallyChanged = post.isLocallyChanged,
+                isConflicted = doesPostHaveUnhandledConflict(post),
                 canShowStats = canShowStats,
                 canPublishPost = canPublishPost,
                 canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
@@ -530,6 +568,7 @@ class PostListViewModel @Inject constructor(
                 featuredImageUrl = getFeaturedImageUrl(post.featuredImageId, post.content),
                 uploadStatus = uploadStatus
         )
+
         return PostAdapterItem(
                 data = postData,
                 onSelected = { handlePostButton(PostListButton.BUTTON_EDIT, post) },
@@ -599,6 +638,11 @@ class PostListViewModel @Inject constructor(
                 localPostIdForPublishDialog = null
                 publishPost(it)
             }
+            CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
+                localPostIdForConflictResolutionDialog = null
+                // here load version from remote
+                updateConflictedPostWithItsRemoteVersion(it)
+            }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
@@ -607,13 +651,19 @@ class PostListViewModel @Inject constructor(
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
+            CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
+                updateConflictedPostWithItsLocalVersion(it)
+            }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
     }
 
     fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
-        // Cancel and outside touch dismiss works the same way
-        onNegativeClickedForBasicDialog(instanceTag)
+        // Cancel and outside touch dismiss works the same way for all, except for conflict resolution dialog,
+        // for which tapping outside and actively tapping the "edit local" have different meanings
+        if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG) {
+            onNegativeClickedForBasicDialog(instanceTag)
+        }
     }
 
     // Gutenberg Events
@@ -660,7 +710,80 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    // Post Conflict Resolution
+
+    private fun updateConflictedPostWithItsRemoteVersion(localPostId: Int) {
+        // We need network connection to load a remote post
+        if (!checkNetworkConnection()) {
+            return
+        }
+
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            originalPostCopyForConflictUndo = post.clone()
+            dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
+            _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
+        }
+    }
+
+    private fun conflictedPostUpdatedWithItsRemoteVersion() {
+        val undoAction = {
+            // here replace the post with whatever we had before, again
+            if (originalPostCopyForConflictUndo != null) {
+                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
+            }
+        }
+        val onDismissAction = {
+            originalPostCopyForConflictUndo = null
+        }
+        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_local_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        _snackbarAction.postValue(snackbarHolder)
+    }
+
+    private fun updateConflictedPostWithItsLocalVersion(localPostId: Int) {
+        // We need network connection to push local version to remote
+        if (!checkNetworkConnection()) {
+            return
+        }
+
+        // Keep a reference to which post is being updated with the local version so we can avoid showing the conflicted
+        // label during the undo snackbar.
+        localPostIdForFetchingRemoteVersionOfConflictedPost = localPostId
+        pagedListWrapper.invalidateData()
+
+        val post = postStore.getPostByLocalPostId(localPostId) ?: return
+
+        // and now show a snackbar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
+        var isUndoed = false
+        val undoAction = {
+            isUndoed = true
+
+            // Remove the reference for the post being updated and re-show the conflicted label on undo
+            localPostIdForFetchingRemoteVersionOfConflictedPost = null
+            pagedListWrapper.invalidateData()
+        }
+
+        val onDismissAction = {
+            if (!isUndoed) {
+                localPostIdForFetchingRemoteVersionOfConflictedPost = null
+                PostUtils.trackSavePostAnalytics(post, site)
+                dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
+            }
+        }
+        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_web_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        _snackbarAction.postValue(snackbarHolder)
+    }
+
     // Utils
+
+    private fun doesPostHaveUnhandledConflict(post: PostModel): Boolean {
+        // If we are fetching the remote version of a conflicted post, it means it's already being handled
+        val isFetchingConflictedPost = localPostIdForFetchingRemoteVersionOfConflictedPost != null &&
+                localPostIdForFetchingRemoteVersionOfConflictedPost == post.id
+        return !isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post)
+    }
 
     private fun checkNetworkConnection(): Boolean =
             if (isNetworkAvailable) {
