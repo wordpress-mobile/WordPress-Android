@@ -156,7 +156,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void checkAndRequestCameraAndStoragePermissions() {
-        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
+        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
+                CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
             mEditorFragmentListener.onCapturePhotoClicked();
         }
     }
