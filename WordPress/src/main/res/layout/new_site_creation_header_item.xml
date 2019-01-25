@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:paddingBottom="@dimen/site_creation_segments_content_padding_vertical"
+    android:paddingEnd="@dimen/site_creation_segments_content_padding_horizontal"
+    android:paddingStart="@dimen/site_creation_segments_content_padding_horizontal"
+    android:paddingTop="@dimen/site_creation_segments_content_padding_vertical">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.1"
+        android:textColor="@color/wp_grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        app:fixWidowWords="true"
+        tools:text="What's the focus of your business?"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.1"
+        android:textColor="@color/wp_grey_darken_20"
+        android:textSize="@dimen/text_sz_large"
+        app:fixWidowWords="true"
+        tools:text="We’ll use your answer to add sections to your website."/>
+</LinearLayout>
