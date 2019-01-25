@@ -23,10 +23,10 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import org.wordpress.android.util.*;
-import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
