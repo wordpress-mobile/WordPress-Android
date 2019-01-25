@@ -35,6 +35,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
+import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
+import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
@@ -216,7 +218,8 @@ class QuickStartUtils {
 
             if (isEveryQuickStartTaskDone(quickStartStore)) {
                 AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
-                dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
+                val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
+                dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
             } else {
                 if (context != null && quickStartStore.hasDoneTask(siteId, CREATE_SITE)) {
                     val nextTask = getNextUncompletedQuickStartTask(quickStartStore, siteId, task.taskType)
