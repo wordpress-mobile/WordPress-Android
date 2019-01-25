@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -23,9 +24,10 @@ import android.webkit.URLUtil;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
@@ -42,6 +44,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
 
     private static boolean mIsToolbarExpanded = false;
+
+    private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
 
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
@@ -108,6 +112,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onUploadMediaButtonClicked() {
                         mEditorFragmentListener.onAddPhotoClicked();
                     }
+                    @Override
+                    public void onCapturePhotoButtonClicked() {
+                        checkAndRequestCameraAndStoragePermissions();
+                    }
                 },
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
@@ -138,6 +146,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return view;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
+            checkAndRequestCameraAndStoragePermissions();
+        }
+    }
+
+    private void checkAndRequestCameraAndStoragePermissions() {
+        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
+                CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
+            mEditorFragmentListener.onCapturePhotoClicked();
+        }
     }
 
     @Override
