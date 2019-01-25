@@ -13,7 +13,6 @@ enum class SiteCreationStep : WizardStep {
                 "site_creation_site_info" -> SITE_INFO
                 "site_creation_domains" -> DOMAINS
                 "site_creation_site_preview" -> SITE_PREVIEW
-                // TODO we should consider skipping the step when it's unknown
                 else -> throw IllegalArgumentException("SiteCreationStep not recognized: \$input")
             }
         }
