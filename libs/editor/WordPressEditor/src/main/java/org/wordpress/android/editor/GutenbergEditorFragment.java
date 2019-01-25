@@ -130,7 +130,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override
                     public void onCapturePhotoButtonClicked() {
                         if (!hasPermissions(sPermissions)) {
-                            requestCameraandStoragePermissions();
+                            requestCameraAndStoragePermissions();
                             return;
                         }
 
@@ -203,7 +203,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return view;
     }
 
-    private void requestCameraandStoragePermissions() {
+    private void requestCameraAndStoragePermissions() {
         requestPermissions(sPermissions, CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
     }
 
@@ -225,7 +225,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             if (hasPermissions(permissions)) {
                 mEditorFragmentListener.onCapturePhotoClicked();
             } else {
-                requestCameraandStoragePermissions();
+                requestCameraAndStoragePermissions();
             }
         }
     }
