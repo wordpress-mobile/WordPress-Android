@@ -52,7 +52,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static boolean mIsToolbarExpanded = false;
 
-    private static final String[] sPermissions = new String[]{Manifest.permission.CAMERA,
+    private static final String[] sCameraAndExternalStoragePermissions = new String[]{Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
 
@@ -129,7 +129,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override
                     public void onCapturePhotoButtonClicked() {
-                        if (!hasPermissions(sPermissions)) {
+                        if (!hasPermissions(sCameraAndExternalStoragePermissions)) {
                             requestCameraAndStoragePermissions();
                             return;
                         }
@@ -204,7 +204,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void requestCameraAndStoragePermissions() {
-        requestPermissions(sPermissions, CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
+        requestPermissions(sCameraAndExternalStoragePermissions, CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
     }
 
     public boolean hasPermissions(String... permissions) {
