@@ -50,7 +50,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
     private boolean mIsNewPost;
-    private boolean mIsRotating;
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
@@ -73,7 +72,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
+        if (getGutenbergContainerFragment() == null) {
             boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
 
             FragmentManager fragmentManager = getChildFragmentManager();
@@ -95,8 +94,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mIsRotating = savedInstanceState != null;
-
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
         if (getArguments() != null) {
@@ -123,7 +120,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
         };
 
-        mEditorFragmentListener.onEditorFragmentInitialized();
+        if (!getGutenbergContainerFragment().hasReceivedAnyContent()) {
+            // container is empty, which means it's a fresh instance so, signal to complete its init
+            mEditorFragmentListener.onEditorFragmentInitialized();
+        }
 
         if (mIsNewPost) {
             showImplicitKeyboard();
@@ -243,10 +243,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setContent(CharSequence text) {
-        if (mIsRotating) {
-            return;
-        }
-
         if (text == null) {
             text = "";
         }

@@ -14,6 +14,7 @@ public class GutenbergContainerFragment extends Fragment {
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
 
     private boolean mHtmlModeEnabled;
+    private boolean mHasReceivedAnyContent;
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
 
@@ -23,6 +24,10 @@ public class GutenbergContainerFragment extends Fragment {
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public boolean hasReceivedAnyContent() {
+        return mHasReceivedAnyContent;
     }
 
     public void attachToContainer(ViewGroup viewGroup) {
@@ -49,6 +54,9 @@ public class GutenbergContainerFragment extends Fragment {
                 BuildConfig.DEBUG,
                 BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
                 isNewPost);
+
+        // clear the content initialization flag since a new ReactRootView has been created;
+        mHasReceivedAnyContent = false;
     }
 
     @Override
@@ -73,6 +81,7 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void setContent(String title, String postContent) {
+        mHasReceivedAnyContent = true;
         mWPAndroidGlueCode.setContent(title, postContent);
     }
 
