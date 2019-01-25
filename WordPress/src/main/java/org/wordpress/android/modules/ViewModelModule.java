@@ -5,6 +5,12 @@ import android.arch.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM;
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel;
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel;
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel;
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel;
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel;
@@ -115,6 +121,36 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(HistoryViewModel.class)
     abstract ViewModel historyViewModel(HistoryViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NewSiteCreationSegmentsViewModel.class)
+    abstract ViewModel siteCreationSegmentsViewModel(NewSiteCreationSegmentsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NewSiteCreationVerticalsViewModel.class)
+    abstract ViewModel siteCreationVerticalsViewModel(NewSiteCreationVerticalsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NewSiteCreationDomainsViewModel.class)
+    abstract ViewModel siteCreationDomainsViewModel(NewSiteCreationDomainsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NewSiteCreationSiteInfoViewModel.class)
+    abstract ViewModel siteCreationSiteInfoViewModel(NewSiteCreationSiteInfoViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NewSiteCreationMainVM.class)
+    abstract ViewModel newSiteCreationMainVM(NewSiteCreationMainVM viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NewSitePreviewViewModel.class)
+    abstract ViewModel newSitePreviewViewModel(NewSitePreviewViewModel viewModel);
 
     @Binds
     @IntoMap

@@ -144,10 +144,12 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                                                                    false));
             case VIEW_TYPE_INPUT:
                 return new InputViewHolder(LayoutInflater.from(parent.getContext())
-                                                         .inflate(R.layout.site_creation_domain_input, parent, false));
+                                                         .inflate(R.layout.site_creation_domain_input, parent,
+                                                                 false));
             case VIEW_TYPE_ITEM:
                 return new DomainViewHolder(LayoutInflater.from(parent.getContext())
-                                                          .inflate(R.layout.site_creation_domain_item, parent, false));
+                                                          .inflate(R.layout.site_creation_domain_item, parent,
+                                                                  false));
             default:
                 throw new RuntimeException("Unknown view type " + viewType);
         }

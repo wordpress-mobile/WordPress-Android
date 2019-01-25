@@ -758,4 +758,10 @@
         <item name="android:enabled">false</item>
     </style>
 
+    <!--Site Preview Skeleton-->
+    <style name="SitePreviewSkeletonView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:background">@color/wp_grey_lighten_30</item>
+    </style>
 </resources>

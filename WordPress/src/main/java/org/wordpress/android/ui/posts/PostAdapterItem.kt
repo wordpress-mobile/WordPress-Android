@@ -18,6 +18,7 @@ data class PostAdapterItemData(
     val date: String,
     val postStatus: PostStatus,
     val isLocallyChanged: Boolean,
+    val isConflicted: Boolean,
     val canShowStats: Boolean,
     val canPublishPost: Boolean,
     val canRetryUpload: Boolean,
