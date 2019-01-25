@@ -44,11 +44,15 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
                     object : RequestListener<Drawable> {
                         override fun onLoadFailed(e: Exception?) {
                         }
+
                         override fun onResourceReady(resource: Drawable) {
                             try {
                                 icon.setColorFilter(Color.parseColor(uiState.iconColor), PorterDuff.Mode.SRC_IN)
                             } catch (e: IllegalArgumentException) {
-                                AppLog.e(AppLog.T.SITE_CREATION, "Error parsing segment icon color: ${uiState.iconColor}")
+                                AppLog.e(
+                                        AppLog.T.SITE_CREATION,
+                                        "Error parsing segment icon color: ${uiState.iconColor}"
+                                )
                             }
                         }
                     }
