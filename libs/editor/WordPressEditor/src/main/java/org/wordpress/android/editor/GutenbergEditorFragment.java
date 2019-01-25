@@ -238,11 +238,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             title = "";
         }
 
-        if (!mWPAndroidGlueCode.hasReactRootView()) {
-            return;
-        }
-
-        mWPAndroidGlueCode.setContent(title.toString(), null);
+        getGutenbergContainerFragment().setContent(title.toString(), null);
     }
 
     @Override
@@ -256,7 +252,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         String postContent = removeVisualEditorProgressTag(text.toString());
-        getGutenbergContainerFragment().setContent(postContent);
+        getGutenbergContainerFragment().setContent(null, postContent);
     }
 
     public void onToggleHtmlMode() {
@@ -325,7 +321,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (!isAdded()) {
             return "";
         }
-        return mWPAndroidGlueCode.getTitle(new OnGetContentTimeout() {
+        return getGutenbergContainerFragment().getTitle(new OnGetContentTimeout() {
             @Override public void onGetContentTimeout(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();

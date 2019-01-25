@@ -72,8 +72,8 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.onDestroy(getActivity());
     }
 
-    public void setContent(String postContent) {
-        mWPAndroidGlueCode.setContent(postContent);
+    public void setContent(String title, String postContent) {
+        mWPAndroidGlueCode.setContent(title, postContent);
     }
 
     public void toggleHtmlMode() {
@@ -88,6 +88,10 @@ public class GutenbergContainerFragment extends Fragment {
      */
     public CharSequence getContent(CharSequence originalContent, OnGetContentTimeout onGetContentTimeout) {
         return mWPAndroidGlueCode.getContent(originalContent, onGetContentTimeout);
+    }
+
+    public CharSequence getTitle(OnGetContentTimeout onGetContentTimeout) {
+        return mWPAndroidGlueCode.getTitle(onGetContentTimeout);
     }
 
     public void appendMediaFile(final String mediaUrl) {
