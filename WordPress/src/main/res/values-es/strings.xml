@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-22 10:43:07+0000
+Translation-Revision-Date: 2019-01-16 19:32:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">Se requiere una conexión para llevar a cabo esta acción. Por favor, revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="stats_no_data_for_period">No hay datos en este periodo</string>
+    <string name="preference_strip_image_location">Eliminar la ubicación de los medios</string>
+    <string name="stats_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="site_creation_label_domain_selection">Elige una dirección disponible para que la gente te encuentre en la web.</string>
     <string name="giphy_powered_by_giphy">Creado por GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Algunos medios no se cargaron debido a un error de red.</string>
@@ -69,7 +73,7 @@ Language: es
     <string name="stats_followers_email">Correo electrónico</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">Gestionar impresiones</string>
-    <string name="stats_empty_insights_description">Personaliza tus impresiones y obtén información sobre el rendimiento de tu web</string>
+    <string name="stats_empty_insights_description">Personaliza tus informes y profundiza en el rendimiento de tu sitio</string>
     <string name="stats_empty_insights_title">Aún no se han añadido impresiones</string>
     <string name="stats_no_data_yet">Aún no hay datos</string>
     <string name="menu_debug">Menú de depuración</string>

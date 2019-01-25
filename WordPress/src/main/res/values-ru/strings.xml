@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-21 20:52:52+0000
+Translation-Revision-Date: 2019-01-16 18:03:19+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">Требуется подключение к интернету для этого действия. Пожалуйста, проверьте ваше подключение и попробуйте снова.</string>
+    <string name="stats_no_data_for_period">Для указанного периода нет данных</string>
+    <string name="preference_strip_image_location">Убрать данные местоположения из медиафайлов</string>
+    <string name="stats_cannot_be_started">Извините, статистика в данный момент недоступна, попробуйте позже.</string>
     <string name="site_creation_label_domain_selection">Выберите доступный адрес для вашего сайта.</string>
     <string name="giphy_powered_by_giphy">Работает с GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Некоторые медиафайлы не загрузились из-за ошибки сети.</string>
@@ -69,7 +73,7 @@ Language: ru
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">Настроить статистику</string>
-    <string name="stats_empty_insights_description">Настройте вашу статистику и узнайте важное чем живет ваш сайт.</string>
+    <string name="stats_empty_insights_description">Настройте вашу статистику и узнайте важное то, чем живет ваш сайт.</string>
     <string name="stats_empty_insights_title">Еще нет статистики</string>
     <string name="stats_no_data_yet">Пока нет данных</string>
     <string name="menu_debug">Меню отладки</string>
