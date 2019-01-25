@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.quickstart;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -19,7 +19,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 
 import javax.inject.Inject;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
 import static org.wordpress.android.ui.RequestCodes.QUICK_START_REMINDER_NOTIFICATION;
 
 public class QuickStartReminderReceiver extends BroadcastReceiver {
@@ -59,7 +58,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         PendingIntent notificationContentIntent = PendingIntent.getActivity(context, QUICK_START_REMINDER_NOTIFICATION,
                 resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         Notification notification = new NotificationCompat.Builder(context,
                 context.getString(R.string.notification_channel_quick_start_id))
                 .setSmallIcon(R.drawable.ic_my_sites_24dp)
@@ -70,8 +69,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 .setContentIntent(notificationContentIntent)
                 .build();
 
-        if (notificationManager != null) {
-            notificationManager.notify(QUICK_START_REMINDER_NOTIFICATION, notification);
-        }
+        notificationManager.notify(QUICK_START_REMINDER_NOTIFICATION, notification);
     }
 }
