@@ -141,6 +141,11 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         QuickStartTaskDetails quickStartTaskDetails = QuickStartTaskDetails.getDetailsForTask(task);
+
+        if (quickStartTaskDetails == null) {
+            throw new IllegalStateException(task.toString() + " task is not recognized in adapter.");
+        }
+
         taskViewHolder.mIcon.setImageResource(quickStartTaskDetails.getIconResId());
         taskViewHolder.mTitle.setText(quickStartTaskDetails.getTitleResId());
         taskViewHolder.mSubtitle.setText(quickStartTaskDetails.getSubtitleResId());
