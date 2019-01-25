@@ -69,7 +69,6 @@ Language: ko_KR
     <string name="stats_followers_email">이메일</string>
     <string name="stats_followers_wordpress_com">워드프레스닷컴</string>
     <string name="stats_button_manage_insights">인사이트 관리</string>
-    <string name="stats_empty_insights_description">인사이트를 사용자 정의하고 사이트 성능에 대한 실정을 확인하세요.</string>
     <string name="stats_empty_insights_title">아직 추가된 인사이트가 없음</string>
     <string name="stats_no_data_yet">아직 데이터 없음</string>
     <string name="menu_debug">디버그 메뉴</string>

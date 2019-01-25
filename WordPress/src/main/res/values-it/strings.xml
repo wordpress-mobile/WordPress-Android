@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-03 10:54:06+0000
+Translation-Revision-Date: 2019-01-22 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">È richiesta una connessione per eseguire questa azione. Controlla la connessione e riprova.</string>
+    <string name="preference_strip_image_location">Rimuovi posizione dal contenuto multimediale</string>
     <string name="site_creation_label_domain_selection">Scegli un indirizzo tra quelli disponibili per consentire alle persone di trovarti nel web.</string>
     <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Alcuni caricamenti multimediali non sono riusciti a causa di un errore di rete.</string>
@@ -69,7 +71,6 @@ Language: it
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">Gestisci insight</string>
-    <string name="stats_empty_insights_description">Personalizza i tuoi insight e ottieni le ultime notizie sulle prestazioni del tuo sito</string>
     <string name="stats_empty_insights_title">Nessun insight aggiunto</string>
     <string name="stats_no_data_yet">Nessun dato</string>
     <string name="menu_debug">Menu di debug</string>
