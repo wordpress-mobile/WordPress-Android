@@ -27,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 
 class BlockDiffCallback(
     private val oldList: List<BlockListItem>,
@@ -55,6 +56,7 @@ class BlockDiffCallback(
                 BACKGROUND_INFO,
                 HEADER,
                 TITLE,
+                VALUE_ITEM,
                 DIVIDER,
                 MAP,
                 EMPTY -> oldItem == newItem

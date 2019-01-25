@@ -56,6 +56,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapIt
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.utils.draw
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
@@ -73,6 +74,18 @@ sealed class BlockListItemViewHolder(
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(item: Title) {
             text.setTextOrHide(item.textResource, item.text)
+        }
+    }
+
+    class ValueViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+            parent,
+            R.layout.stats_block_value_item
+    ) {
+        private val value = itemView.findViewById<TextView>(R.id.value)
+        private val unit = itemView.findViewById<TextView>(R.id.unit)
+        fun bind(item: ValueItem) {
+            value.text = item.value
+            unit.setText(item.unit)
         }
     }
 

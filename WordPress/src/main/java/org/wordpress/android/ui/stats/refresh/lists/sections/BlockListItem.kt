@@ -20,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 
 sealed class BlockListItem(val type: Type) {
     fun id(): Int {
@@ -30,6 +31,7 @@ sealed class BlockListItem(val type: Type) {
 
     enum class Type {
         TITLE,
+        VALUE_ITEM,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
         INFO,
@@ -48,6 +50,8 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
+
+    data class ValueItem(val value: String, @StringRes val unit: Int): BlockListItem(VALUE_ITEM)
 
     data class ListItem(
         val text: String,

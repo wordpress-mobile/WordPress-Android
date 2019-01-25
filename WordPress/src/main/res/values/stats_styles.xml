@@ -184,4 +184,15 @@
         <item name="android:textColor">@color/wp_grey</item>
         <item name="android:textSize">@dimen/text_small</item>
     </style>
+
+    <style name="StatsBlockBigValue" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_key</item>
+    </style>
+
+    <style name="StatsBlockBigValueUnit" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
 </resources>
