@@ -238,7 +238,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             title = "";
         }
 
-        getGutenbergContainerFragment().setContent(title.toString(), null);
+        getGutenbergContainerFragment().setTitle(title.toString());
     }
 
     @Override
@@ -248,7 +248,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         String postContent = removeVisualEditorProgressTag(text.toString());
-        getGutenbergContainerFragment().setContent(null, postContent);
+        getGutenbergContainerFragment().setContent(postContent);
     }
 
     public void onToggleHtmlMode() {

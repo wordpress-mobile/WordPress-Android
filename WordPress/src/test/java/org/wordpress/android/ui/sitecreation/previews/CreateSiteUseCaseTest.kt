@@ -70,10 +70,9 @@ class CreateSiteUseCaseTest {
         val payload = captor.value.payload as NewSitePayload
         assertThat(payload.siteName).isEqualTo(DUMMY_SITE_DATA.domain)
         assertThat(payload.siteTitle).isEqualTo(DUMMY_SITE_DATA.siteTitle)
-        // TODO uncomment when the API is ready
-//        assertThat(payload.segmentId).isEqualTo(DUMMY_SITE_DATA.segmentId)
-//        assertThat(payload.verticalId).isEqualTo(DUMMY_SITE_DATA.verticalId)
-//        assertThat(payload.tagLine).isEqualTo(DUMMY_SITE_DATA.siteTagLine)
+        assertThat(payload.segmentId).isEqualTo(DUMMY_SITE_DATA.segmentId)
+        assertThat(payload.verticalId).isEqualTo(DUMMY_SITE_DATA.verticalId)
+        assertThat(payload.tagLine).isEqualTo(DUMMY_SITE_DATA.siteTagLine)
     }
 
     @Test
