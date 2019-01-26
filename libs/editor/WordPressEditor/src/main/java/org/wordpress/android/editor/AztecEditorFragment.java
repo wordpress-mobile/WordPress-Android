@@ -2091,24 +2091,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return (firstElementAttributes != null);
     }
 
-    public static boolean hasMediaItemsMarkedUploading(Context context, @NonNull String postContent) {
-        return hasMediaItemsMarkedWithTag(context, postContent, ATTR_STATUS_UPLOADING);
+    public static boolean hasMediaItemsMarkedUploading(@NonNull Spanned spannedContent) {
+        return hasMediaItemsMarkedWithTag(spannedContent, ATTR_STATUS_UPLOADING);
     }
 
-    public static boolean hasMediaItemsMarkedFailed(Context context, @NonNull String postContent) {
-        return hasMediaItemsMarkedWithTag(context, postContent, ATTR_STATUS_FAILED);
+    public static boolean hasMediaItemsMarkedFailed(@NonNull Spanned spannedContent) {
+        return hasMediaItemsMarkedWithTag(spannedContent, ATTR_STATUS_FAILED);
     }
 
-    private static boolean hasMediaItemsMarkedWithTag(Context context, @NonNull String postContent, String tag) {
-        // fill in Aztec with the post's content
-        AztecParser parser = getAztecParserWithPlugins();
-        Spanned content = parser.fromHtml(postContent, context);
-
+    private static boolean hasMediaItemsMarkedWithTag(@NonNull Spanned spannedContent, String tag) {
         // get all items with the class in the "tag" param
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(tag);
 
 
-        return getFirstElementAttributes(content, uploadingPredicate) != null;
+        return getFirstElementAttributes(spannedContent, uploadingPredicate) != null;
     }
 
     public static String resetUploadingMediaToFailed(Context context, @NonNull String postContent) {
@@ -2128,28 +2124,30 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return postContent;
     }
 
-    public static List<String> getMediaMarkedUploadingInPostContent(Context context, @NonNull String postContent) {
-        return getMediaMarkedAsClassInPostContent(context, postContent, ATTR_STATUS_UPLOADING);
+    public static List<String> getMediaMarkedUploadingInPostContent(@NonNull Spanned spannedContent) {
+        return getMediaMarkedAsClassInPostContent(spannedContent, ATTR_STATUS_UPLOADING);
     }
 
-    public static List<String> getMediaMarkedFailedInPostContent(Context context, @NonNull String postContent) {
-        return getMediaMarkedAsClassInPostContent(context, postContent, ATTR_STATUS_FAILED);
+    public static List<String> getMediaMarkedFailedInPostContent(@NonNull Spanned spannedContent) {
+        return getMediaMarkedAsClassInPostContent(spannedContent, ATTR_STATUS_FAILED);
     }
 
-    private static List<String> getMediaMarkedAsClassInPostContent(Context context, @NonNull String postContent,
-                                                                   String classToUse) {
+    private static List<String> getMediaMarkedAsClassInPostContent(@NonNull Spanned spannedContent, String classToUse) {
         ArrayList<String> mediaMarkedUploading = new ArrayList<>();
-        // fill in Aztec with the post's content
-        AztecParser parser = getAztecParserWithPlugins();
-        Spanned content = parser.fromHtml(postContent, context);
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(classToUse);
-        for (Attributes attrs : getAllElementAttributes(content, uploadingPredicate)) {
+        for (Attributes attrs : getAllElementAttributes(spannedContent, uploadingPredicate)) {
             String itemId = attrs.getValue(ATTR_ID_WP);
             if (!TextUtils.isEmpty(itemId)) {
                 mediaMarkedUploading.add(itemId);
             }
         }
         return mediaMarkedUploading;
+    }
+
+    public static Spanned parseContent(Context context, @NonNull String postContent) {
+        // fill in Aztec with the post's content
+        AztecParser parser = getAztecParserWithPlugins();
+        return parser.fromHtml(postContent, context);
     }
 
     public void setMediaToFailed(@NonNull String mediaId) {
