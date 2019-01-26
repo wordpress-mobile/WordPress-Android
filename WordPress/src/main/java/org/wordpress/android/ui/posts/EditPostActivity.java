@@ -276,7 +276,9 @@ public class EditPostActivity extends AppCompatActivity implements
      */
     WPViewPager mViewPager;
 
+    // don't set this directly. Use updatePostVar() to set it.
     private PostModel mPost;
+
     private PostModel mPostForUndo;
     private PostModel mOriginalPost;
     private boolean mOriginalPostHadLocalChangesOnOpen;
@@ -326,6 +328,12 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean isModernEditor() {
         return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
+    }
+
+    private void updatePostVar(PostModel postModel) {
+        mPost = postModel;
+
+        mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost);
     }
 
     private Runnable mFetchMediaRunnable = new Runnable() {
@@ -409,14 +417,14 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
                 // Create a new post
-                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
+                updatePostVar(mPostStore.instantiatePostModel(mSite, mIsPage, null, null));
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
                 EventBus.getDefault().postSticky(
                         new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
                 mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
             } else if (extras != null) {
                 // Load post passed in extras
-                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
+                updatePostVar(mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID)));
                 if (mPost != null) {
                     initializePostObject();
                 }
@@ -433,10 +441,10 @@ public class EditPostActivity extends AppCompatActivity implements
             // if we have a remote id saved, let's first try with that, as the local Id might have changed
             // after FETCH_POSTS
             if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {
-                mPost = mPostStore.getPostByRemotePostId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID), mSite);
+                updatePostVar(mPostStore.getPostByRemotePostId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID), mSite));
                 initializePostObject();
             } else if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
-                mPost = mPostStore.getPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID));
+                updatePostVar(mPostStore.getPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID)));
                 initializePostObject();
             }
 
@@ -459,9 +467,6 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(mImageLoader);
         }
-
-        // Ensure that this check happens when mPost is set
-        mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost);
 
         // Ensure we have a valid post
         if (mPost == null) {
@@ -537,7 +542,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mPost != null) {
             mOriginalPost = mPost.clone();
             mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
-            mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
+            updatePostVar(UploadService.updatePostWithCurrentlyCompletedUploads(mPost));
             if (mShowAztecEditor) {
                 mMediaMarkedUploadingOnStartIds =
                         AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
@@ -1681,7 +1686,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
                         RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                        mPost = mPostForUndo.clone();
+                        updatePostVar(mPostForUndo.clone());
                         refreshEditorContent();
                     }
                 })
@@ -3673,7 +3678,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (mIsUpdatingPost) {
                     mIsUpdatingPost = false;
-                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+                    updatePostVar(mPostStore.getPostByLocalPostId(mPost.getId()));
                     refreshEditorContent();
 
                     if (mViewPager != null) {
@@ -3684,7 +3689,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                         AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
                                         RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
                                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                                        mPost = mPostForUndo.clone();
+                                        updatePostVar(mPostForUndo.clone());
                                         refreshEditorContent();
                                     }
                                 })
@@ -3696,7 +3701,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (mIsDiscardingChanges) {
                     mIsDiscardingChanges = false;
-                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+                    updatePostVar(mPostStore.getPostByLocalPostId(mPost.getId()));
                     mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
                     mIsUpdatingPost = true;
                 }
@@ -3724,7 +3729,7 @@ public class EditPostActivity extends AppCompatActivity implements
             UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
                     event.isError() ? event.error.message : null, getSite(), mDispatcher);
             if (!event.isError()) {
-                mPost = post;
+                updatePostVar(post);
                 mIsNewPost = false;
                 invalidateOptionsMenu();
             }
