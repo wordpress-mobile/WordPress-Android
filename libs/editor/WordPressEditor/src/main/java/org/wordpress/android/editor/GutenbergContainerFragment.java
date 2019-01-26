@@ -46,9 +46,13 @@ public class GutenbergContainerFragment extends Fragment {
                 getContext(),
                 mHtmlModeEnabled,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryButtonClick() {
+                    @Override public void onMediaLibraryButtonClicked() {
                         ((GutenbergEditorFragment) getParentFragment()).onToolbarMediaButtonClicked();
                     }
+
+                    @Override public void onUploadMediaButtonClicked() { }
+
+                    @Override public void onCapturePhotoButtonClicked() { }
                 },
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
@@ -80,9 +84,14 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.onDestroy(getActivity());
     }
 
-    public void setContent(String title, String postContent) {
-        mHasReceivedAnyContent = true;
-        mWPAndroidGlueCode.setContent(title, postContent);
+    public void setTitle(String title) {
+        mWPAndroidGlueCode.setTitle(title);
+        mHasReceivedAnyContent = mWPAndroidGlueCode.hasReceivedInitialTitleAndContent();
+    }
+
+    public void setContent(String postContent) {
+        mWPAndroidGlueCode.setContent(postContent);
+        mHasReceivedAnyContent = mWPAndroidGlueCode.hasReceivedInitialTitleAndContent();
     }
 
     public void toggleHtmlMode() {
