@@ -58,7 +58,7 @@ class OverviewMapper
     fun buildChart(
         domainModel: VisitsAndViewsModel,
         statsGranularity: StatsGranularity,
-        onBarSelected: (String?) -> Unit,
+        onBarSelected: (String?, String?, String?) -> Unit,
         selectedPosition: Int,
         selectedDate: String?
     ): BarChartItem {

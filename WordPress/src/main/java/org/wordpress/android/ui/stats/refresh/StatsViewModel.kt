@@ -23,8 +23,10 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -40,6 +42,7 @@ class StatsViewModel
     @Named(YEAR_STATS_USE_CASE) private val yearStatsUseCase: BaseListUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val selectedDateProvider: SelectedDateProvider,
+    private val statsDateFormatter: StatsDateFormatter,
     private val statsSectionManager: SelectedSectionManager,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ScopedViewModel(mainDispatcher) {
@@ -54,6 +57,9 @@ class StatsViewModel
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
     val selectedDateChanged = selectedDateProvider.selectedDateChanged
+
+    private val mutableShowDateSelector = MutableLiveData<DateSelectorUiModel>()
+    val showDateSelector: LiveData<DateSelectorUiModel> = mutableShowDateSelector
 
     fun start(site: SiteModel, launchedFromWidget: Boolean, initialSection: StatsSection?) {
         // Check if VM is not already initialized
@@ -70,6 +76,10 @@ class StatsViewModel
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
             }
         }
+        if (showDateSelector.value == null) {
+            mutableShowDateSelector.value = DateSelectorUiModel(false)
+        }
+        updateDateSelector()
     }
 
     private fun loadStats() {
@@ -120,12 +130,14 @@ class StatsViewModel
                 YEARS -> yearStatsUseCase.refreshData(site)
             }
         }
+        updateDateSelector()
     }
 
     fun getSelectedSection() = statsSectionManager.getSelectedSection()
 
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
+        updateDateSelector()
         when (statsSection) {
             StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
             StatsSection.DAYS -> analyticsTracker.track(STATS_PERIOD_DAYS_ACCESSED)
@@ -135,8 +147,36 @@ class StatsViewModel
         }
     }
 
+    private fun updateDateSelector() {
+        val statsSection = statsSectionManager.getSelectedSection()
+        val shouldShowDateSelection = statsSection != INSIGHTS
+
+        val updatedState = DateSelectorUiModel(shouldShowDateSelection, getDateLabelForSection(statsSection))
+        if (showDateSelector.value != updatedState) {
+            mutableShowDateSelector.value = updatedState
+        }
+    }
+
+    private fun getDateLabelForSection(statsSection: StatsSection): String? {
+        val statsGranularity = when (statsSection) {
+            INSIGHTS -> null
+            StatsSection.DAYS -> DAYS
+            StatsSection.WEEKS -> WEEKS
+            StatsSection.MONTHS -> MONTHS
+            StatsSection.YEARS -> YEARS
+        }
+        return statsGranularity?.let {
+            statsDateFormatter.printGranularDate(
+                    selectedDateProvider.getSelectedDate(statsGranularity) ?: selectedDateProvider.getCurrentDate(),
+                    statsGranularity
+            )
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         selectedDateProvider.clear()
     }
+
+    data class DateSelectorUiModel(val isVisible: Boolean = false, val date: String? = null)
 }

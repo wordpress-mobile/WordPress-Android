@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -79,10 +80,18 @@ constructor(
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
             val selectedDate = uiState.selectedDate ?: domainModel.dates.last().period
+            val index = domainModel.dates.indexOfFirst { it.period == selectedDate }
+            val previousItem = domainModel.dates.getOrNull(index - 1)?.period
+            val nextItem = domainModel.dates.getOrNull(index + 1)?.period
+
             selectedDateProvider.selectDate(
-                    statsDateFormatter.parseStatsDate(statsGranularity, selectedDate),
+                SelectedDate(
+                        statsDateFormatter.parseStatsDate(statsGranularity, selectedDate),
+                        previousItem?.let { statsDateFormatter.parseStatsDate(statsGranularity, previousItem) },
+                        nextItem?.let { statsDateFormatter.parseStatsDate(statsGranularity, nextItem) }
+                ),
                     statsGranularity
-            )
+        )
             val selectedItem = domainModel.dates.find { it.period == uiState.selectedDate }
                     ?: domainModel.dates.last()
             items.add(
@@ -109,12 +118,16 @@ constructor(
         return items
     }
 
-    private fun onBarSelected(period: String?) {
+    private fun onBarSelected(period: String?, previousItem: String?, nextItem: String?) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED, statsGranularity)
         if (period != null && period != "empty") {
             updateUiState { previousState -> previousState.copy(selectedDate = period) }
             selectedDateProvider.selectDate(
-                    statsDateFormatter.parseStatsDate(statsGranularity, period),
+                    SelectedDate(
+                            statsDateFormatter.parseStatsDate(statsGranularity, period),
+                            previousItem?.let { statsDateFormatter.parseStatsDate(statsGranularity, previousItem) },
+                            nextItem?.let { statsDateFormatter.parseStatsDate(statsGranularity, nextItem) }
+                    ),
                     statsGranularity
             )
         } else {

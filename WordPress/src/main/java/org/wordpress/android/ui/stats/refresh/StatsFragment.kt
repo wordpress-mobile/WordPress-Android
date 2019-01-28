@@ -18,6 +18,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
@@ -157,6 +158,13 @@ class StatsFragment : DaggerFragment() {
             statsGranularity?.let {
                 viewModel.onSelectedDateChange(statsGranularity)
             }
+        })
+
+        viewModel.showDateSelector.observe(this, Observer { showDateSelector ->
+            val dateSelector = activity.findViewById<View>(R.id.date_selection_toolbar)
+            dateSelector.visibility = if (showDateSelector?.isVisible == true) View.VISIBLE else View.GONE
+            val label = dateSelector.findViewById<TextView>(R.id.selected_date)
+            label.text = showDateSelector?.date ?: ""
         })
     }
 }

@@ -114,14 +114,34 @@ fun BarChart.draw(
         setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
                 item.selectedItem
-                highlightColumn(cut.indexOfFirst { it.id == item.selectedItem })
-                item.onBarSelected?.invoke(item.selectedItem)
+                val index = cut.indexOfFirst { it.id == item.selectedItem }
+                highlightColumn(index)
+                item.onBarSelected?.invoke(item.selectedItem, getPreviousItem(index), getNextItem(index))
             }
 
             override fun onValueSelected(e: Entry, h: Highlight) {
                 val value = (e as? BarEntry)?.data as? String
-                highlightColumn(e.x.toInt())
-                item.onBarSelected?.invoke(value)
+                val index = e.x.toInt()
+                val previousItem = getPreviousItem(index)
+                val nextItem = getNextItem(index)
+                highlightColumn(index)
+                item.onBarSelected?.invoke(value, previousItem, nextItem)
+            }
+
+            private fun getNextItem(index: Int): String? {
+                return if (index < dataSet.entryCount - 1) {
+                    dataSet.getEntryForIndex(index + 1)?.data as? String
+                } else {
+                    null
+                }
+            }
+
+            private fun getPreviousItem(index: Int): String? {
+                return if (index > 0) {
+                    dataSet.getEntryForIndex(index - 1)?.data as? String
+                } else {
+                    null
+                }
             }
         })
     } else {

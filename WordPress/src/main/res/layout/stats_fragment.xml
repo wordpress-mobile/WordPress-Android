@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -33,13 +34,13 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                app:title="@string/stats"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:title="@string/stats"/>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
@@ -47,14 +48,55 @@
                 android:layout_height="48dp"
                 android:layout_gravity="start"
                 android:background="@color/color_primary"
-                app:tabPaddingStart="16dp"
-                app:tabPaddingEnd="16dp"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/white"
                 app:tabMode="scrollable"
+                app:tabPaddingEnd="16dp"
+                app:tabPaddingStart="16dp"
                 app:tabSelectedTextColor="@color/white"
                 app:tabTextColor="@color/white"
                 app:theme="@style/Base.Widget.Design.TabLayout"/>
+
+            <LinearLayout
+                android:id="@+id/date_selection_toolbar"
+                style="@style/StatsBlockLine"
+                android:layout_width="match_parent"
+                android:animateLayoutChanges="true"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/StatsBlockTitle"
+                    android:id="@+id/selected_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    tools:text="January 2019"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="24dp"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/stats_select_previous_period_description"
+                    android:src="@drawable/ic_chevron_left_grey_selector"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="16dp"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/stats_select_next_period_description"
+                    android:src="@drawable/ic_chevron_right_grey_selector"/>
+            </LinearLayout>
 
         </android.support.design.widget.AppBarLayout>
 
