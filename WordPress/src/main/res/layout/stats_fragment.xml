@@ -67,8 +67,8 @@
                 android:visibility="gone">
 
                 <TextView
-                    style="@style/StatsBlockTitle"
                     android:id="@+id/selected_date"
+                    style="@style/StatsBlockTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -80,6 +80,7 @@
                     android:layout_weight="1"/>
 
                 <ImageButton
+                    android:id="@+id/select_previous_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -89,6 +90,7 @@
                     android:src="@drawable/ic_chevron_left_grey_selector"/>
 
                 <ImageButton
+                    android:id="@+id/select_next_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

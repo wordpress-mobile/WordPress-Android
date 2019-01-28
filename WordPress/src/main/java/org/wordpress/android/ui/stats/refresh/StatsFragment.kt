@@ -18,6 +18,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
@@ -165,6 +166,16 @@ class StatsFragment : DaggerFragment() {
             dateSelector.visibility = if (showDateSelector?.isVisible == true) View.VISIBLE else View.GONE
             val label = dateSelector.findViewById<TextView>(R.id.selected_date)
             label.text = showDateSelector?.date ?: ""
+            val previousButton = dateSelector.findViewById<ImageButton>(R.id.select_previous_date)
+            previousButton.isEnabled = showDateSelector?.enableSelectPrevious == true
+            previousButton.setOnClickListener {
+                showDateSelector?.onPreviousSelected?.invoke()
+            }
+            val nextButton = dateSelector.findViewById<ImageButton>(R.id.select_next_date)
+            nextButton.isEnabled = showDateSelector?.enableSelectNext == true
+            nextButton.setOnClickListener {
+                showDateSelector?.onNextSelected?.invoke()
+            }
         })
     }
 }

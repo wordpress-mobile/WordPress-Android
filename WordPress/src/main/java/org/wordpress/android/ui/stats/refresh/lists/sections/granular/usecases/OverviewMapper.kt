@@ -10,24 +10,24 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Colum
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import java.util.Date
 import javax.inject.Inject
 
 class OverviewMapper
 @Inject constructor(private val statsDateFormatter: StatsDateFormatter) {
     fun buildTitle(
         selectedItemPeriod: String?,
-        dateFromUiState: String?,
+        dateFromUiState: Date?,
         fallbackDate: String,
         statsGranularity: StatsGranularity
     ): Title {
-        val selectedDate = selectedItemPeriod ?: dateFromUiState
-        val titleText = if (selectedDate != null) {
-            statsDateFormatter.printGranularDate(
-                    selectedDate,
+        val titleText = when {
+            selectedItemPeriod != null -> statsDateFormatter.printGranularDate(
+                    selectedItemPeriod,
                     statsGranularity
             )
-        } else {
-            statsDateFormatter.printDate(fallbackDate)
+            dateFromUiState != null -> statsDateFormatter.printStatsDate(dateFromUiState)
+            else -> statsDateFormatter.printDate(fallbackDate)
         }
         return Title(text = titleText)
     }
@@ -58,12 +58,12 @@ class OverviewMapper
     fun buildChart(
         domainModel: VisitsAndViewsModel,
         statsGranularity: StatsGranularity,
-        onBarSelected: (String?, String?, String?) -> Unit,
-        selectedPosition: Int,
-        selectedDate: String?
+        onBarSelected: (String?) -> Unit,
+        selectedType: Int,
+        selectedPosition: Int
     ): BarChartItem {
         val chartItems = domainModel.dates.map {
-            val value = when (selectedPosition) {
+            val value = when (selectedType) {
                 0 -> it.views
                 1 -> it.visitors
                 2 -> it.likes
@@ -76,6 +76,10 @@ class OverviewMapper
                     value.toInt()
             )
         }
-        return BarChartItem(chartItems, selectedItem = selectedDate, onBarSelected = onBarSelected)
+        return BarChartItem(
+                chartItems,
+                selectedItem = domainModel.dates[selectedPosition].period,
+                onBarSelected = onBarSelected
+        )
     }
 }

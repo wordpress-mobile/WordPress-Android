@@ -79,21 +79,24 @@ constructor(
     override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
-            val selectedDate = uiState.selectedDate ?: domainModel.dates.last().period
-            val index = domainModel.dates.indexOfFirst { it.period == selectedDate }
-            val previousItem = domainModel.dates.getOrNull(index - 1)?.period
-            val nextItem = domainModel.dates.getOrNull(index + 1)?.period
+            val periodFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
+            val availableDates = domainModel.dates.map {
+                statsDateFormatter.parseStatsDate(
+                        statsGranularity,
+                        it.period
+                )
+            }
+            val selectedDate = periodFromProvider ?: availableDates.last()
+            val index = availableDates.indexOf(selectedDate)
 
             selectedDateProvider.selectDate(
-                SelectedDate(
-                        statsDateFormatter.parseStatsDate(statsGranularity, selectedDate),
-                        previousItem?.let { statsDateFormatter.parseStatsDate(statsGranularity, previousItem) },
-                        nextItem?.let { statsDateFormatter.parseStatsDate(statsGranularity, nextItem) }
-                ),
+                    SelectedDate(
+                            index,
+                            availableDates
+                    ),
                     statsGranularity
-        )
-            val selectedItem = domainModel.dates.find { it.period == uiState.selectedDate }
-                    ?: domainModel.dates.last()
+            )
+            val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
             items.add(
                     overviewMapper.buildTitle(
                             selectedItem.period,
@@ -108,7 +111,7 @@ constructor(
                             statsGranularity,
                             this::onBarSelected,
                             uiState.selectedPosition,
-                            selectedDate
+                            index
                     )
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
@@ -118,32 +121,24 @@ constructor(
         return items
     }
 
-    private fun onBarSelected(period: String?, previousItem: String?, nextItem: String?) {
+    private fun onBarSelected(period: String?) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED, statsGranularity)
         if (period != null && period != "empty") {
-            updateUiState { previousState -> previousState.copy(selectedDate = period) }
+            val selectedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
             selectedDateProvider.selectDate(
-                    SelectedDate(
-                            statsDateFormatter.parseStatsDate(statsGranularity, period),
-                            previousItem?.let { statsDateFormatter.parseStatsDate(statsGranularity, previousItem) },
-                            nextItem?.let { statsDateFormatter.parseStatsDate(statsGranularity, nextItem) }
-                    ),
+                    selectedDate,
                     statsGranularity
             )
         } else {
-            onUiState(null)
         }
     }
 
     private fun onColumnSelected(position: Int) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED, statsGranularity)
-        updateUiState { previousState -> previousState.copy(selectedPosition = position) }
+        updateUiState { UiState(selectedPosition = position) }
     }
 
-    data class UiState(
-        val selectedPosition: Int = 0,
-        val selectedDate: String? = null
-    )
+    data class UiState(val selectedPosition: Int = 0)
 
     class OverviewUseCaseFactory
     @Inject constructor(

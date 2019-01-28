@@ -151,25 +151,50 @@ class StatsViewModel
         val statsSection = statsSectionManager.getSelectedSection()
         val shouldShowDateSelection = statsSection != INSIGHTS
 
-        val updatedState = DateSelectorUiModel(shouldShowDateSelection, getDateLabelForSection(statsSection))
-        if (showDateSelector.value != updatedState) {
-            mutableShowDateSelector.value = updatedState
+        val updatedDate = getDateLabelForSection(statsSection)
+        val currentState = showDateSelector.value
+        val statsGranularity = statsSection.toStatsGranularity()
+        if ((!shouldShowDateSelection && currentState?.isVisible != true) || statsGranularity == null) {
+            mutableShowDateSelector.value = DateSelectorUiModel(false)
+        } else {
+            val updatedState = DateSelectorUiModel(
+                    shouldShowDateSelection,
+                    updatedDate,
+                    enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsGranularity),
+                    enableSelectNext = selectedDateProvider.hasNextData(statsGranularity),
+                    onPreviousSelected = {
+                        selectedDateProvider.selectPreviousDate(statsGranularity)
+                    },
+                    onNextSelected = {
+                        selectedDateProvider.selectNextDate(statsGranularity)
+                    }
+            )
+            if (currentState == null ||
+                    currentState.isVisible != updatedState.isVisible ||
+                    currentState.date != updatedState.date ||
+                    currentState.enableSelectNext != updatedState.enableSelectNext ||
+                    currentState.enableSelectPrevious != updatedState.enableSelectPrevious) {
+                mutableShowDateSelector.value = updatedState
+            }
         }
     }
 
     private fun getDateLabelForSection(statsSection: StatsSection): String? {
-        val statsGranularity = when (statsSection) {
+        return statsSection.toStatsGranularity()?.let { statsGranularity ->
+            statsDateFormatter.printGranularDate(
+                    selectedDateProvider.getSelectedDate(statsGranularity) ?: selectedDateProvider.getCurrentDate(),
+                    statsGranularity
+            )
+        }
+    }
+
+    private fun StatsSection.toStatsGranularity(): StatsGranularity? {
+        return when (this) {
             INSIGHTS -> null
             StatsSection.DAYS -> DAYS
             StatsSection.WEEKS -> WEEKS
             StatsSection.MONTHS -> MONTHS
             StatsSection.YEARS -> YEARS
-        }
-        return statsGranularity?.let {
-            statsDateFormatter.printGranularDate(
-                    selectedDateProvider.getSelectedDate(statsGranularity) ?: selectedDateProvider.getCurrentDate(),
-                    statsGranularity
-            )
         }
     }
 
@@ -178,5 +203,12 @@ class StatsViewModel
         selectedDateProvider.clear()
     }
 
-    data class DateSelectorUiModel(val isVisible: Boolean = false, val date: String? = null)
+    data class DateSelectorUiModel(
+        val isVisible: Boolean = false,
+        val date: String? = null,
+        val enableSelectPrevious: Boolean = false,
+        val enableSelectNext: Boolean = false,
+        val onPreviousSelected: (() -> Unit) = {},
+        val onNextSelected: (() -> Unit) = {}
+    )
 }
