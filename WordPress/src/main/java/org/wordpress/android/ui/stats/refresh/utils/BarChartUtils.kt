@@ -47,6 +47,7 @@ fun BarChart.draw(
     } else {
         buildEmptyDataSet(context, cut.size)
     }
+    item.onBarChartDrawn?.invoke(dataSet.entryCount)
     data = if (hasData && item.onBarSelected != null) {
         BarData(dataSet, getHighlightDataSet(context, mappedEntries))
     } else {

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
@@ -56,13 +55,14 @@ class OverviewMapper
     }
 
     fun buildChart(
-        domainModel: VisitsAndViewsModel,
+        dates: List<PeriodData>,
         statsGranularity: StatsGranularity,
-        onBarSelected: (String?) -> Unit,
+        onBarSelected: (selectedPeriod: String?) -> Unit,
+        onBarChartDrawn: (visibleBarCount: Int) -> Unit,
         selectedType: Int,
         selectedPosition: Int
     ): BarChartItem {
-        val chartItems = domainModel.dates.map {
+        val chartItems = dates.map {
             val value = when (selectedType) {
                 0 -> it.views
                 1 -> it.visitors
@@ -78,8 +78,9 @@ class OverviewMapper
         }
         return BarChartItem(
                 chartItems,
-                selectedItem = domainModel.dates[selectedPosition].period,
-                onBarSelected = onBarSelected
+                selectedItem = dates[selectedPosition].period,
+                onBarSelected = onBarSelected,
+                onBarChartDrawn = onBarChartDrawn
         )
     }
 }

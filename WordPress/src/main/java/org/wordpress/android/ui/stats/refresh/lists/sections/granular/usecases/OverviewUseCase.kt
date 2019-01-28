@@ -80,7 +80,9 @@ constructor(
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
             val periodFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
-            val availableDates = domainModel.dates.map {
+            val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
+            val availablePeriods = domainModel.dates.takeLast(visibleBarCount)
+            val availableDates = availablePeriods.map {
                 statsDateFormatter.parseStatsDate(
                         statsGranularity,
                         it.period
@@ -96,7 +98,8 @@ constructor(
                     ),
                     statsGranularity
             )
-            val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
+            val shiftedIndex = index + domainModel.dates.size - visibleBarCount
+            val selectedItem = domainModel.dates.getOrNull(shiftedIndex) ?: domainModel.dates.last()
             items.add(
                     overviewMapper.buildTitle(
                             selectedItem.period,
@@ -107,11 +110,12 @@ constructor(
             )
             items.add(
                     overviewMapper.buildChart(
-                            domainModel,
+                            domainModel.dates,
                             statsGranularity,
                             this::onBarSelected,
+                            this::onBarChartDrawn,
                             uiState.selectedPosition,
-                            index
+                            shiftedIndex
                     )
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
@@ -129,16 +133,19 @@ constructor(
                     selectedDate,
                     statsGranularity
             )
-        } else {
         }
     }
 
     private fun onColumnSelected(position: Int) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED, statsGranularity)
-        updateUiState { UiState(selectedPosition = position) }
+        updateUiState { it.copy(selectedPosition = position) }
     }
 
-    data class UiState(val selectedPosition: Int = 0)
+    private fun onBarChartDrawn(visibleBarCount: Int) {
+        updateUiState { it.copy(visibleBarCount = visibleBarCount) }
+    }
+
+    data class UiState(val selectedPosition: Int = 0, val visibleBarCount: Int? = null)
 
     class OverviewUseCaseFactory
     @Inject constructor(
