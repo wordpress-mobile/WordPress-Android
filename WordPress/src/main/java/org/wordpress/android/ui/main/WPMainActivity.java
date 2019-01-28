@@ -226,7 +226,9 @@ public class WPMainActivity extends AppCompatActivity implements
                         ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
                 boolean openRequestedPage = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_PAGE));
                 boolean isQuickStartRequestedFromPush = (getIntent() != null
-                                                         && getIntent().hasExtra(MySiteFragment.ARG_QUICK_START_TASK));
+                                                         && getIntent()
+                                                                 .getBooleanExtra(MySiteFragment.ARG_QUICK_START_TASK,
+                                                                         false));
                 boolean openZendeskTicketsFromPush = (getIntent() != null && getIntent()
                         .getBooleanExtra(ARG_SHOW_ZENDESK_NOTIFICATIONS, false));
 

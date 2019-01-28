@@ -50,7 +50,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         }
 
         Intent resultIntent = new Intent(context, WPMainActivity.class);
-        resultIntent.putExtra(MySiteFragment.ARG_QUICK_START_TASK, quickStartTaskDetails.getTask());
+        resultIntent.putExtra(MySiteFragment.ARG_QUICK_START_TASK, true);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                               | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction(Intent.ACTION_MAIN);
