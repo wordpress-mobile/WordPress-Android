@@ -34,6 +34,11 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
@@ -57,6 +62,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
+
+    private ConcurrentHashMap<String, Float> mUploadingMediaProgressMax = new ConcurrentHashMap<>();
+    private Set<String> mFailedMediaIds = new HashSet<>();
 
     private boolean mIsNewPost;
 
@@ -112,9 +120,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onUploadMediaButtonClicked() {
                         mEditorFragmentListener.onAddPhotoClicked();
                     }
+
                     @Override
                     public void onCapturePhotoButtonClicked() {
                         checkAndRequestCameraAndStoragePermissions();
+                    }
+                },
+                new OnReattachQueryListener() {
+                    @Override
+                    public void onQueryCurrentProgressForUploadingMedia() {
+                        updateMediaProgress();
                     }
                 },
                 getActivity().getApplication(),
@@ -156,6 +171,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    private void updateMediaProgress() {
+        for (String mediaId : mUploadingMediaProgressMax.keySet()) {
+            mWPAndroidGlueCode.mediaFileUploadProgress(Integer.valueOf(mediaId),
+                    mUploadingMediaProgressMax.get(mediaId));
+        }
+    }
+    
     private void checkAndRequestCameraAndStoragePermissions() {
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
                 CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
@@ -314,6 +336,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
         mEditorFragmentListener.onHtmlModeToggledInToolbar();
 
+        // Don't switch to HTML mode if currently uploading media
+        if (!mUploadingMediaProgressMax.isEmpty() || isActionInProgress()) {
+            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
+            return;
+        }
+
         mWPAndroidGlueCode.toggleEditorMode();
     }
 
@@ -412,6 +440,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mWPAndroidGlueCode.appendMediaFile(mediaUrl);
         } else {
             mWPAndroidGlueCode.appendUploadMediaFile(mediaFile.getId(), "file://" + mediaUrl);
+            mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
         }
     }
 
@@ -430,7 +459,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public boolean hasFailedMediaUploads() {
-        return false;
+        return (mFailedMediaIds.size() > 0);
     }
 
     @Override
@@ -455,21 +484,31 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadReattached(String localId, float currentProgress) {
+    public void onMediaUploadReattached(String localMediaId, float currentProgress) {
+        mUploadingMediaProgressMax.put(localMediaId, currentProgress);
+        mWPAndroidGlueCode.mediaFileUploadProgress(Integer.valueOf(localMediaId), currentProgress);
     }
 
     @Override
-    public void onMediaUploadRetry(String localId, MediaType mediaType) {
+    public void onMediaUploadRetry(String localMediaId, MediaType mediaType) {
+        if (mFailedMediaIds.contains(localMediaId)) {
+            mFailedMediaIds.remove(localMediaId);
+            mUploadingMediaProgressMax.put(localMediaId, 0f);
+        }
+
+        // TODO request to start the upload again from the UploadService
     }
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+        mUploadingMediaProgressMax.remove(localMediaId);
         mWPAndroidGlueCode.mediaFileUploadSucceeded(Integer.valueOf(localMediaId), mediaFile.getFileURL(),
                 Integer.valueOf(mediaFile.getMediaId()));
     }
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
+        mUploadingMediaProgressMax.put(localMediaId, progress);
         mWPAndroidGlueCode.mediaFileUploadProgress(Integer.valueOf(localMediaId), progress);
     }
 
@@ -477,6 +516,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onMediaUploadFailed(final String localMediaId, final MediaType
             mediaType, final String errorMessage) {
         mWPAndroidGlueCode.mediaFileUploadFailed(Integer.valueOf(localMediaId));
+        mFailedMediaIds.add(localMediaId);
+        mUploadingMediaProgressMax.remove(localMediaId);
     }
 
     @Override
