@@ -42,8 +42,11 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
         if (post != null) {
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
             boolean showNewEditor = AppPrefs.isVisualEditorEnabled();
+            boolean showGutenbergEditor = AppPrefs.isGutenbergEditorEnabled();
 
-            if (showAztecEditor) {
+            if (showGutenbergEditor) {
+                // TODO check if anything needs be done in Gutenberg
+            } else if (showAztecEditor) {
                 post.setContent(AztecEditorFragment.markMediaFailed(WordPress.getContext(), post.getContent(),
                                                                     localMediaId, mediaFile));
             } else if (showNewEditor) {

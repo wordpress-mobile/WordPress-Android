@@ -402,12 +402,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 }
             } else {
-                // TODO replace in Video block?
+                // TODO replace in GB Video block?
             }
             // re-set the post content
             //postContent = toHtml(builder, parser);
         }
         return postContent;
+    }
+
+    public static boolean isMediaInPostBody(Context context, @NonNull String postContent,
+                                            String localMediaId) {
+        // check if media is in Gutenberg Post
+        String imgBlockHeaderToSearchFor = String.format("<!-- wp:image {\"id\":%s} -->", localMediaId);
+        return postContent.indexOf(imgBlockHeaderToSearchFor) != -1;
     }
 
 

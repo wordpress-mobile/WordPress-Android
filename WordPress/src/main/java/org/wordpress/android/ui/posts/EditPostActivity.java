@@ -559,6 +559,9 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void purgeMediaToPostAssociationsIfNotInPostAnymore() {
+        boolean useAztec = AppPrefs.isAztecEditorEnabled();
+        boolean useGutenberg = AppPrefs.isGutenbergEditorEnabled();
+
         ArrayList<MediaModel> allMedia = new ArrayList<>();
         allMedia.addAll(mUploadStore.getFailedMediaForPost(mPost));
         allMedia.addAll(mUploadStore.getCompletedMediaForPost(mPost));
@@ -567,8 +570,15 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!allMedia.isEmpty()) {
             HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
             for (MediaModel media : allMedia) {
-                if (!AztecEditorFragment.isMediaInPostBody(this, mPost.getContent(), String.valueOf(media.getId()))) {
-                    mediaToDeleteAssociationFor.add(media);
+                if (useAztec) {
+                    if (!AztecEditorFragment.isMediaInPostBody(this, mPost.getContent(), String.valueOf(media.getId()))) {
+                        mediaToDeleteAssociationFor.add(media);
+                    }
+                } else if (useGutenberg) {
+                    if (!GutenbergEditorFragment.isMediaInPostBody(this,
+                            mPost.getContent(), String.valueOf(media.getId()))) {
+                        mediaToDeleteAssociationFor.add(media);
+                    }
                 }
             }
 
