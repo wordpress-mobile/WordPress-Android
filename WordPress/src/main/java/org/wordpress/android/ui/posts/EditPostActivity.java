@@ -571,7 +571,8 @@ public class EditPostActivity extends AppCompatActivity implements
             HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
             for (MediaModel media : allMedia) {
                 if (useAztec) {
-                    if (!AztecEditorFragment.isMediaInPostBody(this, mPost.getContent(), String.valueOf(media.getId()))) {
+                    if (!AztecEditorFragment.isMediaInPostBody(this,
+                            mPost.getContent(), String.valueOf(media.getId()))) {
                         mediaToDeleteAssociationFor.add(media);
                     }
                 } else if (useGutenberg) {
