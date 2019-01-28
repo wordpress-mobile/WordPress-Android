@@ -133,7 +133,7 @@ import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsFragm
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
-import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.OldStatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
@@ -239,7 +239,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(StatsWidgetConfigureAdapter object);
 
-    void inject(StatsActivity object);
+    void inject(OldStatsActivity object);
 
     void inject(JetpackConnectionResultActivity object);
 

@@ -283,7 +283,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        mWPAndroidGlueCode.setContent(title.toString(), null);
+        mWPAndroidGlueCode.setTitle(title.toString());
     }
 
     @Override
@@ -297,7 +297,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         String postContent = removeVisualEditorProgressTag(text.toString());
-        mWPAndroidGlueCode.setContent(null, postContent);
+        mWPAndroidGlueCode.setContent(postContent);
     }
 
     public void onToggleHtmlMode() {
