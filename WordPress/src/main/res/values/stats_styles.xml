@@ -182,6 +182,6 @@
 
     <style name="StatsGraphLabel">
         <item name="android:textColor">@color/wp_grey</item>
-        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textSize">@dimen/text_sz_extra_small</item>
     </style>
 </resources>
