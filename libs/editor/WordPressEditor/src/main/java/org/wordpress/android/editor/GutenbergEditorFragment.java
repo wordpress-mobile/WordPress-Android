@@ -404,8 +404,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             } else {
                 // TODO replace in GB Video block?
             }
-            // re-set the post content
-            //postContent = toHtml(builder, parser);
         }
         return postContent;
     }
