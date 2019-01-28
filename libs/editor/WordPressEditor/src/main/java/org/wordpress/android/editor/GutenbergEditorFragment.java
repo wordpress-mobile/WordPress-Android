@@ -26,6 +26,7 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -39,6 +40,8 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListe
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
@@ -363,6 +366,50 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public static boolean contentContainsGutenbergBlocks(String postContent) {
         return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
     }
+
+    public static String replaceMediaFileWithUrl(Context context, @NonNull String postContent,
+                                                 String localMediaId, MediaFile mediaFile) {
+        if (mediaFile != null) {
+            String remoteUrl = StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
+            // TODO: replace the URL
+            if (!mediaFile.isVideo()) {
+                // replace gutenberg block id holder with serverMediaId, and url_holder with remoteUrl
+                String oldImgBlockHeader = String.format("<!-- wp:image {\"id\":%s} -->", localMediaId);
+                String newImgBlockHeader = String.format("<!-- wp:image {\"id\":%s} -->", mediaFile.getMediaId());
+                postContent = postContent.replace(oldImgBlockHeader, newImgBlockHeader);
+
+                // replace class wp-image-id with serverMediaId, and url_holder with remoteUrl
+                String oldImgClass = String.format("class=\"wp-image-%s\"", localMediaId);
+                String newImgClass = String.format("class=\"wp-image-%s\"", mediaFile.getMediaId());
+                postContent = postContent.replace(oldImgClass, newImgClass);
+
+                // let's first find this occurrence and keep note of the position, as we need to replace the
+                // immediate `src` value before
+                int iStartOfWpImageClassAttribute = postContent.indexOf(newImgClass);
+                if (iStartOfWpImageClassAttribute != -1) {
+                    // now search negatively, for the src attribute appearing right before
+                    int iStartOfImgTag = postContent.lastIndexOf("<img", iStartOfWpImageClassAttribute);
+                    if (iStartOfImgTag != -1) {
+                        Pattern p = Pattern.compile("<img[^>]*src=[\\\"']([^\\\"^']*)");
+                        Matcher m = p.matcher(postContent.substring(iStartOfImgTag));
+                        if (m.find()) {
+                            String src = m.group();
+                            int startIndex = src.indexOf("src=") + 5;
+                            String srcTag = src.substring(startIndex, src.length());
+                            // now replace the url
+                            postContent = postContent.replace(srcTag, remoteUrl);
+                        }
+                    }
+                }
+            } else {
+                // TODO replace in Video block?
+            }
+            // re-set the post content
+            //postContent = toHtml(builder, parser);
+        }
+        return postContent;
+    }
+
 
     /*
     * TODO: REMOVE THIS ONCE AZTEC COMPLETELY REPLACES THE VISUAL EDITOR IN WPANDROID APP

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.editor.EditorFragment;
+import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -17,8 +18,13 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
         if (post != null) {
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
             boolean showNewEditor = AppPrefs.isVisualEditorEnabled();
+            boolean showGutenbergEditor = AppPrefs.isGutenbergEditorEnabled();
 
-            if (showAztecEditor) {
+            if (showGutenbergEditor) {
+                post.setContent(GutenbergEditorFragment
+                        .replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
+                                localMediaId, mediaFile));
+            } else if (showAztecEditor) {
                 post.setContent(AztecEditorFragment.replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
                                                                             localMediaId, mediaFile));
             } else if (showNewEditor) {
