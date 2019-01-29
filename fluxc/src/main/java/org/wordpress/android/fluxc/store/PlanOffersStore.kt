@@ -6,8 +6,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
-import org.wordpress.android.fluxc.action.PlansAction
-import org.wordpress.android.fluxc.action.PlansAction.FETCH_PLANS
+import org.wordpress.android.fluxc.action.PlanOfferAction
+import org.wordpress.android.fluxc.action.PlanOfferAction.FETCH_PLAN_OFFERS
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.plans.PlanOfferModel
 import org.wordpress.android.fluxc.network.BaseRequest
@@ -28,9 +28,9 @@ class PlanOffersStore @Inject constructor(
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
-        val actionType = action.type as? PlansAction ?: return
+        val actionType = action.type as? PlanOfferAction ?: return
         when (actionType) {
-            FETCH_PLANS -> {
+            FETCH_PLAN_OFFERS -> {
                 GlobalScope.launch(coroutineContext) { emitChange(fetchPlanOffers()) }
             }
         }
@@ -60,7 +60,9 @@ class PlanOffersStore @Inject constructor(
         AppLog.d(AppLog.T.API, PlanOffersStore::class.java.simpleName + " onRegister")
     }
 
-    class PlanOffersFetchedPayload(val planOffers: List<PlanOfferModel>? = null) : Payload<BaseRequest.BaseNetworkError>()
+    class PlanOffersFetchedPayload(
+        val planOffers: List<PlanOfferModel>? = null
+    ) : Payload<BaseRequest.BaseNetworkError>()
 
     data class OnPlanOffersFetched(
         val planOffers: List<PlanOfferModel>? = null,
