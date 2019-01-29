@@ -1,8 +1,12 @@
 package org.wordpress.android.util
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.text.Html
@@ -29,13 +33,20 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_P
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
+import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
 class QuickStartUtils {
     companion object {
+        private const val QUICK_START_REMINDER_INTERVAL = (24 * 60 * 60 * 1000 * 2).toLong() // two days
+
         /**
          * Formats the string, to highlight text between %1$s and %2$s with specified color, and add an icon
          * in front of it if necessary
@@ -69,8 +80,10 @@ class QuickStartUtils {
                 val endOfHighlight = mutableSpannedMessage.getSpanEnd(foregroundColorSpan)
 
                 mutableSpannedMessage.removeSpan(foregroundColorSpan)
-                mutableSpannedMessage.setSpan(ForegroundColorSpan(highlightColor),
-                        startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                mutableSpannedMessage.setSpan(
+                        ForegroundColorSpan(highlightColor),
+                        startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
 
                 val icon: Drawable? = try {
                     // .mutate() allows us to avoid sharing the state of drawables
@@ -90,8 +103,10 @@ class QuickStartUtils {
                         mutableSpannedMessage.insert(startOfHighlight, "  ")
                     }
 
-                    mutableSpannedMessage.setSpan(ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    mutableSpannedMessage.setSpan(
+                            ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
             }
 
@@ -180,17 +195,22 @@ class QuickStartUtils {
         }
 
         @JvmStatic
-        fun completeTask(
+        fun completeTaskAndRemindNextOne(
             quickStartStore: QuickStartStore,
             task: QuickStartTask,
             dispatcher: Dispatcher,
-            site: SiteModel
+            site: SiteModel,
+            context: Context?
         ) {
             val siteId = site.id.toLong()
 
             if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore) ||
                     quickStartStore.hasDoneTask(siteId, task) || !isQuickStartAvailableForTheSite(site)) {
                 return
+            }
+
+            if (context != null) {
+                cancelQuickStartReminder(context)
             }
 
             quickStartStore.setDoneTask(siteId, task, true)
@@ -200,6 +220,13 @@ class QuickStartUtils {
                 AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
+            } else {
+                if (context != null && quickStartStore.hasDoneTask(siteId, CREATE_SITE)) {
+                    val nextTask = getNextUncompletedQuickStartTask(quickStartStore, siteId, task.taskType)
+                    if (nextTask != null) {
+                        startQuickStartReminderTimer(context, nextTask)
+                    }
+                }
             }
         }
 
@@ -234,6 +261,71 @@ class QuickStartUtils {
                     Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
                 }
             }
+        }
+
+        private fun startQuickStartReminderTimer(context: Context, quickStartTask: QuickStartTask) {
+            val intent = Intent(context, QuickStartReminderReceiver::class.java)
+
+            // for some reason we have to use a bundle to pass serializable to broadcast receiver
+            val bundle = Bundle()
+            bundle.putSerializable(QuickStartTaskDetails.KEY, QuickStartTaskDetails.getDetailsForTask(quickStartTask))
+            intent.putExtra(QuickStartReminderReceiver.ARG_QUICK_START_TASK_BATCH, bundle)
+
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val pendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    RequestCodes.QUICK_START_REMINDER_RECEIVER,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            alarmManager.set(
+                    AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + QUICK_START_REMINDER_INTERVAL,
+                    pendingIntent
+            )
+        }
+
+        @JvmStatic
+        fun cancelQuickStartReminder(context: Context) {
+            val intent = Intent(context, QuickStartReminderReceiver::class.java)
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val pendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    RequestCodes.QUICK_START_REMINDER_RECEIVER,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            alarmManager.cancel(pendingIntent)
+        }
+
+        /**
+         * This method tries to return the next uncompleted task of taskType
+         * if no uncompleted task of taskType remain it tries to find and return uncompleted task of other task type
+         */
+        private fun getNextUncompletedQuickStartTask(
+            quickStartStore: QuickStartStore,
+            siteId: Long,
+            taskType: QuickStartTaskType
+        ): QuickStartTask? {
+            val uncompletedTasksOfPreferredType = quickStartStore.getUncompletedTasksByType(siteId, taskType)
+
+            var nextTask: QuickStartTask? = null
+
+            if (uncompletedTasksOfPreferredType.isEmpty()) {
+                val otherQuickStartTaskTypes = QuickStartTaskType.values()
+                        .filter { it != taskType && it != UNKNOWN }
+
+                otherQuickStartTaskTypes.forEach {
+                    val otherUncompletedTasks = quickStartStore.getUncompletedTasksByType(siteId, it)
+                    if (otherUncompletedTasks.isNotEmpty()) {
+                        nextTask = quickStartStore.getUncompletedTasksByType(siteId, it).first()
+                        return@forEach
+                    }
+                }
+            } else {
+                nextTask = uncompletedTasksOfPreferredType.first()
+            }
+
+            return nextTask
         }
     }
 }
