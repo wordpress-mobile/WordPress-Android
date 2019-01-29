@@ -91,6 +91,10 @@ class InsightsSqlUtils
         return select(site, followerType.toDbKey(), FollowersResponse::class.java)
     }
 
+    fun selectAllFollowers(site: SiteModel, followerType: FollowerType): List<FollowersResponse> {
+        return selectAll(site, followerType.toDbKey(), FollowersResponse::class.java)
+    }
+
     fun selectPublicizeInsights(site: SiteModel): PublicizeResponse? {
         return select(site, PUBLICIZE_INSIGHTS, PublicizeResponse::class.java)
     }
@@ -116,5 +120,9 @@ class InsightsSqlUtils
 
     private fun <T> select(site: SiteModel, blockType: BlockType, classOfT: Class<T>): T? {
         return statsSqlUtils.select(site, blockType, INSIGHTS, classOfT)
+    }
+
+    private fun <T> selectAll(site: SiteModel, blockType: BlockType, classOfT: Class<T>): List<T> {
+        return statsSqlUtils.selectAll(site, blockType, INSIGHTS, classOfT)
     }
 }
