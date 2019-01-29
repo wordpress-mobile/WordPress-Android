@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-07 14:38:48+0000
+Translation-Revision-Date: 2019-01-16 18:20:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">Für diese Aktion ist eine Verbindung erforderlich. Bitte überprüfe deine Verbindung und versuche es erneut.</string>
+    <string name="stats_no_data_for_period">Keine Daten für diesen Zeitraum</string>
+    <string name="preference_strip_image_location">Positionsangabe von Medien entfernen</string>
+    <string name="stats_cannot_be_started">Wir können die Statistiken momentan nicht öffnen. Bitte später erneut versuchen</string>
     <string name="site_creation_label_domain_selection">Wähle eine verfügbare Adresse aus, damit andere dich im Web finden.</string>
     <string name="giphy_powered_by_giphy">Bereitgestellt von GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Einige Medien konnten aufgrund eines Netzwerkfehlers nicht geladen werden.</string>
@@ -69,7 +73,7 @@ Language: de
     <string name="stats_followers_email">E-Mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">Einsichten verwalten</string>
-    <string name="stats_empty_insights_description">Passe deine Einsichten an und erhalte Details zur Performance deiner Website</string>
+    <string name="stats_empty_insights_description">Passe deine Einsichten an und erhalte Details zur Leistung deiner Website</string>
     <string name="stats_empty_insights_title">Noch keine Einsichten hinzugefügt</string>
     <string name="stats_no_data_yet">Noch keine Daten</string>
     <string name="menu_debug">Debug-Menü</string>
@@ -1499,6 +1503,7 @@ Language: de
     <string name="stats_insights_most_popular_hour">Beliebteste Uhrzeit</string>
     <string name="stats_insights_most_popular_day">Beliebtester Tag</string>
     <string name="stats_insights_today">Heutige Statistiken</string>
+    <string name="stats_insights_popular">Beliebtester Tag und Uhrzeit</string>
     <string name="stats_insights_all_time">Beiträge, Aufrufe und Besucher für den gesamten Zeitraum</string>
     <string name="stats_insights">Einsichten</string>
     <string name="stats_sign_in_jetpack_different_com_account">Um deine Statistiken anzuzeigen, melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendest.</string>

@@ -1,5 +1,5 @@
-* This is the first version of our refreshed stats! It’s completely rebuilt in the new design.
-* The Notifications list layout is more readable, as is the Me tab on tablets and large devices.
-* New privacy settings let you remove of geolocation from uploaded images.
-* Better messaging when there is no data to show in the stats screen adds clarity.
-* There was an issue where only admins of self-hosted sites could update their password. Now all users can.
+* Lots of small improvements to the Stats section, including visual tweaks and fixing a crash.
+* Added a dialog to help you to fix a post with different web and local changes.
+* Refreshed Pages list layout that includes a timestamp and a featured image thumbnail.
+* Fixed a bug that caused some old saved posts to disappear.
+* Fixed a crash that occurred when opening the Media section.

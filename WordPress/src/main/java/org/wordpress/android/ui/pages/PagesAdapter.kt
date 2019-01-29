@@ -13,19 +13,23 @@ import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageParentViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
+import org.wordpress.android.util.image.ImageManager
 
 class PagesAdapter(
     private val onMenuAction: (PageItem.Action, Page) -> Boolean = { _, _ -> false },
     private val onItemTapped: (Page) -> Unit = { },
     private val onEmptyActionButtonTapped: () -> Unit = { },
     private val onParentSelected: (ParentPage) -> Unit = { },
+    private val isSitePhotonCapable: Boolean = false,
+    private val imageManager: ImageManager? = null,
     private val uiScope: CoroutineScope
 ) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
         return when (viewType) {
-            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped)
+            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped, imageManager!!,
+                    isSitePhotonCapable)
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent, onEmptyActionButtonTapped)
             PageItem.Type.PARENT.viewType -> PageParentViewHolder(parent,

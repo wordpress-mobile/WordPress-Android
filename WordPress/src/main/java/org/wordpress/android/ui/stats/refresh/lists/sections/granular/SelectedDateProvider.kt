@@ -45,6 +45,10 @@ class SelectedDateProvider
 
     fun getCurrentDate() = Date()
 
+    fun clear() {
+        mutableDates.clear()
+    }
+
     private fun updateSelectedDate(selectedDate: SelectedDate, statsGranularity: StatsGranularity) {
         val previousDate = getSelectedDate(statsGranularity)
         if (selectedDate != previousDate) {

@@ -128,6 +128,11 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.sitecreation.NewSiteCreationActivity"
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.accounts.HelpActivity"
             android:label="@string/help_screen_title"
             android:theme="@style/CalypsoTheme.NoActionBarShadow" />
@@ -262,7 +267,7 @@
 
         <!-- Stats Activities -->
         <activity
-            android:name=".ui.stats.StatsActivity"
+            android:name=".ui.stats.OldStatsActivity"
             android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
@@ -668,6 +673,11 @@
             android:label="Login to WPCOM Service" />
         <service
             android:name=".ui.accounts.signup.SiteCreationService"
+            android:exported="false"
+            android:label="Site Creation Service" />
+
+        <service
+            android:name=".ui.sitecreation.services.NewSiteCreationService"
             android:exported="false"
             android:label="Site Creation Service" />
 

@@ -19,7 +19,7 @@ fun Int.toFormattedString(): String {
 fun Long.toFormattedString(): String {
     if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString()
     if (this < 0) return "-" + (-this).toFormattedString()
-    if (this < 1000) return this.toString()
+    if (this < 10000) return this.toString()
 
     val e = SUFFIXES.floorEntry(this)
     val divideBy = e.key

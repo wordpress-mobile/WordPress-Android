@@ -202,7 +202,7 @@ class StatsListFragment : DaggerFragment() {
                 is ViewPostDetailStats -> {
                     val postModel = StatsPostModel(
                             site.siteId,
-                            it.postId.toString(),
+                            it.postId,
                             it.postTitle,
                             it.postUrl,
                             it.postType
@@ -312,9 +312,9 @@ sealed class NavigationTarget : Event() {
 
     data class SharePost(val url: String, val title: String) : NavigationTarget()
     data class ViewPostDetailStats(
-        val postId: Long,
+        val postId: String,
         val postTitle: String,
-        val postUrl: String,
+        val postUrl: String?,
         val postType: String = StatsConstants.ITEM_TYPE_POST
     ) : NavigationTarget()
 

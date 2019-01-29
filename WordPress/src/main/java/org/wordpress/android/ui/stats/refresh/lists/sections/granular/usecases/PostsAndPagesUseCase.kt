@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_HOME_PAGE
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_POST
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -101,7 +101,7 @@ constructor(
                         value = viewsModel.views.toFormattedString(),
                         showDivider = index < domainModel.views.size - 1,
                         navigationAction = create(
-                                LinkClickParams(viewsModel.id, viewsModel.url, viewsModel.type),
+                                LinkClickParams(viewsModel.id, viewsModel.url, viewsModel.title, viewsModel.type),
                                 this::onLinkClicked
                         )
                 )
@@ -134,12 +134,20 @@ constructor(
             PAGE, HOMEPAGE -> ITEM_TYPE_HOME_PAGE
         }
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, statsGranularity)
-        navigateTo(ViewPost(params.postId, params.postUrl, type))
+        navigateTo(
+                ViewPostDetailStats(
+                        postId = params.postId.toString(),
+                        postTitle = params.postTitle,
+                        postUrl = params.postUrl,
+                        postType = type
+                )
+        )
     }
 
     private data class LinkClickParams(
         val postId: Long,
         val postUrl: String,
+        val postTitle: String,
         val postType: PostAndPageViewsModel.ViewsType
     )
 

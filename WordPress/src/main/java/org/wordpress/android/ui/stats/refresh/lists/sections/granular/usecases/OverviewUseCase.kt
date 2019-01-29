@@ -83,12 +83,10 @@ constructor(
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
             val selectedDate = uiState.selectedDate ?: domainModel.dates.last().period
-            if (!selectedDateProvider.hasSelectedDate(statsGranularity)) {
-                selectedDateProvider.selectDate(
-                        statsDateFormatter.parseStatsDate(statsGranularity, selectedDate),
-                        statsGranularity
-                )
-            }
+            selectedDateProvider.selectDate(
+                    statsDateFormatter.parseStatsDate(statsGranularity, selectedDate),
+                    statsGranularity
+            )
             val selectedItem = domainModel.dates.find { it.period == uiState.selectedDate }
                     ?: domainModel.dates.last()
             items.add(
