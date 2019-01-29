@@ -576,7 +576,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         mediaToDeleteAssociationFor.add(media);
                     }
                 } else if (useGutenberg) {
-                    if (!GutenbergEditorFragment.isMediaInPostBody(this,
+                    if (!PostUtils.isMediaInGutenbergPostBody(
                             mPost.getContent(), String.valueOf(media.getId()))) {
                         mediaToDeleteAssociationFor.add(media);
                     }

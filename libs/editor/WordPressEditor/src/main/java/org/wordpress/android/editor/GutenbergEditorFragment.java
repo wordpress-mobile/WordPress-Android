@@ -40,8 +40,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListe
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
@@ -50,9 +48,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
-    private static final int SRC_ATTRIBUTE_LENGTH_PLUS_ONE = 5;
-    private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s} -->";
-    private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
 
     private static boolean mIsToolbarExpanded = false;
 
@@ -373,55 +368,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public static boolean contentContainsGutenbergBlocks(String postContent) {
         return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
     }
-
-    public static String replaceMediaFileWithUrl(@NonNull String postContent,
-                                                 String localMediaId, MediaFile mediaFile) {
-        if (mediaFile != null) {
-            String remoteUrl = StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
-            // TODO: replace the URL
-            if (!mediaFile.isVideo()) {
-                // replace gutenberg block id holder with serverMediaId, and url_holder with remoteUrl
-                String oldImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, localMediaId);
-                String newImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, mediaFile.getMediaId());
-                postContent = postContent.replace(oldImgBlockHeader, newImgBlockHeader);
-
-                // replace class wp-image-id with serverMediaId, and url_holder with remoteUrl
-                String oldImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, localMediaId);
-                String newImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, mediaFile.getMediaId());
-                postContent = postContent.replace(oldImgClass, newImgClass);
-
-                // let's first find this occurrence and keep note of the position, as we need to replace the
-                // immediate `src` value before
-                int iStartOfWpImageClassAttribute = postContent.indexOf(newImgClass);
-                if (iStartOfWpImageClassAttribute != -1) {
-                    // now search negatively, for the src attribute appearing right before
-                    int iStartOfImgTag = postContent.lastIndexOf("<img", iStartOfWpImageClassAttribute);
-                    if (iStartOfImgTag != -1) {
-                        Pattern p = Pattern.compile("<img[^>]*src=[\\\"']([^\\\"^']*)");
-                        Matcher m = p.matcher(postContent.substring(iStartOfImgTag));
-                        if (m.find()) {
-                            String src = m.group();
-                            int startIndex = src.indexOf("src=") + SRC_ATTRIBUTE_LENGTH_PLUS_ONE;
-                            String srcTag = src.substring(startIndex, src.length());
-                            // now replace the url
-                            postContent = postContent.replace(srcTag, remoteUrl);
-                        }
-                    }
-                }
-            } else {
-                // TODO replace in GB Video block?
-            }
-        }
-        return postContent;
-    }
-
-    public static boolean isMediaInPostBody(Context context, @NonNull String postContent,
-                                            String localMediaId) {
-        // check if media is in Gutenberg Post
-        String imgBlockHeaderToSearchFor = String.format("<!-- wp:image {\"id\":%s} -->", localMediaId);
-        return postContent.indexOf(imgBlockHeaderToSearchFor) != -1;
-    }
-
 
     /*
     * TODO: REMOVE THIS ONCE AZTEC COMPLETELY REPLACES THE VISUAL EDITOR IN WPANDROID APP

@@ -8,6 +8,7 @@ import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.helpers.MediaFile;
 
@@ -21,8 +22,8 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
             boolean showGutenbergEditor = AppPrefs.isGutenbergEditorEnabled();
 
             if (showGutenbergEditor) {
-                post.setContent(GutenbergEditorFragment
-                        .replaceMediaFileWithUrl(post.getContent(), localMediaId, mediaFile));
+                post.setContent(
+                        PostUtils.replaceMediaFileWithUrlInGutenbergPost(post.getContent(), localMediaId, mediaFile));
             } else if (showAztecEditor) {
                 post.setContent(AztecEditorFragment.replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
                                                                             localMediaId, mediaFile));
