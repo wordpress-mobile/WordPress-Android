@@ -50,6 +50,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
+    private static final int SRC_ATTRIBUTE_LENGTH_PLUS_ONE = 5;
 
     private static boolean mIsToolbarExpanded = false;
 
@@ -398,8 +399,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         Matcher m = p.matcher(postContent.substring(iStartOfImgTag));
                         if (m.find()) {
                             String src = m.group();
-                            final int srcAttrLengthPlusOne = 5;
-                            int startIndex = src.indexOf("src=") + srcAttrLengthPlusOne;
+                            int startIndex = src.indexOf("src=") + SRC_ATTRIBUTE_LENGTH_PLUS_ONE;
                             String srcTag = src.substring(startIndex, src.length());
                             // now replace the url
                             postContent = postContent.replace(srcTag, remoteUrl);
