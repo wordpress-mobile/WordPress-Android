@@ -1395,11 +1395,13 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, true);
+        // don't allow multiple selection for Gutenberg, as we're on a single image block for now
+        WPMediaUtils.launchPictureLibrary(this, !mShowGutenbergEditor);
     }
 
     private void launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this, true);
+        // don't allow multiple selection for Gutenberg, as we're on a single image block for now
+        WPMediaUtils.launchVideoLibrary(this, !mShowGutenbergEditor);
     }
 
     private void launchVideoCamera() {
