@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.plans.PlansRestClient.Plan
 import org.wordpress.android.fluxc.network.rest.wpcom.plans.PlansRestClient.PlansResponse.Plan
 import org.wordpress.android.fluxc.network.rest.wpcom.plans.PlansRestClient.PlansResponse.PlanId
 
-val PLANS_MODEL = listOf(
+val PLAN_MODELS = listOf(
         PlanModel(
                 listOf(1), listOf(
                 PlanModel.Feature("subdomain", "WordPress.com Subdomain", "Subdomain Description"),
