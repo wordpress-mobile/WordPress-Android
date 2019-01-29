@@ -305,7 +305,7 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchFollowers(site, WP_COM, 1,10, false)
+        val responseModel = insightsRestClient.fetchFollowers(site, WP_COM, 1, 10, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
