@@ -198,7 +198,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
             animateContentTransition()
             view?.announceForAccessibility(
                     getString(R.string.new_site_creation_preview_title) +
-                            getString(R.string.new_site_creation_site_preview_content_description))
+                            getString(R.string.new_site_creation_site_preview_content_description)
+            )
         }
     }
 
@@ -329,7 +330,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
                     val animatorItems = mutableListOf(titleAnim, webViewAnim)
                     // OK button should slide in for portrait orientation and fade in for landscape orientation
                     if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        okButtonContainer?.let { animatorItems.add(createSlideInFromBottomAnimator(it, contentHeight))}
+                        okButtonContainer?.let { animatorItems.add(createSlideInFromBottomAnimator(it, contentHeight)) }
                     } else {
                         animatorItems.add(createFadeInAnimator(okButton))
                     }

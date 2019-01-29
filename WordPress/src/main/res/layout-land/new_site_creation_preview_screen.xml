@@ -33,22 +33,12 @@
 
             <TextView
                 android:id="@+id/sitePreviewTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/new_site_creation_preview_title"
-                android:textAlignment="center"
-                android:fontFamily="sans-serif-medium"
-                android:textColor="@color/wp_grey_dark"
-                android:textSize="@dimen/text_sz_extra_large"/>
+                style="@style/SitePreviewTitle"/>
 
             <Button
                 android:id="@+id/okButton"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/new_site_creation_preview_ok_button_height"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:background="@color/wp_blue_medium"
-                android:text="@string/dialog_button_ok"
-                android:textColor="@color/white"/>
+                style="@style/SitePreviewOkButton"
+                android:layout_marginTop="@dimen/margin_extra_large"/>
         </LinearLayout>
 
         <include
