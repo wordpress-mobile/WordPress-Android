@@ -32,26 +32,27 @@ class PlansStore @Inject constructor(
         val actionType = action.type as? PlansAction ?: return
         when (actionType) {
             FETCH_PLANS -> {
-                GlobalScope.launch(coroutineContext) { fetchPlans() }
+                GlobalScope.launch(coroutineContext) { emitChange(fetchPlans()) }
             }
         }
     }
 
-    private suspend fun fetchPlans() = withContext(coroutineContext) {
+    suspend fun fetchPlans() = withContext(coroutineContext) {
         val fetchedPlansPayload = plansRestClient.fetchPlans()
-
 
         return@withContext if (!fetchedPlansPayload.isError) {
             plansSqlUtils.storePlans(fetchedPlansPayload.plans!!)
             val onPlansFetched = OnPlansFetched(fetchedPlansPayload.plans)
-            emitChange(onPlansFetched)
             onPlansFetched
         } else {
-            val errorPayload = OnPlansFetched()
+            val errorPayload = OnPlansFetched(getCachedPlans())
             errorPayload.error = PlansFetchError(GENERIC_ERROR, fetchedPlansPayload.error.message)
-            emitChange(errorPayload)
             errorPayload
         }
+    }
+
+    fun getCachedPlans(): List<PlanModel> {
+        return plansSqlUtils.getPlans()
     }
 
     override fun onRegister() {
@@ -60,7 +61,8 @@ class PlansStore @Inject constructor(
 
     class PlansFetchedPayload(val plans: List<PlanModel>? = null) : Payload<BaseRequest.BaseNetworkError>()
 
-    class OnPlansFetched internal constructor(val plans: List<PlanModel>? = null
+    data class OnPlansFetched(
+        val plans: List<PlanModel>? = null
     ) : Store.OnChanged<PlansFetchError>()
 
     class PlansFetchError(
