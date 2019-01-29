@@ -134,25 +134,14 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
-        val statsSection = arguments?.getSerializable(typeKey) as StatsSection
-
-        val viewModelClass = when (statsSection) {
-            StatsSection.INSIGHTS -> InsightsListViewModel::class.java
-            StatsSection.DAYS -> DaysListViewModel::class.java
-            StatsSection.WEEKS -> WeeksListViewModel::class.java
-            StatsSection.MONTHS -> MonthsListViewModel::class.java
-            StatsSection.YEARS -> YearsListViewModel::class.java
-        }
-
-//        viewModel = ViewModelProviders.of(this, viewModelFactory)
-//                .get(statsSection.name, viewModelClass)
-
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
+//        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
+//
+//        val site = if (savedInstanceState == null) {
+//            val nonNullIntent = checkNotNull(activity.intent)
+//            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
+//        } else {
+//            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+//        }
 
 //        setupObservers(activity, site)
     }
