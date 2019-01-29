@@ -369,7 +369,7 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<FollowersResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE,PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchEmailFollowers(site, PAGE_SIZE, forced)
 
