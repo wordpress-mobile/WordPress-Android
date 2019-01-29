@@ -413,7 +413,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            mWPAndroidGlueCode.appendMediaFile(mediaUrl);
+            mWPAndroidGlueCode.appendMediaFile(Integer.valueOf(mediaFile.getMediaId()), mediaUrl);
         } else {
             mWPAndroidGlueCode.appendUploadMediaFile(mediaFile.getId(), "file://" + mediaUrl);
             mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
