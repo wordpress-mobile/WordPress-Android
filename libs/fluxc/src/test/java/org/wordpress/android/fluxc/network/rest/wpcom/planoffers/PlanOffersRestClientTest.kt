@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.plans
+package org.wordpress.android.fluxc.network.rest.wpcom.planoffers
 
 import com.android.volley.RequestQueue
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
@@ -14,7 +14,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
@@ -24,11 +23,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.plans.PlansRestClient.PlansResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient.PlanOffersResponse
 import org.wordpress.android.fluxc.test
 
 @RunWith(MockitoJUnitRunner::class)
-class PostRestClient {
+class PlanOffersRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
     @Mock private lateinit var site: SiteModel
@@ -39,7 +38,7 @@ class PostRestClient {
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
 
-    private lateinit var plansRestClient: PlansRestClient
+    private lateinit var planOffersRestClient: PlanOffersRestClient
     private val username = "John Smith"
     private val password = "password123"
 
@@ -47,7 +46,7 @@ class PostRestClient {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        plansRestClient = PlansRestClient(
+        planOffersRestClient = PlanOffersRestClient(
                 dispatcher,
                 wpComGsonRequestBuilder,
                 null,
@@ -59,37 +58,34 @@ class PostRestClient {
 
     @Test
     fun `returns plans on successful fetch`() = test {
-        initRequest(Success(PLANS_RESPONSE))
-        val payload = plansRestClient.fetchPlans()
+        initRequest(Success(PLAN_OFFERS_RESPONSE))
+        val payload = planOffersRestClient.fetchPlanOffers()
 
         Assertions.assertThat(payload).isNotNull
-        Assertions.assertThat(payload.plans).isEqualTo(PLAN_MODELS)
+        Assertions.assertThat(payload.planOffers).isEqualTo(PLAN_OFFERS_MODELS)
     }
 
     @Test
     fun `returns error on unsuccessful fetch`() = test {
         initRequest(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
-        val payload = plansRestClient.fetchPlans()
+        val payload = planOffersRestClient.fetchPlanOffers()
 
         Assertions.assertThat(payload).isNotNull
         Assert.assertTrue(payload.isError)
     }
 
     private suspend fun initRequest(
-        data: WPComGsonRequestBuilder.Response<PlansResponse>? = null,
+        data: WPComGsonRequestBuilder.Response<PlanOffersResponse>? = null,
         error: WPComGsonNetworkError? = null
     ) {
         val response = if (error != null) Response.Error(error) else data
 
-        whenever(site.username).thenReturn(username)
-        whenever(site.password).thenReturn(password)
-        whenever(site.url).thenReturn(WPCOMV2.plans.mobile.url)
         whenever(
                 wpComGsonRequestBuilder.syncGetRequest(
-                        eq(plansRestClient),
+                        eq(planOffersRestClient),
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
-                        eq(PlansResponse::class.java),
+                        eq(PlanOffersResponse::class.java),
                         eq(true),
                         any(),
                         eq(true)
