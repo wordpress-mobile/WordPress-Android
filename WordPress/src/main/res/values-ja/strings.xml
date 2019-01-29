@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-03 19:54:07+0000
+Translation-Revision-Date: 2019-01-23 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">この操作を行うには接続が必要です。接続を確認して、もう一度お試しください。</string>
+    <string name="stats_no_data_for_period">この期間のデータがありません</string>
+    <string name="preference_strip_image_location">メディアから位置情報を削除する</string>
+    <string name="stats_cannot_be_started">現在統計を開けません。後ほど、もう一度お試しください</string>
     <string name="site_creation_label_domain_selection">有効なアドレスを選んで、訪問者がウェブでサイトを見つけられるようにしてください。</string>
     <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">ネットワークエラーにより一部のメディアが読み込めませんでした。</string>
@@ -69,7 +73,6 @@ Language: ja_JP
     <string name="stats_followers_email">メール</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">インサイトを管理</string>
-    <string name="stats_empty_insights_description">インサイトをカスタマイズして、サイトのパフォーマンスを安定させましょう</string>
     <string name="stats_empty_insights_title">インサイトは追加されていません</string>
     <string name="stats_no_data_yet">データはまだありません</string>
     <string name="menu_debug">デバッグメニュー</string>

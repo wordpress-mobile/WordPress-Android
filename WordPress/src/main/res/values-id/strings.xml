@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-02 10:54:07+0000
+Translation-Revision-Date: 2019-01-22 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">Perlu koneksi untuk melakukan tindakan ini. Periksa koneksi Anda dan coba lagi.</string>
+    <string name="stats_no_data_for_period">Tidak ada data selama periode ini</string>
+    <string name="preference_strip_image_location">Hapus lokasi dari media</string>
+    <string name="stats_cannot_be_started">Saat ini kami tidak dapat membuka statistik. Harap coba lagi nanti</string>
     <string name="site_creation_label_domain_selection">Pilih alamat yang tersedia agar orang-orang dapat menemukan Anda di web.</string>
     <string name="giphy_powered_by_giphy">Didukung oleh GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Sebagian media gagal dimuat karena terdapat error jaringan.</string>
@@ -69,7 +73,6 @@ Language: id
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">Kelola informasi</string>
-    <string name="stats_empty_insights_description">Sesuaikan informasi Anda dan dapatkan semua fakta terkait performa situs</string>
     <string name="stats_empty_insights_title">Belum ada informasi yang ditambahkan</string>
     <string name="stats_no_data_yet">Belum ada data</string>
     <string name="menu_debug">Menu Debug</string>

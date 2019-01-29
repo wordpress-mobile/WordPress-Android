@@ -21,7 +21,7 @@ public class CrashlyticsUtils {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean hasUserOptedOut = !prefs.getBoolean(context.getString(R.string.pref_key_send_usage), true);
+        boolean hasUserOptedOut = !prefs.getBoolean(context.getString(R.string.pref_key_send_crash), true);
         return !hasUserOptedOut;
     }
 

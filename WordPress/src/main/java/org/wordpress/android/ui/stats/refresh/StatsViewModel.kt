@@ -24,6 +24,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -37,7 +39,9 @@ class StatsViewModel
     @Named(MONTH_STATS_USE_CASE) private val monthStatsUseCase: BaseListUseCase,
     @Named(YEAR_STATS_USE_CASE) private val yearStatsUseCase: BaseListUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    selectedDateProvider: SelectedDateProvider
+    private val selectedDateProvider: SelectedDateProvider,
+    private val statsSectionManager: SelectedSectionManager,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
 
@@ -112,13 +116,21 @@ class StatsViewModel
         }
     }
 
+    fun getSelectedSection() = statsSectionManager.getSelectedSection()
+
     fun onSectionSelected(statsSection: StatsSection) {
+        statsSectionManager.setSelectedSection(statsSection)
         when (statsSection) {
-            StatsSection.INSIGHTS -> track(STATS_INSIGHTS_ACCESSED)
-            StatsSection.DAYS -> track(STATS_PERIOD_DAYS_ACCESSED)
-            StatsSection.WEEKS -> track(STATS_PERIOD_WEEKS_ACCESSED)
-            StatsSection.MONTHS -> track(STATS_PERIOD_MONTHS_ACCESSED)
-            StatsSection.YEARS -> track(STATS_PERIOD_YEARS_ACCESSED)
+            StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
+            StatsSection.DAYS -> analyticsTracker.track(STATS_PERIOD_DAYS_ACCESSED)
+            StatsSection.WEEKS -> analyticsTracker.track(STATS_PERIOD_WEEKS_ACCESSED)
+            StatsSection.MONTHS -> analyticsTracker.track(STATS_PERIOD_MONTHS_ACCESSED)
+            StatsSection.YEARS -> analyticsTracker.track(STATS_PERIOD_YEARS_ACCESSED)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        selectedDateProvider.clear()
     }
 }

@@ -43,8 +43,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "11.6-rc-4"
-        versionCode 670
+        versionName "11.7-rc-1"
+        versionCode 673
         minSdkVersion 21
         targetSdkVersion 26
 
@@ -58,6 +58,7 @@ android {
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
         buildConfigField "boolean", "REVISIONS_ENABLED", "false"
+        buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "false"
     }
 
     flavorDimensions "buildType"

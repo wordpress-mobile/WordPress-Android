@@ -21,11 +21,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
-import java.util.Date
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -37,7 +36,6 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: SearchTermsStore,
     selectedDateProvider: SelectedDateProvider,
-    private val statsDateFormatter: StatsDateFormatter,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatelessUseCase<SearchTermsModel>(SEARCH_TERMS, mainDispatcher, selectedDateProvider, statsGranularity) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_search_terms))
@@ -113,7 +111,7 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_SEARCH_TERMS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewSearchTerms(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
+        navigateTo(ViewSearchTerms(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
     }
 
     class SearchTermsUseCaseFactory
@@ -121,7 +119,6 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: SearchTermsStore,
         private val selectedDateProvider: SelectedDateProvider,
-        private val statsDateFormatter: StatsDateFormatter,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
@@ -130,7 +127,6 @@ constructor(
                         mainDispatcher,
                         store,
                         selectedDateProvider,
-                        statsDateFormatter,
                         analyticsTracker
                 )
     }
