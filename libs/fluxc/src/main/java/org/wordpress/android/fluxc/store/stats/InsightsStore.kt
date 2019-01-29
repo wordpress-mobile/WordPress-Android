@@ -73,10 +73,10 @@ class InsightsStore
 
     // Latest post insights
     suspend fun fetchLatestPostInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
-        val latestPost = restClient.fetchLatestPostForInsights(site, forced)
-        val postsFound = latestPost.response?.postsFound
+        val latestPostPayload = restClient.fetchLatestPostForInsights(site, forced)
+        val postsFound = latestPostPayload.response?.postsFound
 
-        val posts = latestPost.response?.posts
+        val posts = latestPostPayload.response?.posts
         return@withContext if (postsFound != null && postsFound > 0 && posts != null && posts.isNotEmpty()) {
             val latestPost = posts[0]
             val postStats = restClient.fetchPostStats(site, latestPost.id, forced)
@@ -89,8 +89,8 @@ class InsightsStore
                 postStats.isError -> OnStatsFetched(postStats.error)
                 else -> OnStatsFetched()
             }
-        } else if (latestPost.isError) {
-            OnStatsFetched(latestPost.error)
+        } else if (latestPostPayload.isError) {
+            OnStatsFetched(latestPostPayload.error)
         } else {
             OnStatsFetched()
         }
