@@ -156,8 +156,7 @@ class InsightsStore
             val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
             nextPage = savedFollowers / pageSize
         }
-        val response = restClient.fetchFollowers(siteModel, followerType, page = nextPage, pageSize = pageSize,
-                forced = forced)
+        val response = restClient.fetchFollowers(siteModel, followerType, nextPage, pageSize, forced)
         return@withContext when {
             response.isError -> {
                 OnStatsFetched(response.error)
