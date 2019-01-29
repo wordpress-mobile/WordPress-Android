@@ -21,6 +21,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.plans.PLAN_MODELS
 import org.wordpress.android.fluxc.network.rest.wpcom.plans.PlansRestClient
 import org.wordpress.android.fluxc.persistence.PlansSqlUtils
+import org.wordpress.android.fluxc.store.PlansStore.PlansErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.PlansStore.PlansFetchError
 import org.wordpress.android.fluxc.store.PlansStore.PlansFetchedPayload
 import org.wordpress.android.fluxc.test
 
@@ -63,13 +65,19 @@ class PlansStoreTest {
         // tell rest client to return error and no plans
         initRestClient(error = error)
 
+        val expectedEventWithoutError = PlansStore.OnPlansFetched(PLAN_MODELS)
+        verify(dispatcher, times(1)).emitChange(eq(expectedEventWithoutError))
+
         plansStore.onAction(action)
 
         verify(plansRestClient, times(2)).fetchPlans()
         verify(plansSqlUtils, times(1)).storePlans(PLAN_MODELS) // plans should not be stored on error
 
-        val expectedEvent = PlansStore.OnPlansFetched(PLAN_MODELS)
-        verify(dispatcher).emitChange(eq(expectedEvent))
+        val expectedEventWithError = PlansStore.OnPlansFetched(
+                PLAN_MODELS,
+                PlansFetchError(GENERIC_ERROR, "NETWORK_ERROR")
+        )
+        verify(dispatcher, times(1)).emitChange(eq(expectedEventWithError))
     }
 
     private suspend fun initRestClient(
@@ -83,5 +91,6 @@ class PlansStoreTest {
         }
 
         whenever(plansRestClient.fetchPlans()).thenReturn(payload)
+        whenever(plansSqlUtils.getPlans()).thenReturn(PLAN_MODELS)
     }
 }
