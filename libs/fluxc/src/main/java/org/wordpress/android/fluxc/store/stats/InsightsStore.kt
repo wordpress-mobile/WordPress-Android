@@ -129,17 +129,19 @@ class InsightsStore
     suspend fun fetchWpComFollowers(
         siteModel: SiteModel,
         pageSize: Int,
-        forced: Boolean = false
+        forced: Boolean = false,
+        loadMore: Boolean = false
     ): OnStatsFetched<FollowersModel> {
-        return fetchFollowers(siteModel, pageSize, forced, WP_COM)
+        return fetchFollowers(siteModel, pageSize, forced, WP_COM, loadMore)
     }
 
     suspend fun fetchEmailFollowers(
         siteModel: SiteModel,
         pageSize: Int,
-        forced: Boolean = false
+        forced: Boolean = false,
+        loadMore: Boolean = false
     ): OnStatsFetched<FollowersModel> {
-        return fetchFollowers(siteModel, pageSize, forced, EMAIL)
+        return fetchFollowers(siteModel, pageSize, forced, EMAIL, loadMore)
     }
 
     private suspend fun fetchFollowers(
@@ -147,7 +149,7 @@ class InsightsStore
         pageSize: Int,
         forced: Boolean = false,
         followerType: FollowerType,
-        loadMore: Boolean = false
+        loadMore: Boolean
     ) = withContext(coroutineContext) {
         var nextPage = 1
         if (loadMore) {
