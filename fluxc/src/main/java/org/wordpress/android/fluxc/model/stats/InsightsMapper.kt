@@ -120,7 +120,12 @@ class InsightsMapper
             WP_COM -> response.totalWpCom
             EMAIL -> response.totalEmail
         }
-        return FollowersModel(total ?: 0, followers, response.subscribers.size > pageSize)
+        val hasMore = if (response.page != null && response.pages != null) {
+            response.page < response.pages
+        } else {
+            false
+        }
+        return FollowersModel(total ?: 0, followers, hasMore)
     }
 
     fun map(response: CommentsResponse, pageSize: Int): CommentsModel {
