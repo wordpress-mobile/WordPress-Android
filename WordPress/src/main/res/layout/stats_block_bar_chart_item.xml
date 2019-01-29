@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/link_wrapper"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -25,6 +26,7 @@
             android:id="@+id/label_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            tools:text="January 2019"
             style="@style/StatsGraphLabel"/>
         <View
             android:layout_width="0dp"
@@ -32,6 +34,7 @@
             android:layout_weight="1"/>
         <TextView
             android:id="@+id/label_end"
+            tools:text="December 2019"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/StatsGraphLabel"/>
