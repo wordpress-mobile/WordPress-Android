@@ -22,15 +22,24 @@ class StatsSqlUtils
         builder.setDateFormat(DATE_FORMAT)
         builder.create()
     }
-    fun <T> insert(site: SiteModel, blockType: BlockType, statsType: StatsType, item: T, date: String = "") {
+    fun <T> insert(
+        site: SiteModel,
+        blockType: BlockType,
+        statsType: StatsType,
+        item: T,
+        deleteOldDataFirst: Boolean,
+        date: String = ""
+    ) {
         val json = gson.toJson(item)
-        WellSql.delete(StatsBlockBuilder::class.java)
-                .where()
-                .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
-                .equals(StatsBlockTable.STATS_TYPE, statsType.name)
-                .equals(StatsBlockTable.DATE, date)
-                .endWhere()
-                .execute()
+        if (deleteOldDataFirst) {
+            WellSql.delete(StatsBlockBuilder::class.java)
+                    .where()
+                    .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
+                    .equals(StatsBlockTable.STATS_TYPE, statsType.name)
+                    .equals(StatsBlockTable.DATE, date)
+                    .endWhere()
+                    .execute()
+        }
         WellSql.insert(
                 StatsBlockBuilder(
                         localSiteId = site.id,
