@@ -42,8 +42,6 @@ constructor(
             is Success -> {
                 val plans = response.data.plans
                 val features = response.data.features
-
-
                 buildPlanOffersPayload(plans, features)
             }
             is WPComGsonRequestBuilder.Response.Error -> {
@@ -54,14 +52,20 @@ constructor(
         }
     }
 
-    private fun buildPlanOffersPayload(planResponses: List<Plan>?, featureResponses: List<Feature>?): PlanOffersFetchedPayload {
+    private fun buildPlanOffersPayload(
+        planResponses: List<Plan>?,
+        featureResponses: List<Feature>?
+    ): PlanOffersFetchedPayload {
         return PlanOffersFetchedPayload(planResponses?.map { plan ->
-            val featureDetails = featureResponses?.filter { feature -> plan.features!!.contains(feature.id) }!!.mapNotNull { filteredFeature ->
-                PlanOfferModel.Feature(filteredFeature.id, filteredFeature.name, filteredFeature.description)
-            }
+            val featureDetails =
+                    featureResponses?.filter { feature ->
+                        plan.features!!.contains(feature.id)
+                    }!!.map { filteredFeature ->
+                        PlanOfferModel.Feature(filteredFeature.id, filteredFeature.name, filteredFeature.description)
+                    }
 
             PlanOfferModel(
-                    plan.products?.mapNotNull { product -> product.plan_id },
+                    plan.products?.map { product -> product.plan_id },
                     featureDetails,
                     plan.name,
                     plan.short_name,
@@ -74,7 +78,7 @@ constructor(
 
     data class PlanOffersResponse(
         val groups: List<Group>?,
-        val plans: List<Plan>,
+        val plans: List<Plan>?,
         val features: List<Feature>?
     ) : Response {
         data class Group(

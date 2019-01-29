@@ -14,7 +14,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.UserAgent
@@ -30,7 +29,6 @@ import org.wordpress.android.fluxc.test
 class PlanOffersRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
-    @Mock private lateinit var site: SiteModel
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
@@ -39,8 +37,6 @@ class PlanOffersRestClientTest {
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
 
     private lateinit var planOffersRestClient: PlanOffersRestClient
-    private val username = "John Smith"
-    private val password = "password123"
 
     @Before
     fun setUp() {
@@ -62,7 +58,7 @@ class PlanOffersRestClientTest {
         val payload = planOffersRestClient.fetchPlanOffers()
 
         Assertions.assertThat(payload).isNotNull
-        Assertions.assertThat(payload.planOffers).isEqualTo(PLAN_OFFERS_MODELS)
+        Assertions.assertThat(payload.planOffers).isEqualTo(PLAN_OFFER_MODELS)
     }
 
     @Test
@@ -71,6 +67,8 @@ class PlanOffersRestClientTest {
         val payload = planOffersRestClient.fetchPlanOffers()
 
         Assertions.assertThat(payload).isNotNull
+        Assertions.assertThat(payload.planOffers).isNotNull
+        Assertions.assertThat(payload.planOffers!!.isEmpty())
         Assert.assertTrue(payload.isError)
     }
 
