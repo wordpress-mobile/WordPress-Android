@@ -63,7 +63,8 @@ class VideoPlaysSqlUtilsTest {
         mappedTypes.forEach { statsType, dbGranularity ->
             timeStatsSqlUtils.insert(site, VIDEO_PLAYS_RESPONSE, dbGranularity, DATE)
 
-            verify(statsSqlUtils).insert(site, VIDEO_PLAYS, statsType, VIDEO_PLAYS_RESPONSE, DATE_VALUE)
+            verify(statsSqlUtils).insert(site, VIDEO_PLAYS, statsType, VIDEO_PLAYS_RESPONSE,
+                    true, DATE_VALUE)
         }
     }
 }
