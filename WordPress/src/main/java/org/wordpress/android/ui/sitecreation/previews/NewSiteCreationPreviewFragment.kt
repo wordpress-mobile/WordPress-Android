@@ -7,6 +7,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.content.ContextCompat
@@ -323,13 +324,19 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
                     contentLayout.removeOnLayoutChangeListener(this)
                     val contentHeight = contentLayout.measuredHeight.toFloat()
 
+                    val titleAnim = createFadeInAnimator(sitePreviewTitle)
                     val webViewAnim = createSlideInFromBottomAnimator(webviewContainer, contentHeight)
-                    val okContainerAnim = okButtonContainer?.let { createSlideInFromBottomAnimator(it, contentHeight)}
-                    val titleAnim = createTitleAnimator()
+                    val animatorItems = mutableListOf(titleAnim, webViewAnim)
+                    // OK button should slide in for portrait orientation and fade in for landscape orientation
+                    if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        okButtonContainer?.let { animatorItems.add(createSlideInFromBottomAnimator(it, contentHeight))}
+                    } else {
+                        animatorItems.add(createFadeInAnimator(okButton))
+                    }
                     AnimatorSet().apply {
                         interpolator = DecelerateInterpolator()
                         duration = SLIDE_IN_ANIMATION_DURATION
-                        playTogether(listOfNotNull(webViewAnim, okContainerAnim, titleAnim))
+                        playTogether(animatorItems.toList())
                         start()
                     }
                 }
@@ -347,7 +354,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
         )
     }
 
-    private fun createTitleAnimator() = ObjectAnimator.ofFloat(sitePreviewTitle, "alpha", 0f, 1f)
+    private fun createFadeInAnimator(view: View) = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
 
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"
