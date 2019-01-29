@@ -132,10 +132,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnReattachQueryListener() {
                     @Override
                     public void onQueryCurrentProgressForUploadingMedia() {
-                        for (String mediaId : mUploadingMediaProgressMax.keySet()) {
-                            mWPAndroidGlueCode.mediaFileUploadProgress(Integer.valueOf(mediaId),
-                                    mUploadingMediaProgressMax.get(mediaId));
-                        }
+                        updateMediaProgress();
                     }
                 },
                 getActivity().getApplication(),
@@ -177,6 +174,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    private void updateMediaProgress() {
+        for (String mediaId : mUploadingMediaProgressMax.keySet()) {
+            mWPAndroidGlueCode.mediaFileUploadProgress(Integer.valueOf(mediaId),
+                    mUploadingMediaProgressMax.get(mediaId));
+        }
+    }
+    
     private void checkAndRequestCameraAndStoragePermissions() {
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
                 CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
@@ -549,6 +553,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+        mUploadingMediaProgressMax.remove(localMediaId);
         mWPAndroidGlueCode.mediaFileUploadSucceeded(Integer.valueOf(localMediaId), mediaFile.getFileURL(),
                 Integer.valueOf(mediaFile.getMediaId()));
     }
