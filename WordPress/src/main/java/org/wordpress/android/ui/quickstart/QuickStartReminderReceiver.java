@@ -13,6 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
+import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -67,6 +68,8 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(true)
                 .setContentIntent(notificationContentIntent)
+                .setDeleteIntent(NotificationsProcessingService
+                        .getPendingIntentForNotificationDismiss(context, QUICK_START_REMINDER_NOTIFICATION))
                 .build();
 
         notificationManager.notify(QUICK_START_REMINDER_NOTIFICATION, notification);
