@@ -22,8 +22,7 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
 
             if (showGutenbergEditor) {
                 post.setContent(GutenbergEditorFragment
-                        .replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
-                                localMediaId, mediaFile));
+                        .replaceMediaFileWithUrl(post.getContent(), localMediaId, mediaFile));
             } else if (showAztecEditor) {
                 post.setContent(AztecEditorFragment.replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
                                                                             localMediaId, mediaFile));

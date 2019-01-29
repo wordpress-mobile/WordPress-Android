@@ -371,7 +371,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
     }
 
-    public static String replaceMediaFileWithUrl(Context context, @NonNull String postContent,
+    public static String replaceMediaFileWithUrl(@NonNull String postContent,
                                                  String localMediaId, MediaFile mediaFile) {
         if (mediaFile != null) {
             String remoteUrl = StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
