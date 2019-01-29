@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/key"
         style="@style/StatsBlockColumnSmallHeader"
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"/>
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/value"
         style="@style/StatsBlockColumnSmallValue"
         android:layout_width="wrap_content"
