@@ -23,7 +23,16 @@ import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.stats.OldStatsActivity.ARG_DESIRED_TIMEFRAME
+import org.wordpress.android.ui.stats.OldStatsActivity.ARG_LAUNCHED_FROM
+import org.wordpress.android.ui.stats.OldStatsActivity.StatsLaunchedFrom
+import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.StatsTimeframe.DAY
+import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
+import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
+import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
@@ -57,8 +66,8 @@ class StatsFragment : DaggerFragment() {
 
         val nonNullActivity = checkNotNull(activity)
 
-        initializeViews(nonNullActivity)
         initializeViewModels(nonNullActivity, savedInstanceState == null)
+        initializeViews(nonNullActivity)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -67,6 +76,7 @@ class StatsFragment : DaggerFragment() {
     private fun initializeViews(activity: FragmentActivity) {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
+        statsPager.setCurrentItem(viewModel.getSelectedSection().ordinal, false)
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabReselected(tab: Tab?) {
             }
@@ -91,7 +101,13 @@ class StatsFragment : DaggerFragment() {
 
         val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
         val nonNullSite = checkNotNull(site)
-        viewModel.start(nonNullSite)
+
+        val launchedFrom = activity.intent.getSerializableExtra(ARG_LAUNCHED_FROM)
+        val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
+        val initialTimeFrame = getInitialTimeFrame(activity)
+
+        viewModel.start(nonNullSite, launchedFromWidget, initialTimeFrame)
+
         if (!isFirstStart) {
             restorePreviousSearch = true
         }
@@ -102,6 +118,18 @@ class StatsFragment : DaggerFragment() {
                 swipeToRefreshHelper.setEnabled(true)
             }
             return@setOnTouchListener false
+        }
+    }
+
+    private fun getInitialTimeFrame(activity: FragmentActivity): StatsSection? {
+        val initialTimeFrame = activity.intent.getSerializableExtra(ARG_DESIRED_TIMEFRAME)
+        return when (initialTimeFrame) {
+            StatsTimeframe.INSIGHTS -> INSIGHTS
+            DAY -> DAYS
+            WEEK -> WEEKS
+            MONTH -> MONTHS
+            YEAR -> YEARS
+            else -> null
         }
     }
 

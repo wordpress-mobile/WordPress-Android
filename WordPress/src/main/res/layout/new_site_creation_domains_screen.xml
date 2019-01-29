@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <include
+        android:id="@+id/header_layout"
+        layout="@layout/new_site_creation_header_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/search_input_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <include
+        android:id="@+id/search_input_layout"
+        layout="@layout/new_site_creation_verticals_search_input_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_layout"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_goneMarginTop="@dimen/margin_extra_medium_large"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:importantForAccessibility="no"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/create_site_button_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_input_layout"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/create_site_button_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/wp_grey_lighten_30"
+        app:cardElevation="@dimen/card_elevation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view"
+        app:layout_constraintVertical_bias="1">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/create_site_button"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/new_site_creation_domains_create_site_button_height"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/margin_extra_large"
+            android:background="@drawable/wp_blue_medium_extra_small_rounded_bg"
+            android:fontFamily="sans-serif-medium"
+            android:paddingEnd="@dimen/margin_medium"
+            android:paddingStart="@dimen/margin_medium"
+            android:text="@string/new_site_creation_create_site_button"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_medium"
+            android:theme="@style/WordPress.Button"/>
+    </android.support.v7.widget.CardView>
+
+    <FrameLayout
+        android:id="@+id/domain_list_empty_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/wp_grey_lighten_30"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/recycler_view">
+
+        <TextView
+            style="@style/ActionableEmptyStateTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
+            android:text="@string/new_site_creation_empty_domain_list_message"
+            android:textSize="@dimen/text_sz_extra_large"/>
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>

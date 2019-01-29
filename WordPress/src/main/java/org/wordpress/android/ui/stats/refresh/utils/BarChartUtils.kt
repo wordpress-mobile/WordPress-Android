@@ -87,7 +87,7 @@ fun BarChart.draw(
         }
         textColor = greyColor
         gridColor = lightGreyColor
-        textSize = 12f
+        textSize = 10f
         gridLineWidth = 1f
     }
     axisRight.apply {

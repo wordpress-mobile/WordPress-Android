@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-22 00:25:17+0000
+Translation-Revision-Date: 2019-01-16 20:58:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">För att utföra denna åtgärd krävs en förbindelse. Kontrollera din internetuppkoppling och försök igen.</string>
+    <string name="stats_no_data_for_period">Inga uppgifter för denna tidsperiod</string>
+    <string name="preference_strip_image_location">Avlägsna position från media</string>
+    <string name="stats_cannot_be_started">Just nu går det inte att öppna statistiken. Försök igen senare</string>
     <string name="site_creation_label_domain_selection">Välj en ledig adress där man ska kunna hitta dig på webben.</string>
     <string name="giphy_powered_by_giphy">Drivs med hjälp av GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Vissa mediefiler kunde inte laddas på grund av nätverksproblem.</string>
@@ -69,7 +73,7 @@ Language: sv_SE
     <string name="stats_followers_email">E-post</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">Hantera insikter</string>
-    <string name="stats_empty_insights_description">Situationsanpassa dina insikter och se detaljerna om hur din webbplats presterar</string>
+    <string name="stats_empty_insights_description">Anpassa dina insikter och se detaljerna om hur din webbplats presterar</string>
     <string name="stats_empty_insights_title">Inga insikter har lagts till än</string>
     <string name="stats_no_data_yet">Inga data insamlade än</string>
     <string name="menu_debug">Felsökningsmeny</string>

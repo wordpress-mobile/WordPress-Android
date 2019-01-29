@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/site_info_scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:padding="@dimen/margin_extra_large"
+        app:layout_constraintBottom_toTopOf="@+id/site_info_skip_or_next_button_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <LinearLayout
+                android:id="@+id/header_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/site_info_header_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:lineSpacingMultiplier="1.1"
+                    android:text="@string/new_site_creation_site_info_header_title"
+                    android:textColor="@color/wp_grey_dark"
+                    android:textSize="@dimen/text_sz_large"
+                    />
+
+                <TextView
+                    android:id="@+id/site_info_header_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_extra_medium_large"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:lineSpacingMultiplier="1.1"
+                    android:text="@string/new_site_creation_site_info_header_subtitle"
+                    android:textColor="@color/wp_grey_darken_20"
+                    android:textSize="@dimen/text_sz_large"/>
+
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/site_info_site_title_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
+                android:hint="@string/new_site_creation_site_title_hint"
+                android:textColorHint="@color/wp_grey"
+                android:labelFor="@+id/site_info_site_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/header_container">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/site_info_site_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/wp_grey"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/wp_grey_dark">
+                </android.support.design.widget.TextInputEditText>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/site_info_tag_line_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
+                android:hint="@string/new_site_creation_tag_line_hint"
+                android:textColorHint="@color/wp_grey"
+                android:labelFor="@+id/site_info_tag_line"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/site_info_site_title_layout">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/site_info_tag_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/wp_grey"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/wp_grey_dark">
+                </android.support.design.widget.TextInputEditText>
+            </android.support.design.widget.TextInputLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/site_info_tag_line_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:text="@string/new_site_creation_tag_line_description"
+                android:textColor="@color/wp_grey_darken_20"
+                android:textSize="@dimen/text_sz_medium"
+                app:fixWidowWords="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/site_info_tag_line_layout"/>
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/site_info_skip_or_next_button_container"
+        layout="@layout/new_site_creation_skip_button_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
