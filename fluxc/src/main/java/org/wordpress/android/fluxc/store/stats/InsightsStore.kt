@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.store
+package org.wordpress.android.fluxc.store.stats
 
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
