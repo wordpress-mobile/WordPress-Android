@@ -51,8 +51,8 @@ class InsightsSqlUtils
         insert(site, TODAYS_INSIGHTS, data)
     }
 
-    fun insert(site: SiteModel, data: FollowersResponse, followerType: FollowerType) {
-        insert(site, followerType.toDbKey(), data)
+    fun insert(site: SiteModel, data: FollowersResponse, followerType: FollowerType, deleteOldDataFirst: Boolean) {
+        insert(site, followerType.toDbKey(), data, deleteOldDataFirst)
     }
 
     fun insert(site: SiteModel, data: CommentsResponse) {
@@ -110,8 +110,8 @@ class InsightsSqlUtils
         return select(site, TAGS_AND_CATEGORIES_INSIGHTS, TagsResponse::class.java)
     }
 
-    private fun <T> insert(site: SiteModel, blockType: BlockType, data: T) {
-        statsSqlUtils.insert(site, blockType, INSIGHTS, data)
+    private fun <T> insert(site: SiteModel, blockType: BlockType, data: T, deleteOldDataFirst: Boolean = true) {
+        statsSqlUtils.insert(site, blockType, INSIGHTS, data, deleteOldDataFirst)
     }
 
     private fun <T> select(site: SiteModel, blockType: BlockType, classOfT: Class<T>): T? {
