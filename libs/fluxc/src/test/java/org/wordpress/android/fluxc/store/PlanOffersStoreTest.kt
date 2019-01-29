@@ -12,13 +12,13 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.PlansAction
-import org.wordpress.android.fluxc.generated.PlansActionBuilder
+import org.wordpress.android.fluxc.action.PlanOfferAction
+import org.wordpress.android.fluxc.generated.PlanOfferActionBuilder
 import org.wordpress.android.fluxc.model.plans.PlanOfferModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
-import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PLAN_OFFERS_MODELS
+import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PLAN_OFFER_MODELS
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient
 import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils
 import org.wordpress.android.fluxc.store.PlanOffersStore.PlanOffersErrorType.GENERIC_ERROR
@@ -41,23 +41,23 @@ class PlanOffersStoreTest {
 
     @Test
     fun fetchPlans() = test {
-        initRestClient(PLAN_OFFERS_MODELS)
+        initRestClient(PLAN_OFFER_MODELS)
 
-        val action = PlansActionBuilder.generateNoPayloadAction(PlansAction.FETCH_PLANS)
+        val action = PlanOfferActionBuilder.generateNoPayloadAction(PlanOfferAction.FETCH_PLAN_OFFERS)
 
         planOffersStore.onAction(action)
 
         verify(planOffersRestClient).fetchPlanOffers()
-        verify(planOffersSqlUtils).storePlanOffers(PLAN_OFFERS_MODELS)
+        verify(planOffersSqlUtils).storePlanOffers(PLAN_OFFER_MODELS)
 
-        val expectedEvent = PlanOffersStore.OnPlanOffersFetched(PLAN_OFFERS_MODELS)
+        val expectedEvent = PlanOffersStore.OnPlanOffersFetched(PLAN_OFFER_MODELS)
         verify(dispatcher).emitChange(eq(expectedEvent))
     }
 
     @Test
     fun fetchCachedPlansAfterError() = test {
-        initRestClient(PLAN_OFFERS_MODELS)
-        val action = PlansActionBuilder.generateNoPayloadAction(PlansAction.FETCH_PLANS)
+        initRestClient(PLAN_OFFER_MODELS)
+        val action = PlanOfferActionBuilder.generateNoPayloadAction(PlanOfferAction.FETCH_PLAN_OFFERS)
         planOffersStore.onAction(action)
 
         val error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR))
@@ -65,7 +65,7 @@ class PlanOffersStoreTest {
         // tell rest client to return error and no plan offers
         initRestClient(error = error)
 
-        val expectedEventWithoutError = PlanOffersStore.OnPlanOffersFetched(PLAN_OFFERS_MODELS)
+        val expectedEventWithoutError = PlanOffersStore.OnPlanOffersFetched(PLAN_OFFER_MODELS)
         verify(dispatcher, times(1)).emitChange(eq(expectedEventWithoutError))
 
         planOffersStore.onAction(action)
@@ -73,10 +73,10 @@ class PlanOffersStoreTest {
         verify(planOffersRestClient, times(2)).fetchPlanOffers()
 
         // plan offers should not be stored on error
-        verify(planOffersSqlUtils, times(1)).storePlanOffers(PLAN_OFFERS_MODELS)
+        verify(planOffersSqlUtils, times(1)).storePlanOffers(PLAN_OFFER_MODELS)
 
         val expectedEventWithError = PlanOffersStore.OnPlanOffersFetched(
-                PLAN_OFFERS_MODELS,
+                PLAN_OFFER_MODELS,
                 PlansFetchError(GENERIC_ERROR, "NETWORK_ERROR")
         )
         verify(dispatcher, times(1)).emitChange(eq(expectedEventWithError))
@@ -93,6 +93,6 @@ class PlanOffersStoreTest {
         }
 
         whenever(planOffersRestClient.fetchPlanOffers()).thenReturn(payload)
-        whenever(planOffersSqlUtils.getPlanOffers()).thenReturn(PLAN_OFFERS_MODELS)
+        whenever(planOffersSqlUtils.getPlanOffers()).thenReturn(PLAN_OFFER_MODELS)
     }
 }

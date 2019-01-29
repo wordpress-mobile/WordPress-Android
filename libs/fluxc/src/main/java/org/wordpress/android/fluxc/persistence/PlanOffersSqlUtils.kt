@@ -41,9 +41,6 @@ class PlanOffersSqlUtils @Inject constructor() {
             val planIds = WellSql.select(PlanOfferIdBuilder::class.java)
                     .where().equals(PlanOfferIdTable.INTERNAL_PLAN_ID, plan.internalPlanId).endWhere()
                     .asModel.mapNotNull { it.build() }
-
-
-
             plan.build(planIds, planFeatures)
         }
     }

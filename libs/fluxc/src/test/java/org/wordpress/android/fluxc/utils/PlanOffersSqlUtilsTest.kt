@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
-import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PLAN_OFFERS_MODELS
+import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PLAN_OFFER_MODELS
 import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils
 import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils.PlanOffersBuilder
 import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils.PlanOfferFeatureBuilder
@@ -26,7 +26,11 @@ class PlanOffersSqlUtilsTest {
         val appContext = RuntimeEnvironment.application.applicationContext
         val config = SingleStoreWellSqlConfigForTests(
                 appContext,
-                listOf(PlanOffersBuilder::class.java, PlanOfferIdBuilder::class.java, PlanOfferFeatureBuilder::class.java), ""
+                listOf(
+                        PlanOffersBuilder::class.java,
+                        PlanOfferIdBuilder::class.java,
+                        PlanOfferFeatureBuilder::class.java
+                ), ""
         )
         WellSql.init(config)
         config.reset()
@@ -34,11 +38,11 @@ class PlanOffersSqlUtilsTest {
 
     @Test
     fun testStoreAndRetrievePlans() {
-        planOffersSqlUtils.storePlanOffers(PLAN_OFFERS_MODELS)
+        planOffersSqlUtils.storePlanOffers(PLAN_OFFER_MODELS)
 
         val cachedPlanOffers = planOffersSqlUtils.getPlanOffers()
 
         assertNotNull(cachedPlanOffers)
-        assertEquals(PLAN_OFFERS_MODELS, cachedPlanOffers)
+        assertEquals(PLAN_OFFER_MODELS, cachedPlanOffers)
     }
 }
