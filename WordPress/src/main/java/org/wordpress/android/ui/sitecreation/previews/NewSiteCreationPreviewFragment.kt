@@ -66,6 +66,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
     private lateinit var sitePreviewScreenListener: SitePreviewScreenListener
     private lateinit var helpClickedListener: OnHelpClickedListener
 
+    private var okButtonContainer: View? = null
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context !is SitePreviewScreenListener) {
@@ -100,6 +102,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
         sitePreviewWebView = rootView.findViewById(R.id.sitePreviewWebView)
         sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
+        okButtonContainer = rootView.findViewById(R.id.sitePreviewOkButtonContainer)
         initViewModel()
         initRetryButton()
         initOkButton()
@@ -320,25 +323,19 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
                     contentLayout.removeOnLayoutChangeListener(this)
                     val contentHeight = contentLayout.measuredHeight.toFloat()
 
-                    val webViewAnim = createWebViewContainerAnimator(contentHeight)
-                    val okContainerAnim = createOkButtonContainerAnimator(contentHeight)
+                    val webViewAnim = createSlideInFromBottomAnimator(webviewContainer, contentHeight)
+                    val okContainerAnim = okButtonContainer?.let { createSlideInFromBottomAnimator(it, contentHeight)}
                     val titleAnim = createTitleAnimator()
                     AnimatorSet().apply {
                         interpolator = DecelerateInterpolator()
                         duration = SLIDE_IN_ANIMATION_DURATION
-                        playTogether(webViewAnim, okContainerAnim, titleAnim)
+                        playTogether(listOfNotNull(webViewAnim, okContainerAnim, titleAnim))
                         start()
                     }
                 }
             }
         })
     }
-
-    private fun createWebViewContainerAnimator(contentHeight: Float): ObjectAnimator =
-            createSlideInFromBottomAnimator(webviewContainer, contentHeight)
-
-    private fun createOkButtonContainerAnimator(contentHeight: Float): ObjectAnimator =
-            createSlideInFromBottomAnimator(sitePreviewOkButtonContainer, contentHeight)
 
     private fun createSlideInFromBottomAnimator(view: View, contentHeight: Float): ObjectAnimator {
         return ObjectAnimator.ofFloat(
