@@ -51,6 +51,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final int SRC_ATTRIBUTE_LENGTH_PLUS_ONE = 5;
+    private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s} -->";
+    private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
 
     private static boolean mIsToolbarExpanded = false;
 
@@ -379,13 +381,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             // TODO: replace the URL
             if (!mediaFile.isVideo()) {
                 // replace gutenberg block id holder with serverMediaId, and url_holder with remoteUrl
-                String oldImgBlockHeader = String.format("<!-- wp:image {\"id\":%s} -->", localMediaId);
-                String newImgBlockHeader = String.format("<!-- wp:image {\"id\":%s} -->", mediaFile.getMediaId());
+                String oldImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, localMediaId);
+                String newImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, mediaFile.getMediaId());
                 postContent = postContent.replace(oldImgBlockHeader, newImgBlockHeader);
 
                 // replace class wp-image-id with serverMediaId, and url_holder with remoteUrl
-                String oldImgClass = String.format("class=\"wp-image-%s\"", localMediaId);
-                String newImgClass = String.format("class=\"wp-image-%s\"", mediaFile.getMediaId());
+                String oldImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, localMediaId);
+                String newImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, mediaFile.getMediaId());
                 postContent = postContent.replace(oldImgClass, newImgClass);
 
                 // let's first find this occurrence and keep note of the position, as we need to replace the
