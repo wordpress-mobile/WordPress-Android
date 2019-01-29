@@ -19,7 +19,9 @@ import org.wordpress.android.util.LocaleManager
 import java.util.HashMap
 import javax.inject.Inject
 
-class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSiteCreationServiceState(IDLE)),
+private val INITIAL_STATE = IDLE
+
+class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSiteCreationServiceState(INITIAL_STATE)),
         NewSiteCreationServiceManagerListener {
     @Inject lateinit var manager: NewSiteCreationServiceManager
 
@@ -98,7 +100,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
             data: NewSiteCreationServiceData
         ) {
             val currentState = AutoForeground.getState(NewSiteCreationServiceState::class.java)
-            if (currentState == null || currentState.step == FAILURE) {
+            if (currentState == null || currentState.step == INITIAL_STATE || currentState.step == FAILURE ) {
                 clearSiteCreationServiceState()
 
                 val intent = Intent(context, NewSiteCreationService::class.java)
