@@ -23,9 +23,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -63,7 +63,7 @@ class LatestPostSummaryUseCase
         items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
         if (domainModel.hasData()) {
             items.add(
-                    ValueItem(DecimalFormat.getInstance().format(domainModel.postViewsCount), R.string.stats_views)
+                    ValueItem(domainModel.postViewsCount.toFormattedString(startValue = MILLION), R.string.stats_views)
             )
             if (domainModel.dayViews.isNotEmpty()) {
                 items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
