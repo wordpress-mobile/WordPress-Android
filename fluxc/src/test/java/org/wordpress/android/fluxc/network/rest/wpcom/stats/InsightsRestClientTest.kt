@@ -286,8 +286,7 @@ class InsightsRestClientTest {
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "max" to "$pageSize",
-                        "type" to path,
-                        "page" to "$page"
+                        "type" to path
                 )
         )
     }
