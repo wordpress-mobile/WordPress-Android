@@ -16,7 +16,7 @@
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:text="@string/stats_views"
-        app:autoSizeMaxTextSize="12sp"
+        app:autoSizeMaxTextSize="@dimen/text_sz_small"
         app:autoSizeMinTextSize="8sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"/>
@@ -29,6 +29,10 @@
         android:layout_weight="1"
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
+        app:autoSizeMaxTextSize="@dimen/text_sz_post_content"
+        app:autoSizeMinTextSize="@dimen/text_sz_small"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         tools:text="0"/>
 
     <View
