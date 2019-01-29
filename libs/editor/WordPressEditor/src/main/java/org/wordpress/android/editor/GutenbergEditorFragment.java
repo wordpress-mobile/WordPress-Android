@@ -398,7 +398,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         Matcher m = p.matcher(postContent.substring(iStartOfImgTag));
                         if (m.find()) {
                             String src = m.group();
-                            int startIndex = src.indexOf("src=") + 5;
+                            final int srcAttrLengthPlusOne = 5;
+                            int startIndex = src.indexOf("src=") + srcAttrLengthPlusOne;
                             String srcTag = src.substring(startIndex, src.length());
                             // now replace the url
                             postContent = postContent.replace(srcTag, remoteUrl);
