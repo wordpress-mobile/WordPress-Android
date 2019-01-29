@@ -276,7 +276,8 @@ class InsightsRestClientTest {
         initFollowersResponse(FOLLOWERS_RESPONSE)
 
         val pageSize = 10
-        val responseModel = insightsRestClient.fetchFollowers(site, followerType, pageSize, false)
+        val page = 1
+        val responseModel = insightsRestClient.fetchFollowers(site, followerType, page, pageSize, false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(FOLLOWERS_RESPONSE)
@@ -285,7 +286,8 @@ class InsightsRestClientTest {
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "max" to "$pageSize",
-                        "type" to path
+                        "type" to path,
+                        "page" to "$page"
                 )
         )
     }
@@ -303,7 +305,7 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchFollowers(site, WP_COM, 10, false)
+        val responseModel = insightsRestClient.fetchFollowers(site, WP_COM, 1,10, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)

@@ -68,7 +68,7 @@ class InsightsSqlUtilsTest {
     fun `inserts all time response to stats utils`() {
         insightsSqlUtils.insert(site, ALL_TIME_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, ALL_TIME_INSIGHTS, INSIGHTS, ALL_TIME_RESPONSE)
+        verify(statsSqlUtils).insert(site, ALL_TIME_INSIGHTS, INSIGHTS, ALL_TIME_RESPONSE, true)
     }
 
     @Test
@@ -87,7 +87,7 @@ class InsightsSqlUtilsTest {
     fun `inserts most popular response to stats utils`() {
         insightsSqlUtils.insert(site, MOST_POPULAR_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, MOST_POPULAR_INSIGHTS, INSIGHTS, MOST_POPULAR_RESPONSE)
+        verify(statsSqlUtils).insert(site, MOST_POPULAR_INSIGHTS, INSIGHTS, MOST_POPULAR_RESPONSE, true)
     }
 
     @Test
@@ -106,7 +106,7 @@ class InsightsSqlUtilsTest {
     fun `inserts latest post detail response to stats utils`() {
         insightsSqlUtils.insert(site, LATEST_POST)
 
-        verify(statsSqlUtils).insert(site, LATEST_POST_DETAIL_INSIGHTS, INSIGHTS, LATEST_POST)
+        verify(statsSqlUtils).insert(site, LATEST_POST_DETAIL_INSIGHTS, INSIGHTS, LATEST_POST, true)
     }
 
     @Test
@@ -131,7 +131,7 @@ class InsightsSqlUtilsTest {
     fun `inserts latest post views response to stats utils`() {
         insightsSqlUtils.insert(site, POST_STATS_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, LATEST_POST_STATS_INSIGHTS, INSIGHTS, POST_STATS_RESPONSE)
+        verify(statsSqlUtils).insert(site, LATEST_POST_STATS_INSIGHTS, INSIGHTS, POST_STATS_RESPONSE, true)
     }
 
     @Test
@@ -166,16 +166,16 @@ class InsightsSqlUtilsTest {
 
     @Test
     fun `inserts WPCOM followers response to stats utils`() {
-        insightsSqlUtils.insert(site, FOLLOWERS_RESPONSE, WP_COM)
+        insightsSqlUtils.insert(site, FOLLOWERS_RESPONSE, WP_COM, true)
 
-        verify(statsSqlUtils).insert(site, WP_COM_FOLLOWERS, INSIGHTS, FOLLOWERS_RESPONSE)
+        verify(statsSqlUtils).insert(site, WP_COM_FOLLOWERS, INSIGHTS, FOLLOWERS_RESPONSE, true)
     }
 
     @Test
     fun `inserts email followers response to stats utils`() {
-        insightsSqlUtils.insert(site, FOLLOWERS_RESPONSE, EMAIL)
+        insightsSqlUtils.insert(site, FOLLOWERS_RESPONSE, EMAIL, true)
 
-        verify(statsSqlUtils).insert(site, EMAIL_FOLLOWERS, INSIGHTS, FOLLOWERS_RESPONSE)
+        verify(statsSqlUtils).insert(site, EMAIL_FOLLOWERS, INSIGHTS, FOLLOWERS_RESPONSE, true)
     }
 
     @Test
@@ -200,7 +200,7 @@ class InsightsSqlUtilsTest {
     fun `inserts comments response to stats utils`() {
         insightsSqlUtils.insert(site, TOP_COMMENTS_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, COMMENTS_INSIGHTS, INSIGHTS, TOP_COMMENTS_RESPONSE)
+        verify(statsSqlUtils).insert(site, COMMENTS_INSIGHTS, INSIGHTS, TOP_COMMENTS_RESPONSE, true)
     }
 
     @Test
@@ -225,7 +225,7 @@ class InsightsSqlUtilsTest {
     fun `inserts tags response to stats utils`() {
         insightsSqlUtils.insert(site, TAGS_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, TAGS_AND_CATEGORIES_INSIGHTS, INSIGHTS, TAGS_RESPONSE)
+        verify(statsSqlUtils).insert(site, TAGS_AND_CATEGORIES_INSIGHTS, INSIGHTS, TAGS_RESPONSE, true)
     }
 
     @Test
@@ -250,6 +250,6 @@ class InsightsSqlUtilsTest {
     fun `inserts publicize response to stats utils`() {
         insightsSqlUtils.insert(site, PUBLICIZE_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, PUBLICIZE_INSIGHTS, INSIGHTS, PUBLICIZE_RESPONSE)
+        verify(statsSqlUtils).insert(site, PUBLICIZE_INSIGHTS, INSIGHTS, PUBLICIZE_RESPONSE, true)
     }
 }
