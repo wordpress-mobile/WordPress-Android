@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
 import java.util.Date
@@ -159,15 +160,21 @@ constructor(
     suspend fun fetchFollowers(
         site: SiteModel,
         type: FollowerType,
+        page: Int,
         pageSize: Int,
         forced: Boolean
     ): FetchStatsPayload<FollowersResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.followers.urlV1_1
 
-        val params = mapOf(
+        val params = mutableMapOf(
                 "type" to type.path,
                 "max" to pageSize.toString()
         )
+
+        if (page > 1) {
+            params["page"] = page.toString()
+        }
+
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
