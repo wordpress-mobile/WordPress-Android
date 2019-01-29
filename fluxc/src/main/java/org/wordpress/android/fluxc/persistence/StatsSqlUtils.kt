@@ -52,6 +52,23 @@ class StatsSqlUtils
                 .execute()
     }
 
+    fun <T> selectAll(
+        site: SiteModel,
+        blockType: BlockType,
+        statsType: StatsType,
+        classOfT: Class<T>,
+        date: String = ""
+    ): List<T> {
+        val models = WellSql.select(StatsBlockBuilder::class.java)
+                .where()
+                .equals(StatsBlockTable.LOCAL_SITE_ID, site.id)
+                .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
+                .equals(StatsBlockTable.STATS_TYPE, statsType.name)
+                .equals(StatsBlockTable.DATE, date)
+                .endWhere().asModel
+        return models.map { gson.fromJson(it.json, classOfT) }
+    }
+
     fun <T> select(
         site: SiteModel,
         blockType: BlockType,
