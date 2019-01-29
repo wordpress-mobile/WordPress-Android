@@ -164,8 +164,8 @@ class NewSiteCreationMainVMTest {
 
     @Test
     fun titlesForOtherThanFirstAndLastStepIsStepCount() {
-        val isFirstStep = {index: Int -> index == 0}
-        val isLastStep = {index: Int -> index == SITE_CREATION_STEPS.size - 1 }
+        val isFirstStep = { index: Int -> index == 0 }
+        val isLastStep = { index: Int -> index == SITE_CREATION_STEPS.size - 1 }
 
         SITE_CREATION_STEPS.filterIndexed({ index, step ->
             !isFirstStep(index) && !isLastStep(index)
@@ -177,7 +177,7 @@ class NewSiteCreationMainVMTest {
     @Test
     fun siteCreationStateWrittenToBundle() {
         viewModel.writeToBundle(savedInstanceState)
-        verify(savedInstanceState).putParcelable(any(), argThat(){this is SiteCreationState })
+        verify(savedInstanceState).putParcelable(any(), argThat() { this is SiteCreationState })
     }
 
     @Test
