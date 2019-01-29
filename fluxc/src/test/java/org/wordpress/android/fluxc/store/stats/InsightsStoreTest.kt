@@ -295,7 +295,7 @@ class InsightsStoreTest {
                 FOLLOWERS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE, PAGE_SIZE, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<FollowersModel>()
@@ -313,7 +313,7 @@ class InsightsStoreTest {
                 FOLLOWERS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE, PAGE_SIZE, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<FollowersModel>()
@@ -353,7 +353,7 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<FollowersResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE, PAGE_SIZE, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchWpComFollowers(site, PAGE_SIZE, forced)
 
@@ -369,7 +369,7 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<FollowersResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE, PAGE_SIZE, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchEmailFollowers(site, PAGE_SIZE, forced)
 
