@@ -100,7 +100,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
             data: NewSiteCreationServiceData
         ) {
             val currentState = AutoForeground.getState(NewSiteCreationServiceState::class.java)
-            if (currentState == null || currentState.step == INITIAL_STATE || currentState.step == FAILURE ) {
+            if (currentState == null || currentState.step == INITIAL_STATE || currentState.step == FAILURE) {
                 clearSiteCreationServiceState()
 
                 val intent = Intent(context, NewSiteCreationService::class.java)
