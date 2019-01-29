@@ -1,23 +1,23 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.plans
+package org.wordpress.android.fluxc.network.rest.wpcom.planoffers
 
 import android.content.Context
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
-import org.wordpress.android.fluxc.model.plans.PlanModel
+import org.wordpress.android.fluxc.model.plans.PlanOfferModel
 import org.wordpress.android.fluxc.network.Response
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.plans.PlansRestClient.PlansResponse.Feature
-import org.wordpress.android.fluxc.network.rest.wpcom.plans.PlansRestClient.PlansResponse.Plan
-import org.wordpress.android.fluxc.store.PlansStore.PlansFetchedPayload
+import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient.PlanOffersResponse.Feature
+import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient.PlanOffersResponse.Plan
+import org.wordpress.android.fluxc.store.PlanOffersStore.PlanOffersFetchedPayload
 import javax.inject.Singleton
 
 @Singleton
-class PlansRestClient
+class PlanOffersRestClient
 constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
@@ -26,7 +26,7 @@ constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchPlans(): PlansFetchedPayload {
+    suspend fun fetchPlanOffers(): PlanOffersFetchedPayload {
         val url = WPCOMV2.plans.mobile.url
 
         val params = mapOf<String, String>()
@@ -34,7 +34,7 @@ constructor(
                 this,
                 url,
                 params,
-                PlansResponse::class.java,
+                PlanOffersResponse::class.java,
                 enableCaching = true,
                 forced = true
         )
@@ -44,23 +44,23 @@ constructor(
                 val features = response.data.features
 
 
-                buildPlansPayload(plans, features)
+                buildPlanOffersPayload(plans, features)
             }
             is WPComGsonRequestBuilder.Response.Error -> {
-                val payload = PlansFetchedPayload(null)
+                val payload = PlanOffersFetchedPayload(null)
                 payload.error = response.error
                 payload
             }
         }
     }
 
-    private fun buildPlansPayload(planResponses: List<Plan>?, featureResponses: List<Feature>?): PlansFetchedPayload {
-        return PlansFetchedPayload(planResponses?.map { plan ->
+    private fun buildPlanOffersPayload(planResponses: List<Plan>?, featureResponses: List<Feature>?): PlanOffersFetchedPayload {
+        return PlanOffersFetchedPayload(planResponses?.map { plan ->
             val featureDetails = featureResponses?.filter { feature -> plan.features!!.contains(feature.id) }!!.mapNotNull { filteredFeature ->
-                PlanModel.Feature(filteredFeature.id, filteredFeature.name, filteredFeature.description)
+                PlanOfferModel.Feature(filteredFeature.id, filteredFeature.name, filteredFeature.description)
             }
 
-            PlanModel(
+            PlanOfferModel(
                     plan.products?.mapNotNull { product -> product.plan_id },
                     featureDetails,
                     plan.name,
@@ -72,7 +72,7 @@ constructor(
         })
     }
 
-    data class PlansResponse(
+    data class PlanOffersResponse(
         val groups: List<Group>?,
         val plans: List<Plan>,
         val features: List<Feature>?

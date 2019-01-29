@@ -31,7 +31,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.plans.PlansRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
@@ -327,11 +327,11 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public PlansRestClient providePlansRestClient(Context appContext, Dispatcher dispatcher,
-                                                        @Named("regular") RequestQueue requestQueue,
-                                                        AccessToken token, UserAgent userAgent,
-                                                        WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new PlansRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+    public PlanOffersRestClient providePlansRestClient(Context appContext, Dispatcher dispatcher,
+                                                       @Named("regular") RequestQueue requestQueue,
+                                                       AccessToken token, UserAgent userAgent,
+                                                       WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new PlanOffersRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
                 userAgent);
     }
 
