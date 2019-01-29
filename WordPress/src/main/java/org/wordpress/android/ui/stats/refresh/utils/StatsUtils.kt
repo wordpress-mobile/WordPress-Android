@@ -12,14 +12,17 @@ private val SUFFIXES = TreeMap(mapOf(
         1_000_000_000_000_000_000L to "E"
 ))
 
-fun Int.toFormattedString(): String {
-    return this.toLong().toFormattedString()
+const val TEN_THOUSAND = 10000
+const val MILLION = 1000000
+
+fun Int.toFormattedString(startValue: Int = TEN_THOUSAND): String {
+    return this.toLong().toFormattedString(startValue)
 }
 
-fun Long.toFormattedString(): String {
+fun Long.toFormattedString(startValue: Int = TEN_THOUSAND): String {
     if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString()
     if (this < 0) return "-" + (-this).toFormattedString()
-    if (this < 10000) return this.toString()
+    if (this < startValue) return this.toString()
 
     val e = SUFFIXES.floorEntry(this)
     val divideBy = e.key
