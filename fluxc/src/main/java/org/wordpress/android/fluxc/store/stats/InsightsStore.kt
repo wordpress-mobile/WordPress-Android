@@ -146,15 +146,22 @@ class InsightsStore
         siteModel: SiteModel,
         pageSize: Int,
         forced: Boolean = false,
-        followerType: FollowerType
+        followerType: FollowerType,
+        loadMore: Boolean = false
     ) = withContext(coroutineContext) {
-        val response = restClient.fetchFollowers(siteModel, followerType, pageSize = pageSize + 1, forced = forced)
+        var nextPage = 1
+        if (loadMore) {
+            val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
+            nextPage = savedFollowers / pageSize
+        }
+        val response = restClient.fetchFollowers(siteModel, followerType, page = nextPage, pageSize = pageSize + 1,
+                forced = forced)
         return@withContext when {
             response.isError -> {
                 OnStatsFetched(response.error)
             }
             response.response != null -> {
-                sqlUtils.insert(siteModel, response.response, followerType)
+                sqlUtils.insert(siteModel, response.response, followerType, deleteOldDataFirst = !loadMore)
                 OnStatsFetched(insightsMapper.map(response.response, followerType, pageSize))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
