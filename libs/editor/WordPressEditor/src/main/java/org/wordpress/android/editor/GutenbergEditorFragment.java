@@ -130,7 +130,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     @Override public void onRetryUploadForMediaClicked(int mediaId) {
-                        retryMediaUpload(mediaId);
+                        showRetryMediaUploadDialog(mediaId);
                     }
                 },
                 new OnReattachQueryListener() {
@@ -192,7 +192,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private void retryMediaUpload(final int mediaId) {
+    private void showRetryMediaUploadDialog(final int mediaId) {
         // Display 'retry upload' dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
