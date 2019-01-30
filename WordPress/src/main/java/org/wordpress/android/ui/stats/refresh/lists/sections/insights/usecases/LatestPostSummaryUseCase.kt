@@ -19,8 +19,12 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDet
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.utils.MILLION
+import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -66,15 +70,27 @@ class LatestPostSummaryUseCase
         items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
         if (domainModel != null && domainModel.hasData()) {
             items.add(
-                    latestPostSummaryMapper.buildColumnItem(
-                            domainModel.postViewsCount,
-                            domainModel.postLikeCount,
-                            domainModel.postCommentCount
-                    )
+                    ValueItem(domainModel.postViewsCount.toFormattedString(startValue = MILLION), R.string.stats_views)
             )
             if (domainModel.dayViews.isNotEmpty()) {
                 items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
             }
+            items.add(
+                    ListItemWithIcon(
+                            R.drawable.ic_star_grey_dark_24dp,
+                            textResource = R.string.stats_likes,
+                            value = domainModel.postLikeCount.toFormattedString(),
+                            showDivider = true
+                    )
+            )
+            items.add(
+                    ListItemWithIcon(
+                            R.drawable.ic_comment_grey_dark_24dp,
+                            textResource = R.string.stats_comments,
+                            value = domainModel.postCommentCount.toFormattedString(),
+                            showDivider = false
+                    )
+            )
         }
         items.add(buildLink(domainModel))
         return items
