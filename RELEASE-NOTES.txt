@@ -7,4 +7,5 @@
 * Fix the coloring issue with Countries map stats block
 * Fix a crash in Stats for new sites with no data (date parsing in the Overview block)
 * Fix an issue when the old stats screen would be shown in certain situations
+* Gutenberg (a8c only): introduced upload media/image from device library/camera
 * Visual tweaks of the Latest post summary in Stats
