@@ -34,6 +34,8 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -112,7 +114,29 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
-        getGutenbergContainerFragment().attachToContainer(gutenbergContainer);
+        getGutenbergContainerFragment().attachToContainer(gutenbergContainer,
+                new OnMediaLibraryButtonListener() {
+                    @Override public void onMediaLibraryButtonClicked() {
+                        onToolbarMediaButtonClicked();
+                    }
+
+                    @Override
+                    public void onUploadMediaButtonClicked() {
+                        mEditorFragmentListener.onAddPhotoClicked();
+                    }
+
+                    @Override
+                    public void onCapturePhotoButtonClicked() {
+                        checkAndRequestCameraAndStoragePermissions();
+                    }
+                },
+                new OnReattachQueryListener() {
+                    @Override
+                    public void onQueryCurrentProgressForUploadingMedia() {
+                        updateMediaProgress();
+                    }
+                }
+            );
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {

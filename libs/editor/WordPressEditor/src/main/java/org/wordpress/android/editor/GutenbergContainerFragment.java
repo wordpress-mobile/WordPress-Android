@@ -31,8 +31,9 @@ public class GutenbergContainerFragment extends Fragment {
         return mHasReceivedAnyContent;
     }
 
-    public void attachToContainer(ViewGroup viewGroup) {
-        mWPAndroidGlueCode.attachToContainer(viewGroup);
+    public void attachToContainer(ViewGroup viewGroup, OnMediaLibraryButtonListener onMediaLibraryButtonListener,
+                                  OnReattachQueryListener onReattachQueryListener) {
+        mWPAndroidGlueCode.attachToContainer(viewGroup, onMediaLibraryButtonListener, onReattachQueryListener);
     }
 
     @Override
@@ -46,27 +47,6 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.onCreateView(
                 getContext(),
                 mHtmlModeEnabled,
-                new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryButtonClicked() {
-                        ((GutenbergEditorFragment) getParentFragment()).onToolbarMediaButtonClicked();
-                    }
-
-                    @Override
-                    public void onUploadMediaButtonClicked() {
-                        ((GutenbergEditorFragment) getParentFragment()).mEditorFragmentListener.onAddPhotoClicked();
-                    }
-
-                    @Override
-                    public void onCapturePhotoButtonClicked() {
-                        ((GutenbergEditorFragment) getParentFragment()).checkAndRequestCameraAndStoragePermissions();
-                    }
-                },
-                new OnReattachQueryListener() {
-                    @Override
-                    public void onQueryCurrentProgressForUploadingMedia() {
-                        ((GutenbergEditorFragment) getParentFragment()).updateMediaProgress();
-                    }
-                },
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
                 BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
