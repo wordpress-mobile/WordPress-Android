@@ -146,7 +146,7 @@
                     </HorizontalScrollView>
 
                     <View
-                        android:background="@drawable/notifications_list_divider"
+                        android:background="@drawable/notifications_list_divider_full_width"
                         android:layout_height="1dp"
                         android:layout_width="match_parent"/>
 
