@@ -3,14 +3,18 @@ package org.wordpress.android.editor;
 import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spanned;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -188,15 +192,47 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private void retryMediaUpload(int mediaId) {
-        boolean successfullyRetried = true;
-        if (mFailedMediaIds.contains(mediaId)) {
-            successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(String.valueOf(mediaId));
-        }
-        if (successfullyRetried) {
-            mFailedMediaIds.remove(mediaId);
-            mUploadingMediaProgressMax.put(String.valueOf(mediaId), 0f);
-        }
+    private void retryMediaUpload(final int mediaId) {
+
+        // Display 'retry upload' dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        builder.setTitle(getString(R.string.retry_failed_upload_title));
+        builder.setPositiveButton(R.string.retry_failed_upload_yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        boolean successfullyRetried = true;
+                        if (mFailedMediaIds.contains(String.valueOf(mediaId))) {
+                            successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(String.valueOf(mediaId));
+                        }
+                        if (successfullyRetried) {
+                            mFailedMediaIds.remove(String.valueOf(mediaId));
+                            mUploadingMediaProgressMax.put(String.valueOf(mediaId), 0f);
+                            mWPAndroidGlueCode.mediaFileUploadProgress(mediaId,
+                                    mUploadingMediaProgressMax.get(String.valueOf(mediaId)));
+
+                        }
+                    }
+                });
+
+        builder.setNeutralButton(R.string.retry_failed_upload_retry_all, new OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                // TODO implement retry all
+                // search for all failed media items in this Post, and re-start them all
+
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.retry_failed_upload_remove, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
