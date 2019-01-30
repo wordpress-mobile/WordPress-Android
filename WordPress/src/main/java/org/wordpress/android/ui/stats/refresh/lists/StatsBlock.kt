@@ -22,8 +22,7 @@ sealed class StatsBlock(val type: Type, open val statsTypes: StatsTypes, open va
 
     data class Error(
         override val statsTypes: StatsTypes,
-        override val data: List<BlockListItem> = listOf(),
-        val error: List<BlockListItem> = listOf()
+        override val data: List<BlockListItem> = listOf()
     ) : StatsBlock(ERROR, statsTypes, data)
 
     data class EmptyBlock(
@@ -35,12 +34,4 @@ sealed class StatsBlock(val type: Type, open val statsTypes: StatsTypes, open va
         override val statsTypes: StatsTypes,
         override val data: List<BlockListItem>
     ) : StatsBlock(LOADING, statsTypes, data)
-
-    fun update(newBlock: StatsBlock): StatsBlock {
-        return if (newBlock is StatsBlock.Error && (this is StatsBlock.Success || this is StatsBlock.Error)) {
-            newBlock.copy(data = this.data)
-        } else {
-            newBlock
-        }
-    }
 }

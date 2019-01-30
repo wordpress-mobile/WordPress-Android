@@ -419,7 +419,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
-        // temporarily disable animation - otherwise the user will see data animate
+        // temporarily disable animation - otherwise the user will see items animate
         // when they change the filter
         mRecycler.setItemAnimator(null);
         getAdapter().setMediaList(getFilteredMedia());
