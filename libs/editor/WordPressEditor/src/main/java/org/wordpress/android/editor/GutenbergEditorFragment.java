@@ -124,6 +124,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onCapturePhotoButtonClicked() {
                         checkAndRequestCameraAndStoragePermissions();
                     }
+
+                    @Override public void onRetryUploadForMediaClicked(int mediaId) {
+                        retryMediaUpload(mediaId);
+                    }
                 },
                 new OnReattachQueryListener() {
                     @Override
@@ -181,6 +185,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
                 CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
             mEditorFragmentListener.onCapturePhotoClicked();
+        }
+    }
+
+    private void retryMediaUpload(int mediaId) {
+        boolean successfullyRetried = true;
+        if (mFailedMediaIds.contains(mediaId)) {
+            successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(String.valueOf(mediaId));
+        }
+        if (successfullyRetried) {
+            mFailedMediaIds.remove(mediaId);
+            mUploadingMediaProgressMax.put(String.valueOf(mediaId), 0f);
         }
     }
 
