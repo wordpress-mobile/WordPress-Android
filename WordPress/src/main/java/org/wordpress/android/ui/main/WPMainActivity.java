@@ -41,6 +41,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
@@ -104,6 +105,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.WordPress.SITE;
+import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_ME;
 import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_MY_SITE;
@@ -223,6 +225,8 @@ public class WPMainActivity extends AppCompatActivity implements
                 boolean openedFromShortcut = (getIntent() != null && getIntent().getStringExtra(
                         ShortcutsNavigator.ACTION_OPEN_SHORTCUT) != null);
                 boolean openRequestedPage = (getIntent() != null && getIntent().hasExtra(ARG_OPEN_PAGE));
+                boolean isQuickStartRequestedFromPush = (getIntent() != null && getIntent()
+                        .getBooleanExtra(MySiteFragment.ARG_QUICK_START_TASK, false));
                 boolean openZendeskTicketsFromPush = (getIntent() != null && getIntent()
                         .getBooleanExtra(ARG_SHOW_ZENDESK_NOTIFICATIONS, false));
 
@@ -243,6 +247,9 @@ public class WPMainActivity extends AppCompatActivity implements
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
+                } else if (isQuickStartRequestedFromPush) {
+                    // when app is opened from Quick Start reminder switch to MySite fragment
+                    mBottomNav.setCurrentPosition(PAGE_MY_SITE);
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
@@ -524,7 +531,8 @@ public class WPMainActivity extends AppCompatActivity implements
         if (getSelectedSite() != null && NetworkUtils.isNetworkAvailable(this)
             && QuickStartUtils.isEveryQuickStartTaskDone(mQuickStartStore)
             && !mQuickStartStore.getQuickStartNotificationReceived(getSelectedSite().getId())) {
-            mDispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(getSelectedSite()));
+            CompleteQuickStartPayload payload = new CompleteQuickStartPayload(getSelectedSite(), NEXT_STEPS.toString());
+            mDispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload));
         }
     }
 
@@ -710,6 +718,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (mySiteFragment != null) {
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
+                QuickStartUtils.cancelQuickStartReminder(this);
 
                 setSite(data);
                 jumpNewPost(data);
@@ -734,6 +743,13 @@ public class WPMainActivity extends AppCompatActivity implements
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
+
+                    boolean isSameSiteSelected = data != null
+                            && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs.getSelectedSite();
+
+                    if (!isSameSiteSelected) {
+                        QuickStartUtils.cancelQuickStartReminder(this);
+                    }
 
                     setSite(data);
                     jumpNewPost(data);
@@ -784,8 +800,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 R.drawable.img_illustration_site_about_280dp,
                 getString(R.string.quick_start_dialog_need_help_button_negative),
                 "",
-                getString(R.string.quick_start_dialog_need_help_button_neutral)
-        );
+                getString(R.string.quick_start_dialog_need_help_button_neutral));
 
         promoDialog.show(getSupportFragmentManager(), tag);
         AnalyticsTracker.track(Stat.QUICK_START_REQUEST_VIEWED);

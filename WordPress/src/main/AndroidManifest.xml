@@ -698,6 +698,7 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".ui.quickstart.QuickStartReminderReceiver" />
 
 
         <!-- Google Cloud Messaging receiver and services -->

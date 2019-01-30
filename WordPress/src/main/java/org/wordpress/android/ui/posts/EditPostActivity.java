@@ -454,8 +454,8 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
-        QuickStartUtils.completeTask(mQuickStartStore, QuickStartTask.PUBLISH_POST, mDispatcher, mSite,
-                mQuickStartEvent);
+        QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.PUBLISH_POST,
+                mDispatcher, mSite, mQuickStartEvent, this);
 
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(mImageLoader);

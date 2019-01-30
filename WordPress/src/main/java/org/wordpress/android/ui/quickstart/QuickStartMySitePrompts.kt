@@ -18,21 +18,21 @@ enum class QuickStartMySitePrompts constructor(
             R.id.my_site_scroll_view_root,
             R.id.row_view_site,
             R.string.quick_start_dialog_view_site_message_short,
-            R.drawable.ic_globe_grey_24dp
+            R.drawable.ic_globe_white_24dp
     ),
     CHOSE_THEME_TUTORIAL(
             QuickStartTask.CHOOSE_THEME,
             R.id.my_site_scroll_view_root,
             R.id.row_themes,
             R.string.quick_start_dialog_browse_themes_message_short,
-            R.drawable.ic_themes_grey_24dp
+            R.drawable.ic_themes_white_24dp
     ),
     CUSTOMIZE_SITE_TUTORIAL(
             QuickStartTask.CUSTOMIZE_SITE,
             R.id.my_site_scroll_view_root,
             R.id.row_themes,
             R.string.quick_start_dialog_customize_site_message_short_themes,
-            R.drawable.ic_themes_grey_24dp
+            R.drawable.ic_themes_white_24dp
     ),
     SHARE_SITE_TUTORIAL(
             QuickStartTask.ENABLE_POST_SHARING,
@@ -74,14 +74,14 @@ enum class QuickStartMySitePrompts constructor(
             R.id.my_site_scroll_view_root,
             R.id.row_stats,
             R.string.quick_start_dialog_check_stats_message_short,
-            R.drawable.ic_stats_alt_grey_24dp
+            R.drawable.ic_stats_alt_white_24dp
     ),
     EXPLORE_PLANS(
             QuickStartTask.EXPLORE_PLANS,
             R.id.my_site_scroll_view_root,
             R.id.row_plan,
             R.string.quick_start_dialog_explore_plans_message_short,
-            R.drawable.ic_plans_grey_24dp
+            R.drawable.ic_plans_white_24dp
     );
 
     companion object {

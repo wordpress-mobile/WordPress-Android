@@ -140,63 +140,15 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             taskViewHolder.mDivider.setVisibility(View.VISIBLE);
         }
 
-        switch (task) {
-            case CREATE_SITE:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_plus_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_create_site_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_create_site_subtitle);
-                break;
-            case UPLOAD_SITE_ICON:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_globe_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_upload_icon_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_upload_icon_subtitle);
-                break;
-            case CHOOSE_THEME:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_themes_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_browse_themes_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_browse_themes_subtitle);
-                break;
-            case CUSTOMIZE_SITE:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_customize_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_customize_site_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_customize_site_subtitle);
-                break;
-            case CREATE_NEW_PAGE:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_pages_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_create_page_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_create_page_subtitle);
-                break;
-            case VIEW_SITE:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_external_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_view_site_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_view_site_subtitle);
-                break;
-            case ENABLE_POST_SHARING:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_share_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_enable_sharing_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_enable_sharing_subtitle);
-                break;
-            case PUBLISH_POST:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_create_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_publish_post_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_publish_post_subtitle);
-                break;
-            case FOLLOW_SITE:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_reader_follow_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_follow_site_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_follow_site_subtitle);
-                break;
-            case CHECK_STATS:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_stats_alt_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_check_stats_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_check_stats_subtitle);
-                break;
-            case EXPLORE_PLANS:
-                taskViewHolder.mIcon.setImageResource(R.drawable.ic_plans_white_24dp);
-                taskViewHolder.mTitle.setText(R.string.quick_start_list_explore_plans_title);
-                taskViewHolder.mSubtitle.setText(R.string.quick_start_list_explore_plans_subtitle);
-                break;
+        QuickStartTaskDetails quickStartTaskDetails = QuickStartTaskDetails.getDetailsForTask(task);
+
+        if (quickStartTaskDetails == null) {
+            throw new IllegalStateException(task.toString() + " task is not recognized in adapter.");
         }
+
+        taskViewHolder.mIcon.setImageResource(quickStartTaskDetails.getIconResId());
+        taskViewHolder.mTitle.setText(quickStartTaskDetails.getTitleResId());
+        taskViewHolder.mSubtitle.setText(quickStartTaskDetails.getSubtitleResId());
     }
 
     void updateContent(List<QuickStartTask> tasksUncompleted, List<QuickStartTask> tasksCompleted) {

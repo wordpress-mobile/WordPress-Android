@@ -52,6 +52,8 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.RequestCodes.QUICK_START_REMINDER_NOTIFICATION;
+
 /**
  * service which makes it possible to process Notifications quick actions in the background,
  * such as:
@@ -207,6 +209,8 @@ public class NotificationsProcessingService extends Service {
                     int notificationId = mIntent.getIntExtra(ARG_PUSH_ID, 0);
                     if (notificationId == GCMMessageService.GROUP_NOTIFICATION_ID) {
                         GCMMessageService.clearNotifications();
+                    } else if (notificationId == QUICK_START_REMINDER_NOTIFICATION) {
+                        // TODO track Quick Start reminder dismissal
                     } else {
                         GCMMessageService.removeNotification(notificationId);
                         // Dismiss the grouped notification if a user dismisses all notifications from a wear device
