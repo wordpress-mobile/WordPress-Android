@@ -15,7 +15,6 @@ import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceStat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AutoForeground
-import org.wordpress.android.util.CrashlyticsUtils
 import org.wordpress.android.util.LocaleManager
 import java.util.HashMap
 import javax.inject.Inject
@@ -87,19 +86,6 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
         props["phase"] = state?.stepName ?: "null"
         props["is_foreground"] = isForeground
         trackStateUpdate(props)
-    }
-
-    override fun logError(message: String) {
-        AppLog.e(T.NUX, message)
-        CrashlyticsUtils.log(message)
-    }
-
-    override fun logInfo(message: String) {
-        AppLog.i(T.NUX, message)
-    }
-
-    override fun logWarning(message: String) {
-        AppLog.w(T.NUX, message)
     }
 
     companion object {

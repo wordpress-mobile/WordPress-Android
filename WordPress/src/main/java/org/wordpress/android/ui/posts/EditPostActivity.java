@@ -559,6 +559,9 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void purgeMediaToPostAssociationsIfNotInPostAnymore() {
+        boolean useAztec = AppPrefs.isAztecEditorEnabled();
+        boolean useGutenberg = AppPrefs.isGutenbergEditorEnabled();
+
         ArrayList<MediaModel> allMedia = new ArrayList<>();
         allMedia.addAll(mUploadStore.getFailedMediaForPost(mPost));
         allMedia.addAll(mUploadStore.getCompletedMediaForPost(mPost));
@@ -567,8 +570,16 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!allMedia.isEmpty()) {
             HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
             for (MediaModel media : allMedia) {
-                if (!AztecEditorFragment.isMediaInPostBody(this, mPost.getContent(), String.valueOf(media.getId()))) {
-                    mediaToDeleteAssociationFor.add(media);
+                if (useAztec) {
+                    if (!AztecEditorFragment.isMediaInPostBody(this,
+                            mPost.getContent(), String.valueOf(media.getId()))) {
+                        mediaToDeleteAssociationFor.add(media);
+                    }
+                } else if (useGutenberg) {
+                    if (!PostUtils.isMediaInGutenbergPostBody(
+                            mPost.getContent(), String.valueOf(media.getId()))) {
+                        mediaToDeleteAssociationFor.add(media);
+                    }
                 }
             }
 
@@ -1384,11 +1395,13 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, true);
+        // don't allow multiple selection for Gutenberg, as we're on a single image block for now
+        WPMediaUtils.launchPictureLibrary(this, !mShowGutenbergEditor);
     }
 
     private void launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this, true);
+        // don't allow multiple selection for Gutenberg, as we're on a single image block for now
+        WPMediaUtils.launchVideoLibrary(this, !mShowGutenbergEditor);
     }
 
     private void launchVideoCamera() {
@@ -2229,7 +2242,11 @@ public class EditPostActivity extends AppCompatActivity implements
             }
             if (!TextUtils.isEmpty(mPost.getTitle())) {
                 mEditorFragment.setTitle(mPost.getTitle());
+            } else if (mEditorFragment instanceof GutenbergEditorFragment) {
+                // don't avoid calling setTitle() for GutenbergEditorFragment so RN gets initialized
+                mEditorFragment.setTitle("");
             }
+
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             mEditorFragment.setLocalDraft(mPost.isLocalDraft());
 
@@ -3180,6 +3197,16 @@ public class EditPostActivity extends AppCompatActivity implements
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         }
+    }
+
+    @Override
+    public void onAddPhotoClicked() {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+    }
+
+    @Override
+    public void onCapturePhotoClicked() {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
     }
 
     @Override

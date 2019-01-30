@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -20,25 +21,32 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
         EditorMediaUploadListener,
         IHistoryListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
-    private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
+
+    private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
 
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
@@ -48,6 +56,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private Runnable mInvalidateOptionsRunnable;
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
+
+    private ConcurrentHashMap<String, Float> mUploadingMediaProgressMax = new ConcurrentHashMap<>();
+    private Set<String> mFailedMediaIds = new HashSet<>();
 
     private boolean mIsNewPost;
 
@@ -130,6 +141,28 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return view;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
+            checkAndRequestCameraAndStoragePermissions();
+        }
+    }
+
+    protected void updateMediaProgress() {
+        for (String mediaId : mUploadingMediaProgressMax.keySet()) {
+            getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(mediaId),
+                    mUploadingMediaProgressMax.get(mediaId));
+        }
+    }
+    
+    protected void checkAndRequestCameraAndStoragePermissions() {
+        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
+                CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
+            mEditorFragmentListener.onCapturePhotoClicked();
+        }
     }
 
     @Override
@@ -265,30 +298,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
         mEditorFragmentListener.onHtmlModeToggledInToolbar();
 
-        getGutenbergContainerFragment().toggleHtmlMode();
-    }
-
-    /*
-        Note the way we detect we're in presence of Gutenberg blocks logic is taken from
-        https://github.com/WordPress/gutenberg/blob/5a6693589285363341bebad15bd56d9371cf8ecc/lib/register.php#L331-L345
-
-        * Determine whether a content string contains blocks. This test optimizes for
-        * performance rather than strict accuracy, detecting the pattern of a block
-        * but not validating its structure. For strict accuracy, you should use the
-        * block parser on post content.
-        *
-        * @since 1.6.0
-        * @see gutenberg_parse_blocks()
-        *
-        * @param string $content Content to test.
-        * @return bool Whether the content contains blocks.
-
-        function gutenberg_content_has_blocks( $content ) {
-            return false !== strpos( $content, '<!-- wp:' );
+        // Don't switch to HTML mode if currently uploading media
+        if (!mUploadingMediaProgressMax.isEmpty() || isActionInProgress()) {
+            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
+            return;
         }
-     */
-    public static boolean contentContainsGutenbergBlocks(String postContent) {
-        return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
+
+        getGutenbergContainerFragment().toggleHtmlMode();
     }
 
     /*
@@ -359,7 +375,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        getGutenbergContainerFragment().appendMediaFile(mediaUrl);
+        if (URLUtil.isNetworkUrl(mediaUrl)) {
+            getGutenbergContainerFragment().appendMediaFile(Integer.valueOf(mediaFile.getMediaId()), mediaUrl);
+        } else {
+            getGutenbergContainerFragment().appendUploadMediaFile(mediaFile.getId(), "file://" + mediaUrl);
+            mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
+        }
     }
 
     @Override
@@ -377,7 +398,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public boolean hasFailedMediaUploads() {
-        return false;
+        return (mFailedMediaIds.size() > 0);
     }
 
     @Override
@@ -402,24 +423,40 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadReattached(String localId, float currentProgress) {
+    public void onMediaUploadReattached(String localMediaId, float currentProgress) {
+        mUploadingMediaProgressMax.put(localMediaId, currentProgress);
+        getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(localMediaId), currentProgress);
     }
 
     @Override
-    public void onMediaUploadRetry(String localId, MediaType mediaType) {
+    public void onMediaUploadRetry(String localMediaId, MediaType mediaType) {
+        if (mFailedMediaIds.contains(localMediaId)) {
+            mFailedMediaIds.remove(localMediaId);
+            mUploadingMediaProgressMax.put(localMediaId, 0f);
+        }
+
+        // TODO request to start the upload again from the UploadService
     }
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+        mUploadingMediaProgressMax.remove(localMediaId);
+        getGutenbergContainerFragment().mediaFileUploadSucceeded(Integer.valueOf(localMediaId), mediaFile.getFileURL(),
+                Integer.valueOf(mediaFile.getMediaId()));
     }
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
+        mUploadingMediaProgressMax.put(localMediaId, progress);
+        getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(localMediaId), progress);
     }
 
     @Override
     public void onMediaUploadFailed(final String localMediaId, final MediaType
             mediaType, final String errorMessage) {
+        getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId));
+        mFailedMediaIds.add(localMediaId);
+        mUploadingMediaProgressMax.remove(localMediaId);
     }
 
     @Override

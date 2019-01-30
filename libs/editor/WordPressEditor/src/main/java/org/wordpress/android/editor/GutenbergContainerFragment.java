@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
 public class GutenbergContainerFragment extends Fragment {
     public static final String TAG = "gutenberg_container_fragment_tag";
@@ -50,9 +51,21 @@ public class GutenbergContainerFragment extends Fragment {
                         ((GutenbergEditorFragment) getParentFragment()).onToolbarMediaButtonClicked();
                     }
 
-                    @Override public void onUploadMediaButtonClicked() { }
+                    @Override
+                    public void onUploadMediaButtonClicked() {
+                        ((GutenbergEditorFragment) getParentFragment()).mEditorFragmentListener.onAddPhotoClicked();
+                    }
 
-                    @Override public void onCapturePhotoButtonClicked() { }
+                    @Override
+                    public void onCapturePhotoButtonClicked() {
+                        ((GutenbergEditorFragment) getParentFragment()).checkAndRequestCameraAndStoragePermissions();
+                    }
+                },
+                new OnReattachQueryListener() {
+                    @Override
+                    public void onQueryCurrentProgressForUploadingMedia() {
+                        ((GutenbergEditorFragment) getParentFragment()).updateMediaProgress();
+                    }
                 },
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
@@ -112,11 +125,27 @@ public class GutenbergContainerFragment extends Fragment {
         return mWPAndroidGlueCode.getTitle(onGetContentTimeout);
     }
 
-    public void appendMediaFile(final String mediaUrl) {
-        mWPAndroidGlueCode.appendMediaFile(mediaUrl);
+    public void appendMediaFile(int mediaId, final String mediaUrl) {
+        mWPAndroidGlueCode.appendMediaFile(mediaId, mediaUrl);
     }
 
     public void showDevOptionsDialog() {
         mWPAndroidGlueCode.showDevOptionsDialog();
+    }
+
+    public void appendUploadMediaFile(final int mediaId, final String mediaUri) {
+        mWPAndroidGlueCode.appendUploadMediaFile(mediaId, mediaUri);
+    }
+
+    public void mediaFileUploadProgress(final int mediaId, final float progress) {
+        mWPAndroidGlueCode.mediaFileUploadProgress(mediaId, progress);
+    }
+
+    public void mediaFileUploadFailed(final int mediaId) {
+        mWPAndroidGlueCode.mediaFileUploadFailed(mediaId);
+    }
+
+    public void mediaFileUploadSucceeded(final int mediaId, final String mediaUrl, final int serverMediaId) {
+        mWPAndroidGlueCode.mediaFileUploadSucceeded(mediaId, mediaUrl, serverMediaId);
     }
 }

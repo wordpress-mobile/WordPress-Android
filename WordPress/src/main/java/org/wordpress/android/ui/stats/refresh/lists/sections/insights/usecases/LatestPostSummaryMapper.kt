@@ -6,13 +6,11 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase.LinkClickParams
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -60,16 +58,6 @@ class LatestPostSummaryMapper
                         )
                 )
         )
-    }
-
-    fun buildColumnItem(postViewsCount: Int, postLikeCount: Int, postCommentCount: Int): Columns {
-        val headers = listOf(R.string.stats_views, R.string.stats_likes, R.string.stats_comments)
-        val values = listOf(
-                postViewsCount.toFormattedString(),
-                postLikeCount.toFormattedString(),
-                postCommentCount.toFormattedString()
-        )
-        return Columns(headers = headers, values = values)
     }
 
     fun buildBarChartItem(dayViews: List<Pair<String, Int>>): BarChartItem {
