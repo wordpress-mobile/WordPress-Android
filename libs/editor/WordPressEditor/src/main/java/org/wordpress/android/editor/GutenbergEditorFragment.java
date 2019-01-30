@@ -193,7 +193,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void retryMediaUpload(final int mediaId) {
-
         // Display 'retry upload' dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
@@ -211,7 +210,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             mUploadingMediaProgressMax.put(String.valueOf(mediaId), 0f);
                             mWPAndroidGlueCode.mediaFileUploadProgress(mediaId,
                                     mUploadingMediaProgressMax.get(String.valueOf(mediaId)));
-
                         }
                     }
                 });
@@ -226,6 +224,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         builder.setNegativeButton(R.string.retry_failed_upload_remove, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
+                mWPAndroidGlueCode.appendUploadMediaFile(mediaId, null);
             }
         });
 
