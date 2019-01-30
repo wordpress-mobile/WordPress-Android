@@ -3248,6 +3248,8 @@ public class EditPostActivity extends AppCompatActivity implements
             }
             startUploadService(failedMedia);
         }
+
+        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
     }
 
     @Override
