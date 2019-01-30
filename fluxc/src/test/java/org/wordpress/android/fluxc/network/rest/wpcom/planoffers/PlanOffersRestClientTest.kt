@@ -67,8 +67,7 @@ class PlanOffersRestClientTest {
         val payload = planOffersRestClient.fetchPlanOffers()
 
         Assertions.assertThat(payload).isNotNull
-        Assertions.assertThat(payload.planOffers).isNotNull
-        Assertions.assertThat(payload.planOffers!!.isEmpty())
+        Assertions.assertThat(payload.planOffers).isNull()
         Assert.assertTrue(payload.isError)
     }
 
@@ -86,7 +85,7 @@ class PlanOffersRestClientTest {
                         eq(PlanOffersResponse::class.java),
                         eq(true),
                         any(),
-                        eq(true)
+                        eq(false)
                 )
         ).thenReturn(response)
     }
