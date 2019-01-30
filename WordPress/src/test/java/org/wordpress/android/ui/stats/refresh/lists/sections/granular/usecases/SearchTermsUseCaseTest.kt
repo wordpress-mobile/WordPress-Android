@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.SearchTermsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -72,12 +71,11 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.SEARCH_TERMS)
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-            val nonNullData = this.data!!
-            assertTitle(nonNullData[0])
-            assertHeader(nonNullData[1])
-            assertItem(nonNullData[2], searchTerm.text, searchTerm.views)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertTitle(this[0])
+            assertHeader(this[1])
+            assertItem(this[2], searchTerm.text, searchTerm.views)
         }
     }
 
@@ -95,12 +93,11 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.SEARCH_TERMS)
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-            val nonNullData = this.data!!
-            assertThat(nonNullData).hasSize(4)
-            assertTitle(nonNullData[0])
-            assertLink(nonNullData[3])
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this!!).hasSize(4)
+            assertTitle(this!![0])
+            assertLink(this!![3])
         }
     }
 
@@ -125,18 +122,17 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.SEARCH_TERMS)
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-            val nonNullData = this.data!!
-            assertThat(nonNullData).hasSize(8)
-            assertTitle(nonNullData[0])
-            assertHeader(nonNullData[1])
-            assertItem(nonNullData[2], searchTerm.text, searchTerm.views)
-            assertItem(nonNullData[3], searchTerm.text, searchTerm.views)
-            assertItem(nonNullData[4], searchTerm.text, searchTerm.views)
-            assertItem(nonNullData[5], searchTerm.text, searchTerm.views)
-            assertItem(nonNullData[6], searchTerm.text, searchTerm.views)
-            val unknownItem = nonNullData[7] as ListItemWithIcon
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(8)
+            assertTitle(this[0])
+            assertHeader(this[1])
+            assertItem(this[2], searchTerm.text, searchTerm.views)
+            assertItem(this[3], searchTerm.text, searchTerm.views)
+            assertItem(this[4], searchTerm.text, searchTerm.views)
+            assertItem(this[5], searchTerm.text, searchTerm.views)
+            assertItem(this[6], searchTerm.text, searchTerm.views)
+            val unknownItem = this[7] as ListItemWithIcon
             assertThat(unknownItem.textResource).isEqualTo(R.string.stats_search_terms_unknown_search_terms)
             assertThat(unknownItem.value).isEqualTo(unknownSearchCount.toString())
         }
@@ -154,12 +150,11 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.SEARCH_TERMS)
-        result.apply {
-            assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
-            val nonNullData = this.stateData!!
-            assertThat(nonNullData).hasSize(2)
-            assertTitle(nonNullData[0])
-            assertThat(nonNullData[1]).isEqualTo(Empty(R.string.stats_no_data_for_period))
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
+            assertThat(this[1]).isEqualTo(Empty(R.string.stats_no_data_for_period))
         }
     }
 

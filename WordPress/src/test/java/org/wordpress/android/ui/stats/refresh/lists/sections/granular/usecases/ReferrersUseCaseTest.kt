@@ -79,45 +79,41 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.REFERRERS)
-        val expandableItem = result.assertNonExpandedList()
+        val expandableItem = result.data!!.assertNonExpandedList()
 
         expandableItem.onExpandClicked(true)
 
         val updatedResult = loadData(true, forced)
 
-        updatedResult.assertExpandedList()
+        updatedResult.data!!.assertExpandedList()
     }
 
-    private fun UseCaseModel.assertNonExpandedList(): ExpandableItem {
-        assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-        val nonNullData = this.data!!
-        assertThat(nonNullData).hasSize(4)
-        assertTitle(nonNullData[0])
-        assertLabel(nonNullData[1])
+    private fun List<BlockListItem>.assertNonExpandedList(): ExpandableItem {
+        assertThat(this).hasSize(4)
+        assertTitle(this[0])
+        assertLabel(this[1])
         assertSingleItem(
-                nonNullData[2],
+                this[2],
                 singleReferrer.name!!,
                 singleReferrer.total,
                 singleReferrer.icon
         )
-        return assertExpandableItem(nonNullData[3], group.name!!, group.total!!, group.icon)
+        return assertExpandableItem(this[3], group.name!!, group.total!!, group.icon)
     }
 
-    private fun UseCaseModel.assertExpandedList(): ExpandableItem {
-        assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-        val nonNullData = this.data!!
-        assertThat(nonNullData).hasSize(6)
-        assertTitle(nonNullData[0])
-        assertLabel(nonNullData[1])
+    private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
+        assertThat(this).hasSize(6)
+        assertTitle(this[0])
+        assertLabel(this[1])
         assertSingleItem(
-                nonNullData[2],
+                this[2],
                 singleReferrer.name!!,
                 singleReferrer.total,
                 singleReferrer.icon
         )
-        val expandableItem = assertExpandableItem(nonNullData[3], group.name!!, group.total!!, group.icon)
-        assertSingleItem(nonNullData[4], referrer.name, referrer.views, referrer.icon)
-        assertThat(nonNullData[5]).isEqualTo(Divider)
+        val expandableItem = assertExpandableItem(this[3], group.name!!, group.total!!, group.icon)
+        assertSingleItem(this[4], referrer.name, referrer.views, referrer.icon)
+        assertThat(this[5]).isEqualTo(Divider)
         return expandableItem
     }
 
@@ -133,19 +129,18 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.REFERRERS)
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-            val nonNullData = this.data!!
-            assertThat(nonNullData).hasSize(4)
-            assertTitle(nonNullData[0])
-            assertLabel(nonNullData[1])
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertLabel(this[1])
             assertSingleItem(
-                    nonNullData[2],
+                    this[2],
                     singleReferrer.name!!,
                     singleReferrer.total,
                     singleReferrer.icon
             )
-            assertLink(nonNullData[3])
+            assertLink(this[3])
         }
     }
 

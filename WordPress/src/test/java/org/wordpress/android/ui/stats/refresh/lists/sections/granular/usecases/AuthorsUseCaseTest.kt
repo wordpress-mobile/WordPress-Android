@@ -79,57 +79,53 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        val expandableItem = result.assertNonExpandedList()
+        val expandableItem = result.data!!.assertNonExpandedList()
 
         expandableItem.onExpandClicked(true)
 
         val updatedResult = loadData(true, forced)
 
-        updatedResult.assertExpandedList()
+        updatedResult.data!!.assertExpandedList()
     }
 
-    private fun UseCaseModel.assertNonExpandedList(): ExpandableItem {
-        assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(this.data).isNotNull
-        val nonNullData = this.data!!
-        assertThat(nonNullData).hasSize(4)
-        assertTitle(nonNullData[0])
-        assertLabel(nonNullData[1])
+    private fun List<BlockListItem>.assertNonExpandedList(): ExpandableItem {
+        assertThat(this).isNotNull
+        assertThat(this).hasSize(4)
+        assertTitle(this[0])
+        assertLabel(this[1])
         assertSingleItem(
-                nonNullData[2],
+                this[2],
                 authorWithoutPosts.name,
                 authorWithoutPosts.views,
                 authorWithoutPosts.avatarUrl
         )
         return assertExpandableItem(
-                nonNullData[3],
+                this[3],
                 authorWithPosts.name,
                 authorWithPosts.views,
                 authorWithPosts.avatarUrl
         )
     }
 
-    private fun UseCaseModel.assertExpandedList(): ExpandableItem {
-        assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(this.data).isNotNull
-        val nonNullData = this.data!!
-        assertThat(nonNullData).hasSize(6)
-        assertTitle(nonNullData[0])
-        assertLabel(nonNullData[1])
+    private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
+        assertThat(this).isNotNull
+        assertThat(this).hasSize(6)
+        assertTitle(this[0])
+        assertLabel(this[1])
         assertSingleItem(
-                nonNullData[2],
+                this[2],
                 authorWithoutPosts.name,
                 authorWithoutPosts.views,
                 authorWithoutPosts.avatarUrl
         )
         val expandableItem = assertExpandableItem(
-                nonNullData[3],
+                this[3],
                 authorWithPosts.name,
                 authorWithPosts.views,
                 authorWithPosts.avatarUrl
         )
-        assertSingleItem(nonNullData[4], post.title, post.views, null)
-        assertThat(nonNullData[5]).isEqualTo(Divider)
+        assertSingleItem(this[4], post.title, post.views, null)
+        assertThat(this[5]).isEqualTo(Divider)
         return expandableItem
     }
 

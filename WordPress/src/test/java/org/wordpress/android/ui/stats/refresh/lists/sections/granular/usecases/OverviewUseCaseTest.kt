@@ -75,12 +75,11 @@ class OverviewUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.OVERVIEW)
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-            val nonNullData = this.data!!
-            assertThat(nonNullData[0]).isEqualTo(title)
-            assertThat(nonNullData[1]).isEqualTo(barChartItem)
-            assertThat(nonNullData[2]).isEqualTo(columns)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this[0]).isEqualTo(title)
+            assertThat(this[1]).isEqualTo(barChartItem)
+            assertThat(this[2]).isEqualTo(columns)
         }
     }
 

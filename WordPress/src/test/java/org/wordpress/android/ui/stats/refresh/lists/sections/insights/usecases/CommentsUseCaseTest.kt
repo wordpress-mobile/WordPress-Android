@@ -17,8 +17,6 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -74,14 +72,14 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(InsightsTypes.COMMENTS)
-        val tabsItem = result.assertEmptyTab(0)
+        val tabsItem = result.data!!.assertEmptyTab(0)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
 
         tabsItem.onTabSelected(1)
 
         val updatedResult = loadComments(true, forced)
 
-        updatedResult.assertTabWithPosts(1)
+        updatedResult.data!!.assertTabWithPosts(1)
     }
 
     @Test
@@ -101,12 +99,11 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(InsightsTypes.COMMENTS)
-        result.apply {
-            assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-            val nonNullData = this.data!!
-            assertThat(nonNullData).hasSize(4)
-            assertTitle(nonNullData[0])
-            assertThat(nonNullData[3] is Link).isTrue()
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertThat(this[3] is Link).isTrue()
         }
     }
 
@@ -127,12 +124,11 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(InsightsTypes.COMMENTS)
-        result.apply {
-            assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-            val nonNullData = this.data!!
-            assertThat(nonNullData).hasSize(4)
-            assertTitle(nonNullData[0])
-            assertThat(nonNullData[3] is Link).isTrue()
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertThat(this[3] is Link).isTrue()
         }
     }
 
@@ -154,14 +150,14 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(InsightsTypes.COMMENTS)
 
-        val tabsItem = result.assertTabWithUsers(0)
+        val tabsItem = result.data!!.assertTabWithUsers(0)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
 
         tabsItem.onTabSelected(1)
 
         val updatedResult = loadComments(true, forced)
 
-        updatedResult.assertEmptyTab(1)
+        updatedResult.data!!.assertEmptyTab(1)
     }
 
     @Test
@@ -193,23 +189,22 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
-    private fun UseCaseModel.assertTabWithPosts(position: Int): TabsItem {
-        val nonNullData = this.data!!
-        assertThat(nonNullData).hasSize(4)
-        assertTitle(nonNullData[0])
-        val tabsItem = nonNullData[1] as TabsItem
+    private fun List<BlockListItem>.assertTabWithPosts(position: Int): TabsItem {
+        assertThat(this).hasSize(4)
+        assertTitle(this[0])
+        val tabsItem = this[1] as TabsItem
 
         assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_comments_authors)
 
         assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_comments_posts_and_pages)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
 
-        val headerItem = nonNullData[2]
+        val headerItem = this[2]
         assertThat(headerItem.type).isEqualTo(HEADER)
         assertThat((headerItem as Header).leftLabel).isEqualTo(R.string.stats_comments_title_label)
         assertThat(headerItem.rightLabel).isEqualTo(R.string.stats_comments_label)
 
-        val userItem = nonNullData[3]
+        val userItem = this[3]
         assertThat(userItem.type).isEqualTo(LIST_ITEM)
         assertThat((userItem as ListItem).text).isEqualTo(postTitle)
         assertThat(userItem.showDivider).isEqualTo(false)
@@ -217,23 +212,22 @@ class CommentsUseCaseTest : BaseUnitTest() {
         return tabsItem
     }
 
-    private fun UseCaseModel.assertTabWithUsers(position: Int): TabsItem {
-        val nonNullData = this.data!!
-        assertThat(nonNullData).hasSize(4)
-        assertTitle(nonNullData[0])
-        val tabsItem = nonNullData[1] as TabsItem
+    private fun List<BlockListItem>.assertTabWithUsers(position: Int): TabsItem {
+        assertThat(this).hasSize(4)
+        assertTitle(this[0])
+        val tabsItem = this[1] as TabsItem
 
         assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_comments_authors)
 
         assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_comments_posts_and_pages)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
 
-        val headerItem = nonNullData[2]
+        val headerItem = this[2]
         assertThat(headerItem.type).isEqualTo(HEADER)
         assertThat((headerItem as Header).leftLabel).isEqualTo(R.string.stats_comments_author_label)
         assertThat(headerItem.rightLabel).isEqualTo(R.string.stats_comments_label)
 
-        val userItem = nonNullData[3]
+        val userItem = this[3]
         assertThat(userItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
         assertThat((userItem as ListItemWithIcon).iconUrl).isEqualTo(avatar)
         assertThat(userItem.showDivider).isEqualTo(false)
@@ -243,26 +237,24 @@ class CommentsUseCaseTest : BaseUnitTest() {
         return tabsItem
     }
 
-    private fun UseCaseModel.assertEmptyTab(position: Int): TabsItem {
-        val nonNullData = this.data!!
-        assertThat(nonNullData).hasSize(3)
-        assertTitle(nonNullData[0])
-        val tabsItem = nonNullData[1] as TabsItem
+    private fun List<BlockListItem>.assertEmptyTab(position: Int): TabsItem {
+        assertThat(this).hasSize(3)
+        assertTitle(this[0])
+        val tabsItem = this[1] as TabsItem
 
         assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_comments_authors)
 
         assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_comments_posts_and_pages)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
 
-        assertThat(nonNullData[2]).isEqualTo(Empty())
+        assertThat(this[2]).isEqualTo(Empty())
         return tabsItem
     }
 
-    private fun UseCaseModel.assertEmpty() {
-        val nonNullData = this.data!!
-        assertThat(nonNullData).hasSize(2)
-        assertTitle(nonNullData[0])
-        assertThat(nonNullData[1]).isEqualTo(Empty())
+    private fun List<BlockListItem>.assertEmpty() {
+        assertThat(this).hasSize(2)
+        assertTitle(this[0])
+        assertThat(this[1]).isEqualTo(Empty())
     }
 
     private fun assertTitle(item: BlockListItem) {

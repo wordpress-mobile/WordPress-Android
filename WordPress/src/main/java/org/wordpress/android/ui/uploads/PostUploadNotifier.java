@@ -90,9 +90,9 @@ class PostUploadNotifier {
     }
 
     private void updateNotificationBuilder(@Nullable PostModel post) {
-        // set the Notification's title and prepare the Notifications message text, i.e. "1/3 Posts, 4/17 media data"
+        // set the Notification's title and prepare the Notifications message text, i.e. "1/3 Posts, 4/17 media items"
         if (sNotificationData.mTotalMediaItems > 0 && sNotificationData.mTotalPostItems == 0) {
-            // only media data are being uploaded
+            // only media items are being uploaded
             // check if special case for ONE media item
             if (sNotificationData.mTotalMediaItems == 1) {
                 mNotificationBuilder.setContentTitle(buildNotificationTitleForMedia());
@@ -442,10 +442,10 @@ class PostUploadNotifier {
 
     /*
      * This method will create an error notification with the description of the *final state* of the queue
-     * for this Post (i.e. how many media data have been uploaded successfully and how many failed, as well
+     * for this Post (i.e. how many media items have been uploaded successfully and how many failed, as well
      * as the information for the Post itself if we couldn't upload it).
      *
-     * In order to give the user a description of the *current state* of failed media data, you can pass a value
+     * In order to give the user a description of the *current state* of failed media items, you can pass a value
      * other than zero (0) in overrideMediaNotUploadedCount and this value will be shown instead.
      */
     void updateNotificationErrorForPost(@NonNull PostModel post, @NonNull SiteModel site, String errorMessage,
@@ -658,7 +658,7 @@ class PostUploadNotifier {
 
         if (mediaItemsNotUploaded > 0
             && (getCurrentMediaItem()) > 0) {
-            // some media data were uploaded successfully
+            // some media items were uploaded successfully
             newErrorMessage += String.format(mContext.getString(R.string.media_files_uploaded_successfully),
                                              sNotificationData.mCurrentMediaItem);
         }
@@ -677,7 +677,7 @@ class PostUploadNotifier {
             }
 
             if (mediaItemsNotUploaded <= sNotificationData.mCurrentMediaItem) {
-                // some media data were uploaded successfully
+                // some media items were uploaded successfully
                 newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_successfully),
                                                        sNotificationData.mCurrentMediaItem);
             }
@@ -687,7 +687,7 @@ class PostUploadNotifier {
     }
 
     private String buildSuccessMessageForMedia(int mediaItemsUploaded) {
-        // all media data were uploaded successfully
+        // all media items were uploaded successfully
         String successMessage = mediaItemsUploaded == 1 ? mContext.getString(R.string.media_file_uploaded)
                 : String.format(mContext.getString(R.string.media_all_files_uploaded_successfully),
                                 mediaItemsUploaded);

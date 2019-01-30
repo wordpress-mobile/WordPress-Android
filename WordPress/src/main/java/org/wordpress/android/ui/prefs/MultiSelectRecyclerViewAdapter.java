@@ -15,7 +15,7 @@ import org.wordpress.android.R;
 import java.util.List;
 
 /**
- * RecyclerView.Adapter for selecting multiple list data with simple layout (TextView + divider).
+ * RecyclerView.Adapter for selecting multiple list items with simple layout (TextView + divider).
  */
 public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSelectRecyclerViewAdapter.ItemHolder> {
     private final List<String> mItems;

@@ -70,12 +70,11 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-            val nonNullData = this.data!!
-            assertTitle(nonNullData[0])
-            assertHeader(nonNullData[1])
-            assertItem(nonNullData[2], videoPlay.title, videoPlay.plays)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertTitle(this[0])
+            assertHeader(this[1])
+            assertItem(this[2], videoPlay.title, videoPlay.plays)
         }
     }
 
@@ -93,14 +92,13 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-            val nonNullData = this.data!!
-            assertThat(nonNullData).hasSize(4)
-            assertTitle(nonNullData[0])
-            assertHeader(nonNullData[1])
-            assertItem(nonNullData[2], videoPlay.title, videoPlay.plays)
-            assertLink(nonNullData[3])
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertHeader(this[1])
+            assertItem(this[2], videoPlay.title, videoPlay.plays)
+            assertLink(this[3])
         }
     }
 
@@ -116,12 +114,11 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.EMPTY)
-            val data = this.stateData!!
-            assertThat(data).hasSize(2)
-            assertTitle(data[0])
-            assertThat(data[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
+            assertThat(this[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
         }
     }
 

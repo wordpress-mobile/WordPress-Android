@@ -303,7 +303,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         ArrayList<Note> notes = NotificationsTable.getLatestNotes();
         ArrayList<Note> filteredNotes = new ArrayList<>();
 
-        // apply filter to the list so we show the same data that the list show vertically, but horizontally
+        // apply filter to the list so we show the same items that the list show vertically, but horizontally
         NotesAdapter.buildFilteredNotesList(filteredNotes, notes, filter);
         adapter = new NotificationDetailFragmentAdapter(getSupportFragmentManager(), filteredNotes);
 

@@ -79,7 +79,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
              * - A list of search terms + Encrypted item
              * - Encrypted item only
              *
-             * We want to display max 10 data regardless the kind of the data, AND Encrypted
+             * We want to display max 10 items regardless the kind of the items, AND Encrypted
              * must be present if available.
              *
              * We need to do some counts then...
@@ -91,8 +91,8 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
                 // No clear-text search terms. we know we have the encrypted search terms item available
                 mySearchTermList = new ArrayList<>(0);
             } else {
-                // Make sure the list has MAX 9 data if the "Encrypted" is available
-                // we want to show exactly 10 data per module
+                // Make sure the list has MAX 9 items if the "Encrypted" is available
+                // we want to show exactly 10 items per module
                 if (mSearchTerms.getEncryptedSearchTerms() > 0
                     && originalSearchTermList.size() > getMaxNumberOfItemsToShowInList() - 1) {
                     mySearchTermList = new ArrayList<>();
@@ -128,7 +128,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
 
 
         int total = mSearchTerms.getSearchTerms() != null ? mSearchTerms.getSearchTerms().size() : 0;
-        // If "Encrypted" is available we only have 9 data of clear text terms in the list
+        // If "Encrypted" is available we only have 9 items of clear text terms in the list
         if (mSearchTerms.getEncryptedSearchTerms() > 0) {
             return total > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST - 1;
         } else {

@@ -217,7 +217,7 @@ public class ReaderPostTable {
 
     /**
      * When the user unbookmarks a post, we keep the row in the database, but we just change the is_bookmarked flag
-     * to false, so we can show "undo" data in the saved posts list. This method purges database from such rows.
+     * to false, so we can show "undo" items in the saved posts list. This method purges database from such rows.
      */
     public static int purgeUnbookmarkedPostsWithBookmarkTag() {
         int numDeleted = 0;

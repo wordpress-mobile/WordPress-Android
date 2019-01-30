@@ -100,7 +100,7 @@ class HistoryViewModel @Inject constructor(
                     var mutableRevision = it
 
                     if (mutableRevision is HistoryListItem.Revision) {
-                        // we shouldn't directly update data in MutableLiveData, as they will be updated downstream
+                        // we shouldn't directly update items in MutableLiveData, as they will be updated downstream
                         // and DiffUtil will not catch this change
                         mutableRevision = mutableRevision.copy()
 

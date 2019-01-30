@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -51,10 +51,10 @@ class DateUseCaseTest : BaseUnitTest() {
         whenever(resourceProvider.getString(R.string.stats_for, granularDate)).thenReturn(label)
         val result = loadData(true, false)
 
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-            Assertions.assertThat(this.data).hasSize(1)
-            val item = this.data!![0]
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(1)
+            val item = this[0]
             assertThat(item.type).isEqualTo(BACKGROUND_INFO)
             assertThat((item as BackgroundInformation).text).isEqualTo(label)
         }

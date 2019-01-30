@@ -406,7 +406,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
     }
 
     /*
-     * builds the list of media data from the device
+     * builds the list of media items from the device
      */
     private class BuildDeviceMediaListTask extends AsyncTask<Void, Void, Boolean> {
         private final ArrayList<PhotoPickerItem> mTmpList = new ArrayList<>();

@@ -90,7 +90,7 @@ class GiphyPickerActivity : AppCompatActivity() {
     }
 
     /**
-     * Configure the RecyclerView to use [GiphyPickerPagedListAdapter] and display the data in a grid
+     * Configure the RecyclerView to use [GiphyPickerPagedListAdapter] and display the items in a grid
      */
     private fun initializeRecyclerView() {
         val pagedListAdapter = GiphyPickerPagedListAdapter(
@@ -113,7 +113,7 @@ class GiphyPickerActivity : AppCompatActivity() {
             adapter = pagedListAdapter
         }
 
-        // Update the RecyclerView when new data arrive from the API
+        // Update the RecyclerView when new items arrive from the API
         viewModel.mediaViewModelPagedList.observe(this, Observer {
             pagedListAdapter.submitList(it)
         })
@@ -149,7 +149,7 @@ class GiphyPickerActivity : AppCompatActivity() {
     }
 
     /**
-     * Configure the selection bar and its labels when the [GiphyPickerViewModel] selected data change
+     * Configure the selection bar and its labels when the [GiphyPickerViewModel] selected items change
      */
     private fun initializeSelectionBar() {
         viewModel.selectionBarIsVisible.observe(this, Observer {
@@ -178,9 +178,9 @@ class GiphyPickerActivity : AppCompatActivity() {
             }
         })
 
-        // Update the "Add" and "Preview" labels to include the number of data. For example, "Add 7" and "Preview 7".
+        // Update the "Add" and "Preview" labels to include the number of items. For example, "Add 7" and "Preview 7".
         //
-        // We do not change to labels back to the original text if the number of data go back to zero because that
+        // We do not change to labels back to the original text if the number of items go back to zero because that
         // causes a weird UX. The selection bar is animated to disappear at that time and it looks weird if the labels
         // change to just "Add" and "Preview" too.
         viewModel.selectedMediaViewModelList.observe(this, Observer {

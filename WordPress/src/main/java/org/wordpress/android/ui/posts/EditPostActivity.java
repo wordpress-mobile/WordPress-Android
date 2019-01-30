@@ -580,7 +580,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    // this method aims at recovering the current state of media data if they're inconsistent within the PostModel.
+    // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
     private void resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued() {
         boolean useAztec = AppPrefs.isAztecEditorEnabled();
 
@@ -590,7 +590,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         String oldContent = mPost.getContent();
         if (!AztecEditorFragment.hasMediaItemsMarkedUploading(this, oldContent)
-            // we need to make sure data marked failed are still failed or not as well
+            // we need to make sure items marked failed are still failed or not as well
             && !AztecEditorFragment.hasMediaItemsMarkedFailed(this, oldContent)) {
             return;
         }
@@ -928,7 +928,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     /*
-     * called by PhotoPickerFragment when media is selected - may be a single item or a list of data
+     * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
     @Override
     public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
@@ -2450,8 +2450,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     /*
-      * for as long as the user is in the Editor, we check whether there are any differences in media data
-      * being uploaded since they opened the Editor for this Post. If some data have finished, the current list
+      * for as long as the user is in the Editor, we check whether there are any differences in media items
+      * being uploaded since they opened the Editor for this Post. If some items have finished, the current list
       * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
       * URLs will have been replaced with the remote ones.
      */
@@ -2595,9 +2595,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         public void run() {
-            // adding multiple media data at once can take several seconds on slower devices, so we show a blocking
+            // adding multiple media items at once can take several seconds on slower devices, so we show a blocking
             // progress dialog in this situation - otherwise the user could accidentally back out of the process
-            // before all data were added
+            // before all items were added
             boolean shouldShowProgress = mUriList.size() > 2;
             if (shouldShowProgress) {
                 showProgressDialog(true);
@@ -2943,7 +2943,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
 
-        // if the user selected multiple data and they're all images, show the insert media
+        // if the user selected multiple items and they're all images, show the insert media
         // dialog so the user can choose whether to insert them individually or as a gallery
         if (ids.size() > 1 && allAreImages) {
             showInsertMediaDialog(ids);
@@ -3067,7 +3067,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * Only {@link MediaModel} objects that have {@code MediaUploadState.QUEUED} statuses will be uploaded. .
      */
     private void startUploadService(@NonNull List<MediaModel> mediaModels) {
-        // make sure we only pass data with the QUEUED state to the UploadService
+        // make sure we only pass items with the QUEUED state to the UploadService
         final ArrayList<MediaModel> queuedMediaModels = new ArrayList<>();
         for (MediaModel media : mediaModels) {
             if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
@@ -3293,7 +3293,7 @@ public class EditPostActivity extends AppCompatActivity implements
     * upload but keep the media item in FluxC DB because the user might have deleted it accidentally,
     * and they can always UNDO the delete action in Aztec.
     * So, when the user exits then editor (and thus we lose the undo/redo history) we are safe to
-    * physically delete from the FluxC DB those data that have been deleted by the user using backspace.
+    * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
     * */
     private void definitelyDeleteBackspaceDeletedMediaItems() {
         for (String mediaId : mAztecBackspaceDeletedMediaItemIds) {
@@ -3325,7 +3325,7 @@ public class EditPostActivity extends AppCompatActivity implements
         List<String> mediaMarkedUploading =
                 AztecEditorFragment.getMediaMarkedUploadingInPostContent(EditPostActivity.this, undoedContent);
 
-        // go through the list of data marked UPLOADING within the Post content, and look in the UploadService
+        // go through the list of items marked UPLOADING within the Post content, and look in the UploadService
         // to see whether they're really being uploaded or not. If an item is not really being uploaded,
         // mark that item failed
         for (String mediaId : mediaMarkedUploading) {
@@ -3402,13 +3402,13 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onEditorFragmentInitialized() {
         boolean shouldFinishInit = true;
         // now that we have the Post object initialized,
-        // check whether we have media data to insert from the WRITE POST with media functionality
+        // check whether we have media items to insert from the WRITE POST with media functionality
         if (getIntent().hasExtra(EXTRA_INSERT_MEDIA)) {
             // Bump analytics
             AnalyticsTracker.track(Stat.NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST);
 
             List<MediaModel> mediaList = (List<MediaModel>) getIntent().getSerializableExtra(EXTRA_INSERT_MEDIA);
-            // removing this from the intent so it doesn't insert the media data again on each Acivity re-creation
+            // removing this from the intent so it doesn't insert the media items again on each Acivity re-creation
             getIntent().removeExtra(EXTRA_INSERT_MEDIA);
             if (mediaList != null && !mediaList.isEmpty()) {
                 shouldFinishInit = false;

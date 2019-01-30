@@ -166,11 +166,11 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(FIRST_SECOND_AND_THIRD_MODEL_EVENT)
         viewModel.start()
 
-        // Find the segment data
+        // Find the segment items
         val items = (viewModel.segmentsUiState.value!! as SegmentsContentUiState).items
         val segmentUiStates = items.mapNotNull { it as? SegmentUiState }
 
-        // Verify that there are only 2 segments data and third segment is filtered out since it's not a mobile segment
+        // Verify that there are only 2 segments items and third segment is filtered out since it's not a mobile segment
         assertThat(segmentUiStates.size, `is`(2))
         assertNull(segmentUiStates.find { it.segmentId == THIRD_MODEL_SEGMENT_ID })
     }

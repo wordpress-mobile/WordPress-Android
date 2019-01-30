@@ -133,7 +133,7 @@ public class UploadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // Skip this request if no data to upload were given
+        // Skip this request if no items to upload were given
         if (intent == null || (!intent.hasExtra(KEY_MEDIA_LIST) && !intent.hasExtra(KEY_LOCAL_POST_ID))) {
             AppLog.e(T.MAIN, "UploadService > Killed and restarted with an empty intent");
             stopServiceIfUploadsComplete();
@@ -191,7 +191,7 @@ public class UploadService extends Service {
                                                                    mSiteStore.getSiteByLocalId(
                                                                            mediaList.get(0).getLocalSiteId()));
 
-                // add these media data so we can use them in WRITE POST once they end up loading successfully
+                // add these media items so we can use them in WRITE POST once they end up loading successfully
                 mMediaBatchUploaded.addAll(mediaList);
             }
 
@@ -749,7 +749,7 @@ public class UploadService extends Service {
         ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
         mPostUploadNotifier.removePostInfoFromForegroundNotificationData(post, mediaToRetry);
         if (!failedMedia.isEmpty()) {
-            // reset these media data to QUEUED
+            // reset these media items to QUEUED
             for (MediaModel media : failedMedia) {
                 media.setUploadState(MediaUploadState.QUEUED);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
@@ -761,7 +761,7 @@ public class UploadService extends Service {
             post.setContent(postContentWithRestartedUploads);
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
-            // no retry uploading the media data
+            // no retry uploading the media items
             for (MediaModel media : mediaToRetry) {
                 mMediaUploadHandler.upload(media);
             }
@@ -861,12 +861,12 @@ public class UploadService extends Service {
      * successfully uploaded in the actual Post content to reflect what the UploadStore says).
      *
      * Finally, it will either cancel the Post upload from the queue and create an error notification
-     * for the user if there are any failed media data for such a Post, or upload the Post if it's
+     * for the user if there are any failed media items for such a Post, or upload the Post if it's
      * in good shape.
      *
      * This method returns:
-     * - `false` if all registered posts have no in-progress data, and at least one or more retriable
-     * (failed) data are found in them (this, in other words, means all registered posts are found
+     * - `false` if all registered posts have no in-progress items, and at least one or more retriable
+     * (failed) items are found in them (this, in other words, means all registered posts are found
      * in a `finalized` state other than "UPLOADED").
      * - `true` if at least one registered Post is found that is in good conditions to be uploaded.
      *
@@ -952,7 +952,7 @@ public class UploadService extends Service {
                     selectedSite, MediaUploadState.FAILED);
         }
 
-        // only take into account those media data that do not belong to any Post
+        // only take into account those media items that do not belong to any Post
         for (MediaModel media : failedMedia) {
             if (media.getLocalPostId() == 0) {
                 failedStandAloneMedia.add(media);

@@ -10,7 +10,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
  * A mutable implementation of [GiphyMediaViewModel]
  *
  * This is meant to be accessible by [GiphyPickerViewModel] and [GiphyPickerDataSource] only. This is designed this
- * way so that [GiphyPickerViewModel] encapsulates all the logic of managing selected data as well as keeping their
+ * way so that [GiphyPickerViewModel] encapsulates all the logic of managing selected items as well as keeping their
  * selection numbers continuous.
  *
  * The [GiphyPickerViewHolder] should never have access to the mutating methods of this class.

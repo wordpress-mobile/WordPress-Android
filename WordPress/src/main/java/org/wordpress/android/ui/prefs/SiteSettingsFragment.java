@@ -159,7 +159,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Can interface with WP.com or WP.org
     public SiteSettingsInterface mSiteSettings;
 
-    // Reference to the list of data being edited in the current list editor
+    // Reference to the list of items being edited in the current list editor
     private List<String> mEditingList;
 
     // Used to ensure that settings are only fetched once throughout the lifecycle of the fragment

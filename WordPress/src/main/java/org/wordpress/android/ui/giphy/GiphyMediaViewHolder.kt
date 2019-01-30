@@ -23,7 +23,7 @@ import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
  *
  * This ViewHolder references a readonly [GiphyMediaViewModel]. It should never update the [GiphyMediaViewModel]. That
  * behavior is handled by the [GiphyPickerViewModel]. This is designed this way so that [GiphyPickerViewModel]
- * encapsulates all the logic of managing selected data as well as keeping their selection numbers continuous.
+ * encapsulates all the logic of managing selected items as well as keeping their selection numbers continuous.
  */
 class GiphyMediaViewHolder(
     /**

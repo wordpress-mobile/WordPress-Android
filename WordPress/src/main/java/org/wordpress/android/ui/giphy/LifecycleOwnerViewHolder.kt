@@ -26,7 +26,7 @@ import android.view.ViewGroup
  * - When the [ViewHolder.itemView]'s parent ([RecyclerView]) is removed from the window
  * - When the [ViewHolder] is bound with a different item. See [bind].
  *
- * For this to work, subclasses should make use of [bind] when binding data (i.e. ViewModels). For example, in a
+ * For this to work, subclasses should make use of [bind] when binding items (i.e. ViewModels). For example, in a
  * [ListAdapter]:
  *
  * ```

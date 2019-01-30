@@ -60,7 +60,7 @@ import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 /**
- * The grid displaying the media data.
+ * The grid displaying the media items.
  */
 @SuppressWarnings("ALL")
 public class MediaGridFragment extends Fragment implements MediaGridAdapterCallback {

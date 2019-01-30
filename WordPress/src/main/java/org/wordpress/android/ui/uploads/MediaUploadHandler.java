@@ -205,7 +205,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         MediaModel next = getNextMediaToUpload();
 
         if (next == null) {
-            AppLog.w(T.MEDIA, "MediaUploadHandler > No more media data to upload. Skipping this request.");
+            AppLog.w(T.MEDIA, "MediaUploadHandler > No more media items to upload. Skipping this request.");
             checkIfUploadsComplete();
             return;
         }

@@ -39,10 +39,6 @@ class SelectedDateProvider
 
     fun getSelectedDate(statsGranularity: StatsGranularity) = mutableDates[statsGranularity] ?: SelectedDate()
 
-    fun hasSelectedDate(statsGranularity: StatsGranularity): Boolean {
-        return mutableDates[statsGranularity]?.date != null
-    }
-
     fun getCurrentDate() = Date()
 
     fun clear() {

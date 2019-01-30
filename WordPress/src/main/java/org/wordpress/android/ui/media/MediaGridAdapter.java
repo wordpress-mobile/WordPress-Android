@@ -220,11 +220,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (state != MediaUploadState.UPLOADED) {
             holder.mStateContainer.setVisibility(View.VISIBLE);
 
-            // only show progress for data currently being uploaded or deleted
+            // only show progress for items currently being uploaded or deleted
             boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETING;
             holder.mProgressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
 
-            // failed uploads can be retried or deleted, queued data can be deleted
+            // failed uploads can be retried or deleted, queued items can be deleted
             if (state == MediaUploadState.FAILED || state == MediaUploadState.QUEUED) {
                 holder.mRetryDeleteContainer.setVisibility(View.VISIBLE);
                 holder.mImgRetry.setVisibility(state == MediaUploadState.FAILED ? View.VISIBLE : View.GONE);
@@ -408,7 +408,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     /*
      * determines whether the media item at the passed position can be selected - not allowed
-     * for local files or deleted data when used as a picker
+     * for local files or deleted items when used as a picker
      */
     private boolean canSelectPosition(int position) {
         if (!isValidPosition(position)) {

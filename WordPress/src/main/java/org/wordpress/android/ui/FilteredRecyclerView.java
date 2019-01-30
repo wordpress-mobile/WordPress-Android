@@ -161,7 +161,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         mEmptyView = findViewById(R.id.empty_view);
 
-        // progress bar that appears when loading more data
+        // progress bar that appears when loading more items
         mProgressLoadMore = findViewById(R.id.progress_loading);
         mProgressLoadMore.setVisibility(View.GONE);
 
@@ -291,7 +291,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     /**
-     * show/hide progress bar which appears at the bottom when loading more data
+     * show/hide progress bar which appears at the bottom when loading more items
      */
     public void showLoadingProgress() {
         if (mProgressLoadMore != null) {

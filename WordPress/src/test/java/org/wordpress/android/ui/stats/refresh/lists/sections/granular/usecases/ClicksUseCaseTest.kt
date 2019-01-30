@@ -131,18 +131,18 @@ class ClicksUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.type).isEqualTo(TimeStatsTypes.CLICKS)
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-            assertThat(this.data).hasSize(4)
-            assertTitle(this.data!![0])
-            assertHeader(this.data!![1])
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertHeader(this[1])
             assertSingleItem(
-                    this.data!![2],
+                    this[2],
                     singleClick.name!!,
                     singleClick.views,
                     singleClick.icon
             )
-            assertLink(this.data!![3])
+            assertLink(this[3])
         }
     }
 
@@ -160,8 +160,8 @@ class ClicksUseCaseTest : BaseUnitTest() {
         assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
         result.stateData!!.apply {
             assertThat(this).hasSize(2)
-            assertTitle(this!![0])
-            assertThat(this!![1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
+            assertTitle(this[0])
+            assertThat(this[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
         }
     }
 

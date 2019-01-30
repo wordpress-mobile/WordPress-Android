@@ -197,7 +197,7 @@ public class CommentsDetailActivity extends AppCompatActivity
         if (mAdapter != null && mAdapter.isAddingNewComments(commentList)) {
             mAdapter.onNewItems(commentList);
         } else {
-            // If current data change, rebuild the adapter
+            // If current items change, rebuild the adapter
             mAdapter = new CommentDetailFragmentAdapter(getSupportFragmentManager(), commentList, mSite,
                                                         CommentsDetailActivity.this);
             mViewPager.setAdapter(mAdapter);

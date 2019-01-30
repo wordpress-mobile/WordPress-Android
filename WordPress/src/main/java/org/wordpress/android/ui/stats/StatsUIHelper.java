@@ -55,7 +55,7 @@ class StatsUIHelper {
             return;
         }
 
-        // limit number of data to show otherwise it would cause performance issues on the LinearLayout
+        // limit number of items to show otherwise it would cause performance issues on the LinearLayout
         int count = Math.min(adapter.getCount(), maxNumberOfItemsToshow);
 
         if (count == 0) {

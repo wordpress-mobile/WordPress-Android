@@ -211,9 +211,9 @@ public class MediaDeleteService extends Service {
 
         mCurrentDelete = nextMediaToDelete();
 
-        // no more data to delete, stop service
+        // no more items to delete, stop service
         if (mCurrentDelete == null) {
-            AppLog.v(T.MEDIA, "No more media data to delete. Stopping MediaDeleteService.");
+            AppLog.v(T.MEDIA, "No more media items to delete. Stopping MediaDeleteService.");
             stopSelf();
             return;
         }

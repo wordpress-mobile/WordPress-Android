@@ -17,9 +17,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.CountryViewsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -73,16 +70,15 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        result.apply {
-            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
-            val nonNullData = this.data!!
-            assertThat(nonNullData).hasSize(4)
-            assertTitle(nonNullData[0])
-            val mapItem = (nonNullData[1] as MapItem)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            val mapItem = (this[1] as MapItem)
             assertThat(mapItem.mapData).isEqualTo("['CZ',500],")
             assertThat(mapItem.label).isEqualTo(R.string.stats_country_views_label)
-            assertLabel(nonNullData[2])
-            assertItem(nonNullData[3], country.fullName, country.views, country.flagIconUrl)
+            assertLabel(this[2])
+            assertItem(this[3], country.fullName, country.views, country.flagIconUrl)
         }
     }
 

@@ -13,7 +13,7 @@ Each single Plan has a list of features sections to highlight on the plan detail
 a single section to highlight.
        "features_highlight": [
             {
-                "data": [
+                "items": [
                     "custom-design",
                     "videopress",
                     "support",
@@ -24,7 +24,7 @@ a single section to highlight.
             },
             {
                 "title": "Included with all plans",
-                "data": [
+                "items": [
                     "free-blog"
                 ]
             }
@@ -36,7 +36,7 @@ public class PlanFeaturesHighlightSection implements Serializable {
 
     PlanFeaturesHighlightSection(JSONObject featureSection) throws JSONException {
         mTitle = featureSection.optString("title");
-        JSONArray items = featureSection.getJSONArray("data");
+        JSONArray items = featureSection.getJSONArray("items");
         mItems = new ArrayList<>(items.length());
         for (int i = 0; i < items.length(); i++) {
             mItems.add(items.getString(i));

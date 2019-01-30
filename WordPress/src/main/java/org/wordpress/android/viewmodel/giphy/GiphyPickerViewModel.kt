@@ -52,7 +52,7 @@ class GiphyPickerViewModel @Inject constructor(
          */
         IDLE,
         /**
-         * This is reached when the user chose some data and pressed the "Add" button
+         * This is reached when the user chose some items and pressed the "Add" button
          *
          * We're actively downloading and saving in the background during this state.
          */
@@ -124,7 +124,7 @@ class GiphyPickerViewModel @Inject constructor(
     /**
      * Returns `true` if the selection bar (UI) should be shown
      *
-     * This changes when the number of data change from 0 to 1 or 1 to 0.
+     * This changes when the number of items change from 0 to 1 or 1 to 0.
      */
     val selectionBarIsVisible: LiveData<Boolean> =
             Transformations.map(selectedMediaViewModelList) { it.isNotEmpty() }.getDistinct()

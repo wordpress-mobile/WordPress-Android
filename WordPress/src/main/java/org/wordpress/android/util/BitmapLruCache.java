@@ -25,7 +25,7 @@ public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCac
     @Override
     protected int sizeOf(String key, Bitmap value) {
         // The cache size will be measured in kilobytes rather than
-        // number of data.
+        // number of items.
         int bytes = (value.getRowBytes() * value.getHeight());
         return (bytes / 1024); // value.getByteCount() introduced in HONEYCOMB_MR1 or higher.
     }

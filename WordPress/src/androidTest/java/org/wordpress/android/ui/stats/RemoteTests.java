@@ -393,7 +393,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertNotNull(refResultModel.getChildren());
                 assertNull(refResultModel.getUrl()); // has childs. No URL.
 
-                // 3rd level data
+                // 3rd level items
                 SingleItemModel child = refResultModel.getChildren().get(0);
                 assertEquals(child.getUrl(), "http://www.google.com/");
                 assertEquals(child.getTitle(), "google.com");
