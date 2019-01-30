@@ -25,10 +25,11 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -130,8 +131,6 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         )
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(eq(model), any())).thenReturn(textItem)
-        val columnItem = mock<Columns>()
-        whenever(latestPostSummaryMapper.buildColumnItem(viewsCount, 0, 0)).thenReturn(columnItem)
         val chartItem = mock<BarChartItem>()
         whenever(latestPostSummaryMapper.buildBarChartItem(dayViews)).thenReturn(chartItem)
 
@@ -142,9 +141,17 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
             val title = this[0] as Title
             assertThat(title.textResource).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
-            assertThat(this[2]).isEqualTo(columnItem)
+            val valueItem = this[2] as ValueItem
+            assertThat(valueItem.value).isEqualTo(viewsCount.toString())
+            assertThat(valueItem.unit).isEqualTo(R.string.stats_views)
             assertThat(this[3]).isEqualTo(chartItem)
-            val link = this[4] as Link
+            val likesItem = this[4] as ListItemWithIcon
+            assertThat(likesItem.textResource).isEqualTo(R.string.stats_likes)
+            assertThat(likesItem.value).isEqualTo("0")
+            val commentsItem = this[5] as ListItemWithIcon
+            assertThat(commentsItem.textResource).isEqualTo(R.string.stats_comments)
+            assertThat(commentsItem.value).isEqualTo("0")
+            val link = this[6] as Link
             assertThat(link.icon).isNull()
             assertThat(link.text).isEqualTo(R.string.stats_insights_view_more)
 
