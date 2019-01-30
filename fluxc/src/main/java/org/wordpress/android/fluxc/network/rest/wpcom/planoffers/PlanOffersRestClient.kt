@@ -36,7 +36,7 @@ constructor(
                 params,
                 PlanOffersResponse::class.java,
                 enableCaching = true,
-                forced = true
+                forced = false
         )
         return when (response) {
             is Success -> {
@@ -45,7 +45,7 @@ constructor(
                 buildPlanOffersPayload(plans, features)
             }
             is WPComGsonRequestBuilder.Response.Error -> {
-                val payload = PlanOffersFetchedPayload(null)
+                val payload = PlanOffersFetchedPayload()
                 payload.error = response.error
                 payload
             }
@@ -57,10 +57,8 @@ constructor(
         featureResponses: List<Feature>?
     ): PlanOffersFetchedPayload {
         return PlanOffersFetchedPayload(planResponses?.map { plan ->
-            val featureDetails =
-                    featureResponses?.filter { feature ->
-                        plan.features!!.contains(feature.id)
-                    }!!.map { filteredFeature ->
+            val featureDetails = featureResponses?.filter { feature -> plan.features!!.contains(feature.id) }!!
+                    .map { filteredFeature ->
                         PlanOfferModel.Feature(filteredFeature.id, filteredFeature.name, filteredFeature.description)
                     }
 
