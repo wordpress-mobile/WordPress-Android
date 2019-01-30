@@ -61,15 +61,15 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
     fun update(newItems: List<BlockListItem>) {
         // We're using a nested recycler view here. When we try to update a block with new data, there are 2 animations
         // happening at the same time. The outer recycler view is animating the block height change and the inner
-        // recycler view is animating items being added or removed. The problem is that only the inner animation
-        // is actually animating, the block size happens immediately. This looks OK for adding new items to the list
+        // recycler view is animating data being added or removed. The problem is that only the inner animation
+        // is actually animating, the block size happens immediately. This looks OK for adding new data to the list
         // or when the size of the list doesn't change. In that case the block height increases immediately and the
         // inner list changes are animated.
-        // However, when we want to remove items, the block height decreases immediately so the bottom items disappear
+        // However, when we want to remove data, the block height decreases immediately so the bottom data disappear
         // and then the animation happens and they slowly slide back into view. This doesn't look good. We couldn't
         // find a solution that handles this case well so we're falling back to notifying the whole list instead of
-        // animating changes when we decrease the number of items. When we do that, the outer animation happens and
-        // the items are replaced immediately.
+        // animating changes when we decrease the number of data. When we do that, the outer animation happens and
+        // the data are replaced immediately.
         if (newItems.size >= items.size) {
             val diffResult = DiffUtil.calculateDiff(
                     BlockDiffCallback(

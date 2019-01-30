@@ -126,8 +126,8 @@ public abstract class StatsAbstractFragment extends Fragment {
         extras.putInt(StatsService.ARG_PERIOD, mStatsTimeframe.ordinal());
         extras.putString(StatsService.ARG_DATE, mDate);
         if (isSingleView()) {
-            // Single Item screen: request 20 items per page on paged requests.
-            // Default to the first 100 items otherwise.
+            // Single Item screen: request 20 data per page on paged requests.
+            // Default to the first 100 data otherwise.
             int maxElementsToRetrieve =
                     pageNumberRequested > 0 ? StatsService.MAX_RESULTS_REQUESTED_PER_PAGE : MAX_RESULTS_REQUESTED;
             extras.putInt(StatsService.ARG_MAX_RESULTS, maxElementsToRetrieve);

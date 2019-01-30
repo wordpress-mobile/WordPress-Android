@@ -21,8 +21,9 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
@@ -64,7 +65,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(StatsBlock.Error::class.java)
+        assertThat(result!!.state).isEqualTo(UseCaseState.ERROR)
     }
 
     @Test
@@ -75,7 +76,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result is StatsBlock.EmptyBlock).isTrue()
+        assertThat(result!!.state).isEqualTo(UseCaseState.EMPTY)
     }
 
     @Test
@@ -95,8 +96,8 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(Success::class.java)
-        (result as Success).items.apply {
+        assertThat(result!!.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
             val title = this[0] as Title
             assertThat(title.textResource).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
@@ -134,8 +135,8 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(Success::class.java)
-        (result as Success).items.apply {
+        assertThat(result!!.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
             val title = this[0] as Title
             assertThat(title.textResource).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
@@ -157,8 +158,8 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     private suspend fun loadLatestPostSummary(
         refresh: Boolean,
         forced: Boolean
-    ): StatsBlock? {
-        var result: StatsBlock? = null
+    ): UseCaseModel? {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return result

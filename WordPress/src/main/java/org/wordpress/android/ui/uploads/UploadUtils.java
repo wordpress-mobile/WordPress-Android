@@ -382,7 +382,7 @@ public class UploadUtils {
                 return;
             }
 
-            // show success snackbar for media only items and offer the WRITE POST functionality)
+            // show success snackbar for media only data and offer the WRITE POST functionality)
             UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageForUser,
                                                   R.string.media_files_uploaded_write_post, new View.OnClickListener() {
                         @Override

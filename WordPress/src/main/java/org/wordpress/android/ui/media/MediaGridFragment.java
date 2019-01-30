@@ -60,7 +60,7 @@ import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 /**
- * The grid displaying the media items.
+ * The grid displaying the media data.
  */
 @SuppressWarnings("ALL")
 public class MediaGridFragment extends Fragment implements MediaGridAdapterCallback {
@@ -419,7 +419,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
-        // temporarily disable animation - otherwise the user will see items animate
+        // temporarily disable animation - otherwise the user will see data animate
         // when they change the filter
         mRecycler.setItemAnimator(null);
         getAdapter().setMediaList(getFilteredMedia());

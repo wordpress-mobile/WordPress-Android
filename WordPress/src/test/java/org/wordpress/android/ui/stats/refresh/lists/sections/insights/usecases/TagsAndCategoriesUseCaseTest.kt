@@ -18,12 +18,9 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -80,37 +77,37 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
 
         val result = loadTags(true, forced)
 
-        assertThat(result.type).isEqualTo(SUCCESS)
-        val expandableItem = (result as Success).assertNonExpandedList(categoryName)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        val expandableItem = result.data!!.assertNonExpandedList(categoryName)
 
         expandableItem.onExpandClicked(true)
 
         val updatedResult = loadTags(true, forced)
 
-        (updatedResult as Success).assertExpandedList(categoryName)
+        updatedResult.data!!.assertExpandedList(categoryName)
     }
 
-    private fun Success.assertNonExpandedList(
+    private fun List<BlockListItem>.assertNonExpandedList(
         categoryName: String
     ): ExpandableItem {
-        assertThat(this.items).hasSize(4)
-        assertTitle(this.items[0])
-        assertHeader(this.items[1])
-        assertSingleTag(this.items[2], firstTag.name, singleTagViews.toString())
-        return assertCategory(this.items[3], categoryName, categoryViews)
+        assertThat(this).hasSize(4)
+        assertTitle(this[0])
+        assertHeader(this[1])
+        assertSingleTag(this[2], firstTag.name, singleTagViews.toString())
+        return assertCategory(this[3], categoryName, categoryViews)
     }
 
-    private fun Success.assertExpandedList(
+    private fun List<BlockListItem>.assertExpandedList(
         categoryName: String
     ): ExpandableItem {
-        assertThat(this.items).hasSize(7)
-        assertTitle(this.items[0])
-        assertHeader(this.items[1])
-        assertSingleTag(this.items[2], firstTag.name, singleTagViews.toString())
-        val expandableItem = assertCategory(this.items[3], categoryName, categoryViews)
-        assertSingleTag(this.items[4], firstTag.name, null)
-        assertSingleTag(this.items[5], secondTag.name, null)
-        assertThat(this.items[6]).isEqualTo(Divider)
+        assertThat(this).hasSize(7)
+        assertTitle(this[0])
+        assertHeader(this[1])
+        assertSingleTag(this[2], firstTag.name, singleTagViews.toString())
+        val expandableItem = assertCategory(this[3], categoryName, categoryViews)
+        assertSingleTag(this[4], firstTag.name, null)
+        assertSingleTag(this[5], secondTag.name, null)
+        assertThat(this[6]).isEqualTo(Divider)
         return expandableItem
     }
 
@@ -128,13 +125,13 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
 
         val result = loadTags(true, forced)
 
-        assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            assertThat(this.items).hasSize(4)
-            assertTitle(this.items[0])
-            assertHeader(this.items[1])
-            assertSingleTag(this.items[2], tagItem.name, singleTagViews.toString())
-            assertLink(this.items[3])
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertHeader(this[1])
+            assertSingleTag(this[2], tagItem.name, singleTagViews.toString())
+            assertLink(this[3])
         }
     }
 
@@ -147,10 +144,10 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
 
         val result = loadTags(true, forced)
 
-        assertThat(result.type).isEqualTo(Type.EMPTY)
-        (result as EmptyBlock).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
         }
     }
 
@@ -166,7 +163,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
 
         val result = loadTags(true, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -212,8 +209,8 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
     }
 
-    private suspend fun loadTags(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadTags(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

@@ -73,7 +73,7 @@ public class TextDrawable extends Drawable {
 
     public TextDrawable(Context context) {
         super();
-        // Used to load and scale resource items
+        // Used to load and scale resource data
         mResources = context.getResources();
         // Definition of this drawables size
         mTextBounds = new Rect();

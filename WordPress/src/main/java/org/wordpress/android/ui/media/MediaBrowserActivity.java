@@ -789,7 +789,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             ToastUtils.showToast(this, R.string.cannot_delete_multi_media_items, ToastUtils.Duration.LONG);
         }
 
-        // mark items for delete without actually deleting items yet,
+        // mark data for delete without actually deleting data yet,
         // and then refresh the grid
         if (!mediaToDelete.isEmpty()) {
             startMediaDeleteService(mediaToDelete);
@@ -929,7 +929,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void doAddMediaItemClicked(@NonNull AddMenuItem item) {
         mLastAddMediaItemClicked = item;
 
-        // stock photos item requires no permission, all other items do
+        // stock photos item requires no permission, all other data do
         if (item != AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA) {
             String[] permissions;
             if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {

@@ -16,14 +16,11 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -81,42 +78,46 @@ class ReferrersUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(SUCCESS)
-        val expandableItem = (result as Success).assertNonExpandedList()
+        assertThat(result.type).isEqualTo(TimeStatsTypes.REFERRERS)
+        val expandableItem = result.assertNonExpandedList()
 
         expandableItem.onExpandClicked(true)
 
         val updatedResult = loadData(true, forced)
 
-        (updatedResult as Success).assertExpandedList()
+        updatedResult.assertExpandedList()
     }
 
-    private fun Success.assertNonExpandedList(): ExpandableItem {
-        assertThat(this.items).hasSize(4)
-        assertTitle(this.items[0])
-        assertLabel(this.items[1])
+    private fun UseCaseModel.assertNonExpandedList(): ExpandableItem {
+        assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+        val nonNullData = this.data!!
+        assertThat(nonNullData).hasSize(4)
+        assertTitle(nonNullData[0])
+        assertLabel(nonNullData[1])
         assertSingleItem(
-                this.items[2],
+                nonNullData[2],
                 singleReferrer.name!!,
                 singleReferrer.total,
                 singleReferrer.icon
         )
-        return assertExpandableItem(this.items[3], group.name!!, group.total!!, group.icon)
+        return assertExpandableItem(nonNullData[3], group.name!!, group.total!!, group.icon)
     }
 
-    private fun Success.assertExpandedList(): ExpandableItem {
-        assertThat(this.items).hasSize(6)
-        assertTitle(this.items[0])
-        assertLabel(this.items[1])
+    private fun UseCaseModel.assertExpandedList(): ExpandableItem {
+        assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+        val nonNullData = this.data!!
+        assertThat(nonNullData).hasSize(6)
+        assertTitle(nonNullData[0])
+        assertLabel(nonNullData[1])
         assertSingleItem(
-                this.items[2],
+                nonNullData[2],
                 singleReferrer.name!!,
                 singleReferrer.total,
                 singleReferrer.icon
         )
-        val expandableItem = assertExpandableItem(this.items[3], group.name!!, group.total!!, group.icon)
-        assertSingleItem(this.items[4], referrer.name, referrer.views, referrer.icon)
-        assertThat(this.items[5]).isEqualTo(Divider)
+        val expandableItem = assertExpandableItem(nonNullData[3], group.name!!, group.total!!, group.icon)
+        assertSingleItem(nonNullData[4], referrer.name, referrer.views, referrer.icon)
+        assertThat(nonNullData[5]).isEqualTo(Divider)
         return expandableItem
     }
 
@@ -131,18 +132,20 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            assertThat(this.items).hasSize(4)
-            assertTitle(this.items[0])
-            assertLabel(this.items[1])
+        assertThat(result.type).isEqualTo(TimeStatsTypes.REFERRERS)
+        result.apply {
+            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+            val nonNullData = this.data!!
+            assertThat(nonNullData).hasSize(4)
+            assertTitle(nonNullData[0])
+            assertLabel(nonNullData[1])
             assertSingleItem(
-                    this.items[2],
+                    nonNullData[2],
                     singleReferrer.name!!,
                     singleReferrer.total,
                     singleReferrer.icon
             )
-            assertLink(this.items[3])
+            assertLink(nonNullData[3])
         }
     }
 
@@ -155,11 +158,11 @@ class ReferrersUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(Type.EMPTY)
-        (result as EmptyBlock).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
+            assertThat(this[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
         }
     }
 
@@ -175,7 +178,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -223,8 +226,8 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

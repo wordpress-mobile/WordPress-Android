@@ -15,14 +15,11 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.VideoPlaysStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
@@ -72,11 +69,13 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            assertTitle(this.items[0])
-            assertHeader(this.items[1])
-            assertItem(this.items[2], videoPlay.title, videoPlay.plays)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
+        result.apply {
+            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+            val nonNullData = this.data!!
+            assertTitle(nonNullData[0])
+            assertHeader(nonNullData[1])
+            assertItem(nonNullData[2], videoPlay.title, videoPlay.plays)
         }
     }
 
@@ -93,13 +92,15 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            assertThat(this.items).hasSize(4)
-            assertTitle(this.items[0])
-            assertHeader(this.items[1])
-            assertItem(this.items[2], videoPlay.title, videoPlay.plays)
-            assertLink(this.items[3])
+        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
+        result.apply {
+            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+            val nonNullData = this.data!!
+            assertThat(nonNullData).hasSize(4)
+            assertTitle(nonNullData[0])
+            assertHeader(nonNullData[1])
+            assertItem(nonNullData[2], videoPlay.title, videoPlay.plays)
+            assertLink(nonNullData[3])
         }
     }
 
@@ -114,11 +115,13 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(Type.EMPTY)
-        (result as EmptyBlock).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
+        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
+        result.apply {
+            assertThat(this.state).isEqualTo(UseCaseState.EMPTY)
+            val data = this.stateData!!
+            assertThat(data).hasSize(2)
+            assertTitle(data[0])
+            assertThat(data[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
         }
     }
 
@@ -136,7 +139,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -169,8 +172,8 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

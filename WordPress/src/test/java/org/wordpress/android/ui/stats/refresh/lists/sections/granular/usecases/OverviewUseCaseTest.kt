@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,12 +15,11 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -76,11 +74,13 @@ class OverviewUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            assertThat(this.items[0]).isEqualTo(title)
-            assertThat(this.items[1]).isEqualTo(barChartItem)
-            assertThat(this.items[2]).isEqualTo(columns)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.OVERVIEW)
+        result.apply {
+            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+            val nonNullData = this.data!!
+            assertThat(nonNullData[0]).isEqualTo(title)
+            assertThat(nonNullData[1]).isEqualTo(barChartItem)
+            assertThat(nonNullData[2]).isEqualTo(columns)
         }
     }
 
@@ -96,11 +96,11 @@ class OverviewUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(ERROR)
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

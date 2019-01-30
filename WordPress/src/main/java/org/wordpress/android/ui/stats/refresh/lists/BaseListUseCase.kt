@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.mergeNotNull
@@ -23,7 +24,7 @@ constructor(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
     private val statsTypes = MutableLiveData<List<StatsTypes>>()
-    val data: LiveData<List<StatsBlock>> = mergeNotNull(statsTypes, blockListData) { insights, map ->
+    val data: LiveData<List<UseCaseModel>> = mergeNotNull(statsTypes, blockListData) { insights, map ->
         insights.mapNotNull {
             if (map.containsKey(it)) {
                 map[it]

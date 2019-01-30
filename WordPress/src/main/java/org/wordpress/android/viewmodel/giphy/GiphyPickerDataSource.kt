@@ -86,7 +86,7 @@ class GiphyPickerDataSource(
     }
 
     /**
-     * Load a given range of items ([params]) from the Giphy API.
+     * Load a given range of data ([params]) from the Giphy API.
      *
      * Errors are dispatched to [rangeLoadErrorEvent]. If successful, previously failed calls of this method are
      * automatically retried using [retryAllFailedRangeLoads].

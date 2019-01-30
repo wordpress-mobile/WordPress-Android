@@ -60,7 +60,7 @@ public class ReaderSearchTable {
      * Returns a cursor containing query strings previously typed by the user
      *
      * @param filter - filters the list using LIKE syntax (pass null for no filter)
-     * @param max - limit the list to this many items (pass zero for no limit)
+     * @param max - limit the list to this many data (pass zero for no limit)
      */
     public static Cursor getQueryStringCursor(String filter, int max) {
         String sql;

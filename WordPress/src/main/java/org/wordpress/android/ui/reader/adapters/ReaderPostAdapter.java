@@ -1226,7 +1226,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     // we want the gap marker to appear *below* this post
                     gapMarkerPosition = gapMarkerPostPosition + 1;
-                    // increment it if there are custom items at the top of the list (header or newsCard)
+                    // increment it if there are custom data at the top of the list (header or newsCard)
                     gapMarkerPosition += getItemPositionOffset();
                     AppLog.d(AppLog.T.READER, "gap marker at position " + gapMarkerPostPosition);
                 }

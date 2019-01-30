@@ -26,8 +26,8 @@ class StatsBlockDiffCallback(
     }
 
     /**
-     * This method gets called when the items are the same and the contents changed. In this case we want to send
-     * the change payload for Success items which causes the Adapter to reuse the same ViewHolder and thus prevents
+     * This method gets called when the data are the same and the contents changed. In this case we want to send
+     * the change payload for Success data which causes the Adapter to reuse the same ViewHolder and thus prevents
      * the blinking of the item being redrawed. Use this method if you want to manually only change a part of View.
      */
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {

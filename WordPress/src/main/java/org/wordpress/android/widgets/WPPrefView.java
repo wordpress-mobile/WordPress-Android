@@ -110,7 +110,7 @@ public class WPPrefView extends LinearLayout implements
     }
 
     /*
-     * all items when this is a list preference (both single- and multi-select)
+     * all data when this is a list preference (both single- and multi-select)
      */
     public static class PrefListItems extends ArrayList<PrefListItem> {
         private void setCheckedItems(@NonNull SparseBooleanArray checkedItems) {
@@ -129,7 +129,7 @@ public class WPPrefView extends LinearLayout implements
             return null;
         }
 
-        // use this for CHECKLIST prefs to get all selected items
+        // use this for CHECKLIST prefs to get all selected data
         private @NonNull PrefListItems getSelectedItems() {
             PrefListItems selectedItems = new PrefListItems();
             for (PrefListItem item : this) {
@@ -340,7 +340,7 @@ public class WPPrefView extends LinearLayout implements
     }
 
     /*
-     * the list of items when the PrefType is CHECKLIST or RADIOLIST
+     * the list of data when the PrefType is CHECKLIST or RADIOLIST
      */
     public @NonNull PrefListItems getListItems() {
         return mListItems;

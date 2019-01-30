@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,12 +15,12 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.SearchTermsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -72,11 +71,13 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            assertTitle(this.items[0])
-            assertHeader(this.items[1])
-            assertItem(this.items[2], searchTerm.text, searchTerm.views)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.SEARCH_TERMS)
+        result.apply {
+            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+            val nonNullData = this.data!!
+            assertTitle(nonNullData[0])
+            assertHeader(nonNullData[1])
+            assertItem(nonNullData[2], searchTerm.text, searchTerm.views)
         }
     }
 
@@ -93,11 +94,13 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            Assertions.assertThat(this.items).hasSize(4)
-            assertTitle(this.items[0])
-            assertLink(this.items[3])
+        assertThat(result.type).isEqualTo(TimeStatsTypes.SEARCH_TERMS)
+        result.apply {
+            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+            val nonNullData = this.data!!
+            assertThat(nonNullData).hasSize(4)
+            assertTitle(nonNullData[0])
+            assertLink(nonNullData[3])
         }
     }
 
@@ -121,17 +124,19 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            Assertions.assertThat(this.items).hasSize(8)
-            assertTitle(this.items[0])
-            assertHeader(this.items[1])
-            assertItem(this.items[2], searchTerm.text, searchTerm.views)
-            assertItem(this.items[3], searchTerm.text, searchTerm.views)
-            assertItem(this.items[4], searchTerm.text, searchTerm.views)
-            assertItem(this.items[5], searchTerm.text, searchTerm.views)
-            assertItem(this.items[6], searchTerm.text, searchTerm.views)
-            val unknownItem = this.items[7] as ListItemWithIcon
+        assertThat(result.type).isEqualTo(TimeStatsTypes.SEARCH_TERMS)
+        result.apply {
+            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+            val nonNullData = this.data!!
+            assertThat(nonNullData).hasSize(8)
+            assertTitle(nonNullData[0])
+            assertHeader(nonNullData[1])
+            assertItem(nonNullData[2], searchTerm.text, searchTerm.views)
+            assertItem(nonNullData[3], searchTerm.text, searchTerm.views)
+            assertItem(nonNullData[4], searchTerm.text, searchTerm.views)
+            assertItem(nonNullData[5], searchTerm.text, searchTerm.views)
+            assertItem(nonNullData[6], searchTerm.text, searchTerm.views)
+            val unknownItem = nonNullData[7] as ListItemWithIcon
             assertThat(unknownItem.textResource).isEqualTo(R.string.stats_search_terms_unknown_search_terms)
             assertThat(unknownItem.value).isEqualTo(unknownSearchCount.toString())
         }
@@ -148,11 +153,13 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(StatsBlock.Type.EMPTY)
-        (result as StatsBlock.EmptyBlock).apply {
-            Assertions.assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            Assertions.assertThat(this.items[1]).isEqualTo(Empty(R.string.stats_no_data_for_period))
+        assertThat(result.type).isEqualTo(TimeStatsTypes.SEARCH_TERMS)
+        result.apply {
+            assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+            val nonNullData = this.stateData!!
+            assertThat(nonNullData).hasSize(2)
+            assertTitle(nonNullData[0])
+            assertThat(nonNullData[1]).isEqualTo(Empty(R.string.stats_no_data_for_period))
         }
     }
 
@@ -170,18 +177,18 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(ERROR)
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(TITLE)
-        Assertions.assertThat((item as Title).textResource).isEqualTo(R.string.stats_search_terms)
+        assertThat(item.type).isEqualTo(TITLE)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_search_terms)
     }
 
     private fun assertHeader(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(HEADER)
-        Assertions.assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_search_terms_label)
-        Assertions.assertThat(item.rightLabel).isEqualTo(R.string.stats_search_terms_views_label)
+        assertThat(item.type).isEqualTo(HEADER)
+        assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_search_terms_label)
+        assertThat(item.rightLabel).isEqualTo(R.string.stats_search_terms_views_label)
     }
 
     private fun assertItem(
@@ -189,22 +196,22 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         key: String,
         views: Int?
     ) {
-        Assertions.assertThat(item.type).isEqualTo(LIST_ITEM_WITH_ICON)
-        Assertions.assertThat((item as ListItemWithIcon).text).isEqualTo(key)
+        assertThat(item.type).isEqualTo(LIST_ITEM_WITH_ICON)
+        assertThat((item as ListItemWithIcon).text).isEqualTo(key)
         if (views != null) {
-            Assertions.assertThat(item.value).isEqualTo(views.toString())
+            assertThat(item.value).isEqualTo(views.toString())
         } else {
-            Assertions.assertThat(item.value).isNull()
+            assertThat(item.value).isNull()
         }
     }
 
     private fun assertLink(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(LINK)
-        Assertions.assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
+        assertThat(item.type).isEqualTo(LINK)
+        assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

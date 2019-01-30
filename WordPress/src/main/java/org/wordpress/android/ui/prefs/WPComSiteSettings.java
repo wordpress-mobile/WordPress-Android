@@ -249,7 +249,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
 
                 JSONObject jetpackProtectWhitelist = data.optJSONObject("jetpack_protect_global_whitelist");
                 if (jetpackProtectWhitelist != null) {
-                    // clear existing whitelist entries before adding items from response
+                    // clear existing whitelist entries before adding data from response
                     mRemoteJpSettings.jetpackProtectWhitelist.clear();
 
                     JSONArray whitelistItems = jetpackProtectWhitelist.optJSONArray("local");

@@ -12,9 +12,9 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Loading
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import javax.inject.Provider
@@ -26,15 +26,21 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     private val remoteData = "remote data"
     @Mock lateinit var site: SiteModel
     private lateinit var block: TestUseCase
-    private val result = mutableListOf<StatsBlock?>()
-    private val loadingBlock = Loading(ALL_TIME_STATS, listOf<BlockListItem>(Title(string.stats_insights_all_time)))
+    private val result = mutableListOf<UseCaseModel?>()
+    private val loadingData = listOf<BlockListItem>(Title(string.stats_insights_all_time))
+    private val loadingBlock = UseCaseModel(
+            ALL_TIME_STATS,
+            data = null,
+            stateData = loadingData,
+            state = LOADING
+    )
 
     @Before
     fun setUp() {
         block = TestUseCase(
                 localDataProvider,
                 remoteDataProvider,
-                loadingBlock.items
+                loadingData
         )
         whenever(localDataProvider.get()).thenReturn(localData)
         whenever(remoteDataProvider.get()).thenReturn(remoteData)
@@ -48,8 +54,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         block.fetch(site, false, false)
 
-        assertThat(result[0]).isEqualTo(loadingBlock)
-        assertData(1, localData)
+        assertData(0, localData)
     }
 
     @Test
@@ -68,23 +73,20 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         block.fetch(site, true, false)
 
-        assertThat(result.size).isEqualTo(3)
-        assertThat(result[0]).isEqualTo(loadingBlock)
-        assertData(1, localData)
-        assertData(2, remoteData)
+        assertThat(result.size).isEqualTo(2)
+        assertData(0, localData)
+        assertData(1, remoteData)
     }
 
     @Test
     fun `live data value is cleared`() = test {
         block.fetch(site, false, false)
 
-        assertThat(result[0]).isEqualTo(loadingBlock)
-
-        assertData(1, localData)
+        assertData(0, localData)
 
         block.clear()
 
-        assertThat(block.liveData.value).isEqualTo(loadingBlock)
+        assertThat(block.liveData.value?.state).isEqualTo(UseCaseState.EMPTY)
     }
 
     @After
@@ -93,8 +95,8 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     }
 
     private fun assertData(position: Int, data: String) {
-        val blockList = result[position] as Success
-        val firstItem = blockList.items[0] as Text
+        val blockList = result[position]
+        val firstItem = blockList?.data!![0] as Text
         assertThat(firstItem.text).isEqualTo(data)
     }
 

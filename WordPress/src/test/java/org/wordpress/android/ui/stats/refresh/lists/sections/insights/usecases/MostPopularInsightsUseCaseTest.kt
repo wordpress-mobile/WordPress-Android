@@ -15,10 +15,8 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
@@ -77,13 +75,13 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
 
         val result = loadMostPopularInsights(refresh, forced)
 
-        assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            assertThat(this.items).hasSize(4)
-            assertTitle(this.items[0])
-            assertLabel(this.items[1])
-            assertDay(this.items[2])
-            assertHour(this.items[3])
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertLabel(this[1])
+            assertDay(this[2])
+            assertHour(this[3])
         }
     }
 
@@ -100,7 +98,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
 
         val result = loadMostPopularInsights(refresh, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -131,8 +129,8 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         assertThat(item.value).isEqualTo("${highestHourPercent.roundToInt()}%")
     }
 
-    private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

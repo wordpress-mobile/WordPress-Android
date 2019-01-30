@@ -11,16 +11,14 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -55,14 +53,15 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            assertThat(this.items).hasSize(5)
-            assertTitle(this.items[0])
-            assertViews(this.items[1], showDivider = true)
-            assertVisitors(this.items[2], showDivider = true)
-            assertLikes(this.items[3], showDivider = true)
-            assertComments(this.items[4], showDivider = false)
+        assertThat(result.type).isEqualTo(InsightsTypes.TODAY_STATS)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(5)
+            assertTitle(this[0])
+            assertViews(this[1], showDivider = true)
+            assertVisitors(this[2], showDivider = true)
+            assertLikes(this[3], showDivider = true)
+            assertComments(this[4], showDivider = false)
         }
     }
 
@@ -78,12 +77,13 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(Type.SUCCESS)
-        (result as Success).apply {
-            assertThat(this.items).hasSize(3)
-            assertTitle(this.items[0])
-            assertVisitors(this.items[1], showDivider = true)
-            assertLikes(this.items[2], showDivider = false)
+        assertThat(result.type).isEqualTo(InsightsTypes.TODAY_STATS)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(3)
+            assertTitle(this[0])
+            assertVisitors(this[1], showDivider = true)
+            assertLikes(this[2], showDivider = false)
         }
     }
 
@@ -99,10 +99,11 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(Type.EMPTY)
-        (result as EmptyBlock).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
+        assertThat(result.type).isEqualTo(InsightsTypes.TODAY_STATS)
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
         }
     }
 
@@ -119,7 +120,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -163,8 +164,8 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         assertThat(item.value).isEqualTo(comments.toString())
     }
 
-    private suspend fun loadTodayStats(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadTodayStats(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

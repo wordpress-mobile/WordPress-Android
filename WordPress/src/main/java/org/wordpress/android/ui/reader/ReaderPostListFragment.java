@@ -732,7 +732,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * adds a menu to the recycler's toolbar containing settings & search items - only called
+     * adds a menu to the recycler's toolbar containing settings & search data - only called
      * for followed tags
      */
     private void setupRecyclerToolbar() {
@@ -2074,7 +2074,7 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded() || isCurrentTag(tag)) {
             return;
         }
-        // clear 'post removed from saved posts' undo items
+        // clear 'post removed from saved posts' undo data
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
         }

@@ -12,8 +12,8 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BACKGROUND_INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
@@ -40,7 +40,6 @@ class DateUseCaseTest : BaseUnitTest() {
                 resourceProvider,
                 Dispatchers.Unconfined
         )
-        whenever(selectedDateProvider.getCurrentDate()).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(SelectedDate(selectedDate))
     }
 
@@ -52,16 +51,17 @@ class DateUseCaseTest : BaseUnitTest() {
         whenever(resourceProvider.getString(R.string.stats_for, granularDate)).thenReturn(label)
         val result = loadData(true, false)
 
-        (result as Success).apply {
-            Assertions.assertThat(this.items).hasSize(1)
-            val item = this.items[0]
+        result.apply {
+            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+            Assertions.assertThat(this.data).hasSize(1)
+            val item = this.data!![0]
             assertThat(item.type).isEqualTo(BACKGROUND_INFO)
             assertThat((item as BackgroundInformation).text).isEqualTo(label)
         }
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

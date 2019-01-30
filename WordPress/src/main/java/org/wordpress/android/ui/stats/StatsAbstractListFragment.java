@@ -89,7 +89,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mViewAll = (Button) view.findViewById(R.id.btnViewAll);
         mTopPagerContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
 
-        // Load pagination items
+        // Load pagination data
         mBottomPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_bottom_pagination_container);
         mBottomPaginationGoBackButton = (Button) mBottomPaginationContainer.findViewById(R.id.stats_pagination_go_back);
         mBottomPaginationGoForwardButton =

@@ -16,14 +16,11 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.ClicksStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -81,42 +78,42 @@ class ClicksUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(SUCCESS)
-        val expandableItem = (result as Success).assertNonExpandedList()
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        val expandableItem = result.data!!.assertNonExpandedList()
 
         expandableItem.onExpandClicked(true)
 
         val updatedResult = loadData(true, forced)
 
-        (updatedResult as Success).assertExpandedList()
+        updatedResult.data!!.assertExpandedList()
     }
 
-    private fun Success.assertNonExpandedList(): ExpandableItem {
-        assertThat(this.items).hasSize(4)
-        assertTitle(this.items[0])
-        assertHeader(this.items[1])
+    private fun List<BlockListItem>.assertNonExpandedList(): ExpandableItem {
+        assertThat(this).hasSize(4)
+        assertTitle(this[0])
+        assertHeader(this[1])
         assertSingleItem(
-                this.items[2],
+                this[2],
                 singleClick.name!!,
                 singleClick.views,
                 singleClick.icon
         )
-        return assertExpandableItem(this.items[3], group.name!!, group.views!!, group.icon)
+        return assertExpandableItem(this[3], group.name!!, group.views!!, group.icon)
     }
 
-    private fun Success.assertExpandedList(): ExpandableItem {
-        assertThat(this.items).hasSize(6)
-        assertTitle(this.items[0])
-        assertHeader(this.items[1])
+    private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
+        assertThat(this).hasSize(6)
+        assertTitle(this[0])
+        assertHeader(this[1])
         assertSingleItem(
-                this.items[2],
+                this[2],
                 singleClick.name!!,
                 singleClick.views,
                 singleClick.icon
         )
-        val expandableItem = assertExpandableItem(this.items[3], group.name!!, group.views!!, group.icon)
-        assertSingleItem(this.items[4], click.name, click.views, click.icon)
-        assertThat(this.items[5]).isEqualTo(Divider)
+        val expandableItem = assertExpandableItem(this[3], group.name!!, group.views!!, group.icon)
+        assertSingleItem(this[4], click.name, click.views, click.icon)
+        assertThat(this[5]).isEqualTo(Divider)
         return expandableItem
     }
 
@@ -133,18 +130,19 @@ class ClicksUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(SUCCESS)
-        (result as Success).apply {
-            assertThat(this.items).hasSize(4)
-            assertTitle(this.items[0])
-            assertHeader(this.items[1])
+        assertThat(result.type).isEqualTo(TimeStatsTypes.CLICKS)
+        result.apply {
+            assertThat(this.state).isEqualTo(UseCaseState.SUCCESS)
+            assertThat(this.data).hasSize(4)
+            assertTitle(this.data!![0])
+            assertHeader(this.data!![1])
             assertSingleItem(
-                    this.items[2],
+                    this.data!![2],
                     singleClick.name!!,
                     singleClick.views,
                     singleClick.icon
             )
-            assertLink(this.items[3])
+            assertLink(this.data!![3])
         }
     }
 
@@ -159,11 +157,11 @@ class ClicksUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(Type.EMPTY)
-        (result as EmptyBlock).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this!![0])
+            assertThat(this!![1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
         }
     }
 
@@ -181,7 +179,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -229,8 +227,8 @@ class ClicksUseCaseTest : BaseUnitTest() {
         assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)
