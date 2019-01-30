@@ -3232,6 +3232,25 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onMediaRetryAllClicked(Set<String> failedMediaIds) {
+        UploadService.cancelFinalNotification(this, mPost);
+        UploadService.cancelFinalNotificationForMedia(this, mSite);
+
+        ArrayList<MediaModel> failedMedia = new ArrayList<>();
+        for (String mediaId : failedMediaIds) {
+            failedMedia.add(mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)));
+        }
+
+        if (!failedMedia.isEmpty()) {
+            for (MediaModel mediaModel : failedMedia) {
+                mediaModel.setUploadState(MediaUploadState.QUEUED);
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
+            }
+            startUploadService(failedMedia);
+        }
+    }
+
+    @Override
     public boolean onMediaRetryClicked(final String mediaId) {
         if (TextUtils.isEmpty(mediaId)) {
             AppLog.e(T.MEDIA, "Invalid media id passed to onMediaRetryClicked");

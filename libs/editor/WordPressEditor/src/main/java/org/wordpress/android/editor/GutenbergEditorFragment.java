@@ -218,10 +218,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         builder.setNeutralButton(R.string.retry_failed_upload_retry_all, new OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
-                // TODO implement retry all
-                // search for all failed media items in this Post, and re-start them all
-
                 dialog.dismiss();
+                mEditorFragmentListener.onMediaRetryAllClicked(mFailedMediaIds);
             }
         });
 
