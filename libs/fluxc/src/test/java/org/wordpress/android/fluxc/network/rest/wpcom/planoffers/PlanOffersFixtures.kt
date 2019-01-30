@@ -31,7 +31,10 @@ val PLAN_OFFER_MODELS = listOf(
 )
 
 val PLAN_OFFERS_RESPONSE = PlanOffersResponse(
-        listOf(Group("personal", "Personal"), Group("business", "Business")), listOf(
+        listOf(
+                Group("personal", "Personal"),
+                Group("business", "Business")
+        ), listOf(
         Plan(
                 listOf("personal", "too personal"),
                 listOf(PlanId(1)),

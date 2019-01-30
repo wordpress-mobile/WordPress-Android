@@ -41,14 +41,12 @@ class PlanOffersStore @Inject constructor(
 
         return if (!fetchedPlanOffersPayload.isError) {
             planOffersSqlUtils.storePlanOffers(fetchedPlanOffersPayload.planOffers!!)
-            val onPlanOffersFetched = OnPlanOffersFetched(fetchedPlanOffersPayload.planOffers)
-            onPlanOffersFetched
+            OnPlanOffersFetched(fetchedPlanOffersPayload.planOffers)
         } else {
-            val errorPayload = OnPlanOffersFetched(
+            OnPlanOffersFetched(
                     getCachedPlanOffers(),
                     PlansFetchError(GENERIC_ERROR, fetchedPlanOffersPayload.error.message)
             )
-            errorPayload
         }
     }
 
@@ -70,7 +68,7 @@ class PlanOffersStore @Inject constructor(
     ) : Store.OnChanged<PlansFetchError>() {
         init {
             // we allow setting error from constructor, so it will be a part of data class
-            // and used when comparing this class, so we can test error/no error events
+            // and used during comparison, so we can test error events
             this.error = fetchError
         }
     }

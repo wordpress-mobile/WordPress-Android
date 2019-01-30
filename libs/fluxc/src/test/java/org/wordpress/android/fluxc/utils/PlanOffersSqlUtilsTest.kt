@@ -37,7 +37,7 @@ class PlanOffersSqlUtilsTest {
     }
 
     @Test
-    fun testStoreAndRetrievePlans() {
+    fun testStoringAndRetrievingPlanOffers() {
         planOffersSqlUtils.storePlanOffers(PLAN_OFFER_MODELS)
 
         val cachedPlanOffers = planOffersSqlUtils.getPlanOffers()

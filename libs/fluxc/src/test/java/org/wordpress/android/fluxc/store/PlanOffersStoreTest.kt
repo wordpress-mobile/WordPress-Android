@@ -40,7 +40,7 @@ class PlanOffersStoreTest {
     }
 
     @Test
-    fun fetchPlans() = test {
+    fun fetchPlanOffers() = test {
         initRestClient(PLAN_OFFER_MODELS)
 
         val action = PlanOfferActionBuilder.generateNoPayloadAction(PlanOfferAction.FETCH_PLAN_OFFERS)
@@ -55,23 +55,25 @@ class PlanOffersStoreTest {
     }
 
     @Test
-    fun fetchCachedPlansAfterError() = test {
+    fun fetchCachedPlanOffersAfterError() = test {
         initRestClient(PLAN_OFFER_MODELS)
+
         val action = PlanOfferActionBuilder.generateNoPayloadAction(PlanOfferAction.FETCH_PLAN_OFFERS)
+
         planOffersStore.onAction(action)
 
         val error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR))
         error.message = "NETWORK_ERROR"
-        // tell rest client to return error and no plan offers
+
+        // tell REST client to return error and no plan offers
         initRestClient(error = error)
 
         val expectedEventWithoutError = PlanOffersStore.OnPlanOffersFetched(PLAN_OFFER_MODELS)
-        verify(dispatcher, times(1)).emitChange(eq(expectedEventWithoutError))
+        verify(dispatcher, times(1)).emitChange(eq(expectedEventWithoutError)) // sanity check
 
         planOffersStore.onAction(action)
 
         verify(planOffersRestClient, times(2)).fetchPlanOffers()
-
         // plan offers should not be stored on error
         verify(planOffersSqlUtils, times(1)).storePlanOffers(PLAN_OFFER_MODELS)
 
