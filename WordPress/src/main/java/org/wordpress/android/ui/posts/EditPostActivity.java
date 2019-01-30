@@ -2230,7 +2230,11 @@ public class EditPostActivity extends AppCompatActivity implements
             }
             if (!TextUtils.isEmpty(mPost.getTitle())) {
                 mEditorFragment.setTitle(mPost.getTitle());
+            } else if (mEditorFragment instanceof GutenbergEditorFragment) {
+                // don't avoid calling setTitle() for GutenbergEditorFragment so RN gets initialized
+                mEditorFragment.setTitle("");
             }
+
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             mEditorFragment.setLocalDraft(mPost.isLocalDraft());
 
