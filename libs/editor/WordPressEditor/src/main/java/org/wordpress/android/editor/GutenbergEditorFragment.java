@@ -175,14 +175,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    protected void updateMediaProgress() {
+    private void updateMediaProgress() {
         for (String mediaId : mUploadingMediaProgressMax.keySet()) {
             getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(mediaId),
                     mUploadingMediaProgressMax.get(mediaId));
         }
     }
-    
-    protected void checkAndRequestCameraAndStoragePermissions() {
+
+    private void checkAndRequestCameraAndStoragePermissions() {
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
                 CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
             mEditorFragmentListener.onCapturePhotoClicked();
