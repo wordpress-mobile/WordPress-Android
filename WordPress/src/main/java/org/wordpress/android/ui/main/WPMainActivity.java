@@ -598,7 +598,9 @@ public class WPMainActivity extends AppCompatActivity implements
 
         if (getSelectedSite() != null && getMySiteFragment() != null) {
             if (getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
-                getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+                // PUBLISH_POST task requires special QS notice logic, so we set the flag here
+                AppPrefs.setQuickStartNoticeRequired(
+                        !mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), QuickStartTask.PUBLISH_POST));
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here
                 QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
             }
@@ -719,6 +721,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 QuickStartUtils.cancelQuickStartReminder(this);
+                AppPrefs.setQuickStartNoticeRequired(false);
 
                 setSite(data);
                 jumpNewPost(data);
@@ -749,6 +752,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
+                        AppPrefs.setQuickStartNoticeRequired(false);
                     }
 
                     setSite(data);

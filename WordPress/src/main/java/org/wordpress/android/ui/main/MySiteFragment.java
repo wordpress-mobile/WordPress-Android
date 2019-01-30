@@ -1086,6 +1086,7 @@ public class MySiteFragment extends Fragment implements
     public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case TAG_ADD_SITE_ICON_DIALOG:
+                showQuickStartNoticeIfNecessary();
                 break;
             case TAG_CHANGE_SITE_ICON_DIALOG:
                 AnalyticsTracker.track(Stat.MY_SITE_ICON_REMOVED);
@@ -1220,18 +1221,17 @@ public class MySiteFragment extends Fragment implements
 
     private void completeQuickStarTask(QuickStartTask quickStartTask) {
         if (getSelectedSite() != null) {
-            boolean isUploadSiteIconTask = quickStartTask == QuickStartTask.UPLOAD_SITE_ICON;
-            if (isUploadSiteIconTask) {
-                AppPrefs.setQuickStartNoticeRequired(
-                        !mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), quickStartTask));
-            }
+            // we need to process notices for tasks that are completed at MySite fragment
+            AppPrefs.setQuickStartNoticeRequired(!mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), quickStartTask)
+                                             && mActiveTutorialPrompt != null
+                                             && mActiveTutorialPrompt.getTask() == quickStartTask);
+
             QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, quickStartTask, mDispatcher,
                     getSelectedSite(), getContext());
             // We update completed tasks counter onResume, but UPLOAD_SITE_ICON can be completed without navigating
             // away from the activity, so we are updating counter here
-            if (isUploadSiteIconTask) {
+            if (quickStartTask == QuickStartTask.UPLOAD_SITE_ICON) {
                 updateQuickStartContainer();
-                showQuickStartNoticeIfNecessary();
             }
             if (mActiveTutorialPrompt != null && mActiveTutorialPrompt.getTask() == quickStartTask) {
                 removeQuickStartFocusPoint();
@@ -1251,6 +1251,8 @@ public class MySiteFragment extends Fragment implements
             clearActiveQuickStartTask();
             removeQuickStartFocusPoint();
         }
+
+        mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
     }
 
     public void requestNextStepOfActiveQuickStartTask() {
