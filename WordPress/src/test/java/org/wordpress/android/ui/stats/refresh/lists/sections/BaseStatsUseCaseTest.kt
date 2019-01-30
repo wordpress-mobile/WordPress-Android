@@ -54,7 +54,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         block.fetch(site, false, false)
 
-        assertData(0, localData)
+        assertData(1, localData)
     }
 
     @Test
@@ -73,20 +73,22 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         block.fetch(site, true, false)
 
-        assertThat(result.size).isEqualTo(2)
-        assertData(0, localData)
-        assertData(1, remoteData)
+        assertThat(result.size).isEqualTo(4)
+        assertThat(result[0]?.state).isEqualTo(UseCaseState.EMPTY)
+        assertData(1, localData)
+        assertThat(result[2]?.state).isEqualTo(LOADING)
+        assertData(3, remoteData)
     }
 
     @Test
     fun `live data value is cleared`() = test {
         block.fetch(site, false, false)
 
-        assertData(0, localData)
+        assertData(1, localData)
 
         block.clear()
 
-        assertThat(block.liveData.value?.state).isEqualTo(UseCaseState.EMPTY)
+        assertThat(block.liveData.value?.state).isEqualTo(UseCaseState.LOADING)
     }
 
     @After

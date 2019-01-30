@@ -10,8 +10,10 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Error
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Loading
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase.NotUsedUiState
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
@@ -27,30 +29,29 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private val mainDispatcher: CoroutineDispatcher,
     private val defaultUiState: UI_STATE
 ) {
-    private val domainModel = MutableLiveData<State<DOMAIN_MODEL>>()
+    private val domainState = MutableLiveData<UseCaseState>()
+    private val domainModel = MutableLiveData<DOMAIN_MODEL>()
     private val uiState = MutableLiveData<UI_STATE>()
-    val liveData: LiveData<UseCaseModel> = merge(domainModel, uiState) { data, uiState ->
+    val liveData: LiveData<UseCaseModel> = merge(domainModel, domainState, uiState) { data, domainState, uiState ->
+        val currentData = data?.let { buildUiModel(data, uiState ?: defaultUiState) }
         try {
-            val previousModel = value() ?: UseCaseModel(type)
-            when (data) {
-                is State.Loading -> {
-                    previousModel.copy(state = LOADING, stateData = buildLoadingItem())
+            when (domainState) {
+                LOADING -> {
+                    UseCaseModel(type, data = currentData, stateData = buildLoadingItem(), state = LOADING)
                 }
-                is State.Error -> {
-                    previousModel.copy(state = ERROR, stateData = buildErrorItem())
+                ERROR -> {
+                    UseCaseModel(type, data = currentData, stateData = buildErrorItem(), state = ERROR)
                 }
-                is Data -> {
-                    UseCaseModel(type, data = buildUiModel(data.model, uiState ?: defaultUiState))
+                SUCCESS -> {
+                    UseCaseModel(type, data = currentData)
                 }
-                is Empty, null -> UseCaseModel(type, state = EMPTY, stateData = buildEmptyItem())
+                EMPTY, null -> UseCaseModel(type, state = EMPTY, stateData = buildEmptyItem())
             }
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, e)
             UseCaseModel(type, state = ERROR, stateData = buildErrorItem())
         }
     }
-
-    private fun value() = liveData.value
 
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
@@ -64,25 +65,32 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
         val firstLoad = domainModel.value == null
         var emptyDb = false
-        if (firstLoad || domainModel.value is Loading) {
+        if (firstLoad || domainState.value == LOADING) {
             val cachedData = loadCachedData(site)
             withContext(mainDispatcher) {
                 if (cachedData != null) {
-                    domainModel.value = Data(model = cachedData)
+                    domainModel.value = cachedData
                 } else {
                     emptyDb = true
                 }
             }
         }
-        if (firstLoad || refresh || domainModel.value !is Data || emptyDb) {
-            if (domainModel.value == null) {
-                withContext(mainDispatcher) {
-                    domainModel.value = State.Loading()
-                }
+        if (firstLoad || refresh || domainState.value != SUCCESS || emptyDb) {
+            withContext(mainDispatcher) {
+                domainState.value = LOADING
             }
             val state = fetchRemoteData(site, forced)
             withContext(mainDispatcher) {
-                domainModel.value = state
+                val useCaseState = when (state) {
+                    is Error -> ERROR
+                    is Data -> {
+                        domainModel.value = state.model
+                        SUCCESS
+                    }
+                    is Empty -> EMPTY
+                    is Loading -> LOADING
+                }
+                domainState.value = useCaseState
             }
         }
     }
@@ -112,6 +120,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      */
     fun clear() {
         domainModel.postValue(null)
+        domainState.postValue(LOADING)
         uiState.postValue(null)
     }
 
@@ -166,18 +175,6 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         val stateData: List<BlockListItem>? = null,
         val state: UseCaseState = SUCCESS
     ) {
-        fun copyWithLoadingState(loading: List<BlockListItem>): UseCaseModel {
-            return this.copy(state = LOADING, stateData = loading)
-        }
-
-        fun copyWithErrorState(error: List<BlockListItem>): UseCaseModel {
-            return this.copy(state = ERROR, stateData = error)
-        }
-
-        fun copyWithEmptyState(empty: List<BlockListItem>): UseCaseModel {
-            return this.copy(state = EMPTY, stateData = empty)
-        }
-
         enum class UseCaseState {
             SUCCESS, ERROR, LOADING, EMPTY
         }

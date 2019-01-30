@@ -68,15 +68,19 @@ constructor(
         val error = response.error
 
         return when {
-            error != null -> State.Error(error.message ?: error.type.name)
-            model != null && model.dates.isNotEmpty() -> State.Data(model)
-            else -> State.Empty()
+            error != null -> {
+                selectedDateProvider.dateLoadingFailed(statsGranularity)
+                State.Error(error.message ?: error.type.name)
+            }
+            model != null && model.dates.isNotEmpty() -> {
+                selectedDateProvider.dateLoadingSucceeded(statsGranularity)
+                State.Data(model)
+            }
+            else -> {
+                selectedDateProvider.dateLoadingSucceeded(statsGranularity)
+                State.Empty()
+            }
         }
-    }
-
-    override fun buildErrorItem(): List<BlockListItem> {
-        selectedDateProvider.dateLoadingFailed(statsGranularity)
-        return super.buildErrorItem()
     }
 
     override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
@@ -118,10 +122,6 @@ constructor(
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED, statsGranularity)
         if (period != null && period != "empty") {
             updateUiState { previousState -> previousState.copy(selectedDate = period) }
-            selectedDateProvider.selectDate(
-                    statsDateFormatter.parseStatsDate(statsGranularity, period),
-                    statsGranularity
-            )
         } else {
             onUiState(null)
         }

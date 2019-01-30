@@ -6,13 +6,8 @@ import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.EMPTY
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.util.Event
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.map
@@ -21,7 +16,8 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 open class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val toUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel
 ) :
         ScopedViewModel(defaultDispatcher) {
     private val _data = statsUseCase.data
@@ -38,51 +34,11 @@ open class StatsListViewModel(
     private val mutableSnackbarMessage = MutableLiveData<SnackbarMessage>()
     val snackbarMessage: LiveData<SnackbarMessage> = mutableSnackbarMessage
 
-    val uiModel: LiveData<UiModel<out List<StatsBlock>>> = _data.map {
-        val allFailing = it.fold(true) { acc, useCaseModel ->
-            acc && useCaseModel.state == ERROR
-        }
-        val allFailingWithoutData = it.fold(true) { acc, useCaseModel ->
-            acc && useCaseModel.state == ERROR && useCaseModel.data == null
-        }
-        if (!allFailing && !allFailingWithoutData) {
-            UiModel.Success(it.map { useCaseModel ->
-                when(useCaseModel.state) {
-                    SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
-                    ERROR -> StatsBlock.Error(
-                            useCaseModel.type,
-                            useCaseModel.stateData ?: useCaseModel.data ?: listOf()
-                    )
-                    LOADING -> StatsBlock.Loading(
-                            useCaseModel.type,
-                            useCaseModel.stateData ?: useCaseModel.data ?: listOf()
-                    )
-                    EMPTY -> StatsBlock.EmptyBlock(
-                            useCaseModel.type,
-                            useCaseModel.stateData ?: useCaseModel.data ?: listOf()
-                    )
-                }
-            })
-        } else if (!allFailingWithoutData) {
-            mutableSnackbarMessage.value = SnackbarMessage(getErrorMessage())
-            UiModel.Success(it.map { useCaseModel ->
-                when(useCaseModel.state) {
-                    SUCCESS, LOADING, EMPTY, ERROR -> Error(
-                            useCaseModel.type,
-                            useCaseModel.data ?: useCaseModel.stateData ?: listOf()
-                    )
-                }
-            })
-        } else {
-            UiModel.Error<List<StatsBlock>>(getErrorMessage())
-        }
-    }
-
-    private fun getErrorMessage(): Int {
-        return if (networkUtilsWrapper.isNetworkAvailable()) {
-            string.stats_loading_error
-        } else {
-            string.no_network_title
+    val uiModel: LiveData<UiModel> = _data.map { useCaseModels ->
+        toUiModel(useCaseModels) { message ->
+            mutableSnackbarMessage.value = SnackbarMessage(
+                    message
+            )
         }
     }
 
@@ -101,10 +57,10 @@ open class StatsListViewModel(
         }
     }
 
-    sealed class UiModel<T> {
-        data class Success<T>(val data: T) : UiModel<T>()
-        class Error<T>(val message: Int = R.string.stats_loading_error) : UiModel<T>()
+    sealed class UiModel {
+        data class Success(val data: List<StatsBlock>) : UiModel()
+        class Error(val message: Int = R.string.stats_loading_error) : UiModel()
     }
 
-    data class SnackbarMessage(@StringRes val message: Int): Event()
+    data class SnackbarMessage(@StringRes val message: Int) : Event()
 }

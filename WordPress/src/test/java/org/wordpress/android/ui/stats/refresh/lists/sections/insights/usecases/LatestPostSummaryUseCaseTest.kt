@@ -21,7 +21,6 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
