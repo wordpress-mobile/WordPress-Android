@@ -125,7 +125,6 @@ import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
-import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -305,8 +304,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean mHtmlModeMenuStateOn = false;
 
-    private QuickStartEvent mQuickStartEvent;
-
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -455,7 +452,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.PUBLISH_POST,
-                mDispatcher, mSite, mQuickStartEvent, this);
+                mDispatcher, mSite, this);
 
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(mImageLoader);
@@ -630,7 +627,7 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
 
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
 
         reattachUploadingMedia();
     }
@@ -730,8 +727,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
-        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
-
         if (mEditorFragment != null) {
             getSupportFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
         }
@@ -741,7 +736,6 @@ public class EditPostActivity extends AppCompatActivity implements
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         mHtmlModeMenuStateOn = savedInstanceState.getBoolean(STATE_KEY_HTML_MODE_ON);
         if (savedInstanceState.getBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
             showPhotoPicker();
@@ -3612,14 +3606,6 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
     }
-
-    @SuppressWarnings("unused")
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(final QuickStartEvent event) {
-        EventBus.getDefault().removeStickyEvent(event);
-        mQuickStartEvent = event;
-    }
-
 
     private void showAsyncPromoDialog(boolean isPage, boolean isScheduled) {
         int title = isScheduled ? R.string.async_promo_title_schedule : R.string.async_promo_title_publish;
