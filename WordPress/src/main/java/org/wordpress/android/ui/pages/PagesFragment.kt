@@ -242,10 +242,8 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         })
 
         viewModel.createNewPage.observe(this, Observer {
-            QuickStartUtils.completeTaskAndRemindNextOne(
-                    quickStartStore, QuickStartTask.CREATE_NEW_PAGE,
-                    dispatcher, viewModel.site, quickStartEvent, context
-            )
+            QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore, QuickStartTask.CREATE_NEW_PAGE, dispatcher,
+                    viewModel.site, quickStartEvent, context)
             ActivityLauncher.addNewPageForResult(this, viewModel.site)
         })
 

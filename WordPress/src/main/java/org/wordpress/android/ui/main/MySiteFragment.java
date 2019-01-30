@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -105,7 +106,8 @@ public class MySiteFragment extends Fragment implements
         SiteSettingsListener,
         WPMainActivity.OnScrollToTopListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        BasicFragmentDialog.BasicDialogNegativeClickInterface, PromoDialogClickInterface, MainToolbarFragment,
+        BasicFragmentDialog.BasicDialogNegativeClickInterface,
+        BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface, MainToolbarFragment,
         OnConfirmListener {
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
@@ -1120,6 +1122,18 @@ public class MySiteFragment extends Fragment implements
     }
 
     @Override
+    public void onDismissByOutsideTouch(@NotNull String instanceTag) {
+        switch (instanceTag) {
+            case TAG_ADD_SITE_ICON_DIALOG:
+                showQuickStartNoticeIfNecessary();
+                break;
+            default:
+                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
+        }
+    }
+
+    @Override
     public void onLinkClicked(@NonNull String instanceTag) {
     }
 
@@ -1222,9 +1236,10 @@ public class MySiteFragment extends Fragment implements
     private void completeQuickStarTask(QuickStartTask quickStartTask) {
         if (getSelectedSite() != null) {
             // we need to process notices for tasks that are completed at MySite fragment
-            AppPrefs.setQuickStartNoticeRequired(!mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), quickStartTask)
-                                             && mActiveTutorialPrompt != null
-                                             && mActiveTutorialPrompt.getTask() == quickStartTask);
+            AppPrefs.setQuickStartNoticeRequired(
+                    !mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), quickStartTask)
+                    && mActiveTutorialPrompt != null
+                    && mActiveTutorialPrompt.getTask() == quickStartTask);
 
             QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, quickStartTask, mDispatcher,
                     getSelectedSite(), getContext());
