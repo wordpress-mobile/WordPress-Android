@@ -224,7 +224,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         builder.setNegativeButton(R.string.retry_failed_upload_remove, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
-                mWPAndroidGlueCode.appendUploadMediaFile(mediaId, null);
+                mWPAndroidGlueCode.clearMediaFileURL(mediaId);
             }
         });
 
