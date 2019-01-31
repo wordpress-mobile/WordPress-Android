@@ -7,7 +7,7 @@ import kotlin.test.assertNotEquals
 
 class PlanOffersModelTest {
     @Test
-    fun testRevisionModelEquals() {
+    fun testPlanOffersEquals() {
         val samplePlanOfferModel1 = PLAN_OFFER_MODELS[0]
         val samplePlanOfferModel2 = PLAN_OFFER_MODELS[0].copy()
 

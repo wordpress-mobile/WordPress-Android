@@ -57,8 +57,6 @@ data class PlanOfferModel(
         result = 31 * result + (tagline?.hashCode() ?: 0)
         result = 31 * result + (description?.hashCode() ?: 0)
         result = 31 * result + (iconUrl?.hashCode() ?: 0)
-        result = 31 * result + (planIds?.hashCode() ?: 0)
-        result = 31 * result + (features?.hashCode() ?: 0)
         return result
     }
 }
