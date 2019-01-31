@@ -249,7 +249,11 @@ public class UploadService extends Service {
                         rebuildNotificationError(post, getString(R.string.no_network_message));
                         return;
                     }
-                    retryUpload(post, AppPrefs.isAztecEditorEnabled() && !AppPrefs.isGutenbergEditorEnabled());
+                    boolean postHasGutenbergBlocks = PostUtils.contentContainsGutenbergBlocks(post.getContent());
+                    boolean processWithAztec =
+                            AppPrefs.isAztecEditorEnabled() && !AppPrefs.isGutenbergEditorEnabled()
+                            && !postHasGutenbergBlocks;
+                    retryUpload(post, processWithAztec);
                 } else {
                     ToastUtils.showToast(this, R.string.retry_needs_aztec);
                 }
@@ -740,10 +744,10 @@ public class UploadService extends Service {
         }
     }
 
-    private void retryUpload(PostModel post, boolean isAztec) {
+    private void retryUpload(PostModel post, boolean processWithAztec) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_UPLOAD_POST_ERROR_RETRY);
 
-        if (isAztec) {
+        if (processWithAztec) {
             aztecRegisterFailedMediaForThisPost(post);
         }
 
@@ -757,7 +761,7 @@ public class UploadService extends Service {
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
 
-            if (isAztec) {
+            if (processWithAztec) {
                 // do the same within the Post content itself
                 String postContentWithRestartedUploads =
                         AztecEditorFragment.restartFailedMediaToUploading(this, post.getContent());
