@@ -92,5 +92,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = 'issue~1086-add-paging-SNAPSHOT'
+    fluxCVersion = 'b9b51599a32ef218bfb1907169d88d384dc09337'
 }
