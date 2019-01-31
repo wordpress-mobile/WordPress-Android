@@ -163,7 +163,16 @@ class InsightsStore
             }
             response.response != null -> {
                 sqlUtils.insert(siteModel, response.response, followerType, deleteOldDataFirst = !loadMore)
-                OnStatsFetched(insightsMapper.map(response.response, followerType, pageSize))
+                val allFollowers = sqlUtils.selectAllFollowers(siteModel, followerType)
+                        .fold(FollowersModel(0, emptyList(), false)) { acc, next ->
+                            val nextModel = insightsMapper.map(next, followerType, pageSize)
+                            FollowersModel(
+                                    acc.totalCount + nextModel.totalCount,
+                                    acc.followers + nextModel.followers,
+                                    nextModel.hasMore
+                                    )
+                        }
+                OnStatsFetched(allFollowers)
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
