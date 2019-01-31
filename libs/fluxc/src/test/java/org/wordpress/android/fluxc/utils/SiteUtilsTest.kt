@@ -13,6 +13,11 @@ import kotlin.test.assertNotEquals
 class SiteUtilsTest {
     companion object {
         const val UTC8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX"
+
+        const val DATE_FORMAT_DAY = "yyyy-MM-dd"
+        const val DATE_FORMAT_WEEK = "yyyy-'W'ww"
+        const val DATE_FORMAT_MONTH = "yyyy-MM"
+        const val DATE_FORMAT_YEAR = "yyyy"
     }
 
     @Test
@@ -187,5 +192,46 @@ class SiteUtilsTest {
 
         val defaultQuantity2 = SiteUtils.getQuantityByGranularity(null, null, StatsGranularity.YEARS, 1)
         assertEquals(1, defaultQuantity2)
+    }
+
+
+    @Test
+    fun testGetDateFormattedDateForUtcSite() {
+        val siteModel = SiteModel()
+        with(siteModel) {
+            val formattedDate = SiteUtils.getDateTimeForSite(this, DATE_FORMAT_DAY, "")
+            val currentTimeUtc = "2019-01-31"
+            assertEquals(currentTimeUtc, formattedDate)
+        }
+
+        siteModel.timezone = ""
+        with(siteModel) {
+            val formattedDate = SiteUtils.getDateTimeForSite(this, DATE_FORMAT_DAY, "2019-01-31")
+            val currentTimeUtc = "2019-01-30"
+            assertEquals(currentTimeUtc, formattedDate)
+        }
+
+
+        siteModel.timezone = ""
+        with(siteModel) {
+            val formattedDate = SiteUtils.getDateTimeForSite(this, DATE_FORMAT_WEEK, "2019-01-31")
+            val currentTimeUtc = "2019-W05"
+            assertEquals(currentTimeUtc, formattedDate)
+        }
+
+        siteModel.timezone = "0"
+        with(siteModel) {
+            val formattedDate = SiteUtils.getDateTimeForSite(this, DATE_FORMAT_MONTH, "2019-01-31")
+            val currentTimeUtc = "2018-12"
+            assertEquals(currentTimeUtc, formattedDate)
+        }
+
+
+        siteModel.timezone = "0"
+        with(siteModel) {
+            val formattedDate = SiteUtils.getDateTimeForSite(this, DATE_FORMAT_YEAR, "2019-01-31")
+            val currentTimeUtc = "2018"
+            assertEquals(currentTimeUtc, formattedDate)
+        }
     }
 }
