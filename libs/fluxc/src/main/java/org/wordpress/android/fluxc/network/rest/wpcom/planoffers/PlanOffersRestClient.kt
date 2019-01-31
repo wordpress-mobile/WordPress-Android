@@ -4,7 +4,7 @@ import android.content.Context
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
-import org.wordpress.android.fluxc.model.plans.PlanOfferModel
+import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.fluxc.network.Response
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -59,10 +59,10 @@ constructor(
         return PlanOffersFetchedPayload(planResponses?.map { plan ->
             val featureDetails = featureResponses?.filter { feature -> plan.features!!.contains(feature.id) }!!
                     .map { filteredFeature ->
-                        PlanOfferModel.Feature(filteredFeature.id, filteredFeature.name, filteredFeature.description)
+                        PlanOffersModel.Feature(filteredFeature.id, filteredFeature.name, filteredFeature.description)
                     }
 
-            PlanOfferModel(
+            PlanOffersModel(
                     plan.products?.map { product -> product.plan_id },
                     featureDetails,
                     plan.name,

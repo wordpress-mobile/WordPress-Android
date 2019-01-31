@@ -10,8 +10,8 @@ import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PLAN_OFFER_MODELS
 import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils
 import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils.PlanOffersBuilder
-import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils.PlanOfferFeatureBuilder
-import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils.PlanOfferIdBuilder
+import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils.PlanOffersFeatureBuilder
+import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils.PlanOffersIdBuilder
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -28,8 +28,8 @@ class PlanOffersSqlUtilsTest {
                 appContext,
                 listOf(
                         PlanOffersBuilder::class.java,
-                        PlanOfferIdBuilder::class.java,
-                        PlanOfferFeatureBuilder::class.java
+                        PlanOffersIdBuilder::class.java,
+                        PlanOffersFeatureBuilder::class.java
                 ), ""
         )
         WellSql.init(config)

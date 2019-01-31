@@ -12,9 +12,9 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.PlanOfferAction
-import org.wordpress.android.fluxc.generated.PlanOfferActionBuilder
-import org.wordpress.android.fluxc.model.plans.PlanOfferModel
+import org.wordpress.android.fluxc.action.PlanOffersAction
+import org.wordpress.android.fluxc.generated.PlanOffersActionBuilder
+import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
@@ -43,7 +43,7 @@ class PlanOffersStoreTest {
     fun fetchPlanOffers() = test {
         initRestClient(PLAN_OFFER_MODELS)
 
-        val action = PlanOfferActionBuilder.generateNoPayloadAction(PlanOfferAction.FETCH_PLAN_OFFERS)
+        val action = PlanOffersActionBuilder.generateNoPayloadAction(PlanOffersAction.FETCH_PLAN_OFFERS)
 
         planOffersStore.onAction(action)
 
@@ -58,7 +58,7 @@ class PlanOffersStoreTest {
     fun fetchCachedPlanOffersAfterError() = test {
         initRestClient(PLAN_OFFER_MODELS)
 
-        val action = PlanOfferActionBuilder.generateNoPayloadAction(PlanOfferAction.FETCH_PLAN_OFFERS)
+        val action = PlanOffersActionBuilder.generateNoPayloadAction(PlanOffersAction.FETCH_PLAN_OFFERS)
 
         planOffersStore.onAction(action)
 
@@ -85,7 +85,7 @@ class PlanOffersStoreTest {
     }
 
     private suspend fun initRestClient(
-        planOffers: List<PlanOfferModel>? = null,
+        planOffers: List<PlanOffersModel>? = null,
         error: WPComGsonNetworkError? = null
     ) {
         val payload = PlanOffersFetchedPayload(planOffers)

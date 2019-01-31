@@ -411,14 +411,14 @@ public class WellSqlConfig extends DefaultWellConfig {
              case 50:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL(
-                        "CREATE TABLE PlanOffer (_id INTEGER PRIMARY KEY AUTOINCREMENT,INTERNAL_PLAN_ID INTEGER,"
+                        "CREATE TABLE PlanOffers (_id INTEGER PRIMARY KEY AUTOINCREMENT,INTERNAL_PLAN_ID INTEGER,"
                         + "NAME TEXT,SHORT_NAME TEXT,TAGLINE TEXT,DESCRIPTION TEXT,ICON TEXT)");
                 db.execSQL(
-                        "CREATE TABLE PlanOfferId (_id INTEGER PRIMARY KEY AUTOINCREMENT,PRODUCT_ID INTEGER,"
+                        "CREATE TABLE PlanOffersId (_id INTEGER PRIMARY KEY AUTOINCREMENT,PRODUCT_ID INTEGER,"
                         + "INTERNAL_PLAN_ID INTEGER)");
                 db.execSQL(
-                        "CREATE TABLE PlanOfferFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT,INTERNAL_PLAN_ID INTEGER,"
-                        + "STRING_ID TEXT UNIQUE,NAME TEXT,DESCRIPTION TEXT)");
+                        "CREATE TABLE PlanOffersFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + "INTERNAL_PLAN_ID INTEGER,STRING_ID TEXT UNIQUE,NAME TEXT,DESCRIPTION TEXT)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

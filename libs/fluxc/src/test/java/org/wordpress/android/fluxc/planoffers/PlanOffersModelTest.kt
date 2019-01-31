@@ -8,14 +8,14 @@ import kotlin.test.assertNotEquals
 class PlanOffersModelTest {
     @Test
     fun testPlanOffersEquals() {
-        val samplePlanOfferModel1 = PLAN_OFFER_MODELS[0]
-        val samplePlanOfferModel2 = PLAN_OFFER_MODELS[0].copy()
+        val samplePlanOffersModel1 = PLAN_OFFER_MODELS[0]
+        val samplePlanOffersModel2 = PLAN_OFFER_MODELS[0].copy()
 
-        assertEquals(samplePlanOfferModel1, samplePlanOfferModel2)
-        assertEquals(samplePlanOfferModel1.hashCode(), samplePlanOfferModel2.hashCode())
+        assertEquals(samplePlanOffersModel1, samplePlanOffersModel2)
+        assertEquals(samplePlanOffersModel1.hashCode(), samplePlanOffersModel2.hashCode())
 
-        samplePlanOfferModel2.description = "mismatched description"
-        assertNotEquals(samplePlanOfferModel1, samplePlanOfferModel2)
-        assertNotEquals(samplePlanOfferModel1.hashCode(), samplePlanOfferModel2.hashCode())
+        samplePlanOffersModel2.description = "mismatched description"
+        assertNotEquals(samplePlanOffersModel1, samplePlanOffersModel2)
+        assertNotEquals(samplePlanOffersModel1.hashCode(), samplePlanOffersModel2.hashCode())
     }
 }

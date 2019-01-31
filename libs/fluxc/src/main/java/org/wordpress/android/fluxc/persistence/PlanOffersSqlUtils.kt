@@ -1,52 +1,52 @@
 package org.wordpress.android.fluxc.persistence
 
-import com.wellsql.generated.PlanOfferFeatureTable
-import com.wellsql.generated.PlanOfferIdTable
+import com.wellsql.generated.PlanOffersFeatureTable
+import com.wellsql.generated.PlanOffersIdTable
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
 import com.yarolegovich.wellsql.core.annotation.Unique
-import org.wordpress.android.fluxc.model.plans.PlanOfferModel
-import org.wordpress.android.fluxc.model.plans.PlanOfferModel.Feature
+import org.wordpress.android.fluxc.model.plans.PlanOffersModel
+import org.wordpress.android.fluxc.model.plans.PlanOffersModel.Feature
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PlanOffersSqlUtils @Inject constructor() {
-    fun storePlanOffers(planOffers: List<PlanOfferModel>) {
+    fun storePlanOffers(planOffers: List<PlanOffersModel>) {
         WellSql.delete(PlanOffersBuilder::class.java).execute()
-        WellSql.delete(PlanOfferIdBuilder::class.java).execute()
-        WellSql.delete(PlanOfferFeatureBuilder::class.java).execute()
+        WellSql.delete(PlanOffersIdBuilder::class.java).execute()
+        WellSql.delete(PlanOffersFeatureBuilder::class.java).execute()
 
         planOffers.forEachIndexed { index, planModel ->
-            val planIds = planModel.planIds?.map { PlanOfferIdBuilder(internalPlanId = index, productId = it) }
+            val planIds = planModel.planIds?.map { PlanOffersIdBuilder(internalPlanId = index, productId = it) }
             val features = planModel.features?.map { it.toBuilder(index) }
             val plan = planModel.toBuilder(index)
 
             WellSql.insert<PlanOffersBuilder>(plan).execute()
-            WellSql.insert<PlanOfferIdBuilder>(planIds).execute()
-            WellSql.insert<PlanOfferFeatureBuilder>(features).execute()
+            WellSql.insert<PlanOffersIdBuilder>(planIds).execute()
+            WellSql.insert<PlanOffersFeatureBuilder>(features).execute()
         }
     }
 
-    fun getPlanOffers(): List<PlanOfferModel> {
+    fun getPlanOffers(): List<PlanOffersModel> {
         return WellSql.select(PlanOffersBuilder::class.java).asModel.mapNotNull { plan ->
-            val planFeatures = WellSql.select(PlanOfferFeatureBuilder::class.java)
-                    .where().equals(PlanOfferFeatureTable.INTERNAL_PLAN_ID, plan.internalPlanId).endWhere()
+            val planFeatures = WellSql.select(PlanOffersFeatureBuilder::class.java)
+                    .where().equals(PlanOffersFeatureTable.INTERNAL_PLAN_ID, plan.internalPlanId).endWhere()
                     .asModel.mapNotNull {
                 it.build()
             }
-            val planIds = WellSql.select(PlanOfferIdBuilder::class.java)
-                    .where().equals(PlanOfferIdTable.INTERNAL_PLAN_ID, plan.internalPlanId).endWhere()
+            val planIds = WellSql.select(PlanOffersIdBuilder::class.java)
+                    .where().equals(PlanOffersIdTable.INTERNAL_PLAN_ID, plan.internalPlanId).endWhere()
                     .asModel.mapNotNull { it.build() }
             plan.build(planIds, planFeatures)
         }
     }
 
-    private fun Feature.toBuilder(internalPlanId: Int): PlanOfferFeatureBuilder {
-        return PlanOfferFeatureBuilder(
+    private fun Feature.toBuilder(internalPlanId: Int): PlanOffersFeatureBuilder {
+        return PlanOffersFeatureBuilder(
                 internalPlanId = internalPlanId,
                 stringId = this.id,
                 name = this.name,
@@ -54,7 +54,7 @@ class PlanOffersSqlUtils @Inject constructor() {
         )
     }
 
-    private fun PlanOfferModel.toBuilder(internalPlanId: Int): PlanOffersBuilder {
+    private fun PlanOffersModel.toBuilder(internalPlanId: Int): PlanOffersBuilder {
         return PlanOffersBuilder(
                 internalPlanId = internalPlanId,
                 name = this.name,
@@ -65,8 +65,8 @@ class PlanOffersSqlUtils @Inject constructor() {
         )
     }
 
-    @Table(name = "PlanOfferFeature")
-    data class PlanOfferFeatureBuilder(
+    @Table(name = "PlanOffersFeature")
+    data class PlanOffersFeatureBuilder(
         @PrimaryKey @Column private var id: Int = 0,
         @Column var internalPlanId: Int = 0,
         @Column @Unique var stringId: String? = null,
@@ -86,8 +86,8 @@ class PlanOffersSqlUtils @Inject constructor() {
         }
     }
 
-    @Table(name = "PlanOfferId")
-    data class PlanOfferIdBuilder(
+    @Table(name = "PlanOffersId")
+    data class PlanOffersIdBuilder(
         @PrimaryKey @Column private var id: Int = 0,
         @Column var productId: Int = 0,
         @Column var internalPlanId: Int = 0
@@ -105,7 +105,7 @@ class PlanOffersSqlUtils @Inject constructor() {
         }
     }
 
-    @Table(name = "PlanOffer")
+    @Table(name = "PlanOffers")
     data class PlanOffersBuilder(
         @PrimaryKey @Column private var id: Int = 0,
         @Column var internalPlanId: Int = 0,
@@ -116,8 +116,8 @@ class PlanOffersSqlUtils @Inject constructor() {
         @Column var description: String? = null,
         @Column var icon: String? = null
     ) : Identifiable {
-        fun build(planIds: List<Int>, planFeatures: List<Feature>): PlanOfferModel {
-            return PlanOfferModel(planIds, planFeatures, name, shortName, tagline, description, icon)
+        fun build(planIds: List<Int>, planFeatures: List<Feature>): PlanOffersModel {
+            return PlanOffersModel(planIds, planFeatures, name, shortName, tagline, description, icon)
         }
 
         override fun getId(): Int {
