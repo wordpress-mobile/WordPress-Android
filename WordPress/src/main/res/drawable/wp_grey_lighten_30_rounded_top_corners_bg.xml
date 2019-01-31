@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/wp_grey_lighten_30"/>
-    <corners
-        android:bottomLeftRadius="0dp"
-        android:bottomRightRadius="0dp"
-        android:topLeftRadius="@dimen/margin_extra_large"
-        android:topRightRadius="@dimen/margin_extra_large"/>
-</shape>
