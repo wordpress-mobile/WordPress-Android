@@ -7,7 +7,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.content.ContextCompat
@@ -327,17 +326,13 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
 
                     val titleAnim = createFadeInAnimator(sitePreviewTitle)
                     val webViewAnim = createSlideInFromBottomAnimator(webviewContainer, contentHeight)
-                    val animatorItems = mutableListOf(titleAnim, webViewAnim)
-                    // OK button should slide in for portrait orientation and fade in for landscape orientation
-                    if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        okButtonContainer?.let { animatorItems.add(createSlideInFromBottomAnimator(it, contentHeight)) }
-                    } else {
-                        animatorItems.add(createFadeInAnimator(okButton))
-                    }
+                    // OK button should slide in if the container exists and fade in otherwise
+                    val okAnim = okButtonContainer?.let { createSlideInFromBottomAnimator(it, contentHeight) }
+                            ?: createFadeInAnimator(okButton)
                     AnimatorSet().apply {
                         interpolator = DecelerateInterpolator()
                         duration = SLIDE_IN_ANIMATION_DURATION
-                        playTogether(animatorItems.toList())
+                        playTogether(titleAnim, webViewAnim, okAnim)
                         start()
                     }
                 }
