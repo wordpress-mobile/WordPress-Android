@@ -249,7 +249,7 @@ public class UploadService extends Service {
                         rebuildNotificationError(post, getString(R.string.no_network_message));
                         return;
                     }
-                    retryUpload(post, AppPrefs.isAztecEditorEnabled());
+                    retryUpload(post, AppPrefs.isAztecEditorEnabled() && !AppPrefs.isGutenbergEditorEnabled());
                 } else {
                     ToastUtils.showToast(this, R.string.retry_needs_aztec);
                 }
