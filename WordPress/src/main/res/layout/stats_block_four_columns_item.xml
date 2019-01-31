@@ -1,56 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             android:id="@+id/column_container"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="wrap_content"
-                                             android:minHeight="56dp">
+<HorizontalScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <include
-        android:id="@+id/column1"
-        layout="@layout/stats_block_selectable_column"
+    <LinearLayout
+        android:id="@+id/column_container"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toStartOf="@+id/column2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
+        android:orientation="horizontal">
 
-    <include
-        android:id="@+id/column2"
-        layout="@layout/stats_block_selectable_column"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toStartOf="@+id/column3"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toEndOf="@+id/column1"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        <include
+            android:id="@+id/column1"
+            layout="@layout/stats_block_selectable_column"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_medium"/>
 
-    <include
-        android:id="@+id/column3"
-        layout="@layout/stats_block_selectable_column"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toStartOf="@+id/column4"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toEndOf="@+id/column2"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        <include
+            android:id="@+id/column2"
+            layout="@layout/stats_block_selectable_column"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_medium"/>
 
-    <include
-        android:id="@+id/column4"
-        layout="@layout/stats_block_selectable_column"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toEndOf="@+id/column3"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-</android.support.constraint.ConstraintLayout>
+        <include
+            android:id="@+id/column3"
+            layout="@layout/stats_block_selectable_column"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_medium"/>
+
+        <include
+            android:id="@+id/column4"
+            layout="@layout/stats_block_selectable_column"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_medium"/>
+    </LinearLayout>
+</HorizontalScrollView>

@@ -29,6 +29,7 @@
         android:layout_weight="1"
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_key"
         app:autoSizeMaxTextSize="@dimen/text_sz_post_content"
         app:autoSizeMinTextSize="@dimen/text_sz_small"
         app:autoSizeStepGranularity="2sp"
