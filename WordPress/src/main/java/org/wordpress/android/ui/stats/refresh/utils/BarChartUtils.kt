@@ -84,7 +84,7 @@ fun BarChart.draw(
         axisMaximum = if (maxYValue < MIN_VALUE) {
             MIN_VALUE
         } else {
-            maxYValue.toFloat()
+            maxYValue.toFloat() * 1.1f
         }
         textColor = greyColor
         gridColor = lightGreyColor
