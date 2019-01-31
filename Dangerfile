@@ -7,3 +7,7 @@ warn("PR has more than 500 lines of code changing. Consider splitting into small
 # PRs should have a milestone attached
 has_milestone = github.pr_json["milestone"] != nil
 warn("PR is not assigned to a milestone.", sticky: false) unless has_milestone
+
+# Lint
+android_lint.gradle_task = "lintVanillaRelease"
+android_lint.lint(inline_mode: true)
