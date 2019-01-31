@@ -6,29 +6,30 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
-import java.util.Date
 import javax.inject.Inject
 
 class OverviewMapper
 @Inject constructor(private val statsDateFormatter: StatsDateFormatter) {
-    fun buildTitle(
-        selectedItemPeriod: String?,
-        dateFromUiState: Date?,
-        fallbackDate: String,
-        statsGranularity: StatsGranularity
-    ): Title {
-        val titleText = when {
-            selectedItemPeriod != null -> statsDateFormatter.printGranularDate(
-                    selectedItemPeriod,
-                    statsGranularity
-            )
-            dateFromUiState != null -> statsDateFormatter.printStatsDate(dateFromUiState)
-            else -> statsDateFormatter.printDate(fallbackDate)
-        }
-        return Title(text = titleText)
+    private val units = listOf(
+            string.stats_views,
+            string.stats_visitors,
+            string.stats_likes,
+            string.stats_comments
+    )
+
+    fun buildTitle(selectedItem: PeriodData?, selectedPosition: Int): ValueItem {
+        val value = when (selectedPosition) {
+            0 -> selectedItem?.views?.toFormattedString(MILLION)
+            1 -> selectedItem?.visitors?.toFormattedString(MILLION)
+            2 -> selectedItem?.likes?.toFormattedString(MILLION)
+            3 -> selectedItem?.comments?.toFormattedString(MILLION)
+            else -> null
+        }  ?: "0"
+        return ValueItem(value = value, unit = units[selectedPosition])
     }
 
     fun buildColumns(
@@ -37,12 +38,7 @@ class OverviewMapper
         selectedPosition: Int
     ): Columns {
         return Columns(
-                listOf(
-                        string.stats_views,
-                        string.stats_visitors,
-                        string.stats_likes,
-                        string.stats_comments
-                ),
+                units,
                 listOf(
                         selectedItem?.views?.toFormattedString() ?: "0",
                         selectedItem?.visitors?.toFormattedString() ?: "0",

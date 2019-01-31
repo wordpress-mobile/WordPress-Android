@@ -137,7 +137,7 @@ class StatsViewModel
 
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
-        updateDateSelector()
+        updateDateSelector(statsSection)
         when (statsSection) {
             StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
             StatsSection.DAYS -> analyticsTracker.track(STATS_PERIOD_DAYS_ACCESSED)
@@ -147,8 +147,7 @@ class StatsViewModel
         }
     }
 
-    private fun updateDateSelector() {
-        val statsSection = statsSectionManager.getSelectedSection()
+    private fun updateDateSelector(statsSection: StatsSection = statsSectionManager.getSelectedSection()) {
         val shouldShowDateSelection = statsSection != INSIGHTS
 
         val updatedDate = getDateLabelForSection(statsSection)

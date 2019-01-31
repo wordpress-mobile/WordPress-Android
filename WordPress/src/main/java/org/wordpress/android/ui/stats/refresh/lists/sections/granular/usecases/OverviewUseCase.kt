@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
@@ -10,12 +11,13 @@ import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -41,12 +43,7 @@ constructor(
 ) {
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
-                    Title(
-                            text = statsDateFormatter.printGranularDate(
-                                    selectedDateProvider.getCurrentDate(),
-                                    statsGranularity
-                            )
-                    )
+                    ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views)
             )
 
     override suspend fun loadCachedData(site: SiteModel) {
@@ -101,12 +98,7 @@ constructor(
             val shiftedIndex = index + domainModel.dates.size - visibleBarCount
             val selectedItem = domainModel.dates.getOrNull(shiftedIndex) ?: domainModel.dates.last()
             items.add(
-                    overviewMapper.buildTitle(
-                            selectedItem.period,
-                            selectedDate,
-                            domainModel.period,
-                            statsGranularity
-                    )
+                    overviewMapper.buildTitle(selectedItem, uiState.selectedPosition)
             )
             items.add(
                     overviewMapper.buildChart(

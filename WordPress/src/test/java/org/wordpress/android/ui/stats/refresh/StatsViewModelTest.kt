@@ -20,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 class StatsViewModelTest : BaseUnitTest() {
@@ -29,6 +30,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var monthStatsUseCase: BaseListUseCase
     @Mock lateinit var yearStatsUseCase: BaseListUseCase
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var statsSectionManager: SelectedSectionManager
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private lateinit var viewModel: StatsViewModel
@@ -43,6 +45,7 @@ class StatsViewModelTest : BaseUnitTest() {
                 yearStatsUseCase,
                 Dispatchers.Unconfined,
                 selectedDateProvider,
+                statsDateFormatter,
                 statsSectionManager,
                 analyticsTracker
         )
