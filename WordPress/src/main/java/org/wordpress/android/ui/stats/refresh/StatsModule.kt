@@ -29,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.V
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
@@ -64,7 +65,7 @@ class StatsModule {
         allTimeStatsUseCase: AllTimeStatsUseCase,
         latestPostSummaryUseCase: LatestPostSummaryUseCase,
         todayStatsUseCase: TodayStatsUseCase,
-        followersUseCase: FollowersUseCase,
+        followersUseCaseFactory: FollowersUseCaseFactory,
         commentsUseCase: CommentsUseCase,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCase: TagsAndCategoriesUseCase,
@@ -74,7 +75,7 @@ class StatsModule {
                 allTimeStatsUseCase,
                 latestPostSummaryUseCase,
                 todayStatsUseCase,
-                followersUseCase,
+                followersUseCaseFactory.build(false),
                 commentsUseCase,
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCase,
@@ -141,9 +142,9 @@ class StatsModule {
     fun provideViewAllFollowersUseCase(
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        followersUseCases: FollowersUseCase
+        followersUseCaseFactory: FollowersUseCaseFactory
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher, listOf(followersUseCases)) {
+        return BaseListUseCase(bgDispatcher, mainDispatcher, listOf(followersUseCaseFactory.build(true))) {
             listOf(FOLLOWERS)
         }
     }

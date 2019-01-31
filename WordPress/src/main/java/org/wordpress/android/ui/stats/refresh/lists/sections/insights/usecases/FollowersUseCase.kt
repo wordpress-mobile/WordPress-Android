@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -25,12 +26,14 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_PAGE_SIZE = 6
+private const val VIEW_ALL_PAGE_SIZE = 10
 
 class FollowersUseCase
 @Inject constructor(
@@ -38,23 +41,37 @@ class FollowersUseCase
     private val insightsStore: InsightsStore,
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val isViewAllMode: Boolean
 ) : StatefulUseCase<Pair<FollowersModel, FollowersModel>, Int>(
         FOLLOWERS,
         mainDispatcher,
         0
 ) {
+    private val pageSize = if (isViewAllMode) VIEW_ALL_PAGE_SIZE else BLOCK_PAGE_SIZE
+    private lateinit var lastSite: SiteModel
+
     override suspend fun loadCachedData(site: SiteModel) {
-        val wpComFollowers = insightsStore.getWpComFollowers(site, PAGE_SIZE)
-        val emailFollowers = insightsStore.getEmailFollowers(site, PAGE_SIZE)
+        lastSite = site
+        val wpComFollowers = insightsStore.getWpComFollowers(site, pageSize)
+        val emailFollowers = insightsStore.getEmailFollowers(site, pageSize)
         if (wpComFollowers != null && emailFollowers != null) {
             onModel(wpComFollowers to emailFollowers)
         }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, PAGE_SIZE, forced) }
-        val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, PAGE_SIZE, forced) }
+        lastSite = site
+        fetchRemoteData(site, forced, false)
+    }
+
+    private suspend fun fetchRemoteData(site: SiteModel, forced: Boolean, loadMore: Boolean) {
+        val deferredWpComResponse = GlobalScope.async {
+            insightsStore.fetchWpComFollowers(site, pageSize, forced, loadMore)
+        }
+        val deferredEmailResponse = GlobalScope.async {
+            insightsStore.fetchEmailFollowers(site, pageSize, forced, loadMore)
+        }
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
         val wpComModel = wpComResponse.model
@@ -97,9 +114,13 @@ class FollowersUseCase
             }
 
             if (wpComModel.hasMore || emailModel.hasMore) {
+                val buttonText = if (isViewAllMode)
+                        R.string.stats_insights_load_more
+                    else
+                        R.string.stats_insights_view_more
                 items.add(
                         Link(
-                                text = string.stats_insights_view_more,
+                                text = buttonText,
                                 navigateAction = NavigationAction.create(this::onLinkClick)
                         )
                 )
@@ -143,7 +164,32 @@ class FollowersUseCase
     }
 
     private fun onLinkClick() {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
-        navigateTo(ViewFollowersStats())
+        if (isViewAllMode) {
+            GlobalScope.launch {
+                fetchRemoteData(lastSite, forced = true, loadMore = true)
+            }
+        } else {
+            analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
+            navigateTo(ViewFollowersStats())
+        }
+    }
+
+    class FollowersUseCaseFactory
+    @Inject constructor(
+        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        private val insightsStore: InsightsStore,
+        private val statsUtilsWrapper: StatsUtilsWrapper,
+        private val resourceProvider: ResourceProvider,
+        private val analyticsTracker: AnalyticsTrackerWrapper
+    ) : InsightUseCaseFactory {
+        override fun build(isViewAllMode: Boolean) =
+                FollowersUseCase(
+                        mainDispatcher,
+                        insightsStore,
+                        statsUtilsWrapper,
+                        resourceProvider,
+                        analyticsTracker,
+                        isViewAllMode
+                )
     }
 }
