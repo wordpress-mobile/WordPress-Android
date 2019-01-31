@@ -18,6 +18,20 @@ import static org.apache.commons.lang3.StringUtils.split;
 public class SiteUtils {
     private static final String DATE_FORMAT_DEFAULT = "yyyy-MM-dd";
 
+
+    /**
+     * Given a {@link SiteModel} and a {@link String} compatible with {@link SimpleDateFormat} and a {@param dateString}
+     * returns a formatted date that accounts for the site's timezone setting.
+     *
+     */
+    public static @NonNull String getDateTimeForSite(@NonNull SiteModel site,
+                                                     @NonNull String pattern,
+                                                     @NonNull String dateString) {
+        Date date = StringUtils.isEmpty(dateString) ? new Date() : getDateFromString(pattern, dateString);
+        return getDateTimeForSite(site, pattern, date);
+    }
+
+
     /**
      * Given a {@link SiteModel} and a {@link String} compatible with {@link SimpleDateFormat},
      * returns a formatted date that accounts for the site's timezone setting.
@@ -118,16 +132,11 @@ public class SiteUtils {
                                                 long defaultValue) {
         if (StringUtils.isEmpty(d1) || StringUtils.isEmpty(d2)) return defaultValue;
 
-        SimpleDateFormat dateFormat = getDateFormat();
+        Date startDate = getDateFromString(DATE_FORMAT_DEFAULT, d1);
+        Date endDate = getDateFromString(DATE_FORMAT_DEFAULT, d2);
 
-        Calendar startDateCalendar, endDateCalendar;
-        try {
-            startDateCalendar = getStartDateCalendar(dateFormat, d1);
-            endDateCalendar = getEndDateCalendar(dateFormat, d2);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return defaultValue;
-        }
+        Calendar startDateCalendar = getStartDateCalendar(startDate);
+        Calendar endDateCalendar = getEndDateCalendar(endDate);
 
         switch (granularity) {
             case WEEKS: return getQuantityInWeeks(startDateCalendar, endDateCalendar);
@@ -139,11 +148,17 @@ public class SiteUtils {
 
 
     /**
-     * returns a {@link SimpleDateFormat} instance.
-     * based on {@value DATE_FORMAT_DEFAULT}
+     * returns a {@link Date} instance
+     * based on {@param pattern} and {@param dateString}
      */
-    private static SimpleDateFormat getDateFormat() {
-        return new SimpleDateFormat(DATE_FORMAT_DEFAULT, Locale.ROOT);
+    private static Date getDateFromString(String pattern,
+                                          String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.ROOT);
+        try {
+            return dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            return new Date();
+        }
     }
 
 
@@ -153,10 +168,7 @@ public class SiteUtils {
      * returns a {@link Calendar} instance.
      * The start date time is set to 00:00:00
      */
-    private static Calendar getStartDateCalendar(@NonNull SimpleDateFormat dateFormat,
-                                                 @NonNull String dateString) throws ParseException {
-        Date startDate = dateFormat.parse(dateString);
-
+    private static Calendar getStartDateCalendar(@NonNull Date startDate) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(startDate);
         cal1.set(Calendar.HOUR_OF_DAY, 0);
@@ -174,10 +186,7 @@ public class SiteUtils {
      * returns a {@link Calendar} instance.
      * The end date time is set to 23:59:59
      */
-    private static Calendar getEndDateCalendar(@NonNull SimpleDateFormat dateFormat,
-                                               @NonNull String dateString) throws ParseException {
-        Date endDate = dateFormat.parse(dateString);
-
+    private static Calendar getEndDateCalendar(Date endDate) {
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(endDate);
         cal2.set(Calendar.HOUR_OF_DAY, 23);
