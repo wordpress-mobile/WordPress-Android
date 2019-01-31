@@ -183,7 +183,7 @@ class InsightsStore
                     accumulator.copy(
                             totalCount = nextModel.totalCount,
                             followers = accumulator.followers + nextModel.followers,
-                            hasMore = accumulator.hasMore
+                            hasMore = nextModel.hasMore
                     )
                 }
     }
