@@ -1034,7 +1034,6 @@
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$d%%</string>
 
-    <string name="stats_traffic">Traffic</string>
     <string name="stats_posts_and_pages">Posts and Pages</string>
     <string name="stats_referrers">Referrers</string>
     <string name="stats_referrer_label">Referrer</string>
