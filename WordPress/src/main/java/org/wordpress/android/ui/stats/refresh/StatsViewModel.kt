@@ -153,8 +153,8 @@ class StatsViewModel
         val updatedDate = getDateLabelForSection(statsSection)
         val currentState = showDateSelector.value
         val statsGranularity = statsSection.toStatsGranularity()
-        if ((!shouldShowDateSelection && currentState?.isVisible != true) || statsGranularity == null) {
-            mutableShowDateSelector.value = DateSelectorUiModel(false)
+        if ((!shouldShowDateSelection && currentState?.isVisible != false) || statsGranularity == null) {
+            emitValue(currentState, DateSelectorUiModel(false))
         } else {
             val updatedState = DateSelectorUiModel(
                     shouldShowDateSelection,
@@ -168,13 +168,20 @@ class StatsViewModel
                         selectedDateProvider.selectNextDate(statsGranularity)
                     }
             )
-            if (currentState == null ||
-                    currentState.isVisible != updatedState.isVisible ||
-                    currentState.date != updatedState.date ||
-                    currentState.enableSelectNext != updatedState.enableSelectNext ||
-                    currentState.enableSelectPrevious != updatedState.enableSelectPrevious) {
-                mutableShowDateSelector.value = updatedState
-            }
+            emitValue(currentState, updatedState)
+        }
+    }
+
+    private fun emitValue(
+        currentState: DateSelectorUiModel?,
+        updatedState: DateSelectorUiModel
+    ) {
+        if (currentState == null ||
+                currentState.isVisible != updatedState.isVisible ||
+                currentState.date != updatedState.date ||
+                currentState.enableSelectNext != updatedState.enableSelectNext ||
+                currentState.enableSelectPrevious != updatedState.enableSelectPrevious) {
+            mutableShowDateSelector.value = updatedState
         }
     }
 
