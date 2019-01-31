@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.planoffers
 
-import org.wordpress.android.fluxc.model.plans.PlanOfferModel
+import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient.PlanOffersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient.PlanOffersResponse.Feature
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient.PlanOffersResponse.Group
@@ -8,20 +8,20 @@ import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestC
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient.PlanOffersResponse.PlanId
 
 val PLAN_OFFER_MODELS = listOf(
-        PlanOfferModel(
+        PlanOffersModel(
                 listOf(1), listOf(
-                PlanOfferModel.Feature("subdomain", "WordPress.com Subdomain", "Subdomain Description"),
-                PlanOfferModel.Feature("jetpack-essentials", "JE Features", "JE Description")
+                PlanOffersModel.Feature("subdomain", "WordPress.com Subdomain", "Subdomain Description"),
+                PlanOffersModel.Feature("jetpack-essentials", "JE Features", "JE Description")
         ), "WordPress.com Free",
                 "Free",
                 "Best for Getting Started",
                 "Free description",
                 "https://s0.wordpress.com/i/store/mobile/plan-free.png"
-        ), PlanOfferModel(
+        ), PlanOffersModel(
         listOf(1003, 1023), listOf(
-        PlanOfferModel.Feature("custom-domain", "Custom Domain Name", "CDN Description"),
-        PlanOfferModel.Feature("support-live", "Email & Live Chat Support", "LS Description"),
-        PlanOfferModel.Feature("no-ads", "Remove WordPress.com Ads", "No Ads Description")
+        PlanOffersModel.Feature("custom-domain", "Custom Domain Name", "CDN Description"),
+        PlanOffersModel.Feature("support-live", "Email & Live Chat Support", "LS Description"),
+        PlanOffersModel.Feature("no-ads", "Remove WordPress.com Ads", "No Ads Description")
 ), "WordPress.com Premium",
         "Premium",
         "Best for Entrepreneurs and Freelancers",

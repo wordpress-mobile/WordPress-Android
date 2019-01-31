@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.model.plans
 
-data class PlanOfferModel(
+data class PlanOffersModel(
     var planIds: List<Int>?,
     var features: List<Feature>?,
     var name: String?,
@@ -40,7 +40,7 @@ data class PlanOfferModel(
             return true
         }
 
-        if (other == null || other !is PlanOfferModel) {
+        if (other == null || other !is PlanOffersModel) {
             return false
         }
 
