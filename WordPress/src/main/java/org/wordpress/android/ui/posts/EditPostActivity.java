@@ -3327,7 +3327,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // passing false here as we need to keep the media item in case the user wants to undo
                 cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
             } else if (mShowGutenbergEditor) {
-                MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
+                MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(localMediaId));
                 if (mediaModel == null) {
                     return;
                 }
