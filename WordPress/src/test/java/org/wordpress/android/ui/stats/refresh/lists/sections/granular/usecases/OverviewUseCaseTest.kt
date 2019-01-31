@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -38,7 +40,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Mock lateinit var overviewMapper: OverviewMapper
     @Mock lateinit var site: SiteModel
     @Mock lateinit var columns: Columns
-    @Mock lateinit var title: ValueItem
+    @Mock lateinit var value: ValueItem
     @Mock lateinit var barChartItem: BarChartItem
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var useCase: OverviewUseCase
@@ -60,7 +62,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 analyticsTrackerWrapper
         )
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
-        whenever(overviewMapper.buildTitle(any(), any())).thenReturn(title)
+        whenever(overviewMapper.buildValueItem(any(), any())).thenReturn(value)
         whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(barChartItem)
         whenever(overviewMapper.buildColumns(any(), any(), any())).thenReturn(columns)
     }
@@ -79,9 +81,10 @@ class OverviewUseCaseTest : BaseUnitTest() {
 
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as BlockList).apply {
-            assertThat(this.items[0]).isEqualTo(title)
-            assertThat(this.items[1]).isEqualTo(barChartItem)
-            assertThat(this.items[2]).isEqualTo(columns)
+            assertThat(this.items[0]).isEqualTo(Title(string.stats_traffic))
+            assertThat(this.items[1]).isEqualTo(value)
+            assertThat(this.items[2]).isEqualTo(barChartItem)
+            assertThat(this.items[3]).isEqualTo(columns)
         }
     }
 

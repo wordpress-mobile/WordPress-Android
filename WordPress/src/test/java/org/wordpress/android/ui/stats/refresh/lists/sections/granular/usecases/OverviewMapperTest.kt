@@ -28,7 +28,7 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
 
-        val title = mapper.buildTitle(selectedItem, uiState.selectedPosition)
+        val title = mapper.buildValueItem(selectedItem, uiState.selectedPosition)
 
         assertThat(title.value).isEqualTo(likes.toString())
         assertThat(title.unit).isEqualTo(R.string.stats_likes)

@@ -21,7 +21,7 @@ class OverviewMapper
             string.stats_comments
     )
 
-    fun buildTitle(selectedItem: PeriodData?, selectedPosition: Int): ValueItem {
+    fun buildValueItem(selectedItem: PeriodData?, selectedPosition: Int): ValueItem {
         val value = when (selectedPosition) {
             0 -> selectedItem?.views?.toFormattedString(MILLION)
             1 -> selectedItem?.visitors?.toFormattedString(MILLION)

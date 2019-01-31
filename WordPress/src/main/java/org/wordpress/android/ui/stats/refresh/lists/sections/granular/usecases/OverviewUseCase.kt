@@ -11,13 +11,12 @@ import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -42,9 +41,7 @@ constructor(
         UiState()
 ) {
     override fun buildLoadingItem(): List<BlockListItem> =
-            listOf(
-                    ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views)
-            )
+            listOf(Title(R.string.stats_traffic))
 
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = visitsAndViewsStore.getVisits(
@@ -97,8 +94,9 @@ constructor(
             )
             val shiftedIndex = index + domainModel.dates.size - visibleBarCount
             val selectedItem = domainModel.dates.getOrNull(shiftedIndex) ?: domainModel.dates.last()
+            items.add(Title(R.string.stats_traffic))
             items.add(
-                    overviewMapper.buildTitle(selectedItem, uiState.selectedPosition)
+                    overviewMapper.buildValueItem(selectedItem, uiState.selectedPosition)
             )
             items.add(
                     overviewMapper.buildChart(
