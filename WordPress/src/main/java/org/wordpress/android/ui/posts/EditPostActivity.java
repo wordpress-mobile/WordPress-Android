@@ -3321,10 +3321,25 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
-            UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
-            // passing false here as we need to keep the media item in case the user wants to undo
-            cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
+            if (mShowAztecEditor) {
+                mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
+                UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
+                // passing false here as we need to keep the media item in case the user wants to undo
+                cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
+            } else if (mShowGutenbergEditor) {
+                MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
+                if (mediaModel == null) {
+                    return;
+                }
+
+                // also make sure it's not being uploaded anywhere else (maybe on some other Post,
+                // simultaneously)
+                if (mediaModel.getUploadState() != null
+                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))
+                    && !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
+                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+                }
+            }
         }
     }
 
