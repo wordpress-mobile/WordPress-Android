@@ -140,6 +140,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnReattachQueryListener() {
                     @Override
                     public void onQueryCurrentProgressForUploadingMedia() {
+                        updateFailedMediaState();
                         updateMediaProgress();
                     }
                 },
@@ -186,8 +187,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         // get all media failed for this post, and represent it on tje UI
         if (failedMediaIds != null && !failedMediaIds.isEmpty()) {
             for (Integer mediaId : failedMediaIds) {
-                mWPAndroidGlueCode.mediaFileUploadFailed(mediaId);
+                // and keep track of failed ids around
+                mFailedMediaIds.add(String.valueOf(mediaId));
             }
+        }
+    }
+
+    private void updateFailedMediaState() {
+        for (String mediaId : mFailedMediaIds) {
+            mWPAndroidGlueCode.mediaFileUploadFailed(Integer.valueOf(mediaId));
         }
     }
 
@@ -197,7 +205,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     mUploadingMediaProgressMax.get(mediaId));
         }
     }
-    
+
     private void checkAndRequestCameraAndStoragePermissions() {
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
                 CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
