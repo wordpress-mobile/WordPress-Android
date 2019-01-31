@@ -165,19 +165,27 @@ class InsightsStore
             }
             response.response != null -> {
                 sqlUtils.insert(siteModel, response.response, followerType, deleteOldDataFirst = !loadMore)
-                val allFollowers = sqlUtils.selectAllFollowers(siteModel, followerType)
-                        .fold(FollowersModel(0, emptyList(), false)) { acc, next ->
-                            val nextModel = insightsMapper.map(next, followerType, pageSize)
-                            FollowersModel(
-                                    acc.totalCount + nextModel.totalCount,
-                                    acc.followers + nextModel.followers,
-                                    nextModel.hasMore
-                                    )
-                        }
+                val allFollowers = mergeFollowersModels(siteModel, followerType, pageSize)
                 OnStatsFetched(allFollowers)
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
+    }
+
+    private fun mergeFollowersModels(
+        siteModel: SiteModel,
+        followerType: FollowerType,
+        pageSize: Int
+    ): FollowersModel {
+        return sqlUtils.selectAllFollowers(siteModel, followerType)
+                .fold(FollowersModel(0, emptyList(), false)) { accumulator, next ->
+                    val nextModel = insightsMapper.map(next, followerType, pageSize)
+                    accumulator.copy(
+                            totalCount = nextModel.totalCount,
+                            followers = accumulator.followers + nextModel.followers,
+                            hasMore = accumulator.hasMore
+                    )
+                }
     }
 
     fun getWpComFollowers(site: SiteModel, pageSize: Int): FollowersModel? {
