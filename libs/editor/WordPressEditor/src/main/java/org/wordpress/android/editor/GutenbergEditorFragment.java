@@ -132,6 +132,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override public void onRetryUploadForMediaClicked(int mediaId) {
                         showRetryMediaUploadDialog(mediaId);
                     }
+
+                    @Override public void onCancelUploadForMediaClicked(int mediaId) {
+                        showCancelMediaUploadDialog(mediaId);
+                    }
                 },
                 new OnReattachQueryListener() {
                     @Override
@@ -190,6 +194,37 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
             mEditorFragmentListener.onCapturePhotoClicked();
         }
+    }
+
+    private void showCancelMediaUploadDialog(final int localMediaId) {
+        // Display 'cancel upload' dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        builder.setTitle(getString(R.string.stop_upload_dialog_title));
+        builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
+                            mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
+                            //remove from editor
+                            mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
+                            mWPAndroidGlueCode.clearMediaFileURL(localMediaId);
+                            mUploadingMediaProgressMax.remove(localMediaId);
+                        } else {
+                            ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void showRetryMediaUploadDialog(final int mediaId) {
