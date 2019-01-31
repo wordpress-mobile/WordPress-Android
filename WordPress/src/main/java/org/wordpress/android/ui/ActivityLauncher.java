@@ -281,14 +281,7 @@ public class ActivityLauncher {
     public static void viewFollowersStats(Context context, SiteModel site) {
         Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
-        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
-        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
         intent.putExtra(WordPress.SITE, site);
-
-        String title = context.getResources().getString(R.string.stats_view_followers);
-        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
         context.startActivity(intent);
     }
 
