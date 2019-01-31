@@ -7,6 +7,7 @@ import android.content.Context;
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
 import org.wordpress.android.ui.stats.refresh.StatsFragment;
+import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
@@ -29,6 +30,9 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract StatsListFragment contributeStatListFragment();
+
+    @ContributesAndroidInjector
+    abstract StatsViewAllFragment contributeStatsViewAllFragment();
 
     @ContributesAndroidInjector
     abstract StatsFragment contributeStatsFragment();

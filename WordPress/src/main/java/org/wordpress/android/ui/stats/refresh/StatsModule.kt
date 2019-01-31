@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -41,6 +42,8 @@ const val DAY_STATS_USE_CASE = "DayStatsUseCase"
 const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
 const val YEAR_STATS_USE_CASE = "YearStatsUseCase"
+const val VIEW_ALL_FOLLOWERS_USE_CASE = "ViewAllFollowersUseCase"
+
 // These are injected only internally
 private const val INSIGHTS_USE_CASES = "InsightsUseCases"
 private const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
@@ -134,15 +137,14 @@ class StatsModule {
      */
     @Provides
     @Singleton
-    @Named(DAY_STATS_USE_CASE)
-    fun provideDayStatsUseCase(
-        statsStore: StatsStore,
+    @Named(VIEW_ALL_FOLLOWERS_USE_CASE)
+    fun provideViewAllFollowersUseCase(
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
+        followersUseCases: FollowersUseCase
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(DAYS) }) {
-            statsStore.getTimeStatsTypes()
+        return BaseListUseCase(bgDispatcher, mainDispatcher, listOf(followersUseCases)) {
+            listOf(FOLLOWERS)
         }
     }
 
@@ -196,6 +198,24 @@ class StatsModule {
         @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
     ): BaseListUseCase {
         return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(YEARS) }) {
+            statsStore.getTimeStatsTypes()
+        }
+    }
+
+    /**
+     * Provides a singleton usecase that represents the Day stats screen.
+     * @param useCasesFactories build the use cases for the DAYS granularity
+     */
+    @Provides
+    @Singleton
+    @Named(DAY_STATS_USE_CASE)
+    fun provideDayStatsUseCase(
+        statsStore: StatsStore,
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
+    ): BaseListUseCase {
+        return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(DAYS) }) {
             statsStore.getTimeStatsTypes()
         }
     }
