@@ -2,9 +2,13 @@ package org.wordpress.android.fluxc.utils;
 
 import android.support.annotation.NonNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -12,6 +16,8 @@ import java.util.TimeZone;
 import static org.apache.commons.lang3.StringUtils.split;
 
 public class SiteUtils {
+    private static final String DATE_FORMAT_DEFAULT = "yyyy-MM-dd";
+
     /**
      * Given a {@link SiteModel} and a {@link String} compatible with {@link SimpleDateFormat},
      * returns a formatted date that accounts for the site's timezone setting.
@@ -97,5 +103,150 @@ public class SiteUtils {
 
         dateFormat.setTimeZone(TimeZone.getTimeZone(timezoneNormalized));
         return dateFormat.format(date);
+    }
+
+
+
+    /**
+     * Given a {@param d1} start date, {@param d2} end date and the {@param granularity} granularity,
+     * returns a quantity value.
+     * If the start date or end date is empty, returns {@param defaultValue}
+     */
+    public static long getQuantityByGranularity(String d1,
+                                                String d2,
+                                                StatsGranularity granularity,
+                                                long defaultValue) {
+        if (StringUtils.isEmpty(d1) || StringUtils.isEmpty(d2)) return defaultValue;
+
+        SimpleDateFormat dateFormat = getDateFormat();
+
+        Calendar startDateCalendar, endDateCalendar;
+        try {
+            startDateCalendar = getStartDateCalendar(dateFormat, d1);
+            endDateCalendar = getEndDateCalendar(dateFormat, d2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return defaultValue;
+        }
+
+        switch (granularity) {
+            case WEEKS: return getQuantityInWeeks(startDateCalendar, endDateCalendar);
+            case MONTHS: return getQuantityInMonths(startDateCalendar, endDateCalendar);
+            case YEARS: return getQuantityInYears(startDateCalendar, endDateCalendar);
+            default: return getQuantityInDays(startDateCalendar, endDateCalendar);
+        }
+    }
+
+
+    /**
+     * returns a {@link SimpleDateFormat} instance.
+     * based on {@value DATE_FORMAT_DEFAULT}
+     */
+    private static SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat(DATE_FORMAT_DEFAULT, Locale.ROOT);
+    }
+
+
+
+    /**
+     * Given a {@link SimpleDateFormat} instance and the {@link String} start date string,
+     * returns a {@link Calendar} instance.
+     * The start date time is set to 00:00:00
+     */
+    private static Calendar getStartDateCalendar(@NonNull SimpleDateFormat dateFormat,
+                                                 @NonNull String dateString) throws ParseException {
+        Date startDate = dateFormat.parse(dateString);
+
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(startDate);
+        cal1.set(Calendar.HOUR_OF_DAY, 0);
+        cal1.set(Calendar.MINUTE, 0);
+        cal1.set(Calendar.SECOND, 0);
+        cal1.set(Calendar.MILLISECOND, 0);
+
+        return cal1;
+    }
+
+
+
+    /**
+     * Given a {@link SimpleDateFormat} instance and the {@link String} end date string,
+     * returns a {@link Calendar} instance.
+     * The end date time is set to 23:59:59
+     */
+    private static Calendar getEndDateCalendar(@NonNull SimpleDateFormat dateFormat,
+                                               @NonNull String dateString) throws ParseException {
+        Date endDate = dateFormat.parse(dateString);
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(endDate);
+        cal2.set(Calendar.HOUR_OF_DAY, 23);
+        cal2.set(Calendar.MINUTE, 59);
+        cal2.set(Calendar.SECOND, 59);
+        cal2.set(Calendar.MILLISECOND, 59);
+        return cal2;
+    }
+
+
+
+    /**
+     * Given a {@link Calendar} instance for startDate and endDate,
+     * returns a quantity that is calculated based on [StatsGranularity.DAYS]
+     */
+    private static long getQuantityInDays(@NonNull Calendar c1,
+                                          @NonNull Calendar c2) {
+        long millis1 = c1.getTimeInMillis();
+        long millis2 = c2.getTimeInMillis();
+
+        long diff = Math.abs(millis2 - millis1);
+        return (long) Math.ceil(diff / (double) (24 * 60 * 60 * 1000));
+    }
+
+    /**
+     * Given a {@link Calendar} instance for startDate and endDate,
+     * returns a quantity that is calculated based on [StatsGranularity.WEEKS]
+     */
+    private static long getQuantityInWeeks(@NonNull Calendar c1,
+                                           @NonNull Calendar c2) {
+        /*
+         * start date: if day of week is greater than 1: set to 1
+         * end date: if day of week is less than 7: set to 7
+         * */
+        if (c1.get(Calendar.DAY_OF_WEEK) > 1) c1.set(Calendar.DAY_OF_WEEK, 1);
+        if (c2.get(Calendar.DAY_OF_WEEK) < 1) c2.set(Calendar.DAY_OF_WEEK, 7);
+
+        double diffInDays = getQuantityInDays(c1, c2);
+        return (long) Math.ceil(diffInDays / 7);
+    }
+
+
+    /**
+     * Given a {@link Calendar} instance for startDate and endDate,
+     * returns a quantity that is calculated based on [StatsGranularity.MONTHS]
+     */
+    private static long getQuantityInMonths(@NonNull Calendar c1,
+                                            @NonNull Calendar c2) {
+        long diff = 0;
+        if (c2.after(c1)) {
+            while (c2.after(c1)) {
+                if (c2.after(c1)) {
+                    diff++;
+                }
+                c1.add(Calendar.MONTH, 1);
+            }
+        }
+        return Math.abs(diff);
+    }
+
+
+    /**
+     * Given a {@link Calendar} instance for startDate and endDate,
+     * returns a quantity that is calculated based on [StatsGranularity.YEARS]
+     */
+    private static long getQuantityInYears(@NonNull Calendar c1,
+                                           @NonNull Calendar c2) {
+        int diffInYears = Math.abs(c2.get(Calendar.YEAR) - c1.get(Calendar.YEAR));
+        if (diffInYears == 0) diffInYears++;
+        return diffInYears;
     }
 }
