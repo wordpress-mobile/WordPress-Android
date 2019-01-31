@@ -3521,7 +3521,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // probably here is best for Gutenberg to start interacting with
         if (mShowGutenbergEditor && mEditorFragment instanceof GutenbergEditorFragment) {
-            //Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(mPost);
             List<MediaModel> failedMedia = mMediaStore.getMediaForPostWithState(mPost, MediaUploadState.FAILED);
             if (failedMedia != null && !failedMedia.isEmpty()) {
                 HashSet<Integer> mediaIds = new HashSet<>();
