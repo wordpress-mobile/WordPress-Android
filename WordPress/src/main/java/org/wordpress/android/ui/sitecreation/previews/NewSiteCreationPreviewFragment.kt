@@ -22,7 +22,7 @@ import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
 import android.widget.TextView
 import com.facebook.shimmer.ShimmerFrameLayout
-import kotlinx.android.synthetic.main.new_site_creation_preview_screen.*
+import kotlinx.android.synthetic.main.new_site_creation_preview_screen_default.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
