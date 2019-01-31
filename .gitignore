@@ -83,6 +83,3 @@ fastlane/screenshots_orig
 # Bundler
 /.bundle
 /vendor
-
-# Gutenberg
-WordPress/src/main/assets/index.android.bundle
