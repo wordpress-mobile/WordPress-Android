@@ -3236,17 +3236,17 @@ public class EditPostActivity extends AppCompatActivity implements
         UploadService.cancelFinalNotification(this, mPost);
         UploadService.cancelFinalNotificationForMedia(this, mSite);
 
-        ArrayList<MediaModel> failedMedia = new ArrayList<>();
+        ArrayList<MediaModel> failedMediaList = new ArrayList<>();
         for (String mediaId : failedMediaIds) {
-            failedMedia.add(mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)));
+            failedMediaList.add(mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)));
         }
 
-        if (!failedMedia.isEmpty()) {
-            for (MediaModel mediaModel : failedMedia) {
+        if (!failedMediaList.isEmpty()) {
+            for (MediaModel mediaModel : failedMediaList) {
                 mediaModel.setUploadState(MediaUploadState.QUEUED);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
             }
-            startUploadService(failedMedia);
+            startUploadService(failedMediaList);
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
