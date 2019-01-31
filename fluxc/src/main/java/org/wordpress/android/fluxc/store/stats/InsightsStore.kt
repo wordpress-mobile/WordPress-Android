@@ -151,11 +151,13 @@ class InsightsStore
         followerType: FollowerType,
         loadMore: Boolean
     ) = withContext(coroutineContext) {
-        var nextPage = 1
-        if (loadMore) {
+        val nextPage = if (loadMore) {
             val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
-            nextPage = savedFollowers / pageSize
+            savedFollowers / pageSize + 1
+        } else {
+            1
         }
+
         val response = restClient.fetchFollowers(siteModel, followerType, nextPage, pageSize, forced)
         return@withContext when {
             response.isError -> {
