@@ -182,6 +182,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    public void resetUploadingMediaToFailed(Set<Integer> failedMediaIds) {
+        // get all media failed for this post, and represent it on tje UI
+        if (failedMediaIds != null && !failedMediaIds.isEmpty()) {
+            for (Integer mediaId : failedMediaIds) {
+                mWPAndroidGlueCode.mediaFileUploadFailed(mediaId);
+            }
+        }
+    }
+
     private void updateMediaProgress() {
         for (String mediaId : mUploadingMediaProgressMax.keySet()) {
             mWPAndroidGlueCode.mediaFileUploadProgress(Integer.valueOf(mediaId),
