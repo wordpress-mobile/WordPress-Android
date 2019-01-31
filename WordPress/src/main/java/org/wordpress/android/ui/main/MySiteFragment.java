@@ -981,7 +981,7 @@ public class MySiteFragment extends Fragment implements
                 AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED);
                 break;
             case TAG_QUICK_START_MIGRATION_DIALOG:
-                // TODO: Quick Start - Add analytics for migration dialog positive tapped.
+                AnalyticsTracker.track(Stat.QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED);
                 break;
             case TAG_REMOVE_NEXT_STEPS_DIALOG:
                 // TODO: Quick Start - Add analytics for remove next steps dialog positive tapped.
@@ -1221,7 +1221,7 @@ public class MySiteFragment extends Fragment implements
         if (getFragmentManager() != null) {
             promoDialog.show(getFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG);
             AppPrefs.setQuickStartMigrationDialogShown(true);
-            // TODO: Quick Start - Add analytics for migration dialog viewed.
+            AnalyticsTracker.track(Stat.QUICK_START_MIGRATION_DIALOG_VIEWED);
         }
     }
 }
