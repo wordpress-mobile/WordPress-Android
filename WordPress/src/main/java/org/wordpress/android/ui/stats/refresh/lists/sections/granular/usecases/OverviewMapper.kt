@@ -28,7 +28,7 @@ class OverviewMapper
             2 -> selectedItem?.likes?.toFormattedString(MILLION)
             3 -> selectedItem?.comments?.toFormattedString(MILLION)
             else -> null
-        }  ?: "0"
+        } ?: "0"
         return ValueItem(value = value, unit = units[selectedPosition])
     }
 
