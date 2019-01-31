@@ -206,7 +206,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onClick(DialogInterface dialog, int id) {
                         if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
                             mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
-                            //remove from editor
+                            // remove from editor
                             mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
                             mWPAndroidGlueCode.clearMediaFileURL(localMediaId);
                             mUploadingMediaProgressMax.remove(localMediaId);
