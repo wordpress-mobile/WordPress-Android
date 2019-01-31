@@ -28,7 +28,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.S
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
