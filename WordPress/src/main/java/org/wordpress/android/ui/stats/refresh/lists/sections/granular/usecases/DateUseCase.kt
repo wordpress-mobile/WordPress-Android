@@ -10,7 +10,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -65,7 +65,7 @@ constructor(
         private val selectedDateProvider: SelectedDateProvider,
         private val resourceProvider: ResourceProvider,
         private val statsDateFormatter: StatsDateFormatter
-    ) : UseCaseFactory {
+    ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity) =
                 DateUseCase(
                         granularity,

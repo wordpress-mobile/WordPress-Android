@@ -25,7 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -163,7 +163,7 @@ constructor(
         private val authorsStore: AuthorsStore,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
-    ) : UseCaseFactory {
+    ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity) =
                 AuthorsUseCase(
                         granularity,

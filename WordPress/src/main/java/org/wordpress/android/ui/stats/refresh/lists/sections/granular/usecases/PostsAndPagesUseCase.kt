@@ -26,7 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -154,7 +154,7 @@ constructor(
         private val postsAndPageViewsStore: PostAndPageViewsStore,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
-    ) : UseCaseFactory {
+    ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity) =
                 PostsAndPagesUseCase(
                         granularity,
