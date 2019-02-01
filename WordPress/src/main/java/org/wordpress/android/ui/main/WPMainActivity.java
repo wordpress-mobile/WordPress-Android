@@ -601,7 +601,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
         if (getSelectedSite() != null && getMySiteFragment() != null) {
             if (getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
-                // PUBLISH_POST task requires special QS notice logic, so we set the flag here
+                // PUBLISH_POST task requires special Quick Start notice logic, so we set the flag here
                 AppPrefs.setQuickStartNoticeRequired(
                         !mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), QuickStartTask.PUBLISH_POST));
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here

@@ -287,7 +287,6 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
