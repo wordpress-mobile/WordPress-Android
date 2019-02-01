@@ -50,7 +50,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     /**
      * @return The total records in the notification table.
      */
-    fun getNotificationsCount() = WellSql.select(NotificationModelBuilder::class.java).asCursor.count
+    fun getNotificationsCount() = WellSql.select(NotificationModelBuilder::class.java).count()
 
     @SuppressLint("WrongConstant")
     fun getNotifications(
@@ -126,7 +126,6 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         filterBySubtype: List<String>? = null
     ): Boolean {
         val conditionClauseBuilder = WellSql.select(NotificationModelBuilder::class.java)
-                .columns("1")
                 .where()
                 .equals(NotificationModelTable.LOCAL_SITE_ID, site.id)
                 .equals(NotificationModelTable.READ, 0)
@@ -149,7 +148,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
             conditionClauseBuilder.endGroup()
         }
 
-        return conditionClauseBuilder.endWhere().asCursor.count > 0
+        return conditionClauseBuilder.endWhere().exists()
     }
 
     fun getNotificationByIdSet(idSet: NoteIdSet): NotificationModel? {
