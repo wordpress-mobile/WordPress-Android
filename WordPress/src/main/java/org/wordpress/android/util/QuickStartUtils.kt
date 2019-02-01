@@ -279,10 +279,11 @@ class QuickStartUtils {
                 ENABLE_POST_SHARING -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
                 PUBLISH_POST -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
                 FOLLOW_SITE -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
-                else -> {
-                    // TODO: Quick Start - Replace else with remaining tasks.
-                    Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
-                }
+                UPLOAD_SITE_ICON -> Stat.QUICK_START_UPLOAD_ICON_COMPLETED
+                CREATE_NEW_PAGE -> Stat.QUICK_START_CREATE_PAGE_COMPLETED
+                CHECK_STATS -> Stat.QUICK_START_CHECK_STATS_COMPLETED
+                EXPLORE_PLANS -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
+                else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }
 
