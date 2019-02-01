@@ -62,7 +62,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 statsUtilsWrapper,
                 resourceProvider,
-                tracker
+                tracker,
+                false
         )
         whenever(statsUtilsWrapper.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
