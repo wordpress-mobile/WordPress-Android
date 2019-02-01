@@ -209,7 +209,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void updateFailedMediaState() {
         for (String mediaId : mFailedMediaIds) {
-            mWPAndroidGlueCode.mediaFileUploadFailed(Integer.valueOf(mediaId));
+            getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(mediaId));
         }
     }
 
@@ -239,7 +239,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
                             // remove from editor
                             mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
-                            mWPAndroidGlueCode.clearMediaFileURL(localMediaId);
+                            getGutenbergContainerFragment().clearMediaFileURL(localMediaId);
                             mUploadingMediaProgressMax.remove(localMediaId);
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
@@ -274,7 +274,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         if (successfullyRetried) {
                             mFailedMediaIds.remove(String.valueOf(mediaId));
                             mUploadingMediaProgressMax.put(String.valueOf(mediaId), 0f);
-                            mWPAndroidGlueCode.mediaFileUploadProgress(mediaId,
+                            getGutenbergContainerFragment().mediaFileUploadProgress(mediaId,
                                     mUploadingMediaProgressMax.get(String.valueOf(mediaId)));
                         }
                     }
@@ -291,7 +291,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
                 mEditorFragmentListener.onMediaDeleted(String.valueOf(mediaId));
-                mWPAndroidGlueCode.clearMediaFileURL(mediaId);
+                getGutenbergContainerFragment().clearMediaFileURL(mediaId);
             }
         });
 
