@@ -98,12 +98,6 @@ public class AppPrefs {
         // Used to flag the account created stat needs to be bumped after account information is synced.
         SHOULD_TRACK_MAGIC_LINK_SIGNUP,
 
-        // indicates how many times quick start dialog for a single task wash shown
-        NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN,
-
-        // keeps track of quick start tasks that is prompted to user
-        PROMPTED_QUICK_START_TASK,
-
         // Support email address and name that's independent of any account or site
         SUPPORT_EMAIL,
         SUPPORT_NAME,
