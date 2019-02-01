@@ -984,7 +984,7 @@ public class MySiteFragment extends Fragment implements
                 AnalyticsTracker.track(Stat.QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED);
                 break;
             case TAG_REMOVE_NEXT_STEPS_DIALOG:
-                // TODO: Quick Start - Add analytics for remove next steps dialog positive tapped.
+                AnalyticsTracker.track(Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED);
                 skipQuickStart();
                 updateQuickStartContainer();
                 clearActiveQuickStart();
@@ -1025,7 +1025,7 @@ public class MySiteFragment extends Fragment implements
                 AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED);
                 break;
             case TAG_REMOVE_NEXT_STEPS_DIALOG:
-                // TODO: Quick Start - Add analytics for remove next steps dialog negative tapped.
+                AnalyticsTracker.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED);
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
