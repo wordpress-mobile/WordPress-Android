@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -70,6 +71,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PromoDialog;
@@ -80,7 +82,6 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -120,6 +121,7 @@ public class WPMainActivity extends AppCompatActivity implements
         BottomNavController,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
+        BasicDialogOnDismissByOutsideTouchInterface,
         PromoDialogClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
@@ -598,6 +600,9 @@ public class WPMainActivity extends AppCompatActivity implements
 
         if (getSelectedSite() != null && getMySiteFragment() != null) {
             if (getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+                // PUBLISH_POST task requires special Quick Start notice logic, so we set the flag here
+                AppPrefs.setQuickStartNoticeRequired(
+                        !mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), QuickStartTask.PUBLISH_POST));
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here
                 QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
             }
@@ -718,6 +723,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 QuickStartUtils.cancelQuickStartReminder(this);
+                AppPrefs.setQuickStartNoticeRequired(false);
 
                 setSite(data);
                 jumpNewPost(data);
@@ -748,6 +754,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
+                        AppPrefs.setQuickStartNoticeRequired(false);
                     }
 
                     setSite(data);
@@ -803,6 +810,9 @@ public class WPMainActivity extends AppCompatActivity implements
 
         promoDialog.show(getSupportFragmentManager(), tag);
         AnalyticsTracker.track(Stat.QUICK_START_REQUEST_VIEWED);
+
+        // Set migration dialog flag so it is not shown for new sites.
+        AppPrefs.setQuickStartMigrationDialogShown(true);
     }
 
     private void appLanguageChanged() {
@@ -1100,6 +1110,14 @@ public class WPMainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onDismissByOutsideTouch(@NotNull String instanceTag) {
+        MySiteFragment fragment = getMySiteFragment();
+        if (fragment != null) {
+            fragment.onDismissByOutsideTouch(instanceTag);
+        }
+    }
+
+    @Override
     public void onLinkClicked(@NonNull String instanceTag) {
         MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
@@ -1109,14 +1127,9 @@ public class WPMainActivity extends AppCompatActivity implements
 
     // because of the bottom nav implementation (we only get callback after active fragment is changed) we need
     // to manage SnackBar in Activity, instead of Fragment
-    public void showQuickStartSnackBar(CharSequence message) {
+    public void showQuickStartSnackBar(WPDialogSnackbar snackbar) {
         hideQuickStartSnackBar();
-
-        mQuickStartSnackbar = WPDialogSnackbar.make(findViewById(R.id.coordinator),
-                message,
-                AccessibilityUtils.getSnackbarDuration(this,
-                        getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
-
+        mQuickStartSnackbar = snackbar;
         mQuickStartSnackbar.show();
     }
 

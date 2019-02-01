@@ -98,12 +98,6 @@ public class AppPrefs {
         // Used to flag the account created stat needs to be bumped after account information is synced.
         SHOULD_TRACK_MAGIC_LINK_SIGNUP,
 
-        // indicates how many times quick start dialog for a single task wash shown
-        NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN,
-
-        // keeps track of quick start tasks that is prompted to user
-        PROMPTED_QUICK_START_TASK,
-
         // Support email address and name that's independent of any account or site
         SUPPORT_EMAIL,
         SUPPORT_NAME,
@@ -113,7 +107,9 @@ public class AppPrefs {
         // Store a version of the last shown News Card
         NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
-        GUTENBERG_EDITOR_ENABLED
+        GUTENBERG_EDITOR_ENABLED,
+
+        IS_QUICK_START_NOTICE_REQUIRED
     }
 
     /**
@@ -789,6 +785,14 @@ public class AppPrefs {
 
     public static boolean hasQuickStartMigrationDialogShown() {
         return getBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, false);
+    }
+
+    public static void setQuickStartNoticeRequired(Boolean shown) {
+        setBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, shown);
+    }
+
+    public static boolean isQuickStartNoticeRequired() {
+        return getBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, false);
     }
 
     public static void setInstallationReferrerObtained(Boolean isObtained) {
