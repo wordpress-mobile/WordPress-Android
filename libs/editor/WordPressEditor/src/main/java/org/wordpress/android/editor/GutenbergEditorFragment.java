@@ -59,6 +59,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
+    GutenbergContainerFragment mCachedGutenbergContainerFragment;
+
     private ConcurrentHashMap<String, Float> mUploadingMediaProgressMax = new ConcurrentHashMap<>();
     private Set<String> mFailedMediaIds = new HashSet<>();
 
@@ -77,8 +79,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private GutenbergContainerFragment getGutenbergContainerFragment() {
-        return (GutenbergContainerFragment) getChildFragmentManager()
-                .findFragmentByTag(GutenbergContainerFragment.TAG);
+        if (mCachedGutenbergContainerFragment == null) {
+            mCachedGutenbergContainerFragment = (GutenbergContainerFragment) getChildFragmentManager()
+                    .findFragmentByTag(GutenbergContainerFragment.TAG);
+        } else {
+            // Noop. Just use the cached reference. The container fragment might not be attached yet so, getting it from
+            // the fragment manager is not reliable. No need either; it's retained and outlives this EditorFragment.
+        }
+
+        return mCachedGutenbergContainerFragment;
     }
 
     @Override
