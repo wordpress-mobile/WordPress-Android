@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
@@ -195,11 +196,13 @@ class QuickStartUtils {
         }
 
         @JvmStatic
+        @JvmOverloads
         fun completeTaskAndRemindNextOne(
             quickStartStore: QuickStartStore,
             task: QuickStartTask,
             dispatcher: Dispatcher,
             site: SiteModel,
+            quickStartEvent: QuickStartEvent? = null,
             context: Context?
         ) {
             val siteId = site.id.toLong()
@@ -220,6 +223,8 @@ class QuickStartUtils {
                 AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
+            } else if (quickStartEvent?.task == task) {
+                AppPrefs.setQuickStartNoticeRequired(true)
             } else {
                 if (context != null && quickStartStore.hasDoneTask(siteId, CREATE_SITE)) {
                     val nextTask = getNextUncompletedQuickStartTask(quickStartStore, siteId, task.taskType)
@@ -301,7 +306,8 @@ class QuickStartUtils {
          * This method tries to return the next uncompleted task of taskType
          * if no uncompleted task of taskType remain it tries to find and return uncompleted task of other task type
          */
-        private fun getNextUncompletedQuickStartTask(
+        @JvmStatic
+        fun getNextUncompletedQuickStartTask(
             quickStartStore: QuickStartStore,
             siteId: Long,
             taskType: QuickStartTaskType

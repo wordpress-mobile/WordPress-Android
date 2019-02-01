@@ -361,7 +361,7 @@ public class ThemeBrowserFragment extends Fragment
 
     public void completeQuickStartCustomizeTask() {
         QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.CUSTOMIZE_SITE,
-                mDispatcher, mSite, getContext());
+                mDispatcher, mSite, mQuickStartEvent, getContext());
         if (mQuickStartEvent != null && mQuickStartEvent.getTask() == QuickStartTask.CUSTOMIZE_SITE) {
             if (getView() != null) {
                 QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
