@@ -25,6 +25,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AniUtils.Duration;
+import org.wordpress.android.util.QuickStartUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,6 +150,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
 
     @Override
     public void onTaskTapped(QuickStartTask task) {
+        AnalyticsTracker.track(QuickStartUtils.getQuickStartListTappedTracker(task));
         Bundle result = new Bundle();
         result.putSerializable(RESULT_TASK, task);
         mDialogController.confirm(result);
