@@ -3,14 +3,18 @@ package org.wordpress.android.editor;
 import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spanned;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -124,10 +128,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onCapturePhotoButtonClicked() {
                         checkAndRequestCameraAndStoragePermissions();
                     }
+
+                    @Override public void onRetryUploadForMediaClicked(int mediaId) {
+                        showRetryMediaUploadDialog(mediaId);
+                    }
+
+                    @Override public void onCancelUploadForMediaClicked(int mediaId) {
+                        showCancelMediaUploadDialog(mediaId);
+                    }
                 },
                 new OnReattachQueryListener() {
                     @Override
                     public void onQueryCurrentProgressForUploadingMedia() {
+                        updateFailedMediaState();
                         updateMediaProgress();
                     }
                 },
@@ -170,18 +183,106 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    public void resetUploadingMediaToFailed(Set<Integer> failedMediaIds) {
+        // get all media failed for this post, and represent it on tje UI
+        if (failedMediaIds != null && !failedMediaIds.isEmpty()) {
+            for (Integer mediaId : failedMediaIds) {
+                // and keep track of failed ids around
+                mFailedMediaIds.add(String.valueOf(mediaId));
+            }
+        }
+    }
+
+    private void updateFailedMediaState() {
+        for (String mediaId : mFailedMediaIds) {
+            mWPAndroidGlueCode.mediaFileUploadFailed(Integer.valueOf(mediaId));
+        }
+    }
+
     private void updateMediaProgress() {
         for (String mediaId : mUploadingMediaProgressMax.keySet()) {
             mWPAndroidGlueCode.mediaFileUploadProgress(Integer.valueOf(mediaId),
                     mUploadingMediaProgressMax.get(mediaId));
         }
     }
-    
+
     private void checkAndRequestCameraAndStoragePermissions() {
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
                 CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
             mEditorFragmentListener.onCapturePhotoClicked();
         }
+    }
+
+    private void showCancelMediaUploadDialog(final int localMediaId) {
+        // Display 'cancel upload' dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        builder.setTitle(getString(R.string.stop_upload_dialog_title));
+        builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
+                            mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
+                            // remove from editor
+                            mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
+                            mWPAndroidGlueCode.clearMediaFileURL(localMediaId);
+                            mUploadingMediaProgressMax.remove(localMediaId);
+                        } else {
+                            ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showRetryMediaUploadDialog(final int mediaId) {
+        // Display 'retry upload' dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        builder.setTitle(getString(R.string.retry_failed_upload_title));
+        builder.setPositiveButton(R.string.retry_failed_upload_yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        boolean successfullyRetried = true;
+                        if (mFailedMediaIds.contains(String.valueOf(mediaId))) {
+                            successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(String.valueOf(mediaId));
+                        }
+                        if (successfullyRetried) {
+                            mFailedMediaIds.remove(String.valueOf(mediaId));
+                            mUploadingMediaProgressMax.put(String.valueOf(mediaId), 0f);
+                            mWPAndroidGlueCode.mediaFileUploadProgress(mediaId,
+                                    mUploadingMediaProgressMax.get(String.valueOf(mediaId)));
+                        }
+                    }
+                });
+
+        builder.setNeutralButton(R.string.retry_failed_upload_retry_all, new OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mEditorFragmentListener.onMediaRetryAllClicked(mFailedMediaIds);
+            }
+        });
+
+        builder.setNegativeButton(R.string.retry_failed_upload_remove, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                mEditorFragmentListener.onMediaDeleted(String.valueOf(mediaId));
+                mWPAndroidGlueCode.clearMediaFileURL(mediaId);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
