@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 
 
 /**
- * Static data that represents info that goes into QS notices
+ * Static data that represents info that goes into Quick Start notices
  **/
 public enum QuickStartNoticeDetails {
     VIEW_SITE_TUTORIAL(
@@ -64,8 +64,6 @@ public enum QuickStartNoticeDetails {
         mTitleResId = titleResId;
         mMessageResId = messageResId;
     }
-
-    public static final String KEY = "quick_start_task_details";
 
     private final QuickStartTask mTask;
     private int mTitleResId;
