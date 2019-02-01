@@ -286,6 +286,13 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case QUICK_START_TYPE_GROW_VIEWED:
                 predefinedEventProperties.put("type", "grow");
+                break;
+            case QUICK_START_TYPE_CUSTOMIZE_DISMISSED:
+                predefinedEventProperties.put("type", "customize");
+                break;
+            case QUICK_START_TYPE_GROW_DISMISSED:
+                predefinedEventProperties.put("type", "grow");
+                break;
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
                 predefinedEventProperties.put("task_name", "create_site");
                 break;
@@ -1303,6 +1310,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_remove_dialog_button_tapped";
+            case QUICK_START_TYPE_CUSTOMIZE_DISMISSED:
+            case QUICK_START_TYPE_GROW_DISMISSED:
+                return "quick_start_type_dismissed";
             case QUICK_START_TYPE_CUSTOMIZE_VIEWED:
             case QUICK_START_TYPE_GROW_VIEWED:
                 return "quick_start_list_viewed";
