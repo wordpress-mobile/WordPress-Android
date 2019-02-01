@@ -135,8 +135,8 @@ public class SiteUtils {
         Date startDate = getDateFromString(DATE_FORMAT_DEFAULT, d1);
         Date endDate = getDateFromString(DATE_FORMAT_DEFAULT, d2);
 
-        Calendar startDateCalendar = getStartDateCalendar(startDate);
-        Calendar endDateCalendar = getEndDateCalendar(endDate);
+        Calendar startDateCalendar = getStartDateCalendar(startDate.before(endDate) ? startDate : endDate);
+        Calendar endDateCalendar = getEndDateCalendar(startDate.before(endDate) ? endDate : startDate);
 
         switch (granularity) {
             case WEEKS: return getQuantityInWeeks(startDateCalendar, endDateCalendar);
@@ -220,6 +220,11 @@ public class SiteUtils {
         /*
          * start date: if day of week is greater than 1: set to 1
          * end date: if day of week is less than 7: set to 7
+         *
+         * This logic is to handle half week scenarios, for instance if the
+         * start date = 2019-01-25 and end date = 2019-01-28 - the difference
+         * in weeks should be 2 since the dates are actually in two different weeks
+         *
          * */
         if (c1.get(Calendar.DAY_OF_WEEK) > 1) c1.set(Calendar.DAY_OF_WEEK, 1);
         if (c2.get(Calendar.DAY_OF_WEEK) < 1) c2.set(Calendar.DAY_OF_WEEK, 7);
@@ -235,6 +240,21 @@ public class SiteUtils {
      */
     private static long getQuantityInMonths(@NonNull Calendar c1,
                                             @NonNull Calendar c2) {
+        /*
+         * start date: if day of month is greater than 1: set to 1
+         * end date: if day of month is less than the maximum day of month for that particular month:
+         * set to maximum day of month for that particular month
+         *
+         * This is to handle scenarios where the start date such as if start date = 12/31/18 and end date = 1/1/19,
+         * the default difference in months would be 1, but it should be 2 since these are two separate months
+         * */
+        if (c1.get(Calendar.DAY_OF_MONTH) > 1) {
+            c1.set(Calendar.DAY_OF_MONTH, 1);
+        }
+        if (c2.get(Calendar.DAY_OF_MONTH) < c2.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+            c2.set(Calendar.DAY_OF_MONTH, c2.getActualMaximum(Calendar.DAY_OF_MONTH));
+        }
+
         long diff = 0;
         if (c2.after(c1)) {
             while (c2.after(c1)) {
@@ -254,8 +274,30 @@ public class SiteUtils {
      */
     private static long getQuantityInYears(@NonNull Calendar c1,
                                            @NonNull Calendar c2) {
-        int diffInYears = Math.abs(c2.get(Calendar.YEAR) - c1.get(Calendar.YEAR));
-        if (diffInYears == 0) diffInYears++;
-        return diffInYears;
+        /*
+         * start date: if day of year is greater than 1: set to 1
+         * end date: if day of year is less than the maximum day of year for that particular year:
+         * set to maximum day of year for that particular year
+         *
+         * This is to handle scenarios where the start date such as if start date = 12/31/18 and end date = 1/1/19,
+         * the default difference in years would be 1, but it should be 2 since these are two separate years
+         * */
+        if (c1.get(Calendar.DAY_OF_YEAR) > 1) {
+            c1.set(Calendar.DAY_OF_YEAR, 1);
+        }
+        if (c2.get(Calendar.DAY_OF_YEAR) < c2.getActualMaximum(Calendar.DAY_OF_YEAR)) {
+            c2.set(Calendar.DAY_OF_YEAR, c2.getActualMaximum(Calendar.DAY_OF_YEAR));
+        }
+
+        long diff = 0;
+        if (c2.after(c1)) {
+            while (c2.after(c1)) {
+                if (c2.after(c1)) {
+                    diff++;
+                }
+                c1.add(Calendar.YEAR, 1);
+            }
+        }
+        return Math.abs(diff);
     }
 }

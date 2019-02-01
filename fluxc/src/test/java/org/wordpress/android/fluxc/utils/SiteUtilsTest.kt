@@ -97,6 +97,15 @@ class SiteUtilsTest {
         val quantity3 = SiteUtils.getQuantityByGranularity("2018-01-01", "2018-01-31", StatsGranularity.DAYS, 30)
         assertEquals(31, quantity3)
 
+        val quantity4 = SiteUtils.getQuantityByGranularity("2018-01-28", "2018-01-25", StatsGranularity.DAYS, 30)
+        assertEquals(4, quantity4)
+
+        val quantity5 = SiteUtils.getQuantityByGranularity("2018-01-01", "2018-01-01", StatsGranularity.DAYS, 30)
+        assertEquals(1, quantity5)
+
+        val quantity6 = SiteUtils.getQuantityByGranularity("2018-01-31", "2018-01-01", StatsGranularity.DAYS, 30)
+        assertEquals(31, quantity6)
+
         val defaultQuantity1 = SiteUtils.getQuantityByGranularity("", "", StatsGranularity.DAYS, 30)
         assertEquals(30, defaultQuantity1)
 
@@ -114,7 +123,7 @@ class SiteUtilsTest {
         assertEquals(53, quantity2)
 
         val quantity3 = SiteUtils.getQuantityByGranularity("2019-01-20", "2019-01-13", StatsGranularity.WEEKS, 17)
-        assertEquals(1, quantity3)
+        assertEquals(2, quantity3)
 
         val quantity4 = SiteUtils.getQuantityByGranularity("2017-01-01", "2018-03-01", StatsGranularity.WEEKS, 17)
         assertEquals(61, quantity4)
@@ -127,6 +136,28 @@ class SiteUtilsTest {
 
         val quantity7 = SiteUtils.getQuantityByGranularity("2018-11-01", "2018-11-30", StatsGranularity.WEEKS, 17)
         assertEquals(5, quantity7)
+
+
+        val inverseQuantity1 = SiteUtils.getQuantityByGranularity("2018-10-23", "2018-10-22", StatsGranularity.WEEKS, 17)
+        assertEquals(1, inverseQuantity1)
+
+        val inverseQuantity2 = SiteUtils.getQuantityByGranularity("2018-01-01", "2017-01-01", StatsGranularity.WEEKS, 17)
+        assertEquals(53, inverseQuantity2)
+
+        val inverseQuantity3 = SiteUtils.getQuantityByGranularity("2019-01-13", "2019-01-20", StatsGranularity.WEEKS, 17)
+        assertEquals(2, inverseQuantity3)
+
+        val inverseQuantity4 = SiteUtils.getQuantityByGranularity("2018-03-01", "2017-01-01", StatsGranularity.WEEKS, 17)
+        assertEquals(61, inverseQuantity4)
+
+        val inverseQuantity5 = SiteUtils.getQuantityByGranularity("2018-01-31", "2018-01-01", StatsGranularity.WEEKS, 17)
+        assertEquals(5, inverseQuantity5)
+
+        val inverseQuantity6 = SiteUtils.getQuantityByGranularity("2018-12-31", "2018-12-01", StatsGranularity.WEEKS, 17)
+        assertEquals(6, inverseQuantity6)
+
+        val inverseQuantity7 = SiteUtils.getQuantityByGranularity("2018-11-30", "2018-11-01", StatsGranularity.WEEKS, 17)
+        assertEquals(5, inverseQuantity7)
 
         val defaultQuantity1 = SiteUtils.getQuantityByGranularity("", "", StatsGranularity.WEEKS, 17)
         assertEquals(17, defaultQuantity1)
@@ -153,6 +184,27 @@ class SiteUtilsTest {
         val quantity5 = SiteUtils.getQuantityByGranularity("2017-01-01", "2018-01-31", StatsGranularity.MONTHS, 12)
         assertEquals(13, quantity5)
 
+        val quantity6 = SiteUtils.getQuantityByGranularity("2018-12-31", "2019-01-01", StatsGranularity.MONTHS, 1)
+        assertEquals(2, quantity6)
+
+        val inverseQuantity1 = SiteUtils.getQuantityByGranularity("2018-10-23", "2018-10-22", StatsGranularity.MONTHS, 12)
+        assertEquals(1, inverseQuantity1)
+
+        val inverseQuantity2 = SiteUtils.getQuantityByGranularity("2018-01-01", "2017-01-01", StatsGranularity.MONTHS, 12)
+        assertEquals(13, inverseQuantity2)
+
+        val inverseQuantity3 = SiteUtils.getQuantityByGranularity("2018-01-01", "2018-01-01", StatsGranularity.MONTHS, 12)
+        assertEquals(1, inverseQuantity3)
+
+        val inverseQuantity4 = SiteUtils.getQuantityByGranularity("2018-03-01", "2017-01-01", StatsGranularity.MONTHS, 12)
+        assertEquals(15, inverseQuantity4)
+
+        val inverseQuantity5 = SiteUtils.getQuantityByGranularity("2018-01-31", "2017-01-01", StatsGranularity.MONTHS, 12)
+        assertEquals(13, inverseQuantity5)
+
+        val inverseQuantity6 = SiteUtils.getQuantityByGranularity("2019-01-01", "2018-12-31", StatsGranularity.MONTHS, 1)
+        assertEquals(2, inverseQuantity6)
+
         val defaultQuantity1 = SiteUtils.getQuantityByGranularity("", "", StatsGranularity.MONTHS, 12)
         assertEquals(12, defaultQuantity1)
 
@@ -164,28 +216,45 @@ class SiteUtilsTest {
     @Test
     fun testGetQuantityForYears() {
         val quantity1 = SiteUtils.getQuantityByGranularity("2017-01-01", "2018-01-01", StatsGranularity.YEARS, 1)
-        assertEquals(1, quantity1)
+        assertEquals(2, quantity1)
 
-        val quantity2 = SiteUtils.getQuantityByGranularity("2017-01-01", "2018-01-01", StatsGranularity.YEARS, 1)
-        assertEquals(1, quantity2)
+        val quantity2 = SiteUtils.getQuantityByGranularity("2017-01-01", "2018-03-01", StatsGranularity.YEARS, 1)
+        assertEquals(2, quantity2)
 
-        val quantity3 = SiteUtils.getQuantityByGranularity("2017-01-01", "2018-03-01", StatsGranularity.YEARS, 1)
-        assertEquals(1, quantity3)
+        val quantity3 = SiteUtils.getQuantityByGranularity("2017-01-01", "2018-01-05", StatsGranularity.YEARS, 1)
+        assertEquals(2, quantity3)
 
-        val quantity4 = SiteUtils.getQuantityByGranularity("2017-01-01", "2018-01-05", StatsGranularity.YEARS, 1)
-        assertEquals(1, quantity4)
+        val quantity4 = SiteUtils.getQuantityByGranularity("2017-01-01", "2019-03-01", StatsGranularity.YEARS, 1)
+        assertEquals(3, quantity4)
 
-        val quantity5 = SiteUtils.getQuantityByGranularity("2017-01-01", "2018-03-05", StatsGranularity.YEARS, 1)
-        assertEquals(1, quantity5)
+        val quantity5 = SiteUtils.getQuantityByGranularity("2015-03-05", "2017-01-01", StatsGranularity.YEARS, 1)
+        assertEquals(3, quantity5)
 
-        val quantity6 = SiteUtils.getQuantityByGranularity("2017-01-01", "2019-03-01", StatsGranularity.YEARS, 1)
+        val quantity6 = SiteUtils.getQuantityByGranularity("2018-12-31", "2019-01-01", StatsGranularity.YEARS, 1)
         assertEquals(2, quantity6)
 
-        val quantity7 = SiteUtils.getQuantityByGranularity("2015-03-05", "2017-01-01", StatsGranularity.YEARS, 1)
-        assertEquals(2, quantity7)
+        val quantity7 = SiteUtils.getQuantityByGranularity("2019-01-25", "2019-01-25", StatsGranularity.YEARS, 1)
+        assertEquals(1, quantity7)
 
-        val quantity8 = SiteUtils.getQuantityByGranularity("2015-03-05", "2017-12-31", StatsGranularity.YEARS, 1)
-        assertEquals(2, quantity8)
+
+        val inverseQuantity1 = SiteUtils.getQuantityByGranularity("2018-01-01", "2017-01-01", StatsGranularity.YEARS, 1)
+        assertEquals(2, inverseQuantity1)
+
+        val inverseQuantity2 = SiteUtils.getQuantityByGranularity("2018-03-01", "2017-01-01", StatsGranularity.YEARS, 1)
+        assertEquals(2, inverseQuantity2)
+
+        val inverseQuantity3 = SiteUtils.getQuantityByGranularity("2018-01-05", "2017-01-01", StatsGranularity.YEARS, 1)
+        assertEquals(2, inverseQuantity3)
+
+        val inverseQuantity4 = SiteUtils.getQuantityByGranularity("2019-03-01", "2017-01-01", StatsGranularity.YEARS, 1)
+        assertEquals(3, inverseQuantity4)
+
+        val inverseQuantity5 = SiteUtils.getQuantityByGranularity("2017-01-01", "2015-03-05", StatsGranularity.YEARS, 1)
+        assertEquals(3, inverseQuantity5)
+
+        val inverseQuantity6 = SiteUtils.getQuantityByGranularity("2019-01-01", "2018-12-31", StatsGranularity.YEARS, 1)
+        assertEquals(2, inverseQuantity6)
+
 
         val defaultQuantity1 = SiteUtils.getQuantityByGranularity("", "", StatsGranularity.YEARS, 1)
         assertEquals(1, defaultQuantity1)
@@ -195,12 +264,15 @@ class SiteUtilsTest {
     }
 
 
+    /*
+     * TODO: Need to run more test cases for this
+     * */
     @Test
     fun testGetDateFormattedDateForUtcSite() {
         val siteModel = SiteModel()
         with(siteModel) {
             val formattedDate = SiteUtils.getDateTimeForSite(this, DATE_FORMAT_DAY, "")
-            val currentTimeUtc = "2019-01-31"
+            val currentTimeUtc = "2019-02-01"
             assertEquals(currentTimeUtc, formattedDate)
         }
 
