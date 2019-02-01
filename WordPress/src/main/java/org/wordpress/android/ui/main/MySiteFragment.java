@@ -249,16 +249,16 @@ public class MySiteFragment extends Fragment implements
                     String noticeTitle = getString(noticeDetails.getTitleResId());
                     String noticeMessage = getString(noticeDetails.getMessageResId());
 
-                    WPDialogSnackbar mQuickStartTaskPromptSnackBar =
+                    WPDialogSnackbar mQuickStartNoticeSnackBar =
                             WPDialogSnackbar.make(
                                     requireActivity().findViewById(R.id.coordinator),
                                     noticeMessage,
                                     AccessibilityUtils.getSnackbarDuration(getActivity(),
                                             getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
 
-                    mQuickStartTaskPromptSnackBar.setTitle(noticeTitle);
+                    mQuickStartNoticeSnackBar.setTitle(noticeTitle);
 
-                    mQuickStartTaskPromptSnackBar.setPositiveButton(
+                    mQuickStartNoticeSnackBar.setPositiveButton(
                             getString(R.string.quick_start_button_positive), new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -269,7 +269,7 @@ public class MySiteFragment extends Fragment implements
                                 }
                             });
 
-                    mQuickStartTaskPromptSnackBar
+                    mQuickStartNoticeSnackBar
                             .setNegativeButton(getString(R.string.quick_start_button_negative),
                                     new OnClickListener() {
                                         @Override
@@ -278,7 +278,7 @@ public class MySiteFragment extends Fragment implements
                                         }
                                     });
 
-                    mQuickStartTaskPromptSnackBar.show();
+                    mQuickStartNoticeSnackBar.show();
 
                     AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED);
                     AppPrefs.setQuickStartNoticeRequired(false);
