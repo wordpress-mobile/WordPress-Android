@@ -13,3 +13,5 @@
 /segments
 /verticals
 /verticals/prompt
+
+/plans/mobile
