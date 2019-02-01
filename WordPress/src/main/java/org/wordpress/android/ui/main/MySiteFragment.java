@@ -237,7 +237,7 @@ public class MySiteFragment extends Fragment implements
             mQuickStartSnackBarHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (!isAdded() || getView() == null) {
+                    if (!isAdded() || getView() == null || !(getActivity() instanceof WPMainActivity)) {
                         return;
                     }
 
@@ -249,16 +249,16 @@ public class MySiteFragment extends Fragment implements
                     String noticeTitle = getString(noticeDetails.getTitleResId());
                     String noticeMessage = getString(noticeDetails.getMessageResId());
 
-                    WPDialogSnackbar mQuickStartNoticeSnackBar =
+                    WPDialogSnackbar quickStartNoticeSnackBar =
                             WPDialogSnackbar.make(
                                     requireActivity().findViewById(R.id.coordinator),
                                     noticeMessage,
                                     AccessibilityUtils.getSnackbarDuration(getActivity(),
                                             getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
 
-                    mQuickStartNoticeSnackBar.setTitle(noticeTitle);
+                    quickStartNoticeSnackBar.setTitle(noticeTitle);
 
-                    mQuickStartNoticeSnackBar.setPositiveButton(
+                    quickStartNoticeSnackBar.setPositiveButton(
                             getString(R.string.quick_start_button_positive), new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -269,7 +269,7 @@ public class MySiteFragment extends Fragment implements
                                 }
                             });
 
-                    mQuickStartNoticeSnackBar
+                    quickStartNoticeSnackBar
                             .setNegativeButton(getString(R.string.quick_start_button_negative),
                                     new OnClickListener() {
                                         @Override
@@ -278,7 +278,7 @@ public class MySiteFragment extends Fragment implements
                                         }
                                     });
 
-                    mQuickStartNoticeSnackBar.show();
+                    ((WPMainActivity) requireActivity()).showQuickStartSnackBar(quickStartNoticeSnackBar);
 
                     AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED);
                     AppPrefs.setQuickStartNoticeRequired(false);
@@ -1102,7 +1102,7 @@ public class MySiteFragment extends Fragment implements
                 // TODO: Quick Start - Add analytics for remove next steps dialog negative tapped.
                 break;
             default:
-                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                AppLog.e(T.EDITOR, "Dialog instanceTag '" + instanceTag + "' is not recognized");
                 throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
         }
     }
@@ -1115,7 +1115,7 @@ public class MySiteFragment extends Fragment implements
                 AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED);
                 break;
             default:
-                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                AppLog.e(T.EDITOR, "Dialog instanceTag '" + instanceTag + "' is not recognized");
                 throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
         }
     }
@@ -1126,8 +1126,14 @@ public class MySiteFragment extends Fragment implements
             case TAG_ADD_SITE_ICON_DIALOG:
                 showQuickStartNoticeIfNecessary();
                 break;
+            case TAG_CHANGE_SITE_ICON_DIALOG:
+            case TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG:
+            case TAG_QUICK_START_DIALOG:
+            case TAG_QUICK_START_MIGRATION_DIALOG:
+            case TAG_REMOVE_NEXT_STEPS_DIALOG:
+                break; // do nothing
             default:
-                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
+                AppLog.e(T.EDITOR, "Dialog instanceTag '" + instanceTag + "' is not recognized");
                 throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
         }
     }
@@ -1287,7 +1293,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void showActiveQuickStartTutorial() {
-        if (!hasActiveQuickStartTask() || getActivity() == null || !(getActivity() instanceof WPMainActivity)) {
+        if (!hasActiveQuickStartTask() || !isAdded() || !(getActivity() instanceof WPMainActivity)) {
             return;
         }
 
@@ -1297,7 +1303,11 @@ public class MySiteFragment extends Fragment implements
                 mActiveTutorialPrompt.getShortMessagePrompt(),
                 mActiveTutorialPrompt.getIconId());
 
-        ((WPMainActivity) getActivity()).showQuickStartSnackBar(shortQuickStartMessage);
+        WPDialogSnackbar promptSnackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator),
+                shortQuickStartMessage, AccessibilityUtils.getSnackbarDuration(requireContext(),
+                        getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+
+        ((WPMainActivity) getActivity()).showQuickStartSnackBar(promptSnackbar);
     }
 
     private void showQuickStartDialogMigration() {

@@ -82,7 +82,6 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -1125,14 +1124,9 @@ public class WPMainActivity extends AppCompatActivity implements
 
     // because of the bottom nav implementation (we only get callback after active fragment is changed) we need
     // to manage SnackBar in Activity, instead of Fragment
-    public void showQuickStartSnackBar(CharSequence message) {
+    public void showQuickStartSnackBar(WPDialogSnackbar snackbar) {
         hideQuickStartSnackBar();
-
-        mQuickStartSnackbar = WPDialogSnackbar.make(findViewById(R.id.coordinator),
-                message,
-                AccessibilityUtils.getSnackbarDuration(this,
-                        getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
-
+        mQuickStartSnackbar = snackbar;
         mQuickStartSnackbar.show();
     }
 
