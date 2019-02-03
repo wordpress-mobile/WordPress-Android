@@ -44,7 +44,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        TextView moduleTitle = (TextView) view.findViewById(R.id.stats_module_title);
+        TextView moduleTitle = view.findViewById(R.id.stats_module_title);
         moduleTitle.setTag(StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
         moduleTitle.setOnClickListener(mButtonsOnClickListener);
         moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
@@ -112,7 +112,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
                                                       .inflate(R.layout.stats_insights_today_item,
                                                                (ViewGroup) mResultContainer.getRootView(), false);
 
-        LinearLayout tabs = (LinearLayout) ll.findViewById(R.id.stats_post_tabs);
+        LinearLayout tabs = ll.findViewById(R.id.stats_post_tabs);
 
         for (int i = 0; i < tabs.getChildCount(); i++) {
             LinearLayout currentTab = (LinearLayout) tabs.getChildAt(i);
@@ -148,16 +148,16 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         currentTab.setTag(itemType);
         currentTab.setOnClickListener(mButtonsOnClickListener);
 
-        label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
+        label = currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
         label.setText(itemType.getLabel());
-        value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
+        value = currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
             value.setTextColor(getResources().getColor(R.color.grey_text_min));
         } else {
             value.setTextColor(getResources().getColor(R.color.blue_wordpress));
         }
-        icon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
+        icon = currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
         icon.setImageDrawable(getTabIcon(itemType));
         icon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(requireActivity(), R.color.grey_dark)));
 
