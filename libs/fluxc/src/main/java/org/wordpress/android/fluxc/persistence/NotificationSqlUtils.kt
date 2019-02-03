@@ -9,9 +9,9 @@ import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
-import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.notification.NoteIdSet
+import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.notification.NotificationModel.Kind
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableContentMapper
@@ -50,7 +50,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     /**
      * @return The total records in the notification table.
      */
-    fun getNotificationsCount() = WellSql.select(NotificationModelBuilder::class.java).asCursor.count
+    fun getNotificationsCount() = WellSql.select(NotificationModelBuilder::class.java).count()
 
     @SuppressLint("WrongConstant")
     fun getNotifications(
@@ -118,6 +118,37 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .orderBy(NotificationModelTable.TIMESTAMP, order)
                 .asModel
                 .map { it.build(formattableContentMapper) }
+    }
+
+    fun hasUnreadNotificationsForSite(
+        site: SiteModel,
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null
+    ): Boolean {
+        val conditionClauseBuilder = WellSql.select(NotificationModelBuilder::class.java)
+                .where()
+                .equals(NotificationModelTable.LOCAL_SITE_ID, site.id)
+                .equals(NotificationModelTable.READ, 0)
+
+        if (filterByType != null || filterBySubtype != null) {
+            conditionClauseBuilder.beginGroup()
+
+            filterByType?.let {
+                conditionClauseBuilder.isIn(NotificationModelTable.TYPE, it)
+            }
+
+            if (filterByType != null && filterBySubtype != null) {
+                conditionClauseBuilder.or()
+            }
+
+            filterBySubtype?.let {
+                conditionClauseBuilder.isIn(NotificationModelTable.SUBTYPE, it)
+            }
+
+            conditionClauseBuilder.endGroup()
+        }
+
+        return conditionClauseBuilder.endWhere().exists()
     }
 
     fun getNotificationByIdSet(idSet: NoteIdSet): NotificationModel? {

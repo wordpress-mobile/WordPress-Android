@@ -69,7 +69,7 @@ class ReferrersRestClientTest {
                 gson,
                 statsUtils
         )
-        whenever(statsUtils.getFormattedDate(eq(site), eq(currentDate))).thenReturn(currentStringDate)
+        whenever(statsUtils.getFormattedDate(eq(currentDate))).thenReturn(currentStringDate)
     }
 
     @Test
