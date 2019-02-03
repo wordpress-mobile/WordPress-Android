@@ -176,7 +176,7 @@
                 android:paddingEnd="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                android:src="@drawable/ic_pencil_grey_min_24dp"
+                android:src="@drawable/ic_pencil_white_24dp"
                 android:tint="@color/grey_text_min"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
