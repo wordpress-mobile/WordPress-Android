@@ -1145,7 +1145,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (isLiked) {
             color = ContextCompat.getColor(getActivity(), R.color.orange_jazzy);
-            drawable = R.drawable.ic_star_orange_jazzy_24dp;
+            drawable = R.drawable.ic_star_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setActivated(true);
         } else {
