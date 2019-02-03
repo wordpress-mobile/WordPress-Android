@@ -422,9 +422,6 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 51:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                oldVersion++;
-            case 52:
-                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
         }
@@ -502,7 +499,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "CURRENCY_THOUSAND_SEPARATOR TEXT NOT NULL,CURRENCY_DECIMAL_SEPARATOR TEXT NOT NULL,"
                                + "CURRENCY_DECIMAL_NUMBER INTEGER)");
                     break;
-                case 52:
+                case 51:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("CREATE TABLE WCOrderStatusModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "LOCAL_SITE_ID INTEGER,STATUS_KEY TEXT NOT NULL,LABEL TEXT NOT NULL)");
