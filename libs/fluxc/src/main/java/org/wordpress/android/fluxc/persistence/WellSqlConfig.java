@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 51;
+        return 52;
     }
 
     @Override
@@ -494,6 +494,12 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "LOCAL_SITE_ID INTEGER,CURRENCY_CODE TEXT NOT NULL,CURRENCY_POSITION TEXT NOT NULL,"
                                + "CURRENCY_THOUSAND_SEPARATOR TEXT NOT NULL,CURRENCY_DECIMAL_SEPARATOR TEXT NOT NULL,"
                                + "CURRENCY_DECIMAL_NUMBER INTEGER)");
+                    break;
+                case 51:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD IS_CUSTOM_FIELD INTEGER");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD DATE TEXT");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD QUANTITY TEXT");
                     break;
             }
         }
