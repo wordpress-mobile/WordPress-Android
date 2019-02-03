@@ -25,8 +25,15 @@ public class SiteUtils {
      */
     public static @NonNull String getDateTimeForSite(@NonNull SiteModel site,
                                                      @NonNull String pattern,
-                                                     @NonNull String dateString) {
-        Date date = StringUtils.isEmpty(dateString) ? new Date() : getDateFromString(pattern, dateString);
+                                                     String dateString) {
+        Date date = StringUtils.isEmpty(dateString) ? new Date() : getDateFromString(dateString);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR_OF_DAY, date.getHours());
+        calendar.add(Calendar.MINUTE, date.getMinutes());
+        calendar.add(Calendar.SECOND, date.getSeconds());
+
         return getDateTimeForSite(site, pattern, date);
     }
 
@@ -70,9 +77,9 @@ public class SiteUtils {
      * Given a {@link SiteModel}, {@link SimpleDateFormat} and a {@link Date},
      * returns a formatted date that accounts for the site's timezone setting.
      */
-    private static @NonNull String getDateTimeForSite(@NonNull SiteModel site,
-                                                      @NonNull SimpleDateFormat dateFormat,
-                                                      @NonNull Date date) {
+    public static @NonNull String getDateTimeForSite(@NonNull SiteModel site,
+                                                     @NonNull SimpleDateFormat dateFormat,
+                                                     @NonNull Date date) {
         String wpTimeZone = site.getTimezone();
 
         /*
@@ -123,14 +130,24 @@ public class SiteUtils {
      * returns a {@link Date} instance
      * based on {@param pattern} and {@param dateString}
      */
-    public static Date getDateFromString(String pattern,
-                                          String dateString) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.ROOT);
+    public static Date getDateFromString(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DEFAULT, Locale.ROOT);
         try {
             return dateFormat.parse(dateString);
         } catch (ParseException e) {
             return new Date();
         }
+    }
+
+
+    /**
+     * returns a {@link String} formatted
+     * based on {@param pattern} and {@param date}
+     */
+    public static String formatDate(String pattern,
+                                    Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.ROOT);
+        return dateFormat.format(date);
     }
 
 
