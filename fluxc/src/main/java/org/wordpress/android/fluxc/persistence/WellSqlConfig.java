@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 49;
+        return 51;
     }
 
     @Override
@@ -404,6 +404,22 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE PostModel ADD REMOTE_LAST_MODIFIED TEXT");
                 oldVersion++;
+            case 49:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+             case 50:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE PlanOffers (_id INTEGER PRIMARY KEY AUTOINCREMENT,INTERNAL_PLAN_ID INTEGER,"
+                        + "NAME TEXT,SHORT_NAME TEXT,TAGLINE TEXT,DESCRIPTION TEXT,ICON TEXT)");
+                db.execSQL(
+                        "CREATE TABLE PlanOffersId (_id INTEGER PRIMARY KEY AUTOINCREMENT,PRODUCT_ID INTEGER,"
+                        + "INTERNAL_PLAN_ID INTEGER)");
+                db.execSQL(
+                        "CREATE TABLE PlanOffersFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + "INTERNAL_PLAN_ID INTEGER,STRING_ID TEXT UNIQUE,NAME TEXT,DESCRIPTION TEXT)");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -471,6 +487,13 @@ public class WellSqlConfig extends DefaultWellConfig {
                 case 45:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("ALTER TABLE WCOrderNoteModel ADD IS_SYSTEM_NOTE INTEGER");
+                    break;
+                case 49:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCSettingsModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,CURRENCY_CODE TEXT NOT NULL,CURRENCY_POSITION TEXT NOT NULL,"
+                               + "CURRENCY_THOUSAND_SEPARATOR TEXT NOT NULL,CURRENCY_DECIMAL_SEPARATOR TEXT NOT NULL,"
+                               + "CURRENCY_DECIMAL_NUMBER INTEGER)");
                     break;
             }
         }

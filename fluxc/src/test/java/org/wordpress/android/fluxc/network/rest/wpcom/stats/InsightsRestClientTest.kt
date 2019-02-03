@@ -223,7 +223,7 @@ class InsightsRestClientTest {
 
         val date = Date(10)
         val formattedDate = "2019-01-17"
-        whenever(statsUtils.getFormattedDate(site, date)).thenReturn(formattedDate)
+        whenever(statsUtils.getFormattedDate(date)).thenReturn(formattedDate)
         val responseModel = insightsRestClient.fetchTimePeriodStats(site, DAYS, date, false)
 
         assertThat(responseModel.response).isNotNull()
