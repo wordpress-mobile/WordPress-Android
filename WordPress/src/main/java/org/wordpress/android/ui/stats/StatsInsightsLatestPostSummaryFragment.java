@@ -164,7 +164,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         Spannable descriptionTextToSpan = new SpannableString(trendLabelFormatted);
         descriptionTextToSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.stats_link_text_color)),
                                       startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        TextView trendLabelTextField = (TextView) ll.findViewById(R.id.stats_post_trend_label);
+        TextView trendLabelTextField = ll.findViewById(R.id.stats_post_trend_label);
         trendLabelTextField.setText(descriptionTextToSpan);
         trendLabelTextField.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,7 +177,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             }
         });
 
-        LinearLayout tabs = (LinearLayout) ll.findViewById(R.id.stats_latest_post_tabs);
+        LinearLayout tabs = ll.findViewById(R.id.stats_latest_post_tabs);
 
         for (int i = 0; i < tabs.getChildCount(); i++) {
             LinearLayout currentTab = (LinearLayout) tabs.getChildAt(i);
@@ -214,9 +214,9 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             currentTab.setClickable(false);
         }
 
-        label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
+        label = currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
         label.setText(itemType.getLabel());
-        value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
+        value = currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
             value.setTextColor(getResources().getColor(R.color.grey_text_min));
@@ -230,7 +230,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
                 value.setTextColor(getResources().getColor(R.color.grey_darken_30));
             }
         }
-        icon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
+        icon = currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
         icon.setImageDrawable(getTabIcon(itemType));
         icon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(requireActivity(), R.color.grey_dark)));
 
