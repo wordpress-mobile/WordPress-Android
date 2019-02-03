@@ -71,7 +71,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
-                    android:background="@drawable/ic_visible_on_grey_dark_12dp"
+                    android:src="@drawable/ic_visible_on_grey_dark_12dp"
                     android:tint="@color/grey_dark" />
 
                 <TextView
@@ -118,7 +118,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
-                    android:background="@drawable/ic_user_grey_dark_12dp"
+                    android:src="@drawable/ic_user_grey_dark_12dp"
                     android:tint="@color/grey_dark" />
 
                 <TextView
@@ -165,7 +165,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
-                    android:background="@drawable/ic_star_grey_dark_12dp"
+                    android:src="@drawable/ic_star_grey_dark_12dp"
                     android:tint="@color/grey_dark" />
 
                 <TextView
@@ -212,7 +212,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
-                    android:background="@drawable/ic_comment_grey_dark_12dp"
+                    android:src="@drawable/ic_comment_grey_dark_12dp"
                     android:tint="@color/grey_dark" />
 
                 <TextView
