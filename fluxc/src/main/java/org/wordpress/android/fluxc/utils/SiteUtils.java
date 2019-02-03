@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -120,38 +119,11 @@ public class SiteUtils {
     }
 
 
-
-    /**
-     * Given a {@param d1} start date, {@param d2} end date and the {@param granularity} granularity,
-     * returns a quantity value.
-     * If the start date or end date is empty, returns {@param defaultValue}
-     */
-    public static long getQuantityByGranularity(String d1,
-                                                String d2,
-                                                StatsGranularity granularity,
-                                                long defaultValue) {
-        if (StringUtils.isEmpty(d1) || StringUtils.isEmpty(d2)) return defaultValue;
-
-        Date startDate = getDateFromString(DATE_FORMAT_DEFAULT, d1);
-        Date endDate = getDateFromString(DATE_FORMAT_DEFAULT, d2);
-
-        Calendar startDateCalendar = getStartDateCalendar(startDate.before(endDate) ? startDate : endDate);
-        Calendar endDateCalendar = getEndDateCalendar(startDate.before(endDate) ? endDate : startDate);
-
-        switch (granularity) {
-            case WEEKS: return getQuantityInWeeks(startDateCalendar, endDateCalendar);
-            case MONTHS: return getQuantityInMonths(startDateCalendar, endDateCalendar);
-            case YEARS: return getQuantityInYears(startDateCalendar, endDateCalendar);
-            default: return getQuantityInDays(startDateCalendar, endDateCalendar);
-        }
-    }
-
-
     /**
      * returns a {@link Date} instance
      * based on {@param pattern} and {@param dateString}
      */
-    private static Date getDateFromString(String pattern,
+    public static Date getDateFromString(String pattern,
                                           String dateString) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.ROOT);
         try {
@@ -168,7 +140,7 @@ public class SiteUtils {
      * returns a {@link Calendar} instance.
      * The start date time is set to 00:00:00
      */
-    private static Calendar getStartDateCalendar(@NonNull Date startDate) {
+    public static Calendar getStartDateCalendar(@NonNull Date startDate) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(startDate);
         cal1.set(Calendar.HOUR_OF_DAY, 0);
@@ -186,7 +158,7 @@ public class SiteUtils {
      * returns a {@link Calendar} instance.
      * The end date time is set to 23:59:59
      */
-    private static Calendar getEndDateCalendar(Date endDate) {
+    public static Calendar getEndDateCalendar(Date endDate) {
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(endDate);
         cal2.set(Calendar.HOUR_OF_DAY, 23);
@@ -202,7 +174,7 @@ public class SiteUtils {
      * Given a {@link Calendar} instance for startDate and endDate,
      * returns a quantity that is calculated based on [StatsGranularity.DAYS]
      */
-    private static long getQuantityInDays(@NonNull Calendar c1,
+    public static long getQuantityInDays(@NonNull Calendar c1,
                                           @NonNull Calendar c2) {
         long millis1 = c1.getTimeInMillis();
         long millis2 = c2.getTimeInMillis();
@@ -215,7 +187,7 @@ public class SiteUtils {
      * Given a {@link Calendar} instance for startDate and endDate,
      * returns a quantity that is calculated based on [StatsGranularity.WEEKS]
      */
-    private static long getQuantityInWeeks(@NonNull Calendar c1,
+    public static long getQuantityInWeeks(@NonNull Calendar c1,
                                            @NonNull Calendar c2) {
         /*
          * start date: if day of week is greater than 1: set to 1
@@ -238,7 +210,7 @@ public class SiteUtils {
      * Given a {@link Calendar} instance for startDate and endDate,
      * returns a quantity that is calculated based on [StatsGranularity.MONTHS]
      */
-    private static long getQuantityInMonths(@NonNull Calendar c1,
+    public static long getQuantityInMonths(@NonNull Calendar c1,
                                             @NonNull Calendar c2) {
         /*
          * start date: if day of month is greater than 1: set to 1
@@ -272,7 +244,7 @@ public class SiteUtils {
      * Given a {@link Calendar} instance for startDate and endDate,
      * returns a quantity that is calculated based on [StatsGranularity.YEARS]
      */
-    private static long getQuantityInYears(@NonNull Calendar c1,
+    public static long getQuantityInYears(@NonNull Calendar c1,
                                            @NonNull Calendar c2) {
         /*
          * start date: if day of year is greater than 1: set to 1
