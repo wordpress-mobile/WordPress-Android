@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
@@ -33,6 +33,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.widgets.AutoResizeTextView;
 
 import java.text.ParseException;
@@ -193,6 +194,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
 
             mIcon.setImageDrawable(getTabIcon());
+            mIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(requireActivity(),
+                    R.color.grey_dark)));
 
             if (mIsLastItem) {
                 if (mIsChecked) {
