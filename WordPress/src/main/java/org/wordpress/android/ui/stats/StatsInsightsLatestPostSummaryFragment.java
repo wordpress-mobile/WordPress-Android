@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -230,6 +232,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         }
         icon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
         icon.setImageDrawable(getTabIcon(itemType));
+        icon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(requireActivity(), R.color.grey_dark)));
 
         if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS) {
             currentTab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_white);
