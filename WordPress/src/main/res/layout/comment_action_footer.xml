@@ -36,7 +36,8 @@
                 android:paddingEnd="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                android:src="@drawable/ic_checkmark_grey_min_24dp"/>
+                android:src="@drawable/ic_checkmark_grey_min_24dp"
+                android:tint="@color/grey_text_min"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_moderate_text"
@@ -70,7 +71,8 @@
                 android:paddingEnd="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                android:src="@drawable/ic_spam_grey_min_24dp"/>
+                android:src="@drawable/ic_spam_grey_min_24dp"
+                android:tint="@color/grey_text_min"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_spam_text"
@@ -104,7 +106,8 @@
                 android:paddingEnd="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                android:src="@drawable/ic_trash_grey_min_24dp"/>
+                android:src="@drawable/ic_trash_grey_min_24dp"
+                android:tint="@color/grey_text_min"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_trash_text"
@@ -138,7 +141,8 @@
                 android:paddingEnd="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                android:src="@drawable/ic_star_outline_grey_min_24dp"/>
+                android:src="@drawable/ic_star_outline_grey_min_24dp"
+                android:tint="@color/grey_text_min"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_like_text"
@@ -172,7 +176,8 @@
                 android:paddingEnd="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                android:src="@drawable/ic_pencil_grey_min_24dp"/>
+                android:src="@drawable/ic_pencil_grey_min_24dp"
+                android:tint="@color/grey_text_min"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_edit_text"
