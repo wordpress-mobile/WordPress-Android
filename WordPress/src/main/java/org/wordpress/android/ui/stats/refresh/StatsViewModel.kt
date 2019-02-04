@@ -5,12 +5,12 @@ import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
-import org.wordpress.android.analytics.AnalyticsTracker.track
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -39,7 +39,7 @@ class StatsViewModel
     @Named(MONTH_STATS_USE_CASE) private val monthStatsUseCase: BaseListUseCase,
     @Named(YEAR_STATS_USE_CASE) private val yearStatsUseCase: BaseListUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    selectedDateProvider: SelectedDateProvider,
+    private val selectedDateProvider: SelectedDateProvider,
     private val statsSectionManager: SelectedSectionManager,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ScopedViewModel(mainDispatcher) {
@@ -55,14 +55,20 @@ class StatsViewModel
 
     val selectedDateChanged = selectedDateProvider.selectedDateChanged
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, launchedFromWidget: Boolean, initialSection: StatsSection?) {
         // Check if VM is not already initialized
         if (!isInitialized) {
             isInitialized = true
 
             this.site = site
 
+            initialSection?.let { statsSectionManager.setSelectedSection(it) }
+
             loadStats()
+
+            if (launchedFromWidget) {
+                analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
+            }
         }
     }
 
@@ -127,5 +133,10 @@ class StatsViewModel
             StatsSection.MONTHS -> analyticsTracker.track(STATS_PERIOD_MONTHS_ACCESSED)
             StatsSection.YEARS -> analyticsTracker.track(STATS_PERIOD_YEARS_ACCESSED)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        selectedDateProvider.clear()
     }
 }

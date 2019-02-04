@@ -5,7 +5,7 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.27.0'
         classpath 'com.google.gms:google-services:3.2.0'
     }
 }
@@ -25,8 +25,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
-apply from: 'gutenberg-tasks.gradle'
-
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
@@ -39,12 +37,12 @@ android {
     }
 
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-149"
-        versionCode 671
+        versionName "alpha-150"
+        versionCode 674
         minSdkVersion 21
         targetSdkVersion 26
 
@@ -58,6 +56,7 @@ android {
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
         buildConfigField "boolean", "REVISIONS_ENABLED", "false"
+        buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "false"
     }
 
     flavorDimensions "buildType"
@@ -161,7 +160,7 @@ dependencies {
     implementation 'org.wordpress:graphview:3.4.0'
     implementation 'org.wordpress:persistentedittext:1.0.2'
     implementation 'org.wordpress:emailchecker2:1.1.0'
-    implementation 'com.squareup.okio:okio:1.13.0'
+    implementation 'com.squareup.okio:okio:1.14.0'
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.airbnb.android:lottie:2.0.0-rc2'
     implementation 'com.facebook.shimmer:shimmer:0.3.0'
@@ -185,7 +184,7 @@ dependencies {
     androidTestImplementation 'org.objenesis:objenesis:2.1'
     androidTestImplementation 'org.mockito:mockito-core:1.10.19'
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
-    androidTestImplementation 'com.squareup.okio:okio:1.13.0'
+    androidTestImplementation 'com.squareup.okio:okio:1.14.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
@@ -250,18 +249,6 @@ configurations.all {
     exclude group: 'org.wordpress', module: 'analytics'
 }
 
-task copyGoogleServicesExampleFile(type: Copy) {
-    from('.')
-    into('.')
-    include('google-services.json-example')
-    rename('google-services.json-example', 'google-services.json')
-}
-
-task copyGoogleServicesBuddybuildFile(type: Copy) {
-    from(file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json"))
-    into('.')
-}
-
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
     def inputFile = checkGradlePropertiesFile()
@@ -300,11 +287,11 @@ android.buildTypes.all { buildType ->
     // If Google services file doesn't exist...
     if (!file("google-services.json").exists()) {
         // ... copy example file.
-        if (!file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json").exists()) {
-            tasks.copyGoogleServicesExampleFile.execute()
-        // ... copy Buddybuild file.
-        } else {
-            tasks.copyGoogleServicesBuddybuildFile.execute()
+        copy {
+            from(".")
+            into(".")
+            include("google-services.json-example")
+            rename('google-services.json-example', 'google-services.json')
         }
     }
 
@@ -317,11 +304,7 @@ android.buildTypes.all { buildType ->
 def checkGradlePropertiesFile() {
     def inputFile = file("${rootDir}/gradle.properties")
     if (!inputFile.exists()) {
-        // Try the BuddyBuild provided file if it's there
-        inputFile = file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/gradle.properties")
-        if (!inputFile.exists()) {
-            throw new StopActionException("Build configuration file gradle.properties doesn't exist, follow README instructions")
-        }
+        throw new StopActionException("Build configuration file gradle.properties doesn't exist, follow README instructions")
     }
     return inputFile
 }
@@ -348,6 +331,9 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
 }
+
+def legacyGBBundleFile = 'src/main/assets/index.android.bundle'
+assert !(file(legacyGBBundleFile).exists()) : "Error: Legacy Gutenberg JS bundle file detected. Please delete it: " + file(legacyGBBundleFile).getAbsolutePath()
 
 // Keep this at the bottom (https://stackoverflow.com/a/37565535)
 apply plugin: 'com.google.gms.google-services'

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-03 10:54:06+0000
+Translation-Revision-Date: 2019-01-22 08:54:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">Er is een verbinding vereist om deze actie uit te voeren. Controleer je verbinding en probeer het nogmaals.</string>
+    <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
+    <string name="preference_strip_image_location">Locatie van media verwijderen</string>
+    <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
     <string name="giphy_powered_by_giphy">Mogelijk gemaakt door GIPHY</string>
     <string name="giphy_picker_search_hint">Zoek op Giphy</string>
     <string name="photo_picker_giphy">Kies van Giphy</string>

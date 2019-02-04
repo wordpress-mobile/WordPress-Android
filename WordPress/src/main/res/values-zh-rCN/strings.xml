@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-02 08:54:07+0000
+Translation-Revision-Date: 2019-01-22 13:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">必须连接后才能执行此操作。请检查您的连接，然后重试。</string>
+    <string name="stats_no_data_for_period">没有此时间段的数据</string>
+    <string name="preference_strip_image_location">从媒体删除位置信息</string>
+    <string name="stats_cannot_be_started">我们现在无法打开统计信息。请稍后重试</string>
     <string name="site_creation_label_domain_selection">选择一个可用的地址，以便人们在网络上找到您。</string>
     <string name="giphy_powered_by_giphy">由 GIPHY 提供支持</string>
     <string name="giphy_picker_endless_scroll_network_error">由于网络错误，无法加载某些媒体。</string>
@@ -69,7 +73,6 @@ Language: zh_CN
     <string name="stats_followers_email">电子邮件</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">管理见解</string>
-    <string name="stats_empty_insights_description">自定义您的见解并获取站点性能的实情</string>
     <string name="stats_empty_insights_title">尚未添加任何见解</string>
     <string name="stats_no_data_yet">尚无数据</string>
     <string name="change_password_dialog_message">正在更改密码…</string>

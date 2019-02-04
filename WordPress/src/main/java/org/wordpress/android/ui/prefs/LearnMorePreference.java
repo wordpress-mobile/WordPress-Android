@@ -105,6 +105,8 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
 
         if (!TextUtils.isEmpty(mButtonText)) {
             learnMoreButton.setText(mButtonText);
+            learnMoreButton.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.bottom_padding).setVisibility(View.GONE);
         }
 
         if (mIcon != -1) {

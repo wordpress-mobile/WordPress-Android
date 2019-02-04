@@ -153,6 +153,9 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment() {
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
         uiHelpers.updateVisibility(emptyView, contentState.emptyViewVisibility)
+        if (contentState.items.isNotEmpty()) {
+            view?.announceForAccessibility(getString(R.string.suggestions_updated_content_description))
+        }
         (recyclerView.adapter as NewSiteCreationDomainsAdapter).update(contentState.items)
     }
 

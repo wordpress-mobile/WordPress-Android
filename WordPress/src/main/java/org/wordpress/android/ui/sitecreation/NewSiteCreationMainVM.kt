@@ -12,8 +12,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
-import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState
 import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -24,7 +24,6 @@ import javax.inject.Inject
 private const val KEY_CURRENT_STEP = "key_current_step"
 private const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 private val SITE_CREATION_STEPS =
-        // TODO we'll receive this from a server/Firebase config
         listOf(
                 SiteCreationStep.fromString("site_creation_segments"),
                 SiteCreationStep.fromString("site_creation_verticals"),

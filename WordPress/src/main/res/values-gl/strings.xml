@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-22 02:15:42+0000
+Translation-Revision-Date: 2019-01-14 18:16:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
 -->
 <resources>
+    <string name="stats_author_label">Autor</string>
+    <string name="stats_authors">Autores</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">Path</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_comments_author_label">Autor</string>
+    <string name="stats_comments_authors">Autores</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="preference_experimental">*EXPERIMENTAL*</string>
     <string name="site_settings_enable_gutenberg_summary">Esta é unha versión experimental de Gutenberg</string>
     <string name="site_settings_enable_gutenberg">Activa Gutenberg</string>

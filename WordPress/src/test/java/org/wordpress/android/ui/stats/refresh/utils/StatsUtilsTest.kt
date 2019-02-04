@@ -31,8 +31,8 @@ class StatsUtilsTest {
                 "0",
                 "5",
                 "999",
-                "1k",
-                "-5.8k",
+                "1000",
+                "-5821",
                 "10k",
                 "-101k",
                 "2M",
@@ -48,6 +48,23 @@ class StatsUtilsTest {
         for (i in numbers.indices) {
             val number = numbers[i]
             val formatted = number.toFormattedString()
+            assertThat(formatted).isEqualTo(expected[i])
+        }
+    }
+
+    @Test
+    fun `test stats int formatter with start value`() {
+        val numbers = listOf(
+                999999,
+                1000000
+        )
+        val expected = listOf(
+                "999999",
+                "1M"
+        )
+        for (i in numbers.indices) {
+            val number = numbers[i]
+            val formatted = number.toFormattedString(MILLION)
             assertThat(formatted).isEqualTo(expected[i])
         }
     }

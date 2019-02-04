@@ -559,6 +559,9 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void purgeMediaToPostAssociationsIfNotInPostAnymore() {
+        boolean useAztec = AppPrefs.isAztecEditorEnabled();
+        boolean useGutenberg = AppPrefs.isGutenbergEditorEnabled();
+
         ArrayList<MediaModel> allMedia = new ArrayList<>();
         allMedia.addAll(mUploadStore.getFailedMediaForPost(mPost));
         allMedia.addAll(mUploadStore.getCompletedMediaForPost(mPost));
@@ -567,8 +570,16 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!allMedia.isEmpty()) {
             HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
             for (MediaModel media : allMedia) {
-                if (!AztecEditorFragment.isMediaInPostBody(this, mPost.getContent(), String.valueOf(media.getId()))) {
-                    mediaToDeleteAssociationFor.add(media);
+                if (useAztec) {
+                    if (!AztecEditorFragment.isMediaInPostBody(this,
+                            mPost.getContent(), String.valueOf(media.getId()))) {
+                        mediaToDeleteAssociationFor.add(media);
+                    }
+                } else if (useGutenberg) {
+                    if (!PostUtils.isMediaInGutenbergPostBody(
+                            mPost.getContent(), String.valueOf(media.getId()))) {
+                        mediaToDeleteAssociationFor.add(media);
+                    }
                 }
             }
 
@@ -1384,11 +1395,13 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, true);
+        // don't allow multiple selection for Gutenberg, as we're on a single image block for now
+        WPMediaUtils.launchPictureLibrary(this, !mShowGutenbergEditor);
     }
 
     private void launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this, true);
+        // don't allow multiple selection for Gutenberg, as we're on a single image block for now
+        WPMediaUtils.launchVideoLibrary(this, !mShowGutenbergEditor);
     }
 
     private void launchVideoCamera() {
@@ -2230,7 +2243,11 @@ public class EditPostActivity extends AppCompatActivity implements
             }
             if (!TextUtils.isEmpty(mPost.getTitle())) {
                 mEditorFragment.setTitle(mPost.getTitle());
+            } else if (mEditorFragment instanceof GutenbergEditorFragment) {
+                // don't avoid calling setTitle() for GutenbergEditorFragment so RN gets initialized
+                mEditorFragment.setTitle("");
             }
+
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             mEditorFragment.setLocalDraft(mPost.isLocalDraft());
 
@@ -3184,6 +3201,16 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onAddPhotoClicked() {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+    }
+
+    @Override
+    public void onCapturePhotoClicked() {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+    }
+
+    @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
         mDroppedMediaUris = mediaUris;
         if (PermissionUtils
@@ -3202,6 +3229,27 @@ public class EditPostActivity extends AppCompatActivity implements
     @TargetApi(Build.VERSION_CODES.N)
     private void requestTemporaryPermissions(DragEvent dragEvent) {
         requestDragAndDropPermissions(dragEvent);
+    }
+
+    @Override
+    public void onMediaRetryAllClicked(Set<String> failedMediaIds) {
+        UploadService.cancelFinalNotification(this, mPost);
+        UploadService.cancelFinalNotificationForMedia(this, mSite);
+
+        ArrayList<MediaModel> failedMediaList = new ArrayList<>();
+        for (String mediaId : failedMediaIds) {
+            failedMediaList.add(mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)));
+        }
+
+        if (!failedMediaList.isEmpty()) {
+            for (MediaModel mediaModel : failedMediaList) {
+                mediaModel.setUploadState(MediaUploadState.QUEUED);
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
+            }
+            startUploadService(failedMediaList);
+        }
+
+        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
     }
 
     @Override
@@ -3273,10 +3321,25 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
-            UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
-            // passing false here as we need to keep the media item in case the user wants to undo
-            cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
+            if (mShowAztecEditor) {
+                mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
+                UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
+                // passing false here as we need to keep the media item in case the user wants to undo
+                cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
+            } else if (mShowGutenbergEditor) {
+                MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(localMediaId));
+                if (mediaModel == null) {
+                    return;
+                }
+
+                // also make sure it's not being uploaded anywhere else (maybe on some other Post,
+                // simultaneously)
+                if (mediaModel.getUploadState() != null
+                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))
+                    && !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
+                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+                }
+            }
         }
     }
 
@@ -3454,6 +3517,18 @@ public class EditPostActivity extends AppCompatActivity implements
                     // no op
                 }
             });
+        }
+
+        // probably here is best for Gutenberg to start interacting with
+        if (mShowGutenbergEditor && mEditorFragment instanceof GutenbergEditorFragment) {
+            List<MediaModel> failedMedia = mMediaStore.getMediaForPostWithState(mPost, MediaUploadState.FAILED);
+            if (failedMedia != null && !failedMedia.isEmpty()) {
+                HashSet<Integer> mediaIds = new HashSet<>();
+                for (MediaModel media : failedMedia) {
+                    mediaIds.add(media.getId());
+                }
+                ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
+            }
         }
     }
 

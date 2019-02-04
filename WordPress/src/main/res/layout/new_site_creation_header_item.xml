@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical"
+    android:focusable="true"
     android:paddingBottom="@dimen/site_creation_segments_content_padding_vertical"
     android:paddingEnd="@dimen/site_creation_segments_content_padding_horizontal"
     android:paddingStart="@dimen/site_creation_segments_content_padding_horizontal"
