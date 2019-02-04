@@ -55,8 +55,8 @@ class InsightsSqlUtils
         insert(site, followerType.toDbKey(), data, replaceExistingData)
     }
 
-    fun insert(site: SiteModel, data: CommentsResponse, replaceExistingData: Boolean) {
-        insert(site, COMMENTS_INSIGHTS, data, replaceExistingData)
+    fun insert(site: SiteModel, data: CommentsResponse) {
+        insert(site, COMMENTS_INSIGHTS, data)
     }
 
     fun insert(site: SiteModel, data: TagsResponse) {
