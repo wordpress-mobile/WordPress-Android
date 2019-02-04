@@ -252,6 +252,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 } else if (isQuickStartRequestedFromPush) {
                     // when app is opened from Quick Start reminder switch to MySite fragment
                     mBottomNav.setCurrentPosition(PAGE_MY_SITE);
+                    AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_TAPPED);
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
