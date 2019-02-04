@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
 import java.util.Date
@@ -126,6 +127,23 @@ class InsightsMapper
             false
         }
         return FollowersModel(total ?: 0, followers, hasMore)
+    }
+
+    fun mergeFollowersModels(
+        sqlUtils: InsightsSqlUtils,
+        siteModel: SiteModel,
+        followerType: FollowerType,
+        pageSize: Int
+    ): FollowersModel {
+        return sqlUtils.selectAllFollowers(siteModel, followerType)
+                .fold(FollowersModel(0, emptyList(), false)) { accumulator, next ->
+                    val nextModel = map(next, followerType, pageSize)
+                    accumulator.copy(
+                            totalCount = nextModel.totalCount,
+                            followers = accumulator.followers + nextModel.followers,
+                            hasMore = nextModel.hasMore
+                    )
+                }
     }
 
     fun map(response: CommentsResponse, pageSize: Int): CommentsModel {
