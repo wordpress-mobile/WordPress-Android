@@ -164,7 +164,7 @@ class InsightsStore
                 OnStatsFetched(response.error)
             }
             response.response != null -> {
-                sqlUtils.insert(siteModel, response.response, followerType, deleteOldDataFirst = !loadMore)
+                sqlUtils.insert(siteModel, response.response, followerType, replaceExistingData = !loadMore)
                 val allFollowers = mergeFollowersModels(siteModel, followerType, pageSize)
                 OnStatsFetched(allFollowers)
             }

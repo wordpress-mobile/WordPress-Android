@@ -27,11 +27,11 @@ class StatsSqlUtils
         blockType: BlockType,
         statsType: StatsType,
         item: T,
-        deleteOldDataFirst: Boolean,
+        replaceExistingData: Boolean,
         date: String = ""
     ) {
         val json = gson.toJson(item)
-        if (deleteOldDataFirst) {
+        if (replaceExistingData) {
             WellSql.delete(StatsBlockBuilder::class.java)
                     .where()
                     .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
