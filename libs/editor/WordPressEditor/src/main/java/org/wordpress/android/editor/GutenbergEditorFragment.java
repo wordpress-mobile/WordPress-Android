@@ -63,7 +63,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
-    GutenbergContainerFragment mCachedGutenbergContainerFragment;
+    // pointer (to the Gutenberg container fragment) that outlives this fragment's Android lifecycle. The retained
+    //  fragment can be alive and accessible even before it gets attached to an activity.
+    //  See discussion at https://github.com/wordpress-mobile/WordPress-Android/pull/9030#issuecomment-459447537 and on.
+    GutenbergContainerFragment mRetainedGutenbergContainerFragment;
 
     private ConcurrentHashMap<String, Float> mUploadingMediaProgressMax = new ConcurrentHashMap<>();
     private Set<String> mFailedMediaIds = new HashSet<>();
@@ -83,15 +86,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private GutenbergContainerFragment getGutenbergContainerFragment() {
-        if (mCachedGutenbergContainerFragment == null) {
-            mCachedGutenbergContainerFragment = (GutenbergContainerFragment) getChildFragmentManager()
+        if (mRetainedGutenbergContainerFragment == null) {
+            mRetainedGutenbergContainerFragment = (GutenbergContainerFragment) getChildFragmentManager()
                     .findFragmentByTag(GutenbergContainerFragment.TAG);
         } else {
             // Noop. Just use the cached reference. The container fragment might not be attached yet so, getting it from
             // the fragment manager is not reliable. No need either; it's retained and outlives this EditorFragment.
         }
 
-        return mCachedGutenbergContainerFragment;
+        return mRetainedGutenbergContainerFragment;
     }
 
     @Override
