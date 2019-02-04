@@ -110,6 +110,10 @@ class InsightsSqlUtils
         return select(site, COMMENTS_INSIGHTS, CommentsResponse::class.java)
     }
 
+    fun selectAllComments(site: SiteModel): List<CommentsResponse> {
+        return selectAll(site, COMMENTS_INSIGHTS, CommentsResponse::class.java)
+    }
+
     fun selectTags(site: SiteModel): TagsResponse? {
         return select(site, TAGS_AND_CATEGORIES_INSIGHTS, TagsResponse::class.java)
     }
