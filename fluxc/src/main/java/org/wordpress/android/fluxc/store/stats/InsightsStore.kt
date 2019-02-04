@@ -190,17 +190,16 @@ class InsightsStore
     }
 
     // Comments stats
-    suspend fun fetchComments(siteModel: SiteModel, pageSize: Int, forced: Boolean = false, loadMore: Boolean = false) =
+    suspend fun fetchComments(siteModel: SiteModel, pageSize: Int, forced: Boolean = false) =
             withContext(coroutineContext) {
-                val responsePayload = restClient.fetchTopComments(siteModel, pageSize = pageSize + 1, forced = forced)
+                val responsePayload = restClient.fetchTopComments(siteModel, forced = forced)
                 return@withContext when {
                     responsePayload.isError -> {
                         OnStatsFetched(responsePayload.error)
                     }
                     responsePayload.response != null -> {
-                        sqlUtils.insert(siteModel, responsePayload.response, replaceExistingData = !loadMore)
-                        val allComments = insightsMapper.mergeCommentsModels(sqlUtils, siteModel, pageSize)
-                        OnStatsFetched(allComments)
+                        sqlUtils.insert(siteModel, responsePayload.response)
+                        OnStatsFetched(insightsMapper.map(responsePayload.response, pageSize))
                     }
                     else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
                 }
