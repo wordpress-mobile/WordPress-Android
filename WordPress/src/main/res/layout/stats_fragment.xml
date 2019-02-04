@@ -85,8 +85,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="24dp"
-                    android:background="@color/transparent"
+                    android:padding="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="?selectableItemBackgroundBorderless"
                     android:contentDescription="@string/stats_select_previous_period_description"
                     android:src="@drawable/ic_chevron_left_grey_selector"/>
 
@@ -95,8 +96,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="16dp"
-                    android:background="@color/transparent"
+                    android:padding="4dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="?selectableItemBackgroundBorderless"
                     android:contentDescription="@string/stats_select_next_period_description"
                     android:src="@drawable/ic_chevron_right_grey_selector"/>
             </LinearLayout>
