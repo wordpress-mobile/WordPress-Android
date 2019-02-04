@@ -298,9 +298,7 @@ class InsightsStoreTest {
         whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE, PAGE_SIZE, forced)).thenReturn(
                 fetchInsightsPayload
         )
-        val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, WP_COM, PAGE_SIZE)).thenReturn(model)
-
+        val model = FollowersModel(0, emptyList(), false)
         val responseModel = store.fetchWpComFollowers(site, PAGE_SIZE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
@@ -316,9 +314,7 @@ class InsightsStoreTest {
         whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE, PAGE_SIZE, forced)).thenReturn(
                 fetchInsightsPayload
         )
-        val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, EMAIL, PAGE_SIZE)).thenReturn(model)
-
+        val model = FollowersModel(0, emptyList(), false)
         val responseModel = store.fetchEmailFollowers(site, PAGE_SIZE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
