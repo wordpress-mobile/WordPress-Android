@@ -171,7 +171,6 @@
     <style name="StatsBlockColumnSmallHeader" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/stats_block_column</item>
         <item name="android:textSize">@dimen/text_sz_extra_small</item>
-        <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
     <style name="StatsBlockColumnSmallValue" parent="TextAppearance.AppCompat.Body2">

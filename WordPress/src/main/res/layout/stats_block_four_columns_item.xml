@@ -4,7 +4,6 @@
     android:id="@+id/column_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="56dp"
     android:orientation="horizontal">
 
     <include
@@ -12,26 +11,26 @@
         layout="@layout/stats_block_selectable_column"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 
     <include
         android:id="@+id/column2"
         layout="@layout/stats_block_selectable_column"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 
     <include
         android:id="@+id/column3"
         layout="@layout/stats_block_selectable_column"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 
     <include
         android:id="@+id/column4"
         layout="@layout/stats_block_selectable_column"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>
