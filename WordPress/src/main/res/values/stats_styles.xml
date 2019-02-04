@@ -131,11 +131,6 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
-    <style name="StatsBlockBackground" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_darken_10</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
-    </style>
-
     <style name="StatsBlockText" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/grey_darken_20</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
