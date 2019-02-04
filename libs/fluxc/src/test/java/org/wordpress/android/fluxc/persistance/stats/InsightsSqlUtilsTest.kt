@@ -198,7 +198,7 @@ class InsightsSqlUtilsTest {
 
     @Test
     fun `inserts comments response to stats utils`() {
-        insightsSqlUtils.insert(site, TOP_COMMENTS_RESPONSE)
+        insightsSqlUtils.insert(site, TOP_COMMENTS_RESPONSE, true)
 
         verify(statsSqlUtils).insert(site, COMMENTS_INSIGHTS, INSIGHTS, TOP_COMMENTS_RESPONSE, true)
     }
