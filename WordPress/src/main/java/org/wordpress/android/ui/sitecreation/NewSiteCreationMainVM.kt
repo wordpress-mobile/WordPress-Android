@@ -37,11 +37,11 @@ data class SiteCreationState(
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
 class NewSiteCreationMainVM @Inject constructor(
-    private val stepsProvider: NewSiteCreationStepsProvider,
-    private val tracker: NewSiteCreationTracker
+    private val tracker: NewSiteCreationTracker,
+    private val wizardManager: WizardManager<SiteCreationStep>
 ) : ViewModel() {
     private var isStarted = false
-    private lateinit var wizardManager: WizardManager<SiteCreationStep>
+
     private lateinit var siteCreationState: SiteCreationState
 
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
@@ -60,11 +60,10 @@ class NewSiteCreationMainVM @Inject constructor(
         if (savedInstanceState == null) {
             tracker.trackSiteCreationAccessed()
             siteCreationState = SiteCreationState()
-            wizardManager = WizardManager(stepsProvider.getSteps())
         } else {
             siteCreationState = savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE)
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
-            wizardManager = WizardManager(stepsProvider.getSteps(), currentStepIndex)
+            wizardManager.setCurrentStepIndex(currentStepIndex)
         }
         isStarted = true
         if (savedInstanceState == null) {
