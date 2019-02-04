@@ -168,6 +168,24 @@ class InsightsMapper
         return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
 
+    fun mergeCommentsModels(
+        sqlUtils: InsightsSqlUtils,
+        siteModel: SiteModel,
+        pageSize: Int
+    ): CommentsModel {
+        return sqlUtils.selectAllComments(siteModel)
+                .fold(CommentsModel(emptyList(), emptyList(), hasMorePosts = false, hasMoreAuthors = false)) {
+                    accumulator, next ->
+                        val nextModel = map(next, pageSize)
+                        accumulator.copy(
+                                posts = accumulator.posts + nextModel.posts,
+                                authors = accumulator.authors + nextModel.authors,
+                                hasMoreAuthors = nextModel.hasMoreAuthors,
+                                hasMorePosts = nextModel.hasMorePosts
+                        )
+                }
+    }
+
     fun map(response: TagsResponse, pageSize: Int): TagsModel {
         return TagsModel(response.tags.take(pageSize).map { tag ->
             TagModel(tag.tags.mapNotNull { it.toItem() }.take(pageSize), tag.views ?: 0)
