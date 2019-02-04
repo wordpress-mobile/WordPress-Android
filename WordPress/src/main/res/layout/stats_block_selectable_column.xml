@@ -2,29 +2,32 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/key"
         style="@style/StatsBlockColumnSmallHeader"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:text="@string/stats_views"/>
+        android:gravity="center_horizontal"
+        android:lines="1"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"
+        android:text="@string/stats_views"
+        android:textAllCaps="true"/>
 
     <TextView
         android:id="@+id/value"
         style="@style/StatsBlockColumnSmallValue"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingBottom="@dimen/margin_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="8dp"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"
         tools:text="0"/>
 
     <View

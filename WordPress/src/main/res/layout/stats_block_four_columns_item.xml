@@ -1,42 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<HorizontalScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/column_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:minHeight="56dp"
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/column_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="64dp"
-        android:orientation="horizontal">
+    <include
+        android:id="@+id/column1"
+        layout="@layout/stats_block_selectable_column"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"/>
 
-        <include
-            android:id="@+id/column1"
-            layout="@layout/stats_block_selectable_column"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/margin_medium"/>
+    <include
+        android:id="@+id/column2"
+        layout="@layout/stats_block_selectable_column"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"/>
 
-        <include
-            android:id="@+id/column2"
-            layout="@layout/stats_block_selectable_column"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/margin_medium"/>
+    <include
+        android:id="@+id/column3"
+        layout="@layout/stats_block_selectable_column"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"/>
 
-        <include
-            android:id="@+id/column3"
-            layout="@layout/stats_block_selectable_column"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/margin_medium"/>
-
-        <include
-            android:id="@+id/column4"
-            layout="@layout/stats_block_selectable_column"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/margin_medium"/>
-    </LinearLayout>
-</HorizontalScrollView>
+    <include
+        android:id="@+id/column4"
+        layout="@layout/stats_block_selectable_column"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"/>
+</LinearLayout>
