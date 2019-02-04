@@ -158,13 +158,13 @@ class InsightsStore
             1
         }
 
-        val response = restClient.fetchFollowers(siteModel, followerType, nextPage, pageSize, forced)
+        val responsePayload = restClient.fetchFollowers(siteModel, followerType, nextPage, pageSize, forced)
         return@withContext when {
-            response.isError -> {
-                OnStatsFetched(response.error)
+            responsePayload.isError -> {
+                OnStatsFetched(responsePayload.error)
             }
-            response.response != null -> {
-                sqlUtils.insert(siteModel, response.response, followerType, replaceExistingData = !loadMore)
+            responsePayload.response != null -> {
+                sqlUtils.insert(siteModel, responsePayload.response, followerType, replaceExistingData = !loadMore)
                 val allFollowers = insightsMapper.mergeFollowersModels(sqlUtils, siteModel, followerType, pageSize)
                 OnStatsFetched(allFollowers)
             }
