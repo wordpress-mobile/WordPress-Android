@@ -11,6 +11,8 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -73,5 +75,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 .build();
 
         notificationManager.notify(QUICK_START_REMINDER_NOTIFICATION, notification);
+        AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_SENT);
     }
 }
