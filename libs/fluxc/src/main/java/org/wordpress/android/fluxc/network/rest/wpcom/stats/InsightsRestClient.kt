@@ -194,18 +194,14 @@ constructor(
 
     suspend fun fetchTopComments(
         site: SiteModel,
-        pageSize: Int,
         forced: Boolean
     ): FetchStatsPayload<CommentsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.comments.urlV1_1
 
-        val params = mapOf(
-                "max" to pageSize.toString()
-        )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
-                params,
+                emptyMap(),
                 CommentsResponse::class.java,
                 enableCaching = true,
                 forced = forced
