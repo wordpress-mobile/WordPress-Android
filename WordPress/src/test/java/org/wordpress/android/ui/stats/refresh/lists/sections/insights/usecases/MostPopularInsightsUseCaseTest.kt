@@ -79,7 +79,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(4)
+            assertThat(this).hasSize(3)
             assertTitle(this[0])
             assertDay(this[1])
             assertHour(this[2])
