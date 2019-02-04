@@ -15,6 +15,7 @@
     <string name="pref_key_app_settings_root" translatable="false">wp_pref_root</string>
     <string name="pref_key_privacy_settings" translatable="false">wp_pref_privacy_settings</string>
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
+    <string name="pref_key_send_crash" translatable="false">wp_pref_send_crash_stats</string>
     <string name="pref_key_device_settings" translatable="false">wp_pref_device_settings</string>
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
     <string name="pref_key_experimental_section" translatable="false">wp_pref_app_experimental_section</string>
@@ -54,6 +55,7 @@
     <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>
     <string name="pref_key_optimize_media" translatable="false">wp_pref_optimize_media</string>
     <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
+    <string name="pref_key_strip_image_location" translatable="false">wp_pref_key_strip_image_location</string>
     <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
     <string name="pref_key_site_image_quality" translatable="false">wp_pref_site_default_image_quality</string>
     <string name="pref_key_optimize_video" translatable="false">wp_pref_key_optimize_video</string>

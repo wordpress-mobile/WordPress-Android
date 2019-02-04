@@ -1,11 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-13 14:03:59+0000
+Translation-Revision-Date: 2019-01-17 15:58:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="stats_no_data_for_period">Ingen data for denne perioden</string>
+    <string name="preference_strip_image_location">Fjern dette stedet fra media</string>
+    <string name="stats_cannot_be_started">Vi kan ikke åpne statistikken i øyeblikket. Vennligst prøv igjen senere</string>
+    <string name="site_creation_label_domain_selection">Velg en tilgjengelig adresse for å la folk finne deg på nettet.</string>
+    <string name="giphy_powered_by_giphy">Drevet av GIPHY</string>
+    <string name="giphy_picker_empty_search_list">Ingen media passet ditt søk</string>
+    <string name="giphy_picker_initial_empty_text">Søk for å finne GIF-er å legge til i ditt mediebibliotek!</string>
+    <string name="giphy_picker_search_hint">Søk Giphy</string>
+    <string name="photo_picker_giphy">Velg fra Giphy</string>
+    <string name="stats_author_views_label">Visninger</string>
+    <string name="stats_author_label">Forfatter</string>
+    <string name="stats_authors">Forfattere</string>
+    <string name="stats_search_terms_views_label">Visninger</string>
+    <string name="stats_search_terms_label">Søkeuttrykk</string>
+    <string name="stats_search_terms">Søkeuttrykk</string>
+    <string name="stats_videos_views_label">Visninger</string>
+    <string name="stats_videos_title_label">Tittel</string>
+    <string name="stats_videos">Videoer</string>
+    <string name="stats_country_views_label">Visninger</string>
+    <string name="stats_country_label">Land</string>
+    <string name="stats_countries">Land</string>
+    <string name="stats_clicks_label">Klikk</string>
+    <string name="stats_clicks_link_label">Lenke</string>
+    <string name="stats_clicks">Klikk</string>
+    <string name="stats_referrer_views_label">Visninger</string>
+    <string name="stats_referrer_label">Referent</string>
+    <string name="stats_referrers">Referenter</string>
+    <string name="stats_posts_and_pages">Innlegg og sider</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">Sti</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">Vis mer</string>
+    <string name="stats_insights_share_post">Del innlegg</string>
+    <string name="stats_insights_create_post">Lag innlegg</string>
+    <string name="stats_insights_latest_post_message">Det har gått %1$s siden %2$s ble publisert. Her er hvordan det har gått med det så langt</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Det har gått %1$s siden %2$s ble publisert. Få ballen til å rulle og øk dine innleggsvisninger ved å dele ditt innlegg.</string>
+    <string name="stats_insights_latest_post_empty">Du har ikke publisert noe innlegg ennå. Straks du starter publisere vil sammendraget av dine siste innlegg dukke opp her</string>
+    <string name="stats_insights_tags_and_categories">Stikkord og kategorier</string>
+    <string name="stats_insights_all_time_stats">Statistikk til alle tider</string>
+    <string name="stats_insights_most_popular_views_label">Visninger</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Dag/Time</string>
+    <string name="stats_insights_today_stats">Dagens statistikk</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">Følgere</string>
+    <string name="stats_publicize_service_label">Tjeneste</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">Visninger</string>
+    <string name="stats_tags_and_categories_title_label">Tittel</string>
+    <string name="stats_posts_and_pages_views_label">Visninger</string>
+    <string name="stats_posts_and_pages_title_label">Tittel</string>
+    <string name="stats_comments_label">Kommentarer</string>
+    <string name="stats_comments_title_label">Tittel</string>
+    <string name="stats_comments_author_label">Forfatter</string>
+    <string name="stats_comments_posts_and_pages">Innlegg og sider</string>
+    <string name="stats_comments_authors">Forfattere</string>
+    <string name="stats_follower_since_label">Siden</string>
+    <string name="stats_follower_label">Følger</string>
+    <string name="stats_followers_count_message">Totalt %1$s følgere: %2$s</string>
+    <string name="stats_followers_email">E-post</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">Behandle innsikter</string>
+    <string name="stats_empty_insights_description">Tilpass dine innsikter og få den viktigste informasjonen om ytelsen til nettstedet ditt</string>
+    <string name="stats_empty_insights_title">Ingen innsikter lagt til ennå</string>
+    <string name="stats_no_data_yet">Ingen data ennå</string>
     <string name="menu_debug">Feilrettingsmeny</string>
     <string name="preference_experimental">*EKSPERIMENTELL*</string>
     <string name="site_settings_enable_gutenberg_summary">Dette er fortsatt en eksperimentell versjon av Gutenberg</string>
@@ -434,7 +502,6 @@ Language: nb_NO
     <string name="site_creation_title_hint">Navn på nettstedet</string>
     <string name="site_creation_domain_finish_button">Opprett netsted</string>
     <string name="site_creation_domain_keywords_hint">Skriv et stikkord for å få flere ideer</string>
-    <string name="site_creation_label_domain_selection">Velg en tilgjengelig adresse på formatet \"dittnavn.wordpress.com\" for å la andre finne deg på nettet.</string>
     <string name="site_creation_title_portfolio">Start med en portefølje</string>
     <string name="site_creation_title_website">Start med et nettsted</string>
     <string name="site_creation_title_blog">Start med en blogg</string>

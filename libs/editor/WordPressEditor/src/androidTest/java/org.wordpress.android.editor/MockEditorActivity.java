@@ -14,6 +14,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class MockEditorActivity extends AppCompatActivity implements EditorFragmentListener,
         EditorDragAndDropListener {
@@ -55,6 +56,10 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
     @Override
     public boolean onMediaRetryClicked(String mediaId) {
         return true;
+    }
+
+    @Override
+    public void onMediaRetryAllClicked(Set<String> mediaIdSet) {
     }
 
     @Override

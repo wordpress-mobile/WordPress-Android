@@ -1,11 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-14 15:05:10+0000
+Translation-Revision-Date: 2018-12-26 14:10:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es_CL
 -->
 <resources>
+    <string name="site_creation_label_domain_selection">Elige una dirección disponible para que la gente te encuentre en la Web.</string>
+    <string name="giphy_powered_by_giphy">Desarrollado por GIPHY</string>
+    <string name="giphy_picker_endless_scroll_network_error">Algunos medios no pudieron cargarse debido a un error de red.</string>
+    <string name="giphy_picker_empty_search_list">No hay medios que coincidan con tu búsqueda</string>
+    <string name="giphy_picker_initial_empty_text">¡Busca para encontrar GIFs para añadirlos a tu Biblioteca de Medios!</string>
+    <string name="giphy_picker_search_hint">Buscar en Giphy</string>
+    <string name="photo_picker_giphy">Elige desde Giphy</string>
+    <string name="stats_author_views_label">Vistas</string>
+    <string name="stats_author_label">Autor</string>
+    <string name="stats_authors">Autores</string>
+    <string name="stats_search_terms_views_label">Vistas</string>
+    <string name="stats_search_terms_label">Término de búsqueda</string>
+    <string name="stats_search_terms">Términos de búsqueda</string>
+    <string name="stats_videos_views_label">Vistas</string>
+    <string name="stats_videos_title_label">Título</string>
+    <string name="stats_videos">Vídeos</string>
+    <string name="stats_country_views_label">Vistas</string>
+    <string name="stats_country_label">País</string>
+    <string name="stats_countries">Países</string>
+    <string name="stats_clicks_label">Clics</string>
+    <string name="stats_clicks_link_label">Enlace</string>
+    <string name="stats_clicks">Clics</string>
+    <string name="stats_referrer_views_label">Vistas</string>
+    <string name="stats_referrer_label">Referencias</string>
+    <string name="stats_referrers">Referentes</string>
+    <string name="stats_posts_and_pages">Entradas y Páginas</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">Ruta</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">Ver más</string>
+    <string name="stats_insights_share_post">Compartir entrada</string>
+    <string name="stats_insights_create_post">Crear entrada</string>
+    <string name="stats_insights_latest_post_message">Ha pasado %1$s desde que %2$s fue publicado. Así es la performance de la entrada hasta ahora</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Ha pasado %1$s desde que %2$s fue publicado. Haz rodar la pelota e incrementa las vistas de tu entrada al compartirlo</string>
+    <string name="stats_insights_latest_post_empty">Aún no has publicado ninguna publicación. Una vez que empieces a publicar, aparecerá aquí el resumen de tu últimas entradas</string>
+    <string name="stats_insights_tags_and_categories">Etiquetas y Categorías</string>
+    <string name="stats_insights_all_time_stats">Estadísticas de Todo el Tiempo</string>
+    <string name="stats_insights_most_popular_views_label">Vistas</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Día/Hora</string>
+    <string name="stats_insights_today_stats">Estadísticas de hoy</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_publicize_followers_label">Seguidores</string>
+    <string name="stats_publicize_service_label">Servicio</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_views_label">Vistas</string>
+    <string name="stats_tags_and_categories_title_label">Título</string>
+    <string name="stats_posts_and_pages_views_label">Vistas</string>
+    <string name="stats_posts_and_pages_title_label">Título</string>
+    <string name="stats_comments_label">Comentarios</string>
+    <string name="stats_comments_title_label">Título</string>
+    <string name="stats_comments_author_label">Autor</string>
+    <string name="stats_comments_posts_and_pages">Entradas y Páginas</string>
+    <string name="stats_comments_authors">Autores</string>
+    <string name="stats_follower_since_label">Desde</string>
+    <string name="stats_follower_label">Seguidor</string>
+    <string name="stats_followers_count_message">Total %1$s Seguidores: %2$s</string>
+    <string name="stats_followers_email">Email</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_button_manage_insights">Administrar estadísticas</string>
+    <string name="stats_empty_insights_title">Aún no se ha añadido estadisticas</string>
+    <string name="stats_no_data_yet">Aún no hay datos</string>
     <string name="menu_debug">Menú Depuración</string>
     <string name="preference_experimental">*EXPERIMENTAL*</string>
     <string name="site_settings_enable_gutenberg_summary">Esta todavía es una versión experimental de Gutenberg</string>
@@ -30,7 +95,6 @@ Language: es_CL
     <string name="dialog_gutenberg_compatibility_message">Estamos trabajando en el nuevo editor de WordPress. Todavía puedes editar esta entrada, pero te recomendamos previsualizarla antes de publicarla.</string>
     <string name="dialog_gutenberg_compatibility_title">Antes de continuar</string>
     <string name="media_space_used">%1$s usado</string>
-    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Por favor, ingresa un sitio WordPress.com o un sitio auto hospedado que contenga Jetpack</string>
     <string name="history_loading_revision">Cargando revisión</string>
     <string name="history_loaded_revision">Revisión cargada</string>
@@ -482,7 +546,6 @@ Language: es_CL
     <string name="site_creation_title_hint">Título del sitio</string>
     <string name="site_creation_domain_finish_button">Crear sitio</string>
     <string name="site_creation_domain_keywords_hint">Escriba una palabra clave para más ideas</string>
-    <string name="site_creation_label_domain_selection">Escoge una dirección de \"yourname.wordpress.com\" disponible para permitir que la gente te encuentre en la Web.</string>
     <string name="site_creation_label_domain_selection_title">Paso 4 de 4</string>
     <string name="site_creation_label_site_details">Cuéntanos más sobre lo que estás creando. ¿Cuál es el título y el eslogan?</string>
     <string name="site_creation_label_site_details_title">Paso 3 de 4</string>
@@ -1435,7 +1498,7 @@ Language: es_CL
     <string name="stats_insights_most_popular_hour">Hora más popular</string>
     <string name="stats_insights_most_popular_day">Día más popular</string>
     <string name="stats_insights_today">Estadísticas de hoy</string>
-    <string name="stats_insights_popular">Hora y día más populares</string>
+    <string name="stats_insights_popular">Hora y Días Más Populares</string>
     <string name="stats_insights_all_time">Entradas, vistas y visitantes de todos los tiempos</string>
     <string name="stats_insights">Detalles</string>
     <string name="stats_sign_in_jetpack_different_com_account">Para ver tus estadísticas, inicia sesión en la cuenta WordPress.com que usaste para conectar Jetpack.</string>

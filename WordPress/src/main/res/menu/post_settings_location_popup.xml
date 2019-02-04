@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_change_location"
-          android:title="@string/change_location"
-          android:icon="@drawable/ic_location_on_grey_600_24dp"/>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_remove_location"
-          android:title="@string/remove_location"
-          android:icon="@drawable/ic_cross_grey_600_24dp"/>
+    <item
+        android:id="@+id/menu_change_location"
+        android:icon="@drawable/ic_location_white_24dp"
+        android:title="@string/change_location"
+        app:iconTint="@color/grey_600">
+    </item>
+
+    <item
+        android:id="@+id/menu_remove_location"
+        android:icon="@drawable/ic_cross_white_24dp"
+        android:title="@string/remove_location"
+        app:iconTint="@color/grey_600">
+    </item>
 
 </menu>

@@ -337,7 +337,7 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         Bundle args = new Bundle();
         args.putSerializable(ARGS_VIEW_TYPE, viewType);
-        args.putInt(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, localTableBlogID);
+        args.putInt(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, localTableBlogID);
         fragment.setArguments(args);
 
         return fragment;
@@ -364,7 +364,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     int getLocalTableBlogID() {
-        return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_SITE_ID);
+        return getArguments().getInt(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID);
     }
 
     boolean isSingleView() {

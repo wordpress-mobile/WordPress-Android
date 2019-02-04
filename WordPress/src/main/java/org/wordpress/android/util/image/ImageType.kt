@@ -16,5 +16,6 @@ enum class ImageType {
     PLUGIN,
     THEME,
     UNKNOWN,
-    VIDEO
+    VIDEO,
+    ICON
 }

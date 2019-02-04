@@ -310,17 +310,28 @@
     <string name="width">Width</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
+    <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
     <string name="delete_post">Delete post?</string>
     <string name="delete_page">Delete page?</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
     <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
     <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_yes">Publish now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
+
+    <!-- post version sync conflict dialog -->
+    <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
+    <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %s\n\nWeb\nSaved on %s\n</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Discard Local</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Discard Web</string>
+    <string name="toast_conflict_updating_post">Updating post</string>
+    <string name="snackbar_conflict_local_version_discarded">Local version discarded</string>
+    <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
+    <string name="snackbar_conflict_undo">Undo</string>
 
     <!-- gutenberg compatibility dialog -->
     <string name="dialog_gutenberg_compatibility_title">Before you continue</string>
@@ -749,6 +760,8 @@
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_collect_information">Collect information</string>
+    <string name="preference_crash_reports">Crash reports</string>
+    <string name="preference_crash_reports_summary">Allow automatic crash reports to help us improve the app\'s performance.</string>
     <string name="preference_privacy_settings">Privacy settings</string>
     <string name="cookie_policy_learn_more_header">Cookie Policy</string>
     <string name="cookie_policy_learn_more_caption">Share information with our analytics tool about your use of services while logged in to your WordPress.com account.</string>
@@ -760,6 +773,7 @@
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
     <string name="preference_experimental">*EXPERIMENTAL*</string>
+    <string name="preference_strip_image_location">Remove location from media</string>
 
     <string name="preference_editor_beta" translatable="false">Beta</string>
     <string name="preference_editor_legacy">Legacy</string>
@@ -786,6 +800,32 @@
     <string name="stats_jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our <u>terms and conditions</u></string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
+
+    <!-- Stats refresh -->
+    <string name="stats_no_data_yet">No data yet</string>
+    <string name="stats_no_data_for_period">No data for this period</string>
+    <string name="stats_empty_insights_title">No insights added yet</string>
+    <string name="stats_empty_insights_description">Customize your insights and get the low-down on your site’s performance</string>
+    <string name="stats_button_manage_insights">Manage insights</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_followers_email">Email</string>
+    <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
+    <string name="stats_follower_label">Follower</string>
+    <string name="stats_follower_since_label">Since</string>
+    <string name="stats_comments_authors">Authors</string>
+    <string name="stats_comments_posts_and_pages">Posts and pages</string>
+    <string name="stats_comments_author_label">Author</string>
+    <string name="stats_comments_title_label">Title</string>
+    <string name="stats_comments_label">Comments</string>
+    <string name="stats_posts_and_pages_title_label">Title</string>
+    <string name="stats_posts_and_pages_views_label">Views</string>
+    <string name="stats_tags_and_categories_title_label">Title</string>
+    <string name="stats_tags_and_categories_views_label">Views</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_publicize_service_label">Service</string>
+    <string name="stats_publicize_followers_label">Followers</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+    <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
@@ -968,11 +1008,49 @@
     <string name="stats_insights_latest_post_no_title">(no title)</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
-    <string name="stats_insights_popular">Most popular day and hour</string>
+    <string name="stats_insights_popular">Most Popular Time</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
+    <string name="stats_insights_today_stats">Today\'s Stats</string>
+
+    <!-- Stats refreshed insights -->
+    <string name="stats_insights_all_time_stats">All Time Stats</string>
+    <string name="stats_insights_tags_and_categories">Tags and Categories</string>
+    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
+    <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
+    <string name="stats_insights_create_post">Create post</string>
+    <string name="stats_insights_share_post">Share post</string>
+    <string name="stats_insights_view_more">View more</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_path">Path</string>
+    <string name="stats_most_popular_percent_views">%1$d%% of views</string>
+
+    <string name="stats_posts_and_pages">Posts and Pages</string>
+    <string name="stats_referrers">Referrers</string>
+    <string name="stats_referrer_label">Referrer</string>
+    <string name="stats_referrer_views_label">Views</string>
+    <string name="stats_clicks">Clicks</string>
+    <string name="stats_clicks_link_label">Link</string>
+    <string name="stats_clicks_label">Clicks</string>
+    <string name="stats_countries">Countries</string>
+    <string name="stats_country_label">Country</string>
+    <string name="stats_country_views_label">Views</string>
+    <string name="stats_videos">Videos</string>
+    <string name="stats_videos_title_label">Title</string>
+    <string name="stats_videos_views_label">Views</string>
+    <string name="stats_search_terms">Search Terms</string>
+    <string name="stats_search_terms_label">Search Term</string>
+    <string name="stats_search_terms_views_label">Views</string>
+    <string name="stats_authors">Authors</string>
+    <string name="stats_author_label">Author</string>
+    <string name="stats_author_views_label">Views</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
@@ -1310,6 +1388,10 @@
     <string name="local_changes_discarded">Local changes discarded</string>
     <string name="local_changes_discarding">Discarding local changes</string>
     <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
+    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
+
+    <!-- Remote Post has conflicts with local post -->
+    <string name="local_post_is_conflicted">Version conflict</string>
 
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
@@ -1327,7 +1409,7 @@
     <!-- Error Messages -->
     <!-- The following messages can\'t be factorized due to i18n -->
     <string name="error_refresh_posts">Posts couldn\'t be refreshed at this time</string>
-    <string name="error_refresh_pages">Pages couldn\'t be refreshed at this time</string>
+    <string name="error_refresh_pages" tools:ignore="UnusedResources">Pages couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
@@ -1634,6 +1716,7 @@
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
+    <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
@@ -1663,10 +1746,6 @@
     <string name="bullet" translatable="false">\u2022</string>
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
-
-    <!-- Noticons -->
-    <string name="noticon_clock" translatable="false">\uf303</string>
-    <string name="noticon_note" translatable="false">\uf814</string>
 
     <!-- Publicize and sharing -->
     <string name="sharing">Sharing</string>
@@ -1993,6 +2072,7 @@
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
+    <string name="photo_picker_giphy">Choose from Giphy</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
@@ -2000,6 +2080,12 @@
     <string name="stock_media_picker_search_hint">Search free photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
+
+    <string name="giphy_picker_search_hint">Search Giphy</string>
+    <string name="giphy_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
+    <string name="giphy_picker_empty_search_list">No media matching your search</string>
+    <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
+    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -2019,7 +2105,6 @@
     <string name="permissions_denied_message">It looks like you turned off permissions required for this feature.&lt;br/&gt;&lt;br/&gt;To change this, edit your permissions and make sure &lt;strong&gt;%s&lt;/strong&gt; is enabled.</string>
     <string name="permission_storage">Storage</string>
     <string name="permission_camera">Camera</string>
-    <string name="permission_location">Location</string>
 
     <!-- Image Optimization promo -->
     <string name="turn_on">Turn on</string>
@@ -2151,7 +2236,7 @@
     <string name="notification_channel_reminder_id" translatable="false">wpandroid_notification_reminder_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
-    <string name="login_notification_channel_id">@string/notification_channel_normal_id</string>
+    <string name="login_notification_channel_id" translatable="false">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
@@ -2236,6 +2321,7 @@
     <string name="reader_gallery_images_desc">image gallery</string>
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
+    <string name="suggestions_updated_content_description">Suggestions updated</string>
 
 
     <!-- Site Creation -->
@@ -2258,7 +2344,7 @@
     <string name="site_creation_label_site_details_title">Step 3 of 4</string>
     <string name="site_creation_label_site_details">Tell us more about what you\'re creating. What\'s the title and tagline?</string>
     <string name="site_creation_label_domain_selection_title">Step 4 of 4</string>
-    <string name="site_creation_label_domain_selection">Pick an available \"yourname.wordpress.com\" address to let people find you on the web.</string>
+    <string name="site_creation_label_domain_selection">Pick an available address to let people find you on the web.</string>
     <string name="site_creation_domain_keywords_hint">Type a keyword for more ideas</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="site_creation_title_hint">Site title</string>
@@ -2395,4 +2481,34 @@
     <!--suppress UnusedResources -->
     <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://en.blog.wordpress.com/2018/06/21/bookmark-posts-with-save-for-later/</string>
     <!-- END (News Card) -->
+
+    <!-- Site Creation -->
+    <string name="new_site_creation_screen_title_general">Create Site</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
+    <string name="new_site_creation_preview_title">Your site has been created!</string>
+    <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
+    <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
+    <string name="new_site_creation_site_info_header_title">Basic Information</string>
+    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
+    <string name="new_site_creation_site_title_hint">Site Title</string>
+    <string name="new_site_creation_tag_line_hint">Tagline</string>
+    <string name="new_site_creation_tag_line_description">The tagline is a short line of text shown right below the title.</string>
+    <string name="new_site_creation_button_skip">Skip</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
+    <string name="site_creation_error_generic_title">There was a problem</string>
+    <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
+    <string name="new_site_creation_domain_header_title">Choose a domain name for your site</string>
+    <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
+    <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
+    <string name="new_site_creation_create_site_button">Create Site</string>
+    <string name="notification_new_site_creation_title">Create Site</string>
+    <string name="notification_new_site_creation_failed">There was a problem</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+    <string name="cancel_new_site_wizard_content_description">Cancel Site Creation Wizard</string>
+    <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
+    <string name="new_site_creation_clear_all_content_description">Clear</string>
+    <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
 </resources>

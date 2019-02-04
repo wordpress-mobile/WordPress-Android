@@ -3,9 +3,9 @@ package org.wordpress.android.ui.pages
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
@@ -13,19 +13,23 @@ import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageParentViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
+import org.wordpress.android.util.image.ImageManager
 
 class PagesAdapter(
     private val onMenuAction: (PageItem.Action, Page) -> Boolean = { _, _ -> false },
     private val onItemTapped: (Page) -> Unit = { },
     private val onEmptyActionButtonTapped: () -> Unit = { },
     private val onParentSelected: (ParentPage) -> Unit = { },
+    private val isSitePhotonCapable: Boolean = false,
+    private val imageManager: ImageManager? = null,
     private val uiScope: CoroutineScope
 ) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
         return when (viewType) {
-            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped)
+            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped, imageManager!!,
+                    isSitePhotonCapable)
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent, onEmptyActionButtonTapped)
             PageItem.Type.PARENT.viewType -> PageParentViewHolder(parent,

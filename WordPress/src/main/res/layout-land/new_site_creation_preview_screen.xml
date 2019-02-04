@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wp_grey_lighten_30"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/site_creation_error_with_retry"
+        tools:visibility="gone"/>
+
+    <include
+        layout="@layout/new_site_creation_progress"
+        tools:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="InconsistentLayout">
+
+        <LinearLayout
+            android:id="@+id/sitePreviewTitleAndButtonContainer"
+            android:layout_width="@dimen/new_site_creation_preview_landscape_title_and_button_container_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/margin_large"
+            android:paddingStart="@dimen/margin_large">
+
+            <TextView
+                android:id="@+id/sitePreviewTitle"
+                style="@style/SitePreviewTitle"/>
+
+            <Button
+                android:id="@+id/okButton"
+                style="@style/SitePreviewOkButton"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                tools:ignore="InconsistentLayout"/>
+        </LinearLayout>
+
+        <include
+            android:id="@+id/webviewContainer"
+            layout="@layout/new_site_creation_preview_web_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_extra_medium_large"
+            android:layout_toStartOf="@+id/sitePreviewTitleAndButtonContainer"/>
+    </RelativeLayout>
+</RelativeLayout>
+

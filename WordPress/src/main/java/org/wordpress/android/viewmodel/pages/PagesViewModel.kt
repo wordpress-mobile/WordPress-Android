@@ -2,16 +2,16 @@ package org.wordpress.android.viewmodel.pages
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.isActive
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
@@ -25,8 +25,8 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.modules.DEFAULT_SCOPE
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
@@ -37,11 +37,14 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPDATE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -56,12 +59,13 @@ import java.util.Date
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
 
-private const val ACTION_DELAY = 100
-private const val SEARCH_DELAY = 200
-private const val SNACKBAR_DELAY = 500
-private const val SEARCH_COLLAPSE_DELAY = 500
+private const val ACTION_DELAY = 100L
+private const val SEARCH_DELAY = 200L
+private const val SNACKBAR_DELAY = 500L
+private const val SEARCH_COLLAPSE_DELAY = 500L
 private const val PAGE_UPLOAD_TIMEOUT = 5000L
 
 class PagesViewModel
@@ -69,9 +73,10 @@ class PagesViewModel
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
     private val actionPerfomer: ActionPerformer,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
-) : ViewModel() {
+    private val networkUtils: NetworkUtilsWrapper,
+    @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
+) : ScopedViewModel(uiDispatcher) {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
@@ -156,7 +161,7 @@ class PagesViewModel
         actionPerfomer.onCleanup()
     }
 
-    private fun loadPagesAsync() = defaultScope.launch {
+    private fun loadPagesAsync() = launch(defaultDispatcher) {
         refreshPages()
 
         val loadState = if (pageMap.isEmpty()) FETCHING else REFRESHING
@@ -170,28 +175,37 @@ class PagesViewModel
     }
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
-        _listState.setOnUi(state)
+        if (performIfNetworkAvailableAsync {
+            _listState.setOnUi(state)
 
-        val result = pageStore.requestPagesFromServer(site)
-        if (result.isError) {
-            _listState.setOnUi(ERROR)
-            showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
-            AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
-        } else {
+            val result = pageStore.requestPagesFromServer(site)
+            if (result.isError) {
+                _listState.setOnUi(ERROR)
+                showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
+                AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
+            } else {
+                _listState.setOnUi(DONE)
+            }
+            refreshPages()
+        }) else {
             _listState.setOnUi(DONE)
         }
-        refreshPages()
     }
 
     private suspend fun refreshPages() {
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
-    fun onPageEditFinished(remotePageId: Long) {
-        uiScope.launch {
+    fun onPageEditFinished(remotePageId: Long, wasPageUpdated: Boolean) {
+        launch {
             refreshPages() // show local changes immediately
-            waitForPageUpdate(remotePageId)
-            reloadPages()
+
+            if (wasPageUpdated) {
+                performIfNetworkAvailableAsync {
+                    waitForPageUpdate(remotePageId)
+                    reloadPages()
+                }
+            }
         }
     }
 
@@ -204,7 +218,7 @@ class PagesViewModel
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
-        uiScope.launch {
+        launch {
             pageMap[pageId]?.let { page ->
                 setParent(page, parentId)
             }
@@ -236,10 +250,10 @@ class PagesViewModel
         _isNewPageButtonVisible.postOnUi(isNotEmpty && hasNoExceptions)
     }
 
-    fun onSearch(searchQuery: String, delay: Int = SEARCH_DELAY) {
+    fun onSearch(searchQuery: String, delay: Long = SEARCH_DELAY) {
         searchJob?.cancel()
         if (searchQuery.isNotEmpty()) {
-            searchJob = uiScope.launch {
+            searchJob = launch {
                 delay(delay)
                 searchJob = null
                 if (isActive) {
@@ -269,7 +283,7 @@ class PagesViewModel
     private suspend fun groupedSearch(
         site: SiteModel,
         searchQuery: String
-    ): SortedMap<PageListType, List<PageModel>> = withContext(defaultScope.coroutineContext) {
+    ): SortedMap<PageListType, List<PageModel>> = withContext(defaultDispatcher) {
         val list = pageStore.search(site, searchQuery).groupBy { PageListType.fromPageStatus(it.status) }
         return@withContext list.toSortedMap(
                 Comparator { previous, next ->
@@ -303,7 +317,7 @@ class PagesViewModel
         _isSearchExpanded.value = false
         clearSearch()
 
-        uiScope.launch {
+        launch {
             delay(SEARCH_COLLAPSE_DELAY)
             checkIfNewPageButtonShouldBeVisible()
         }
@@ -322,19 +336,45 @@ class PagesViewModel
     }
 
     private fun deletePage(page: Page) {
-        _displayDeleteDialog.postValue(page)
+        performIfNetworkAvailable {
+            _displayDeleteDialog.postValue(page)
+        }
     }
 
     private fun setParent(page: Page) {
-        trackMenuSelectionEvent(SET_PARENT)
+        performIfNetworkAvailable {
+            trackMenuSelectionEvent(SET_PARENT)
 
-        _setPageParent.postValue(pageMap[page.id])
+            _setPageParent.postValue(pageMap[page.id])
+        }
     }
 
     private fun previewPage(page: Page) {
-        trackMenuSelectionEvent(VIEW_PAGE)
+        performIfNetworkAvailable {
+            trackMenuSelectionEvent(VIEW_PAGE)
 
-        _previewPage.postValue(pageMap[page.id])
+            _previewPage.postValue(pageMap[page.id])
+        }
+    }
+
+    private fun performIfNetworkAvailable(performAction: () -> Unit): Boolean {
+        return if (networkUtils.isNetworkAvailable()) {
+            performAction()
+            true
+        } else {
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.no_network_message))
+            false
+        }
+    }
+
+    private suspend fun performIfNetworkAvailableAsync(performAction: suspend () -> Unit): Boolean {
+        return if (networkUtils.isNetworkAvailable()) {
+            performAction()
+            true
+        } else {
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.no_network_message))
+            false
+        }
     }
 
     private fun trackMenuSelectionEvent(action: Action) {
@@ -350,12 +390,20 @@ class PagesViewModel
     }
 
     private fun publishPageNow(remoteId: Long) {
-        pageMap[remoteId]?.date = Date()
-        changePageStatus(remoteId, PageStatus.PUBLISHED)
+        performIfNetworkAvailable {
+            pageMap[remoteId]?.date = Date()
+            changePageStatus(remoteId, PageStatus.PUBLISHED)
+        }
+    }
+
+    fun onImagesChanged() {
+        launch {
+            refreshPages()
+        }
     }
 
     fun onDeleteConfirmed(remoteId: Long) {
-        defaultScope.launch {
+        launch(defaultDispatcher) {
             pageMap[remoteId]?.let { deletePage(it) }
         }
     }
@@ -371,7 +419,7 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
-        uiScope.launch {
+        launch {
             reloadPages(FETCHING)
         }
     }
@@ -388,7 +436,7 @@ class PagesViewModel
         }
 
         action.undo = {
-            defaultScope.launch {
+            launch(defaultDispatcher) {
                 pageMap[action.remoteId]?.let { changed ->
                     val updatedPage = updateParent(changed, oldParent)
 
@@ -398,7 +446,7 @@ class PagesViewModel
         }
 
         action.onSuccess = {
-            defaultScope.launch {
+            launch(defaultDispatcher) {
                 reloadPages()
 
                 showSnackbar(
@@ -411,14 +459,14 @@ class PagesViewModel
             }
         }
         action.onError = {
-            defaultScope.launch {
+            launch(defaultDispatcher) {
                 refreshPages()
 
                 showSnackbar(SnackbarMessageHolder(string.page_parent_change_error))
             }
         }
 
-        uiScope.launch {
+        launch {
             _arePageActionsEnabled = false
             actionPerfomer.performAction(action)
             _arePageActionsEnabled = true
@@ -451,7 +499,7 @@ class PagesViewModel
             }
         }
         action.onSuccess = {
-            defaultScope.launch {
+            launch(defaultDispatcher) {
                 delay(ACTION_DELAY)
                 reloadPages()
 
@@ -459,70 +507,79 @@ class PagesViewModel
             }
         }
         action.onError = {
-            defaultScope.launch {
+            launch(defaultDispatcher) {
                 refreshPages()
 
                 showSnackbar(SnackbarMessageHolder(string.page_delete_error))
             }
         }
 
-        uiScope.launch {
+        launch {
             actionPerfomer.performAction(action)
         }
     }
 
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
-        if (status == DRAFT) {
-            trackMenuSelectionEvent(MOVE_TO_DRAFT)
-        } else if (status == TRASHED) {
-            trackMenuSelectionEvent(MOVE_TO_TRASH)
-        }
-
-        pageMap[remoteId]?.let { page ->
-            val oldStatus = page.status
-            val action = PageAction(remoteId, UPLOAD) {
-                val updatedPage = updatePageStatus(page, status)
-                pageStore.updatePageInDb(updatedPage)
-
-                refreshPages()
-
-                // Local pages can be trashed locally
-                if (status != TRASHED || remoteId > 0) {
-                    pageStore.uploadPageToServer(updatedPage)
-                }
+        performIfNetworkAvailable {
+            if (status == DRAFT) {
+                trackMenuSelectionEvent(MOVE_TO_DRAFT)
+            } else if (status == TRASHED) {
+                trackMenuSelectionEvent(MOVE_TO_TRASH)
             }
 
-            action.undo = {
-                val updatedPage = updatePageStatus(page.copy(remoteId = action.remoteId), oldStatus)
-                defaultScope.launch {
-                    pageStore.updatePageInDb(updatedPage)
-                    refreshPages()
+            pageMap[remoteId]?.let { page ->
+                val oldStatus = page.status
 
-                    pageStore.uploadPageToServer(updatedPage)
+                val action = if (status != TRASHED || remoteId > 0) {
+                    PageAction(remoteId, UPLOAD) {
+                        val updatedPage = updatePageStatus(page, status)
+                        pageStore.updatePageInDb(updatedPage)
+
+                        refreshPages()
+                        pageStore.uploadPageToServer(updatedPage)
+                    }
+                } else {
+                    // Local pages are trashed locally
+                    PageAction(remoteId, UPDATE) {
+                        val updatedPage = updatePageStatus(page, status)
+                        pageStore.updatePageInDb(updatedPage)
+
+                        refreshPages()
+                    }
                 }
-            }
 
-            action.onSuccess = {
-                defaultScope.launch {
-                    delay(ACTION_DELAY)
-                    reloadPages()
+                action.undo = {
+                    val updatedPage = updatePageStatus(page.copy(remoteId = action.remoteId), oldStatus)
+                    launch(defaultDispatcher) {
+                        pageStore.updatePageInDb(updatedPage)
+                        refreshPages()
 
-                    val message = prepareStatusChangeSnackbar(status, action.undo)
-                    showSnackbar(message)
+                        pageStore.uploadPageToServer(updatedPage)
+                    }
                 }
-            }
-            action.onError = {
-                defaultScope.launch {
-                    action.undo?.let { it() }
 
-                    showSnackbar(SnackbarMessageHolder(string.page_status_change_error))
+                action.onSuccess = {
+                    launch(defaultDispatcher) {
+                        delay(ACTION_DELAY)
+                        reloadPages()
+
+                        val message = prepareStatusChangeSnackbar(status, action.undo)
+                        showSnackbar(message)
+                    }
                 }
-            }
+                action.onError = {
+                    launch(defaultDispatcher) {
+                        action.undo?.let { it() }
 
-            uiScope.launch {
-                _arePageActionsEnabled = false
-                actionPerfomer.performAction(action)
-                _arePageActionsEnabled = true
+                        showSnackbar(SnackbarMessageHolder(string.page_status_change_error))
+                    }
+                }
+
+            launch {
+                    _arePageActionsEnabled = false
+                    actionPerfomer.performAction(action)
+                    _arePageActionsEnabled = true
+                }
             }
         }
     }
@@ -569,13 +626,13 @@ class PagesViewModel
         }
     }
 
-    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiScope.coroutineContext) {
+    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(coroutineContext) {
         setValue(value)
     }
 
     private fun <T> MutableLiveData<T>.postOnUi(value: T) {
         val liveData = this
-        uiScope.launch {
+        launch {
             liveData.value = value
         }
     }
