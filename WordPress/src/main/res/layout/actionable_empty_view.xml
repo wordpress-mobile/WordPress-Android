@@ -53,6 +53,16 @@
                 android:visibility="gone" >
             </android.support.v7.widget.AppCompatButton>
 
+            <ImageView
+                android:id="@+id/bottom_image"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/content_description_person_reading_device_notification"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_width="wrap_content"
+                android:visibility="gone" >
+            </ImageView>
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

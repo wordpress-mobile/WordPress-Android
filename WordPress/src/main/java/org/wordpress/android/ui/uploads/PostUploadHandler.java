@@ -24,20 +24,20 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
+import org.wordpress.android.fluxc.store.MediaStore.UploadMediaPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
@@ -484,7 +484,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             }
 
             CountDownLatch countDownLatch = new CountDownLatch(1);
-            MediaPayload payload = new MediaPayload(mSite, FluxCUtils.mediaModelFromMediaFile(mediaFile));
+            UploadMediaPayload payload = new UploadMediaPayload(
+                    mSite,
+                    FluxCUtils.mediaModelFromMediaFile(mediaFile),
+                    AppPrefs.isStripImageLocation()
+            );
             mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
             try {
@@ -516,7 +520,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
         private String uploadImageFile(MediaFile mediaFile, SiteModel site) {
             CountDownLatch countDownLatch = new CountDownLatch(1);
-            MediaPayload payload = new MediaPayload(site, FluxCUtils.mediaModelFromMediaFile(mediaFile));
+            UploadMediaPayload payload = new UploadMediaPayload(
+                    site,
+                    FluxCUtils.mediaModelFromMediaFile(mediaFile),
+                    AppPrefs.isStripImageLocation()
+            );
             mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
             try {

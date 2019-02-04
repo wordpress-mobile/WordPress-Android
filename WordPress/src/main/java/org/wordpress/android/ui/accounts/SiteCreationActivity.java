@@ -22,7 +22,6 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 
 public class SiteCreationActivity extends AppCompatActivity implements SiteCreationListener {
     public static final String KEY_DO_NEW_POST = "KEY_DO_NEW_POST";
@@ -180,7 +179,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         mSiteTitle = siteTitle;
         mSiteTagline = siteTagline;
 
-        SiteCreationDomainFragment fragment = SiteCreationDomainFragment.newInstance(mSiteTitle);
+        SiteCreationDomainFragment fragment = SiteCreationDomainFragment.newInstance(mSiteTitle, mCategory);
         slideInFragment(fragment, SiteCreationDomainFragment.TAG);
     }
 
@@ -191,10 +190,8 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void withDomain(String domain) {
-        String siteSlug = UrlUtils.extractSubDomain(domain);
-
         SiteCreationCreatingFragment siteCreationCreatingFragment =
-                SiteCreationCreatingFragment.newInstance(mSiteTitle, mSiteTagline, siteSlug, mThemeId);
+                SiteCreationCreatingFragment.newInstance(mSiteTitle, mSiteTagline, domain, mThemeId);
         slideInFragment(siteCreationCreatingFragment, SiteCreationCreatingFragment.TAG);
     }
 

@@ -70,7 +70,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         if (isExpandableList()) {
             view = inflater.inflate(R.layout.stats_expandable_list_fragment, container, false);
         } else {
-            view = inflater.inflate(R.layout.stats_list_fragment, container, false);
+            view = inflater.inflate(R.layout.stats_list_item_fragment, container, false);
         }
 
         mEmptyModulePlaceholder = (LinearLayout) view.findViewById(R.id.stats_empty_module_placeholder);
@@ -219,7 +219,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 }
 
                 Intent viewAllIntent = new Intent(getActivity(), StatsViewAllActivity.class);
-                viewAllIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, getLocalTableBlogID());
+                viewAllIntent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, getLocalTableBlogID());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, getTimeframe());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, getDate());

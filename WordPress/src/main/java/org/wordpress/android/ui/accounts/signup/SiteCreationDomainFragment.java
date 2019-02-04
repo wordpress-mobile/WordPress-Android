@@ -31,6 +31,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     public static final String TAG = "site_creation_domain_fragment_tag";
 
     private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
+    private static final String ARG_SITE_CATEGORY = "ARG_SITE_CATEGORY";
 
     private static final String KEY_QUERY_STRING = "KEY_QUERY_STRING";
     private static final String KEY_KEYWORDS = "KEY_KEYWORDS";
@@ -38,6 +39,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     private static final String KEY_SELECTED_DOMAIN = "KEY_SELECTED_DOMAIN";
 
     private String mSiteTitle;
+    private String mSiteCategory;
     private String mKeywords = "";
 
     private String mQueryString;
@@ -51,10 +53,11 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
     @Inject SiteStore mSiteStore;
 
-    public static SiteCreationDomainFragment newInstance(String siteTitle) {
+    public static SiteCreationDomainFragment newInstance(String siteTitle, String siteCategory) {
         SiteCreationDomainFragment fragment = new SiteCreationDomainFragment();
         Bundle args = new Bundle();
         args.putString(ARG_SITE_TITLE, siteTitle);
+        args.putString(ARG_SITE_CATEGORY, siteCategory);
         fragment.setArguments(args);
         return fragment;
     }
@@ -108,6 +111,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
         if (getArguments() != null) {
             mSiteTitle = getArguments().getString(ARG_SITE_TITLE);
+            mSiteCategory = getArguments().getString(ARG_SITE_CATEGORY);
         }
 
         if (savedInstanceState != null) {
@@ -127,7 +131,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            SiteCreationDomainLoaderFragment loaderFragment = SiteCreationDomainLoaderFragment.newInstance(mSiteTitle);
+            SiteCreationDomainLoaderFragment loaderFragment =
+                    SiteCreationDomainLoaderFragment.newInstance(mSiteTitle, mSiteCategory);
             loaderFragment.setRetainInstance(true);
             fragmentTransaction.add(loaderFragment, SiteCreationDomainLoaderFragment.TAG);
             fragmentTransaction.commitNow();
@@ -188,7 +193,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                             // fallback to using the provided site title as query if text is empty
                             mQueryString = TextUtils.isEmpty(keywords.trim()) ? mSiteTitle : keywords;
 
-                            getLoaderFragment().load(mQueryString);
+                            getLoaderFragment().load(mQueryString, mSiteCategory);
                         }
 
                         @Override

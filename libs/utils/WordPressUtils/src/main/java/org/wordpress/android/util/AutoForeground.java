@@ -174,7 +174,7 @@ public abstract class AutoForeground<StateClass extends ServiceState>
         }
     }
 
-    private void track(ServiceState state) {
+    protected void track(ServiceState state) {
         Map<String, Object> props = new HashMap<>();
         props.put("login_phase", state == null ? "null" : state.getStepName());
         props.put("login_service_is_foreground", isForeground());

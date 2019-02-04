@@ -38,6 +38,7 @@ public class LocaleManager {
 
     /**
      * Activate the locale associated with the provided context.
+     *
      * @param context The current context.
      */
     public static Context setLocale(Context context) {
@@ -47,7 +48,8 @@ public class LocaleManager {
     /**
      * Change the active locale to the language provided. Save the updated language
      * settings to sharedPreferences.
-     * @param context The current context
+     *
+     * @param context  The current context
      * @param language The 2-letter language code (example "en") to switch to
      */
     public static void setNewLocale(Context context, String language) {
@@ -60,6 +62,7 @@ public class LocaleManager {
 
     /**
      * Compare the language for the current context with another language.
+     *
      * @param language The language to compare
      * @return True if the languages are the same, else false
      */
@@ -71,6 +74,7 @@ public class LocaleManager {
     /**
      * If the user has selected a language other than the device default, return that
      * language code, else just return the device default language code.
+     *
      * @return The 2-letter language code (example "en")
      */
     public static String getLanguage(Context context) {
@@ -79,10 +83,40 @@ public class LocaleManager {
     }
 
     /**
+     * Convert the device language code (codes defined by ISO 639-1) to a Language ID.
+     * Language IDs, used only by WordPress, are integer values that map to a language code.
+     * http://bit.ly/2H7gksN
+     **/
+    public static @NonNull String getLanguageWordPressId(Context context) {
+        final String deviceLanguageCode = LanguageUtils.getPatchedCurrentDeviceLanguage(context);
+
+        Map<String, String> languageCodeToID = LocaleManager.generateLanguageMap(context);
+        String langID = null;
+        if (languageCodeToID.containsKey(deviceLanguageCode)) {
+            langID = languageCodeToID.get(deviceLanguageCode);
+        } else {
+            int pos = deviceLanguageCode.indexOf("_");
+            if (pos > -1) {
+                String newLang = deviceLanguageCode.substring(0, pos);
+                if (languageCodeToID.containsKey(newLang)) {
+                    langID = languageCodeToID.get(newLang);
+                }
+            }
+        }
+
+        if (langID == null) {
+            // fallback to device language code if there is no match
+            langID = deviceLanguageCode;
+        }
+        return langID;
+    }
+
+    /**
      * Save the updated language to SharedPreferences.
      * Use commit() instead of apply() to ensure the language preference is saved instantly
      * as the app may be restarted immediately.
-     * @param context The current context
+     *
+     * @param context  The current context
      * @param language The 2-letter language code (example "en")
      */
     @SuppressLint("ApplySharedPref")
@@ -94,7 +128,7 @@ public class LocaleManager {
     /**
      * Update resources for the current session.
      *
-     * @param context The current active context
+     * @param context  The current active context
      * @param language The 2-letter language code (example "en")
      * @return The modified context containing the updated localized resources
      */
@@ -123,12 +157,12 @@ public class LocaleManager {
      * [https://bugs.openjdk.java.net/browse/JDK-8167567]. Any strings that contain
      * locale-specific grouping separators should use:
      * <code>
-     *     String.format(LocaleManager.getSafeLocale(context), baseString, val)
+     * String.format(LocaleManager.getSafeLocale(context), baseString, val)
      * </code>
-     *
+     * <p>
      * An example of a string that contains locale-specific grouping separators:
      * <code>
-     *     <string name="test">%,d likes</string>
+     * <string name="test">%,d likes</string>
      * </code>
      */
     public static Locale getSafeLocale(@Nullable Context context) {
@@ -149,6 +183,7 @@ public class LocaleManager {
 
     /**
      * Gets a locale for the given language code.
+     *
      * @param languageCode The language code (example "en" or "es-US"). If null or empty will return
      *                     the current default locale.
      */
