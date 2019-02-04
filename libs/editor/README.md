@@ -1,7 +1,5 @@
 # WordPress-Editor-Android #
 
-[![Build Status](https://travis-ci.org/wordpress-mobile/WordPress-Editor-Android.svg?branch=develop)](https://travis-ci.org/wordpress-mobile/WordPress-Editor-Android)
-
 ## Introduction ##
 
 WordPress-Editor-Android is the text editor used in the [WordPress Android app](https://github.com/wordpress-mobile/WordPress-Android) to create and edit pages & posts. In short it's a simple, straightforward way to visually edit HTML.
