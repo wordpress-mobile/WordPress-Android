@@ -3,6 +3,7 @@
               style="@style/StatsBlockLine"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+             android:paddingTop="@dimen/margin_extra_large"
               android:minHeight="@dimen/one_line_list_item_height">
 
     <TextView
