@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.MainVM
+package org.wordpress.android.ui.sitecreation
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
@@ -17,13 +17,9 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.sitecreation.NavigationTarget
-import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
-import org.wordpress.android.ui.sitecreation.NewSiteCreationStepsProvider
-import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
@@ -111,7 +107,10 @@ class NewSiteCreationMainVMTest {
 
     @Test
     fun siteCreationStateUpdatedWithSiteInfo() {
-        viewModel.onInfoScreenFinished(SITE_TITLE, SITE_TAGLINE)
+        viewModel.onInfoScreenFinished(
+                SITE_TITLE,
+                SITE_TAGLINE
+        )
         assertThat(viewModel.navigationTargetObservable.lastEvent!!.wizardState.siteTitle).isEqualTo(SITE_TITLE)
         assertThat(viewModel.navigationTargetObservable.lastEvent!!.wizardState.siteTagLine).isEqualTo(SITE_TAGLINE)
     }
@@ -142,7 +141,7 @@ class NewSiteCreationMainVMTest {
     }
 
     @Test
-    fun backSupressedOnlyForLastStep() {
+    fun backSuppressedOnlyForLastStep() {
         while (!isAtLastStep()) {
             assertThat(viewModel.shouldSuppressBackPress()).isFalse()
             viewModel.onSkipClicked() // navigate to a next step
@@ -167,9 +166,9 @@ class NewSiteCreationMainVMTest {
         val isFirstStep = { index: Int -> index == 0 }
         val isLastStep = { index: Int -> index == SITE_CREATION_STEPS.size - 1 }
 
-        SITE_CREATION_STEPS.filterIndexed({ index, step ->
+        SITE_CREATION_STEPS.filterIndexed { index, _ ->
             !isFirstStep(index) && !isLastStep(index)
-        }).forEach() { step ->
+        }.forEach { step ->
             assertThat(viewModel.screenTitleForWizardStep(step)).isInstanceOf(ScreenTitleStepCount::class.java)
         }
     }
@@ -177,7 +176,7 @@ class NewSiteCreationMainVMTest {
     @Test
     fun siteCreationStateWrittenToBundle() {
         viewModel.writeToBundle(savedInstanceState)
-        verify(savedInstanceState).putParcelable(any(), argThat() { this is SiteCreationState })
+        verify(savedInstanceState).putParcelable(any(), argThat { this is SiteCreationState })
     }
 
     @Test
@@ -205,5 +204,5 @@ class NewSiteCreationMainVMTest {
 
     private fun currentStep() = viewModel.navigationTargetObservable.lastEvent!!.wizardStep
 
-    private fun isAtLastStep() = SITE_CREATION_STEPS.last().equals(currentStep())
+    private fun isAtLastStep() = SITE_CREATION_STEPS.last() == currentStep()
 }
