@@ -189,6 +189,8 @@ public class WPMainActivity extends AppCompatActivity implements
         ProfilingUtils.split("WPMainActivity.onCreate");
         ((WordPress) getApplication()).component().inject(this);
 
+        // change
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
