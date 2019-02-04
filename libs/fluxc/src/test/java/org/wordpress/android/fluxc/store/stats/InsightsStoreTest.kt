@@ -383,16 +383,17 @@ class InsightsStoreTest {
                 TOP_COMMENTS_RESPONSE
         )
         val forced = true
+        val loadMore = false
         whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
-        val model = mock<CommentsModel>()
-        whenever(mapper.map(TOP_COMMENTS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        val model = CommentsModel(emptyList(), emptyList(), hasMorePosts = false, hasMoreAuthors = false)
+        whenever(mapper.mergeCommentsModels(sqlUtils, site, PAGE_SIZE)).thenReturn(model)
 
-        val responseModel = store.fetchComments(site, PAGE_SIZE, forced)
+        val responseModel = store.fetchComments(site, PAGE_SIZE, forced, loadMore)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, TOP_COMMENTS_RESPONSE)
+        verify(sqlUtils).insert(site, TOP_COMMENTS_RESPONSE, !loadMore)
     }
 
     @Test
@@ -412,9 +413,10 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<CommentsResponse>(StatsError(type, message))
         val forced = true
+        val loadMore = true
         whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchComments(site, PAGE_SIZE, forced)
+        val responseModel = store.fetchComments(site, PAGE_SIZE, forced, loadMore)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
