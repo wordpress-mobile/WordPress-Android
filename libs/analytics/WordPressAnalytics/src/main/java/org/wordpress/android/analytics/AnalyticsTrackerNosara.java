@@ -272,6 +272,39 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 predefinedEventProperties.put("type", "positive");
                 break;
+            case QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED:
+                predefinedEventProperties.put("type", "positive");
+                break;
+            case QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED:
+                predefinedEventProperties.put("type", "negative");
+                break;
+            case QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED:
+                predefinedEventProperties.put("type", "positive");
+                break;
+            case QUICK_START_TYPE_CUSTOMIZE_VIEWED:
+                predefinedEventProperties.put("type", "customize");
+                break;
+            case QUICK_START_TYPE_GROW_VIEWED:
+                predefinedEventProperties.put("type", "grow");
+                break;
+            case QUICK_START_TYPE_CUSTOMIZE_DISMISSED:
+                predefinedEventProperties.put("type", "customize");
+                break;
+            case QUICK_START_TYPE_GROW_DISMISSED:
+                predefinedEventProperties.put("type", "grow");
+                break;
+            case QUICK_START_LIST_CUSTOMIZE_COLLAPSED:
+                predefinedEventProperties.put("type", "customize");
+                break;
+            case QUICK_START_LIST_GROW_COLLAPSED:
+                predefinedEventProperties.put("type", "grow");
+                break;
+            case QUICK_START_LIST_CUSTOMIZE_EXPANDED:
+                predefinedEventProperties.put("type", "customize");
+                break;
+            case QUICK_START_LIST_GROW_EXPANDED:
+                predefinedEventProperties.put("type", "grow");
+                break;
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
                 predefinedEventProperties.put("task_name", "create_site");
                 break;
@@ -293,6 +326,51 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
                 predefinedEventProperties.put("task_name", "follow_site");
                 break;
+            case QUICK_START_LIST_UPLOAD_ICON_TAPPED:
+                predefinedEventProperties.put("task_name", "upload_icon");
+                break;
+            case QUICK_START_LIST_CREATE_PAGE_TAPPED:
+                predefinedEventProperties.put("task_name", "create_page");
+                break;
+            case QUICK_START_LIST_CHECK_STATS_TAPPED:
+                predefinedEventProperties.put("task_name", "check_stats");
+                break;
+            case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
+                predefinedEventProperties.put("task_name", "explore_plans");
+                break;
+            case QUICK_START_LIST_CREATE_SITE_SKIPPED:
+                predefinedEventProperties.put("task_name", "create_site");
+                break;
+            case QUICK_START_LIST_VIEW_SITE_SKIPPED:
+                predefinedEventProperties.put("task_name", "view_site");
+                break;
+            case QUICK_START_LIST_BROWSE_THEMES_SKIPPED:
+                predefinedEventProperties.put("task_name", "browse_themes");
+                break;
+            case QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED:
+                predefinedEventProperties.put("task_name", "customize_site");
+                break;
+            case QUICK_START_LIST_ADD_SOCIAL_SKIPPED:
+                predefinedEventProperties.put("task_name", "share_site");
+                break;
+            case QUICK_START_LIST_PUBLISH_POST_SKIPPED:
+                predefinedEventProperties.put("task_name", "publish_post");
+                break;
+            case QUICK_START_LIST_FOLLOW_SITE_SKIPPED:
+                predefinedEventProperties.put("task_name", "follow_site");
+                break;
+            case QUICK_START_LIST_UPLOAD_ICON_SKIPPED:
+                predefinedEventProperties.put("task_name", "upload_icon");
+                break;
+            case QUICK_START_LIST_CREATE_PAGE_SKIPPED:
+                predefinedEventProperties.put("task_name", "create_page");
+                break;
+            case QUICK_START_LIST_CHECK_STATS_SKIPPED:
+                predefinedEventProperties.put("task_name", "check_stats");
+                break;
+            case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
+                predefinedEventProperties.put("task_name", "explore_plans");
+                break;
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "create_site");
                 break;
@@ -313,6 +391,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case QUICK_START_FOLLOW_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "follow_site");
+                break;
+            case QUICK_START_UPLOAD_ICON_COMPLETED:
+                predefinedEventProperties.put("task_name", "upload_icon");
+                break;
+            case QUICK_START_CREATE_PAGE_COMPLETED:
+                predefinedEventProperties.put("task_name", "create_page");
+                break;
+            case QUICK_START_CHECK_STATS_COMPLETED:
+                predefinedEventProperties.put("task_name", "check_stats");
+                break;
+            case QUICK_START_EXPLORE_PLANS_COMPLETED:
+                predefinedEventProperties.put("task_name", "explore_plans");
                 break;
             case QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
@@ -1370,10 +1460,25 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_task_dialog_button_tapped";
-            case QUICK_START_LIST_VIEWED:
+            case QUICK_START_MIGRATION_DIALOG_VIEWED:
+                return "quick_start_migration_dialog_viewed";
+            case QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED:
+                return "quick_start_migration_dialog_button_tapped";
+            case QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED:
+            case QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED:
+                return "quick_start_remove_dialog_button_tapped";
+            case QUICK_START_TYPE_CUSTOMIZE_DISMISSED:
+            case QUICK_START_TYPE_GROW_DISMISSED:
+                return "quick_start_type_dismissed";
+            case QUICK_START_LIST_CUSTOMIZE_COLLAPSED:
+            case QUICK_START_LIST_GROW_COLLAPSED:
+                return "quick_start_list_collapsed";
+            case QUICK_START_LIST_CUSTOMIZE_EXPANDED:
+            case QUICK_START_LIST_GROW_EXPANDED:
+                return "quick_start_list_expanded";
+            case QUICK_START_TYPE_CUSTOMIZE_VIEWED:
+            case QUICK_START_TYPE_GROW_VIEWED:
                 return "quick_start_list_viewed";
-            case QUICK_START_LIST_COMPLETED_VIEWED:
-                return "quick_start_list_completed_viewed";
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
             case QUICK_START_LIST_VIEW_SITE_TAPPED:
             case QUICK_START_LIST_BROWSE_THEMES_TAPPED:
@@ -1381,9 +1486,23 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_ADD_SOCIAL_TAPPED:
             case QUICK_START_LIST_PUBLISH_POST_TAPPED:
             case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
+            case QUICK_START_LIST_UPLOAD_ICON_TAPPED:
+            case QUICK_START_LIST_CREATE_PAGE_TAPPED:
+            case QUICK_START_LIST_CHECK_STATS_TAPPED:
+            case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
                 return "quick_start_list_item_tapped";
-            case QUICK_START_LIST_SKIP_ALL_TAPPED:
-                return "quick_start_list_all_tasks_skipped";
+            case QUICK_START_LIST_CREATE_SITE_SKIPPED:
+            case QUICK_START_LIST_VIEW_SITE_SKIPPED:
+            case QUICK_START_LIST_BROWSE_THEMES_SKIPPED:
+            case QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED:
+            case QUICK_START_LIST_ADD_SOCIAL_SKIPPED:
+            case QUICK_START_LIST_PUBLISH_POST_SKIPPED:
+            case QUICK_START_LIST_FOLLOW_SITE_SKIPPED:
+            case QUICK_START_LIST_UPLOAD_ICON_SKIPPED:
+            case QUICK_START_LIST_CREATE_PAGE_SKIPPED:
+            case QUICK_START_LIST_CHECK_STATS_SKIPPED:
+            case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
+                return "quick_start_list_item_skipped";
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
             case QUICK_START_VIEW_SITE_TASK_COMPLETED:
             case QUICK_START_BROWSE_THEMES_TASK_COMPLETED:
@@ -1391,6 +1510,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_SHARE_SITE_TASK_COMPLETED:
             case QUICK_START_PUBLISH_POST_TASK_COMPLETED:
             case QUICK_START_FOLLOW_SITE_TASK_COMPLETED:
+            case QUICK_START_UPLOAD_ICON_COMPLETED:
+            case QUICK_START_CREATE_PAGE_COMPLETED:
+            case QUICK_START_CHECK_STATS_COMPLETED:
+            case QUICK_START_EXPLORE_PLANS_COMPLETED:
                 return "quick_start_task_completed";
             case QUICK_START_ALL_TASKS_COMPLETED:
                 return "quick_start_all_tasks_completed";
@@ -1400,6 +1523,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED:
             case QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED:
                 return "quick_start_request_dialog_button_tapped";
+            case QUICK_START_NOTIFICATION_DISMISSED:
+                return "quick_start_notification_dismissed";
+            case QUICK_START_NOTIFICATION_SENT:
+                return "quick_start_notification_sent";
+            case QUICK_START_NOTIFICATION_TAPPED:
+                return "quick_start_notification_tapped";
             case INSTALLATION_REFERRER_OBTAINED:
                 return "installation_referrer_obtained";
             case INSTALLATION_REFERRER_FAILED:

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
@@ -102,12 +101,6 @@ public class AppPrefs {
         // Used to flag the account created stat needs to be bumped after account information is synced.
         SHOULD_TRACK_MAGIC_LINK_SIGNUP,
 
-        // indicates how many times quick start dialog for a single task wash shown
-        NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN,
-
-        // keeps track of quick start tasks that is prompted to user
-        PROMPTED_QUICK_START_TASK,
-
         // Support email address and name that's independent of any account or site
         SUPPORT_EMAIL,
         SUPPORT_NAME,
@@ -117,7 +110,9 @@ public class AppPrefs {
         // Store a version of the last shown News Card
         NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
-        GUTENBERG_EDITOR_ENABLED
+        GUTENBERG_EDITOR_ENABLED,
+
+        IS_QUICK_START_NOTICE_REQUIRED
     }
 
     /**
@@ -180,6 +175,9 @@ public class AppPrefs {
 
         // used to indicate that user opted out of quick start
         IS_QUICK_START_DISABLED,
+
+        // quick start migration dialog is shown only once for all sites
+        HAS_QUICK_START_MIGRATION_SHOWN,
 
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
@@ -790,21 +788,20 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
     }
 
-    public static int getNumberOfTimesQuickStartDialogShown() {
-        return getInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, 0);
+    public static void setQuickStartMigrationDialogShown(Boolean shown) {
+        setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
     }
 
-    public static void setNumberOfTimesQuickStartDialogShown(int value) {
-        setInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, value);
+    public static boolean hasQuickStartMigrationDialogShown() {
+        return getBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, false);
     }
 
-    @Nullable
-    public static String getPromptedQuickStartTask() {
-        return getString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, null);
+    public static void setQuickStartNoticeRequired(Boolean shown) {
+        setBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, shown);
     }
 
-    public static void setPromptedQuickStartTask(@Nullable String task) {
-        setString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, task);
+    public static boolean isQuickStartNoticeRequired() {
+        return getBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, false);
     }
 
     public static void setInstallationReferrerObtained(Boolean isObtained) {

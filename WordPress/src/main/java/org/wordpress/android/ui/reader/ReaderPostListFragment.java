@@ -115,6 +115,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
+import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -542,14 +543,17 @@ public class ReaderPostListFragment extends Fragment
         mQuickStartEvent = event;
         EventBus.getDefault().removeStickyEvent(event);
 
-        if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE) {
+        if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE
+            && isAdded() && getActivity() instanceof WPMainActivity) {
             Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_grey_24dp);
 
-            if (getActivity() != null && getActivity() instanceof WPMainActivity) {
-                ((WPMainActivity) getActivity()).showQuickStartSnackBar(title);
-            }
+            WPDialogSnackbar snackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator),
+                    title, AccessibilityUtils.getSnackbarDuration(requireContext(),
+                            getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+
+            ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
         }
     }
 
@@ -782,8 +786,8 @@ public class ReaderPostListFragment extends Fragment
                 }
 
                 if (getSelectedSite() != null) {
-                    QuickStartUtils.completeTask(mQuickStartStore, QuickStartTask.FOLLOW_SITE, mDispatcher,
-                            getSelectedSite());
+                    QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.FOLLOW_SITE,
+                            mDispatcher, getSelectedSite(), mQuickStartEvent, getContext());
                 }
 
                 return true;
