@@ -299,6 +299,7 @@ class InsightsStoreTest {
                 fetchInsightsPayload
         )
         val model = FollowersModel(0, emptyList(), false)
+        whenever(mapper.mergeFollowersModels(sqlUtils, site, WP_COM, PAGE_SIZE)).thenReturn(model)
         val responseModel = store.fetchWpComFollowers(site, PAGE_SIZE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
@@ -315,6 +316,7 @@ class InsightsStoreTest {
                 fetchInsightsPayload
         )
         val model = FollowersModel(0, emptyList(), false)
+        whenever(mapper.mergeFollowersModels(sqlUtils, site, EMAIL, PAGE_SIZE)).thenReturn(model)
         val responseModel = store.fetchEmailFollowers(site, PAGE_SIZE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
