@@ -54,6 +54,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListV
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.YearsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.observeEvent
@@ -64,6 +65,7 @@ class StatsListFragment : DaggerFragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var viewModel: StatsListViewModel
+    private lateinit var navigator: StatsNavigator
 
     private var layoutManager: LayoutManager? = null
 
@@ -151,6 +153,8 @@ class StatsListFragment : DaggerFragment() {
         }
 
         setupObservers(activity, site)
+
+        this.navigator = StatsNavigator(site, activity, statsDateFormatter)
     }
 
     private fun setupObservers(activity: FragmentActivity, site: SiteModel) {
@@ -160,115 +164,9 @@ class StatsListFragment : DaggerFragment() {
             }
         })
 
-        viewModel.navigationTarget.observeEvent(this) {
-            when (it) {
-                is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, site, false)
-                is ViewPost -> {
-                    StatsUtils.openPostInReaderOrInAppWebview(
-                            activity,
-                            site.siteId,
-                            it.postId.toString(),
-                            it.postType,
-                            it.postUrl
-                    )
-                }
-                is SharePost -> {
-                    val intent = Intent(Intent.ACTION_SEND)
-                    intent.type = "text/plain"
-                    intent.putExtra(Intent.EXTRA_TEXT, it.url)
-                    intent.putExtra(Intent.EXTRA_SUBJECT, it.title)
-                    try {
-                        startActivity(Intent.createChooser(intent, getString(R.string.share_link)))
-                    } catch (ex: android.content.ActivityNotFoundException) {
-                        ToastUtils.showToast(activity, R.string.reader_toast_err_share_intent)
-                    }
-                }
-                is ViewPostDetailStats -> {
-                    val postModel = StatsPostModel(
-                            site.siteId,
-                            it.postId,
-                            it.postTitle,
-                            it.postUrl,
-                            it.postType
-                    )
-                    ActivityLauncher.viewStatsSinglePostDetails(activity, postModel)
-                }
-                is ViewFollowersStats -> {
-                    ActivityLauncher.viewFollowersStats(activity, site)
-                }
-                is ViewCommentsStats -> {
-                    ActivityLauncher.viewCommentsStats(activity, site)
-                }
-                is ViewTagsAndCategoriesStats -> {
-                    ActivityLauncher.viewTagsAndCategoriesStats(activity, site)
-                }
-                is ViewTag -> {
-                    ActivityLauncher.openStatsUrl(activity, it.link)
-                }
-                is ViewPublicizeStats -> {
-                    ActivityLauncher.viewPublicizeStats(activity, site)
-                }
-                is ViewPostsAndPages -> {
-                    ActivityLauncher.viewPostsAndPagesStats(
-                            activity,
-                            site,
-                            it.statsGranularity.toStatsTimeFrame(),
-                            statsDateFormatter.printStatsDate(it.selectedDate)
-                    )
-                }
-                is ViewReferrers -> {
-                    ActivityLauncher.viewReferrersStats(
-                            activity,
-                            site,
-                            it.statsGranularity.toStatsTimeFrame(),
-                            statsDateFormatter.printStatsDate(it.selectedDate)
-                    )
-                }
-                is ViewClicks -> {
-                    ActivityLauncher.viewClicksStats(
-                            activity,
-                            site,
-                            it.statsGranularity.toStatsTimeFrame(),
-                            statsDateFormatter.printStatsDate(it.selectedDate)
-                    )
-                }
-                is ViewCountries -> {
-                    ActivityLauncher.viewCountriesStats(
-                            activity,
-                            site,
-                            it.statsGranularity.toStatsTimeFrame(),
-                            statsDateFormatter.printStatsDate(it.selectedDate)
-                    )
-                }
-                is ViewVideoPlays -> {
-                    ActivityLauncher.viewVideoPlays(
-                            activity,
-                            site,
-                            it.statsGranularity.toStatsTimeFrame(),
-                            statsDateFormatter.printStatsDate(it.selectedDate)
-                    )
-                }
-                is ViewSearchTerms -> {
-                    ActivityLauncher.viewSearchTerms(
-                            activity,
-                            site,
-                            it.statsGranularity.toStatsTimeFrame(),
-                            statsDateFormatter.printStatsDate(it.selectedDate)
-                    )
-                }
-                is ViewAuthors -> {
-                    ActivityLauncher.viewAuthorsStats(
-                            activity,
-                            site,
-                            it.statsGranularity.toStatsTimeFrame(),
-                            statsDateFormatter.printStatsDate(it.selectedDate)
-                    )
-                }
-                is ViewUrl -> {
-                    WPWebViewActivity.openURL(activity, it.url)
-                }
-            }
-            true
+        viewModel.navigationTarget.observeEvent(this) { target ->
+            navigator.navigate(target)
+            return@observeEvent true
         }
     }
 
