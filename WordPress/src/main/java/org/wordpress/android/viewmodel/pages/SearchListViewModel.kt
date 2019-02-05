@@ -4,8 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
@@ -88,10 +88,10 @@ class SearchListViewModel
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->
-                PublishedPage(remoteId, title, actionsEnabled = areActionsEnabled)
-            PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(remoteId, title, actionsEnabled = areActionsEnabled)
-            PageStatus.TRASHED -> TrashedPage(remoteId, title, actionsEnabled = areActionsEnabled)
-            PageStatus.SCHEDULED -> ScheduledPage(remoteId, title, actionsEnabled = areActionsEnabled)
+                PublishedPage(remoteId, title, date, actionsEnabled = areActionsEnabled)
+            PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(remoteId, title, date, actionsEnabled = areActionsEnabled)
+            PageStatus.TRASHED -> TrashedPage(remoteId, title, date, actionsEnabled = areActionsEnabled)
+            PageStatus.SCHEDULED -> ScheduledPage(remoteId, title, date, actionsEnabled = areActionsEnabled)
         }
     }
 }

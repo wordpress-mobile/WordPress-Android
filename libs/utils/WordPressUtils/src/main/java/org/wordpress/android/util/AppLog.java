@@ -50,7 +50,8 @@ public class AppLog {
         PLUGINS,
         ACTIVITY_LOG,
         JETPACK_REMOTE_INSTALL,
-        SUPPORT
+        SUPPORT,
+        SITE_CREATION
     }
 
     public static final String TAG = "WordPress";

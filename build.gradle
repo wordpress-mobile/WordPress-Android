@@ -1,5 +1,6 @@
 buildscript {
-    ext.kotlin_version = '1.2.61'
+    ext.kotlin_version = '1.3.11'
+    ext.kotlin_coroutines_version = '1.1.0'
     ext.arch_components_version = '1.1.1'
 
     repositories {
@@ -8,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.3'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.automattic.android:fetchstyle:1.1'
     }
 }
@@ -16,7 +17,7 @@ buildscript {
 apply plugin: 'com.automattic.android.fetchstyle'
 
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
-project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false)
+project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
 
 allprojects {
     apply plugin: 'checkstyle'
@@ -37,6 +38,14 @@ allprojects {
                 // Local Maven repo containing AARs with JSC library built for Android
                 url "$rootDir/libs/gutenberg-mobile/node_modules/jsc-android/dist"
             }
+        } else {
+            maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            force 'org.webkit:android-jsc:r224109'
         }
     }
 
@@ -66,7 +75,7 @@ subprojects {
     }
 
     dependencies {
-        ktlint 'com.github.shyiko:ktlint:0.28.0'
+        ktlint 'com.github.shyiko:ktlint:0.29.0'
     }
 
     task ktlint(type: JavaExec) {
@@ -83,5 +92,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = '8dc2c32672ccca2e2ca3037757300cc866202896'
+    fluxCVersion = 'e76fa1f73cd594d867b16bba4c52362a6a326abc'
 }

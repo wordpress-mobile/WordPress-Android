@@ -415,7 +415,6 @@ Language: vi_VN
     <string name="stats_insights_most_popular_percent_views">%1$d%% lượt xemn</string>
     <string name="stats_insights_most_popular_hour">Thời gian phổ biến nhất</string>
     <string name="stats_insights_most_popular_day">Ngày phổ biến nhất</string>
-    <string name="stats_insights_popular">Ngày và giời phổ biến nhất</string>
     <string name="stats_insights_today">Thống kê hôm nay</string>
     <string name="stats_insights_all_time">Tất cả bài viết, lượt xem và khách</string>
     <string name="stats_insights">Phân tích</string>

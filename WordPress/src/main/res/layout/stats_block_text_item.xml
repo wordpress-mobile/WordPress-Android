@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/StatsBlockLine"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:minHeight="@dimen/one_line_list_item_height">
+
+    <TextView
+        android:id="@+id/text"
+        style="@style/StatsBlockText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_gravity="center_vertical"
+        android:text="@string/unknown"/>
+
+</FrameLayout>

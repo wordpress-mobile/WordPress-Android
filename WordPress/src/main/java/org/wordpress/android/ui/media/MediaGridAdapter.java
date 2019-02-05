@@ -432,7 +432,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private void loadVideoThumbnail(final int position, final @NonNull MediaModel media,
                                     @NonNull final ImageView imageView) {
         // if we have a thumbnail url, use it and be done
-        if (!TextUtils.isEmpty(media.getThumbnailUrl())) {
+        if (!TextUtils.isEmpty(media.getThumbnailUrl()) && !MediaUtils.isVideo(media.getThumbnailUrl())) {
             mImageManager.load(imageView, ImageType.VIDEO, media.getThumbnailUrl(), ScaleType.CENTER_CROP);
             return;
         }

@@ -1,7 +1,6 @@
 {
   "branch": "master",
-  "pinned_hash": "98cf6abc2244f0beaf7ff1a176494dbe7dd8ba75",
-  "pinned_hash": "e0c507b8edca314db8b901525ec0761332084fde",
+  "pinned_hash": "3f2bc7f9f915f7f01f92490d2a2deef527267e27",
   "files_to_copy": [
     {
       "file": "android/WPAndroid/gradle.properties",
@@ -13,5 +12,6 @@
     }
   ],
   "file_dependencies": [
+
   ]
 }

@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -61,14 +63,21 @@ import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
-import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
+import org.wordpress.android.ui.stats.StatsAbstractFragment;
+import org.wordpress.android.ui.stats.OldStatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
+import org.wordpress.android.ui.stats.StatsTimeframe;
+import org.wordpress.android.ui.stats.StatsViewAllActivity;
+import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
+import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -80,8 +89,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
-import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
+import static org.wordpress.android.ui.stats.OldStatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
@@ -138,6 +148,17 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, StockMediaPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
+
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void showGiphyPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("from", activity.getClass().getSimpleName());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_ACCESSED, properties);
+
+        Intent intent = new Intent(activity, GiphyPickerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
 
         activity.startActivityForResult(intent, requestCode);
     }
@@ -234,8 +255,169 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
-        Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
+        if (site == null) {
+            AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
+            AnalyticsTracker.track(
+                    STATS_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Stats because of the null SiteModel"
+                                  );
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+        } else {
+            Intent intent = new Intent(context, StatsActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void viewFollowersStats(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_followers);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
+    public static void viewCommentsStats(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.COMMENTS);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_comments);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
+    public static void viewTagsAndCategoriesStats(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.TAGS_AND_CATEGORIES);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_tags_and_categories);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
+    public static void viewPostsAndPagesStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
+                                              String selectedDate) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.TOP_POSTS_AND_PAGES);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_tags_and_categories);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
+    public static void viewReferrersStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
+                                          String selectedDate) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.REFERRERS);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_referrers);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
+    public static void viewClicksStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
+                                       String selectedDate) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.CLICKS);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_clicks);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
+    public static void viewCountriesStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
+                                          String selectedDate) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.GEOVIEWS);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_countries);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
+    public static void viewVideoPlays(Context context, SiteModel site, StatsTimeframe statsTimeframe,
+                                      String selectedDate) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.VIDEO_PLAYS);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_videos);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
+    public static void viewSearchTerms(Context context, SiteModel site, StatsTimeframe statsTimeframe,
+                                       String selectedDate) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.SEARCH_TERMS);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_search_terms);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
+    public static void viewAuthorsStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
+                                        String selectedDate) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.AUTHORS);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_authors);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
+    public static void viewPublicizeStats(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.PUBLICIZE);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_publicize);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
         context.startActivity(intent);
     }
 
@@ -525,7 +707,8 @@ public class ActivityLauncher {
     }
 
     public static void newBlogForResult(Activity activity) {
-        Intent intent = new Intent(activity, SiteCreationActivity.class);
+        Intent intent = new Intent(activity,
+                BuildConfig.NEW_SITE_CREATION_ENABLED ? NewSiteCreationActivity.class : SiteCreationActivity.class);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
@@ -668,6 +851,24 @@ public class ActivityLauncher {
         } finally {
             // re-enable deeplinking
             WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
+        }
+    }
+
+    public static void openStatsUrl(Context context, @NonNull String url) {
+        if (url.startsWith("https://wordpress.com/my-stats") || url.startsWith("http://wordpress.com/my-stats")) {
+            // make sure to load the no-chrome version of Stats over https
+            url = UrlUtils.makeHttps(url);
+            if (url.contains("?")) {
+                // add the no chrome parameters if not available
+                if (!url.contains("?no-chrome") && !url.contains("&no-chrome")) {
+                    url += "&no-chrome";
+                }
+            } else {
+                url += "?no-chrome";
+            }
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
+        } else if (url.startsWith("https") || url.startsWith("http")) {
+            WPWebViewActivity.openURL(context, url);
         }
     }
 }
