@@ -244,12 +244,16 @@ public class UploadService extends Service {
             }
 
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
-                if (AppPrefs.isAztecEditorEnabled()) {
+                if (AppPrefs.isAztecEditorEnabled() || AppPrefs.isGutenbergEditorEnabled()) {
                     if (!NetworkUtils.isNetworkAvailable(this)) {
                         rebuildNotificationError(post, getString(R.string.no_network_message));
                         return;
                     }
-                    aztecRetryUpload(post);
+                    boolean postHasGutenbergBlocks = PostUtils.contentContainsGutenbergBlocks(post.getContent());
+                    boolean processWithAztec =
+                            AppPrefs.isAztecEditorEnabled() && !AppPrefs.isGutenbergEditorEnabled()
+                            && !postHasGutenbergBlocks;
+                    retryUpload(post, processWithAztec);
                 } else {
                     ToastUtils.showToast(this, R.string.retry_needs_aztec);
                 }
@@ -706,7 +710,7 @@ public class UploadService extends Service {
                                                            errorMessage, 0);
     }
 
-    private void registerFailedMediaForThisPost(PostModel post) {
+    private void aztecRegisterFailedMediaForThisPost(PostModel post) {
         // there could be failed media in the post, that has not been registered in the UploadStore because
         // the media was being uploaded separately (i.e. the user included media, started uploading within
         // the editor, and such media failed _before_ exiting the eidtor, thus the registration never happened.
@@ -740,10 +744,12 @@ public class UploadService extends Service {
         }
     }
 
-    private void aztecRetryUpload(PostModel post) {
+    private void retryUpload(PostModel post, boolean processWithAztec) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_UPLOAD_POST_ERROR_RETRY);
 
-        registerFailedMediaForThisPost(post);
+        if (processWithAztec) {
+            aztecRegisterFailedMediaForThisPost(post);
+        }
 
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
@@ -755,11 +761,13 @@ public class UploadService extends Service {
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
 
-            // do the same within the Post content itself
-            String postContentWithRestartedUploads =
-                    AztecEditorFragment.restartFailedMediaToUploading(this, post.getContent());
-            post.setContent(postContentWithRestartedUploads);
-            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+            if (processWithAztec) {
+                // do the same within the Post content itself
+                String postContentWithRestartedUploads =
+                        AztecEditorFragment.restartFailedMediaToUploading(this, post.getContent());
+                post.setContent(postContentWithRestartedUploads);
+                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+            }
 
             // no retry uploading the media items
             for (MediaModel media : mediaToRetry) {

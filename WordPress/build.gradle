@@ -25,8 +25,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
-apply from: 'gutenberg-tasks.gradle'
-
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
@@ -333,6 +331,9 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
 }
+
+def legacyGBBundleFile = 'src/main/assets/index.android.bundle'
+assert !(file(legacyGBBundleFile).exists()) : "Error: Legacy Gutenberg JS bundle file detected. Please delete it: " + file(legacyGBBundleFile).getAbsolutePath()
 
 // Keep this at the bottom (https://stackoverflow.com/a/37565535)
 apply plugin: 'com.google.gms.google-services'
