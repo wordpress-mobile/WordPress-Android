@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.network.rest.GsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTimeoutRequestHandler;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
 
@@ -21,6 +22,24 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
     public interface WPComErrorListener {
         void onErrorResponse(@NonNull WPComGsonNetworkError error);
     }
+
+    public interface OnJetpackTunnelTimeoutListener {
+        void onJetpackTunnelTimeout(OnJetpackTimeoutError event);
+    }
+
+    public static class OnJetpackTimeoutError {
+        public String apiPath;
+        public int timesRetried;
+
+        public OnJetpackTimeoutError(String apiPath, int timesRetried) {
+            this.apiPath = apiPath;
+            this.timesRetried = timesRetried;
+        }
+    }
+
+    private OnJetpackTunnelTimeoutListener mOnJetpackTunnelTimeoutListener;
+
+    private int mNumManualRetries = 0;
 
     public static final String REST_AUTHORIZATION_HEADER = "Authorization";
     public static final String REST_AUTHORIZATION_FORMAT = "Bearer %s";
@@ -82,6 +101,12 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
                 wrapInBaseListener(errorListener));
     }
 
+    public static <T> WPComGsonRequest<T> buildFormPostRequest(String url, Map<String, String> params, Type type,
+                                                           Listener<T> listener, WPComErrorListener errorListener) {
+        return new WPComGsonRequest<>(Method.POST, url, params, null, null, type, listener,
+                wrapInBaseListener(errorListener));
+    }
+
     private static BaseErrorListener wrapInBaseListener(final WPComErrorListener wpComErrorListener) {
         return new BaseErrorListener() {
             @Override
@@ -97,6 +122,17 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
         return url;
     }
 
+    void setOnJetpackTunnelTimeoutListener(OnJetpackTunnelTimeoutListener onJetpackTunnelTimeoutListener) {
+        mOnJetpackTunnelTimeoutListener = onJetpackTunnelTimeoutListener;
+    }
+
+    /**
+     * Mark that this request has been retried manually (by duplicating and re-enqueuing it).
+     */
+    public void increaseManualRetryCount() {
+        mNumManualRetries++;
+    }
+
     public void setAccessToken(String token) {
         if (token == null) {
             mHeaders.remove(REST_AUTHORIZATION_HEADER);
@@ -104,6 +140,7 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
             mHeaders.put(REST_AUTHORIZATION_HEADER, String.format(REST_AUTHORIZATION_FORMAT, token));
         }
     }
+
     @Override
     public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
         WPComGsonNetworkError returnedError = new WPComGsonNetworkError(error);
@@ -146,6 +183,21 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
                         returnedError.message);
                 AuthenticateErrorPayload payload = new AuthenticateErrorPayload(authError);
                 mOnAuthFailedListener.onAuthFailed(payload);
+            }
+
+            if (JetpackTimeoutRequestHandler.isJetpackTimeoutError(returnedError)) {
+                OnJetpackTimeoutError onJetpackTimeoutError = null;
+                if (getMethod() == Method.GET && getParams() != null) {
+                    onJetpackTimeoutError = new OnJetpackTimeoutError(getParams().get("path"), mNumManualRetries);
+                } else if (getMethod() == Method.POST && getBodyAsMap() != null) {
+                    Object pathValue = getBodyAsMap().get("path");
+                    if (pathValue != null) {
+                        onJetpackTimeoutError = new OnJetpackTimeoutError(pathValue.toString(), mNumManualRetries);
+                    }
+                }
+                if (onJetpackTimeoutError != null) {
+                    mOnJetpackTunnelTimeoutListener.onJetpackTunnelTimeout(onJetpackTimeoutError);
+                }
             }
         }
 
