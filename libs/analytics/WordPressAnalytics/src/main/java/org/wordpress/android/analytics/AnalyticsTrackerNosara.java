@@ -1525,6 +1525,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_request_dialog_button_tapped";
             case QUICK_START_NOTIFICATION_SENT:
                 return "quick_start_notification_sent";
+            case QUICK_START_NOTIFICATION_TAPPED:
+                return "quick_start_notification_tapped";
             case INSTALLATION_REFERRER_OBTAINED:
                 return "installation_referrer_obtained";
             case INSTALLATION_REFERRER_FAILED:
