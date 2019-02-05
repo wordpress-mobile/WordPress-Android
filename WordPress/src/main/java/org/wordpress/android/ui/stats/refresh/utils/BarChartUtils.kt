@@ -35,7 +35,7 @@ fun BarChart.draw(
     val columnNumber = (graphWidth / 24) - 1
     val count = if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT
     val cut = cutEntries(count, item.entries)
-    val mappedEntries = cut.mapIndexed { index, pair -> pair.toBarEntry(index) }
+    val mappedEntries = cut.mapIndexed { index, pair -> toBarEntry(pair, index) }
     val maxYValue = cut.maxBy { it.value }!!.value
     val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
     val dataSet = if (hasData) {
@@ -44,13 +44,14 @@ fun BarChart.draw(
         buildEmptyDataSet(context, cut.size)
     }
     val dataSets = mutableListOf<IBarDataSet>()
+    dataSets.add(dataSet)
+    val hasOverlappingEntries = hasData && item.overlappingEntries != null
     if (hasData && item.overlappingEntries != null) {
         val overlappingCut = cutEntries(count, item.overlappingEntries)
-        val mappedOverlappingEntries = overlappingCut.mapIndexed { index, pair -> pair.toBarEntry(index) }
+        val mappedOverlappingEntries = overlappingCut.mapIndexed { index, pair -> toBarEntry(pair, index) }
         val overlappingDataSet = buildOverlappingDataSet(context, mappedOverlappingEntries)
         dataSets.add(overlappingDataSet)
     }
-    dataSets.add(dataSet)
     if (hasData && item.onBarSelected != null) {
         getHighlightDataSet(context, mappedEntries)?.let { dataSets.add(it) }
     }
@@ -117,13 +118,13 @@ fun BarChart.draw(
         setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
                 item.selectedItem
-                highlightColumn(cut.indexOfFirst { it.id == item.selectedItem })
+                highlightColumn(cut.indexOfFirst { it.id == item.selectedItem }, hasOverlappingEntries)
                 item.onBarSelected?.invoke(item.selectedItem)
             }
 
             override fun onValueSelected(e: Entry, h: Highlight) {
                 val value = (e as? BarEntry)?.data as? String
-                highlightColumn(e.x.toInt())
+                highlightColumn(e.x.toInt(), hasOverlappingEntries)
                 item.onBarSelected?.invoke(value)
             }
         })
@@ -140,7 +141,7 @@ fun BarChart.draw(
     if (item.selectedItem != null) {
         val index = cut.indexOfFirst { it.id == item.selectedItem }
         if (index >= 0) {
-            highlightColumn(index)
+            highlightColumn(index, hasOverlappingEntries)
         } else {
             highlightValue(null, false)
         }
@@ -148,12 +149,22 @@ fun BarChart.draw(
     invalidate()
 }
 
-private fun BarChart.highlightColumn(index: Int) {
-    val high = Highlight(index.toFloat(), 0, 0)
-    val high2 = Highlight(index.toFloat(), 1, 0)
-    high.dataIndex = index
-    high2.dataIndex = index
-    highlightValues(arrayOf(high2, high))
+private fun BarChart.highlightColumn(index: Int, hasOverlappingColumns: Boolean) {
+    if (hasOverlappingColumns) {
+        val high = Highlight(index.toFloat(), 0, 0)
+        val high2 = Highlight(index.toFloat(), 1, 1)
+        val high3 = Highlight(index.toFloat(), 2, 2)
+        high.dataIndex = index
+        high2.dataIndex = index
+        high3.dataIndex = index
+        highlightValues(arrayOf(high3, high, high2))
+    } else {
+        val high = Highlight(index.toFloat(), 0, 0)
+        val high2 = Highlight(index.toFloat(), 1, 1)
+        high.dataIndex = index
+        high2.dataIndex = index
+        highlightValues(arrayOf(high2, high))
+    }
 }
 
 private fun buildEmptyDataSet(context: Context, count: Int): BarDataSet {
@@ -269,10 +280,10 @@ private fun BarChart.resetChart() {
     invalidate()
 }
 
-private fun Bar.toBarEntry(index: Int): BarEntry {
-    BarEntry(
+private fun toBarEntry(bar: Bar, index: Int): BarEntry {
+    return BarEntry(
             index.toFloat(),
-            value.toFloat(),
-            id
+            bar.value.toFloat(),
+            bar.id
     )
 }
