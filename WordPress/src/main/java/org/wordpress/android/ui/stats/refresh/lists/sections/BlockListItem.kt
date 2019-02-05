@@ -46,7 +46,12 @@ sealed class BlockListItem(val type: Type) {
 
     data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
 
-    data class ValueItem(val value: String, @StringRes val unit: Int) : BlockListItem(VALUE_ITEM)
+    data class ValueItem(
+        val value: String,
+        @StringRes val unit: Int,
+        val change: String? = null,
+        val positive: Boolean = true
+    ) : BlockListItem(VALUE_ITEM)
 
     data class ListItem(
         val text: String,

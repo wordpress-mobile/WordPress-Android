@@ -22,7 +22,7 @@ fun Int.toFormattedString(startValue: Int = TEN_THOUSAND): String {
 fun Long.toFormattedString(startValue: Int = TEN_THOUSAND): String {
     if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString()
     if (this < 0) return "-" + (-this).toFormattedString()
-    if (this < startValue) return this.toString()
+    if (this < startValue) return DecimalFormat.getInstance().format(this).toString()
 
     val e = SUFFIXES.floorEntry(this)
     val divideBy = e.key
