@@ -288,7 +288,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_videos)); // FILTER_VIDEOS
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_audio)); // FILTER_AUDIO
 
-            mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     setFilter(getFilterForPosition(tab.getPosition()));
