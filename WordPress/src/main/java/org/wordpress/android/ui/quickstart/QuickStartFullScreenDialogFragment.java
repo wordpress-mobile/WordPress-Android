@@ -131,6 +131,18 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
 
     @Override
     public boolean onDismissClicked(FullScreenDialogController controller) {
+        switch (mTasksType) {
+            case CUSTOMIZE:
+                AnalyticsTracker.track(Stat.QUICK_START_TYPE_CUSTOMIZE_DISMISSED);
+                break;
+            case GROW:
+                AnalyticsTracker.track(Stat.QUICK_START_TYPE_GROW_DISMISSED);
+                break;
+            case UNKNOWN:
+                // Do not track unknown.
+                break;
+        }
+
         controller.dismiss();
         return true;
     }

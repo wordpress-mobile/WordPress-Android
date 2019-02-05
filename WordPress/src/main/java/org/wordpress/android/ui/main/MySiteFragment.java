@@ -614,7 +614,6 @@ public class MySiteFragment extends Fragment implements
                 new FullScreenDialogFragment.Builder(requireContext())
                         .setTitle(R.string.quick_start_sites_type_customize)
                         .setOnConfirmListener(this)
-                        .setOnDismissListener(null)  // TODO: Quick Start - Add analytics for dismissing Customize.
                         .setContent(QuickStartFullScreenDialogFragment.class, bundle)
                         .build()
                         .show(requireActivity().getSupportFragmentManager(), FullScreenDialogFragment.TAG);
@@ -623,7 +622,6 @@ public class MySiteFragment extends Fragment implements
                 new FullScreenDialogFragment.Builder(requireContext())
                         .setTitle(R.string.quick_start_sites_type_grow)
                         .setOnConfirmListener(this)
-                        .setOnDismissListener(null)  // TODO: Quick Start - Add analytics for dismissing Grow.
                         .setContent(QuickStartFullScreenDialogFragment.class, bundle)
                         .build()
                         .show(requireActivity().getSupportFragmentManager(), FullScreenDialogFragment.TAG);
