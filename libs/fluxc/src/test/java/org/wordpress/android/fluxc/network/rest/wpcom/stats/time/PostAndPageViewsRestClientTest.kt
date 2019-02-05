@@ -2,12 +2,12 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
-import com.nhaarman.mockito_kotlin.KArgumentCaptor
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class PostAndPageViewsRestClientTest {
@@ -41,11 +42,14 @@ class PostAndPageViewsRestClientTest {
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
+    @Mock private lateinit var statsUtils: StatsUtils
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: PostAndPageViewsRestClient
     private val siteId: Long = 12
     private val pageSize = 5
+    private val currentStringDate = "2018-10-10"
+    private val currentDate = Date(0)
 
     @Before
     fun setUp() {
@@ -57,8 +61,10 @@ class PostAndPageViewsRestClientTest {
                 null,
                 requestQueue,
                 accessToken,
-                userAgent
+                userAgent,
+                statsUtils
         )
+        whenever(statsUtils.getFormattedDate(eq(currentDate))).thenReturn(currentStringDate)
     }
 
     @Test
@@ -101,11 +107,11 @@ class PostAndPageViewsRestClientTest {
         testErrorResponse(YEARS)
     }
 
-    private suspend fun testSuccessResponse(period: StatsGranularity) {
+    private suspend fun testSuccessResponse(granularity: StatsGranularity) {
         val response = mock<PostAndPageViewsResponse>()
         initAllTimeResponse(response)
 
-        val responseModel = restClient.fetchPostAndPageViews(site, period, pageSize, false)
+        val responseModel = restClient.fetchPostAndPageViews(site, granularity, currentDate, pageSize, false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(response)
@@ -114,12 +120,13 @@ class PostAndPageViewsRestClientTest {
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "max" to pageSize.toString(),
-                        "period" to period.toString()
+                        "period" to granularity.toString(),
+                        "date" to currentStringDate
                 )
         )
     }
 
-    private suspend fun testErrorResponse(period: StatsGranularity) {
+    private suspend fun testErrorResponse(granularity: StatsGranularity) {
         val errorMessage = "message"
         initAllTimeResponse(
                 error = WPComGsonNetworkError(
@@ -131,7 +138,7 @@ class PostAndPageViewsRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchPostAndPageViews(site, period, pageSize, false)
+        val responseModel = restClient.fetchPostAndPageViews(site, granularity, currentDate, pageSize, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
@@ -149,7 +156,7 @@ class PostAndPageViewsRestClientTest {
         kclass: Class<T>,
         data: T,
         error: WPComGsonNetworkError? = null,
-        cachingEnabled: Boolean = true
+        cachingEnabled: Boolean = false
     ): Response<T> {
         val response = if (error != null) Response.Error<T>(error) else Success(data)
         whenever(

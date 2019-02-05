@@ -1,18 +1,29 @@
 package org.wordpress.android.fluxc.store
 
+import android.annotation.SuppressLint
 import android.content.Context
+import com.yarolegovich.wellsql.SelectQuery.ORDER_DESCENDING
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.NotificationAction
+import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATION
+import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATIONS
+import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_SEEN
+import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_READ
+import org.wordpress.android.fluxc.action.NotificationAction.UPDATE_NOTIFICATION
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.notification.NoteIdSet
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationRestClient
+import org.wordpress.android.fluxc.persistence.NotificationSqlUtils
 import org.wordpress.android.fluxc.utils.PreferenceUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import java.util.Date
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
@@ -23,7 +34,9 @@ class NotificationStore @Inject
 constructor(
     dispatcher: Dispatcher,
     private val context: Context,
-    private val notificationRestClient: NotificationRestClient
+    private val notificationRestClient: NotificationRestClient,
+    private val notificationSqlUtils: NotificationSqlUtils,
+    private val siteStore: SiteStore
 ) : Store(dispatcher) {
     companion object {
         const val WPCOM_PUSH_DEVICE_UUID = "NOTIFICATIONS_UUID_PREF_KEY"
@@ -75,27 +88,170 @@ constructor(
 
     enum class DeviceUnregistrationErrorType { GENERIC_ERROR; }
 
+    class FetchNotificationsPayload : Payload<BaseNetworkError>()
+
+    class FetchNotificationsResponsePayload(
+        val notifs: List<NotificationModel> = emptyList(),
+        val lastSeen: Date? = null
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError) : this() { this.error = error }
+    }
+
+    class FetchNotificationPayload(
+        val remoteNoteId: Long
+    ) : Payload<BaseNetworkError>()
+
+    class FetchNotificationResponsePayload(
+        val notification: NotificationModel? = null
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError) : this() { this.error = error }
+    }
+
+    class FetchNotificationHashesResponsePayload(
+        val hashesMap: Map<Long, Long> = emptyMap()
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError) : this() { this.error = error }
+    }
+
+    class MarkNotificationsSeenPayload(
+        val lastSeenTime: Long
+    ) : Payload<BaseNetworkError>()
+
+    class MarkNotificationSeenResponsePayload(
+        val success: Boolean = false,
+        val lastSeenTime: Long? = null
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError) : this() { this.error = error }
+    }
+
+    class MarkNotificationsReadPayload(
+        val notifications: List<NotificationModel>
+    ) : Payload<BaseNetworkError>()
+
+    class MarkNotificationsReadResponsePayload(
+        val notifications: List<NotificationModel>? = null,
+        val success: Boolean = false
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError) : this() { this.error = error }
+    }
+
+    class NotificationError(val type: NotificationErrorType, val message: String = "") : OnChangedError
+
+    enum class NotificationErrorType {
+        BAD_REQUEST,
+        NOT_FOUND,
+        AUTHORIZATION_REQUIRED,
+        GENERIC_ERROR;
+
+        companion object {
+            private val reverseMap = NotificationErrorType.values().associateBy(NotificationErrorType::name)
+            fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: GENERIC_ERROR
+        }
+    }
+
     // OnChanged events
     class OnDeviceRegistered(val deviceId: String?) : OnChanged<DeviceRegistrationError>()
 
     class OnDeviceUnregistered : OnChanged<DeviceUnregistrationError>()
 
+    class OnNotificationChanged(var rowsAffected: Int) : OnChanged<NotificationError>() {
+        var causeOfChange: NotificationAction? = null
+        var lastSeenTime: Long? = null
+        var success: Boolean = true
+        val changedNotificationLocalIds = mutableListOf<Int>()
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? NotificationAction ?: return
         when (actionType) {
+            // remote actions
             NotificationAction.REGISTER_DEVICE -> registerDevice(action.payload as RegisterDevicePayload)
             NotificationAction.UNREGISTER_DEVICE -> unregisterDevice()
+            NotificationAction.FETCH_NOTIFICATIONS -> synchronizeNotifications()
+            NotificationAction.FETCH_NOTIFICATION -> fetchNotification(action.payload as FetchNotificationPayload)
+            NotificationAction.MARK_NOTIFICATIONS_SEEN ->
+                markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
+            NotificationAction.MARK_NOTIFICATIONS_READ ->
+                markNotificationsRead(action.payload as MarkNotificationsReadPayload)
+
+            // remote responses
             NotificationAction.REGISTERED_DEVICE ->
                 handleRegisteredDevice(action.payload as RegisterDeviceResponsePayload)
             NotificationAction.UNREGISTERED_DEVICE ->
                 handleUnregisteredDevice(action.payload as UnregisterDeviceResponsePayload)
+            NotificationAction.FETCHED_NOTIFICATIONS ->
+                handleFetchNotificationsCompleted(action.payload as FetchNotificationsResponsePayload)
+            NotificationAction.FETCHED_NOTIFICATION_HASHES ->
+                handleFetchNotificationHashesCompleted(action.payload as FetchNotificationHashesResponsePayload)
+            NotificationAction.FETCHED_NOTIFICATION ->
+                handleFetchNotificationCompleted(action.payload as FetchNotificationResponsePayload)
+            NotificationAction.MARKED_NOTIFICATIONS_SEEN ->
+                handleMarkedNotificationSeen(action.payload as MarkNotificationSeenResponsePayload)
+            NotificationAction.MARKED_NOTIFICATIONS_READ ->
+                handleMarkedNotificationsRead(action.payload as MarkNotificationsReadResponsePayload)
+
+            // local actions
+            NotificationAction.UPDATE_NOTIFICATION -> updateNotification(action.payload as NotificationModel)
         }
     }
 
     override fun onRegister() {
         AppLog.d(T.API, NotificationStore::class.java.simpleName + " onRegister")
     }
+
+    /**
+     * Fetch all notifications from the database.
+     *
+     * Filtering. Filtering is done by fetching all records that match the strings in [filterByType] OR
+     * [filterBySubtype].
+     *
+     * @param filterByType Optional. A list of notification type strings to filter by
+     * @param filterBySubtype Optional. A list of notification subtype strings to filter by
+     */
+    @SuppressLint("WrongConstant")
+    fun getNotifications(
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null
+    ): List<NotificationModel> =
+            notificationSqlUtils.getNotifications(ORDER_DESCENDING, filterByType, filterBySubtype)
+
+    /**
+     * Fetch all notifications for the given site.
+     *
+     * Filtering. Filtering is done by fetching all records that match the strings in [filterByType] OR
+     * [filterBySubtype].
+     *
+     * @param site The [SiteModel] to fetch notifications for
+     * @param filterByType Optional. A list of notification type strings to filter by
+     * @param filterBySubtype Optional. A list of notification subtype strings to filter by
+     */
+    @SuppressLint("WrongConstant")
+    fun getNotificationsForSite(
+        site: SiteModel,
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null
+    ): List<NotificationModel> =
+            notificationSqlUtils.getNotificationsForSite(site, ORDER_DESCENDING, filterByType, filterBySubtype)
+
+    /**
+     * Fetch the first notification matching the parameters specified in [NoteIdSet].
+     *
+     * @param idSet A [NoteIdSet] containing the localSiteId, remoteNoteId, and localNoteId
+     */
+    fun getNotificationByIdSet(idSet: NoteIdSet) = notificationSqlUtils.getNotificationByIdSet(idSet)
+
+    /**
+     * Fetch a notification from the database by the remote notification ID.
+     */
+    fun getNotificationByRemoteId(remoteNoteId: Long) =
+            notificationSqlUtils.getNotificationByRemoteId(remoteNoteId)
+
+    /**
+     * Fetch a notification from the database by it's local notification id.
+     */
+    fun getNotificationByLocalId(noteId: Int) =
+            notificationSqlUtils.getNotificationByIdSet(NoteIdSet(noteId, 0, 0))
 
     private fun registerDevice(payload: RegisterDevicePayload) {
         val uuid = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID()
@@ -156,5 +312,176 @@ constructor(
         return UUID.randomUUID().toString().also {
             preferences.edit().putString(WPCOM_PUSH_DEVICE_UUID, it).apply()
         }
+    }
+
+    /**
+     * Determines the optimal route for fetching new notifications and synchronizing the local database.
+     *
+     * No cached notifications in the database: skip fetching hashes and just fetch full notifications
+     * from the remote.
+     *
+     * Cached notifications exist: fetch only the notification id and note_hash from the remote API
+     * and use the smaller, faster results to build a list of notifications to be fetched, and delete
+     * notifications in the database that no longer exist.
+     */
+    private fun synchronizeNotifications() {
+        val cachedCount = notificationSqlUtils.getNotificationsCount()
+
+        if (cachedCount > 0) {
+            // Fetch only the hashes to determine which notifications need to be fully fetched, and which
+            // should be deleted
+            notificationRestClient.fetchNotificationHashes()
+        } else {
+            // Fetch all notifications from the remote
+            notificationRestClient.fetchNotifications(siteStore)
+        }
+    }
+
+    /**
+     * Use the condensed map of newly fetched notification ids and hashes to determine which notifications are missing
+     * from cache, require updates, or should be deleted.
+     */
+    private fun handleFetchNotificationHashesCompleted(payload: FetchNotificationHashesResponsePayload) {
+        if (payload.isError) {
+            // Unable to synchronize notifications with remote. Emit error event.
+            val onNotificationChanged = OnNotificationChanged(0).also {
+                it.error = payload.error
+                it.causeOfChange = FETCH_NOTIFICATIONS
+            }
+            emitChange(onNotificationChanged)
+            return
+        }
+
+        // Create a mutable copy of freshly fetched notifications map
+        val notifsToFetch = payload.hashesMap.toMutableMap()
+
+        // Pull cached notifications from the database and build a map of remoteNoteId to noteHash
+        val existingNotifsByRemoteIdMap = notificationSqlUtils
+                .getNotifications().associateBy { it.remoteNoteId }.toMap()
+
+        // Scrub the newly fetched list against the cached db records. Remove any entries for records that
+        // do not require an update from the remote API
+        existingNotifsByRemoteIdMap.entries.forEach { cached ->
+            // Compare new note_hash values against cached values. Delete from db if
+            // cached notification not present in new list
+            notifsToFetch[cached.key]?.let { newNoteHash ->
+                if (cached.value.noteHash == newNoteHash) {
+                    // Notifications are identical. No update needed, remove from
+                    // list of notifs to fetch
+                    notifsToFetch.remove(cached.key)
+                }
+            } ?: notificationSqlUtils.deleteNotificationByRemoteId(cached.key) // Delete notification from the db
+        }
+
+        // Fetch new and updated notifications from the remote api
+        notificationRestClient.fetchNotifications(siteStore, notifsToFetch.keys.toList())
+    }
+
+    private fun handleFetchNotificationsCompleted(payload: FetchNotificationsResponsePayload) {
+        val onNotificationChanged = if (payload.isError) {
+            // Notification error
+            OnNotificationChanged(0).also { it.error = payload.error }
+        } else {
+            // Save notifications to the database
+            val rowsAffected = payload.notifs.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
+
+            OnNotificationChanged(rowsAffected)
+        }.apply {
+            causeOfChange = FETCH_NOTIFICATIONS
+        }
+
+        emitChange(onNotificationChanged)
+    }
+
+    private fun fetchNotification(payload: FetchNotificationPayload) {
+        notificationRestClient.fetchNotification(payload.remoteNoteId)
+    }
+
+    private fun handleFetchNotificationCompleted(payload: FetchNotificationResponsePayload) {
+        val onNotificationChanged = if (payload.isError) {
+            OnNotificationChanged(0).also { it.error = payload.error }
+        } else {
+            // Update the localSiteId and save to the db
+            val rows = payload.notification?.let {
+                val remoteSiteId = it.getRemoteSiteId() ?: 0
+                it.localSiteId = siteStore.getLocalIdForRemoteSiteId(remoteSiteId)
+                notificationSqlUtils.insertOrUpdateNotification(it)
+            } ?: 0
+            // Fetch inserted/updated local notification id
+            val dbNotification = payload.notification?.let {
+                notificationSqlUtils.getNotificationByRemoteId(it.remoteNoteId)
+            }
+            OnNotificationChanged(rows).apply {
+                dbNotification?.let { changedNotificationLocalIds.add(it.noteId) }
+            }
+        }.apply {
+            causeOfChange = FETCH_NOTIFICATION
+        }
+        emitChange(onNotificationChanged)
+    }
+
+    private fun markNotificationSeen(payload: MarkNotificationsSeenPayload) {
+        notificationRestClient.markNotificationsSeen(payload.lastSeenTime)
+    }
+
+    private fun handleMarkedNotificationSeen(payload: MarkNotificationSeenResponsePayload) {
+        val onNotificationChanged = if (payload.isError) {
+            // Notification error
+            OnNotificationChanged(0).apply {
+                error = payload.error
+                success = false
+            }
+        } else {
+            OnNotificationChanged(0).apply {
+                success = payload.success
+                lastSeenTime = payload.lastSeenTime
+            }
+        }.apply {
+            causeOfChange = MARK_NOTIFICATIONS_SEEN
+        }
+        emitChange(onNotificationChanged)
+    }
+
+    private fun markNotificationsRead(payload: MarkNotificationsReadPayload) {
+        notificationRestClient.markNotificationRead(payload.notifications)
+    }
+
+    private fun handleMarkedNotificationsRead(payload: MarkNotificationsReadResponsePayload) {
+        // Update the notification in the database
+        var rowsAffected = 0
+        if (payload.success) {
+            payload.notifications?.forEach {
+                it.read = true // Just in case it wasn't set by the calling client
+                rowsAffected += notificationSqlUtils.insertOrUpdateNotification(it)
+            }
+        }
+
+        // Create and dispatch result
+        val onNotificationChanged = if (payload.isError) {
+            OnNotificationChanged(rowsAffected).apply {
+                error = payload.error
+                success = false
+            }
+        } else {
+            OnNotificationChanged(rowsAffected).apply {
+                success = true
+            }
+        }.apply {
+            payload.notifications?.forEach {
+                changedNotificationLocalIds.add(it.noteId)
+            }
+            causeOfChange = MARK_NOTIFICATIONS_READ
+        }
+        emitChange(onNotificationChanged)
+    }
+
+    private fun updateNotification(payload: NotificationModel) {
+        // save notification to the db
+        val rowsAffected = notificationSqlUtils.insertOrUpdateNotification(payload)
+        val onNotificationChanged = OnNotificationChanged(rowsAffected).apply {
+            changedNotificationLocalIds.add(payload.noteId)
+            causeOfChange = UPDATE_NOTIFICATION
+        }
+        emitChange(onNotificationChanged)
     }
 }

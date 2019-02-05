@@ -20,6 +20,7 @@ public class WPComEndpointTest {
         assertEquals("/sites/56/posts/", WPCOMREST.sites.site(56).posts.getEndpoint());
         assertEquals("/sites/56/posts/78/", WPCOMREST.sites.site(56).posts.post(78).getEndpoint());
         assertEquals("/sites/56/posts/78/delete/", WPCOMREST.sites.site(56).posts.post(78).delete.getEndpoint());
+        assertEquals("/sites/56/posts/78/restore/", WPCOMREST.sites.site(56).posts.post(78).restore.getEndpoint());
         assertEquals("/sites/56/posts/new/", WPCOMREST.sites.site(56).posts.new_.getEndpoint());
         assertEquals("/sites/56/posts/slug:fluxc/", WPCOMREST.sites.site(56).posts.slug("fluxc").getEndpoint());
 

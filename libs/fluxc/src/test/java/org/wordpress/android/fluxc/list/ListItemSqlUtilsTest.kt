@@ -138,6 +138,32 @@ class ListItemSqlUtilsTest {
     }
 
     @Test
+    fun testDeleteFromListsDoesNotCrashForEmptyRemoteItemIds() {
+        /**
+         * 1. Create a test list
+         * 2. Attempt to delete an empty list of remote item ids from the list
+         * 3. Verify that this case is handled correctly in `deleteItemsFromLists` and it does not crash.
+         *
+         * This test is added due to a bug in WellSql where it doesn't handle empty lists properly while building
+         * `isIn` queries.
+         */
+        val testList = insertTestList(PostListDescriptorForXmlRpcSite(testSite()))
+        listItemSqlUtils.deleteItemsFromLists(listOf(testList.id), emptyList())
+    }
+
+    @Test
+    fun testDeleteFromListsDoesNotCrashForEmptyListOfLists() {
+        /**
+         * 1. Attempt to delete a list of remote item ids from an empty list of lists
+         * 2. Verify that this case is handled correctly in `deleteItemsFromLists` and it does not crash.
+         *
+         * This test is added due to a bug in WellSql where it doesn't handle empty lists properly while building
+         * `isIn` queries.
+         */
+        listItemSqlUtils.deleteItemsFromLists(emptyList(), listOf(1L, 2L))
+    }
+
+    @Test
     fun insertDuplicateListItemModel() {
         val testRemoteItemId = 1245L // value doesn't matter
 
