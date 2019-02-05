@@ -206,4 +206,9 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 
         object NotUsedUiState
     }
+
+    enum class UseCaseMode {
+        BLOCK,
+        VIEW_ALL
+    }
 }

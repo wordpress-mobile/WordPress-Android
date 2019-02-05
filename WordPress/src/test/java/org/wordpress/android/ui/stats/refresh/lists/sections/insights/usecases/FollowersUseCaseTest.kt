@@ -16,6 +16,8 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.model.stats.LoadMode.INITIAL
+import org.wordpress.android.fluxc.model.stats.LoadMode.MORE
 import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -27,6 +29,8 @@ import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -66,7 +70,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 statsUtilsWrapper,
                 resourceProvider,
                 tracker,
-                false
+                BLOCK
         )
         whenever(statsUtilsWrapper.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
@@ -236,12 +240,12 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 statsUtilsWrapper,
                 resourceProvider,
                 tracker,
-                true
+                VIEW_ALL
         )
 
         val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, viewAllPageSize, forced, false)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, viewAllPageSize, forced, INITIAL)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -250,7 +254,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, viewAllPageSize, forced, false)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, viewAllPageSize, forced, INITIAL)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,
@@ -260,7 +264,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        whenever(insightsStore.fetchWpComFollowers(site, viewAllPageSize, true, true)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, viewAllPageSize, true, MORE)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -269,7 +273,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, viewAllPageSize, true, true)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, viewAllPageSize, true, MORE)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,

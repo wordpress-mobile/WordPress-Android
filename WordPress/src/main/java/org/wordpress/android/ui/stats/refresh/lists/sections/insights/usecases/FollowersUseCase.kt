@@ -18,6 +18,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -44,13 +45,13 @@ class FollowersUseCase
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val isViewAllMode: Boolean
+    private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<Pair<FollowersModel, FollowersModel>, Int>(
         FOLLOWERS,
         mainDispatcher,
         0
 ) {
-    private val pageSize = if (isViewAllMode) VIEW_ALL_PAGE_SIZE else BLOCK_PAGE_SIZE
+    private val pageSize = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_PAGE_SIZE
     private lateinit var lastSite: SiteModel
 
     override suspend fun loadCachedData(site: SiteModel) {
@@ -112,7 +113,7 @@ class FollowersUseCase
             }
 
             if (wpComModel.hasMore || emailModel.hasMore) {
-                val buttonText = if (isViewAllMode)
+                val buttonText = if (useCaseMode == VIEW_ALL)
                         R.string.stats_insights_load_more
                     else
                         R.string.stats_insights_view_more
@@ -162,7 +163,7 @@ class FollowersUseCase
     }
 
     private fun onLinkClick() {
-        if (isViewAllMode) {
+        if (useCaseMode == VIEW_ALL) {
             GlobalScope.launch {
                 fetchRemoteData(lastSite, forced = true, loadMode = MORE)
             }
@@ -180,14 +181,14 @@ class FollowersUseCase
         private val resourceProvider: ResourceProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : InsightUseCaseFactory {
-        override fun build(isViewAllMode: Boolean) =
+        override fun build(useCaseMode: UseCaseMode) =
                 FollowersUseCase(
                         mainDispatcher,
                         insightsStore,
                         statsUtilsWrapper,
                         resourceProvider,
                         analyticsTracker,
-                        isViewAllMode
+                        useCaseMode
                 )
     }
 }

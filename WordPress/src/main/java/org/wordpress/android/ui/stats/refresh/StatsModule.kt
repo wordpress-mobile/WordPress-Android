@@ -16,6 +16,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
@@ -73,7 +74,7 @@ class StatsModule {
                 allTimeStatsUseCase,
                 latestPostSummaryUseCase,
                 todayStatsUseCase,
-                followersUseCaseFactory.build(false),
+                followersUseCaseFactory.build(UseCaseMode.BLOCK),
                 commentsUseCase,
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCase,
@@ -129,8 +130,8 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton usecase that represents the Day stats screen.
-     * @param useCasesFactories build the use cases for the DAYS granularity
+     * Provides a singleton FollowersUseCase that represents the Followers View all screen
+     * @param followersUseCaseFactory build the use cases for the Followers
      */
     @Provides
     @Singleton
@@ -140,7 +141,11 @@ class StatsModule {
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         followersUseCaseFactory: FollowersUseCaseFactory
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher, listOf(followersUseCaseFactory.build(true))) {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                listOf(followersUseCaseFactory.build(UseCaseMode.VIEW_ALL))
+        ) {
             listOf(FOLLOWERS)
         }
     }
