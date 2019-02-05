@@ -100,18 +100,4 @@ public class PermissionUtils {
                 permission.WRITE_EXTERNAL_STORAGE
         });
     }
-
-    public static boolean checkLocationPermissions(Activity activity, int requestCode) {
-        return checkAndRequestPermissions(activity, requestCode, new String[]{
-                permission.ACCESS_FINE_LOCATION,
-                permission.ACCESS_COARSE_LOCATION
-        });
-    }
-
-    public static boolean checkLocationPermissions(Fragment fragment, int requestCode) {
-        return checkAndRequestPermissions(fragment, requestCode, new String[]{
-                permission.ACCESS_FINE_LOCATION,
-                permission.ACCESS_COARSE_LOCATION
-        });
-    }
 }
