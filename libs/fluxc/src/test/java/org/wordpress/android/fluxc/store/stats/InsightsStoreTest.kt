@@ -383,7 +383,7 @@ class InsightsStoreTest {
                 TOP_COMMENTS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(insightsRestClient.fetchTopComments(site, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<CommentsModel>()
@@ -412,7 +412,7 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<CommentsResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(insightsRestClient.fetchTopComments(site, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchComments(site, PAGE_SIZE, forced)
 
