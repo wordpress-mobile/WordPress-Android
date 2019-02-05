@@ -260,6 +260,9 @@ class QuickStartUtils {
         @JvmStatic
         fun getQuickStartListSkippedTracker(task: QuickStartTask): Stat {
             return when (task) {
+                // Skipping create site task should never happen as of Quick Start v2.  The task is automatically set as
+                // completed when Quick Start v2 begins since it is initiated when a new site is created.  The task case
+                // is included here for completeness.
                 CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
                 VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_SKIPPED
                 CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_SKIPPED
