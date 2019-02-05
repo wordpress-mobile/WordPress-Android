@@ -50,7 +50,6 @@ Language: sr_RS
     <string name="stats_insights_best_ever">Најбољи погледи икада</string>
     <string name="stats_insights_most_popular_hour">Најпопуларнији час</string>
     <string name="stats_insights_most_popular_day">Најпопуларнији дан</string>
-    <string name="stats_insights_popular">Најпопуларнији дан и час</string>
     <string name="stats_insights_today">Данашње статистике</string>
     <string name="stats_insights_all_time">Чланци, погледи и посетиоци целог времена</string>
     <string name="stats_insights">Увиди</string>

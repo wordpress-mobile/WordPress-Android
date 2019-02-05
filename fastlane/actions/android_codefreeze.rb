@@ -62,7 +62,7 @@ module Fastlane
         if (params[:update_release_branch_version])
           Action.sh("./tools/update-release-names.sh #{current_release_version_code} #{current_release_version} #{new_beta_version} #{new_alpha_version}")
         else
-          Action.sh("./tools/update-name-alpha-beta.sh #{current_release_version_code} #{new_beta_version} #{new_alpha_version}")
+          Action.sh("./tools/update-name-alpha-beta.sh #{new_beta_version_code} #{new_beta_version} #{new_alpha_version}")
         end 
 
         current_release_version

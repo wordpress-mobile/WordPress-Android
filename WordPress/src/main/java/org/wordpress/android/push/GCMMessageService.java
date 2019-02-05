@@ -55,6 +55,9 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
+        .IS_TAPPED_ON_NOTIFICATION;
+
 public class GCMMessageService extends FirebaseMessagingService {
     private static final ArrayMap<Integer, Bundle> ACTIVE_NOTIFICATIONS_MAP = new ArrayMap<>();
     private static final NotificationHelper NOTIFICATION_HELPER = new NotificationHelper();
@@ -753,6 +756,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             resultIntent.setAction("android.intent.action.MAIN");
             resultIntent.addCategory("android.intent.category.LAUNCHER");
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
+            resultIntent.putExtra(IS_TAPPED_ON_NOTIFICATION, true);
 
             showNotificationForBuilder(builder, context, resultIntent, pushId, notifyUser);
         }

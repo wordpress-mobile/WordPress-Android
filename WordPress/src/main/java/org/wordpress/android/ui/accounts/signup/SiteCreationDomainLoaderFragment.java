@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
+import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 
@@ -21,6 +22,7 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
     public static final String TAG = "site_creation_domain_loader_fragment_tag";
 
     private static final String ARG_USERNAME = "ARG_USERNAME";
+    private static final String ARG_SITE_CATEGORY = "ARG_SITE_CATEGORY";
 
     public enum DomainUpdateStep {
         UPDATING,
@@ -61,10 +63,11 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
         EventBus.getDefault().postSticky(event);
     }
 
-    public static SiteCreationDomainLoaderFragment newInstance(String username) {
+    public static SiteCreationDomainLoaderFragment newInstance(String username, String siteCategory) {
         SiteCreationDomainLoaderFragment fragment = new SiteCreationDomainLoaderFragment();
         Bundle args = new Bundle();
         args.putString(ARG_USERNAME, username);
+        args.putString(ARG_SITE_CATEGORY, siteCategory);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,9 +77,14 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
+        String siteCategory = "";
+        if (getArguments() != null) {
+            siteCategory = getArguments().getString(ARG_SITE_CATEGORY);
+        }
+
         mDispatcher.register(this);
 
-        load(getArguments().getString(ARG_USERNAME));
+        load(getArguments().getString(ARG_USERNAME), siteCategory);
     }
 
     @Override
@@ -85,13 +93,15 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
         mDispatcher.unregister(this);
     }
 
-    public void load(String keywords) {
+    public void load(String keywords, String siteCategory) {
         // notify if no connectivity but continue anyway
         NetworkUtils.checkConnection(getActivity());
 
         postUpdate(new DomainSuggestionEvent(DomainUpdateStep.UPDATING, keywords, null));
 
-        SuggestDomainsPayload payload = new SuggestDomainsPayload(keywords, true, true, false, 20);
+        boolean isBlog = siteCategory.equals(ThemeStore.MOBILE_FRIENDLY_CATEGORY_BLOG);
+
+        SuggestDomainsPayload payload = new SuggestDomainsPayload(keywords, true, true, isBlog, 20, isBlog);
         mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
     }
 

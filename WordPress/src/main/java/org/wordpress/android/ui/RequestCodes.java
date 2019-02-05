@@ -41,7 +41,9 @@ public class RequestCodes {
     public static final int REQUEST_JETPACK = 3000;
     public static final int JETPACK_LOGIN = 3100;
 
-     // QuickStart
-     public static final int QUICK_START_REMINDER_RECEIVER = 4000;
-     public static final int QUICK_START_REMINDER_NOTIFICATION = 4001;
+    // QuickStart
+    public static final int QUICK_START_REMINDER_RECEIVER = 4000;
+    public static final int QUICK_START_REMINDER_NOTIFICATION = 4001;
+
+    public static final int GIPHY_PICKER = 3200;
 }

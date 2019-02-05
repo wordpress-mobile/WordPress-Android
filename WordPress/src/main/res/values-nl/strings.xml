@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-11 13:54:06+0000
+Translation-Revision-Date: 2019-01-22 08:54:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="local_changes_discarding_no_connection">Er is een verbinding vereist om deze actie uit te voeren. Controleer je verbinding en probeer het nogmaals.</string>
+    <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
+    <string name="preference_strip_image_location">Locatie van media verwijderen</string>
+    <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
+    <string name="giphy_powered_by_giphy">Mogelijk gemaakt door GIPHY</string>
+    <string name="giphy_picker_search_hint">Zoek op Giphy</string>
+    <string name="photo_picker_giphy">Kies van Giphy</string>
+    <string name="stats_author_label">Auteur</string>
+    <string name="stats_authors">Auteurs</string>
+    <string name="stats_search_terms_label">Zoekterm</string>
+    <string name="stats_search_terms">Zoektermen</string>
+    <string name="stats_videos_title_label">Titel</string>
+    <string name="stats_country_label">Land</string>
+    <string name="stats_countries">Landen</string>
+    <string name="stats_clicks_label">Kliks</string>
+    <string name="stats_clicks_link_label">Link</string>
+    <string name="stats_clicks">Kliks</string>
+    <string name="stats_posts_and_pages">Berichten en pagina\'s</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+    <string name="stats_insights_path">Path</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_tags_and_categories">Tags en categorieën</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Dag/uur</string>
+    <string name="stats_publicize_followers_label">Volgers</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_tags_and_categories_title_label">Titel</string>
+    <string name="stats_posts_and_pages_title_label">Titel</string>
+    <string name="stats_comments_label">Reacties</string>
+    <string name="stats_comments_title_label">Titel</string>
+    <string name="stats_comments_author_label">Auteur</string>
+    <string name="stats_comments_posts_and_pages">Berichten en pagina\'s</string>
+    <string name="stats_comments_authors">Auteurs</string>
+    <string name="stats_follower_since_label">Sinds</string>
+    <string name="stats_follower_label">Volger</string>
+    <string name="stats_followers_count_message">Totaal %1$s volgers: %2$s</string>
+    <string name="stats_followers_email">E-mail</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_no_data_yet">Nog geen gegevens</string>
     <string name="menu_debug">Debug-menu</string>
     <string name="preference_experimental">*EXPERIMENTEEL*</string>
     <string name="site_settings_enable_gutenberg_summary">Dit is nog een experimentele versie van Gutenberg</string>
@@ -30,7 +72,6 @@ Language: nl
     <string name="dialog_gutenberg_compatibility_message">We werken aan een gloednieuwe WordPress-editor. Je kunt dit bericht nog steeds bewerken, maar we raden je aan een voorbeeld te bekijken voordat je het publiceert.</string>
     <string name="dialog_gutenberg_compatibility_title">Voordat je doorgaat</string>
     <string name="media_space_used">%1$s gebruikt</string>
-    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Voer een WordPress.com-site of een aan Jetpack gekoppelde zelf-gehoste WordPress-site in</string>
     <string name="history_loading_revision">Bezig met laden revisie</string>
     <string name="history_loaded_revision">Revisie geladen</string>
@@ -496,10 +537,17 @@ Language: nl
     <string name="username_changer_title">Verander gebruikersnaam</string>
     <string name="username_changer_action">Opslaan</string>
     <string name="content_description_add_avatar">Voeg avatar toe </string>
+    <string name="signup_with_google_button">Meld je aan met Google</string>
+    <string name="signup_with_email_button">Meld je aan met e-mail</string>
     <string name="signup_user_exists">E-mailadres bestaat al op WordPress.com\nDoorgaan met inloggen. </string>
     <string name="signup_magic_link_progress">E-mail versturen</string>
+    <string name="signup_magic_link_error_button_positive">Probeer opnieuw</string>
     <string name="signup_magic_link_error_button_negative">Sluit</string>
+    <string name="signup_epilogue_hint_username">Gebruikersnaam</string>
     <string name="signup_epilogue_hint_password">Wachtwoord (optioneel)</string>
+    <string name="signup_epilogue_hint_display">Weergavenaam</string>
+    <string name="signup_epilogue_heading">Nieuw account</string>
+    <string name="signup_epilogue_error_button_positive">Probeer opnieuw</string>
     <string name="plugin_needs_update">Update nodig </string>
     <string name="plugin_caption_search">Zoek plugins</string>
     <string name="plugin_caption_new">Nieuw</string>
@@ -511,6 +559,8 @@ Language: nl
     <string name="plugin_install">Installeer</string>
     <string name="my_site_add_new_site">Voeg nieuwe site toe</string>
     <string name="my_site_create_new_site">Creëer een nieuwe site voor jouw bedrijf, magazine, persoonlijke blog of verbind een bestaande WordPress installatie. </string>
+    <string name="site_settings_lazy_load_images">\"Lazy-load\" afbeeldingen</string>
+    <string name="site_settings_speed_up_your_site">Versnel je site</string>
     <string name="stats_jetpack_connection_setup">Jetpack installeren</string>
     <string name="plugin_chevron_icon_content_description">Tekst in-/uitschakelen</string>
     <string name="plugin_info_your_version">Jouw WordPress versie</string>
@@ -523,6 +573,7 @@ Language: nl
     <string name="plugin_two_stars">2 sterren</string>
     <string name="plugin_one_stars">1 ster</string>
     <string name="plugin_empty_text">Geen opgegeven</string>
+    <string name="plugin_num_downloads">%s downloads</string>
     <string name="plugin_num_ratings">%s beoordelingen</string>
     <string name="plugin_read_reviews">Lees beoordelingen</string>
     <string name="plugin_faq">Veelgestelde vragen</string>
@@ -1048,6 +1099,7 @@ Language: nl
     <string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
     <string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
     <string name="reader_empty_search_description">Geen resultaten gevonden voor %s in je taal.</string>
+    <string name="reader_hint_post_search">Zoek op WordPress</string>
     <string name="reader_title_related_post_detail">Gerelateerd bericht</string>
     <string name="preview_screen_links_disabled">Links uitgeschakeld op voorbeeldscherm</string>
     <string name="draft_explainer">Dit bericht is een concept dat niet is gepubliceerd</string>
@@ -1146,6 +1198,7 @@ Language: nl
     <string name="detail_approve_manual">Vereist handmatige goedkeuring voor de reacties van iedereen.</string>
     <string name="days_quantity_other">%d dagen</string>
     <string name="days_quantity_one">1 dag</string>
+    <string name="web_address">Webadres</string>
     <string name="primary_site">Primaire site</string>
     <string name="pending_email_change_snackbar">Klik op de link in de verificatiemail die verzonden is naar %1$s om je nieuwe adres te bevestigen</string>
     <string name="editor_toast_uploading_please_wait">Je bent media aan het uploaden. Wacht totdat dit is afgerond.</string>
@@ -1381,7 +1434,7 @@ Language: nl
     <string name="stats_insights_most_popular_hour">De meest populaire tijd.</string>
     <string name="stats_insights_most_popular_day">De meest populaire dag.</string>
     <string name="stats_insights_today">De statistieken van vandaag.</string>
-    <string name="stats_insights_popular">De meest populaire dag en tijd.</string>
+    <string name="stats_insights_popular">Meest populaire dag en uur</string>
     <string name="stats_insights_all_time">Alle berichten, weergaven en bezoekers</string>
     <string name="stats_insights">Inzichten</string>
     <string name="stats_sign_in_jetpack_different_com_account">Om de statistieken te bekijken moet je je met je WordPress.com account aanmelden en deze verbinden met Jetpack.</string>
@@ -1437,6 +1490,7 @@ Language: nl
     <string name="error_copy_to_clipboard">Er is een fout opgetreden tijdens het kopiëren van de tekst naar het klembord</string>
     <string name="stats_recent_weeks">Laatste weken</string>
     <string name="stats_average_per_day">Gemiddelde per dag</string>
+    <string name="reader_empty_posts_in_blog">Deze site is leeg</string>
     <string name="reader_label_new_posts">Nieuwe berichten</string>
     <string name="logs_copied_to_clipboard">Applicatielogs zijn gekopieerd naar het klembord</string>
     <string name="stats_period">Periode</string>
@@ -1526,13 +1580,17 @@ Language: nl
     <string name="reader_empty_posts_in_tag">Geen berichten met deze tag</string>
     <string name="reader_empty_comments">Nog geen reacties</string>
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
+    <string name="reader_menu_block_blog">Blokkeer deze site</string>
     <string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
     <string name="contact_us">Contact</string>
     <string name="schedule_verb">Inplannen</string>
     <string name="update_verb">Bijwerken</string>
+    <string name="reader_toast_err_already_follow_blog">Je volgt deze site al</string>
+    <string name="reader_label_followed_blog">Site gevolgd</string>
     <string name="reader_hint_add_tag_or_url">Voer een tag of URL in om te volgen</string>
     <string name="reader_page_followed_blogs">Gevolgde sites</string>
     <string name="reader_page_followed_tags">Gevolgde tags</string>
+    <string name="reader_title_subs">Tags &amp; sites</string>
     <string name="reader_title_tag_preview">Reader-tag</string>
     <string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
     <string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>

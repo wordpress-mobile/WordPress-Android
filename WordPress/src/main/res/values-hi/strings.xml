@@ -184,7 +184,6 @@ Language: hi_IN
     <string name="ignore">ध्यान न दें</string>
     <string name="stats_insights_most_popular_hour">सबसे लोकप्रिय घण्टा</string>
     <string name="stats_insights_most_popular_day">सबसे लोकप्रिय दिन</string>
-    <string name="stats_insights_popular">सबसे लोकप्रिय दिन और घण्टा</string>
     <string name="stats_insights_today">आज के आँकड़े</string>
     <string name="account_settings">अकाउंट सेटिंग्स</string>
     <string name="me_btn_support">मदद और सहायता</string>
