@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
@@ -80,11 +82,13 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
                 setCompleteViewImage(R.drawable.img_illustration_site_brush_191dp);
+                AnalyticsTracker.track(Stat.QUICK_START_TYPE_CUSTOMIZE_VIEWED);
                 break;
             case GROW:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, GROW));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, GROW));
                 setCompleteViewImage(R.drawable.img_illustration_site_about_182dp);
+                AnalyticsTracker.track(Stat.QUICK_START_TYPE_GROW_VIEWED);
                 break;
             case UNKNOWN:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
