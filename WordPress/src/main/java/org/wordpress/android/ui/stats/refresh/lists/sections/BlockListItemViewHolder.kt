@@ -39,7 +39,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -94,16 +93,6 @@ sealed class BlockListItemViewHolder(
     ) {
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(item: Information) {
-            text.text = item.text
-        }
-    }
-
-    class BackgroundInformationViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-            parent,
-            R.layout.stats_block_background_information_item
-    ) {
-        private val text = itemView.findViewById<TextView>(R.id.text)
-        fun bind(item: BackgroundInformation) {
             text.text = item.text
         }
     }
