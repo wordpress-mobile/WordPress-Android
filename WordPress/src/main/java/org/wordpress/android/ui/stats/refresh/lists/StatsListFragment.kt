@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.FragmentActivity
@@ -24,29 +23,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
-import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
-import org.wordpress.android.ui.stats.StatsUtils
-import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPublicizeStats
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReferrers
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewSearchTerms
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel
@@ -55,7 +33,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.YearsListV
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
@@ -152,12 +129,12 @@ class StatsListFragment : DaggerFragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
-        setupObservers(activity, site)
-
         this.navigator = StatsNavigator(site, activity, statsDateFormatter)
+
+        setupObservers()
     }
 
-    private fun setupObservers(activity: FragmentActivity, site: SiteModel) {
+    private fun setupObservers() {
         viewModel.data.observe(this, Observer {
             if (it != null) {
                 updateInsights(it)
