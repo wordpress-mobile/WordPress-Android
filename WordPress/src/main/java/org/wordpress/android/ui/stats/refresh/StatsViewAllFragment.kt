@@ -18,11 +18,6 @@ import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
@@ -165,14 +160,5 @@ class StatsViewAllFragment : DaggerFragment() {
         val recyclerViewState = layoutManager?.onSaveInstanceState()
         adapter.update(statsState)
         layoutManager?.onRestoreInstanceState(recyclerViewState)
-    }
-}
-
-fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
-    return when (this) {
-        DAYS -> StatsTimeframe.DAY
-        WEEKS -> StatsTimeframe.WEEK
-        MONTHS -> StatsTimeframe.MONTH
-        YEARS -> StatsTimeframe.YEAR
     }
 }
