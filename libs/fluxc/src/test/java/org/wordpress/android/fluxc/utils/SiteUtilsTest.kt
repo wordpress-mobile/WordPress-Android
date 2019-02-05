@@ -83,7 +83,6 @@ class SiteUtilsTest {
         }
     }
 
-
     @Test
     fun testGetFormattedDateForUtcSite() {
         val siteModel = SiteModel()
@@ -99,7 +98,6 @@ class SiteUtilsTest {
             val currentTimeUtc = DateTimeUtils.iso8601UTCFromDate(Date())
             assertEquals(currentTimeUtc, formattedDate.replace("Z", "+00:00"))
         }
-
 
         siteModel.timezone = "0"
         val dateString = "2019-01-31"
