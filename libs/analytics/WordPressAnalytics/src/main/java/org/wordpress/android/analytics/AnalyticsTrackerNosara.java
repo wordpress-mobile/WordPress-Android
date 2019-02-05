@@ -296,6 +296,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TYPE_GROW_DISMISSED:
                 predefinedEventProperties.put("type", "grow");
                 break;
+            case QUICK_START_LIST_CUSTOMIZE_COLLAPSED:
+                predefinedEventProperties.put("type", "customize");
+                break;
+            case QUICK_START_LIST_GROW_COLLAPSED:
+                predefinedEventProperties.put("type", "grow");
+                break;
             case QUICK_START_LIST_CUSTOMIZE_EXPANDED:
                 predefinedEventProperties.put("type", "customize");
                 break;
@@ -1407,6 +1413,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TYPE_CUSTOMIZE_DISMISSED:
             case QUICK_START_TYPE_GROW_DISMISSED:
                 return "quick_start_type_dismissed";
+            case QUICK_START_LIST_CUSTOMIZE_COLLAPSED:
+            case QUICK_START_LIST_GROW_COLLAPSED:
+                return "quick_start_list_collapsed";
             case QUICK_START_LIST_CUSTOMIZE_EXPANDED:
             case QUICK_START_LIST_GROW_EXPANDED:
                 return "quick_start_list_expanded";
