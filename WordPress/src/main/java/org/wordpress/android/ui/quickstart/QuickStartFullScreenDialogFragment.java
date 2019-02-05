@@ -150,6 +150,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
 
     @Override
     public void onTaskTapped(QuickStartTask task) {
+        AnalyticsTracker.track(QuickStartUtils.getQuickStartListTappedTracker(task));
         Bundle result = new Bundle();
         result.putSerializable(RESULT_TASK, task);
         mDialogController.confirm(result);

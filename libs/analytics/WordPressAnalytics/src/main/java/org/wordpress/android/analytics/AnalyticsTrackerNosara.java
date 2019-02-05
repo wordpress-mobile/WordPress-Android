@@ -359,6 +359,18 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
                 predefinedEventProperties.put("task_name", "follow_site");
                 break;
+            case QUICK_START_LIST_UPLOAD_ICON_TAPPED:
+                predefinedEventProperties.put("task_name", "upload_icon");
+                break;
+            case QUICK_START_LIST_CREATE_PAGE_TAPPED:
+                predefinedEventProperties.put("task_name", "create_page");
+                break;
+            case QUICK_START_LIST_CHECK_STATS_TAPPED:
+                predefinedEventProperties.put("task_name", "check_stats");
+                break;
+            case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
+                predefinedEventProperties.put("task_name", "explore_plans");
+                break;
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "create_site");
                 break;
@@ -1476,6 +1488,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_ADD_SOCIAL_TAPPED:
             case QUICK_START_LIST_PUBLISH_POST_TAPPED:
             case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
+            case QUICK_START_LIST_UPLOAD_ICON_TAPPED:
+            case QUICK_START_LIST_CREATE_PAGE_TAPPED:
+            case QUICK_START_LIST_CHECK_STATS_TAPPED:
+            case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
                 return "quick_start_list_item_tapped";
             case QUICK_START_LIST_SKIP_ALL_TAPPED:
                 return "quick_start_list_all_tasks_skipped";
