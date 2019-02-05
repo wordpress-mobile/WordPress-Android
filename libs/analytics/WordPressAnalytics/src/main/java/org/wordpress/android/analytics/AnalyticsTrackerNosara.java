@@ -1479,8 +1479,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TYPE_CUSTOMIZE_VIEWED:
             case QUICK_START_TYPE_GROW_VIEWED:
                 return "quick_start_list_viewed";
-            case QUICK_START_LIST_COMPLETED_VIEWED:
-                return "quick_start_list_completed_viewed";
             case QUICK_START_LIST_CREATE_SITE_SKIPPED:
             case QUICK_START_LIST_VIEW_SITE_SKIPPED:
             case QUICK_START_LIST_BROWSE_THEMES_SKIPPED:
@@ -1505,8 +1503,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_CHECK_STATS_TAPPED:
             case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
                 return "quick_start_list_item_tapped";
-            case QUICK_START_LIST_SKIP_ALL_TAPPED:
-                return "quick_start_list_all_tasks_skipped";
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
             case QUICK_START_VIEW_SITE_TASK_COMPLETED:
             case QUICK_START_BROWSE_THEMES_TASK_COMPLETED:
