@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.store.stats.time
 
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
@@ -10,9 +10,10 @@ import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class PostAndPageViewsStore
@@ -25,21 +26,27 @@ class PostAndPageViewsStore
     suspend fun fetchPostAndPageViews(
         site: SiteModel,
         pageSize: Int,
-        period: StatsGranularity,
+        granularity: StatsGranularity,
+        date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchPostAndPageViews(site, period, pageSize + 1, forced)
+        val payload = restClient.fetchPostAndPageViews(site, granularity, date, pageSize + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
-                sqlUtils.insert(site, payload.response, period)
+                sqlUtils.insert(site, payload.response, granularity, date)
                 OnStatsFetched(timeStatsMapper.map(payload.response, pageSize))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
-    fun getPostAndPageViews(site: SiteModel, period: StatsGranularity, pageSize: Int): PostAndPageViewsModel? {
-        return sqlUtils.selectPostAndPageViews(site, period)?.let { timeStatsMapper.map(it, pageSize) }
+    fun getPostAndPageViews(
+        site: SiteModel,
+        granularity: StatsGranularity,
+        date: Date,
+        pageSize: Int
+    ): PostAndPageViewsModel? {
+        return sqlUtils.selectPostAndPageViews(site, granularity, date)?.let { timeStatsMapper.map(it, pageSize) }
     }
 }

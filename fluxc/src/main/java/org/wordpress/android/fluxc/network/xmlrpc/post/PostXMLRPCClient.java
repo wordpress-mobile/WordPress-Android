@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.PostAction;
+import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
@@ -92,26 +93,26 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         }
                     }
                 }, new BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // Possible non-generic errors:
-                        // 404 - "Invalid post ID."
-                        FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
-                        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
-                        // Convert GenericErrorType to PostErrorType where applicable
-                        PostError postError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
-                        }
-                        payload.error = postError;
-                        payload.origin = origin;
-                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
-                    }
-                });
+            @Override
+            public void onErrorResponse(@NonNull BaseNetworkError error) {
+                // Possible non-generic errors:
+                // 404 - "Invalid post ID."
+                FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
+                // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
+                // Convert GenericErrorType to PostErrorType where applicable
+                PostError postError;
+                switch (error.type) {
+                    case AUTHORIZATION_REQUIRED:
+                        postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                        break;
+                    default:
+                        postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                }
+                payload.error = postError;
+                payload.origin = origin;
+                mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
+            }
+        });
 
         add(request);
     }
@@ -213,10 +214,14 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void pushPost(final PostModel post, final SiteModel site) {
-        if (TextUtils.isEmpty(post.getStatus())) {
-            post.setStatus(PostStatus.PUBLISHED.toString());
-        }
+        pushPostInternal(post, site, false);
+    }
 
+    public void restorePost(final PostModel post, final SiteModel site) {
+        pushPostInternal(post, site, true);
+    }
+
+    private void pushPostInternal(final PostModel post, final SiteModel site, final boolean isRestoringPost) {
         Map<String, Object> contentStruct = postModelToContentStruct(post);
 
         if (post.isLocalDraft()) {
@@ -247,7 +252,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         post.setIsLocallyChanged(false);
 
                         RemotePostPayload payload = new RemotePostPayload(post, site);
-                        mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
+
+                        Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload)
+                                : UploadActionBuilder.newPushedPostAction(payload);
+                        mDispatcher.dispatch(resultAction);
                     }
                 },
                 new BaseErrorListener() {
@@ -270,7 +278,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                                 postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
                         }
                         payload.error = postError;
-                        mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
+
+                        Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload)
+                                : UploadActionBuilder.newPushedPostAction(payload);
+                        mDispatcher.dispatch(resultAction);
                     }
                 });
 
@@ -378,6 +389,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified_gmt");
         String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
         post.setLastModified(lastModifiedAsIso8601);
+        post.setRemoteLastModified(lastModifiedAsIso8601);
 
         post.setContent(MapUtils.getMapStr(postMap, "post_content"));
         post.setLink(MapUtils.getMapStr(postMap, "link"));

@@ -36,10 +36,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.vertical.VerticalRestClient;
 import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
@@ -54,8 +55,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import kotlin.coroutines.experimental.CoroutineContext;
-import kotlinx.coroutines.experimental.Dispatchers;
+import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.Dispatchers;
 import okhttp3.OkHttpClient;
 
 @Module
@@ -191,22 +192,12 @@ public class ReleaseNetworkModule {
     @Singleton
     @Provides
     public InsightsRestClient provideInsightsRestClient(Context appContext, Dispatcher dispatcher,
-                                                     @Named("regular") RequestQueue requestQueue,
-                                                     AccessToken token, UserAgent userAgent,
-                                                     WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+                                                        @Named("regular") RequestQueue requestQueue,
+                                                        AccessToken token, UserAgent userAgent,
+                                                        WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                        StatsUtils statsUtils) {
         return new InsightsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
-                userAgent);
-    }
-
-    @Singleton
-    @Provides
-    public PostAndPageViewsRestClient providePostAndPageViewsRestClient(
-            Context appContext, Dispatcher dispatcher,
-            @Named("regular") RequestQueue requestQueue,
-            AccessToken token, UserAgent userAgent,
-            WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new PostAndPageViewsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
-                userAgent);
+                userAgent, statsUtils);
     }
 
     @Singleton
@@ -222,7 +213,7 @@ public class ReleaseNetworkModule {
     @Singleton
     @Provides
     public CoroutineContext provideCoroutineContext() {
-        return Dispatchers.Default;
+        return Dispatchers.getDefault();
     }
 
     @Singleton
@@ -321,6 +312,16 @@ public class ReleaseNetworkModule {
                                                      @Named("regular") RequestQueue requestQueue,
                                                      AccessToken token, UserAgent userAgent) {
         return new ReaderRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public VerticalRestClient provideVerticalRestClient(Context appContext, Dispatcher dispatcher,
+                                                        @Named("regular") RequestQueue requestQueue,
+                                                        AccessToken token, UserAgent userAgent,
+                                                        WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new VerticalRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent);
     }
 
     @Singleton

@@ -22,6 +22,11 @@
 /me/social-login/connect/
 /me/username/
 
+/notifications/
+/notifications/$note_id
+/notifications/seen/
+/notifications/read/
+
 /read/feed/
 /read/feed/$feed_url_or_id#long,String
 /read/following/mine
@@ -71,6 +76,7 @@
 /sites/$site/posts/
 /sites/$site/posts/$post_ID/
 /sites/$site/posts/$post_ID/delete/
+/sites/$site/posts/$post_ID/restore/
 /sites/$site/posts/$post_ID/replies/new
 /sites/$site/posts/new/
 /sites/$site/posts/slug:$post_slug#String/

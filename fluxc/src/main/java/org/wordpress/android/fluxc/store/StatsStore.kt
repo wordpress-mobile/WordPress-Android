@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.CENSORED
@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.CLICKS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.COUNTRIES
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.DATE
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAGES
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.REFERRERS
@@ -37,7 +38,7 @@ import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.SEARCH_TERMS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.VIDEOS
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class StatsStore
@@ -58,6 +59,7 @@ class StatsStore
     suspend fun getTimeStatsTypes(): List<TimeStatsTypes> = withContext(coroutineContext) {
         return@withContext listOf(
                 OVERVIEW,
+                DATE,
                 POSTS_AND_PAGES,
                 REFERRERS,
                 CLICKS,
@@ -86,6 +88,7 @@ class StatsStore
 
     enum class TimeStatsTypes : StatsTypes {
         OVERVIEW,
+        DATE,
         POSTS_AND_PAGES,
         REFERRERS,
         CLICKS,

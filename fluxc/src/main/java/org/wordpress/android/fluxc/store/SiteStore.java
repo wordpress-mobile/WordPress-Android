@@ -67,18 +67,32 @@ public class SiteStore extends Store {
         public String url;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class NewSitePayload extends Payload<BaseNetworkError> {
-        public String siteName;
-        public String siteTitle;
-        public String language;
-        public SiteVisibility visibility;
-        public boolean dryRun;
+        @NonNull public String siteName;
+        @NonNull public String siteTitle;
+        @NonNull public String language;
+        @NonNull public SiteVisibility visibility;
+        @Nullable public String verticalId;
+        @Nullable public Long segmentId;
+        @Nullable public String tagLine;
+        @NonNull public boolean dryRun;
+
         public NewSitePayload(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
-                              SiteVisibility visibility, boolean dryRun) {
+                              @NonNull SiteVisibility visibility, boolean dryRun) {
+            this(siteName, siteTitle, language, visibility, null, null, null, dryRun);
+        }
+
+        public NewSitePayload(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
+                              @NonNull SiteVisibility visibility, @Nullable String verticalId, @Nullable Long segmentId,
+                              @Nullable String tagLine, boolean dryRun) {
             this.siteName = siteName;
             this.siteTitle = siteTitle;
             this.language = language;
             this.visibility = visibility;
+            this.verticalId = verticalId;
+            this.segmentId = segmentId;
+            this.tagLine = tagLine;
             this.dryRun = dryRun;
         }
     }
@@ -122,13 +136,15 @@ public class SiteStore extends Store {
         public boolean includeWordpressCom;
         public boolean includeDotBlogSubdomain;
         public int quantity;
+        public boolean includeVendorDot;
         public SuggestDomainsPayload(@NonNull String query, boolean onlyWordpressCom, boolean includeWordpressCom,
-                                     boolean includeDotBlogSubdomain, int quantity) {
+                                     boolean includeDotBlogSubdomain, int quantity, boolean includeVendorDot) {
             this.query = query;
             this.onlyWordpressCom = onlyWordpressCom;
             this.includeWordpressCom = includeWordpressCom;
             this.includeDotBlogSubdomain = includeDotBlogSubdomain;
             this.quantity = quantity;
+            this.includeVendorDot = includeVendorDot;
         }
     }
 
@@ -141,7 +157,7 @@ public class SiteStore extends Store {
             this.suggestions = new ArrayList<>();
         }
 
-        public SuggestDomainsResponsePayload(@NonNull String query, ArrayList<DomainSuggestionResponse> suggestions) {
+        public SuggestDomainsResponsePayload(@NonNull String query, List<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
         }
@@ -686,9 +702,11 @@ public class SiteStore extends Store {
     }
 
     public enum SuggestDomainErrorType {
+        EMPTY_RESULTS,
         EMPTY_QUERY,
         INVALID_MINIMUM_QUANTITY,
         INVALID_MAXIMUM_QUANTITY,
+        INVALID_QUERY,
         GENERIC_ERROR;
 
         public static SuggestDomainErrorType fromString(final String string) {
@@ -1470,7 +1488,7 @@ public class SiteStore extends Store {
 
     private void createNewSite(NewSitePayload payload) {
         mSiteRestClient.newSite(payload.siteName, payload.siteTitle, payload.language, payload.visibility,
-                payload.dryRun);
+                payload.verticalId, payload.segmentId, payload.tagLine, payload.dryRun);
     }
 
     private void handleCreateNewSiteCompleted(NewSiteResponsePayload payload) {
@@ -1560,7 +1578,7 @@ public class SiteStore extends Store {
 
     private void suggestDomains(SuggestDomainsPayload payload) {
         mSiteRestClient.suggestDomains(payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
-                payload.includeDotBlogSubdomain, payload.quantity);
+                payload.includeDotBlogSubdomain, payload.quantity, payload.includeVendorDot);
     }
 
     private void handleSuggestedDomains(SuggestDomainsResponsePayload payload) {

@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.network.rest;
 
-import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -12,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import org.jetbrains.annotations.Nullable;
 import org.wordpress.android.fluxc.network.BaseRequest;
 
 import java.io.UnsupportedEncodingException;
@@ -34,8 +33,10 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     protected GsonRequest(int method, Map<String, String> params, Map<String, Object> body, String url, Class<T> clazz,
                        Type type, Listener<T> listener, BaseErrorListener errorListener) {
         super(method, url, errorListener);
-        // HTTP RFC requires a body (even empty) for all POST requests.
-        if (method == Method.POST && body == null) {
+        // HTTP RFC requires a body (even empty) for all POST requests. Volley will default to using the params
+        // for the body so only do this if params is null since this behavior is desirable for form-encoded
+        // POST requests.
+        if (method == Method.POST && body == null && (params == null || params.size() == 0)) {
             body = new HashMap<>();
         }
 
@@ -54,7 +55,11 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
 
     @Override
     public String getBodyContentType() {
-        return PROTOCOL_CONTENT_TYPE;
+        if (mBody == null) {
+            return super.getBodyContentType();
+        } else {
+            return PROTOCOL_CONTENT_TYPE;
+        }
     }
 
     @Override
@@ -71,11 +76,15 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
         return mGson.toJson(mBody).getBytes(Charset.forName("UTF-8"));
     }
 
+    @Nullable
+    protected Map<String, Object> getBodyAsMap() {
+        return mBody;
+    }
+
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            Log.e("response", "Response: " + json);
             T res;
             if (mClass == null) {
                 res = mGson.fromJson(json, mType);

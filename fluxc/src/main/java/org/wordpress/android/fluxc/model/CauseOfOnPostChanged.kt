@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.model
 
 sealed class CauseOfOnPostChanged {
     class DeletePost(val localPostId: Int, val remotePostId: Long) : CauseOfOnPostChanged()
+    class RestorePost(val localPostId: Int, val remotePostId: Long) : CauseOfOnPostChanged()
     object FetchPages : CauseOfOnPostChanged()
     object FetchPosts : CauseOfOnPostChanged()
     object RemoveAllPosts : CauseOfOnPostChanged()

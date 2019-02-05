@@ -8,6 +8,8 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 
+import java.util.Locale;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -22,5 +24,11 @@ public class ReleaseToolsModule {
                                                     AccessToken accessToken, HTTPAuthManager httpAuthManager,
                                                     UserAgent userAgent) {
         return new FluxCImageLoader(queue, imageCache, accessToken, httpAuthManager, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public Locale provideLocale() {
+        return Locale.getDefault();
     }
 }
