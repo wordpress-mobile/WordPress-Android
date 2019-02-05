@@ -1,6 +1,9 @@
 package org.wordpress.android.fluxc.store.stats
 
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.model.stats.LoadMode
+import org.wordpress.android.fluxc.model.stats.LoadMode.INITIAL
+import org.wordpress.android.fluxc.model.stats.LoadMode.MORE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
@@ -130,18 +133,18 @@ class InsightsStore
         siteModel: SiteModel,
         pageSize: Int,
         forced: Boolean = false,
-        loadMore: Boolean = false
+        loadMode: LoadMode = INITIAL
     ): OnStatsFetched<FollowersModel> {
-        return fetchFollowers(siteModel, pageSize, forced, WP_COM, loadMore)
+        return fetchFollowers(siteModel, pageSize, forced, WP_COM, loadMode)
     }
 
     suspend fun fetchEmailFollowers(
         siteModel: SiteModel,
         pageSize: Int,
         forced: Boolean = false,
-        loadMore: Boolean = false
+        loadMode: LoadMode = INITIAL
     ): OnStatsFetched<FollowersModel> {
-        return fetchFollowers(siteModel, pageSize, forced, EMAIL, loadMore)
+        return fetchFollowers(siteModel, pageSize, forced, EMAIL, loadMode)
     }
 
     private suspend fun fetchFollowers(
@@ -149,9 +152,9 @@ class InsightsStore
         pageSize: Int,
         forced: Boolean = false,
         followerType: FollowerType,
-        loadMore: Boolean
+        loadMode: LoadMode
     ) = withContext(coroutineContext) {
-        val nextPage = if (loadMore) {
+        val nextPage = if (loadMode == MORE) {
             val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
             savedFollowers / pageSize + 1
         } else {
@@ -164,7 +167,7 @@ class InsightsStore
                 OnStatsFetched(response.error)
             }
             response.response != null -> {
-                sqlUtils.insert(siteModel, response.response, followerType, replaceExistingData = !loadMore)
+                sqlUtils.insert(siteModel, response.response, followerType, replaceExistingData = loadMode == INITIAL)
                 val allFollowers = insightsMapper.mergeFollowersModels(sqlUtils, siteModel, followerType, pageSize)
                 OnStatsFetched(allFollowers)
             }
