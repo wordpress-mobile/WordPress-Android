@@ -10,6 +10,8 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.model.stats.LoadMode
+import org.wordpress.android.fluxc.model.stats.LoadMode.MORE
 import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.modules.UI_THREAD
@@ -60,17 +62,13 @@ class FollowersUseCase
         }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean, loadMode: LoadMode) {
         lastSite = site
-        fetchRemoteData(site, forced, false)
-    }
-
-    private suspend fun fetchRemoteData(site: SiteModel, forced: Boolean, loadMore: Boolean) {
         val deferredWpComResponse = GlobalScope.async {
-            insightsStore.fetchWpComFollowers(site, pageSize, forced, loadMore)
+            insightsStore.fetchWpComFollowers(site, pageSize, forced, loadMode)
         }
         val deferredEmailResponse = GlobalScope.async {
-            insightsStore.fetchEmailFollowers(site, pageSize, forced, loadMore)
+            insightsStore.fetchEmailFollowers(site, pageSize, forced, loadMode)
         }
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
@@ -166,7 +164,7 @@ class FollowersUseCase
     private fun onLinkClick() {
         if (isViewAllMode) {
             GlobalScope.launch {
-                fetchRemoteData(lastSite, forced = true, loadMore = true)
+                fetchRemoteData(lastSite, forced = true, loadMode = MORE)
             }
         } else {
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
@@ -23,7 +24,11 @@ abstract class GranularStatelessUseCase<DOMAIN_MODEL>(
 
     abstract suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean)
 
-    final override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    final override suspend fun fetchRemoteData(
+        site: SiteModel,
+        forced: Boolean,
+        loadMode: LoadMode
+    ) {
         selectedDateProvider.getSelectedDate(statsGranularity)?.let { date ->
             fetchRemoteData(date, site, forced)
         }

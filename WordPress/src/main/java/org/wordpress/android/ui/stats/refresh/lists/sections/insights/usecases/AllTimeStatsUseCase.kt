@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
+import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.modules.UI_THREAD
@@ -30,7 +31,11 @@ class AllTimeStatsUseCase
         dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(
+        site: SiteModel,
+        forced: Boolean,
+        loadMode: LoadMode
+    ) {
         val response = insightsStore.fetchAllTimeInsights(site, forced)
         val model = response.model
         val error = response.error
