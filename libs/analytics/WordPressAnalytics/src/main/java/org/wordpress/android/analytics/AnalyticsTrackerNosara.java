@@ -272,6 +272,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 predefinedEventProperties.put("type", "positive");
                 break;
+            case QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED:
+                predefinedEventProperties.put("type", "positive");
+                break;
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
                 predefinedEventProperties.put("task_name", "create_site");
                 break;
@@ -1370,6 +1373,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_task_dialog_button_tapped";
+            case QUICK_START_MIGRATION_DIALOG_VIEWED:
+                return "quick_start_migration_dialog_viewed";
+            case QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED:
+                return "quick_start_migration_dialog_button_tapped";
             case QUICK_START_LIST_VIEWED:
                 return "quick_start_list_viewed";
             case QUICK_START_LIST_COMPLETED_VIEWED:
