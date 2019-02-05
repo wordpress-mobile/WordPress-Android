@@ -60,7 +60,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 analyticsTrackerWrapper
         )
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
-        whenever(overviewMapper.buildTitle(any(), any())).thenReturn(title)
+        whenever(overviewMapper.buildTitle(any(), any(), any())).thenReturn(title)
         whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(barChartItem)
         whenever(overviewMapper.buildColumns(any(), any(), any())).thenReturn(columns)
     }

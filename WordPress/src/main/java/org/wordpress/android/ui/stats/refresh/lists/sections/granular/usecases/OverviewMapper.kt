@@ -29,7 +29,7 @@ class OverviewMapper
     fun buildTitle(selectedItem: PeriodData?, previousItem: PeriodData?, selectedPosition: Int): ValueItem {
         val value = selectedItem?.getValue(selectedPosition) ?: 0
         val previousValue = previousItem?.getValue(selectedPosition)
-        val positive = value > (previousValue ?: 0)
+        val positive = value >= (previousValue ?: 0)
         val change = previousValue?.let {
             val difference = value - previousValue
             val percentage = when {
@@ -41,8 +41,8 @@ class OverviewMapper
             if (positive) {
                 resourceProvider.getString(R.string.stats_traffic_increase, difference.toFormattedString(), percentage)
             } else {
+                resourceProvider.getString(R.string.stats_traffic_change, difference.toFormattedString(), percentage)
             }
-            resourceProvider.getString(R.string.stats_traffic_change, difference.toFormattedString(), percentage)
         }
 
         return ValueItem(
