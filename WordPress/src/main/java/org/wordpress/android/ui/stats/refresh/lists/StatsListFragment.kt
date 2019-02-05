@@ -161,12 +161,3 @@ class StatsListFragment : DaggerFragment() {
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }
-
-fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
-    return when (this) {
-        DAYS -> StatsTimeframe.DAY
-        WEEKS -> StatsTimeframe.WEEK
-        MONTHS -> StatsTimeframe.MONTH
-        YEARS -> StatsTimeframe.YEAR
-    }
-}

@@ -4,8 +4,14 @@ import android.content.Intent
 import android.support.v4.app.FragmentActivity
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
@@ -26,7 +32,6 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
-import org.wordpress.android.ui.stats.refresh.lists.toStatsTimeFrame
 import org.wordpress.android.util.ToastUtils
 
 class StatsNavigator(
@@ -142,5 +147,14 @@ class StatsNavigator(
                 WPWebViewActivity.openURL(activity, target.url)
             }
         }
+    }
+}
+
+fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
+    return when (this) {
+        DAYS -> StatsTimeframe.DAY
+        WEEKS -> StatsTimeframe.WEEK
+        MONTHS -> StatsTimeframe.MONTH
+        YEARS -> StatsTimeframe.YEAR
     }
 }
