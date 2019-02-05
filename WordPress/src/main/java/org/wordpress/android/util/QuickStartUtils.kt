@@ -26,12 +26,16 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
@@ -249,6 +253,24 @@ class QuickStartUtils {
                     // TODO: Quick Start - Replace else with remaining tasks.
                     Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
                 }
+            }
+        }
+
+        @JvmStatic
+        fun getQuickStartListSkippedTracker(task: QuickStartTask): Stat {
+            return when (task) {
+                CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
+                VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_SKIPPED
+                CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_SKIPPED
+                CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED
+                ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_SKIPPED
+                PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_SKIPPED
+                FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_SKIPPED
+                UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_SKIPPED
+                CREATE_NEW_PAGE -> Stat.QUICK_START_LIST_CREATE_PAGE_SKIPPED
+                CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_SKIPPED
+                EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
+                else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }
 

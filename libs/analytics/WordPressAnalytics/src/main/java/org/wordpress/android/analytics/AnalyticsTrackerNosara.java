@@ -308,6 +308,39 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_GROW_EXPANDED:
                 predefinedEventProperties.put("type", "grow");
                 break;
+            case QUICK_START_LIST_CREATE_SITE_SKIPPED:
+                predefinedEventProperties.put("task_name", "create_site");
+                break;
+            case QUICK_START_LIST_VIEW_SITE_SKIPPED:
+                predefinedEventProperties.put("task_name", "view_site");
+                break;
+            case QUICK_START_LIST_BROWSE_THEMES_SKIPPED:
+                predefinedEventProperties.put("task_name", "browse_themes");
+                break;
+            case QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED:
+                predefinedEventProperties.put("task_name", "customize_site");
+                break;
+            case QUICK_START_LIST_ADD_SOCIAL_SKIPPED:
+                predefinedEventProperties.put("task_name", "share_site");
+                break;
+            case QUICK_START_LIST_PUBLISH_POST_SKIPPED:
+                predefinedEventProperties.put("task_name", "publish_post");
+                break;
+            case QUICK_START_LIST_FOLLOW_SITE_SKIPPED:
+                predefinedEventProperties.put("task_name", "follow_site");
+                break;
+            case QUICK_START_LIST_UPLOAD_ICON_SKIPPED:
+                predefinedEventProperties.put("task_name", "upload_icon");
+                break;
+            case QUICK_START_LIST_CREATE_PAGE_SKIPPED:
+                predefinedEventProperties.put("task_name", "create_page");
+                break;
+            case QUICK_START_LIST_CHECK_STATS_SKIPPED:
+                predefinedEventProperties.put("task_name", "check_stats");
+                break;
+            case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
+                predefinedEventProperties.put("task_name", "explore_plans");
+                break;
             case QUICK_START_LIST_VIEW_SITE_TAPPED:
                 predefinedEventProperties.put("task_name", "view_site");
                 break;
@@ -1424,6 +1457,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_list_viewed";
             case QUICK_START_LIST_COMPLETED_VIEWED:
                 return "quick_start_list_completed_viewed";
+            case QUICK_START_LIST_CREATE_SITE_SKIPPED:
+            case QUICK_START_LIST_VIEW_SITE_SKIPPED:
+            case QUICK_START_LIST_BROWSE_THEMES_SKIPPED:
+            case QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED:
+            case QUICK_START_LIST_ADD_SOCIAL_SKIPPED:
+            case QUICK_START_LIST_PUBLISH_POST_SKIPPED:
+            case QUICK_START_LIST_FOLLOW_SITE_SKIPPED:
+            case QUICK_START_LIST_UPLOAD_ICON_SKIPPED:
+            case QUICK_START_LIST_CREATE_PAGE_SKIPPED:
+            case QUICK_START_LIST_CHECK_STATS_SKIPPED:
+            case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
+                return "quick_start_list_item_skipped";
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
             case QUICK_START_LIST_VIEW_SITE_TAPPED:
             case QUICK_START_LIST_BROWSE_THEMES_TAPPED:

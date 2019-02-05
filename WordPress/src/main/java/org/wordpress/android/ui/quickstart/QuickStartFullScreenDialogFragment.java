@@ -25,6 +25,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AniUtils.Duration;
+import org.wordpress.android.util.QuickStartUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -164,8 +165,9 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
 
     @Override
     public void onSkipTaskTapped(QuickStartTask task) {
-        // TODO: Quick Start - Add analytics for skipping task.
+        AnalyticsTracker.track(QuickStartUtils.getQuickStartListSkippedTracker(task));
         mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), task, true);
+
         if (mQuickStartAdapter != null) {
             int site = AppPrefs.getSelectedSite();
 
