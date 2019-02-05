@@ -10,8 +10,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.CLICKS
 import org.wordpress.android.fluxc.store.stats.time.ClicksStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewClicks
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty

@@ -26,28 +26,27 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewAuthors
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewClicks
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCountries
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublicizeStats
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewReferrers
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewSearchTerms
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewVideoPlays
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPublicizeStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReferrers
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewSearchTerms
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel
@@ -55,11 +54,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListV
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.YearsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import org.wordpress.android.util.Event
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.observeEvent
-import java.util.Date
 import javax.inject.Inject
 
 class StatsListFragment : DaggerFragment() {
@@ -288,34 +285,6 @@ class StatsListFragment : DaggerFragment() {
         adapter.update(statsState)
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
-}
-
-sealed class NavigationTarget : Event() {
-    class AddNewPost : NavigationTarget()
-    data class ViewPost(val postId: Long, val postUrl: String, val postType: String = StatsConstants.ITEM_TYPE_POST) :
-            NavigationTarget()
-
-    data class SharePost(val url: String, val title: String) : NavigationTarget()
-    data class ViewPostDetailStats(
-        val postId: String,
-        val postTitle: String,
-        val postUrl: String?,
-        val postType: String = StatsConstants.ITEM_TYPE_POST
-    ) : NavigationTarget()
-
-    class ViewFollowersStats : NavigationTarget()
-    class ViewCommentsStats : NavigationTarget()
-    class ViewTagsAndCategoriesStats : NavigationTarget()
-    class ViewPublicizeStats : NavigationTarget()
-    data class ViewTag(val link: String) : NavigationTarget()
-    data class ViewPostsAndPages(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
-    data class ViewReferrers(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
-    data class ViewClicks(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
-    data class ViewCountries(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
-    data class ViewVideoPlays(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
-    data class ViewSearchTerms(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
-    data class ViewAuthors(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
-    data class ViewUrl(val url: String) : NavigationTarget()
 }
 
 fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
