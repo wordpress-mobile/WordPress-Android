@@ -148,7 +148,7 @@ class StatsViewAllFragment : DaggerFragment() {
             val nonNullIntent = checkNotNull(activity.intent)
             nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
         } else {
-            savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE) as SiteModel
+            savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
         }
 
         val clazz = when (type) {
