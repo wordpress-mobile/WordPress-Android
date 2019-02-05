@@ -76,6 +76,23 @@ class OverviewMapper
                     value.toInt()
             )
         }
-        return BarChartItem(chartItems, selectedItem = selectedDate, onBarSelected = onBarSelected)
+        // Only show overlapping visitors when we are showing views
+        val overlappingItems = if (selectedPosition == 0) {
+            domainModel.dates.map {
+                Bar(
+                        statsDateFormatter.printGranularDate(it.period, statsGranularity),
+                        it.period,
+                        it.visitors.toInt()
+                )
+            }
+        } else {
+            null
+        }
+        return BarChartItem(
+                chartItems,
+                overlappingEntries = overlappingItems,
+                selectedItem = selectedDate,
+                onBarSelected = onBarSelected
+        )
     }
 }

@@ -12,6 +12,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.LargeValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ViewPortHandler
 import org.wordpress.android.R
@@ -32,14 +33,9 @@ fun BarChart.draw(
     resetChart()
     val graphWidth = DisplayUtils.pxToDp(context, width)
     val columnNumber = (graphWidth / 24) - 1
-    val cut = cutEntries(if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT, item)
-    val mappedEntries = cut.mapIndexed { index, pair ->
-        BarEntry(
-                index.toFloat(),
-                pair.value.toFloat(),
-                pair.id
-        )
-    }
+    val count = if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT
+    val cut = cutEntries(count, item.entries)
+    val mappedEntries = cut.mapIndexed { index, pair -> pair.toBarEntry(index) }
     val maxYValue = cut.maxBy { it.value }!!.value
     val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
     val dataSet = if (hasData) {
@@ -47,11 +43,18 @@ fun BarChart.draw(
     } else {
         buildEmptyDataSet(context, cut.size)
     }
-    data = if (hasData && item.onBarSelected != null) {
-        BarData(dataSet, getHighlightDataSet(context, mappedEntries))
-    } else {
-        BarData(dataSet)
+    val dataSets = mutableListOf<IBarDataSet>()
+    if (hasData && item.overlappingEntries != null) {
+        val overlappingCut = cutEntries(count, item.overlappingEntries)
+        val mappedOverlappingEntries = overlappingCut.mapIndexed { index, pair -> pair.toBarEntry(index) }
+        val overlappingDataSet = buildOverlappingDataSet(context, mappedOverlappingEntries)
+        dataSets.add(overlappingDataSet)
     }
+    dataSets.add(dataSet)
+    if (hasData && item.onBarSelected != null) {
+        getHighlightDataSet(context, mappedEntries)?.let { dataSets.add(it) }
+    }
+    data = BarData(dataSets)
     val greyColor = ContextCompat.getColor(
             context,
             color.wp_grey
@@ -195,6 +198,29 @@ private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
     return dataSet
 }
 
+fun buildOverlappingDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
+    val dataSet = BarDataSet(cut, "Overlapping data")
+    dataSet.color = ContextCompat.getColor(context, R.color.blue_dark)
+    dataSet.setGradientColor(
+            ContextCompat.getColor(
+                    context,
+                    R.color.blue_dark
+            ), ContextCompat.getColor(
+            context,
+            R.color.blue_dark
+    )
+    )
+    dataSet.formLineWidth = 0f
+    dataSet.setDrawValues(false)
+    dataSet.isHighlightEnabled = true
+    dataSet.highLightColor = ContextCompat.getColor(
+            context,
+            color.orange_dark_active
+    )
+    dataSet.highLightAlpha = 255
+    return dataSet
+}
+
 private fun getHighlightDataSet(context: Context, cut: List<BarEntry>): BarDataSet? {
     val maxEntry = cut.maxBy { it.y } ?: return null
     val highlightedDataSet = cut.map {
@@ -224,13 +250,13 @@ private fun getHighlightDataSet(context: Context, cut: List<BarEntry>): BarDataS
 
 private fun cutEntries(
     count: Int,
-    item: BarChartItem
+    entries: List<Bar>
 ): List<Bar> {
-    return if (count < item.entries.size) item.entries.subList(
-            item.entries.size - count,
-            item.entries.size
+    return if (count < entries.size) entries.subList(
+            entries.size - count,
+            entries.size
     ) else {
-        item.entries
+        entries
     }
 }
 
@@ -241,4 +267,12 @@ private fun BarChart.resetChart() {
     notifyDataSetChanged()
     clear()
     invalidate()
+}
+
+private fun Bar.toBarEntry(index: Int): BarEntry {
+    BarEntry(
+            index.toFloat(),
+            value.toFloat(),
+            id
+    )
 }
