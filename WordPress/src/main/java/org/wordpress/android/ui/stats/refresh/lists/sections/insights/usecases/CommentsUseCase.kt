@@ -28,7 +28,8 @@ import javax.inject.Named
 
 typealias SelectedTabUiState = Int
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_PAGE_SIZE = 6
+private const val VIEW_ALL_PAGE_SIZE = 100
 
 class CommentsUseCase
 @Inject constructor(
@@ -37,7 +38,8 @@ class CommentsUseCase
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
+        val response = insightsStore.fetchComments(site,
+                BLOCK_PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
@@ -49,7 +51,9 @@ class CommentsUseCase
     }
 
     override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getComments(site, PAGE_SIZE)
+        val dbModel = insightsStore.getComments(site,
+                BLOCK_PAGE_SIZE
+        )
         dbModel?.let { onModel(dbModel) }
     }
 
@@ -90,7 +94,7 @@ class CommentsUseCase
         val mutableItems = mutableListOf<BlockListItem>()
         if (authors.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_author_label, R.string.stats_comments_label))
-            mutableItems.addAll(authors.take(PAGE_SIZE).mapIndexed { index, author ->
+            mutableItems.addAll(authors.take(BLOCK_PAGE_SIZE).mapIndexed { index, author ->
                 ListItemWithIcon(
                         iconUrl = author.gravatar,
                         iconStyle = AVATAR,
@@ -109,7 +113,7 @@ class CommentsUseCase
         val mutableItems = mutableListOf<BlockListItem>()
         if (posts.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_title_label, R.string.stats_comments_label))
-            mutableItems.addAll(posts.take(PAGE_SIZE).mapIndexed { index, post ->
+            mutableItems.addAll(posts.take(BLOCK_PAGE_SIZE).mapIndexed { index, post ->
                 ListItem(
                         post.name,
                         post.comments.toFormattedString(),
