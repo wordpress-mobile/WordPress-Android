@@ -392,6 +392,18 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_FOLLOW_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "follow_site");
                 break;
+            case QUICK_START_UPLOAD_ICON_COMPLETED:
+                predefinedEventProperties.put("task_name", "upload_icon");
+                break;
+            case QUICK_START_CREATE_PAGE_COMPLETED:
+                predefinedEventProperties.put("task_name", "create_page");
+                break;
+            case QUICK_START_CHECK_STATS_COMPLETED:
+                predefinedEventProperties.put("task_name", "check_stats");
+                break;
+            case QUICK_START_EXPLORE_PLANS_COMPLETED:
+                predefinedEventProperties.put("task_name", "explore_plans");
+                break;
             case QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
                 break;
@@ -1502,6 +1514,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_SHARE_SITE_TASK_COMPLETED:
             case QUICK_START_PUBLISH_POST_TASK_COMPLETED:
             case QUICK_START_FOLLOW_SITE_TASK_COMPLETED:
+            case QUICK_START_UPLOAD_ICON_COMPLETED:
+            case QUICK_START_CREATE_PAGE_COMPLETED:
+            case QUICK_START_CHECK_STATS_COMPLETED:
+            case QUICK_START_EXPLORE_PLANS_COMPLETED:
                 return "quick_start_task_completed";
             case QUICK_START_ALL_TASKS_COMPLETED:
                 return "quick_start_all_tasks_completed";
