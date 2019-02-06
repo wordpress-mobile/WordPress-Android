@@ -333,10 +333,9 @@ class InsightsStoreTest {
 
     @Test
     fun `returns WPCOM followers from db`() {
-        whenever(sqlUtils.selectFollowers(site, WP_COM)).thenReturn(FOLLOWERS_RESPONSE)
         val model = mock<FollowersModel>()
         whenever(sqlUtils.selectAllFollowers(site, WP_COM)).thenReturn(listOf(FOLLOWERS_RESPONSE))
-        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), WP_COM, CacheMode.All))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), WP_COM, CacheMode.Top(PAGE_SIZE)))
                 .thenReturn(model)
 
         val result = store.getWpComFollowers(site, CACHE_MODE_TOP)
@@ -346,10 +345,9 @@ class InsightsStoreTest {
 
     @Test
     fun `returns email followers from db`() {
-        whenever(sqlUtils.selectFollowers(site, EMAIL)).thenReturn(FOLLOWERS_RESPONSE)
         val model = mock<FollowersModel>()
         whenever(sqlUtils.selectAllFollowers(site, EMAIL)).thenReturn(listOf(FOLLOWERS_RESPONSE))
-        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), EMAIL, CacheMode.All))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), EMAIL, CacheMode.Top(PAGE_SIZE)))
                 .thenReturn(model)
 
         val result = store.getEmailFollowers(site, CACHE_MODE_TOP)
