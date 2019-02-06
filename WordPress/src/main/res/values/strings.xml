@@ -2010,8 +2010,8 @@
     <!-- Plans -->
     <string name="plan">Plan</string>
     <string name="plans">Plans</string>
-    <string name="plans_loading_error_title">Unable to load plans</string>
-    <string name="plans_loading_error_subtitle">Error communicating with the server, please try again</string>
+    <string name="plans_loading_error_title">No connection</string>
+    <string name="plans_loading_error_subtitle">An active internet connection is required to view plans</string>
 
     <!-- gravatar -->
     <string name="error_cropping_image">Error cropping the image</string>

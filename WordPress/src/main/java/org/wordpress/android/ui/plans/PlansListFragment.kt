@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
+import org.wordpress.android.ui.plans.PlansViewModel.PlanOffersListStatus.ERROR
 import org.wordpress.android.ui.plans.PlansViewModel.PlanOffersListStatus.FETCHING
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -90,6 +91,10 @@ class PlansListFragment : Fragment() {
         viewModel.listStatus.observe(this, Observer { listStatus ->
             if (isAdded && view != null) {
                 swipeToRefreshHelper.isRefreshing = listStatus == FETCHING
+
+                if (listStatus == ERROR) {
+                    reloadList(emptyList())
+                }
             }
         })
 

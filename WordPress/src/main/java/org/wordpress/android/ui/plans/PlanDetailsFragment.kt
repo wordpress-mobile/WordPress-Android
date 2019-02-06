@@ -81,7 +81,7 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
     }
 
     override fun onConfirmClicked(controller: FullScreenDialogController): Boolean {
-        // do nothing
+        return true
     }
 
     override fun onDismissClicked(controller: FullScreenDialogController): Boolean {
