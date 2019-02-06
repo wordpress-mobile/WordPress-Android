@@ -61,7 +61,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private val blockPageSize = 6
     private val viewAllPageSize = 10
     private val blockInitialMode = FetchMode.Paged(blockPageSize, false)
-    private val viewAllInitiaLoadMode = FetchMode.Paged(viewAllPageSize, true)
+    private val viewAllInitialLoadMode = FetchMode.Paged(viewAllPageSize, true)
     private val viewAllMoreLoadMode = FetchMode.Paged(viewAllPageSize, true)
     val message = "Total followers count is 50"
     @Before
@@ -241,7 +241,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         )
 
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, viewAllInitiaLoadMode)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, viewAllInitialLoadMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -250,7 +250,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, viewAllInitiaLoadMode)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, viewAllInitialLoadMode)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,
