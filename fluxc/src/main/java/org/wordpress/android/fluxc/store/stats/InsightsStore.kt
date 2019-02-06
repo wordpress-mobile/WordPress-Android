@@ -150,8 +150,12 @@ class InsightsStore
         followerType: FollowerType,
         fetchMode: Paged
     ) = withContext(coroutineContext) {
-        val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
-        val nextPage = savedFollowers / fetchMode.pageSize + 1
+        val nextPage = if (fetchMode.loadMore) {
+            val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
+            savedFollowers / fetchMode.pageSize + 1
+        } else {
+            1
+        }
 
         val response = restClient.fetchFollowers(siteModel, followerType, nextPage, fetchMode.pageSize, forced)
         return@withContext when {
