@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.model.stats.LoadMode.Paged
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
@@ -103,8 +104,8 @@ class InsightsMapper
         )
     }
 
-    fun map(response: FollowersResponse, followerType: FollowerType, pageSize: Int): FollowersModel {
-        val followers = response.subscribers.mapNotNull {
+    fun map(response: FollowersResponse, followerType: FollowerType, loadMode: LoadMode): FollowersModel {
+        var followers = response.subscribers.mapNotNull {
             if (it.avatar != null && it.label != null && it.dateSubscribed != null) {
                 FollowerModel(
                         it.avatar,
@@ -116,7 +117,10 @@ class InsightsMapper
                 AppLog.e(STATS, "CommentsResponse.posts: Non-null field is coming as null from API")
                 null
             }
-        }.take(pageSize)
+        }
+        if (loadMode is Paged) {
+            followers = followers.take(loadMode.pageSize)
+        }
         val total = when (followerType) {
             WP_COM -> response.totalWpCom
             EMAIL -> response.totalEmail
@@ -133,11 +137,11 @@ class InsightsMapper
         sqlUtils: InsightsSqlUtils,
         siteModel: SiteModel,
         followerType: FollowerType,
-        pageSize: Int
+        loadMode: LoadMode
     ): FollowersModel {
         return sqlUtils.selectAllFollowers(siteModel, followerType)
                 .fold(FollowersModel(0, emptyList(), false)) { accumulator, next ->
-                    val nextModel = map(next, followerType, pageSize)
+                    val nextModel = map(next, followerType, loadMode)
                     accumulator.copy(
                             totalCount = nextModel.totalCount,
                             followers = accumulator.followers + nextModel.followers,
