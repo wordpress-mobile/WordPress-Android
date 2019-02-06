@@ -9,16 +9,6 @@
               android:paddingEnd="@dimen/margin_extra_large"
               android:paddingStart="@dimen/margin_extra_large">
 
-    <TextView
-        android:id="@+id/legend"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:drawablePadding="8dp"
-        android:drawableStart="@drawable/shape_rounded_rectangle_dark_blue"
-        android:text="@string/stats_visitors"/>
-
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
@@ -34,21 +24,19 @@
 
         <TextView
             android:id="@+id/label_start"
-            style="@style/StatsGraphLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="January 2019"/>
-
+            tools:text="January 2019"
+            style="@style/StatsGraphLabel"/>
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
-
         <TextView
             android:id="@+id/label_end"
-            style="@style/StatsGraphLabel"
+            tools:text="December 2019"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="December 2019"/>
+            style="@style/StatsGraphLabel"/>
     </LinearLayout>
 </LinearLayout>

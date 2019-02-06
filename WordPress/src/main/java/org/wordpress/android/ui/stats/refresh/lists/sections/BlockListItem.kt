@@ -4,6 +4,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
@@ -37,6 +38,7 @@ sealed class BlockListItem(val type: Type) {
         COLUMNS,
         LINK,
         BAR_CHART,
+        CHART_LEGEND,
         TABS,
         HEADER,
         MAP,
@@ -106,7 +108,6 @@ sealed class BlockListItem(val type: Type) {
 
     data class BarChartItem(
         val entries: List<Bar>,
-        @StringRes val legend: Int? = null,
         val overlappingEntries: List<Bar>? = null,
         val selectedItem: String? = null,
         val onBarSelected: ((String?) -> Unit)? = null
@@ -116,6 +117,8 @@ sealed class BlockListItem(val type: Type) {
         override val itemId: Int
             get() = entries.hashCode()
     }
+
+    data class ChartLegend(@StringRes val text: Int) : BlockListItem(CHART_LEGEND)
 
     data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
             BlockListItem(TABS) {

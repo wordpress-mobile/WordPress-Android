@@ -40,6 +40,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -287,20 +288,27 @@ sealed class BlockListItemViewHolder(
         private val chart = itemView.findViewById<BarChart>(R.id.chart)
         private val labelStart = itemView.findViewById<TextView>(R.id.label_start)
         private val labelEnd = itemView.findViewById<TextView>(R.id.label_end)
-        private val legend = itemView.findViewById<TextView>(R.id.legend)
 
         fun bind(
             item: BarChartItem,
             barSelected: Boolean
         ) {
-            legend.visibility = if (item.legend != null) View.VISIBLE else View.GONE
-            item.legend?.let { legend.setText(it) }
             if (!barSelected) {
                 GlobalScope.launch(Dispatchers.Main) {
                     delay(50)
                     chart.draw(item, labelStart, labelEnd)
                 }
             }
+        }
+    }
+
+    class ChartLegendViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+            parent,
+            R.layout.stats_block_legend_item
+    ) {
+        private val legend = itemView.findViewById<TextView>(R.id.legend)
+        fun bind(item: ChartLegend) {
+            legend.setText(item.text)
         }
     }
 

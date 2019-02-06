@@ -93,7 +93,7 @@ constructor(
                             statsGranularity
                     )
             )
-            items.add(
+            items.addAll(
                     overviewMapper.buildChart(
                             domainModel,
                             statsGranularity,

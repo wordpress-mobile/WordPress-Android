@@ -5,8 +5,10 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -62,7 +64,7 @@ class OverviewMapper
         onBarSelected: (String?) -> Unit,
         selectedPosition: Int,
         selectedDate: String?
-    ): BarChartItem {
+    ): List<BlockListItem> {
         val chartItems = domainModel.dates.map {
             val value = when (selectedPosition) {
                 0 -> it.views
@@ -90,13 +92,16 @@ class OverviewMapper
         } else {
             null
         }
-        val legend = if (shouldShowVisitors) R.string.stats_visitors else null
-        return BarChartItem(
+        val result = mutableListOf<BlockListItem>()
+        if (shouldShowVisitors) {
+            result.add(ChartLegend(R.string.stats_visitors))
+        }
+        result.add(BarChartItem(
                 chartItems,
-                legend = legend,
                 overlappingEntries = overlappingItems,
                 selectedItem = selectedDate,
                 onBarSelected = onBarSelected
-        )
+        ))
+        return result
     }
 }
