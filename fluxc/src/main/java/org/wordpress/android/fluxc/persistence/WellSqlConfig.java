@@ -418,7 +418,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "INTERNAL_PLAN_ID INTEGER)");
                 db.execSQL(
                         "CREATE TABLE PlanOffersFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + "INTERNAL_PLAN_ID INTEGER,STRING_ID TEXT UNIQUE,NAME TEXT,DESCRIPTION TEXT)");
+                        + "INTERNAL_PLAN_ID INTEGER,STRING_ID TEXT,NAME TEXT,DESCRIPTION TEXT)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
