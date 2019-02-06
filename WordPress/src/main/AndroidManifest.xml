@@ -261,7 +261,7 @@
         <activity android:name=".ui.plans.PlansActivity"
                   android:theme="@style/Calypso.NoActionBar"
                   android:launchMode="singleTop"
-                  android:label="@string/plans"/>
+                  android:parentActivityName=".ui.main.WPMainActivity"/>
 
         <!-- Stats Activities -->
         <activity
