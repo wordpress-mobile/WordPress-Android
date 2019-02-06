@@ -22,16 +22,19 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.hamcrest.CoreMatchers.`is` as Is
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
+private const val ERROR_RESULT_FETCH_QUERY = "test"
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair("multi_result_query", MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE)
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = Pair("empty_result_query", 0)
 
@@ -78,6 +81,16 @@ class NewSiteCreationDomainsViewModelTest {
         test {
             whenever(fetchDomainsUseCase.fetchDomains(queryResultSizePair.first))
                     .thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
+            block()
+        }
+    }
+
+    private fun <T> testWithErrorResponse(
+        block: suspend CoroutineScope.() -> T
+    ) {
+        test {
+            whenever(fetchDomainsUseCase.fetchDomains(ERROR_RESULT_FETCH_QUERY))
+                    .thenReturn(createFailedOnSuggestedDomains(ERROR_RESULT_FETCH_QUERY))
             block()
         }
     }
@@ -149,6 +162,21 @@ class NewSiteCreationDomainsViewModelTest {
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(2)).onChanged(captor.capture())
         verifyVisibleItemsContentUiState(captor.secondValue, showClearButton = true)
+    }
+
+    /**
+     * Verifies the UI state for after the user enters a non-empty query which results in error.
+     */
+    @Test
+    fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = testWithErrorResponse {
+        viewModel.updateQuery(ERROR_RESULT_FETCH_QUERY)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verifyVisibleItemsContentUiState(captor.secondValue, showClearButton = true, numberOfItems = 1)
+        assertThat(
+                captor.secondValue.contentState.items[0],
+                instanceOf(DomainsFetchSuggestionsErrorUiState::class.java)
+        )
     }
 
     /**
@@ -235,5 +263,14 @@ class NewSiteCreationDomainsViewModelTest {
             response
         }
         return OnSuggestedDomains(queryResultSizePair.first, suggestions)
+    }
+
+    /**
+     * Helper function that creates an error [OnSuggestedDomains] event.
+     */
+    private fun createFailedOnSuggestedDomains(searchQuery: String): OnSuggestedDomains {
+        val event = OnSuggestedDomains(searchQuery, emptyList())
+        event.error = SuggestDomainError("GENERIC_ERROR", "test")
+        return event
     }
 }
