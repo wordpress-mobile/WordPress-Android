@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
@@ -77,7 +78,8 @@ class OverviewMapper
             )
         }
         // Only show overlapping visitors when we are showing views
-        val overlappingItems = if (selectedPosition == 0) {
+        val shouldShowVisitors = selectedPosition == 0
+        val overlappingItems = if (shouldShowVisitors) {
             domainModel.dates.map {
                 Bar(
                         statsDateFormatter.printGranularDate(it.period, statsGranularity),
@@ -88,8 +90,10 @@ class OverviewMapper
         } else {
             null
         }
+        val legend = if (shouldShowVisitors) R.string.stats_visitors else null
         return BarChartItem(
                 chartItems,
+                legend = legend,
                 overlappingEntries = overlappingItems,
                 selectedItem = selectedDate,
                 onBarSelected = onBarSelected

@@ -287,11 +287,14 @@ sealed class BlockListItemViewHolder(
         private val chart = itemView.findViewById<BarChart>(R.id.chart)
         private val labelStart = itemView.findViewById<TextView>(R.id.label_start)
         private val labelEnd = itemView.findViewById<TextView>(R.id.label_end)
+        private val legend = itemView.findViewById<TextView>(R.id.legend)
 
         fun bind(
             item: BarChartItem,
             barSelected: Boolean
         ) {
+            legend.visibility = if (item.legend != null) View.VISIBLE else View.GONE
+            item.legend?.let { legend.setText(it) }
             if (!barSelected) {
                 GlobalScope.launch(Dispatchers.Main) {
                     delay(50)
