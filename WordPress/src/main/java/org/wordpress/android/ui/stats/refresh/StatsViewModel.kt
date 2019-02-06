@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
@@ -122,6 +124,7 @@ class StatsViewModel
     }
 
     fun onSelectedDateChange(statsGranularity: StatsGranularity) {
+        updateDateSelector()
         loadData {
             when (statsGranularity) {
                 DAYS -> dayStatsUseCase.refreshData(site)
@@ -130,7 +133,24 @@ class StatsViewModel
                 YEARS -> yearStatsUseCase.refreshData(site)
             }
         }
-        updateDateSelector()
+    }
+
+    fun onNextDateSelected() {
+        launch(Dispatchers.Default) {
+            delay(300)
+            statsSectionManager.getSelectedSection().toStatsGranularity()?.let { statsGranularity ->
+                selectedDateProvider.selectNextDate(statsGranularity)
+            }
+        }
+    }
+
+    fun onPreviousDateSelected() {
+        launch(Dispatchers.Default) {
+            delay(300)
+            statsSectionManager.getSelectedSection().toStatsGranularity()?.let { statsGranularity ->
+                selectedDateProvider.selectPreviousDate(statsGranularity)
+            }
+        }
     }
 
     fun getSelectedSection() = statsSectionManager.getSelectedSection()
@@ -160,13 +180,7 @@ class StatsViewModel
                     shouldShowDateSelection,
                     updatedDate,
                     enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsGranularity),
-                    enableSelectNext = selectedDateProvider.hasNextData(statsGranularity),
-                    onPreviousSelected = {
-                        selectedDateProvider.selectPreviousDate(statsGranularity)
-                    },
-                    onNextSelected = {
-                        selectedDateProvider.selectNextDate(statsGranularity)
-                    }
+                    enableSelectNext = selectedDateProvider.hasNextData(statsGranularity)
             )
             emitValue(currentState, updatedState)
         }
@@ -213,8 +227,6 @@ class StatsViewModel
         val isVisible: Boolean = false,
         val date: String? = null,
         val enableSelectPrevious: Boolean = false,
-        val enableSelectNext: Boolean = false,
-        val onPreviousSelected: (() -> Unit) = {},
-        val onNextSelected: (() -> Unit) = {}
+        val enableSelectNext: Boolean = false
     )
 }

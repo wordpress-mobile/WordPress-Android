@@ -26,7 +26,7 @@ class SelectedDateProvider
     fun selectDate(selectedDate: SelectedDate, statsGranularity: StatsGranularity) {
         if (selectedDate != mutableDates[statsGranularity]) {
             mutableDates[statsGranularity] = selectedDate
-            mutableSelectedDateChanged.value = statsGranularity
+            mutableSelectedDateChanged.postValue(statsGranularity)
         }
     }
 

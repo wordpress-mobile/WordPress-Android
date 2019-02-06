@@ -18,8 +18,6 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
@@ -94,6 +92,12 @@ class StatsFragment : DaggerFragment() {
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
         }
+        select_next_date.setOnClickListener {
+            viewModel.onNextDateSelected()
+        }
+        select_previous_date.setOnClickListener {
+            viewModel.onPreviousDateSelected()
+        }
     }
 
     private fun initializeViewModels(activity: FragmentActivity, isFirstStart: Boolean) {
@@ -161,20 +165,19 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.showDateSelector.observe(this, Observer { showDateSelector ->
-            val dateSelector = activity.findViewById<View>(R.id.date_selection_toolbar)
-            dateSelector.visibility = if (showDateSelector?.isVisible == true) View.VISIBLE else View.GONE
-            val label = dateSelector.findViewById<TextView>(R.id.selected_date)
-            label.text = showDateSelector?.date ?: ""
-            val previousButton = dateSelector.findViewById<ImageButton>(R.id.select_previous_date)
-            previousButton.isEnabled = showDateSelector?.enableSelectPrevious == true
-            previousButton.setOnClickListener {
-                showDateSelector?.onPreviousSelected?.invoke()
+        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
+            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
+            if (date_selection_toolbar.visibility != dateSelectorVisibility) {
+                date_selection_toolbar.visibility = dateSelectorVisibility
             }
-            val nextButton = dateSelector.findViewById<ImageButton>(R.id.select_next_date)
-            nextButton.isEnabled = showDateSelector?.enableSelectNext == true
-            nextButton.setOnClickListener {
-                showDateSelector?.onNextSelected?.invoke()
+            selected_date.text = dateSelectorUiModel?.date ?: ""
+            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
+            if (select_previous_date.isEnabled != enablePreviousButton) {
+                select_previous_date.isEnabled = enablePreviousButton
+            }
+            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
+            if (select_next_date.isEnabled != enableNextButton) {
+                select_next_date.isEnabled = enableNextButton
             }
         })
     }
