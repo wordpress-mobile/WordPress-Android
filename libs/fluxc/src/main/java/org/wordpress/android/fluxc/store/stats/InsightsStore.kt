@@ -1,15 +1,15 @@
 package org.wordpress.android.fluxc.store.stats
 
 import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.CacheMode
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
-import org.wordpress.android.fluxc.model.stats.LoadMode.Paged
+import org.wordpress.android.fluxc.model.stats.FetchMode.Paged
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
@@ -130,46 +130,42 @@ class InsightsStore
     // Followers stats
     suspend fun fetchWpComFollowers(
         siteModel: SiteModel,
-        loadMode: LoadMode,
+        fetchMode: Paged,
         forced: Boolean = false
     ): OnStatsFetched<FollowersModel> {
-        return fetchFollowers(siteModel, forced, WP_COM, loadMode)
+        return fetchFollowers(siteModel, forced, WP_COM, fetchMode)
     }
 
     suspend fun fetchEmailFollowers(
         siteModel: SiteModel,
-        loadMode: LoadMode,
+        fetchMode: Paged,
         forced: Boolean = false
     ): OnStatsFetched<FollowersModel> {
-        return fetchFollowers(siteModel, forced, EMAIL, loadMode)
+        return fetchFollowers(siteModel, forced, EMAIL, fetchMode)
     }
 
     private suspend fun fetchFollowers(
         siteModel: SiteModel,
         forced: Boolean = false,
         followerType: FollowerType,
-        loadMode: LoadMode
+        fetchMode: Paged
     ) = withContext(coroutineContext) {
-        val nextPage = if (loadMode is Paged) {
-            val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
-            savedFollowers / loadMode.pageSize + 1
-        } else {
-            1
-        }
+        val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
+        val nextPage = savedFollowers / fetchMode.pageSize + 1
 
-        val response = restClient.fetchFollowers(siteModel, followerType, nextPage, loadMode.pageSize, forced)
+        val response = restClient.fetchFollowers(siteModel, followerType, nextPage, fetchMode.pageSize, forced)
         return@withContext when {
             response.isError -> {
                 OnStatsFetched(response.error)
             }
             response.response != null -> {
-                val replace = loadMode is Paged && !loadMode.loadMore
+                val replace = !fetchMode.loadMore
                 sqlUtils.insert(siteModel, response.response, followerType, replaceExistingData = replace)
                 val followerResponses = sqlUtils.selectAllFollowers(siteModel, followerType)
                 val allFollowers = insightsMapper.mapAndMergeFollowersModels(
                         followerResponses,
                         followerType,
-                        loadMode
+                        CacheMode.All
                 )
                 OnStatsFetched(allFollowers)
             }
@@ -177,17 +173,17 @@ class InsightsStore
         }
     }
 
-    fun getWpComFollowers(site: SiteModel, loadMode: LoadMode): FollowersModel? {
-        return getFollowers(site, WP_COM, loadMode)
+    fun getWpComFollowers(site: SiteModel, cacheMode: CacheMode): FollowersModel? {
+        return getFollowers(site, WP_COM, cacheMode)
     }
 
-    fun getEmailFollowers(site: SiteModel, loadMode: LoadMode): FollowersModel? {
-        return getFollowers(site, EMAIL, loadMode)
+    fun getEmailFollowers(site: SiteModel, cacheMode: CacheMode): FollowersModel? {
+        return getFollowers(site, EMAIL, cacheMode)
     }
 
-    private fun getFollowers(site: SiteModel, followerType: FollowerType, loadMode: LoadMode): FollowersModel? {
+    private fun getFollowers(site: SiteModel, followerType: FollowerType, cacheMode: CacheMode): FollowersModel? {
         val followerResponses = sqlUtils.selectAllFollowers(site, followerType)
-        return insightsMapper.mapAndMergeFollowersModels(followerResponses, followerType, loadMode)
+        return insightsMapper.mapAndMergeFollowersModels(followerResponses, followerType, cacheMode)
     }
 
     // Comments stats
