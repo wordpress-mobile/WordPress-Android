@@ -2486,5 +2486,5 @@
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
-    <string name="new_site_creation_preview_back_pressed_warning">Exiting may result in losing your progress. Are you sure you want to continue?</string>
+    <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
 </resources>
