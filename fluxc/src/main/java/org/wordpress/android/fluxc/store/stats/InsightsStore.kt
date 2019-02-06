@@ -130,16 +130,16 @@ class InsightsStore
     // Followers stats
     suspend fun fetchWpComFollowers(
         siteModel: SiteModel,
-        forced: Boolean = false,
-        loadMode: LoadMode
+        loadMode: LoadMode,
+        forced: Boolean = false
     ): OnStatsFetched<FollowersModel> {
         return fetchFollowers(siteModel, forced, WP_COM, loadMode)
     }
 
     suspend fun fetchEmailFollowers(
         siteModel: SiteModel,
-        forced: Boolean = false,
-        loadMode: LoadMode
+        loadMode: LoadMode,
+        forced: Boolean = false
     ): OnStatsFetched<FollowersModel> {
         return fetchFollowers(siteModel, forced, EMAIL, loadMode)
     }
@@ -165,9 +165,9 @@ class InsightsStore
             response.response != null -> {
                 val replace = loadMode is Paged && !loadMode.loadMore
                 sqlUtils.insert(siteModel, response.response, followerType, replaceExistingData = replace)
-                val allFollowers = insightsMapper.mergeFollowersModels(
-                        sqlUtils,
-                        siteModel,
+                val followerResponses = sqlUtils.selectAllFollowers(siteModel, followerType)
+                val allFollowers = insightsMapper.mapAndMergeFollowersModels(
+                        followerResponses,
                         followerType,
                         loadMode
                 )
@@ -185,13 +185,9 @@ class InsightsStore
         return getFollowers(site, EMAIL, loadMode)
     }
 
-    private fun getFollowers(
-        site: SiteModel,
-        followerType: FollowerType,
-        loadMode: LoadMode
-    ): FollowersModel? {
-        val wpComResponse = sqlUtils.selectFollowers(site, followerType)
-        return wpComResponse?.let { insightsMapper.map(wpComResponse, followerType, loadMode) }
+    private fun getFollowers(site: SiteModel, followerType: FollowerType, loadMode: LoadMode): FollowersModel? {
+        val followerResponses = sqlUtils.selectAllFollowers(site, followerType)
+        return insightsMapper.mapAndMergeFollowersModels(followerResponses, followerType, loadMode)
     }
 
     // Comments stats
