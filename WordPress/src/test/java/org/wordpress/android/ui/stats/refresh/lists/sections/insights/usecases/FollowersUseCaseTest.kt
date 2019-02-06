@@ -16,8 +16,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
-import org.wordpress.android.fluxc.model.stats.LoadMode.INITIAL
-import org.wordpress.android.fluxc.model.stats.LoadMode.MORE
+import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -61,6 +60,9 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private val wordPressLabel = "wordpress"
     private val blockPageSize = 6
     private val viewAllPageSize = 10
+    private val blockInitialMode = LoadMode.Paged(blockPageSize, false)
+    private val viewAllInitiaLoadMode = LoadMode.Paged(viewAllPageSize, false)
+    private val viewAllMoreLoadMode = LoadMode.Paged(viewAllPageSize, true)
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
@@ -83,7 +85,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     fun `maps followers from selected tab to UI model and select empty tab`() = test {
         val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, forced, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,
@@ -92,7 +94,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, forced, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -118,7 +120,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     fun `maps email followers to UI model`() = test {
         val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, forced, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -127,7 +129,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, forced, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,
@@ -151,7 +153,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     fun `maps empty followers to UI model`() = test {
         val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, forced, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -160,7 +162,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, forced, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -181,12 +183,12 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val message = "Generic error"
-        whenever(insightsStore.fetchWpComFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, forced, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, forced, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -209,7 +211,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val message = "Generic error"
-        whenever(insightsStore.fetchWpComFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, forced, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -218,7 +220,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, forced, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
@@ -245,7 +247,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, viewAllPageSize, forced, INITIAL)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, forced, viewAllInitiaLoadMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -254,7 +256,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, viewAllPageSize, forced, INITIAL)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, forced, viewAllInitiaLoadMode)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,
@@ -264,7 +266,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        whenever(insightsStore.fetchWpComFollowers(site, viewAllPageSize, true, MORE)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, true, viewAllMoreLoadMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -273,7 +275,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, viewAllPageSize, true, MORE)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, true, viewAllMoreLoadMode)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,
