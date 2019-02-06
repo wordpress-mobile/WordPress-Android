@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
-import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.modules.UI_THREAD
@@ -30,11 +29,7 @@ class MostPopularInsightsUseCase
         dbModel?.let { onModel(dbModel) }
     }
 
-    override suspend fun fetchRemoteData(
-        site: SiteModel,
-        forced: Boolean,
-        loadMode: LoadMode
-    ) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchMostPopularInsights(site, forced)
         val model = response.model
         val error = response.error

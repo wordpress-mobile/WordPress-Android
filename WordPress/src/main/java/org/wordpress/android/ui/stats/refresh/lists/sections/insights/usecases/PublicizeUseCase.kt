@@ -5,7 +5,6 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
 import org.wordpress.android.fluxc.store.stats.InsightsStore
@@ -39,11 +38,7 @@ class PublicizeUseCase
         )?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(
-        site: SiteModel,
-        forced: Boolean,
-        loadMode: LoadMode
-    ) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchPublicizeData(
                 site,
                 PAGE_SIZE, forced

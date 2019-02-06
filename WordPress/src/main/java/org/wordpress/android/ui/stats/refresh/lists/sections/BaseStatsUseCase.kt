@@ -5,8 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LoadMode
-import org.wordpress.android.fluxc.model.stats.LoadMode.INITIAL
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
@@ -52,7 +50,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param refresh is true when we want to get the remote data
      * @param forced is true when we want to get fresh data and skip the cache
      */
-    suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean, loadMode: LoadMode = INITIAL) {
+    suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
         val emptyData = domainModel.value == null || domainModel.value !is Data
         if (emptyData) {
             withContext(mainDispatcher) {
@@ -61,7 +59,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             loadCachedData(site)
         }
         if (refresh || emptyData) {
-            fetchRemoteData(site, forced, loadMode)
+            fetchRemoteData(site, forced)
         }
     }
 
@@ -140,7 +138,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param site for which we fetch the data
      * @param forced is true when we want to get the fresh data
      */
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean, loadMode: LoadMode)
+    protected abstract suspend fun fetchRemoteData(
+        site: SiteModel,
+        forced: Boolean
+    )
 
     /**
      * Transforms given domain model and ui state into the UI model

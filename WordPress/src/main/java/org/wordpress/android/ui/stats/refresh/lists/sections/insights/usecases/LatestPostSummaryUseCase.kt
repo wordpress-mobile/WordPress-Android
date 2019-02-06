@@ -9,7 +9,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_S
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
-import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.modules.UI_THREAD
@@ -42,11 +41,7 @@ class LatestPostSummaryUseCase
         dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(
-        site: SiteModel,
-        forced: Boolean,
-        loadMode: LoadMode
-    ) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchLatestPostInsights(site, forced)
         val model = response.model
         val error = response.error

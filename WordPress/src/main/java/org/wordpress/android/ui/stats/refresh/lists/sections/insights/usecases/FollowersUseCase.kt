@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.model.stats.LoadMode
-import org.wordpress.android.fluxc.model.stats.LoadMode.MORE
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.modules.UI_THREAD
@@ -56,20 +55,20 @@ class FollowersUseCase
 
     override suspend fun loadCachedData(site: SiteModel) {
         lastSite = site
-        val wpComFollowers = insightsStore.getWpComFollowers(site, pageSize)
-        val emailFollowers = insightsStore.getEmailFollowers(site, pageSize)
+        val wpComFollowers = insightsStore.getWpComFollowers(site, LoadMode.All)
+        val emailFollowers = insightsStore.getEmailFollowers(site, LoadMode.All)
         if (wpComFollowers != null && emailFollowers != null) {
             onModel(wpComFollowers to emailFollowers)
         }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean, loadMode: LoadMode) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         lastSite = site
         val deferredWpComResponse = GlobalScope.async {
-            insightsStore.fetchWpComFollowers(site, pageSize, forced, loadMode)
+            insightsStore.fetchWpComFollowers(site, forced, LoadMode.Paged(pageSize, false))
         }
         val deferredEmailResponse = GlobalScope.async {
-            insightsStore.fetchEmailFollowers(site, pageSize, forced, loadMode)
+            insightsStore.fetchEmailFollowers(site, forced, LoadMode.Paged(pageSize, false))
         }
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
@@ -165,7 +164,7 @@ class FollowersUseCase
     private fun onLinkClick() {
         if (useCaseMode == VIEW_ALL) {
             GlobalScope.launch {
-                fetchRemoteData(lastSite, forced = true, loadMode = MORE)
+                fetchRemoteData(lastSite, forced = true)
             }
         } else {
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)

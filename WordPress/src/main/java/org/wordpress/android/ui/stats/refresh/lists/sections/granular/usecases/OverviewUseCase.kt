@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
@@ -58,11 +57,7 @@ constructor(
         dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(
-        site: SiteModel,
-        forced: Boolean,
-        loadMode: LoadMode
-    ) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = visitsAndViewsStore.fetchVisits(
                 site,
                 PAGE_SIZE,

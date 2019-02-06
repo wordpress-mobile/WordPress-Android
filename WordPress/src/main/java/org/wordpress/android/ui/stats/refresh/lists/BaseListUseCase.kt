@@ -6,8 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LoadMode
-import org.wordpress.android.fluxc.model.stats.LoadMode.INITIAL
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
@@ -41,20 +39,20 @@ constructor(
 
     val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(useCases.map { it.navigationTarget })
 
-    suspend fun loadData(site: SiteModel, loadMode: LoadMode = INITIAL) {
-        loadData(site, false, false, loadMode)
+    suspend fun loadData(site: SiteModel, loadMore: Boolean = false) {
+        loadData(site, false, false, loadMore)
     }
 
-    suspend fun refreshData(site: SiteModel, forced: Boolean = false, loadMode: LoadMode = INITIAL) {
-        loadData(site, true, forced, loadMode)
+    suspend fun refreshData(site: SiteModel, forced: Boolean = false, loadMore: Boolean = false) {
+        loadData(site, true, forced, loadMore)
     }
 
-    private suspend fun loadData(site: SiteModel, refresh: Boolean, forced: Boolean, loadMode: LoadMode) {
+    private suspend fun loadData(site: SiteModel, refresh: Boolean, forced: Boolean, loadMore: Boolean) {
         withContext(bgDispatcher) {
             if (PackageUtils.isDebugBuild() && useCases.distinctBy { it.type }.size < useCases.size) {
                 throw RuntimeException("Duplicate stats type in a use case")
             }
-            useCases.forEach { block -> launch { block.fetch(site, refresh, forced, loadMode) } }
+            useCases.forEach { block -> launch { block.fetch(site, refresh, forced) } }
             val items = getStatsTypes()
             withContext(mainDispatcher) {
                 statsTypes.value = items

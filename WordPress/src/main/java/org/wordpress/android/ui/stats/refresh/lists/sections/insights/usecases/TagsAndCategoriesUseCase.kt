@@ -6,7 +6,6 @@ import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
@@ -44,11 +43,7 @@ class TagsAndCategoriesUseCase
         mainDispatcher,
         TagsAndCategoriesUiState(null)
 ) {
-    override suspend fun fetchRemoteData(
-        site: SiteModel,
-        forced: Boolean,
-        loadMode: LoadMode
-    ) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
