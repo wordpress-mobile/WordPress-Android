@@ -69,7 +69,7 @@ class PlanOffersSqlUtils @Inject constructor() {
     data class PlanOffersFeatureBuilder(
         @PrimaryKey @Column private var id: Int = 0,
         @Column var internalPlanId: Int = 0,
-        @Column @Unique var stringId: String? = null,
+        @Column var stringId: String? = null,
         @Column var name: String? = null,
         @Column var description: String? = null
     ) : Identifiable {
