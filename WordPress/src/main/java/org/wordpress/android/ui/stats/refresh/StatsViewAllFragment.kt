@@ -8,7 +8,6 @@ import android.os.Parcelable
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView.LayoutManager
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,12 +75,8 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
-        val columns = resources.getInteger(R.integer.stats_number_of_columns)
-        val layoutManager: LayoutManager = if (columns == 1) {
-            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        } else {
-            StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL)
-        }
+        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
@@ -92,7 +87,7 @@ class StatsViewAllFragment : DaggerFragment() {
                 StatsListItemDecoration(
                         resources.getDimensionPixelSize(dimen.margin_small),
                         resources.getDimensionPixelSize(dimen.margin_small),
-                        columns
+                        1
                 )
         )
     }
