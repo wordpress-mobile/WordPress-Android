@@ -10,7 +10,6 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
@@ -120,11 +119,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
             localDataProvider.get()?.let { onModel(it) }
         }
 
-        override suspend fun fetchRemoteData(
-            site: SiteModel,
-            forced: Boolean,
-            loadMode: LoadMode
-        ) {
+        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
             val domainModel = remoteDataProvider.get()
             if (domainModel != null) {
                 onModel(domainModel)

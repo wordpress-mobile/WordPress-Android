@@ -8,9 +8,10 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.CacheMode
+import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
-import org.wordpress.android.fluxc.model.stats.LoadMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.modules.UI_THREAD
@@ -34,7 +35,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val BLOCK_PAGE_SIZE = 6
+private const val BLOCK_ITEM_COUNT = 6
 private const val VIEW_ALL_PAGE_SIZE = 10
 
 class FollowersUseCase
@@ -50,25 +51,30 @@ class FollowersUseCase
         mainDispatcher,
         0
 ) {
-    private val pageSize = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_PAGE_SIZE
+    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_ITEM_COUNT
     private lateinit var lastSite: SiteModel
 
     override suspend fun loadCachedData(site: SiteModel) {
         lastSite = site
-        val wpComFollowers = insightsStore.getWpComFollowers(site, LoadMode.All)
-        val emailFollowers = insightsStore.getEmailFollowers(site, LoadMode.All)
+        val cacheMode = if (useCaseMode == VIEW_ALL) CacheMode.All else CacheMode.Top(itemsToLoad)
+        val wpComFollowers = insightsStore.getWpComFollowers(site, cacheMode)
+        val emailFollowers = insightsStore.getEmailFollowers(site, cacheMode)
         if (wpComFollowers != null && emailFollowers != null) {
             onModel(wpComFollowers to emailFollowers)
         }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+        fetchData(site, forced, FetchMode.Paged(itemsToLoad, useCaseMode == VIEW_ALL))
+    }
+
+    private suspend fun fetchData(site: SiteModel, forced: Boolean, fetchMode: FetchMode.Paged) {
         lastSite = site
         val deferredWpComResponse = GlobalScope.async {
-            insightsStore.fetchWpComFollowers(site, forced, LoadMode.Paged(pageSize, false))
+            insightsStore.fetchWpComFollowers(site, fetchMode, forced)
         }
         val deferredEmailResponse = GlobalScope.async {
-            insightsStore.fetchEmailFollowers(site, forced, LoadMode.Paged(pageSize, false))
+            insightsStore.fetchEmailFollowers(site, fetchMode, forced)
         }
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
@@ -164,7 +170,7 @@ class FollowersUseCase
     private fun onLinkClick() {
         if (useCaseMode == VIEW_ALL) {
             GlobalScope.launch {
-                fetchRemoteData(lastSite, forced = true)
+                fetchData(lastSite, true, FetchMode.Paged(itemsToLoad, true))
             }
         } else {
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
