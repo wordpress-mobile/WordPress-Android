@@ -128,6 +128,17 @@ class NewSiteCreationDomainsViewModelTest {
     }
 
     /**
+     * Verifies the UI state for after the VM is started with a non-empty site title and it results in error
+     */
+    @Test
+    fun verifyErrorResultTitleQueryUiStateAfterResponse() = testWithErrorResponse {
+        viewModel.start(ERROR_RESULT_FETCH_QUERY)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verifyInitialContentUiState(captor.secondValue)
+    }
+
+    /**
      * Verifies the initial UI state for when the user enters a non-empty query.
      */
     @Test
