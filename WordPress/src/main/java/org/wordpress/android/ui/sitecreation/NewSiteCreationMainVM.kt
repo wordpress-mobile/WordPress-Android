@@ -23,7 +23,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import javax.inject.Inject
 
-private const val TAG_WARNING_DIALOG = "back_pressed_warning_dialog"
+const val TAG_WARNING_DIALOG = "back_pressed_warning_dialog"
 const val KEY_CURRENT_STEP = "key_current_step"
 const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 
@@ -62,7 +62,7 @@ class NewSiteCreationMainVM @Inject constructor(
     val wizardFinishedObservable: LiveData<CreateSiteState> = _wizardFinishedObservable
 
     private val _exitFlowObservable = SingleLiveEvent<Unit>()
-    val cancelFlowObservable: LiveData<Unit> = _exitFlowObservable
+    val exitFlowObservable: LiveData<Unit> = _exitFlowObservable
 
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
@@ -94,7 +94,7 @@ class NewSiteCreationMainVM @Inject constructor(
     private fun shouldSuppressBackPress(): Boolean = wizardManager.isLastStep()
 
     /**
-     * Returns true if the back pressed event was handled, false otherwise.
+     * Returns true if the back pressed event was handled and the activity should suppress it, false otherwise.
      */
     fun onBackPressed(): Boolean {
         return if (shouldSuppressBackPress()) {

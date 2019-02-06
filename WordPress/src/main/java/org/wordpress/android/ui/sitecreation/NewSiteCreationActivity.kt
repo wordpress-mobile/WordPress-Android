@@ -104,7 +104,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
                 dialogHolder.show(this, supportFragmentManager, uiHelpers)
             }
         })
-        mainViewModel.cancelFlowObservable.observe(this, Observer {
+        mainViewModel.exitFlowObservable.observe(this, Observer {
             setResult(Activity.RESULT_CANCELED)
             finish()
         })

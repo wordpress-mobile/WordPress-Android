@@ -24,6 +24,7 @@ import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.Cr
 import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.DialogHolder
 
 private const val LOCAL_SITE_ID = 1
 private const val SEGMENT_ID = 1L
@@ -43,6 +44,8 @@ class NewSiteCreationMainVMTest {
     @Mock lateinit var tracker: NewSiteCreationTracker
     @Mock lateinit var navigationTargetObserver: Observer<NavigationTarget>
     @Mock lateinit var wizardFinishedObserver: Observer<CreateSiteState>
+    @Mock lateinit var wizardExitedObserver: Observer<Unit>
+    @Mock lateinit var dialogActionsObserver: Observer<DialogHolder>
     @Mock lateinit var savedInstanceState: Bundle
     @Mock lateinit var wizardManager: WizardManager<SiteCreationStep>
     @Mock lateinit var siteCreationStep: SiteCreationStep
@@ -61,6 +64,8 @@ class NewSiteCreationMainVMTest {
         viewModel.start(null)
         viewModel.navigationTargetObservable.observeForever(navigationTargetObserver)
         viewModel.wizardFinishedObservable.observeForever(wizardFinishedObserver)
+        viewModel.dialogActionObservable.observeForever(dialogActionsObserver)
+        viewModel.exitFlowObservable.observeForever(wizardExitedObserver)
         whenever(wizardManager.stepsCount).thenReturn(STEP_COUNT)
         // clear invocations since viewModel.start() calls wizardManager.showNextStep
         clearInvocations(wizardManager)
@@ -144,13 +149,26 @@ class NewSiteCreationMainVMTest {
     @Test
     fun backNotSuppressedWhenNotLastStep() {
         whenever(wizardManager.isLastStep()).thenReturn(false)
-        assertThat(viewModel.shouldSuppressBackPress()).isFalse()
+        assertThat(viewModel.onBackPressed()).isFalse()
     }
 
     @Test
-    fun backSuppressedForLastStep() {
+    fun backSuppressedWhenLastStep() {
         whenever(wizardManager.isLastStep()).thenReturn(true)
-        assertThat(viewModel.shouldSuppressBackPress()).isTrue()
+        assertThat(viewModel.onBackPressed()).isTrue()
+    }
+
+    @Test
+    fun dialogShownOnBackPressedForLastStep() {
+        whenever(wizardManager.isLastStep()).thenReturn(true)
+        viewModel.onBackPressed()
+        verify(dialogActionsObserver).onChanged(any())
+    }
+
+    @Test
+    fun flowExitedOnDialogPositiveButtonClicked() {
+        viewModel.onPositiveDialogButtonClicked(TAG_WARNING_DIALOG)
+        verify(wizardExitedObserver).onChanged(any())
     }
 
     @Test
