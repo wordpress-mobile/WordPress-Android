@@ -14,13 +14,16 @@ import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreati
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.SingleEventObservable
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.DialogHolder
 import javax.inject.Inject
 
+private const val TAG_WARNING_DIALOG = "back_pressed_warning_dialog"
 private const val KEY_CURRENT_STEP = "key_current_step"
 private const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 private val SITE_CREATION_STEPS =
@@ -57,8 +60,14 @@ class NewSiteCreationMainVM @Inject constructor(private val tracker: NewSiteCrea
         )
     }
 
+    private val _dialogAction = SingleLiveEvent<DialogHolder>()
+    val dialogActionObservable: LiveData<DialogHolder> = _dialogAction
+
     private val _wizardFinishedObservable = SingleLiveEvent<CreateSiteState>()
     val wizardFinishedObservable: LiveData<CreateSiteState> = _wizardFinishedObservable
+
+    private val _cancelFlowObservable = SingleLiveEvent<Unit>()
+    val cancelFlowObservable: LiveData<Unit> = _cancelFlowObservable
 
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
@@ -88,10 +97,25 @@ class NewSiteCreationMainVM @Inject constructor(private val tracker: NewSiteCrea
         wizardManager.showNextStep()
     }
 
-    fun shouldSuppressBackPress(): Boolean = wizardManager.isLastStep()
+    private fun shouldSuppressBackPress(): Boolean = wizardManager.isLastStep()
 
-    fun onBackPressed() {
-        wizardManager.onBackPressed()
+    /**
+     * Returns true if the back pressed event was handled, false otherwise.
+     */
+    fun onBackPressed(): Boolean {
+        return if (shouldSuppressBackPress()) {
+            _dialogAction.value = DialogHolder(
+                    tag = TAG_WARNING_DIALOG,
+                    title = null,
+                    message = UiStringRes(R.string.new_site_creation_preview_back_pressed_warning),
+                    positiveButton = UiStringRes(R.string.exit),
+                    negativeButton = UiStringRes(R.string.cancel)
+            )
+            true
+        } else {
+            wizardManager.onBackPressed()
+            false
+        }
     }
 
     fun onVerticalsScreenFinished(verticalId: String) {
@@ -132,6 +156,25 @@ class NewSiteCreationMainVM @Inject constructor(private val tracker: NewSiteCrea
 
     fun onSitePreviewScreenFinished(createSiteState: CreateSiteState) {
         _wizardFinishedObservable.value = createSiteState
+    }
+
+    fun onPositiveDialogButtonClicked(instanceTag: String) {
+        when (instanceTag) {
+            TAG_WARNING_DIALOG -> cancelFlow()
+            else -> NotImplementedError("Unknown dialog tag: $instanceTag")
+        }
+    }
+
+    fun onNegativeDialogButtonClicked(instanceTag: String) {
+        when (instanceTag) {
+            TAG_WARNING_DIALOG -> Unit // TODO log event
+            else -> NotImplementedError("Unknown dialog tag: $instanceTag")
+        }
+    }
+
+    private fun cancelFlow() {
+        // TODO log event
+       _cancelFlowObservable.call()
     }
 
     sealed class NewSiteCreationScreenTitle {

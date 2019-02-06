@@ -14,30 +14,33 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
-import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState
-import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteCreationCompleted
-import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteNotCreated
-import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
-import org.wordpress.android.ui.sitecreation.previews.NewSiteCreationPreviewFragment
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.OnSkipClickedListener
+import org.wordpress.android.ui.sitecreation.previews.NewSiteCreationPreviewFragment
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteNotCreated
+import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.siteinfo.NewSiteCreationSiteInfoFragment
 import org.wordpress.android.ui.sitecreation.siteinfo.SiteInfoScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
 import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
@@ -48,8 +51,11 @@ class NewSiteCreationActivity : AppCompatActivity(),
         SiteInfoScreenListener,
         SitePreviewScreenListener,
         OnSkipClickedListener,
-        OnHelpClickedListener {
+        OnHelpClickedListener,
+        BasicDialogPositiveClickInterface,
+        BasicDialogNegativeClickInterface {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var mainViewModel: NewSiteCreationMainVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,6 +94,19 @@ class NewSiteCreationActivity : AppCompatActivity(),
                 setResult(if (siteCreated) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
                 finish()
             }
+        })
+        mainViewModel.dialogActionObservable.observe(this, Observer { dialogHolder ->
+            dialogHolder?.let {
+                val supportFragmentManager = requireNotNull(supportFragmentManager) {
+                    "FragmentManager can't be null " +
+                            "at this point"
+                }
+                dialogHolder.show(this, supportFragmentManager, uiHelpers)
+            }
+        })
+        mainViewModel.cancelFlowObservable.observe(this, Observer {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
         })
     }
 
@@ -162,6 +181,14 @@ class NewSiteCreationActivity : AppCompatActivity(),
         fragmentTransaction.commit()
     }
 
+    override fun onPositiveClicked(instanceTag: String) {
+        mainViewModel.onPositiveDialogButtonClicked(instanceTag)
+    }
+
+    override fun onNegativeClicked(instanceTag: String) {
+        mainViewModel.onNegativeDialogButtonClicked(instanceTag)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
@@ -171,8 +198,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        if (!mainViewModel.shouldSuppressBackPress()) {
-            mainViewModel.onBackPressed()
+        if (!mainViewModel.onBackPressed()) {
             super.onBackPressed()
         }
     }

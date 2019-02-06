@@ -109,6 +109,8 @@
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
     <string name="dismiss">dismiss</string>
+    <string name="exit">exit</string>
+    <string name="warning">warning</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -2485,4 +2487,5 @@
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Exiting may result in losing your progress. Are you sure you want to continue?</string>
 </resources>
