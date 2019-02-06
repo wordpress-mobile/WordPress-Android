@@ -4,6 +4,7 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.verify
@@ -159,16 +160,24 @@ class NewSiteCreationMainVMTest {
     }
 
     @Test
-    fun dialogShownOnBackPressedForLastStep() {
+    fun dialogShownOnBackPressedWhenLastStepAndPreviewNotShown() {
         whenever(wizardManager.isLastStep()).thenReturn(true)
         viewModel.onBackPressed()
         verify(dialogActionsObserver).onChanged(any())
     }
 
     @Test
+    fun flowExitedOnBackPressedWhenLastStepAndPreviewAlreadyShown() {
+        whenever(wizardManager.isLastStep()).thenReturn(true)
+        viewModel.onPreviewLayoutShown()
+        viewModel.onBackPressed()
+        verify(wizardExitedObserver).onChanged(anyOrNull())
+    }
+
+    @Test
     fun flowExitedOnDialogPositiveButtonClicked() {
         viewModel.onPositiveDialogButtonClicked(TAG_WARNING_DIALOG)
-        verify(wizardExitedObserver).onChanged(any())
+        verify(wizardExitedObserver).onChanged(anyOrNull())
     }
 
     @Test

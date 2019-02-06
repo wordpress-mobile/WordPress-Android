@@ -44,6 +44,7 @@ class NewSiteCreationMainVM @Inject constructor(
     private val wizardManager: WizardManager<SiteCreationStep>
 ) : ViewModel() {
     private var isStarted = false
+    private var isSitePreviewLayoutShown = false
 
     private lateinit var siteCreationState: SiteCreationState
 
@@ -91,20 +92,22 @@ class NewSiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    private fun shouldSuppressBackPress(): Boolean = wizardManager.isLastStep()
-
     /**
      * Returns true if the back pressed event was handled and the activity should suppress it, false otherwise.
      */
     fun onBackPressed(): Boolean {
-        return if (shouldSuppressBackPress()) {
-            _dialogAction.value = DialogHolder(
-                    tag = TAG_WARNING_DIALOG,
-                    title = null,
-                    message = UiStringRes(R.string.new_site_creation_preview_back_pressed_warning),
-                    positiveButton = UiStringRes(R.string.exit),
-                    negativeButton = UiStringRes(R.string.cancel)
-            )
+        return if (wizardManager.isLastStep()) {
+            if(isSitePreviewLayoutShown){
+                _exitFlowObservable.call()
+            } else {
+                _dialogAction.value = DialogHolder(
+                        tag = TAG_WARNING_DIALOG,
+                        title = null,
+                        message = UiStringRes(R.string.new_site_creation_preview_back_pressed_warning),
+                        positiveButton = UiStringRes(R.string.exit),
+                        negativeButton = UiStringRes(R.string.cancel)
+                )
+            }
             true
         } else {
             wizardManager.onBackPressed()
@@ -148,13 +151,20 @@ class NewSiteCreationMainVM @Inject constructor(
         }
     }
 
+    fun onPreviewLayoutShown() {
+        isSitePreviewLayoutShown = true
+    }
+
     fun onSitePreviewScreenFinished(createSiteState: CreateSiteState) {
         _wizardFinishedObservable.value = createSiteState
     }
 
     fun onPositiveDialogButtonClicked(instanceTag: String) {
         when (instanceTag) {
-            TAG_WARNING_DIALOG -> exitFlow()
+            TAG_WARNING_DIALOG -> {
+                tracker.trackFlowExited()
+                _exitFlowObservable.call()
+            }
             else -> NotImplementedError("Unknown dialog tag: $instanceTag")
         }
     }
@@ -166,11 +176,6 @@ class NewSiteCreationMainVM @Inject constructor(
             }
             else -> NotImplementedError("Unknown dialog tag: $instanceTag")
         }
-    }
-
-    private fun exitFlow() {
-        tracker.trackFlowExited()
-        _exitFlowObservable.call()
     }
 
     sealed class NewSiteCreationScreenTitle {
