@@ -88,7 +88,7 @@ class PlansViewModel @Inject constructor(
             AppLog.e(T.API, "An error occurred while fetching plans")
         } else {
             _listStatus.value = PlanOffersListStatus.DONE
-            _planOffers.value = event.planOffers
         }
+        _planOffers.value = event.planOffers
     }
 }
