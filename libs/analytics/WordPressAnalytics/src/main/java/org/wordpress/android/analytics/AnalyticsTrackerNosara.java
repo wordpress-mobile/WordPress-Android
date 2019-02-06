@@ -1125,6 +1125,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_success_preview_loaded";
             case ENHANCED_SITE_CREATION_COMPLETED:
                 return "enhanced_site_creation_completed";
+            case ENHANCED_SITE_CREATION_EXITED:
+                return "enhanced_site_creation_exited";
             case ENHANCED_SITE_CREATION_ERROR_SHOWN:
                 return "enhanced_site_creation_error_shown";
             case PERSON_REMOVED:

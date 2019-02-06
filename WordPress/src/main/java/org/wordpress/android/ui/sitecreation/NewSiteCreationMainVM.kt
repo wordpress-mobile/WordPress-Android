@@ -66,8 +66,8 @@ class NewSiteCreationMainVM @Inject constructor(private val tracker: NewSiteCrea
     private val _wizardFinishedObservable = SingleLiveEvent<CreateSiteState>()
     val wizardFinishedObservable: LiveData<CreateSiteState> = _wizardFinishedObservable
 
-    private val _cancelFlowObservable = SingleLiveEvent<Unit>()
-    val cancelFlowObservable: LiveData<Unit> = _cancelFlowObservable
+    private val _exitFlowObservable = SingleLiveEvent<Unit>()
+    val cancelFlowObservable: LiveData<Unit> = _exitFlowObservable
 
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
@@ -160,21 +160,23 @@ class NewSiteCreationMainVM @Inject constructor(private val tracker: NewSiteCrea
 
     fun onPositiveDialogButtonClicked(instanceTag: String) {
         when (instanceTag) {
-            TAG_WARNING_DIALOG -> cancelFlow()
+            TAG_WARNING_DIALOG -> exitFlow()
             else -> NotImplementedError("Unknown dialog tag: $instanceTag")
         }
     }
 
     fun onNegativeDialogButtonClicked(instanceTag: String) {
         when (instanceTag) {
-            TAG_WARNING_DIALOG -> Unit // TODO log event
+            TAG_WARNING_DIALOG -> {
+                // do nothing
+            }
             else -> NotImplementedError("Unknown dialog tag: $instanceTag")
         }
     }
 
-    private fun cancelFlow() {
-        // TODO log event
-       _cancelFlowObservable.call()
+    private fun exitFlow() {
+        tracker.trackFlowExited()
+        _exitFlowObservable.call()
     }
 
     sealed class NewSiteCreationScreenTitle {
