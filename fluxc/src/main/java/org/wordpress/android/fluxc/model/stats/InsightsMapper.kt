@@ -144,7 +144,7 @@ class InsightsMapper
             }
             .apply {
                 if (loadMode is Paged) {
-                    copy(followers = followers.take(loadMode.pageSize))
+                    return copy(followers = followers.take(loadMode.pageSize))
                 }
             }
     }
