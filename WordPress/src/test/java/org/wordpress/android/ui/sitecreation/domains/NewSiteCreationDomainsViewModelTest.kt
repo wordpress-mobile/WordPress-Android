@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation.domains
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.firstValue
+import com.nhaarman.mockitokotlin2.lastValue
 import com.nhaarman.mockitokotlin2.secondValue
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -222,6 +223,40 @@ class NewSiteCreationDomainsViewModelTest {
         verify(createSiteBtnObserver, times(1)).onChanged(captor.capture())
         assertThat(captor.firstValue, Is(domainName))
     }
+
+    /**
+     * Verifies the input focus is requested when the VM is started with a non-empty site title.
+     */
+    @Test
+    fun verifyInputFocusRequestedAfterVMStartedWithNonEmptyTitle() = testWithSuccessResponse {
+        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(RequestFocusMode::class.java)
+        verify(onInputFocusRequestedObserver, times(1)).onChanged(captor.capture())
+        assertThat(captor.lastValue, Is(RequestFocusMode.FOCUS_ONLY))
+    }
+
+    /**
+     * Verifies the input focus and keyboard is requested when the VM is started with an empty site title.
+     */
+    @Test
+    fun verifyInputFocusAndKeyboardRequestedAfterVMStartedWithEmptyTitle() = testWithSuccessResponse {
+        viewModel.start("")
+        val captor = ArgumentCaptor.forClass(RequestFocusMode::class.java)
+        verify(onInputFocusRequestedObserver, times(1)).onChanged(captor.capture())
+        assertThat(captor.lastValue, Is(RequestFocusMode.FOCUS_AND_KEYBOARD))
+    }
+
+    /**
+     * Verifies the input focus and keyboard is requested when the VM is started with null site title.
+     */
+    @Test
+    fun verifyInputFocusAndKeyboardRequestedAfterVMStartedWithNullTitle() = testWithSuccessResponse {
+        viewModel.start(null)
+        val captor = ArgumentCaptor.forClass(RequestFocusMode::class.java)
+        verify(onInputFocusRequestedObserver, times(1)).onChanged(captor.capture())
+        assertThat(captor.lastValue, Is(RequestFocusMode.FOCUS_AND_KEYBOARD))
+    }
+
 
     /**
      * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.Initial] content state.
