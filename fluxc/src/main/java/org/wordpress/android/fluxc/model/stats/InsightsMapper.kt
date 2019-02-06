@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
-import org.wordpress.android.fluxc.model.stats.LoadMode.Paged
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
@@ -132,7 +131,7 @@ class InsightsMapper
     fun mapAndMergeFollowersModels(
         followerResponses: List<FollowersResponse>,
         followerType: FollowerType,
-        loadMode: LoadMode
+        cacheMode: CacheMode
     ): FollowersModel {
         return followerResponses.fold(FollowersModel(0, emptyList(), false)) { accumulator, next ->
                 val nextModel = map(next, followerType)
@@ -143,8 +142,8 @@ class InsightsMapper
                 )
             }
             .apply {
-                if (loadMode is Paged) {
-                    return copy(followers = followers.take(loadMode.pageSize))
+                if (cacheMode is CacheMode.Top) {
+                    return copy(followers = followers.take(cacheMode.limit))
                 }
             }
     }

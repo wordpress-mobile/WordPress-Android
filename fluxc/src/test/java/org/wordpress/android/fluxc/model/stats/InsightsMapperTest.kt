@@ -103,7 +103,7 @@ class InsightsMapperTest {
 
     @Test
     fun `maps and merges followers responses`() {
-        val model = mapper.mapAndMergeFollowersModels(VIEW_ALL_FOLLOWERS_RESPONSE, WP_COM, LoadMode.Paged(1, false))
+        val model = mapper.mapAndMergeFollowersModels(VIEW_ALL_FOLLOWERS_RESPONSE, WP_COM, FetchMode.Paged(1, false))
 
         assertThat(model.followers.size).isEqualTo(1)
         assertThat(model.followers.first().label).isEqualTo(FOLLOWER_RESPONSE.label)

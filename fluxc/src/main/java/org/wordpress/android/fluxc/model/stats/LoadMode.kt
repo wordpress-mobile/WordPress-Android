@@ -1,8 +1,12 @@
 package org.wordpress.android.fluxc.model.stats
 
-const val ALL_PAGE_SIZE = 100
+sealed class FetchMode {
+    data class Paged(val pageSize: Int, val loadMore: Boolean = false) : FetchMode()
+    data class Top(val limit: Int) : FetchMode()
+    object All : FetchMode()
+}
 
-sealed class LoadMode(open val pageSize: Int) {
-    data class Paged(override val pageSize: Int, val loadMore: Boolean = false) : LoadMode(pageSize)
-    object All : LoadMode(ALL_PAGE_SIZE)
+sealed class CacheMode {
+    data class Top(val limit: Int) : CacheMode()
+    object All : CacheMode()
 }
