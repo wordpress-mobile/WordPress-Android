@@ -6,8 +6,11 @@ import android.content.Context;
 
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationStepsProvider;
+import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.stats.refresh.StatsFragment;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
+import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
@@ -32,6 +35,11 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract StatsFragment contributeStatsFragment();
+
+    @Provides
+    public static WizardManager<SiteCreationStep> provideWizardManager(NewSiteCreationStepsProvider stepsProvider) {
+        return new WizardManager<>(stepsProvider.getSteps());
+    }
 
     @Provides
     public static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
