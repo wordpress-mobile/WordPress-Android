@@ -169,7 +169,7 @@ class NewSiteCreationMainVMTest {
 
     @Test
     fun titlesForOtherThanFirstAndLastStepIsStepCount() {
-        (FIRST_STEP_INDEX + 1 until STEP_COUNT).forEach { stepIndex ->
+        (FIRST_STEP_INDEX + 1 until LAST_STEP_INDEX).forEach { stepIndex ->
             whenever(wizardManager.stepPosition(siteCreationStep)).thenReturn(stepIndex)
 
             assertThat(viewModel.screenTitleForWizardStep(siteCreationStep))
