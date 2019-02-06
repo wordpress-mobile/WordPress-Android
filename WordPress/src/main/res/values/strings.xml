@@ -2010,8 +2010,8 @@
     <!-- Plans -->
     <string name="plan">Plan</string>
     <string name="plans">Plans</string>
-    <string name="plans_loading_error">Unable to load plans</string>
-    <string name="plans_manage">Manage your plan at\nWordPress.com/plans</string>
+    <string name="plans_loading_error_title">Unable to load plans</string>
+    <string name="plans_loading_error_subtitle">Error communicating with the server, please try again</string>
 
     <!-- gravatar -->
     <string name="error_cropping_image">Error cropping the image</string>
