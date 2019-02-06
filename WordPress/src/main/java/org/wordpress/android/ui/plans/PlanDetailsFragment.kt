@@ -71,7 +71,6 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
             val featureTitle = view.findViewById<TextView>(R.id.item_title)
             val featureDescription = view.findViewById<TextView>(R.id.item_subtitle)
 
-
             featureTitle.text = it.name
             featureDescription.text = it.description
 
@@ -82,7 +81,7 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
     }
 
     override fun onConfirmClicked(controller: FullScreenDialogController): Boolean {
-       // do nothing
+        // do nothing
     }
 
     override fun onDismissClicked(controller: FullScreenDialogController): Boolean {
