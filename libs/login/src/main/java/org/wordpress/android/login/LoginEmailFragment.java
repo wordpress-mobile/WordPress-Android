@@ -68,7 +68,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
-    private ArrayList<Integer> mOldSitesIDs;
+    private ArrayList<Integer> mOldSitesIDs = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private String mGoogleEmail;
     private String mRequestedEmail;
