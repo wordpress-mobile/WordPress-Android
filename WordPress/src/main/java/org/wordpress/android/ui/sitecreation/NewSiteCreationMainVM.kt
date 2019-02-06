@@ -21,8 +21,8 @@ import org.wordpress.android.viewmodel.SingleEventObservable
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
-private const val KEY_CURRENT_STEP = "key_current_step"
-private const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
+const val KEY_CURRENT_STEP = "key_current_step"
+const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 
 @Parcelize
 @SuppressLint("ParcelCreator")

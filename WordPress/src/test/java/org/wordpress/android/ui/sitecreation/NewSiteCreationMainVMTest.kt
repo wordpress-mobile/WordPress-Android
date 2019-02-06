@@ -186,7 +186,7 @@ class NewSiteCreationMainVMTest {
     @Test
     fun siteCreationStateRestored() {
         val expectedState = SiteCreationState()
-        whenever(savedInstanceState.getParcelable<SiteCreationState>("key_site_creation_state"))
+        whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
                 .thenReturn(expectedState)
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
@@ -204,10 +204,10 @@ class NewSiteCreationMainVMTest {
     @Test
     fun siteCreationStepIndexRestored() {
         val index = 17
-        whenever(savedInstanceState.getInt("key_current_step")).thenReturn(index)
+        whenever(savedInstanceState.getInt(KEY_CURRENT_STEP)).thenReturn(index)
 
         // siteCreationState is not nullable - we need to set it
-        whenever(savedInstanceState.getParcelable<SiteCreationState>("key_site_creation_state"))
+        whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
                 .thenReturn(SiteCreationState())
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
