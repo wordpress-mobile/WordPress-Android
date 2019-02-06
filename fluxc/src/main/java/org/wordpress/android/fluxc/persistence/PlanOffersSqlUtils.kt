@@ -7,7 +7,6 @@ import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
-import com.yarolegovich.wellsql.core.annotation.Unique
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel.Feature
 import javax.inject.Inject
