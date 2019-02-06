@@ -35,7 +35,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.hamcrest.CoreMatchers.`is` as Is
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
-private const val ERROR_RESULT_FETCH_QUERY = "test"
+private const val ERROR_RESULT_FETCH_QUERY = "error_result_query"
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair("multi_result_query", MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE)
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = Pair("empty_result_query", 0)
 
@@ -129,7 +129,7 @@ class NewSiteCreationDomainsViewModelTest {
     }
 
     /**
-     * Verifies the UI state for after the VM is started with a non-empty site title and it results in error
+     * Verifies the UI state for after the VM is started with a non-empty site title and fetchDomains results in error
      */
     @Test
     fun verifyErrorResultTitleQueryUiStateAfterResponse() = testWithErrorResponse {
