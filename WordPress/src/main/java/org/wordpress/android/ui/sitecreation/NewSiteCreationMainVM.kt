@@ -97,7 +97,7 @@ class NewSiteCreationMainVM @Inject constructor(
      */
     fun onBackPressed(): Boolean {
         return if (wizardManager.isLastStep()) {
-            if(isSitePreviewLayoutShown){
+            if (isSitePreviewLayoutShown) {
                 _exitFlowObservable.call()
             } else {
                 _dialogAction.value = DialogHolder(
