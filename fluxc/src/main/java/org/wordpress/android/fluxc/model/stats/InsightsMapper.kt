@@ -187,10 +187,22 @@ class InsightsMapper
         return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
 
-    fun map(response: TagsResponse, pageSize: Int): TagsModel {
-        return TagsModel(response.tags.take(pageSize).map { tag ->
-            TagModel(tag.tags.mapNotNull { it.toItem() }.take(pageSize), tag.views ?: 0)
-        }, response.tags.size > pageSize)
+    fun map(response: TagsResponse, cacheMode: CacheMode): TagsModel {
+        return TagsModel(response.tags.let {
+            if (cacheMode is CacheMode.Top) {
+                return@let it.take(cacheMode.limit)
+            } else {
+                return@let it
+            }
+        }.map { tag ->
+            TagModel(tag.tags.mapNotNull { it.toItem() }.let {
+                if (cacheMode is CacheMode.Top) {
+                    return@let it.take(cacheMode.limit)
+                } else {
+                    return@let it
+                }
+            }, tag.views ?: 0)
+        }, cacheMode is CacheMode.Top && response.tags.size > cacheMode.limit)
     }
 
     private fun TagResponse.toItem(): TagModel.Item? {

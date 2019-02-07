@@ -216,9 +216,9 @@ class InsightsStore
     }
 
     // Tags
-    suspend fun fetchTags(siteModel: SiteModel, pageSize: Int, forced: Boolean = false) =
+    suspend fun fetchTags(siteModel: SiteModel, fetchMode: FetchMode.Top, forced: Boolean = false) =
             withContext(coroutineContext) {
-                val response = restClient.fetchTags(siteModel, pageSize = pageSize + 1, forced = forced)
+                val response = restClient.fetchTags(siteModel, pageSize = fetchMode.limit + 1, forced = forced)
                 return@withContext when {
                     response.isError -> {
                         OnStatsFetched(response.error)
@@ -226,15 +226,15 @@ class InsightsStore
                     response.response != null -> {
                         sqlUtils.insert(siteModel, response.response)
                         OnStatsFetched(
-                                insightsMapper.map(response.response, pageSize)
+                                insightsMapper.map(response.response, CacheMode.Top(fetchMode.limit))
                         )
                     }
                     else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
                 }
             }
 
-    fun getTags(site: SiteModel, pageSize: Int): TagsModel? {
-        return sqlUtils.selectTags(site)?.let { insightsMapper.map(it, pageSize) }
+    fun getTags(site: SiteModel, cacheMode: CacheMode): TagsModel? {
+        return sqlUtils.selectTags(site)?.let { insightsMapper.map(it, cacheMode) }
     }
 
     // Publicize stats
