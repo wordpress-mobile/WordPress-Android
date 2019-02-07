@@ -99,7 +99,18 @@ val FOLLOWER_RESPONSE = FollowerResponse(
         DATE,
         FollowData("type", PARAMS)
 )
+val FOLLOWER_RESPONSE_2 = FollowerResponse(
+        "Two",
+        AVATAR,
+        URL,
+        DATE,
+        FollowData("type", PARAMS)
+)
 val FOLLOWERS_RESPONSE = FollowersResponse(0, 10, 100, 70, 30, listOf(FOLLOWER_RESPONSE))
+val VIEW_ALL_FOLLOWERS_RESPONSE = listOf(
+        FollowersResponse(0, 10, 100, 70, 30, listOf(FOLLOWER_RESPONSE)),
+        FollowersResponse(0, 10, 100, 70, 30, listOf(FOLLOWER_RESPONSE_2)))
+
 val AUTHOR = CommentsResponse.Author(
         USER_LABEL,
         URL,
