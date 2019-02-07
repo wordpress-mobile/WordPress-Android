@@ -15,23 +15,18 @@ class PlansActivity : AppCompatActivity(), PlansItemClickInterface {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.plans_activity)
-        val mToolbar = findViewById<Toolbar>(R.id.toolbar)
-        mToolbar!!.title = getString(R.string.plans)
-        setSupportActionBar(mToolbar)
-
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar!!.title = getString(R.string.plans)
+        setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onPlanItemClicked(plan: PlanOffersModel) {
-        val bundle = PlanDetailsFragment.newBundle(
-                plan
-        )
-
+        val bundle = PlanDetailsFragment.newBundle(plan)
         planDetailsDialog = FullScreenDialogFragment.Builder(this)
                 .setTitle(StringUtils.notNullStr(plan.name))
                 .setContent(PlanDetailsFragment::class.java, bundle)
                 .build()
-
         planDetailsDialog!!.show(this.supportFragmentManager, FullScreenDialogFragment.TAG)
     }
 }

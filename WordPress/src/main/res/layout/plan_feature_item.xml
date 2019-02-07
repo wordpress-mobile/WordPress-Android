@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/feature_details"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
     android:layout_marginTop="@dimen/margin_medium"
     android:orientation="vertical"
     android:paddingEnd="@dimen/activity_log_icon_margin"
-    android:paddingStart="@dimen/activity_log_icon_margin"
-    tools:ignore="UselessParent">
+    android:paddingStart="@dimen/activity_log_icon_margin">
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/item_title"
+        android:id="@+id/feature_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
@@ -24,7 +23,7 @@
     </org.wordpress.android.widgets.WPTextView>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/item_subtitle"
+        android:id="@+id/feature_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
@@ -40,6 +39,4 @@
         android:background="@drawable/notifications_list_divider_full_width">
     </View>
 
-
 </LinearLayout>
-

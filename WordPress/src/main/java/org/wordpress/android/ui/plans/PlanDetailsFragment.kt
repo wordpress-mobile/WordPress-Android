@@ -2,7 +2,6 @@ package org.wordpress.android.ui.plans
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,17 +18,17 @@ import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 
 class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
-    private var planOffers: PlanOffersModel? = null
+    private var plan: PlanOffersModel? = null
     @Inject lateinit var imageManager: ImageManager
     private lateinit var dialogController: FullScreenDialogController
 
     companion object {
-        const val EXTRA_PLAN_OFFERS = "EXTRA_PLAN_OFFERS"
-        const val KEY_PLAN_OFFERS = "KEY_PLAN_OFFERS"
+        const val EXTRA_PLAN = "EXTRA_PLAN"
+        const val KEY_PLAN = "KEY_PLAN"
 
         fun newBundle(planOffersModel: PlanOffersModel): Bundle {
             val bundle = Bundle()
-            bundle.putParcelable(EXTRA_PLAN_OFFERS, planOffersModel)
+            bundle.putParcelable(EXTRA_PLAN, planOffersModel)
             return bundle
         }
     }
@@ -39,42 +38,44 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
 
         (requireActivity().application as WordPress).component().inject(this)
 
-        planOffers = if (savedInstanceState != null) {
-            savedInstanceState.getParcelable(KEY_PLAN_OFFERS)
+        plan = if (savedInstanceState != null) {
+            savedInstanceState.getParcelable(KEY_PLAN)
         } else {
-            arguments?.getParcelable(EXTRA_PLAN_OFFERS)
+            arguments?.getParcelable(EXTRA_PLAN)
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(KEY_PLAN, plan)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.plan_fragment, container, false) as ViewGroup
+        val rootView = inflater.inflate(R.layout.plan_details_fragment, container, false) as ViewGroup
 
         val planIcon = rootView.findViewById<ImageView>(R.id.image_plan_icon)
         val planName = rootView.findViewById<TextView>(R.id.text_product_name)
         val planTagline = rootView.findViewById<TextView>(R.id.text_tagline)
+        val featuresContainer = rootView.findViewById<ViewGroup>(R.id.plan_features_container)
 
-        if (!TextUtils.isEmpty(planOffers!!.iconUrl)) {
-            imageManager.loadIntoCircle(
-                    planIcon, ImageType.PLAN,
-                    StringUtils.notNullStr(planOffers!!.iconUrl)
-            )
-        }
+        imageManager.loadIntoCircle(
+                planIcon, ImageType.PLAN,
+                StringUtils.notNullStr(plan!!.iconUrl)
+        )
 
-        planName.text = planOffers!!.name
-        planTagline.text = planOffers!!.tagline
+        planName.text = plan!!.name
+        planTagline.text = plan!!.tagline
 
-        val featuresContainer = rootView.findViewById<ViewGroup>(R.id.plan_container)
-
-        planOffers!!.features?.forEachIndexed { index, feature ->
+        plan!!.features?.forEachIndexed { index, feature ->
             val view = inflater.inflate(R.layout.plan_feature_item, featuresContainer, false) as ViewGroup
 
-            val featureTitle = view.findViewById<TextView>(R.id.item_title)
-            val featureDescription = view.findViewById<TextView>(R.id.item_subtitle)
+            val featureTitle = view.findViewById<TextView>(R.id.feature_title)
+            val featureDescription = view.findViewById<TextView>(R.id.feature_description)
 
             featureTitle.text = feature.name
             featureDescription.text = feature.description
 
-            if (index == planOffers!!.features!!.size - 1) {
+            if (index == plan!!.features!!.size - 1) {
                 view.findViewById<View>(R.id.bottom_divider).visibility = View.INVISIBLE
             }
 

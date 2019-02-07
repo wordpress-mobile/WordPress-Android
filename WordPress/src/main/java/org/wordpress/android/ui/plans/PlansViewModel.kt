@@ -54,9 +54,7 @@ class PlansViewModel @Inject constructor(
         if (isStarted) {
             return
         }
-
         fetchPlans()
-
         isStarted = true
     }
 
@@ -89,6 +87,6 @@ class PlansViewModel @Inject constructor(
         } else {
             _listStatus.value = PlansListStatus.DONE
         }
-        _plans.value = event.planOffers
+        _plans.value = event.planOffers // in case of PlansListStatus.ERROR this might contain cached plans
     }
 }

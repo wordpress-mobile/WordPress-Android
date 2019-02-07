@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.Adapter
 import android.text.TextUtils
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -42,11 +41,7 @@ class PlansListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanOffersItemViewHolder {
-        return PlanOffersItemViewHolder(
-                parent,
-                itemClickListener,
-                imageManager
-        )
+        return PlanOffersItemViewHolder(parent, itemClickListener, imageManager)
     }
 
     internal fun updateList(items: List<PlanOffersModel>) {
@@ -60,19 +55,14 @@ class PlansListAdapter(
         private val itemClickListener: (PlanOffersModel) -> Unit,
         val imageManager: ImageManager
     ) : RecyclerView.ViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                    R.layout.plan_offers_list_item,
-                    parent,
-                    false
-            )
+            LayoutInflater.from(parent.context).inflate(R.layout.plans_list_item, parent, false)
     ) {
-        private val container: View = itemView.findViewById(R.id.item_layout)
         private val planImage: ImageView = itemView.findViewById(R.id.plan_image)
-        private val title: TextView = itemView.findViewById(R.id.item_title)
-        private val subtitle: TextView = itemView.findViewById(R.id.item_subtitle)
+        private val title: TextView = itemView.findViewById(R.id.plan_title)
+        private val subtitle: TextView = itemView.findViewById(R.id.plan_subtitle)
 
         fun bind(planOffersModel: PlanOffersModel) {
-            container.setOnClickListener { itemClickListener(planOffersModel) }
+            itemView.setOnClickListener { itemClickListener(planOffersModel) }
             title.text = planOffersModel.name
             subtitle.text = planOffersModel.tagline
 

@@ -24,12 +24,6 @@ class PlansListFragment : Fragment() {
     private lateinit var viewModel: PlansViewModel
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    companion object {
-        fun newInstance(): PlansListFragment {
-            return PlansListFragment()
-        }
-    }
-
     interface PlansItemClickInterface {
         fun onPlanItemClicked(plan: PlanOffersModel)
     }
