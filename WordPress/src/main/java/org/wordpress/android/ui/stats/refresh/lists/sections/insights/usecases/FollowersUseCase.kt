@@ -56,16 +56,15 @@ class FollowersUseCase
 
     override suspend fun loadCachedData(site: SiteModel) {
         lastSite = site
-        val cacheMode = if (useCaseMode == VIEW_ALL) CacheMode.All else CacheMode.Top(itemsToLoad)
-        val wpComFollowers = insightsStore.getWpComFollowers(site, cacheMode)
-        val emailFollowers = insightsStore.getEmailFollowers(site, cacheMode)
+        val wpComFollowers = insightsStore.getWpComFollowers(site, CacheMode.Top(itemsToLoad))
+        val emailFollowers = insightsStore.getEmailFollowers(site, CacheMode.Top(itemsToLoad))
         if (wpComFollowers != null && emailFollowers != null) {
             onModel(wpComFollowers to emailFollowers)
         }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        fetchData(site, forced, FetchMode.Paged(itemsToLoad, !forced && useCaseMode == VIEW_ALL))
+        fetchData(site, forced, FetchMode.Paged(itemsToLoad, false))
     }
 
     private suspend fun fetchData(site: SiteModel, forced: Boolean, fetchMode: FetchMode.Paged) {
