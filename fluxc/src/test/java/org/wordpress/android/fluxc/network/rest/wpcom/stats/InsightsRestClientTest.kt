@@ -347,7 +347,7 @@ class InsightsRestClientTest {
     fun `returns tags and categories`() = test {
         initTagsResponse(TAGS_RESPONSE)
 
-        val responseModel = insightsRestClient.fetchTags(site, pageSize = pageSize, forced = false)
+        val responseModel = insightsRestClient.fetchTags(site, max = pageSize, forced = false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(TAGS_RESPONSE)
@@ -368,7 +368,7 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchTags(site, pageSize = pageSize, forced = false)
+        val responseModel = insightsRestClient.fetchTags(site, max = pageSize, forced = false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)

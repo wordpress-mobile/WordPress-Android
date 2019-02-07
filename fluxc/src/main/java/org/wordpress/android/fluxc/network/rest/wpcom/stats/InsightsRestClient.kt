@@ -218,13 +218,13 @@ constructor(
 
     suspend fun fetchTags(
         site: SiteModel,
-        pageSize: Int,
+        max: Int,
         forced: Boolean
     ): FetchStatsPayload<TagsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.tags.urlV1_1
 
         val params = mapOf(
-                "max" to pageSize.toString()
+                "max" to max.toString()
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
