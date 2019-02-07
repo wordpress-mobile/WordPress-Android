@@ -147,7 +147,7 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="StatsBlockColumnSmallHeader" parent="TextAppearance.AppCompat.Body2">
+    <style name="StatsBlockColumnSmallHeader" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/stats_block_column</item>
         <item name="android:textSize">@dimen/text_sz_extra_small</item>
     </style>
@@ -171,5 +171,15 @@
     <style name="StatsBlockBigValueUnit" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsLegend" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:layout_marginBottom">6dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:drawableStart">@drawable/shape_rounded_rectangle_dark_blue</item>
     </style>
 </resources>
