@@ -321,11 +321,6 @@ class InsightsRestClientTest {
         assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(TOP_COMMENTS_RESPONSE)
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/comments/")
-        assertThat(paramsCaptor.lastValue).isEqualTo(
-                mapOf(
-                        "max" to "$pageSize"
-                )
-        )
     }
 
     @Test
