@@ -58,8 +58,10 @@ public class ReaderIconCountView extends LinearLayout {
                                 R.color.grey_min_orange_jazzy_grey_disabled_selector));
                         break;
                     case ICON_COMMENT:
-                        mImageView
-                                .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.reader_button_comment));
+                        mImageView.setImageDrawable(ContextCompat.getDrawable(context,
+                                R.drawable.ic_comment_white_24dp));
+                        mImageView.setImageTintList(getResources().getColorStateList(
+                                R.color.grey_min_blue_medium_grey_disabled_selector));
                         break;
                 }
             } finally {
