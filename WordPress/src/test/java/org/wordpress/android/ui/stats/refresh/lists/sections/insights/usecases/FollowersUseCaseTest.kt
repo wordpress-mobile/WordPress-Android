@@ -61,7 +61,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private val blockPageSize = 6
     private val viewAllPageSize = 10
     private val blockInitialMode = FetchMode.Paged(blockPageSize, false)
-    private val viewAllInitialLoadMode = FetchMode.Paged(viewAllPageSize, true)
+    private val viewAllInitialLoadMode = FetchMode.Paged(viewAllPageSize, false)
     private val viewAllMoreLoadMode = FetchMode.Paged(viewAllPageSize, true)
     val message = "Total followers count is 50"
     @Before

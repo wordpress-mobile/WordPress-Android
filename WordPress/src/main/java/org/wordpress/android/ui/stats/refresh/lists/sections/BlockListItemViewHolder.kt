@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.net.http.SslError
 import android.support.annotation.LayoutRes
@@ -472,6 +473,7 @@ sealed class BlockListItemViewHolder(
     ) {
         when {
             item.icon != null -> {
+                this.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this.context, R.color.grey_dark))
                 this.visibility = View.VISIBLE
                 imageManager.load(this, item.icon)
             }

@@ -54,7 +54,7 @@ class TodayStatsUseCase
             if (hasViews) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_visible_on_grey_dark_24dp,
+                                R.drawable.ic_visible_on_white_24dp,
                                 textResource = R.string.stats_views,
                                 value = domainModel.views.toFormattedString(),
                                 showDivider = hasVisitors || hasLikes || hasComments
@@ -64,7 +64,7 @@ class TodayStatsUseCase
             if (hasVisitors) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_user_grey_dark_24dp,
+                                R.drawable.ic_user_white_24dp,
                                 textResource = R.string.stats_visitors,
                                 value = domainModel.visitors.toFormattedString(),
                                 showDivider = hasLikes || hasComments
@@ -74,7 +74,7 @@ class TodayStatsUseCase
             if (hasLikes) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_star_grey_dark_24dp,
+                                R.drawable.ic_star_white_24dp,
                                 textResource = R.string.stats_likes,
                                 value = domainModel.likes.toFormattedString(),
                                 showDivider = hasComments
@@ -84,7 +84,7 @@ class TodayStatsUseCase
             if (hasComments) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_comment_grey_dark_24dp,
+                                R.drawable.ic_comment_white_24dp,
                                 textResource = R.string.stats_comments,
                                 value = domainModel.comments.toFormattedString(),
                                 showDivider = false

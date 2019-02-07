@@ -66,7 +66,7 @@ class AllTimeStatsUseCase
             if (hasViews) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_visible_on_grey_dark_24dp,
+                                R.drawable.ic_visible_on_white_24dp,
                                 textResource = R.string.stats_views,
                                 value = domainModel.views.toFormattedString(),
                                 showDivider = hasVisitors || hasViewsBestDayTotal
@@ -76,7 +76,7 @@ class AllTimeStatsUseCase
             if (hasVisitors) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_user_grey_dark_24dp,
+                                R.drawable.ic_user_white_24dp,
                                 textResource = R.string.stats_visitors,
                                 value = domainModel.visitors.toFormattedString(),
                                 showDivider = hasViewsBestDayTotal
