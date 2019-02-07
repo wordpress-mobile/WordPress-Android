@@ -84,7 +84,7 @@ class TodayStatsUseCase
             if (hasComments) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_comment_grey_dark_24dp,
+                                R.drawable.ic_comment_white_24dp,
                                 textResource = R.string.stats_comments,
                                 value = domainModel.comments.toFormattedString(),
                                 showDivider = false

@@ -269,7 +269,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             case VISITORS:
                 return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
             case COMMENTS:
-                return getResources().getDrawable(R.drawable.ic_comment_grey_dark_12dp);
+                return getResources().getDrawable(R.drawable.ic_comment_white_24dp);
             case LIKES:
                 return getResources().getDrawable(R.drawable.ic_star_white_24dp);
             default:

@@ -163,7 +163,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         val item = blockListItem as ListItemWithIcon
         assertThat(item.textResource).isEqualTo(R.string.stats_comments)
         assertThat(item.showDivider).isEqualTo(showDivider)
-        assertThat(item.icon).isEqualTo(R.drawable.ic_comment_grey_dark_24dp)
+        assertThat(item.icon).isEqualTo(R.drawable.ic_comment_white_24dp)
         assertThat(item.value).isEqualTo(comments.toString())
     }
 
