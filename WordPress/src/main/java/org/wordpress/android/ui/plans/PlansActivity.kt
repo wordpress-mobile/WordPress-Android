@@ -6,10 +6,10 @@ import android.support.v7.widget.Toolbar
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.ui.FullScreenDialogFragment
-import org.wordpress.android.ui.plans.PlansListFragment.PlanOffersItemClickInterface
+import org.wordpress.android.ui.plans.PlansListFragment.PlansItemClickInterface
 import org.wordpress.android.util.StringUtils
 
-class PlansActivity : AppCompatActivity(), PlanOffersItemClickInterface {
+class PlansActivity : AppCompatActivity(), PlansItemClickInterface {
     private var planDetailsDialog: FullScreenDialogFragment? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {

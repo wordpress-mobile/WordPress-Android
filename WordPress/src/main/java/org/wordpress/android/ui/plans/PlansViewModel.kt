@@ -23,22 +23,22 @@ import javax.inject.Named
 class PlansViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     @Suppress("unused")
-    private var planOffersStore: PlanOffersStore,
+    private var plansStore: PlanOffersStore,
     @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) : ViewModel() {
-    enum class PlanOffersListStatus {
+    enum class PlansListStatus {
         DONE,
         ERROR,
         FETCHING
     }
 
-    private val _listStatus = MutableLiveData<PlanOffersListStatus>()
-    val listStatus: LiveData<PlanOffersListStatus>
+    private val _listStatus = MutableLiveData<PlansListStatus>()
+    val listStatus: LiveData<PlansListStatus>
         get() = _listStatus
 
-    private val _planOffers = MutableLiveData<List<PlanOffersModel>>()
-    val planOffers: LiveData<List<PlanOffersModel>>
-        get() = _planOffers
+    private val _plans = MutableLiveData<List<PlanOffersModel>>()
+    val plans: LiveData<List<PlanOffersModel>>
+        get() = _plans
 
     private val _showDialog = SingleLiveEvent<PlanOffersModel>()
     val showDialog: LiveData<PlanOffersModel>
@@ -55,13 +55,13 @@ class PlansViewModel @Inject constructor(
             return
         }
 
-        fetchPlanOffers()
+        fetchPlans()
 
         isStarted = true
     }
 
-    private fun fetchPlanOffers() {
-        _listStatus.value = PlanOffersListStatus.FETCHING
+    private fun fetchPlans() {
+        _listStatus.value = PlansListStatus.FETCHING
         uiScope.launch {
             dispatcher.dispatch(PlanOffersActionBuilder.generateNoPayloadAction(FETCH_PLAN_OFFERS))
         }
@@ -77,18 +77,18 @@ class PlansViewModel @Inject constructor(
     }
 
     fun onPullToRefresh() {
-        fetchPlanOffers()
+        fetchPlans()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onPlanOffersFetched(event: OnPlanOffersFetched) {
         if (event.isError) {
-            _listStatus.value = PlanOffersListStatus.ERROR
+            _listStatus.value = PlansListStatus.ERROR
             AppLog.e(T.API, "An error occurred while fetching plans")
         } else {
-            _listStatus.value = PlanOffersListStatus.DONE
+            _listStatus.value = PlansListStatus.DONE
         }
-        _planOffers.value = event.planOffers
+        _plans.value = event.planOffers
     }
 }

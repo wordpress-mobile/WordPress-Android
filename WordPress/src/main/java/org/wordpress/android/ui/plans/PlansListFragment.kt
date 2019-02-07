@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
-import org.wordpress.android.ui.plans.PlansViewModel.PlanOffersListStatus.FETCHING
+import org.wordpress.android.ui.plans.PlansViewModel.PlansListStatus.FETCHING
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -30,7 +30,7 @@ class PlansListFragment : Fragment() {
         }
     }
 
-    interface PlanOffersItemClickInterface {
+    interface PlansItemClickInterface {
         fun onPlanItemClicked(plan: PlanOffersModel)
     }
 
@@ -83,7 +83,7 @@ class PlansListFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.planOffers.observe(this, Observer {
+        viewModel.plans.observe(this, Observer {
             reloadList(it ?: emptyList())
         })
 
@@ -94,8 +94,8 @@ class PlansListFragment : Fragment() {
         })
 
         viewModel.showDialog.observe(this, Observer {
-            if (it is PlanOffersModel && activity is PlanOffersItemClickInterface) {
-                (activity as PlanOffersItemClickInterface).onPlanItemClicked(it)
+            if (it is PlanOffersModel && activity is PlansItemClickInterface) {
+                (activity as PlansItemClickInterface).onPlanItemClicked(it)
             }
         })
     }

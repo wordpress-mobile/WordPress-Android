@@ -33,6 +33,7 @@
     </org.wordpress.android.widgets.WPTextView>
 
     <View
+        android:id="@+id/bottom_divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
         android:layout_marginTop="@dimen/margin_medium"
