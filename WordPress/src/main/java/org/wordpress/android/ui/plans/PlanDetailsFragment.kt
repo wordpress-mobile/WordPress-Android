@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plans
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,10 +59,12 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
         val planTagline = rootView.findViewById<TextView>(R.id.text_tagline)
         val featuresContainer = rootView.findViewById<ViewGroup>(R.id.plan_features_container)
 
-        imageManager.loadIntoCircle(
-                planIcon, ImageType.PLAN,
-                StringUtils.notNullStr(plan!!.iconUrl)
-        )
+        if (!TextUtils.isEmpty(plan!!.iconUrl)) {
+            imageManager.loadIntoCircle(
+                    planIcon, ImageType.PLAN,
+                    StringUtils.notNullStr(plan!!.iconUrl)
+            )
+        }
 
         planName.text = plan!!.name
         planTagline.text = plan!!.tagline

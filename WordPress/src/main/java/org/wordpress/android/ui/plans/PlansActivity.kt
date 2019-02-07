@@ -10,8 +10,6 @@ import org.wordpress.android.ui.plans.PlansListFragment.PlansItemClickInterface
 import org.wordpress.android.util.StringUtils
 
 class PlansActivity : AppCompatActivity(), PlansItemClickInterface {
-    private var planDetailsDialog: FullScreenDialogFragment? = null
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.plans_activity)
@@ -23,7 +21,7 @@ class PlansActivity : AppCompatActivity(), PlansItemClickInterface {
 
     override fun onPlanItemClicked(plan: PlanOffersModel) {
         val bundle = PlanDetailsFragment.newBundle(plan)
-        planDetailsDialog = FullScreenDialogFragment.Builder(this)
+        val planDetailsDialog = FullScreenDialogFragment.Builder(this)
                 .setTitle(StringUtils.notNullStr(plan.name))
                 .setContent(PlanDetailsFragment::class.java, bundle)
                 .build()

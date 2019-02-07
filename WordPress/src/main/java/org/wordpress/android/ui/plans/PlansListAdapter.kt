@@ -11,7 +11,7 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
-import org.wordpress.android.ui.plans.PlansListAdapter.PlanOffersItemViewHolder
+import org.wordpress.android.ui.plans.PlansListAdapter.PlansItemViewHolder
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class PlansListAdapter(
     val activity: Activity,
     private val itemClickListener: (PlanOffersModel) -> Unit
-) : Adapter<PlanOffersItemViewHolder>() {
+) : Adapter<PlansItemViewHolder>() {
     private val list = mutableListOf<PlanOffersModel>()
     @Inject lateinit var imageManager: ImageManager
 
@@ -32,16 +32,16 @@ class PlansListAdapter(
         return list.size
     }
 
-    override fun onBindViewHolder(holder: PlanOffersItemViewHolder, position: Int, payloads: List<Any>) {
+    override fun onBindViewHolder(holder: PlansItemViewHolder, position: Int, payloads: List<Any>) {
         onBindViewHolder(holder, position)
     }
 
-    override fun onBindViewHolder(holder: PlanOffersItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PlansItemViewHolder, position: Int) {
         holder.bind(list[position])
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanOffersItemViewHolder {
-        return PlanOffersItemViewHolder(parent, itemClickListener, imageManager)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlansItemViewHolder {
+        return PlansItemViewHolder(parent, itemClickListener, imageManager)
     }
 
     internal fun updateList(items: List<PlanOffersModel>) {
@@ -50,7 +50,7 @@ class PlansListAdapter(
         notifyDataSetChanged()
     }
 
-    class PlanOffersItemViewHolder(
+    class PlansItemViewHolder(
         parent: ViewGroup,
         private val itemClickListener: (PlanOffersModel) -> Unit,
         val imageManager: ImageManager
