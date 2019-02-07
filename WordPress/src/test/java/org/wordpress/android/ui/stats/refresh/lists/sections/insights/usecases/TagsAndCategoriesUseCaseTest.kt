@@ -11,6 +11,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.store.stats.InsightsStore
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -56,7 +58,8 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 insightsStore,
                 resourceProvider,
-                tracker
+                tracker,
+                BLOCK
         )
     }
 
@@ -71,7 +74,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 listOf(firstTag, secondTag),
                 categoryViews
         )
-        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, FetchMode.Top(pageSize), forced)).thenReturn(
                 OnStatsFetched(
                         TagsModel(listOf(singleTag, category), hasMore = false)
                 )
@@ -119,7 +122,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         val singleTagViews: Long = 10
         val tagItem = TagModel.Item("tag1", "tag", "url.com")
         val tag = TagModel(listOf(tagItem), singleTagViews)
-        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, FetchMode.Top(pageSize), forced)).thenReturn(
                 OnStatsFetched(
                         TagsModel(listOf(tag), hasMore = true)
                 )
@@ -140,7 +143,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty tags to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, FetchMode.Top(pageSize), forced)).thenReturn(
                 OnStatsFetched(TagsModel(listOf(), hasMore = false))
         )
 
@@ -158,7 +161,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, FetchMode.Top(pageSize), forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
