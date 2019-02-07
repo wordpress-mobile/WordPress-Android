@@ -192,7 +192,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
                 return getResources().getDrawable(R.drawable.ic_star_white_24dp);
             default:
                 // Views and when no prev match
-                return getResources().getDrawable(R.drawable.ic_visible_on_grey_dark_12dp);
+                return getResources().getDrawable(R.drawable.ic_visible_on_white_24dp);
         }
     }
 
