@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.CacheMode.Top
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
@@ -148,8 +149,15 @@ class InsightsMapper
             }
     }
 
-    fun map(response: CommentsResponse, pageSize: Int): CommentsModel {
-        val authors = response.authors?.take(pageSize)?.mapNotNull {
+    fun map(response: CommentsResponse, cacheMode: CacheMode): CommentsModel {
+        val authors = response.authors?.let {
+            if (cacheMode is CacheMode.Top) {
+                return@let it.take(cacheMode.limit)
+            } else {
+                return@let it
+            }
+        }
+        ?.mapNotNull {
             if (it.name != null && it.comments != null && it.link != null && it.gravatar != null) {
                 CommentsModel.Author(it.name, it.comments, it.link, it.gravatar)
             } else {
@@ -157,7 +165,14 @@ class InsightsMapper
                 null
             }
         }
-        val posts = response.posts?.take(pageSize)?.mapNotNull {
+        val posts = response.posts?.let {
+            if (cacheMode is CacheMode.Top) {
+                return@let it.take(cacheMode.limit)
+            } else {
+                return@let it
+            }
+        }
+        ?.mapNotNull {
             if (it.id != null && it.name != null && it.comments != null && it.link != null) {
                 CommentsModel.Post(it.id, it.name, it.comments, it.link)
             } else {
@@ -165,8 +180,8 @@ class InsightsMapper
                 null
             }
         }
-        val hasMoreAuthors = (response.authors != null && response.authors.size > pageSize)
-        val hasMorePosts = (response.posts != null && response.posts.size > pageSize)
+        val hasMoreAuthors = (response.authors != null && cacheMode is Top && response.authors.size > cacheMode.limit)
+        val hasMorePosts = (response.posts != null && cacheMode is Top &&  response.posts.size > cacheMode.limit)
         return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
 
