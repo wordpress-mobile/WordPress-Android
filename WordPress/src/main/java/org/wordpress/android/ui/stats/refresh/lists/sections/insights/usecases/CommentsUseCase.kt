@@ -97,7 +97,7 @@ class CommentsUseCase
         val mutableItems = mutableListOf<BlockListItem>()
         if (authors.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_author_label, R.string.stats_comments_label))
-            mutableItems.addAll(authors.take(BLOCK_ITEM_COUNT).mapIndexed { index, author ->
+            mutableItems.addAll(authors.mapIndexed { index, author ->
                 ListItemWithIcon(
                         iconUrl = author.gravatar,
                         iconStyle = AVATAR,
@@ -116,7 +116,7 @@ class CommentsUseCase
         val mutableItems = mutableListOf<BlockListItem>()
         if (posts.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_title_label, R.string.stats_comments_label))
-            mutableItems.addAll(posts.take(BLOCK_ITEM_COUNT).mapIndexed { index, post ->
+            mutableItems.addAll(posts.mapIndexed { index, post ->
                 ListItem(
                         post.name,
                         post.comments.toFormattedString(),
