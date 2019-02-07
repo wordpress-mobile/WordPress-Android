@@ -134,7 +134,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is ListItemWithIcon)
         val item = items[1] as ListItemWithIcon
-        assertEquals(item.icon, R.drawable.ic_visible_on_grey_dark_24dp)
+        assertEquals(item.icon, R.drawable.ic_visible_on_white_24dp)
         assertEquals(item.textResource, R.string.stats_views)
         assertEquals(item.value, views.toString())
     }
@@ -162,7 +162,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is ListItemWithIcon)
         val item = items[1] as ListItemWithIcon
-        assertEquals(item.icon, R.drawable.ic_user_grey_dark_24dp)
+        assertEquals(item.icon, R.drawable.ic_user_white_24dp)
         assertEquals(item.textResource, R.string.stats_visitors)
         assertEquals(item.value, visitors.toString())
     }
