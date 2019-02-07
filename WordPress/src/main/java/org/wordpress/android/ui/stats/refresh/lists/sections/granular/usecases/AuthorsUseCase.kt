@@ -11,8 +11,8 @@ import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewAuthors
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -24,8 +24,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular

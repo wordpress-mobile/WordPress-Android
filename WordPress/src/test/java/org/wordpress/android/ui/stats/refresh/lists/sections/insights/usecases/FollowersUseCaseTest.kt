@@ -14,6 +14,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.store.stats.InsightsStore
@@ -27,6 +28,8 @@ import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -57,6 +60,9 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private val wordPressLabel = "wordpress"
     private val blockPageSize = 6
     private val viewAllPageSize = 10
+    private val blockInitialMode = FetchMode.Paged(blockPageSize, false)
+    private val viewAllInitialLoadMode = FetchMode.Paged(viewAllPageSize, true)
+    private val viewAllMoreLoadMode = FetchMode.Paged(viewAllPageSize, true)
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
@@ -66,7 +72,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 statsUtilsWrapper,
                 resourceProvider,
                 tracker,
-                false
+                BLOCK
         )
         whenever(statsUtilsWrapper.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
@@ -77,9 +83,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `maps followers from selected tab to UI model and select empty tab`() = test {
-        val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,
@@ -88,7 +93,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -98,23 +103,22 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        val result = loadFollowers(refresh, forced)
+        val result = loadFollowers(refresh)
 
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
         val tabsItem = (result as BlockList).assertSelectedFollowers(position = 0)
 
         tabsItem.onTabSelected(1)
 
-        val updatedResult = loadFollowers(refresh, forced)
+        val updatedResult = loadFollowers(refresh)
 
         (updatedResult as BlockList).assertEmptyTabSelected(1)
     }
 
     @Test
     fun `maps email followers to UI model`() = test {
-        val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -123,7 +127,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,
@@ -133,21 +137,20 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        val result = loadFollowers(refresh, forced)
+        val result = loadFollowers(refresh)
 
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
         val tabsItem = (result as BlockList).assertEmptyTabSelected(0)
 
         tabsItem.onTabSelected(1)
-        val updatedResult = loadFollowers(refresh, forced)
+        val updatedResult = loadFollowers(refresh)
         (updatedResult as BlockList).assertSelectedFollowers(position = 1)
     }
 
     @Test
     fun `maps empty followers to UI model`() = test {
-        val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -156,7 +159,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -166,7 +169,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        val result = loadFollowers(refresh, forced)
+        val result = loadFollowers(refresh)
 
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as BlockList).assertEmpty()
@@ -174,15 +177,14 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `maps WPCOM error item to UI model`() = test {
-        val forced = false
         val refresh = true
         val message = "Generic error"
-        whenever(insightsStore.fetchWpComFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -192,7 +194,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        val result = loadFollowers(refresh, forced)
+        val result = loadFollowers(refresh)
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
@@ -202,10 +204,9 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `maps email error item to UI model`() = test {
-        val forced = false
         val refresh = true
         val message = "Generic error"
-        whenever(insightsStore.fetchWpComFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -214,13 +215,13 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, blockPageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
         )
 
-        val result = loadFollowers(refresh, forced)
+        val result = loadFollowers(refresh)
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
@@ -236,12 +237,11 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 statsUtilsWrapper,
                 resourceProvider,
                 tracker,
-                true
+                VIEW_ALL
         )
 
-        val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, viewAllPageSize, forced, false)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, viewAllInitialLoadMode)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -250,7 +250,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, viewAllPageSize, forced, false)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, viewAllInitialLoadMode)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,
@@ -260,7 +260,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        whenever(insightsStore.fetchWpComFollowers(site, viewAllPageSize, true, true)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, viewAllMoreLoadMode, true)).thenReturn(
                 OnStatsFetched(
                         model = FollowersModel(
                                 0,
@@ -269,7 +269,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, viewAllPageSize, true, true)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, viewAllMoreLoadMode, true)).thenReturn(
                 OnStatsFetched(
                         FollowersModel(
                                 totalCount,
@@ -279,22 +279,22 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        val result = loadFollowers(refresh, forced)
+        val result = loadFollowers(refresh)
 
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
         val tabsItem = (result as BlockList).assertEmptyTabSelectedViewAllMode(0)
 
         tabsItem.onTabSelected(1)
-        var updatedResult = loadFollowers(refresh, forced)
+        var updatedResult = loadFollowers(refresh)
         val button = (updatedResult as BlockList).assertViewAllFollowersFirstLoad(position = 1)
 
         button.navigateAction.click()
-        delay(15000)
+        delay(1000)
         updatedResult = useCase.liveData.value!! as BlockList
         updatedResult.assertViewAllFollowersSecondLoad()
     }
 
-    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean): StatsBlock {
+    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean = false): StatsBlock {
         var result: StatsBlock? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)

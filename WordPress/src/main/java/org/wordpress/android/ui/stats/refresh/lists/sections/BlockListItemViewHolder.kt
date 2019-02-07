@@ -39,7 +39,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -94,16 +93,6 @@ sealed class BlockListItemViewHolder(
     ) {
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(item: Information) {
-            text.text = item.text
-        }
-    }
-
-    class BackgroundInformationViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
-            parent,
-            R.layout.stats_block_background_information_item
-    ) {
-        private val text = itemView.findViewById<TextView>(R.id.text)
-        fun bind(item: BackgroundInformation) {
             text.text = item.text
         }
     }
@@ -227,17 +216,11 @@ sealed class BlockListItemViewHolder(
             parent,
             R.layout.stats_block_four_columns_item
     ) {
-        private val keys = listOf<TextView>(
-                itemView.findViewById(R.id.key1),
-                itemView.findViewById(R.id.key2),
-                itemView.findViewById(R.id.key3),
-                itemView.findViewById(R.id.key4)
-        )
-        private val values = listOf<TextView>(
-                itemView.findViewById(R.id.value1),
-                itemView.findViewById(R.id.value2),
-                itemView.findViewById(R.id.value3),
-                itemView.findViewById(R.id.value4)
+        private val columnLayouts = listOf<LinearLayout>(
+                itemView.findViewById(R.id.column1),
+                itemView.findViewById(R.id.column2),
+                itemView.findViewById(R.id.column3),
+                itemView.findViewById(R.id.column4)
         )
 
         fun bind(
@@ -248,38 +231,35 @@ sealed class BlockListItemViewHolder(
             val valuesChanged = payloads.contains(COLUMNS_VALUE_CHANGED)
             when {
                 tabSelected -> {
-                    for (index in 0 until keys.size) {
-                        val key = keys[index]
-                        val isSelected = columns.selectedColumn == index
-                        key.isSelected = isSelected
-                        val value = values[index]
-                        value.isSelected = isSelected
+                    columnLayouts.forEachIndexed { index, layout ->
+                        layout.setSelection(columns.selectedColumn == index)
                     }
                 }
                 valuesChanged -> {
-                    for (index in 0 until values.size) {
-                        values[index].text = columns.values[index]
+                    columnLayouts.forEachIndexed { index, layout ->
+                        layout.value().text = columns.values[index]
                     }
                 }
                 else -> {
-                    for (index in 0 until keys.size) {
-                        val key = keys[index]
-                        val value = values[index]
-                        key.setOnClickListener {
+                    columnLayouts.forEachIndexed { index, layout ->
+                        layout.setOnClickListener {
                             columns.onColumnSelected?.invoke(index)
                         }
-                        value.setOnClickListener {
-                            columns.onColumnSelected?.invoke(index)
-                        }
-                        val isSelected = columns.selectedColumn == null || columns.selectedColumn == index
-                        key.setText(columns.headers[index])
-                        key.isSelected = isSelected
-                        value.text = columns.values[index]
-                        value.isSelected = isSelected
+                        layout.key().setText(columns.headers[index])
+                        layout.value().text = columns.values[index]
+                        layout.setSelection(columns.selectedColumn == null || columns.selectedColumn == index)
                     }
                 }
             }
         }
+        private fun LinearLayout.setSelection(isSelected: Boolean) {
+            key().isSelected = isSelected
+            value().isSelected = isSelected
+            selector().visibility = if (isSelected) View.VISIBLE else View.GONE
+        }
+        private fun LinearLayout.key(): TextView = this.findViewById(R.id.key)
+        private fun LinearLayout.value(): TextView = this.findViewById(R.id.value)
+        private fun LinearLayout.selector(): View = this.findViewById(R.id.selector)
     }
 
     class LinkViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
