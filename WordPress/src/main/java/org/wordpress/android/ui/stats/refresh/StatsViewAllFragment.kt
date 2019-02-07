@@ -32,7 +32,7 @@ class StatsViewAllFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
-    private lateinit var viewModel: StatsListViewModel
+    private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var navigator: StatsNavigator
 
     private var layoutManager: LayoutManager? = null

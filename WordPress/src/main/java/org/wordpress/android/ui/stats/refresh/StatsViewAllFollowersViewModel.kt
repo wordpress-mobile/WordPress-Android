@@ -13,15 +13,5 @@ import javax.inject.Named
 class StatsViewAllFollowersViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(VIEW_ALL_FOLLOWERS_USE_CASE) private val useCase: BaseListUseCase
-) : StatsListViewModel(mainDispatcher, useCase) {
-    fun start(site: SiteModel) {
-        loadData {
-            useCase.loadData(site)
-        }
-    }
-
-    private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
-        executeLoading()
-    }
-}
+    @Named(VIEW_ALL_FOLLOWERS_USE_CASE) useCase: BaseListUseCase
+) : StatsViewAllViewModel(mainDispatcher, useCase)
