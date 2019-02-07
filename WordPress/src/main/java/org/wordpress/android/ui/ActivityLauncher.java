@@ -293,15 +293,9 @@ public class ActivityLauncher {
     }
 
     public static void viewTagsAndCategoriesStats(Context context, SiteModel site) {
-        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.TAGS_AND_CATEGORIES);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
-        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
-        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
-
-        String title = context.getResources().getString(R.string.stats_view_tags_and_categories);
-        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }
 
