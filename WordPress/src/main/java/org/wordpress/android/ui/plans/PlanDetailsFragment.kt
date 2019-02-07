@@ -55,8 +55,8 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
         val rootView = inflater.inflate(R.layout.plan_details_fragment, container, false) as ViewGroup
 
         val planIcon = rootView.findViewById<ImageView>(R.id.image_plan_icon)
-        val planName = rootView.findViewById<TextView>(R.id.text_product_name)
-        val planTagline = rootView.findViewById<TextView>(R.id.text_tagline)
+        val planName = rootView.findViewById<TextView>(R.id.plan_name)
+        val planTagline = rootView.findViewById<TextView>(R.id.plan_tagline)
         val featuresContainer = rootView.findViewById<ViewGroup>(R.id.plan_features_container)
 
         if (!TextUtils.isEmpty(plan!!.iconUrl)) {

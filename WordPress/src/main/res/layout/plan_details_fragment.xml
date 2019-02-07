@@ -27,17 +27,17 @@
             android:contentDescription="@null"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_product_name"
+            android:id="@+id/plan_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_medium"
             android:textColor="@color/blue_wordpress"
             android:textSize="@dimen/text_sz_extra_large"
-            tools:text="text_product_name"/>
+            tools:text="Personal Plan"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_tagline"
+            android:id="@+id/plan_tagline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -46,7 +46,7 @@
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="italic"
-            tools:text="text_tagline"/>
+            tools:text="Best for beginners"/>
 
         <View
             android:layout_width="match_parent"
