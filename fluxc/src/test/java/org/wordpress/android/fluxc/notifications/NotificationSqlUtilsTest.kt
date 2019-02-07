@@ -354,6 +354,23 @@ class NotificationSqlUtilsTest {
     }
 
     @Test
+    fun testHasUnreadNotifications() {
+        val notificationSqlUtils = NotificationSqlUtils(FormattableContentMapper(Gson()))
+        val jsonString = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
+        val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
+        val notesList = apiResponse.notes?.map {
+            NotificationApiResponse.notificationResponseToNotificationModel(it, 0)
+        } ?: emptyList()
+        val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
+        assertEquals(6, inserted)
+
+        val site = SiteModel().apply { id = 0 }
+        val hasUnread = notificationSqlUtils.hasUnreadNotificationsForSite(site)
+        assertEquals(hasUnread, true)
+    }
+
+    @Test
     fun testDeleteNotificationByRemoteId() {
         val noteId = 3616322875
 
