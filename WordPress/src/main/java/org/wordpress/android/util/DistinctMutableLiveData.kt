@@ -2,7 +2,7 @@ package org.wordpress.android.util
 
 import android.arch.lifecycle.MutableLiveData
 
-class DistinctMutableLiveData<T>(private val defaultValue: T): MutableLiveData<T>() {
+class DistinctMutableLiveData<T>(private val defaultValue: T) : MutableLiveData<T>() {
     override fun postValue(value: T) {
         if (this.value != value) {
             super.postValue(value)
