@@ -16,7 +16,7 @@
         android:layout_gravity="center_vertical"
         android:layout_height="@dimen/reader_count_icon"
         android:layout_width="@dimen/reader_count_icon"
-        android:src="@drawable/ic_bookmark_selector_18dp"
+        android:src="@drawable/ic_bookmark_outline_bookmark_selector_24dp"
         android:tint="@color/grey_min_blue_medium_grey_disabled_selector" >
     </ImageView>
 

@@ -254,12 +254,11 @@
                 android:contentDescription="@string/reader_add_bookmark"
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_centerVertical="true"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
+                android:layout_height="@dimen/reader_button_minimum_height"
+                android:layout_width="@dimen/reader_button_minimum_height"
                 android:layout_toStartOf="@id/count_comments"
-                android:minWidth="@dimen/reader_button_minimum_height"
                 android:padding="@dimen/margin_medium"
-                android:src="@drawable/ic_bookmark_selector_18dp"
+                android:src="@drawable/ic_bookmark_outline_bookmark_selector_24dp"
                 android:tint="@color/grey_min_blue_medium_grey_disabled_selector" >
             </ImageView>
 

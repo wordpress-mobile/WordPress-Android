@@ -945,12 +945,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             bookmarkButton.setVisibility(View.GONE);
         }
-        mImageManager.load(bookmarkButton, post.isBookmarked
-                ? R.drawable.ic_bookmark_blue_medium_18dp
-                : R.drawable.ic_bookmark_grey_min_18dp);
+
         if (post.isBookmarked) {
+            bookmarkButton.setSelected(true);
             bookmarkButton.setContentDescription(context.getString(R.string.reader_remove_bookmark));
         } else {
+            bookmarkButton.setSelected(false);
             bookmarkButton.setContentDescription(context.getString(R.string.reader_add_bookmark));
         }
     }
