@@ -2,28 +2,6 @@
 <issues format="4" by="lint 3.1.3">
 
     <issue
-        id="DefaultLocale"
-        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
-        errorLine1="            matched.appendReplacement(sb, matched.group(1).toUpperCase());"
-        errorLine2="                                                           ~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/horcrux/svg/RenderableShadowNode.java"
-            line="400"
-            column="60"/>
-    </issue>
-
-    <issue
-        id="WrongCall"
-        message="Suspicious method call; should probably call &quot;`layout`&quot; rather than &quot;`onLayout`&quot;"
-        errorLine1="                    onLayout(false, getLeft(), getTop(), getRight(), getBottom());"
-        errorLine2="                    ~~~~~~~~">
-        <location
-            file="src/main/java/com/github/godness84/RNRecyclerViewList/RecyclerViewBackedScrollView.java"
-            line="364"
-            column="21"/>
-    </issue>
-
-    <issue
         id="ClickableViewAccessibility"
         message="Custom view ``EditTextWithKeyBackListener`` has `setOnTouchListener` called on it but does not override `performClick`"
         errorLine1="        mTitle.setOnTouchListener(this);"
@@ -193,30 +171,14 @@
     </issue>
 
     <issue
-        id="ManifestOrder"
-        severity="Warning"
-        message="`&lt;uses-permission>` tag appears after `&lt;application>` tag"
-        category="Correctness"
-        priority="5"
-        summary="Incorrect order of elements in manifest"
-        explanation="The &lt;application> tag should appear after the elements which declare which version you need, which features you need, which libraries you need, and so on. In the past there have been subtle bugs (such as themes not getting applied correctly) when the `&lt;application>` tag appears before some of these other elements, so it&apos;s best to order your manifest in the logical dependency order."
-        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.DISABLE_KEYGUARD&quot;/>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../WordPress/src/debug/AndroidManifest.xml"
-            line="18"
-            column="5"/>
-    </issue>
-
-    <issue
         id="GradleDependency"
         severity="Warning"
-        message="A newer version of com.android.tools.build:gradle than 3.1.2 is available: 3.2.1"
+        message="A newer version of com.android.tools.build:gradle than 3.2.1 is available: 3.3.0"
         category="Correctness"
         priority="4"
         summary="Obsolete Gradle Dependency"
         explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.1.2&apos;"
+        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.2.1&apos;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location
@@ -228,12 +190,12 @@
     <issue
         id="GradleDependency"
         severity="Warning"
-        message="A newer version of com.android.tools.build:gradle than 3.1.2 is available: 3.2.1"
+        message="A newer version of com.android.tools.build:gradle than 3.2.1 is available: 3.3.0"
         category="Correctness"
         priority="4"
         summary="Obsolete Gradle Dependency"
         explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.1.2&apos;"
+        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.2.1&apos;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location
@@ -245,12 +207,12 @@
     <issue
         id="GradleDependency"
         severity="Warning"
-        message="A newer version of com.android.tools.build:gradle than 3.1.2 is available: 3.2.1"
+        message="A newer version of com.android.tools.build:gradle than 3.2.1 is available: 3.3.0"
         category="Correctness"
         priority="4"
         summary="Obsolete Gradle Dependency"
         explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.1.2&apos;"
+        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.2.1&apos;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location
@@ -262,12 +224,12 @@
     <issue
         id="GradleDependency"
         severity="Warning"
-        message="A newer version of com.android.tools.build:gradle than 3.1.3 is available: 3.2.1"
+        message="A newer version of com.android.tools.build:gradle than 3.2.1 is available: 3.3.0"
         category="Correctness"
         priority="4"
         summary="Obsolete Gradle Dependency"
         explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.1.3&apos;"
+        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.2.1&apos;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location

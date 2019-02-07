@@ -1,0 +1,17 @@
+{
+  "branch": "master",
+  "pinned_hash": "3f2bc7f9f915f7f01f92490d2a2deef527267e27",
+  "files_to_copy": [
+    {
+      "file": "android/WPAndroid/gradle.properties",
+      "destination": "gradle.properties"
+    },
+    {
+      "file": "android/WPAndroid/google-services.json",
+      "destination": "WordPress/google-services.json"
+    }
+  ],
+  "file_dependencies": [
+
+  ]
+}

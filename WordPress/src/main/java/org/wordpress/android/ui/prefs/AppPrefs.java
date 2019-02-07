@@ -96,6 +96,9 @@ public class AppPrefs {
         VIDEO_OPTIMIZE_WIDTH,
         VIDEO_OPTIMIZE_QUALITY, // Encoder max bitrate
 
+        // Used to flag whether the app should strip geolocation from images
+        STRIP_IMAGE_LOCATION,
+
         // Used to flag the account created stat needs to be bumped after account information is synced.
         SHOULD_TRACK_MAGIC_LINK_SIGNUP,
 
@@ -168,8 +171,6 @@ public class AppPrefs {
         ASKED_PERMISSION_STORAGE_WRITE,
         ASKED_PERMISSION_STORAGE_READ,
         ASKED_PERMISSION_CAMERA,
-        ASKED_PERMISSION_LOCATION_COURSE,
-        ASKED_PERMISSION_LOCATION_FINE,
 
         // Updated after WP.com themes have been fetched
         LAST_WP_COM_THEMES_SYNC,
@@ -597,6 +598,14 @@ public class AppPrefs {
 
     public static void setImageOptimize(boolean optimize) {
         setBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, optimize);
+    }
+
+    public static boolean isStripImageLocation() {
+        return getBoolean(DeletablePrefKey.STRIP_IMAGE_LOCATION, false);
+    }
+
+    public static void setStripImageLocation(boolean stripImageLocation) {
+        setBoolean(DeletablePrefKey.STRIP_IMAGE_LOCATION, stripImageLocation);
     }
 
     public static void setImageOptimizeMaxSize(int width) {

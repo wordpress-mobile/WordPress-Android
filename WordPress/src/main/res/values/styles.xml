@@ -163,7 +163,7 @@
     <style name="MediaSettings.TextInputTheme" parent="ThemeOverlay.AppCompat.Light">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/grey_darken_10</item>
-        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <!-- Header color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">@color/grey_text_min</item>
         <item name="colorControlActivated">@color/blue_wordpress</item>
         <item name="android:textAlignment">viewStart</item>
@@ -377,8 +377,8 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">@color/me_divider</item>
-        <item name="android:layout_marginEnd" >@dimen/me_content_margin</item>
-        <item name="android:layout_marginStart" >@dimen/me_content_margin</item>
+        <item name="android:layout_marginEnd" >@dimen/content_margin</item>
+        <item name="android:layout_marginStart" >@dimen/content_margin</item>
     </style>
 
     <!-- Used in Notifications and Site settings to animate nested preference screens -->
@@ -741,6 +741,7 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:maxLines">1</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:ellipsize">end</item>
     </style>
 
@@ -757,4 +758,28 @@
         <item name="android:enabled">false</item>
     </style>
 
+    <!--Site Preview -->
+    <style name="SitePreviewTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/new_site_creation_preview_title</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/wp_grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+    </style>
+
+    <style name="SitePreviewOkButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/new_site_creation_preview_ok_button_height</item>
+        <item name="android:background">@color/wp_blue_medium</item>
+        <item name="android:text">@string/dialog_button_ok</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="SitePreviewSkeletonView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:background">@color/wp_grey_lighten_30</item>
+    </style>
 </resources>

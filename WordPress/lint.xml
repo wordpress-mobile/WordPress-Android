@@ -68,7 +68,8 @@
     <issue id="UnusedAttribute" severity="error" />
     <issue id="IconXmlAndPng" severity="error" />
     <issue id="RtlSymmetry" severity="error" />
-
+    <issue id="ExportedReceiver" severity="error" />
+    <issue id="ExportedService" severity="error" />
 
     <!-- IGNORE -->
     <issue id="MissingTranslation" severity="ignore" />
@@ -80,10 +81,6 @@
     <issue id="InvalidPackage">
         <ignore regexp="okio-1.9.0.jar" />
         <ignore regexp="java-common-1.13.jar" />
-    </issue>
-
-    <issue id="IconLauncherFormat">
-        <ignore path="src/main/res/mipmap-anydpi-v26/app_icon.xml" />
     </issue>
 
     <issue id="UnusedResources" severity="error">

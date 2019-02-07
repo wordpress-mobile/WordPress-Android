@@ -17,8 +17,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <!-- GCM all build types configuration -->
@@ -124,6 +122,11 @@
 
         <activity
             android:name=".ui.accounts.SiteCreationActivity"
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.sitecreation.NewSiteCreationActivity"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
 
@@ -262,7 +265,7 @@
 
         <!-- Stats Activities -->
         <activity
-            android:name=".ui.stats.StatsActivity"
+            android:name=".ui.stats.OldStatsActivity"
             android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
@@ -279,6 +282,10 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.stats.refresh.StatsActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.WPWebViewActivity"
             android:theme="@style/Calypso.NoActionBar" />
@@ -502,6 +509,9 @@
             android:name=".ui.stockmedia.StockMediaPickerActivity"
             android:label=""
             android:theme="@style/Calypso.NoActionBar" />
+        <activity
+            android:name=".ui.giphy.GiphyPickerActivity"
+            android:theme="@style/Calypso.NoActionBar" />
 
         <!-- Notifications activities -->
         <activity
@@ -645,8 +655,10 @@
 
         <service
             android:name=".util.analytics.service.InstallationReferrerService"
-            android:exported="false"
+            android:exported="true"
+            android:permission="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
             android:label="Installation Referrer Service" />
+
         <service
             android:name=".util.analytics.service.InstallationReferrerJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
@@ -659,6 +671,11 @@
             android:label="Login to WPCOM Service" />
         <service
             android:name=".ui.accounts.signup.SiteCreationService"
+            android:exported="false"
+            android:label="Site Creation Service" />
+
+        <service
+            android:name=".ui.sitecreation.services.NewSiteCreationService"
             android:exported="false"
             android:label="Site Creation Service" />
 
@@ -692,6 +709,7 @@
         </receiver>
         <receiver
             android:name=".util.analytics.receiver.InstallationReferrerReceiver"
+            android:permission="android.permission.INSTALL_PACKAGES"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
@@ -710,14 +728,15 @@
             android:exported="false" />
 
         <service
-            android:name=".push.GCMMessageService">
+            android:name=".push.GCMMessageService"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
             android:name=".push.InstanceIDService"
-            >
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

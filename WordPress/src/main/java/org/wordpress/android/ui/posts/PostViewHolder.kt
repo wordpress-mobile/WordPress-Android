@@ -173,6 +173,10 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                 // the Post (or its related media if such a thing exist) *is strictly* queued
                 statusTextResId = R.string.post_queued
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
+            } else if (postAdapterItem.isConflicted) {
+                statusTextResId = R.string.local_post_is_conflicted
+                statusIconResId = R.drawable.ic_gridicons_notice
+                statusColorResId = R.color.alert_red
             } else if (postAdapterItem.isLocalDraft) {
                 statusTextResId = R.string.local_draft
                 statusIconResId = R.drawable.ic_gridicons_page

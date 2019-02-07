@@ -333,7 +333,7 @@ public class UploadUtils {
                         break;
                     case SCHEDULED:
                         snackbarButtonRes = R.string.button_view;
-                        snackbarMessageRes = post.isPage() ? R.string.page_scheduled : R.string.post_published;
+                        snackbarMessageRes = post.isPage() ? R.string.page_scheduled : R.string.post_scheduled;
                         break;
                     default:
                         snackbarButtonRes = R.string.button_view;

@@ -1,6 +1,7 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -53,8 +54,8 @@ public class PostListButton extends LinearLayout {
     private void initView(Context context, AttributeSet attrs) {
         inflate(context, R.layout.post_list_button, this);
 
-        mImageView = (ImageView) findViewById(R.id.image);
-        mTextView = (TextView) findViewById(R.id.text);
+        mImageView = findViewById(R.id.image);
+        mTextView = findViewById(R.id.text);
 
         int buttonType = 0;
         if (attrs != null) {
@@ -82,10 +83,12 @@ public class PostListButton extends LinearLayout {
             return;
         }
 
+        int color = getContext().getResources().getColor(getTextColorResId(buttonType));
         mButtonType = buttonType;
-        mTextView.setText(getButtonTextResId(buttonType));
         mImageView.setImageResource(getButtonIconResId(buttonType));
-        mTextView.setTextColor(getContext().getResources().getColor(getTextColorResId(buttonType)));
+        mImageView.setImageTintList(ColorStateList.valueOf(color));
+        mTextView.setText(getButtonTextResId(buttonType));
+        mTextView.setTextColor(color);
     }
 
     public static @StringRes
@@ -124,27 +127,25 @@ public class PostListButton extends LinearLayout {
     int getButtonIconResId(int buttonType) {
         switch (buttonType) {
             case BUTTON_EDIT:
-                return R.drawable.ic_pencil_blue_wordpress_18dp;
+                return R.drawable.ic_pencil_white_24dp;
             case BUTTON_VIEW:
-                return R.drawable.ic_external_blue_wordpress_18dp;
             case BUTTON_PREVIEW:
-                return R.drawable.ic_external_blue_wordpress_18dp;
+                return R.drawable.ic_external_white_24dp;
             case BUTTON_STATS:
-                return R.drawable.ic_stats_alt_blue_wordpress_18dp;
+                return R.drawable.ic_stats_alt_white_24dp;
             case BUTTON_TRASH:
-                return R.drawable.ic_trash_blue_wordpress_18dp;
             case BUTTON_DELETE:
-                return R.drawable.ic_trash_blue_wordpress_18dp;
+                return R.drawable.ic_trash_white_24dp;
             case BUTTON_PUBLISH:
             case BUTTON_SYNC:
             case BUTTON_SUBMIT:
-                return R.drawable.ic_reader_blue_wordpress_18dp;
+                return R.drawable.ic_reader_white_24dp;
             case BUTTON_MORE:
-                return R.drawable.ic_ellipsis_blue_wordpress_18dp;
+                return R.drawable.ic_ellipsis_white_24dp;
             case BUTTON_BACK:
-                return R.drawable.ic_chevron_left_blue_wordpress_18dp;
+                return R.drawable.ic_chevron_left_white_24dp;
             case BUTTON_RETRY:
-                return R.drawable.ic_refresh_red_18dp;
+                return R.drawable.ic_refresh_white_24dp;
             default:
                 return 0;
         }

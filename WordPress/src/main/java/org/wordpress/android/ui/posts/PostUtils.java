@@ -1,13 +1,16 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.editor.Utils;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -18,15 +21,19 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.helpers.MediaFile;
 
 import java.text.BreakIterator;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +43,9 @@ public class PostUtils {
     private static final HashSet<String> SHORTCODE_TABLE = new HashSet<>();
 
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
+    private static final int SRC_ATTRIBUTE_LENGTH_PLUS_ONE = 5;
+    private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s} -->";
+    private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
 
     /*
      * collapses shortcodes in the passed post content, stripping anything between the
@@ -369,6 +379,89 @@ public class PostUtils {
 
     public static boolean shouldShowGutenbergEditor(boolean isNewPost, PostModel post) {
         return AppPrefs.isGutenbergEditorEnabled()
-               && (isNewPost || contentContainsGutenbergBlocks(post.getContent()));
+               && (isNewPost
+                   || contentContainsGutenbergBlocks(post.getContent())
+                   || TextUtils.isEmpty(post.getContent()));
+    }
+
+    public static String replaceMediaFileWithUrlInGutenbergPost(@NonNull String postContent,
+                                                 String localMediaId, MediaFile mediaFile) {
+        if (mediaFile != null && contentContainsGutenbergBlocks(postContent)) {
+            String remoteUrl = org.wordpress.android.util.StringUtils
+                    .notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
+            // TODO: replace the URL
+            if (!mediaFile.isVideo()) {
+                // replace gutenberg block id holder with serverMediaId, and url_holder with remoteUrl
+                String oldImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, localMediaId);
+                String newImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, mediaFile.getMediaId());
+                postContent = postContent.replace(oldImgBlockHeader, newImgBlockHeader);
+
+                // replace class wp-image-id with serverMediaId, and url_holder with remoteUrl
+                String oldImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, localMediaId);
+                String newImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, mediaFile.getMediaId());
+                postContent = postContent.replace(oldImgClass, newImgClass);
+
+                // let's first find this occurrence and keep note of the position, as we need to replace the
+                // immediate `src` value before
+                int iStartOfWpImageClassAttribute = postContent.indexOf(newImgClass);
+                if (iStartOfWpImageClassAttribute != -1) {
+                    // now search negatively, for the src attribute appearing right before
+                    int iStartOfImgTag = postContent.lastIndexOf("<img", iStartOfWpImageClassAttribute);
+                    if (iStartOfImgTag != -1) {
+                        Pattern p = Pattern.compile("<img[^>]*src=[\\\"']([^\\\"^']*)");
+                        Matcher m = p.matcher(postContent.substring(iStartOfImgTag));
+                        if (m.find()) {
+                            String src = m.group();
+                            int startIndex = src.indexOf("src=") + SRC_ATTRIBUTE_LENGTH_PLUS_ONE;
+                            String srcTag = src.substring(startIndex, src.length());
+                            // now replace the url
+                            postContent = postContent.replace(srcTag, remoteUrl);
+                        }
+                    }
+                }
+            } else {
+                // TODO replace in GB Video block?
+            }
+        }
+        return postContent;
+    }
+
+    public static boolean isMediaInGutenbergPostBody(@NonNull String postContent,
+                                            String localMediaId) {
+        // check if media is in Gutenberg Post
+        String imgBlockHeaderToSearchFor = String.format("<!-- wp:image {\"id\":%s} -->", localMediaId);
+        return postContent.indexOf(imgBlockHeaderToSearchFor) != -1;
+    }
+
+    public static boolean isPostInConflictWithRemote(PostModel post) {
+        // at this point we know there's a potential version conflict (the post has been modified
+        // both locally and on the remote)
+        return !post.getLastModified().equals(post.getRemoteLastModified()) && post.isLocallyChanged();
+    }
+
+    public static String getConflictedPostCustomStringForDialog(PostModel post) {
+        Context context = WordPress.getContext();
+        String firstPart = context.getString(R.string.dialog_confirm_load_remote_post_body);
+        String secondPart =
+                String.format(context.getString(R.string.dialog_confirm_load_remote_post_body_2),
+                        getFormattedDateForLastModified(
+                                context, DateTimeUtils.timestampFromIso8601Millis(post.getLastModified())),
+                        getFormattedDateForLastModified(
+                                context, DateTimeUtils.timestampFromIso8601Millis(post.getRemoteLastModified())));
+        return firstPart + secondPart;
+    }
+
+    /**
+     * E.g. Jul 2, 2013 @ 21:57
+     */
+    public static String getFormattedDateForLastModified(Context context, long timeSinceLastModified) {
+        Date date = new Date(timeSinceLastModified);
+        SimpleDateFormat sdf =
+                new SimpleDateFormat("MMM d, yyyy '@' hh:mm a", LocaleManager.getSafeLocale(context));
+
+        // The timezone on the website is at GMT
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        return sdf.format(date);
     }
 }

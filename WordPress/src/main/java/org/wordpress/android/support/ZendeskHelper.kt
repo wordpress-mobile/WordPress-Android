@@ -37,7 +37,6 @@ import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
 import java.util.Locale
 import java.util.Timer
-import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
 
 private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"

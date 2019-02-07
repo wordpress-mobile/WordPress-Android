@@ -35,7 +35,7 @@ import "./ScreenshotFastfile"
 # Environment
 ########################################################################
 Dotenv.load('~/.wpandroid-env.default')
-ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
+ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 
 ########################################################################
 # Release Lanes
@@ -62,7 +62,7 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{options[:codefreeze_version]}")
     setfrozentag(repository:GHHELPER_REPO, milestone: options[:codefreeze_version])
 
-    get_prs_list(repository:GHHELPER_REPO, start_tag:"#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
+    get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
   end
 
 #####################################################################################
@@ -93,7 +93,7 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
       play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
     }
 
-    update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 
+    android_update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 
       source_files: files, 
       release_version: options[:version])
   end 
@@ -139,11 +139,22 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
     }
 
     delete_old_changelogs(build: options[:build_number])
-    download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
+    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
       target_files: files, 
-      locales: SUPPORTED_LOCALES,
-      download_path: Dir.pwd + "/fastlane/metadata/android")
+      locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]},
+      source_locale: "en-US",
+      download_path: Dir.pwd + "/metadata/android")
   end 
+
+#####################################################################################
+# release_preflight
+# -----------------------------------------------------------------------------------
+# Run pre-build checks to ensure we're ready for release!
+#####################################################################################
+desc "Run release preflight checks"
+ lane :release_preflight do | options |
+     configure_validate()
+ end
 
 ########################################################################
 # Helper Lanes

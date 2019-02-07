@@ -57,7 +57,8 @@ public class PhotoPickerFragment extends Fragment {
         ANDROID_CAPTURE_PHOTO,
         ANDROID_CAPTURE_VIDEO,
         WP_MEDIA,
-        STOCK_MEDIA
+        STOCK_MEDIA,
+        GIPHY
     }
 
     /*
@@ -243,6 +244,10 @@ public class PhotoPickerFragment extends Fragment {
             case WP_MEDIA:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA);
                 break;
+            case STOCK_MEDIA:
+                break;
+            case GIPHY:
+                break;
         }
 
         if (mListener != null) {
@@ -279,6 +284,14 @@ public class PhotoPickerFragment extends Fragment {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     doIconClicked(PhotoPickerIcon.STOCK_MEDIA);
+                    return true;
+                }
+            });
+
+            MenuItem itemGiphy = popup.getMenu().add(R.string.photo_picker_giphy);
+            itemGiphy.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override public boolean onMenuItemClick(MenuItem item) {
+                    doIconClicked(PhotoPickerIcon.GIPHY);
                     return true;
                 }
             });

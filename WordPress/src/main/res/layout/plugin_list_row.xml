@@ -64,7 +64,8 @@
             android:layout_height="12dp"
             android:layout_gravity="center_vertical"
             android:contentDescription="@null"
-            tools:src="@drawable/plugin_update_available_icon" />
+            tools:src="@drawable/ic_sync_white_24dp"
+            tools:tint="@color/alert_yellow" />
 
         <TextView
             android:id="@+id/plugin_status_text"

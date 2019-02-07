@@ -521,7 +521,7 @@ public class Note {
             resultLength = decompresser.inflate(result);
             decompresser.end();
         } catch (DataFormatException e) {
-            AppLog.e(AppLog.T.NOTIFS, "Can't decompress the PN Payload. It could be > 4K", e);
+            AppLog.e(AppLog.T.NOTIFS, "Can't decompress the PN BlockListPayload. It could be > 4K", e);
         }
 
         String out = null;
