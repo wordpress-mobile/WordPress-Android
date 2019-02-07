@@ -115,7 +115,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
 
-        mDateTextView =  view.findViewById(R.id.stats_summary_date);
+        mDateTextView = view.findViewById(R.id.stats_summary_date);
         mGraphContainer = view.findViewById(R.id.stats_bar_chart_fragment_container);
         mModuleButtonsContainer = view.findViewById(R.id.stats_pager_tabs);
         mNoActivtyThisPeriodContainer = view.findViewById(R.id.stats_bar_chart_no_activity);
