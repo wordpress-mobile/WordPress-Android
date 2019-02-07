@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.stats_fragment.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
@@ -21,9 +22,10 @@ import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlockAdapter
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
+import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
@@ -34,6 +36,7 @@ class StatsViewAllFragment : DaggerFragment() {
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var navigator: StatsNavigator
+    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private var layoutManager: LayoutManager? = null
 
@@ -52,7 +55,7 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.stats_list_fragment, container, false)
+        return inflater.inflate(R.layout.stats_view_all_fragment, container, false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -90,6 +93,10 @@ class StatsViewAllFragment : DaggerFragment() {
                         1
                 )
         )
+
+        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
+            viewModel.onPullToRefresh()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -127,10 +134,16 @@ class StatsViewAllFragment : DaggerFragment() {
 
         setupObservers()
 
-        (viewModel as StatsViewAllFollowersViewModel).start(site)
+        viewModel.start(site)
     }
 
     private fun setupObservers() {
+        viewModel.isRefreshing.observe(this, Observer {
+            it?.let { isRefreshing ->
+                swipeToRefreshHelper.isRefreshing = isRefreshing
+            }
+        })
+
         viewModel.data.observe(this, Observer {
             if (it != null) {
                 updateInsights(it)

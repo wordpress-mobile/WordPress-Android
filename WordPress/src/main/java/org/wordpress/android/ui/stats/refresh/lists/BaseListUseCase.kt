@@ -39,15 +39,15 @@ constructor(
 
     val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(useCases.map { it.navigationTarget })
 
-    suspend fun loadData(site: SiteModel, loadMore: Boolean = false) {
-        loadData(site, false, false, loadMore)
+    suspend fun loadData(site: SiteModel) {
+        loadData(site, false, false)
     }
 
-    suspend fun refreshData(site: SiteModel, forced: Boolean = false, loadMore: Boolean = false) {
-        loadData(site, true, forced, loadMore)
+    suspend fun refreshData(site: SiteModel, forced: Boolean = false) {
+        loadData(site, true, forced)
     }
 
-    private suspend fun loadData(site: SiteModel, refresh: Boolean, forced: Boolean, loadMore: Boolean) {
+    private suspend fun loadData(site: SiteModel, refresh: Boolean, forced: Boolean) {
         withContext(bgDispatcher) {
             if (PackageUtils.isDebugBuild() && useCases.distinctBy { it.type }.size < useCases.size) {
                 throw RuntimeException("Duplicate stats type in a use case")
