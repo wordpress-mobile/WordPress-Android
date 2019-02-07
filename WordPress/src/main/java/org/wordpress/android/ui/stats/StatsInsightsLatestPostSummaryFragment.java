@@ -267,7 +267,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     private Drawable getTabIcon(final StatsVisitorsAndViewsFragment.OverviewLabel labelItem) {
         switch (labelItem) {
             case VISITORS:
-                return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
+                return getResources().getDrawable(R.drawable.ic_user_white_24dp);
             case COMMENTS:
                 return getResources().getDrawable(R.drawable.ic_comment_white_24dp);
             case LIKES:

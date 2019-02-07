@@ -172,7 +172,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         private Drawable getTabIcon() {
             switch (mLabelItem) {
                 case VISITORS:
-                    return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
+                    return getResources().getDrawable(R.drawable.ic_user_white_24dp);
                 case COMMENTS:
                     return getResources().getDrawable(R.drawable.ic_comment_white_24dp);
                 case LIKES:
