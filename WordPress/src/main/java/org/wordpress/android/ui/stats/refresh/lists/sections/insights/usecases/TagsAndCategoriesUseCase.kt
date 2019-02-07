@@ -171,7 +171,7 @@ class TagsAndCategoriesUseCase
 
     data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null)
 
-    class  TagsAndCategoriesUseCaseFactory
+    class TagsAndCategoriesUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val insightsStore: InsightsStore,
