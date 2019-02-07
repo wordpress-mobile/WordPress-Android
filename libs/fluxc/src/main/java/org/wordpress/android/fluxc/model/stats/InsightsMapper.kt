@@ -142,9 +142,11 @@ class InsightsMapper
                         hasMore = nextModel.hasMore
                 )
             }
-            .apply {
+            .let {
                 if (cacheMode is CacheMode.Top) {
-                    return copy(followers = followers.take(cacheMode.limit))
+                    return@let it.copy(followers = it.followers.take(cacheMode.limit))
+                } else {
+                    return@let it
                 }
             }
     }
