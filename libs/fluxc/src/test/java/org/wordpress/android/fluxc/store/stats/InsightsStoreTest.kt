@@ -11,12 +11,14 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.CacheMode
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
+import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
@@ -47,6 +49,8 @@ import kotlin.test.assertNotNull
 
 private const val PAGE_SIZE = 8
 private const val PAGE = 1
+private val LOAD_MODE_INITIAL = FetchMode.Paged(PAGE_SIZE, false)
+private val CACHE_MODE_TOP = CacheMode.Top(PAGE_SIZE)
 
 @RunWith(MockitoJUnitRunner::class)
 class InsightsStoreTest {
@@ -299,8 +303,10 @@ class InsightsStoreTest {
                 fetchInsightsPayload
         )
         val model = FollowersModel(0, emptyList(), false)
-        whenever(mapper.mergeFollowersModels(sqlUtils, site, WP_COM, PAGE_SIZE)).thenReturn(model)
-        val responseModel = store.fetchWpComFollowers(site, PAGE_SIZE, forced)
+        whenever(sqlUtils.selectAllFollowers(site, WP_COM)).thenReturn(listOf(FOLLOWERS_RESPONSE))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), WP_COM, CacheMode.All))
+                .thenReturn(model)
+        val responseModel = store.fetchWpComFollowers(site, LOAD_MODE_INITIAL, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, FOLLOWERS_RESPONSE, WP_COM, true)
@@ -316,8 +322,10 @@ class InsightsStoreTest {
                 fetchInsightsPayload
         )
         val model = FollowersModel(0, emptyList(), false)
-        whenever(mapper.mergeFollowersModels(sqlUtils, site, EMAIL, PAGE_SIZE)).thenReturn(model)
-        val responseModel = store.fetchEmailFollowers(site, PAGE_SIZE, forced)
+        whenever(sqlUtils.selectAllFollowers(site, EMAIL)).thenReturn(listOf(FOLLOWERS_RESPONSE))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), EMAIL, CacheMode.All))
+                .thenReturn(model)
+        val responseModel = store.fetchEmailFollowers(site, LOAD_MODE_INITIAL, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, FOLLOWERS_RESPONSE, EMAIL, true)
@@ -325,22 +333,24 @@ class InsightsStoreTest {
 
     @Test
     fun `returns WPCOM followers from db`() {
-        whenever(sqlUtils.selectFollowers(site, WP_COM)).thenReturn(FOLLOWERS_RESPONSE)
         val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, WP_COM, PAGE_SIZE)).thenReturn(model)
+        whenever(sqlUtils.selectAllFollowers(site, WP_COM)).thenReturn(listOf(FOLLOWERS_RESPONSE))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), WP_COM, CacheMode.Top(PAGE_SIZE)))
+                .thenReturn(model)
 
-        val result = store.getWpComFollowers(site, PAGE_SIZE)
+        val result = store.getWpComFollowers(site, CACHE_MODE_TOP)
 
         assertThat(result).isEqualTo(model)
     }
 
     @Test
     fun `returns email followers from db`() {
-        whenever(sqlUtils.selectFollowers(site, EMAIL)).thenReturn(FOLLOWERS_RESPONSE)
         val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, EMAIL, PAGE_SIZE)).thenReturn(model)
+        whenever(sqlUtils.selectAllFollowers(site, EMAIL)).thenReturn(listOf(FOLLOWERS_RESPONSE))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), EMAIL, CacheMode.Top(PAGE_SIZE)))
+                .thenReturn(model)
 
-        val result = store.getEmailFollowers(site, PAGE_SIZE)
+        val result = store.getEmailFollowers(site, CACHE_MODE_TOP)
 
         assertThat(result).isEqualTo(model)
     }
@@ -353,7 +363,7 @@ class InsightsStoreTest {
         val forced = true
         whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE, PAGE_SIZE, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchWpComFollowers(site, PAGE_SIZE, forced)
+        val responseModel = store.fetchWpComFollowers(site, LOAD_MODE_INITIAL, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -369,7 +379,7 @@ class InsightsStoreTest {
         val forced = true
         whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE, PAGE_SIZE, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchEmailFollowers(site, PAGE_SIZE, forced)
+        val responseModel = store.fetchEmailFollowers(site, LOAD_MODE_INITIAL, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
