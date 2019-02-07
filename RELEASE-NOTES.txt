@@ -10,3 +10,4 @@
 * Gutenberg (a8c only): introduced upload media/image from device library/camera
 * Visual tweaks of the Latest post summary in Stats
 * Removed unused location permissions
+* Improved Quick Start experience
