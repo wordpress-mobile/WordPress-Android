@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
-import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
 import java.util.Date
@@ -103,7 +102,7 @@ class InsightsMapper
         )
     }
 
-    fun map(response: FollowersResponse, followerType: FollowerType, pageSize: Int): FollowersModel {
+    fun map(response: FollowersResponse, followerType: FollowerType): FollowersModel {
         val followers = response.subscribers.mapNotNull {
             if (it.avatar != null && it.label != null && it.dateSubscribed != null) {
                 FollowerModel(
@@ -116,7 +115,7 @@ class InsightsMapper
                 AppLog.e(STATS, "CommentsResponse.posts: Non-null field is coming as null from API")
                 null
             }
-        }.take(pageSize)
+        }
         val total = when (followerType) {
             WP_COM -> response.totalWpCom
             EMAIL -> response.totalEmail
@@ -129,21 +128,24 @@ class InsightsMapper
         return FollowersModel(total ?: 0, followers, hasMore)
     }
 
-    fun mergeFollowersModels(
-        sqlUtils: InsightsSqlUtils,
-        siteModel: SiteModel,
+    fun mapAndMergeFollowersModels(
+        followerResponses: List<FollowersResponse>,
         followerType: FollowerType,
-        pageSize: Int
+        cacheMode: CacheMode
     ): FollowersModel {
-        return sqlUtils.selectAllFollowers(siteModel, followerType)
-                .fold(FollowersModel(0, emptyList(), false)) { accumulator, next ->
-                    val nextModel = map(next, followerType, pageSize)
-                    accumulator.copy(
-                            totalCount = nextModel.totalCount,
-                            followers = accumulator.followers + nextModel.followers,
-                            hasMore = nextModel.hasMore
-                    )
+        return followerResponses.fold(FollowersModel(0, emptyList(), false)) { accumulator, next ->
+                val nextModel = map(next, followerType)
+                accumulator.copy(
+                        totalCount = nextModel.totalCount,
+                        followers = accumulator.followers + nextModel.followers,
+                        hasMore = nextModel.hasMore
+                )
+            }
+            .apply {
+                if (cacheMode is CacheMode.Top) {
+                    return copy(followers = followers.take(cacheMode.limit))
                 }
+            }
     }
 
     fun map(response: CommentsResponse, pageSize: Int): CommentsModel {
