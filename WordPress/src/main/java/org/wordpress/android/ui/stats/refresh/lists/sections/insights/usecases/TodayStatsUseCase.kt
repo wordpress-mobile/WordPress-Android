@@ -74,7 +74,7 @@ class TodayStatsUseCase
             if (hasLikes) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_star_grey_dark_24dp,
+                                R.drawable.ic_star_white_24dp,
                                 textResource = R.string.stats_likes,
                                 value = domainModel.likes.toFormattedString(),
                                 showDivider = hasComments

@@ -165,7 +165,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_star_grey_dark_12dp"
+                    android:src="@drawable/ic_star_white_24dp"
                     android:tint="@color/grey_dark" />
 
                 <TextView
