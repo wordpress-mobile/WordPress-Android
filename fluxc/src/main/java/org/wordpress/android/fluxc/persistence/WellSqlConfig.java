@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 51;
+        return 53;
     }
 
     @Override
@@ -408,7 +408,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
-             case 50:
+            case 50:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL(
                         "CREATE TABLE PlanOffers (_id INTEGER PRIMARY KEY AUTOINCREMENT,INTERNAL_PLAN_ID INTEGER,"
@@ -419,6 +419,18 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL(
                         "CREATE TABLE PlanOffersFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                         + "INTERNAL_PLAN_ID INTEGER,STRING_ID TEXT UNIQUE,NAME TEXT,DESCRIPTION TEXT)");
+                oldVersion++;
+            case 51:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 52:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE PlanOffersFeatureTemp (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "INTERNAL_PLAN_ID INTEGER,STRING_ID TEXT,NAME TEXT,DESCRIPTION TEXT)");
+                db.execSQL("INSERT INTO PlanOffersFeatureTemp SELECT * FROM PlanOffersFeature");
+                db.execSQL("DROP TABLE PlanOffersFeature");
+                db.execSQL("ALTER TABLE PlanOffersFeatureTemp RENAME TO PlanOffersFeature");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
@@ -494,6 +506,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "LOCAL_SITE_ID INTEGER,CURRENCY_CODE TEXT NOT NULL,CURRENCY_POSITION TEXT NOT NULL,"
                                + "CURRENCY_THOUSAND_SEPARATOR TEXT NOT NULL,CURRENCY_DECIMAL_SEPARATOR TEXT NOT NULL,"
                                + "CURRENCY_DECIMAL_NUMBER INTEGER)");
+                    break;
+                case 51:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCOrderStatusModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,STATUS_KEY TEXT NOT NULL,LABEL TEXT NOT NULL)");
                     break;
             }
         }

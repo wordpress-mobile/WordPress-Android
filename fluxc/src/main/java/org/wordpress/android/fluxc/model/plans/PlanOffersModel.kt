@@ -1,5 +1,11 @@
 package org.wordpress.android.fluxc.model.plans
 
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+@SuppressLint("ParcelCreator")
 data class PlanOffersModel(
     var planIds: List<Int>?,
     var features: List<Feature>?,
@@ -8,12 +14,14 @@ data class PlanOffersModel(
     var tagline: String?,
     var description: String?,
     var iconUrl: String?
-) {
+) : Parcelable {
+    @Parcelize
+    @SuppressLint("ParcelCreator")
     data class Feature(
         var id: String?,
         var name: String?,
         var description: String?
-    ) {
+    ) : Parcelable {
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
