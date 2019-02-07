@@ -4,6 +4,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CacheMode
 import org.wordpress.android.fluxc.model.stats.CommentsModel
+import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
@@ -191,7 +192,7 @@ class InsightsStore
     }
 
     // Comments stats
-    suspend fun fetchComments(siteModel: SiteModel, pageSize: Int, forced: Boolean = false) =
+    suspend fun fetchComments(siteModel: SiteModel, fetchMode: FetchMode, forced: Boolean = false) =
             withContext(coroutineContext) {
                 val responsePayload = restClient.fetchTopComments(siteModel, forced = forced)
                 return@withContext when {
@@ -200,14 +201,18 @@ class InsightsStore
                     }
                     responsePayload.response != null -> {
                         sqlUtils.insert(siteModel, responsePayload.response)
-                        OnStatsFetched(insightsMapper.map(responsePayload.response, pageSize))
+                        val cacheMode = if (fetchMode is FetchMode.Top)
+                            CacheMode.Top(fetchMode.limit)
+                        else
+                            CacheMode.All
+                        OnStatsFetched(insightsMapper.map(responsePayload.response, cacheMode))
                     }
                     else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
                 }
             }
 
-    fun getComments(site: SiteModel, pageSize: Int): CommentsModel? {
-        return sqlUtils.selectCommentInsights(site)?.let { insightsMapper.map(it, pageSize) }
+    fun getComments(site: SiteModel, cacheMode: CacheMode): CommentsModel? {
+        return sqlUtils.selectCommentInsights(site)?.let { insightsMapper.map(it, cacheMode) }
     }
 
     // Tags
