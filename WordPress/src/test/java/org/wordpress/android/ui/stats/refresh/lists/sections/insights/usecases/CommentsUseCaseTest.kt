@@ -12,6 +12,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel.Post
+import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -54,14 +56,15 @@ class CommentsUseCaseTest : BaseUnitTest() {
         useCase = CommentsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                tracker
+                tracker,
+                BLOCK
         )
     }
 
     @Test
     fun `maps posts comments to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
                                 listOf(Post(postId, postTitle, totalCount, url)),
@@ -87,7 +90,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `adds link to UI model when has more posts`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
                                 listOf(Post(postId, postTitle, totalCount, url)),
@@ -111,7 +114,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `adds link to UI model when has more authors`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
                                 listOf(Post(postId, postTitle, totalCount, url)),
@@ -135,7 +138,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps comment authors to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
                                 listOf(),
@@ -162,7 +165,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty comments to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(listOf(), listOf(), hasMorePosts = false, hasMoreAuthors = false)
                 )
@@ -178,7 +181,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
