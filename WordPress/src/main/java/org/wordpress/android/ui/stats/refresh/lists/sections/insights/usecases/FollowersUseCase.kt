@@ -65,7 +65,7 @@ class FollowersUseCase
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        fetchData(site, forced, FetchMode.Paged(itemsToLoad, useCaseMode == VIEW_ALL))
+        fetchData(site, forced, FetchMode.Paged(itemsToLoad, !forced && useCaseMode == VIEW_ALL))
     }
 
     private suspend fun fetchData(site: SiteModel, forced: Boolean, fetchMode: FetchMode.Paged) {
