@@ -1987,7 +1987,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                                                             AztecParser parser) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         String cleanSource = Format.removeSourceEditorFormatting(postContent, true);
-        builder.append(parser.fromHtml(cleanSource, context));
+        builder.append(parser.parseHtmlForInspection(cleanSource, context));
         Format.preProcessSpannedText(builder, true);
         return builder;
     }
@@ -2147,7 +2147,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public static Spanned parseContent(Context context, @NonNull String postContent) {
         // fill in Aztec with the post's content
         AztecParser parser = getAztecParserWithPlugins();
-        return parser.fromHtml(postContent, context);
+        return parser.parseHtmlForInspection(postContent, context);
     }
 
     public void setMediaToFailed(@NonNull String mediaId) {
