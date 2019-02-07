@@ -442,9 +442,9 @@ class InsightsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<TagsModel>()
-        whenever(mapper.map(TAGS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(TAGS_RESPONSE, CacheMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val responseModel = store.fetchTags(site, PAGE_SIZE, forced)
+        val responseModel = store.fetchTags(site, FetchMode.Top(PAGE_SIZE), forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, TAGS_RESPONSE)
@@ -454,9 +454,9 @@ class InsightsStoreTest {
     fun `returns tags and categories from db`() {
         whenever(sqlUtils.selectTags(site)).thenReturn(TAGS_RESPONSE)
         val model = mock<TagsModel>()
-        whenever(mapper.map(TAGS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(TAGS_RESPONSE, CacheMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val result = store.getTags(site, PAGE_SIZE)
+        val result = store.getTags(site, CacheMode.Top(PAGE_SIZE))
 
         assertThat(result).isEqualTo(model)
     }
@@ -469,7 +469,7 @@ class InsightsStoreTest {
         val forced = true
         whenever(insightsRestClient.fetchTags(site, PAGE_SIZE + 1, forced = forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchTags(site, PAGE_SIZE, forced)
+        val responseModel = store.fetchTags(site, FetchMode.Top(PAGE_SIZE), forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
