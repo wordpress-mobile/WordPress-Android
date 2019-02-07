@@ -218,7 +218,7 @@ class InsightsStore
     // Tags
     suspend fun fetchTags(siteModel: SiteModel, fetchMode: FetchMode.Top, forced: Boolean = false) =
             withContext(coroutineContext) {
-                val response = restClient.fetchTags(siteModel, pageSize = fetchMode.limit + 1, forced = forced)
+                val response = restClient.fetchTags(siteModel, max = fetchMode.limit + 1, forced = forced)
                 return@withContext when {
                     response.isError -> {
                         OnStatsFetched(response.error)
