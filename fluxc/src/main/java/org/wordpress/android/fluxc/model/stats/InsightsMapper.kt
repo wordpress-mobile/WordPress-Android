@@ -183,7 +183,7 @@ class InsightsMapper
             }
         }
         val hasMoreAuthors = (response.authors != null && cacheMode is Top && response.authors.size > cacheMode.limit)
-        val hasMorePosts = (response.posts != null && cacheMode is Top &&  response.posts.size > cacheMode.limit)
+        val hasMorePosts = (response.posts != null && cacheMode is Top && response.posts.size > cacheMode.limit)
         return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
 
