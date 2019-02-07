@@ -5,12 +5,15 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.CacheMode
 import org.wordpress.android.fluxc.model.stats.CommentsModel
+import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -21,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -28,18 +32,18 @@ import javax.inject.Named
 
 typealias SelectedTabUiState = Int
 
-private const val BLOCK_PAGE_SIZE = 6
-private const val VIEW_ALL_PAGE_SIZE = 100
+private const val BLOCK_ITEM_COUNT = 6
 
 class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchComments(site,
-                BLOCK_PAGE_SIZE, forced)
+        val fetchMode = if (useCaseMode == VIEW_ALL) FetchMode.All else FetchMode.Top(BLOCK_ITEM_COUNT)
+        val response = insightsStore.fetchComments(site, fetchMode, forced)
         val model = response.model
         val error = response.error
 
@@ -51,9 +55,8 @@ class CommentsUseCase
     }
 
     override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getComments(site,
-                BLOCK_PAGE_SIZE
-        )
+        val cacheMode = if (useCaseMode == VIEW_ALL) CacheMode.All else CacheMode.Top(BLOCK_ITEM_COUNT)
+        val dbModel = insightsStore.getComments(site, cacheMode)
         dbModel?.let { onModel(dbModel) }
     }
 
@@ -94,7 +97,7 @@ class CommentsUseCase
         val mutableItems = mutableListOf<BlockListItem>()
         if (authors.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_author_label, R.string.stats_comments_label))
-            mutableItems.addAll(authors.take(BLOCK_PAGE_SIZE).mapIndexed { index, author ->
+            mutableItems.addAll(authors.take(BLOCK_ITEM_COUNT).mapIndexed { index, author ->
                 ListItemWithIcon(
                         iconUrl = author.gravatar,
                         iconStyle = AVATAR,
@@ -113,7 +116,7 @@ class CommentsUseCase
         val mutableItems = mutableListOf<BlockListItem>()
         if (posts.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_title_label, R.string.stats_comments_label))
-            mutableItems.addAll(posts.take(BLOCK_PAGE_SIZE).mapIndexed { index, post ->
+            mutableItems.addAll(posts.take(BLOCK_ITEM_COUNT).mapIndexed { index, post ->
                 ListItem(
                         post.name,
                         post.comments.toFormattedString(),
@@ -129,5 +132,20 @@ class CommentsUseCase
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_COMMENTS_VIEW_MORE_TAPPED)
         navigateTo(ViewCommentsStats())
+    }
+
+    class CommentsUseCaseFactory
+    @Inject constructor(
+        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        private val insightsStore: InsightsStore,
+        private val analyticsTracker: AnalyticsTrackerWrapper
+    ) : InsightUseCaseFactory {
+        override fun build(useCaseMode: UseCaseMode) =
+                CommentsUseCase(
+                        mainDispatcher,
+                        insightsStore,
+                        analyticsTracker,
+                        useCaseMode
+                )
     }
 }
