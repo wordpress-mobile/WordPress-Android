@@ -126,7 +126,8 @@ class StatsViewAllFragment : DaggerFragment() {
         val clazz = when (type) {
             StatsViewType.FOLLOWERS -> StatsViewAllFollowersViewModel::class.java
             StatsViewType.COMMENTS -> StatsViewAllCommentsViewModel::class.java
-            else -> StatsViewAllFollowersViewModel::class.java
+            StatsViewType.TAGS_AND_CATEGORIES -> StatsViewAllTagsAndCategoriesViewModel::class.java
+            else -> throw IllegalStateException("View all screen: Unsupported use case type: ${type.name}")
         }
 
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(clazz)

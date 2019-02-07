@@ -54,3 +54,8 @@ class StatsViewAllFollowersViewModel
     @Named(VIEW_ALL_FOLLOWERS_USE_CASE) useCase: BaseListUseCase
 ) : StatsViewAllViewModel(mainDispatcher, useCase)
 
+class StatsViewAllTagsAndCategoriesViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE) useCase: BaseListUseCase
+) : StatsViewAllViewModel(mainDispatcher, useCase)
