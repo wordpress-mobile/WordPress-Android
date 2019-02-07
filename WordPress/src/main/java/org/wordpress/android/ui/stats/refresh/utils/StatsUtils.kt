@@ -13,6 +13,7 @@ private val SUFFIXES = TreeMap(mapOf(
 ))
 
 const val TEN_THOUSAND = 10000
+const val HUNDRED_THOUSAND = 100000
 const val MILLION = 1000000
 
 fun Int.toFormattedString(startValue: Int = TEN_THOUSAND): String {

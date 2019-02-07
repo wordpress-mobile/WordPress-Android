@@ -34,6 +34,7 @@
         android:id="@+id/positive_change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:textColor="@color/alert_green"
         android:textSize="16sp"
         android:visibility="gone"/>
@@ -42,6 +43,7 @@
         android:id="@+id/negative_change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:textColor="@color/alert_red"
         android:textSize="16sp"
         android:visibility="gone"/>

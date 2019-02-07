@@ -8,7 +8,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
-import org.wordpress.android.ui.stats.refresh.utils.MILLION
+import org.wordpress.android.ui.stats.refresh.utils.HUNDRED_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -46,7 +46,7 @@ class OverviewMapper
         }
 
         return ValueItem(
-                value = value.toFormattedString(MILLION),
+                value = value.toFormattedString(HUNDRED_THOUSAND),
                 unit = units[selectedPosition],
                 change = change,
                 positive = positive
