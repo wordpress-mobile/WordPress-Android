@@ -19,8 +19,8 @@ class RevisionItemViewHolder(
 ) : HistoryViewHolder(parent, R.layout.history_list_item) {
     private val container: View = itemView.findViewById(R.id.item_layout)
     private val avatar: ImageView = itemView.findViewById(R.id.item_avatar)
-    private val title: TextView = itemView.findViewById(R.id.feature_title)
-    private val subtitle: TextView = itemView.findViewById(R.id.feature_description)
+    private val title: TextView = itemView.findViewById(R.id.item_title)
+    private val subtitle: TextView = itemView.findViewById(R.id.item_subtitle)
     private val diffLayout: LinearLayout = itemView.findViewById(R.id.diff_layout)
     private val diffAdditions: TextView = itemView.findViewById(R.id.diff_additions)
     private val diffDeletions: TextView = itemView.findViewById(R.id.diff_deletions)

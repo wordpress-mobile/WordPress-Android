@@ -9,7 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.history_list_fragment.*
+import kotlinx.android.synthetic.main.plans_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
