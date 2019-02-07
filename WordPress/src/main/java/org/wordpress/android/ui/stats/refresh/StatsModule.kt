@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.L
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import javax.inject.Named
 import javax.inject.Singleton
@@ -45,6 +47,7 @@ const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
 const val YEAR_STATS_USE_CASE = "YearStatsUseCase"
 const val VIEW_ALL_FOLLOWERS_USE_CASE = "ViewAllFollowersUseCase"
 const val VIEW_ALL_COMMENTS_USE_CASE = "ViewAllCommentsUseCase"
+const val VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE = "ViewAllTagsAndCategoriesUseCase"
 
 // These are injected only internally
 private const val INSIGHTS_USE_CASES = "InsightsUseCases"
@@ -69,7 +72,7 @@ class StatsModule {
         followersUseCaseFactory: FollowersUseCaseFactory,
         commentsUseCaseFactory: CommentsUseCaseFactory,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
-        tagsAndCategoriesUseCase: TagsAndCategoriesUseCase,
+        tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCase: PublicizeUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
@@ -79,7 +82,7 @@ class StatsModule {
                 followersUseCaseFactory.build(UseCaseMode.BLOCK),
                 commentsUseCaseFactory.build(UseCaseMode.BLOCK),
                 mostPopularInsightsUseCase,
-                tagsAndCategoriesUseCase,
+                tagsAndCategoriesUseCaseFactory.build(UseCaseMode.BLOCK),
                 publicizeUseCase
         )
     }
@@ -170,6 +173,27 @@ class StatsModule {
                 listOf(commentsUseCaseFactory.build(UseCaseMode.VIEW_ALL))
         ) {
             listOf(COMMENTS)
+        }
+    }
+
+    /**
+     * Provides a singleton TagsAndCategoriesUseCase that represents the Followers View all screen
+     * @param tagsAndCategoriesUseCaseFactory build the use cases for the Followers
+     */
+    @Provides
+    @Singleton
+    @Named(VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE)
+    fun provideViewAllTagsAndCategoriesUseCase(
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                listOf(tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL))
+        ) {
+            listOf(TAGS_AND_CATEGORIES)
         }
     }
 

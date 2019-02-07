@@ -6,6 +6,8 @@ import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.CacheMode
+import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
@@ -14,6 +16,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -23,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -30,33 +34,37 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_ITEM_COUNT = 6
+private const val VIEW_ALL_ITEM_COUNT = 100
 
 class TagsAndCategoriesUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    useCaseMode: UseCaseMode
 ) : StatefulUseCase<TagsModel, TagsAndCategoriesUiState>(
         TAGS_AND_CATEGORIES,
         mainDispatcher,
         TagsAndCategoriesUiState(null)
 ) {
+    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
+
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
+        val response = insightsStore.fetchTags(site, FetchMode.Top(itemsToLoad), forced)
         val model = response.model
         val error = response.error
 
         when {
             error != null -> onError(error.message ?: error.type.name)
-            model != null -> model.let { onModel(model) }
+            model != null -> onModel(model)
             else -> onEmpty()
         }
     }
 
     override suspend fun loadCachedData(site: SiteModel) {
-        val model = insightsStore.getTags(site, PAGE_SIZE)
+        val model = insightsStore.getTags(site, CacheMode.Top(itemsToLoad))
         model?.let { onModel(model) }
     }
 
@@ -162,4 +170,21 @@ class TagsAndCategoriesUseCase
     }
 
     data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null)
+
+    class  TagsAndCategoriesUseCaseFactory
+    @Inject constructor(
+        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        private val insightsStore: InsightsStore,
+        private val resourceProvider: ResourceProvider,
+        private val analyticsTracker: AnalyticsTrackerWrapper
+    ) : InsightUseCaseFactory {
+        override fun build(useCaseMode: UseCaseMode) =
+                TagsAndCategoriesUseCase(
+                        mainDispatcher,
+                        insightsStore,
+                        resourceProvider,
+                        analyticsTracker,
+                        useCaseMode
+                )
+    }
 }
