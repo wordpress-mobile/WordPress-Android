@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
@@ -124,8 +123,7 @@ class StatsViewModel
     }
 
     fun onSelectedDateChange(statsGranularity: StatsGranularity) {
-        updateDateSelector()
-        loadData {
+        launch {
             when (statsGranularity) {
                 DAYS -> dayStatsUseCase.refreshData(site)
                 WEEKS -> weekStatsUseCase.refreshData(site)
@@ -133,11 +131,11 @@ class StatsViewModel
                 YEARS -> yearStatsUseCase.refreshData(site)
             }
         }
+        updateDateSelector()
     }
 
     fun onNextDateSelected() {
         launch(Dispatchers.Default) {
-            delay(300)
             statsSectionManager.getSelectedSection().toStatsGranularity()?.let { statsGranularity ->
                 selectedDateProvider.selectNextDate(statsGranularity)
             }
@@ -146,7 +144,6 @@ class StatsViewModel
 
     fun onPreviousDateSelected() {
         launch(Dispatchers.Default) {
-            delay(300)
             statsSectionManager.getSelectedSection().toStatsGranularity()?.let { statsGranularity ->
                 selectedDateProvider.selectPreviousDate(statsGranularity)
             }

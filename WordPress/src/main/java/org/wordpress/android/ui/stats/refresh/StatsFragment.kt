@@ -19,6 +19,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
