@@ -480,9 +480,6 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <!-- Plans Styles -->
-    <style name="PlansProgressBar" parent="@android:style/Widget.Material.ProgressBar" />
-
     <style name="SwitchBlueLight">
         <item name="colorControlActivated">@color/blue_light</item>
     </style>

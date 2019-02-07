@@ -520,18 +520,6 @@ public class AppPrefs {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
     }
 
-    public static void setGlobalPlansFeatures(String jsonOfFeatures) {
-        if (jsonOfFeatures != null) {
-            setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
-        } else {
-            remove(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES);
-        }
-    }
-
-    public static String getGlobalPlansFeatures() {
-        return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
-    }
-
     public static boolean isInAppPurchaseRefreshRequired() {
         return getBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, false);
     }

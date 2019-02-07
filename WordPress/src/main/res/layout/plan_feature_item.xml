@@ -7,9 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
     android:layout_marginTop="@dimen/margin_medium"
-    android:orientation="vertical"
-    android:paddingEnd="@dimen/activity_log_icon_margin"
-    android:paddingStart="@dimen/activity_log_icon_margin">
+    android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/feature_title"
