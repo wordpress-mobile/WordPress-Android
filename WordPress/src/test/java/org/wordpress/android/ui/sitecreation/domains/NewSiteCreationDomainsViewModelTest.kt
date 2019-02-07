@@ -257,7 +257,6 @@ class NewSiteCreationDomainsViewModelTest {
         assertThat(captor.lastValue, Is(RequestFocusMode.FOCUS_AND_KEYBOARD))
     }
 
-
     /**
      * Helper function to verify a [DomainsUiState] with [DomainsUiContentState.Initial] content state.
      */
