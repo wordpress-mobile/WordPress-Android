@@ -54,7 +54,6 @@ class UiModelMapper
 
     fun mapTimeStats(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
         val allFailing = useCaseModels
-                .filter { it.type != TimeStatsTypes.DATE }
                 .fold(true) { acc, useCaseModel ->
                     acc && useCaseModel.state == ERROR
                 }

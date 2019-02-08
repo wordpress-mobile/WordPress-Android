@@ -123,7 +123,7 @@ constructor(
         navigateTo(
                 ViewPostsAndPages(
                         statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
                 )
         )
     }

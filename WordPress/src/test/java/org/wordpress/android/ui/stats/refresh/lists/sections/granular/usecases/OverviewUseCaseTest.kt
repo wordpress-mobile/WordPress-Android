@@ -22,7 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -35,7 +35,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Mock lateinit var overviewMapper: OverviewMapper
     @Mock lateinit var site: SiteModel
     @Mock lateinit var columns: Columns
-    @Mock lateinit var title: Title
+    @Mock lateinit var title: ValueItem
     @Mock lateinit var barChartItem: BarChartItem
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var useCase: OverviewUseCase
@@ -57,8 +57,8 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 analyticsTrackerWrapper
         )
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
-        whenever(overviewMapper.buildTitle(any(), any(), any(), any())).thenReturn(title)
-        whenever(overviewMapper.buildChart(any(), any(), any(), any(), any())).thenReturn(barChartItem)
+        whenever(overviewMapper.buildTitle(any(), any())).thenReturn(title)
+        whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(barChartItem)
         whenever(overviewMapper.buildColumns(any(), any(), any())).thenReturn(columns)
     }
 

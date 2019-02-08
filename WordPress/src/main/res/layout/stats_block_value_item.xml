@@ -4,7 +4,7 @@
               android:layout_height="wrap_content"
               android:paddingStart="@dimen/margin_extra_large"
               android:paddingEnd="@dimen/margin_extra_large"
-              android:layout_marginBottom="@dimen/margin_extra_large"
+              android:layout_marginBottom="8dp"
               android:gravity="center_vertical"
               android:orientation="horizontal">
 

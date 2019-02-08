@@ -971,10 +971,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (canTrash()) {
             mBtnTrashComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.TRASH) {
-                mBtnModerateIcon.setImageResource(R.drawable.ic_undo_24dp);
-                mBtnModerateIcon
-                        .setColorFilter(ContextCompat.getColor(mBtnModerateIcon.getContext(), R.color.grey_text_min),
-                                android.graphics.PorterDuff.Mode.SRC_IN);
+                mBtnModerateIcon.setImageResource(R.drawable.ic_undo_white_24dp);
+                mBtnModerateIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(),
+                        R.color.grey_text_min)));
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
@@ -1145,12 +1144,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (isLiked) {
             color = ContextCompat.getColor(getActivity(), R.color.orange_jazzy);
-            drawable = R.drawable.ic_star_orange_jazzy_24dp;
+            drawable = R.drawable.ic_star_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setActivated(true);
         } else {
             color = ContextCompat.getColor(getActivity(), R.color.grey_text_min);
-            drawable = R.drawable.ic_star_outline_grey_min_24dp;
+            drawable = R.drawable.ic_star_outline_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeComment.setActivated(false);
         }

@@ -113,7 +113,7 @@ constructor(
         navigateTo(
                 ViewCountries(
                         statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
                 )
         )
     }

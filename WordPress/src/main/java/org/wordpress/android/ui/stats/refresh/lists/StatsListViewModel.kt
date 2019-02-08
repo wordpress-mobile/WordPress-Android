@@ -11,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.util.Event
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.map
+import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 open class StatsListViewModel(
@@ -18,10 +19,7 @@ open class StatsListViewModel(
     private val statsUseCase: BaseListUseCase,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val toUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel
-) :
-        ScopedViewModel(defaultDispatcher) {
-    private val _data = statsUseCase.data
-
+) : ScopedViewModel(defaultDispatcher) {
     enum class StatsSection(@StringRes val titleRes: Int) {
         INSIGHTS(R.string.stats_insights),
         DAYS(R.string.stats_timeframe_days),
@@ -34,12 +32,14 @@ open class StatsListViewModel(
     private val mutableSnackbarMessage = MutableLiveData<SnackbarMessage>()
     val snackbarMessage: LiveData<SnackbarMessage> = mutableSnackbarMessage
 
-    val uiModel: LiveData<UiModel> = _data.map { useCaseModels ->
-        toUiModel(useCaseModels) { message ->
-            mutableSnackbarMessage.value = SnackbarMessage(
-                    message
-            )
-        }
+    val uiModel: LiveData<UiModel>  by lazy {
+        statsUseCase.data.map { useCaseModels ->
+            toUiModel(useCaseModels) { message ->
+                mutableSnackbarMessage.value = SnackbarMessage(
+                        message
+                )
+            }
+        }.throttle(this)
     }
 
     override fun onCleared() {

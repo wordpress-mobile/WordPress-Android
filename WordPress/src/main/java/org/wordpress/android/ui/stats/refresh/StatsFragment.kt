@@ -19,6 +19,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -92,6 +93,12 @@ class StatsFragment : DaggerFragment() {
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
         }
+        select_next_date.setOnClickListener {
+            viewModel.onNextDateSelected()
+        }
+        select_previous_date.setOnClickListener {
+            viewModel.onPreviousDateSelected()
+        }
     }
 
     private fun initializeViewModels(activity: FragmentActivity, isFirstStart: Boolean) {
@@ -156,6 +163,22 @@ class StatsFragment : DaggerFragment() {
         viewModel.selectedDateChanged.observe(this, Observer { statsGranularity ->
             statsGranularity?.let {
                 viewModel.onSelectedDateChange(statsGranularity)
+            }
+        })
+
+        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
+            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
+            if (date_selection_toolbar.visibility != dateSelectorVisibility) {
+                date_selection_toolbar.visibility = dateSelectorVisibility
+            }
+            selected_date.text = dateSelectorUiModel?.date ?: ""
+            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
+            if (select_previous_date.isEnabled != enablePreviousButton) {
+                select_previous_date.isEnabled = enablePreviousButton
+            }
+            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
+            if (select_next_date.isEnabled != enableNextButton) {
+                select_next_date.isEnabled = enableNextButton
             }
         })
     }

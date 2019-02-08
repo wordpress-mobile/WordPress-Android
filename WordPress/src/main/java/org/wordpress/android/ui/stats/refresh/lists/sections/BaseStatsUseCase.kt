@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
 
 /**
@@ -51,7 +52,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             AppLog.e(AppLog.T.STATS, e)
             UseCaseModel(type, state = ERROR, stateData = buildErrorItem())
         }
-    }
+    }.distinct()
 
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget

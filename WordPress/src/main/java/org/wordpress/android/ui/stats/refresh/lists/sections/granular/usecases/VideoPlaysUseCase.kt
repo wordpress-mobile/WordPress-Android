@@ -102,7 +102,7 @@ constructor(
         navigateTo(
                 ViewVideoPlays(
                         statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
                 )
         )
     }

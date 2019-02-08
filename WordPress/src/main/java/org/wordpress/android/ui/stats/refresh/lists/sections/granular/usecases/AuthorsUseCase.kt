@@ -133,7 +133,7 @@ constructor(
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewAuthors(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()))
+        navigateTo(ViewAuthors(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
     }
 
     private fun onPostClicked(params: PostClickParams) {

@@ -117,7 +117,7 @@ constructor(
         navigateTo(
                 ViewSearchTerms(
                         statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity).date ?: Date()
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
                 )
         )
     }

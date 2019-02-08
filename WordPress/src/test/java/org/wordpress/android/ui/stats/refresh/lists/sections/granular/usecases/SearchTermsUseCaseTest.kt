@@ -55,7 +55,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 tracker
         )
-        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(SelectedDate(selectedDate))
+        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
     }
 
     @Test

@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.DATE
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 
@@ -18,7 +17,7 @@ abstract class BaseStatsViewHolder(
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     @CallSuper
     open fun bind(statsTypes: StatsTypes, items: List<BlockListItem>) {
-        if (statsTypes == OVERVIEW || statsTypes == LATEST_POST_SUMMARY || statsTypes == DATE) {
+        if (statsTypes == OVERVIEW || statsTypes == LATEST_POST_SUMMARY) {
             val layoutParams = itemView.layoutParams as? StaggeredGridLayoutManager.LayoutParams
             layoutParams?.isFullSpan = true
         }

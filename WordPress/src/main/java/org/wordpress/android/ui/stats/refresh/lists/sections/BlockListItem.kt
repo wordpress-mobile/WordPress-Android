@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BACKGROUND_INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
@@ -33,7 +32,6 @@ sealed class BlockListItem(val type: Type) {
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
         INFO,
-        BACKGROUND_INFO,
         EMPTY,
         TEXT,
         COLUMNS,
@@ -82,8 +80,6 @@ sealed class BlockListItem(val type: Type) {
 
     data class Information(val text: String) : BlockListItem(INFO)
 
-    data class BackgroundInformation(val text: String) : BlockListItem(BACKGROUND_INFO)
-
     data class Text(val text: String? = null, val textResource: Int? = null, val links: List<Clickable>? = null) :
             BlockListItem(TEXT) {
         data class Clickable(
@@ -112,7 +108,8 @@ sealed class BlockListItem(val type: Type) {
     data class BarChartItem(
         val entries: List<Bar>,
         val selectedItem: String? = null,
-        val onBarSelected: ((String?) -> Unit)? = null
+        val onBarSelected: ((period: String?) -> Unit)? = null,
+        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null
     ) : BlockListItem(BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
 
