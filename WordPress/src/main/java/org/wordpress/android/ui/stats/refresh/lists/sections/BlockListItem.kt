@@ -110,7 +110,8 @@ sealed class BlockListItem(val type: Type) {
         val entries: List<Bar>,
         val overlappingEntries: List<Bar>? = null,
         val selectedItem: String? = null,
-        val onBarSelected: ((String?) -> Unit)? = null
+        val onBarSelected: ((period: String?) -> Unit)? = null,
+        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null
     ) : BlockListItem(BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
 

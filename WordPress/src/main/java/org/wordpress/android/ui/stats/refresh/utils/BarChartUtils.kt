@@ -43,6 +43,7 @@ fun BarChart.draw(
     } else {
         buildEmptyDataSet(context, cut.size)
     }
+    item.onBarChartDrawn?.invoke(dataSet.entryCount)
     val dataSets = mutableListOf<IBarDataSet>()
     dataSets.add(dataSet)
     val hasOverlappingEntries = hasData && item.overlappingEntries != null
@@ -87,7 +88,7 @@ fun BarChart.draw(
         axisMaximum = if (maxYValue < MIN_VALUE) {
             MIN_VALUE
         } else {
-            maxYValue.toFloat()
+            maxYValue.toFloat() * 1.1f
         }
         textColor = greyColor
         gridColor = lightGreyColor

@@ -11,3 +11,4 @@
 * Visual tweaks of the Latest post summary in Stats
 * Removed unused location permissions
 * Add Visitors overlay to the Overview block in Stats
+* Create a date selector in stats that let's the user move to next/previous time period

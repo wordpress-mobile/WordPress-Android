@@ -13,6 +13,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:checkMark="@drawable/category_checkmark"
+        android:checkMarkTint="@color/grey_text_min"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:textColor="@color/grey_dark"
