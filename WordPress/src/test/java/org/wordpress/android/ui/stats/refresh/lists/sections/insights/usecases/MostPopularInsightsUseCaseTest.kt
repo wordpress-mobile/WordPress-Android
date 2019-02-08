@@ -116,7 +116,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     private fun assertDay(blockListItem: BlockListItem) {
         assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
         val item = blockListItem as ListItemWithIcon
-        assertThat(item.icon).isEqualTo(R.drawable.ic_calendar_grey_dark_24dp)
+        assertThat(item.icon).isEqualTo(R.drawable.ic_calendar_white_24dp)
         assertThat(item.text).isEqualTo(dayString)
         assertThat(item.showDivider).isEqualTo(true)
         assertThat(item.value).isEqualTo("${highestDayPercent.roundToInt()}% of views")
