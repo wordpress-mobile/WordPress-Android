@@ -82,9 +82,16 @@ sealed class BlockListItemViewHolder(
     ) {
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val unit = itemView.findViewById<TextView>(R.id.unit)
+        private val positiveChange = itemView.findViewById<TextView>(R.id.positive_change)
+        private val negativeChange = itemView.findViewById<TextView>(R.id.negative_change)
         fun bind(item: ValueItem) {
             value.text = item.value
             unit.setText(item.unit)
+            val hasChange = item.change != null
+            positiveChange.visibility = if (hasChange && item.positive) View.VISIBLE else View.GONE
+            negativeChange.visibility = if (hasChange && !item.positive) View.VISIBLE else View.GONE
+            positiveChange.text = item.change
+            negativeChange.text = item.change
         }
     }
 
