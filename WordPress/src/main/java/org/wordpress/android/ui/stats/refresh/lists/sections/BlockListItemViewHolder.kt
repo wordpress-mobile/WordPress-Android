@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.net.http.SslError
 import android.support.annotation.LayoutRes
@@ -10,6 +11,7 @@ import android.support.design.widget.TabLayout
 import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.design.widget.TabLayout.Tab
 import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.Spannable
@@ -273,7 +275,12 @@ sealed class BlockListItemViewHolder(
 
         fun bind(item: Link) {
             if (item.icon != null) {
-                text.setCompoundDrawablesWithIntrinsicBounds(item.icon, 0, 0, 0)
+                val drawable = text.context.resources.getDrawable(item.icon, text.context.theme)
+                // Suppress getColor(int) warning since getColor(int, Theme) cannot be used until minSdkVersion is 23.
+                @Suppress("DEPRECATION")
+                DrawableCompat.setTint(drawable, text.context.resources.getColor(R.color.blue_medium))
+                DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN)
+                text.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
             } else {
                 text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
             }
