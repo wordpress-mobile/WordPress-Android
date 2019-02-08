@@ -23,7 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
-import org.wordpress.android.ui.stats.refresh.utils.MILLION
+import org.wordpress.android.ui.stats.refresh.utils.HUNDRED_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -63,14 +63,17 @@ class LatestPostSummaryUseCase
         items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
         if (domainModel.hasData()) {
             items.add(
-                    ValueItem(domainModel.postViewsCount.toFormattedString(startValue = MILLION), R.string.stats_views)
+                    ValueItem(
+                            domainModel.postViewsCount.toFormattedString(startValue = HUNDRED_THOUSAND),
+                            R.string.stats_views
+                    )
             )
             if (domainModel.dayViews.isNotEmpty()) {
                 items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
             }
             items.add(
                     ListItemWithIcon(
-                            R.drawable.ic_star_grey_dark_24dp,
+                            R.drawable.ic_star_white_24dp,
                             textResource = R.string.stats_likes,
                             value = domainModel.postLikeCount.toFormattedString(),
                             showDivider = true
@@ -78,7 +81,7 @@ class LatestPostSummaryUseCase
             )
             items.add(
                     ListItemWithIcon(
-                            R.drawable.ic_comment_grey_dark_24dp,
+                            R.drawable.ic_comment_white_24dp,
                             textResource = R.string.stats_comments,
                             value = domainModel.postCommentCount.toFormattedString(),
                             showDivider = false

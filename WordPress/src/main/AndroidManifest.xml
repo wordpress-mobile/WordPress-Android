@@ -711,6 +711,7 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".ui.quickstart.QuickStartReminderReceiver" />
 
 
         <!-- Google Cloud Messaging receiver and services -->
@@ -737,12 +738,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name=".ui.quickstart.QuickStartActivity"
-            android:label="@string/quick_start_sites"
-            android:parentActivityName=".ui.main.WPMainActivity"
-            android:theme="@style/CalypsoTheme" />
 
         <!-- Smart Lock for Passwords -->
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
