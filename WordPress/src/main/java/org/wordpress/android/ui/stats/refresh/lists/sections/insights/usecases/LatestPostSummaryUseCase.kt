@@ -70,7 +70,7 @@ class LatestPostSummaryUseCase
             }
             items.add(
                     ListItemWithIcon(
-                            R.drawable.ic_star_grey_dark_24dp,
+                            R.drawable.ic_star_white_24dp,
                             textResource = R.string.stats_likes,
                             value = domainModel.postLikeCount.toFormattedString(),
                             showDivider = true
@@ -78,7 +78,7 @@ class LatestPostSummaryUseCase
             )
             items.add(
                     ListItemWithIcon(
-                            R.drawable.ic_comment_grey_dark_24dp,
+                            R.drawable.ic_comment_white_24dp,
                             textResource = R.string.stats_comments,
                             value = domainModel.postCommentCount.toFormattedString(),
                             showDivider = false

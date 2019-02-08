@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase.NotUsedUiState
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
 
 /**
@@ -39,7 +40,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             AppLog.e(AppLog.T.STATS, e)
             Error(type, "An error occurred (${e.message ?: "Unknown"})")
         }
-    }
+    }.distinct()
 
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget

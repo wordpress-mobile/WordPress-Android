@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.Transformations
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * A helper function that merges sources into a single LiveData object
@@ -15,7 +16,9 @@ fun <T> mergeNotNull(vararg sources: LiveData<T>): LiveData<T> {
     val mediator = MediatorLiveData<T>()
     for (source in sources) {
         mediator.addSource(source) {
-            mediator.value = it
+            if (mediator.value != it) {
+                mediator.value = it
+            }
         }
     }
     return mediator
@@ -30,7 +33,9 @@ fun <T> mergeNotNull(sources: Iterable<LiveData<T>>): LiveData<T> {
     val mediator = MediatorLiveData<T>()
     for (source in sources) {
         mediator.addSource(source) {
-            mediator.value = it
+            if (mediator.value != it) {
+                mediator.value = it
+            }
         }
     }
     return mediator
@@ -45,10 +50,14 @@ fun <T> mergeNotNull(sources: Iterable<LiveData<T>>): LiveData<T> {
 fun <T, U, V> mergeNotNull(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T, U) -> V): LiveData<V> {
     val mediator = MediatorLiveData<Pair<T?, U?>>()
     mediator.addSource(sourceA) {
-        mediator.value = it to mediator.value?.second
+        if (mediator.value?.first != it) {
+            mediator.value = it to mediator.value?.second
+        }
     }
     mediator.addSource(sourceB) {
-        mediator.value = mediator.value?.first to it
+        if (mediator.value?.second != it) {
+            mediator.value = mediator.value?.first to it
+        }
     }
     return mediator.map { (dataA, dataB) ->
         if (dataA != null && dataB != null) {
@@ -91,13 +100,19 @@ fun <S, T, U, V> merge(
 ): LiveData<V> {
     val mediator = MediatorLiveData<Triple<S?, T?, U?>>()
     mediator.addSource(sourceA) {
-        mediator.value = Triple(it, mediator.value?.second, mediator.value?.third)
+        if (mediator.value?.first != it) {
+            mediator.value = Triple(it, mediator.value?.second, mediator.value?.third)
+        }
     }
     mediator.addSource(sourceB) {
-        mediator.value = Triple(mediator.value?.first, it, mediator.value?.third)
+        if (mediator.value?.second != it) {
+            mediator.value = Triple(mediator.value?.first, it, mediator.value?.third)
+        }
     }
     mediator.addSource(sourceC) {
-        mediator.value = Triple(mediator.value?.first, mediator.value?.second, it)
+        if (mediator.value?.third != it) {
+            mediator.value = Triple(mediator.value?.first, mediator.value?.second, it)
+        }
     }
     return mediator.map { (dataA, dataB, dataC) -> merger(dataA, dataB, dataC) }
 }
@@ -111,14 +126,16 @@ fun <Key, Value> combineMap(sources: Map<Key, LiveData<Value>>): LiveData<Map<Ke
     val mediator = MediatorLiveData<MutableMap<Key, Value>>()
     mediator.value = mutableMapOf()
     for (source in sources) {
-        mediator.addSource(source.value) {
+        mediator.addSource(source.value) { updatedValue ->
             val value = mediator.value ?: mutableMapOf()
-            if (it != null) {
-                value[source.key] = it
-            } else {
-                value.remove(source.key)
+            if (value[source.key] != updatedValue) {
+                if (updatedValue != null) {
+                    value[source.key] = updatedValue
+                } else {
+                    value.remove(source.key)
+                }
+                mediator.value = value
             }
-            mediator.value = value
         }
     }
     return mediator.map { it.toMap() }
@@ -131,6 +148,33 @@ fun <T, U> LiveData<T>.map(mapper: (T) -> U?): LiveData<U> {
     return Transformations.map(this) {
         it?.let(mapper)
     }
+}
+
+/**
+ * This method ensures that the LiveData instance doesn't emit the same item twice
+ */
+fun <T> LiveData<T>.distinct(): LiveData<T> {
+    val mediatorLiveData: MediatorLiveData<T> = MediatorLiveData()
+    mediatorLiveData.addSource(this) {
+        if (it != mediatorLiveData.value) {
+            mediatorLiveData.value = it
+        }
+    }
+    return mediatorLiveData
+}
+
+/**
+ * Call this method if you want to throttle the LiveData emissions.
+ * The default implementation takes only the last emitted result after 100ms.
+ */
+fun <T> LiveData<T>.throttle(coroutineScope: CoroutineScope): LiveData<T> {
+    val mediatorLiveData: ThrottleLiveData<T> = ThrottleLiveData(coroutineScope = coroutineScope)
+    mediatorLiveData.addSource(this) {
+        if (it != mediatorLiveData.value) {
+            mediatorLiveData.value = it
+        }
+    }
+    return mediatorLiveData
 }
 
 /**
