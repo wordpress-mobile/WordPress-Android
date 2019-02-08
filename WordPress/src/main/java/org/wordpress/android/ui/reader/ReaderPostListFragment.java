@@ -655,8 +655,10 @@ public class ReaderPostListFragment extends Fragment
                     mRecyclerView.setRefreshing(true);
                 }
 
-                ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
-                refreshPosts();
+                if (getCurrentTag() != null && getCurrentTag().isBookmarked()) {
+                    ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
+                    refreshPosts();
+                }
             }
 
             @Override
