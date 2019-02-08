@@ -125,7 +125,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     private fun assertHour(blockListItem: BlockListItem) {
         assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
         val item = blockListItem as ListItemWithIcon
-        assertThat(item.icon).isEqualTo(R.drawable.ic_time_grey_dark_24dp)
+        assertThat(item.icon).isEqualTo(R.drawable.ic_time_white_24dp)
         assertThat(item.text).isEqualTo(hourString)
         assertThat(item.showDivider).isEqualTo(false)
         assertThat(item.value).isEqualTo("${highestHourPercent.roundToInt()}% of views")
