@@ -56,7 +56,7 @@ class AllTimeStatsUseCase
             if (hasPosts) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_posts_grey_dark_24dp,
+                                R.drawable.ic_posts_white_24dp,
                                 textResource = R.string.posts,
                                 value = domainModel.posts.toFormattedString(),
                                 showDivider = hasViews || hasVisitors || hasViewsBestDayTotal
