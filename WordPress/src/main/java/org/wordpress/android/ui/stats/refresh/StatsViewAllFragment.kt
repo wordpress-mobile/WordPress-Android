@@ -34,8 +34,8 @@ class StatsViewAllFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
+    @Inject lateinit var navigator: StatsNavigator
     private lateinit var viewModel: StatsViewAllViewModel
-    private lateinit var navigator: StatsNavigator
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private var layoutManager: LayoutManager? = null
@@ -143,15 +143,11 @@ class StatsViewAllFragment : DaggerFragment() {
         }
 
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(clazz)
-
-        this.navigator = StatsNavigator(site, activity, statsDateFormatter)
-
-        setupObservers()
-
+        setupObservers(site, activity)
         viewModel.start(site)
     }
 
-    private fun setupObservers() {
+    private fun setupObservers(site: SiteModel, activity: FragmentActivity) {
         viewModel.isRefreshing.observe(this, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
@@ -165,7 +161,7 @@ class StatsViewAllFragment : DaggerFragment() {
         })
 
         viewModel.navigationTarget.observeEvent(this) { target ->
-            navigator.navigate(target)
+            navigator.navigate(site, activity, target)
             return@observeEvent true
         }
     }
