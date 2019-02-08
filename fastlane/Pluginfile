@@ -2,6 +2,7 @@
 #
 # Ensure this file is checked in to source control!
 
-gem 'fastlane-plugin-wpmreleasetoolkit', git: 'https://github.com/wordpress-mobile/release-toolkit', ref: 'a1fe5ffd9ce4cae71000ad46d0c7a47666751c0f'
+gem 'fastlane-plugin-wpmreleasetoolkit', git: 'https://github.com/wordpress-mobile/release-toolkit', ref: '0063d5716e05968a948fd8787bdc5d98b9787d86'
+
 
 
