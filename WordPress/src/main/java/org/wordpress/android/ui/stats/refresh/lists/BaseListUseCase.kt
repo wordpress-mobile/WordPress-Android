@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -10,8 +9,10 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.DistinctMutableLiveData
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
+import org.wordpress.android.util.distinct
 import org.wordpress.android.util.mergeNotNull
 
 class BaseListUseCase
@@ -24,7 +25,7 @@ constructor(
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
-    private val statsTypes = MutableLiveData<List<StatsTypes>>()
+    private val statsTypes = DistinctMutableLiveData<List<StatsTypes>>(listOf())
     val data: LiveData<List<StatsBlock>> = mergeNotNull(statsTypes, blockListData) { insights, map ->
         insights.mapNotNull {
             if (map.containsKey(it)) {
@@ -34,7 +35,7 @@ constructor(
                 null
             }
         }
-    }
+    }.distinct()
 
     val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(useCases.map { it.navigationTarget })
 

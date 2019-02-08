@@ -153,7 +153,8 @@ sealed class BlockListItemViewHolder(
 
     class EmptyViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_empty_item) {
+            R.layout.stats_block_empty_item
+    ) {
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(message: Empty) {
             when {
@@ -293,11 +294,9 @@ sealed class BlockListItemViewHolder(
             item: BarChartItem,
             barSelected: Boolean
         ) {
-            if (!barSelected) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    delay(50)
-                    chart.draw(item, labelStart, labelEnd)
-                }
+            GlobalScope.launch(Dispatchers.Main) {
+                delay(50)
+                chart.draw(item, labelStart, labelEnd)
             }
         }
     }
