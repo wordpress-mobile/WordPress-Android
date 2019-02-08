@@ -22,9 +22,9 @@ fun Int.toFormattedString(startValue: Int = TEN_THOUSAND, locale: Locale = Local
 }
 
 fun Long.toFormattedString(startValue: Int = TEN_THOUSAND, locale: Locale = Locale.getDefault()): String {
-    if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString()
-    if (this < 0) return "-" + (-this).toFormattedString()
-    if (this < startValue) return DecimalFormat.getInstance().format(this).toString()
+    if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString(locale = locale)
+    if (this < 0) return "-" + (-this).toFormattedString(locale = locale)
+    if (this < startValue) return DecimalFormat.getInstance(locale).format(this).toString()
 
     val e = SUFFIXES.floorEntry(this)
     val divideBy = e.key

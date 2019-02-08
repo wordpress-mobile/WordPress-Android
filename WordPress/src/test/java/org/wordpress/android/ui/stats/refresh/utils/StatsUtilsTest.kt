@@ -32,8 +32,8 @@ class StatsUtilsTest {
                 "0",
                 "5",
                 "999",
-                "1000",
-                "-5821",
+                "1,000",
+                "-5,821",
                 "10k",
                 "-101k",
                 "2M",
@@ -60,7 +60,7 @@ class StatsUtilsTest {
                 1000000
         )
         val expected = listOf(
-                "999999",
+                "999,999",
                 "1M"
         )
         for (i in numbers.indices) {
