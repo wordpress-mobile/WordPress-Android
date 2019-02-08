@@ -3,10 +3,12 @@ package org.wordpress.android.util.wizard
 import android.arch.lifecycle.LiveData
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
+private const val DEFAULT_STEP_INDEX = -1
+
 class WizardManager<T : WizardStep>(
-    private val steps: List<T>,
-    private var currentStepIndex: Int = -1
+    private val steps: List<T>
 ) {
+    private var currentStepIndex: Int = DEFAULT_STEP_INDEX
     val stepsCount = steps.size
     val currentStep: Int
         get() = currentStepIndex
@@ -40,6 +42,13 @@ class WizardManager<T : WizardStep>(
         } else {
             throw IllegalStateException("Step $T is not present.")
         }
+    }
+
+    fun setCurrentStepIndex(stepIndex: Int) {
+        if (!isIndexValid(stepIndex)) {
+            throw IllegalStateException("Invalid index.")
+        }
+        currentStepIndex = stepIndex
     }
 }
 

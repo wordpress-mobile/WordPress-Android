@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -57,51 +56,9 @@
                 app:tabTextColor="@color/white"
                 app:theme="@style/Base.Widget.Design.TabLayout"/>
 
-            <LinearLayout
+            <include
                 android:id="@+id/date_selection_toolbar"
-                style="@style/StatsBlockLine"
-                android:layout_width="match_parent"
-                android:animateLayoutChanges="true"
-                android:background="@color/white"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/selected_date"
-                    style="@style/StatsBlockTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:ellipsize="end"
-                    tools:text="January 2019"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
-
-                <ImageButton
-                    android:id="@+id/select_previous_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:padding="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/stats_select_previous_period_description"
-                    android:src="@drawable/ic_chevron_left_grey_selector"/>
-
-                <ImageButton
-                    android:id="@+id/select_next_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:padding="4dp"
-                    android:layout_marginEnd="12dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/stats_select_next_period_description"
-                    android:src="@drawable/ic_chevron_right_grey_selector"/>
-            </LinearLayout>
+                layout="@layout/stats_date_selector"/>
 
         </android.support.design.widget.AppBarLayout>
 
