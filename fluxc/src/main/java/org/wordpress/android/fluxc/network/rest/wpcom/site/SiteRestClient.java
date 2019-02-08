@@ -753,11 +753,12 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void completeQuickStart(@NonNull final SiteModel site) {
+    public void completeQuickStart(@NonNull final SiteModel site, String variant) {
         String url = WPCOMREST.sites.site(site.getSiteId()).mobile_quick_start.getUrlV1_1();
-
+        Map<String, Object> params = new HashMap<>();
+        params.put("variant", variant);
         final WPComGsonRequest<QuickStartCompletedResponse> request = WPComGsonRequest
-                .buildPostRequest(url, null, QuickStartCompletedResponse.class,
+                .buildPostRequest(url, params, QuickStartCompletedResponse.class,
                         new Listener<QuickStartCompletedResponse>() {
                             @Override
                             public void onResponse(QuickStartCompletedResponse response) {
