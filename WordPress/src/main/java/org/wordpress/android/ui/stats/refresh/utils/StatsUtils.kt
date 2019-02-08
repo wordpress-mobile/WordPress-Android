@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import java.text.DecimalFormat
+import java.util.Locale
 import java.util.TreeMap
 
 private val SUFFIXES = TreeMap(mapOf(
@@ -16,11 +17,11 @@ const val TEN_THOUSAND = 10000
 const val HUNDRED_THOUSAND = 100000
 const val MILLION = 1000000
 
-fun Int.toFormattedString(startValue: Int = TEN_THOUSAND): String {
-    return this.toLong().toFormattedString(startValue)
+fun Int.toFormattedString(startValue: Int = TEN_THOUSAND, locale: Locale = Locale.getDefault()): String {
+    return this.toLong().toFormattedString(startValue, locale)
 }
 
-fun Long.toFormattedString(startValue: Int = TEN_THOUSAND): String {
+fun Long.toFormattedString(startValue: Int = TEN_THOUSAND, locale: Locale = Locale.getDefault()): String {
     if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString()
     if (this < 0) return "-" + (-this).toFormattedString()
     if (this < startValue) return DecimalFormat.getInstance().format(this).toString()
@@ -32,7 +33,7 @@ fun Long.toFormattedString(startValue: Int = TEN_THOUSAND): String {
     val truncated = this / (divideBy!! / 10)
     val hasDecimal = truncated < 100 && truncated / 10.0 != (truncated / 10).toDouble()
     return if (hasDecimal)
-        DecimalFormat.getInstance().format(truncated / 10.0) + suffix
+        DecimalFormat.getInstance(locale).format(truncated / 10.0) + suffix
     else
-        DecimalFormat.getInstance().format(truncated / 10) + suffix
+        DecimalFormat.getInstance(locale).format(truncated / 10) + suffix
 }

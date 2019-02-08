@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class StatsUtilsTest {
@@ -47,7 +48,7 @@ class StatsUtilsTest {
         )
         for (i in numbers.indices) {
             val number = numbers[i]
-            val formatted = number.toFormattedString()
+            val formatted = number.toFormattedString(locale = Locale.US)
             assertThat(formatted).isEqualTo(expected[i])
         }
     }
@@ -64,7 +65,7 @@ class StatsUtilsTest {
         )
         for (i in numbers.indices) {
             val number = numbers[i]
-            val formatted = number.toFormattedString(MILLION)
+            val formatted = number.toFormattedString(MILLION, Locale.US)
             assertThat(formatted).isEqualTo(expected[i])
         }
     }
