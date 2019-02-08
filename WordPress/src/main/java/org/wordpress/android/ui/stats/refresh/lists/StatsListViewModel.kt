@@ -32,7 +32,7 @@ open class StatsListViewModel(
     private val mutableSnackbarMessage = MutableLiveData<SnackbarMessage>()
     val snackbarMessage: LiveData<SnackbarMessage> = mutableSnackbarMessage
 
-    val uiModel: LiveData<UiModel>  by lazy {
+    val uiModel: LiveData<UiModel> by lazy {
         statsUseCase.data.map { useCaseModels ->
             toUiModel(useCaseModels) { message ->
                 mutableSnackbarMessage.value = SnackbarMessage(

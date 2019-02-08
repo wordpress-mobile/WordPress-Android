@@ -35,7 +35,10 @@ class SelectedDateProvider
     fun selectDate(updatedIndex: Int, availableDates: List<Date>, statsGranularity: StatsGranularity) {
         val selectedDate = getSelectedDateState(statsGranularity)
         if (selectedDate.index != updatedIndex || selectedDate.availableDates != availableDates) {
-            updateSelectedDate(selectedDate.copy(index = updatedIndex, availableDates = availableDates), statsGranularity)
+            updateSelectedDate(
+                    selectedDate.copy(index = updatedIndex, availableDates = availableDates),
+                    statsGranularity
+            )
         }
     }
 
