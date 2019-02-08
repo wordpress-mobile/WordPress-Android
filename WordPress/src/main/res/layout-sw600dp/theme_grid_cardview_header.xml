@@ -63,8 +63,8 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/icon_size_075"
+                        android:layout_height="@dimen/icon_size_075"
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/customize"
@@ -93,8 +93,8 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/icon_size_075"
+                        android:layout_height="@dimen/icon_size_075"
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/details"
@@ -123,8 +123,8 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/icon_size_075"
+                        android:layout_height="@dimen/icon_size_075"
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/support"
