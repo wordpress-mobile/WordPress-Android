@@ -21,16 +21,8 @@ import org.wordpress.android.viewmodel.SingleEventObservable
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
-private const val KEY_CURRENT_STEP = "key_current_step"
-private const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
-private val SITE_CREATION_STEPS =
-        listOf(
-                SiteCreationStep.fromString("site_creation_segments"),
-                SiteCreationStep.fromString("site_creation_verticals"),
-                SiteCreationStep.fromString("site_creation_site_info"),
-                SiteCreationStep.fromString("site_creation_domains"),
-                SiteCreationStep.fromString("site_creation_site_preview")
-        )
+const val KEY_CURRENT_STEP = "key_current_step"
+const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 
 @Parcelize
 @SuppressLint("ParcelCreator")
@@ -44,9 +36,12 @@ data class SiteCreationState(
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
-class NewSiteCreationMainVM @Inject constructor(private val tracker: NewSiteCreationTracker) : ViewModel() {
+class NewSiteCreationMainVM @Inject constructor(
+    private val tracker: NewSiteCreationTracker,
+    private val wizardManager: WizardManager<SiteCreationStep>
+) : ViewModel() {
     private var isStarted = false
-    private lateinit var wizardManager: WizardManager<SiteCreationStep>
+
     private lateinit var siteCreationState: SiteCreationState
 
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
@@ -65,11 +60,10 @@ class NewSiteCreationMainVM @Inject constructor(private val tracker: NewSiteCrea
         if (savedInstanceState == null) {
             tracker.trackSiteCreationAccessed()
             siteCreationState = SiteCreationState()
-            wizardManager = WizardManager(SITE_CREATION_STEPS)
         } else {
             siteCreationState = savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE)
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
-            wizardManager = WizardManager(SITE_CREATION_STEPS, currentStepIndex)
+            wizardManager.setCurrentStepIndex(currentStepIndex)
         }
         isStarted = true
         if (savedInstanceState == null) {
