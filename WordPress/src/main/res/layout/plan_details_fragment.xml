@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_medium"
-            android:textColor="@color/blue_wordpress"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_extra_large"
             tools:text="Personal Plan"/>
 
