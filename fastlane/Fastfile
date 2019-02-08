@@ -157,6 +157,26 @@ desc "Run release preflight checks"
  end
 
 ########################################################################
+# Dependencies handling lanes
+######################################################################## 
+  main_strings_path = "./WordPress/src/main/res/values/strings.xml"
+  libraries_strings_path = [
+    {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]}
+  ]
+
+  desc "Merge libraries strings files into the main app one"
+  lane :localize_libs do | options |
+    if (an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)) then
+      UI.important("Your #{main_strings_path} has changed.")
+      UI.input("Please, review the changes, commit them and press return to continue.")
+    end
+  end
+
+  lane :validate_login_strings do | options |
+    an_validate_lib_strings(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)
+  end 
+
+########################################################################
 # Helper Lanes
 ########################################################################  
   desc "Get a list of pull request from `start_tag` to the current state"
@@ -164,18 +184,7 @@ desc "Run release preflight checks"
     get_prs_list(repository:GHHELPER_REPO, start_tag:"#{options[:start_tag]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
   end
 
-  desc "Merge libraries strings files into the main app one"
-  lane :localize_libs do | options |
-    main_strings_path = "./WordPress/src/main/res/values/strings.xml"
-    libraries_strings_path = [
-      {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]}
-    ]
   
-    if (an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)) then
-      UI.important("Your #{main_strings_path} has changed.")
-      UI.input("Please, review the changes, commit them and press return to continue.")
-    end
-  end
 #####################################################################################
 # Private lanes
 #####################################################################################
