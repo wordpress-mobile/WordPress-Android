@@ -41,6 +41,11 @@ constructor(
         mainDispatcher,
         UiState()
 ) {
+    init {
+        uiState.addSource(selectedDateProvider.granularSelectedDateChanged(statsGranularity)) {
+            onUiState()
+        }
+    }
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
                     ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views)
