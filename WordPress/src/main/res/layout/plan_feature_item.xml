@@ -6,10 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
+    android:layout_marginBottom="@dimen/margin_medium"
     android:layout_marginTop="@dimen/margin_medium"
-    android:orientation="vertical"
-    android:paddingEnd="@dimen/activity_log_icon_margin"
-    android:paddingStart="@dimen/activity_log_icon_margin">
+    android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/feature_title"
@@ -30,13 +29,5 @@
         android:textColor="@color/grey_darken_10"
         tools:text="Feature Description">
     </org.wordpress.android.widgets.WPTextView>
-
-    <View
-        android:id="@+id/bottom_divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_divider_height"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:background="@drawable/notifications_list_divider_full_width">
-    </View>
 
 </LinearLayout>

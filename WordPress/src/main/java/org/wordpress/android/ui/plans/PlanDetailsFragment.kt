@@ -69,7 +69,7 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
         planName.text = plan!!.name
         planTagline.text = plan!!.tagline
 
-        plan!!.features?.forEachIndexed { index, feature ->
+        plan!!.features?.forEach { feature ->
             val view = inflater.inflate(R.layout.plan_feature_item, featuresContainer, false) as ViewGroup
 
             val featureTitle = view.findViewById<TextView>(R.id.feature_title)
@@ -77,10 +77,6 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
 
             featureTitle.text = feature.name
             featureDescription.text = feature.description
-
-            if (index == plan!!.features!!.size - 1) {
-                view.findViewById<View>(R.id.bottom_divider).visibility = View.INVISIBLE
-            }
 
             featuresContainer.addView(view)
         }

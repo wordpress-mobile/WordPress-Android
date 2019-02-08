@@ -19,12 +19,12 @@
         android:paddingTop="@dimen/margin_extra_large">
 
         <ImageView
-            android:src="@drawable/ic_plans_grey_36dp"
             android:id="@+id/image_plan_icon"
             android:layout_width="@dimen/plan_icon_size"
             android:layout_height="@dimen/plan_icon_size"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="@null"/>
+            android:contentDescription="@null"
+            android:src="@drawable/ic_plans_grey_36dp"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/plan_name"
@@ -51,7 +51,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:background="@color/divider_grey"/>
 
@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/margin_extra_large"/>
+            android:paddingBottom="@dimen/margin_medium"/>
     </LinearLayout>
 
 </org.wordpress.android.widgets.WPScrollView>
