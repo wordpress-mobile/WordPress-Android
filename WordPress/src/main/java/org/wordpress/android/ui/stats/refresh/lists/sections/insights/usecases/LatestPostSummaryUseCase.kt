@@ -107,7 +107,7 @@ class LatestPostSummaryUseCase
                     )
             )
             else -> Link(
-                    R.drawable.ic_share_blue_medium_24dp,
+                    R.drawable.ic_share_white_24dp,
                     R.string.stats_insights_share_post,
                     navigateAction = NavigationAction.create(
                             SharePostParams(model.postURL, model.postTitle),
