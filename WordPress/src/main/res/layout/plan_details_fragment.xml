@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_large"
             android:gravity="center_horizontal"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_large"
@@ -51,8 +52,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
             android:background="@color/divider_grey"/>
 
         <LinearLayout
@@ -60,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/margin_medium"/>
+            android:paddingBottom="@dimen/margin_large"/>
     </LinearLayout>
 
 </org.wordpress.android.widgets.WPScrollView>
