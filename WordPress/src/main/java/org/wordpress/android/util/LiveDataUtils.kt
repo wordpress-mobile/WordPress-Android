@@ -118,26 +118,6 @@ fun <S, T, U, V> merge(
 }
 
 /**
- * Merges four LiveData sources using a given function. The function returns an object of a new type.
- * @param sourceR first source
- * @param sourceS second source
- * @param sourceT third source
- * @param sourceU fourth source
- * @return new data source
- */
-fun <R, S, T, U, V> merge(
-    sourceR: LiveData<R>,
-    sourceS: LiveData<S>,
-    sourceT: LiveData<T>,
-    sourceU: LiveData<U>,
-    merger: (R?, S?, T?, U?) -> V
-): LiveData<V> {
-    val resultA: LiveData<Pair<R?, S?>> = merge(sourceR, sourceS) { r, s -> r to s }
-    val resultB: LiveData<Pair<T?, U?>> = merge(sourceT, sourceU) { t, u -> t to u }
-    return mergeNotNull(resultA, resultB) { (r, s), (t, u) -> merger(r, s, t, u) }
-}
-
-/**
  * Combines all the LiveData values in the given Map into one LiveData with the map of values.
  * @param sources is a map of all the live data sources in a map by a given key
  * @return one livedata instance that combines all the values into one map
