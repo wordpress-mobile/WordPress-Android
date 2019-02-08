@@ -7,10 +7,10 @@ import org.wordpress.android.fluxc.model.stats.CacheMode.All
 import org.wordpress.android.fluxc.model.stats.FetchMode.Paged
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -21,7 +21,7 @@ import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class FollowersStore @Inject constructor(
-    private val restClient: InsightsRestClient,
+    private val restClient: FollowersRestClient,
     private val sqlUtils: InsightsSqlUtils,
     private val insightsMapper: InsightsMapper,
     private val coroutineContext: CoroutineContext

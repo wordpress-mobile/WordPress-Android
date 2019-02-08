@@ -4,7 +4,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -16,7 +16,7 @@ import kotlin.coroutines.CoroutineContext
 @Singleton
 class PublicizeStore
 @Inject constructor(
-    private val restClient: InsightsRestClient,
+    private val restClient: PublicizeRestClient,
     private val sqlUtils: InsightsSqlUtils,
     private val insightsMapper: InsightsMapper,
     private val coroutineContext: CoroutineContext

@@ -4,7 +4,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -15,7 +15,7 @@ import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class MostPopularInsightsStore @Inject constructor(
-    private val restClient: InsightsRestClient,
+    private val restClient: MostPopularRestClient,
     private val sqlUtils: InsightsSqlUtils,
     private val insightsMapper: InsightsMapper,
     private val coroutineContext: CoroutineContext

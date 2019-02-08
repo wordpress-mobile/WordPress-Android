@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.stats.CacheMode.Top
 import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.TagsModel
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -17,9 +17,8 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 @Singleton
-class TagsStore
-@Inject constructor(
-    private val restClient: InsightsRestClient,
+class TagsStore @Inject constructor(
+    private val restClient: TagsRestClient,
     private val sqlUtils: InsightsSqlUtils,
     private val insightsMapper: InsightsMapper,
     private val coroutineContext: CoroutineContext
