@@ -52,6 +52,7 @@
             android:layout_height="128dp"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_gridicons_audio"
+            android:tint="@color/grey"
             android:contentDescription="@string/media_preview_audio_desc"/>
 
     </RelativeLayout>
