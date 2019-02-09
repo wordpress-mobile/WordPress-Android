@@ -161,18 +161,18 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                 } else if (uploadError.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, false, uploadError.postError)
                 }
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload
+                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
                 statusColorResId = R.color.alert_red
             } else if (postAdapterItem.uploadStatus.isUploading) {
                 statusTextResId = R.string.post_uploading
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload
+                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
             } else if (postAdapterItem.uploadStatus.hasInProgressMediaUpload) {
                 statusTextResId = R.string.uploading_media
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload
+                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
             } else if (postAdapterItem.uploadStatus.isQueued || postAdapterItem.uploadStatus.hasPendingMediaUpload) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
                 statusTextResId = R.string.post_queued
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload
+                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
             } else if (postAdapterItem.isConflicted) {
                 statusTextResId = R.string.local_post_is_conflicted
                 statusIconResId = R.drawable.ic_gridicons_notice
