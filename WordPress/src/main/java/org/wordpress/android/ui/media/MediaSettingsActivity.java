@@ -45,7 +45,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -371,7 +370,7 @@ public class MediaSettingsActivity extends AppCompatActivity
             mImageView.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(MediaSettingsActivity.this,
                     R.color.grey)));
             mImageView.setPadding(padding, padding * 2, padding, padding);
-            mImageManager.load(mImageView, getResources().getDrawable(imageRes), ScaleType.FIT_CENTER);
+            mImageView.setImageResource(imageRes);
         } else {
             loadImage();
         }
