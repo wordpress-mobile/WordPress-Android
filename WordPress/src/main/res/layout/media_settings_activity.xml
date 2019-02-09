@@ -38,7 +38,8 @@
                     android:scaleType="centerCrop"
                     tools:layout_height="224dp"
                     android:contentDescription="@string/media_settings_image_preview_desc"
-                    tools:src="@drawable/ic_gridicons_audio" >
+                    tools:src="@drawable/ic_gridicons_audio"
+                    tools:tint="@color/grey" >
                 </ImageView>
 
                 <ImageView
