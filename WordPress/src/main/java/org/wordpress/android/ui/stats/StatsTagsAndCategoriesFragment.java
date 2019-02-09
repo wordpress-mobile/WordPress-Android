@@ -266,7 +266,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             if (children == 0) {
                 holder.networkImageView.setVisibility(View.VISIBLE);
                 int drawableResource = groupName.toString().equalsIgnoreCase("uncategorized")
-                        ? R.drawable.ic_folder_blue_wordpress_12dp
+                        ? R.drawable.ic_folder_white_24dp
                         : R.drawable.ic_tag_white_24dp;
                 mImageManager.load(holder.networkImageView, getResources().getDrawable(drawableResource));
             } else {
