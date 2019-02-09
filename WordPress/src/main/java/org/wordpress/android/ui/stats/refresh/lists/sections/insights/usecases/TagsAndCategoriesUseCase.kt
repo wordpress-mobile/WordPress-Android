@@ -132,7 +132,7 @@ class TagsAndCategoriesUseCase
             }
         }
         return ListItemWithIcon(
-                icon = R.drawable.ic_folder_multiple_grey_dark_24dp,
+                icon = R.drawable.ic_folder_multiple_white_24dp,
                 text = text,
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1

@@ -206,7 +206,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         assertThat(item.type).isEqualTo(EXPANDABLE_ITEM)
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
         assertThat(item.header.value).isEqualTo(views.toString())
-        assertThat(item.header.icon).isEqualTo(R.drawable.ic_folder_multiple_grey_dark_24dp)
+        assertThat(item.header.icon).isEqualTo(R.drawable.ic_folder_multiple_white_24dp)
         return item
     }
 
