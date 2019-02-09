@@ -200,7 +200,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                     }
                     PostStatus.SCHEDULED -> {
                         statusTextResId = R.string.post_status_scheduled
-                        statusIconResId = R.drawable.ic_gridicons_calendar
+                        statusIconResId = R.drawable.ic_calendar_white_24dp
                         statusColorResId = R.color.blue_medium
                     }
                     PostStatus.TRASHED -> {
