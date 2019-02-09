@@ -365,7 +365,7 @@ public class MediaSettingsActivity extends AppCompatActivity
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
             @DrawableRes int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
             if (imageRes == 0) {
-                imageRes = R.drawable.ic_gridicons_page;
+                imageRes = R.drawable.ic_pages_white_24dp;
             }
             mImageView.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(MediaSettingsActivity.this,
                     R.color.grey)));

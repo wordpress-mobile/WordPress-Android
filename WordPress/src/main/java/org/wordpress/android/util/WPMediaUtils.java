@@ -341,7 +341,7 @@ public class WPMediaUtils {
         if (MediaUtils.isValidImage(url)) {
             return R.drawable.ic_gridicons_image;
         } else if (MediaUtils.isDocument(url)) {
-            return R.drawable.ic_gridicons_page;
+            return R.drawable.ic_pages_white_24dp;
         } else if (MediaUtils.isPowerpoint(url)) {
             return R.drawable.media_powerpoint;
         } else if (MediaUtils.isSpreadsheet(url)) {

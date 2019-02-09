@@ -179,23 +179,23 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                 statusColorResId = R.color.alert_red
             } else if (postAdapterItem.isLocalDraft) {
                 statusTextResId = R.string.local_draft
-                statusIconResId = R.drawable.ic_gridicons_page
+                statusIconResId = R.drawable.ic_pages_white_24dp
                 statusColorResId = R.color.alert_yellow_dark
             } else if (postAdapterItem.isLocallyChanged) {
                 statusTextResId = R.string.local_changes
-                statusIconResId = R.drawable.ic_gridicons_page
+                statusIconResId = R.drawable.ic_pages_white_24dp
                 statusColorResId = R.color.alert_yellow_dark
             } else {
                 when (postAdapterItem.postStatus) {
                     PostStatus.DRAFT -> {
                         statusTextResId = R.string.post_status_draft
-                        statusIconResId = R.drawable.ic_gridicons_page
+                        statusIconResId = R.drawable.ic_pages_white_24dp
                         statusColorResId = R.color.alert_yellow_dark
                     }
                     PostStatus.PRIVATE -> statusTextResId = R.string.post_status_post_private
                     PostStatus.PENDING -> {
                         statusTextResId = R.string.post_status_pending_review
-                        statusIconResId = R.drawable.ic_gridicons_page
+                        statusIconResId = R.drawable.ic_pages_white_24dp
                         statusColorResId = R.color.alert_yellow_dark
                     }
                     PostStatus.SCHEDULED -> {
@@ -205,7 +205,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                     }
                     PostStatus.TRASHED -> {
                         statusTextResId = R.string.post_status_trashed
-                        statusIconResId = R.drawable.ic_gridicons_page
+                        statusIconResId = R.drawable.ic_pages_white_24dp
                         statusColorResId = R.color.alert_red
                     }
                     PostStatus.UNKNOWN -> {
