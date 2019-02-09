@@ -347,7 +347,7 @@ public class WPMediaUtils {
         } else if (MediaUtils.isSpreadsheet(url)) {
             return R.drawable.media_spreadsheet;
         } else if (MediaUtils.isVideo(url)) {
-            return R.drawable.ic_gridicons_video_camera;
+            return R.drawable.ic_video_camera_white_24dp;
         } else if (MediaUtils.isAudio(url)) {
             return R.drawable.ic_audio_white_24dp;
         } else {
