@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -29,6 +30,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -366,6 +368,8 @@ public class MediaSettingsActivity extends AppCompatActivity
             if (imageRes == 0) {
                 imageRes = R.drawable.ic_gridicons_page;
             }
+            mImageView.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(MediaSettingsActivity.this,
+                    R.color.grey)));
             mImageView.setPadding(padding, padding * 2, padding, padding);
             mImageManager.load(mImageView, getResources().getDrawable(imageRes), ScaleType.FIT_CENTER);
         } else {
