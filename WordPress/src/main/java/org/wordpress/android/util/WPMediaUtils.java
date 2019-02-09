@@ -339,7 +339,7 @@ public class WPMediaUtils {
 
     public static int getPlaceholder(String url) {
         if (MediaUtils.isValidImage(url)) {
-            return R.drawable.ic_gridicons_image;
+            return R.drawable.ic_image_white_24dp;
         } else if (MediaUtils.isDocument(url)) {
             return R.drawable.ic_pages_white_24dp;
         } else if (MediaUtils.isPowerpoint(url)) {
