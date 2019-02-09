@@ -195,7 +195,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         } else {
             assertThat(item.value).isNull()
         }
-        assertThat(item.icon).isEqualTo(R.drawable.ic_tag_grey_dark_24dp)
+        assertThat(item.icon).isEqualTo(R.drawable.ic_tag_white_24dp)
     }
 
     private fun assertCategory(
