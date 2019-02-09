@@ -349,7 +349,7 @@ public class WPMediaUtils {
         } else if (MediaUtils.isVideo(url)) {
             return R.drawable.ic_gridicons_video_camera;
         } else if (MediaUtils.isAudio(url)) {
-            return R.drawable.ic_gridicons_audio;
+            return R.drawable.ic_audio_white_24dp;
         } else {
             return 0;
         }

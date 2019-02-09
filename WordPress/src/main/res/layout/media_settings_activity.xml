@@ -36,9 +36,9 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/media_settings_background"
                     android:scaleType="centerCrop"
-                    tools:layout_height="224dp"
                     android:contentDescription="@string/media_settings_image_preview_desc"
-                    tools:src="@drawable/ic_gridicons_audio"
+                    tools:layout_height="224dp"
+                    tools:src="@drawable/ic_audio_white_24dp"
                     tools:tint="@color/grey" >
                 </ImageView>
 
