@@ -1,0 +1,13 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportHeight="48"
+    android:viewportWidth="48" >
+
+    <path
+        android:fillColor="@color/blue_wordpress"
+        android:pathData="M33,33L15,33L15,31L33,31L33,33ZM20,22L16,22L16,29L20,29L20,22ZM26,15L22,15L22,29L26,29L26,15ZM32,18L28,18L28,29L32,29L32,18Z" >
+    </path>
+
+</vector>
