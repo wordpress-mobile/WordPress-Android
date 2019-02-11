@@ -449,7 +449,7 @@
                 app:buttonTextAllCaps="true"
                 app:buttonTextColor="@color/grey_dark"
                 app:longClickHint="@string/site_settings_start_over_hint"
-                app:preficon="@drawable/ic_history_black_24dp"/>
+                app:preficon="@drawable/ic_history_white_24dp"/>
 
         </PreferenceScreen>
 
