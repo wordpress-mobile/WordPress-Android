@@ -116,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/people_invite_role_info_desc"
-                    android:src="@drawable/ic_info_black_24dp"
+                    android:src="@drawable/ic_info_outline_white_24dp"
                     android:tint="@color/grey_dark"
                     android:paddingEnd="@dimen/margin_small"
                     android:paddingStart="@dimen/margin_small"/>
