@@ -148,7 +148,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
         }
     }
 
-    private fun slideInFragment(fragment: Fragment?, tag: String) {
+    private fun slideInFragment(fragment: Fragment, tag: String) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
         if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
