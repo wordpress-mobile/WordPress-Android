@@ -31,7 +31,8 @@
             android:layout_height="24dp"
             android:layout_marginEnd="32dp"
             android:contentDescription="@null"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:tint="@color/grey_800"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
