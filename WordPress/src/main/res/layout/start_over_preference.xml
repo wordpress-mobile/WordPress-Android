@@ -51,12 +51,12 @@
         android:paddingStart="@dimen/start_over_preference_margin_small"
         android:layout_marginStart="@dimen/start_over_summary_margin"/>
 
-    <LinearLayout
-        android:id="@android:id/widget_frame"
+    <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:layout_marginStart="@dimen/start_over_summary_margin"/>
+        android:layout_marginStart="@dimen/start_over_summary_margin"
+        android:text="@string/button_more"
+        android:theme="@style/WhiteButton"/>
 
 </LinearLayout>
