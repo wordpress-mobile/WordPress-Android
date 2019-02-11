@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-22 08:54:13+0000
+Translation-Revision-Date: 2019-02-05 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="new_site_creation_clear_all_content_description">Wissen</string>
+    <string name="new_site_creation_button_skip">Overslaan</string>
     <string name="local_changes_discarding_no_connection">Er is een verbinding vereist om deze actie uit te voeren. Controleer je verbinding en probeer het nogmaals.</string>
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
