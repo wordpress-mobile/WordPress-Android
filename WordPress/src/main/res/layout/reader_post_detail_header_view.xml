@@ -18,8 +18,8 @@
             android:layout_width="@dimen/reader_detail_header_blavatar"
             android:layout_height="@dimen/reader_detail_header_blavatar"
             android:layout_gravity="top|start"
-            tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
-            android:contentDescription="@null"/>
+            android:contentDescription="@null"
+            tools:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"/>
 
         <ImageView
             android:id="@+id/image_header_avatar"

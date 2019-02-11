@@ -29,7 +29,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+                    android:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"
                     android:contentDescription="@null"/>
 
                 <ImageView

@@ -11,7 +11,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.AVATAR -> R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_grey_user_32dp
             ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
-            ImageType.BLAVATAR -> R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp
+            ImageType.BLAVATAR -> R.drawable.bg_rectangle_grey_lighten_20_globe_32dp
             ImageType.IMAGE -> null // don't display any error drawable
             ImageType.PHOTO -> R.color.grey_lighten_30
             ImageType.PLAN -> R.drawable.ic_reader_white_24dp
