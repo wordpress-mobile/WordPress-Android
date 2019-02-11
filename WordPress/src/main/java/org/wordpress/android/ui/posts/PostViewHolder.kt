@@ -35,7 +35,6 @@ class PostViewHolderConfig(
     val isPhotonCapable: Boolean,
     val showAllButtons: Boolean,
     val imageManager: ImageManager,
-    val isAztecEditorEnabled: Boolean,
     val hasCapabilityPublishPosts: Boolean
 )
 
@@ -98,9 +97,6 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
         if (uploadStatus.isUploading) {
             disabledOverlay.visibility = View.VISIBLE
             progressBar.isIndeterminate = true
-        } else if (!config.isAztecEditorEnabled && uploadStatus.isUploadingOrQueued) {
-            // Editing posts with uploading media is only supported in Aztec
-            disabledOverlay.visibility = View.VISIBLE
         } else {
             progressBar.isIndeterminate = false
             disabledOverlay.visibility = View.GONE
