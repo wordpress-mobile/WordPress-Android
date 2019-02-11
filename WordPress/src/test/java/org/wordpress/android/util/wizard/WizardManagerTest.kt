@@ -81,4 +81,3 @@ class WizardManagerTest {
 
     private fun createWizardManager(initialStepIndex: Int) = WizardManager(STEPS, initialStepIndex)
 }
-
