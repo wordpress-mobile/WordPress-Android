@@ -17,7 +17,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.PLAN -> R.drawable.ic_reader_white_24dp
             ImageType.PLUGIN -> R.drawable.plugin_placeholder
             ImageType.THEME -> R.color.grey_lighten_30
-            ImageType.UNKNOWN -> R.drawable.ic_notice_grey_500_48dp
+            ImageType.UNKNOWN -> R.drawable.ic_notice_white_24dp
             ImageType.VIDEO -> R.color.grey_lighten_30
             ImageType.ICON -> R.drawable.bg_grey_lighten_30_with_radius
         }
