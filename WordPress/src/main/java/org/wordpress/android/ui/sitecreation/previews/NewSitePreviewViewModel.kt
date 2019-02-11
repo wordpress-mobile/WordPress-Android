@@ -34,7 +34,7 @@ import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceStat
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -49,6 +49,7 @@ class NewSitePreviewViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val fetchWpComSiteUseCase: FetchWpComSiteUseCase,
     private val networkUtils: NetworkUtilsWrapper,
+    private val urlUtils: UrlUtilsWrapper,
     private val tracker: NewSiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
@@ -116,7 +117,7 @@ class NewSitePreviewViewModel @Inject constructor(
                         verticalId,
                         siteTitle,
                         siteTagLine,
-                        UrlUtils.extractSubDomain(urlWithoutScheme)
+                        urlUtils.extractSubDomain(urlWithoutScheme)
                 )
                 _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)
             }
@@ -225,7 +226,7 @@ class NewSitePreviewViewModel @Inject constructor(
             }
         }
         // Load the newly created site in the webview
-        _preloadPreview.postValue(UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true))
+        _preloadPreview.postValue(urlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true))
     }
 
     fun onUrlLoaded() {
@@ -247,8 +248,8 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     private fun createSitePreviewData(): SitePreviewData {
-        val subDomain = UrlUtils.extractSubDomain(urlWithoutScheme)
-        val fullUrl = UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
+        val subDomain = urlUtils.extractSubDomain(urlWithoutScheme)
+        val fullUrl = urlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
         val subDomainIndices: Pair<Int, Int> = Pair(0, subDomain.length)
         val domainIndices: Pair<Int, Int> = Pair(
                 Math.min(subDomainIndices.second, urlWithoutScheme.length),
