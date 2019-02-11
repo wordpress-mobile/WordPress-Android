@@ -135,7 +135,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_history_blue_24dp"
+                    android:src="@drawable/ic_history_white_24dp"
                     android:tint="@color/blue_wordpress"/>
 
                 <org.wordpress.android.widgets.WPTextView
