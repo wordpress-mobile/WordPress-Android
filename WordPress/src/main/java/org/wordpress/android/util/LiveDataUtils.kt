@@ -167,10 +167,14 @@ fun <T> LiveData<T>.distinct(): LiveData<T> {
  * Call this method if you want to throttle the LiveData emissions.
  * The default implementation takes only the last emitted result after 100ms.
  */
-fun <T> LiveData<T>.throttle(coroutineScope: CoroutineScope): LiveData<T> {
-    val mediatorLiveData: ThrottleLiveData<T> = ThrottleLiveData(coroutineScope = coroutineScope)
+fun <T> LiveData<T>.throttle(
+    coroutineScope: CoroutineScope,
+    distinct: Boolean = true,
+    offset: Long = 100
+): ThrottleLiveData<T> {
+    val mediatorLiveData: ThrottleLiveData<T> = ThrottleLiveData(coroutineScope = coroutineScope, offset = offset)
     mediatorLiveData.addSource(this) {
-        if (it != mediatorLiveData.value) {
+        if (it != mediatorLiveData.value || !distinct) {
             mediatorLiveData.value = it
         }
     }

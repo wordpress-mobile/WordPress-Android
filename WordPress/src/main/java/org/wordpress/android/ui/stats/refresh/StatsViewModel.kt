@@ -114,11 +114,13 @@ class StatsViewModel
 
     fun onPullToRefresh() {
         loadData {
-            insightsUseCase.refreshData(site, true)
-            dayStatsUseCase.refreshData(site, true)
-            weekStatsUseCase.refreshData(site, true)
-            monthStatsUseCase.refreshData(site, true)
-            yearStatsUseCase.refreshData(site, true)
+            when(statsSectionManager.getSelectedSection()) {
+                StatsSection.INSIGHTS -> insightsUseCase.refreshData(site, true)
+                StatsSection.DAYS -> dayStatsUseCase.refreshData(site, true)
+                StatsSection.WEEKS -> weekStatsUseCase.refreshData(site, true)
+                StatsSection.MONTHS -> monthStatsUseCase.refreshData(site, true)
+                StatsSection.YEARS -> yearStatsUseCase.refreshData(site, true)
+            }
         }
     }
 

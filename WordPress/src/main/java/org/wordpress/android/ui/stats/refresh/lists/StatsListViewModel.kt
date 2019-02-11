@@ -29,15 +29,15 @@ open class StatsListViewModel(
     }
 
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
-    private val mutableSnackbarMessage = MutableLiveData<SnackbarMessage>()
-    val snackbarMessage: LiveData<SnackbarMessage> = mutableSnackbarMessage
+    private val mutableSnackbarMessage by lazy {
+        MutableLiveData<Int>().throttle(this, distinct = false, offset = 1000)
+    }
+    val snackbarMessage: LiveData<SnackbarMessage> = mutableSnackbarMessage.map { SnackbarMessage(it) }
 
     val uiModel: LiveData<UiModel> by lazy {
         statsUseCase.data.map { useCaseModels ->
             toUiModel(useCaseModels) { message ->
-                mutableSnackbarMessage.value = SnackbarMessage(
-                        message
-                )
+                mutableSnackbarMessage.postValue(message)
             }
         }.throttle(this)
     }
@@ -53,7 +53,7 @@ open class StatsListViewModel(
                 statsUseCase.refreshData(site, true)
             }
         } else {
-            mutableSnackbarMessage.value = SnackbarMessage(R.string.no_network_title)
+            mutableSnackbarMessage.value = R.string.no_network_title
         }
     }
 
