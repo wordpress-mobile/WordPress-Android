@@ -12,11 +12,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeConnection;
+import org.wordpress.android.models.PublicizeConnection.ConnectStatus;
 import org.wordpress.android.models.PublicizeConnectionList;
+import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.ConnectButton;
 import org.wordpress.android.ui.publicize.PublicizeActions;
 import org.wordpress.android.ui.publicize.PublicizeConstants;
-import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -31,18 +33,18 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
 
     private final long mSiteId;
     private final long mCurrentUserId;
-    private final String mServiceId;
+    private final PublicizeService mService;
 
     private PublicizeActions.OnPublicizeActionListener mActionListener;
     private OnAdapterLoadedListener mLoadedListener;
 
     @Inject ImageManager mImageManager;
 
-    public PublicizeConnectionAdapter(Context context, long siteId, String serviceId, long currentUserId) {
+    public PublicizeConnectionAdapter(Context context, long siteId, PublicizeService service, long currentUserId) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mSiteId = siteId;
-        mServiceId = StringUtils.notNullStr(serviceId);
+        mService = service;
         mCurrentUserId = currentUserId;
         setHasStableIds(true);
     }
@@ -58,7 +60,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
     public void refresh() {
         PublicizeConnectionList siteConnections = PublicizeTable.getConnectionsForSite(mSiteId);
         PublicizeConnectionList serviceConnections =
-                siteConnections.getServiceConnectionsForUser(mCurrentUserId, mServiceId);
+                siteConnections.getServiceConnectionsForUser(mCurrentUserId, mService.getId());
 
         if (!mConnections.isSameAs(serviceConnections)) {
             mConnections.clear();
