@@ -57,7 +57,7 @@
                     android:layout_height="60dp"
                     android:layout_gravity="center"
                     android:visibility="gone"
-                    android:src="@drawable/play_video_selector_large"
+                    android:src="@drawable/ic_play_white_black_24dp"
                     android:contentDescription="@string/media_settings_play"
                     tools:visibility="visible" />
             </FrameLayout>

@@ -124,7 +124,7 @@
                 android:layout_gravity="center"
                 android:layout_height="@dimen/reader_video_overlay_size"
                 android:layout_width="@dimen/reader_video_overlay_size"
-                android:src="@drawable/play_video_selector"
+                android:src="@drawable/ic_play_white_black_black_white_24dp_selector"
                 android:visibility="gone"
                 tools:visibility="visible" >
             </ImageView>
