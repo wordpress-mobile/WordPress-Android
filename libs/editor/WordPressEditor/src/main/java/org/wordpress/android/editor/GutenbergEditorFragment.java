@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,6 +43,8 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
+import java.lang.reflect.Field;
+import java.util.Locale;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,6 +55,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         IHistoryListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
+    private static final String ARG_TRANSLATIONS = "param_translations";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
 
@@ -75,12 +80,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
-                                                      boolean isNewPost) {
+                                                      boolean isNewPost, Bundle translations) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
         args.putString(ARG_PARAM_CONTENT, content);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
+        args.putBundle(ARG_TRANSLATIONS, fragment.getTranslations());
         fragment.setArguments(args);
         return fragment;
     }
@@ -97,17 +103,54 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return mRetainedGutenbergContainerFragment;
     }
 
+    private Bundle getTranslations() {
+        Bundle translations = new Bundle();
+        Locale defaultLocale = new Locale("en");
+        Resources currentResources = getResources();
+        Configuration configuration = currentResources.getConfiguration();
+        if (configuration.locale.equals(defaultLocale)) {
+            return translations;
+        }
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        configuration.locale = defaultLocale;
+        Resources defaultResources = new Resources(getActivity().getAssets(), metrics, configuration);
+
+        int resourceId = 0;
+        for (Field stringField : R.string.class.getFields()) {
+            try {
+                resourceId = stringField.getInt(R.string.class);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                continue;
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            String currentResourceString = currentResources.getString(resourceId);
+            String defaultResourceString = defaultResources.getString(resourceId);
+            if (currentResourceString != null && currentResourceString.length() > 0 &&
+                    defaultResourceString != null && defaultResourceString.length() > 0) {
+                translations.putString(defaultResourceString, currentResourceString);
+            }
+        }
+        return translations;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
             boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
+            Bundle translations = getArguments().getBundle(ARG_TRANSLATIONS);
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             GutenbergContainerFragment gutenbergContainerFragment =
-                    GutenbergContainerFragment.newInstance(isNewPost);
+                    GutenbergContainerFragment.newInstance(isNewPost, translations);
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
