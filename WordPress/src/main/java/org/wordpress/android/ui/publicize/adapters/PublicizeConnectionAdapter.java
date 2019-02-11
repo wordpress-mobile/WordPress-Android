@@ -104,15 +104,35 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND,
                 connection.getExternalProfilePictureUrl());
 
-        holder.mBtnConnect.setAction(PublicizeConstants.ConnectAction.DISCONNECT);
-        holder.mBtnConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mActionListener != null) {
-                    mActionListener.onRequestDisconnect(connection);
-                }
-            }
-        });
+        bindButton(holder.mBtnConnect, connection);
+    }
+
+    private void bindButton(ConnectButton btnConnect, final PublicizeConnection connection) {
+        ConnectStatus status = connection.getStatusEnum();
+        switch (status) {
+            case BROKEN:
+                btnConnect.setAction(ConnectAction.RECONNECT);
+                btnConnect.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                        if (mActionListener != null) {
+                            mActionListener.onRequestReconnect(mService, connection);
+                        }
+                    }
+                });
+                break;
+            case OK:
+            case MUST_DISCONNECT:
+            default:
+                btnConnect.setAction(PublicizeConstants.ConnectAction.DISCONNECT);
+                btnConnect.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mActionListener != null) {
+                            mActionListener.onRequestDisconnect(connection);
+                        }
+                    }
+                });
+        }
     }
 
     class ConnectionViewHolder extends RecyclerView.ViewHolder {
