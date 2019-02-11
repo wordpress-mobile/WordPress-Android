@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-19 19:43:40+0000
+Translation-Revision-Date: 2019-02-02 20:28:58+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
 -->
 <resources>
+    <string name="notification_new_site_creation_creating_site_subtitle">Vytvárate novú webovú stránku</string>
+    <string name="notification_new_site_creation_failed">Nastal problém</string>
+    <string name="notification_new_site_creation_title">Vytvoriť webovú stránku</string>
+    <string name="new_site_creation_create_site_button">Vytvoriť webovú stránku</string>
+    <string name="site_creation_error_generic_subtitle">Chyba pri komunikácii so serverom, prosím skúste to znova</string>
+    <string name="site_creation_error_generic_title">Nastal problém</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Vlastná kategória</string>
+    <string name="new_site_creation_button_skip">Preskočiť</string>
+    <string name="new_site_creation_tag_line_description">Slogan je krátky text, ktorý sa zobrazuje vpravo od názvu.</string>
+    <string name="new_site_creation_tag_line_hint">Slogan</string>
+    <string name="new_site_creation_site_title_hint">Názov webovej stránky</string>
+    <string name="new_site_creation_site_info_header_subtitle">Povedzte nám viac o webovej stránke, ktorú vytvárate.</string>
+    <string name="new_site_creation_site_info_header_title">Základné informácie</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Nastal problém</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Žiadne spojenie</string>
+    <string name="new_site_creation_preview_title">Vaša webová stránka bola vytvorená!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
+    <string name="snackbar_conflict_undo">Vrátiť späť</string>
     <string name="stats_no_data_for_period">Žiadne dáta pre toto obdobie</string>
+    <string name="preference_strip_image_location">Odstrániť lokáciu z médiá</string>
     <string name="giphy_powered_by_giphy">Poháňa GIPHY</string>
     <string name="giphy_picker_search_hint">Vyhľadať v Giphy</string>
     <string name="photo_picker_giphy">Vybrať z Giphy</string>
@@ -57,6 +76,7 @@ Language: sk
     <string name="stats_follower_since_label">Od</string>
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_no_data_yet">Zatiaľ žiadne dáta</string>
     <string name="menu_debug">Menu ladenia</string>
     <string name="preference_experimental">*TESTOVACIE*</string>
     <string name="site_settings_enable_gutenberg_summary">Toto je stále len testovacia verzia Gutenberg</string>

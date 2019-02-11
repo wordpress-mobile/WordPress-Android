@@ -10,13 +10,17 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
-import org.wordpress.android.ui.stats.refresh.utils.MILLION
+import org.wordpress.android.ui.stats.refresh.utils.HUNDRED_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class OverviewMapper
-@Inject constructor(private val statsDateFormatter: StatsDateFormatter) {
+@Inject constructor(
+    private val statsDateFormatter: StatsDateFormatter,
+    private val resourceProvider: ResourceProvider
+) {
     private val units = listOf(
             string.stats_views,
             string.stats_visitors,
@@ -24,15 +28,43 @@ class OverviewMapper
             string.stats_comments
     )
 
-    fun buildTitle(selectedItem: PeriodData?, selectedPosition: Int): ValueItem {
-        val value = when (selectedPosition) {
-            0 -> selectedItem?.views?.toFormattedString(MILLION)
-            1 -> selectedItem?.visitors?.toFormattedString(MILLION)
-            2 -> selectedItem?.likes?.toFormattedString(MILLION)
-            3 -> selectedItem?.comments?.toFormattedString(MILLION)
+    fun buildTitle(selectedItem: PeriodData?, previousItem: PeriodData?, selectedPosition: Int): ValueItem {
+        val value = selectedItem?.getValue(selectedPosition) ?: 0
+        val previousValue = previousItem?.getValue(selectedPosition)
+        val positive = value >= (previousValue ?: 0)
+        val change = previousValue?.let {
+            val difference = value - previousValue
+            val percentage = when {
+                previousValue == value -> "0"
+                previousValue == 0L -> "∞"
+                value == 0L -> "-∞"
+                else -> (difference * 100 / previousValue).toFormattedString()
+            }
+            if (positive) {
+                resourceProvider.getString(R.string.stats_traffic_increase, difference.toFormattedString(), percentage)
+            } else {
+                resourceProvider.getString(R.string.stats_traffic_change, difference.toFormattedString(), percentage)
+            }
+        }
+
+        return ValueItem(
+                value = value.toFormattedString(HUNDRED_THOUSAND),
+                unit = units[selectedPosition],
+                change = change,
+                positive = positive
+        )
+    }
+
+    private fun PeriodData.getValue(
+        selectedPosition: Int
+    ): Long? {
+        return when (selectedPosition) {
+            0 -> this.views
+            1 -> this.visitors
+            2 -> this.likes
+            3 -> this.comments
             else -> null
-        } ?: "0"
-        return ValueItem(value = value, unit = units[selectedPosition])
+        }
     }
 
     fun buildColumns(

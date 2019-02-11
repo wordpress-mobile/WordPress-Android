@@ -14,6 +14,7 @@ private val SUFFIXES = TreeMap(mapOf(
 ))
 
 const val TEN_THOUSAND = 10000
+const val HUNDRED_THOUSAND = 100000
 const val MILLION = 1000000
 
 fun Int.toFormattedString(startValue: Int = TEN_THOUSAND, locale: Locale = Locale.getDefault()): String {
@@ -21,9 +22,9 @@ fun Int.toFormattedString(startValue: Int = TEN_THOUSAND, locale: Locale = Local
 }
 
 fun Long.toFormattedString(startValue: Int = TEN_THOUSAND, locale: Locale = Locale.getDefault()): String {
-    if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString()
-    if (this < 0) return "-" + (-this).toFormattedString()
-    if (this < startValue) return this.toString()
+    if (this == java.lang.Long.MIN_VALUE) return (java.lang.Long.MIN_VALUE + 1).toFormattedString(locale = locale)
+    if (this < 0) return "-" + (-this).toFormattedString(locale = locale)
+    if (this < startValue) return DecimalFormat.getInstance(locale).format(this).toString()
 
     val e = SUFFIXES.floorEntry(this)
     val divideBy = e.key

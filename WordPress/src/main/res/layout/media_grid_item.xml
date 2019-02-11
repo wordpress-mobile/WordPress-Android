@@ -35,7 +35,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
                 android:tint="@color/grey_dark"
-                tools:src="@drawable/ic_gridicons_page"
+                tools:src="@drawable/ic_pages_white_24dp"
                 android:contentDescription="@null"
                 />
 
