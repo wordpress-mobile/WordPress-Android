@@ -393,4 +393,6 @@
 
     <dimen name="settings_icon_size">24dp</dimen>
 
+    <dimen name="icon_size_075">18dp</dimen>
+
 </resources>
