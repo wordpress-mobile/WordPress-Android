@@ -50,6 +50,12 @@
     <dimen name="content_margin_tablet">48dp</dimen>
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
+    <dimen name="content_margin_site_row_end">@dimen/margin_extra_large</dimen>
+    <dimen name="content_margin_site_row_end_tablet">@dimen/content_margin_tablet</dimen>
+    <dimen name="content_margin_site_row_end_tablet_big">@dimen/content_margin_tablet_big</dimen>
+    <dimen name="content_margin_site_row_start">@dimen/my_site_list_row_padding_left</dimen>
+    <dimen name="content_margin_site_row_start_tablet">60dp</dimen>
+    <dimen name="content_margin_site_row_start_tablet_big">108dp</dimen>
 
     <dimen name="site_creation_content_margin_normal">0dp</dimen>
     <dimen name="site_creation_content_margin">@dimen/site_creation_content_margin_normal</dimen>
@@ -318,12 +324,14 @@
     <dimen name="dialog_snackbar_content_padding">20dp</dimen>
     <dimen name="dialog_snackbar_max_icons_size">18dp</dimen>
 
-    <dimen name="quick_start_dot_size">8dp</dimen>
-    <dimen name="quick_start_completed_row_height">56dp</dimen>
-    <dimen name="quick_start_completed_text">14sp</dimen>
+    <dimen name="quick_start_card_padding_horizontal">4dp</dimen>
+    <dimen name="quick_start_card_width_maximum">512dp</dimen>
     <dimen name="quick_start_focus_point_my_site_right_offset">24dp</dimen>
     <dimen name="quick_start_focus_point_bottom_nav_offset">4dp</dimen>
     <dimen name="quick_start_focus_point_size">40dp</dimen>
+    <dimen name="quick_start_type_divider_margin_start">64dp</dimen>
+    <dimen name="quick_start_type_icon">@dimen/blavatar_sz</dimen>
+    <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
 
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
@@ -384,5 +392,7 @@
     <dimen name="stats_block_icon_size">24dp</dimen>
 
     <dimen name="settings_icon_size">24dp</dimen>
+
+    <dimen name="icon_size_075">18dp</dimen>
 
 </resources>

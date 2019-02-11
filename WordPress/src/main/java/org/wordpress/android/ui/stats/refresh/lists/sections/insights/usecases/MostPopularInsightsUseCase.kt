@@ -47,7 +47,7 @@ class MostPopularInsightsUseCase
         items.add(Title(R.string.stats_insights_popular))
         items.add(
                 ListItemWithIcon(
-                        icon = R.drawable.ic_calendar_grey_dark_24dp,
+                        icon = R.drawable.ic_calendar_white_24dp,
                         text = dateUtils.getWeekDay(domainModel.highestDayOfWeek),
                         value = resourceProvider.getString(
                                 R.string.stats_most_popular_percent_views,
@@ -58,7 +58,7 @@ class MostPopularInsightsUseCase
         )
         items.add(
                 ListItemWithIcon(
-                        icon = R.drawable.ic_time_grey_dark_24dp,
+                        icon = R.drawable.ic_time_white_24dp,
                         text = dateUtils.getHour(domainModel.highestHour),
                         value = resourceProvider.getString(
                                 R.string.stats_most_popular_percent_views,

@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.util.filter
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,6 +24,10 @@ class SelectedDateProvider
 
     private val mutableSelectedDateChanged = MutableLiveData<StatsGranularity>()
     val selectedDateChanged: LiveData<StatsGranularity> = mutableSelectedDateChanged
+
+    fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<StatsGranularity> {
+        return selectedDateChanged.filter { it == statsGranularity }
+    }
 
     fun selectDate(date: Date, statsGranularity: StatsGranularity) {
         val selectedDate = getSelectedDateState(statsGranularity)

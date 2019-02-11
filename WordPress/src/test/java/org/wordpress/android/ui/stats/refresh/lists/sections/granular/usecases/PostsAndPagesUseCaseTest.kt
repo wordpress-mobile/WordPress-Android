@@ -133,7 +133,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertHeader(items[1])
         assertThat(items[2] is ListItemWithIcon).isTrue()
         val item = items[2] as ListItemWithIcon
-        assertThat(item.icon).isEqualTo(R.drawable.ic_posts_grey_dark_24dp)
+        assertThat(item.icon).isEqualTo(R.drawable.ic_posts_white_24dp)
         assertThat(item.text).isEqualTo(post.title)
         assertThat(item.value).isEqualTo("10")
     }
@@ -167,7 +167,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertHeader(items[1])
         assertThat(items[2] is ListItemWithIcon).isTrue()
         val item = items[2] as ListItemWithIcon
-        assertThat(item.icon).isEqualTo(R.drawable.ic_pages_grey_dark_24dp)
+        assertThat(item.icon).isEqualTo(R.drawable.ic_pages_white_24dp)
         assertThat(item.text).isEqualTo(title)
         assertThat(item.value).isEqualTo(views.toString())
     }
@@ -201,7 +201,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertHeader(items[1])
         assertThat(items[2] is ListItemWithIcon).isTrue()
         val item = items[2] as ListItemWithIcon
-        assertThat(item.icon).isEqualTo(R.drawable.ic_pages_grey_dark_24dp)
+        assertThat(item.icon).isEqualTo(R.drawable.ic_pages_white_24dp)
         assertThat(item.text).isEqualTo(title)
         assertThat(item.value).isEqualTo(views.toFormattedString())
     }

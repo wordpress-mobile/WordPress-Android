@@ -92,8 +92,8 @@ constructor(
             items.add(Header(R.string.stats_posts_and_pages_title_label, R.string.stats_posts_and_pages_views_label))
             items.addAll(domainModel.views.mapIndexed { index, viewsModel ->
                 val icon = when (viewsModel.type) {
-                    POST -> R.drawable.ic_posts_grey_dark_24dp
-                    HOMEPAGE, PAGE -> R.drawable.ic_pages_grey_dark_24dp
+                    POST -> R.drawable.ic_posts_white_24dp
+                    HOMEPAGE, PAGE -> R.drawable.ic_pages_white_24dp
                 }
                 ListItemWithIcon(
                         icon = icon,

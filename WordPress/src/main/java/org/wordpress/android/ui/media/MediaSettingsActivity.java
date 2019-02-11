@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -29,6 +30,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,7 +45,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -364,10 +365,12 @@ public class MediaSettingsActivity extends AppCompatActivity
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
             @DrawableRes int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
             if (imageRes == 0) {
-                imageRes = R.drawable.ic_gridicons_page;
+                imageRes = R.drawable.ic_pages_white_24dp;
             }
+            mImageView.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(MediaSettingsActivity.this,
+                    R.color.grey)));
             mImageView.setPadding(padding, padding * 2, padding, padding);
-            mImageManager.load(mImageView, getResources().getDrawable(imageRes), ScaleType.FIT_CENTER);
+            mImageView.setImageResource(imageRes);
         } else {
             loadImage();
         }

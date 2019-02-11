@@ -178,6 +178,21 @@ fun <T> LiveData<T>.throttle(coroutineScope: CoroutineScope): LiveData<T> {
 }
 
 /**
+ * A helper function that filters data and only emits what fits the predicate
+ * @param predicate
+ * @return filtered result
+ */
+fun <T> LiveData<T>.filter(predicate: (T) -> Boolean): LiveData<T> {
+    val mediator = MediatorLiveData<T>()
+    mediator.addSource(this) {
+        if (it != null && predicate(it)) {
+            mediator.value = it
+        }
+    }
+    return mediator
+}
+
+/**
  * Use this in order to observe an emission only once - for example for displaying a Snackbar message
  */
 fun <T : Event> LiveData<T>.observeEvent(owner: LifecycleOwner, observer: (T) -> Boolean) {

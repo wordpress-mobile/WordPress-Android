@@ -40,6 +40,11 @@ constructor(
         mainDispatcher,
         UiState()
 ) {
+    init {
+        uiState.addSource(selectedDateProvider.granularSelectedDateChanged(statsGranularity)) {
+            onUiState()
+        }
+    }
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
                     ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views)
@@ -102,8 +107,9 @@ constructor(
             )
             val shiftedIndex = index + domainModel.dates.size - visibleBarCount
             val selectedItem = domainModel.dates.getOrNull(shiftedIndex) ?: domainModel.dates.last()
+            val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
             items.add(
-                    overviewMapper.buildTitle(selectedItem, uiState.selectedPosition)
+                    overviewMapper.buildTitle(selectedItem, previousItem, uiState.selectedPosition)
             )
             items.add(
                     overviewMapper.buildChart(
