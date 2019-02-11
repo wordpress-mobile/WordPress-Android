@@ -78,6 +78,7 @@ class PostListFragment : Fragment() {
                 isPhotonCapable = SiteUtils.isPhotonCapable(site),
                 showAllButtons = displayWidth >= 1080, // on larger displays we can always show all buttons
                 imageManager = imageManager,
+                isAztecEditorEnabled = AppPrefs.isAztecEditorEnabled(),
                 hasCapabilityPublishPosts = site.hasCapabilityPublishPosts
         )
     }
