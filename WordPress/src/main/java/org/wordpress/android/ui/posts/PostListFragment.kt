@@ -26,7 +26,6 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiHelpers
