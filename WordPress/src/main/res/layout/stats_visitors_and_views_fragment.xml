@@ -88,7 +88,8 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_info_grey_800_32dp"
                     android:contentDescription="@null"
-                    android:paddingEnd="@dimen/margin_medium"/>
+                    android:paddingEnd="@dimen/margin_medium"
+                    android:tint="@color/grey_800"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
