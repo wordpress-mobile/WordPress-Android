@@ -21,7 +21,6 @@ import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.LocaleManager
 import java.util.ArrayList
-import java.util.Collections
 import javax.inject.Inject
 
 class HelpActivity : AppCompatActivity() {
