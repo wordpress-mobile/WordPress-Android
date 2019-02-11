@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-16 22:27:48+0000
+Translation-Revision-Date: 2019-01-30 06:14:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
+    <string name="new_site_creation_clear_all_content_description">Clear</string>
+    <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
+    <string name="cancel_new_site_wizard_content_description">Cancel Site Creation Wizard</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+    <string name="notification_new_site_creation_failed">There was a problem</string>
+    <string name="notification_new_site_creation_title">Create Site</string>
+    <string name="new_site_creation_create_site_button">Create Site</string>
+    <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
+    <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
+    <string name="new_site_creation_domain_header_title">Choose a domain name for your site</string>
+    <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
+    <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="site_creation_error_generic_title">There was a problem</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
+    <string name="new_site_creation_button_skip">Skip</string>
+    <string name="new_site_creation_tag_line_description">The tagline is a short line of text shown right below the title.</string>
+    <string name="new_site_creation_tag_line_hint">Tagline</string>
+    <string name="new_site_creation_site_title_hint">Site Title</string>
+    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
+    <string name="new_site_creation_site_info_header_title">Basic Information</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
+    <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
+    <string name="site_creation_segments_title">Tell us what kind of site you’d like to make</string>
+    <string name="new_site_creation_preview_title">Your site has been created!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
+    <string name="new_site_creation_screen_title_general">Create Site</string>
+    <string name="suggestions_updated_content_description">Suggestions updated</string>
+    <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
+    <string name="local_post_is_conflicted">Version conflict</string>
+    <string name="preference_crash_reports_summary">Allow automatic crash reports to help us improve the app\'s performance.</string>
+    <string name="preference_crash_reports">Crash reports</string>
+    <string name="snackbar_conflict_undo">Undo</string>
+    <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
+    <string name="snackbar_conflict_local_version_discarded">Local version discarded</string>
+    <string name="toast_conflict_updating_post">Updating post</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Discard Web</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Discard Local</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %s\n\nWeb\nSaved on %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
     <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="preference_strip_image_location">Remove location from media</string>
@@ -46,9 +88,9 @@ Language: en_AU
     <string name="stats_insights_view_more">View more</string>
     <string name="stats_insights_share_post">Share post</string>
     <string name="stats_insights_create_post">Create post</string>
-    <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far</string>
-    <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post</string>
-    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here</string>
+    <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
+    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
     <string name="stats_insights_all_time_stats">All Time Stats</string>
     <string name="stats_insights_most_popular_views_label">Views</string>
