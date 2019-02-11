@@ -28,7 +28,7 @@
             android:layout_gravity="bottom|end"
             android:background="@drawable/shape_oval_white"
             android:padding="2dp"
-            tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+            tools:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
             android:contentDescription="@null"/>
     </FrameLayout>
 

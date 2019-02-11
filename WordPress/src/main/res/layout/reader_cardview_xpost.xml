@@ -42,7 +42,7 @@
                 android:layout_gravity="bottom|end"
                 android:layout_marginTop="14dp"
                 android:contentDescription="@string/reader_avatar_desc"
-                android:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+                android:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
                 android:layout_marginStart="14dp"/>
         </FrameLayout>
 

@@ -8,7 +8,7 @@ import javax.inject.Singleton
 class ImagePlaceholderManager @Inject constructor() {
     fun getErrorResource(imgType: ImageType): Int? {
         return when (imgType) {
-            ImageType.AVATAR -> R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
+            ImageType.AVATAR -> R.drawable.bg_rectangle_grey_lighten_20_user_32dp
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_grey_user_32dp
             ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
             ImageType.BLAVATAR -> R.drawable.bg_rectangle_grey_lighten_20_globe_32dp

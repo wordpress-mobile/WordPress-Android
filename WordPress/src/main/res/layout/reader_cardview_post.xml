@@ -180,7 +180,7 @@
                 android:background="?android:selectableItemBackground"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/margin_large"
-                android:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+                android:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
                 android:contentDescription="@string/reader_blavatar_desc"
                 style="@style/ReaderImageView.Avatar.Small" >
             </ImageView>
