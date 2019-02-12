@@ -6,17 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
-        app:aevSubtitle="@string/plans_loading_error_subtitle"
-        app:aevTitle="@string/plans_loading_error_title"
-        tools:visibility="visible">
-    </org.wordpress.android.ui.ActionableEmptyView>
-
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -31,5 +20,17 @@
         </org.wordpress.android.ui.prefs.EmptyViewRecyclerView>
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:aevButton="@string/plans_loading_error_with_cash_button"
+        app:aevImage="@drawable/img_illustration_empty_results_216dp"
+        app:aevSubtitle="@string/plans_loading_error_subtitle"
+        app:aevTitle="@string/plans_loading_error_title"
+        tools:visibility="visible">
+    </org.wordpress.android.ui.ActionableEmptyView>
 
 </RelativeLayout>
