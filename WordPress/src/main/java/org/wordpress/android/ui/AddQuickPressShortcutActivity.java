@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -75,7 +74,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
         ListView listView = (ListView) findViewById(android.R.id.list);
 
-        ImageView iv = new ImageView(this);
+        View iv = new View(this);
         iv.setBackgroundResource(R.drawable.list_divider);
         listView.addFooterView(iv);
         listView.setVerticalFadingEdgeEnabled(false);
