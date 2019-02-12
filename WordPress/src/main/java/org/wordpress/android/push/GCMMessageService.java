@@ -55,8 +55,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
-        .IS_TAPPED_ON_NOTIFICATION;
+import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 
 public class GCMMessageService extends FirebaseMessagingService {
     private static final ArrayMap<Integer, Bundle> ACTIVE_NOTIFICATIONS_MAP = new ArrayMap<>();
@@ -588,7 +587,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
             PendingIntent commentApprovePendingIntent = getCommentActionPendingIntentForService(context,
                                                                                                 commentApproveIntent);
-            builder.addAction(R.drawable.ic_checkmark_grey_32dp, context.getText(R.string.approve),
+            builder.addAction(R.drawable.ic_checkmark_white_24dp, context.getText(R.string.approve),
                               commentApprovePendingIntent);
         }
 
@@ -1024,7 +1023,7 @@ public class GCMMessageService extends FirebaseMessagingService {
                     PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
                                               PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
-            builder.addAction(R.drawable.ic_checkmark_grey_32dp, context.getText(R.string.approve),
+            builder.addAction(R.drawable.ic_checkmark_white_24dp, context.getText(R.string.approve),
                               authApprovePendingIntent);
 
 
