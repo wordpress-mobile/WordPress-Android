@@ -37,7 +37,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
 
     fun initialize(
         tag: String,
-        title: String? = null,
+        title: String?,
         message: String,
         positiveButtonLabel: String,
         negativeButtonLabel: String? = null,
