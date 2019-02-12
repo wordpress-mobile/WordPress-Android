@@ -2015,8 +2015,12 @@
     <!-- Plans -->
     <string name="plan">Plan</string>
     <string name="plans">Plans</string>
-    <string name="plans_loading_error_title">No connection</string>
-    <string name="plans_loading_error_subtitle">An active internet connection is required to view plans</string>
+    <string name="plans_loading_error_network_title">No connection</string>
+    <string name="plans_loading_error_no_plans_title">Cannot load Plans</string>
+    <string name="plans_loading_error_no_plans_subtitle">We cannot load Plans at the moment. Please try again later.</string>
+    <string name="plans_loading_error_no_cache_subtitle">An internet connection is required to view Plans.</string>
+    <string name="plans_loading_error_with_cache_subtitle">An internet connection is required to view Plans, so details may be out-of-date.</string>
+    <string name="plans_loading_error_with_cache_button">View Plans Anyway</string>
 
     <!-- gravatar -->
     <string name="error_cropping_image">Error cropping the image</string>
