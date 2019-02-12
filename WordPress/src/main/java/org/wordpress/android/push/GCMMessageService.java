@@ -655,7 +655,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             // Build the new notification, add group to support wearable stacking
             return new NotificationCompat.Builder(context,
                     context.getString(R.string.notification_channel_normal_id))
-                    .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
@@ -710,7 +710,7 @@ public class GCMMessageService extends FirebaseMessagingService {
                 NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context,
                         context.getString(R.string.notification_channel_normal_id))
                         .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
-                        .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                        .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                         .setColor(context.getResources().getColor(R.color.blue_wordpress))
                         .setGroup(NOTIFICATION_GROUP_KEY)
                         .setGroupSummary(true)
@@ -986,7 +986,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
                     context.getString(R.string.notification_channel_important_id))
-                    .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
