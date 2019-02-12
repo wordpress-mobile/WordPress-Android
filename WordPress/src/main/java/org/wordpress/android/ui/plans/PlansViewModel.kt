@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.fluxc.store.PlanOffersStore
 import org.wordpress.android.fluxc.store.PlanOffersStore.OnPlanOffersFetched
 import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.ui.plans.PlansViewModel.PlansListStatus.DONE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -29,6 +30,7 @@ class PlansViewModel @Inject constructor(
     enum class PlansListStatus {
         DONE,
         ERROR,
+        ERROR_WITH_CACHE,
         FETCHING
     }
 
@@ -39,6 +41,10 @@ class PlansViewModel @Inject constructor(
     private val _plans = MutableLiveData<List<PlanOffersModel>>()
     val plans: LiveData<List<PlanOffersModel>>
         get() = _plans
+
+    private val _cachedPlans = MutableLiveData<List<PlanOffersModel>>()
+    val cachedPlans: LiveData<List<PlanOffersModel>>
+        get() = _cachedPlans
 
     private val _showDialog = SingleLiveEvent<PlanOffersModel>()
     val showDialog: LiveData<PlanOffersModel>
@@ -78,15 +84,26 @@ class PlansViewModel @Inject constructor(
         fetchPlans()
     }
 
+    fun onShowCachedPlansButtonClicked() {
+        _listStatus.value = DONE
+        _plans.value = cachedPlans.value
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onPlanOffersFetched(event: OnPlanOffersFetched) {
-        if (event.isError) {
+        if (event.isError && event.planOffers?.isEmpty() == false) {
+            _listStatus.value = PlansListStatus.ERROR_WITH_CACHE
+            _cachedPlans.value = event.planOffers
+            _plans.value = emptyList()
+            AppLog.e(T.API, "An error occurred while fetching plans. Cache is available.")
+        } else if (event.isError) {
             _listStatus.value = PlansListStatus.ERROR
-            AppLog.e(T.API, "An error occurred while fetching plans")
+            _plans.value = emptyList()
+            AppLog.e(T.API, "An error occurred while fetching plans. Cache is not available.")
         } else {
             _listStatus.value = PlansListStatus.DONE
+            _plans.value = event.planOffers
         }
-        _plans.value = event.planOffers // in case of PlansListStatus.ERROR this might contain cached plans
     }
 }

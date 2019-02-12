@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.plans_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
+import org.wordpress.android.ui.plans.PlansViewModel.PlansListStatus.ERROR
+import org.wordpress.android.ui.plans.PlansViewModel.PlansListStatus.ERROR_WITH_CACHE
 import org.wordpress.android.ui.plans.PlansViewModel.PlansListStatus.FETCHING
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -24,8 +26,9 @@ class PlansListFragment : Fragment() {
     private lateinit var viewModel: PlansViewModel
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    interface PlansItemClickInterface {
+    interface PlansListInterface {
         fun onPlanItemClicked(plan: PlanOffersModel)
+        fun onPlansUpdating()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -85,11 +88,38 @@ class PlansListFragment : Fragment() {
             if (isAdded && view != null) {
                 swipeToRefreshHelper.isRefreshing = listStatus == FETCHING
             }
+
+            when (listStatus) {
+                ERROR -> {
+                    actionable_empty_view.title.text = getString(R.string.plans_loading_error_network_title)
+                    actionable_empty_view.subtitle.text = getString(R.string.plans_loading_error_no_cache_subtitle)
+                    actionable_empty_view.button.visibility = View.GONE
+                }
+                ERROR_WITH_CACHE -> {
+                    actionable_empty_view.title.text = getString(R.string.plans_loading_error_network_title)
+                    actionable_empty_view.subtitle.text = getString(R.string.plans_loading_error_with_cache_subtitle)
+                    actionable_empty_view.button.visibility = View.VISIBLE
+                    actionable_empty_view.button.setOnClickListener {
+                        viewModel.onShowCachedPlansButtonClicked()
+                    }
+                }
+                FETCHING -> {
+                    if (activity is PlansListInterface) {
+                        (activity as PlansListInterface).onPlansUpdating()
+                    }
+                }
+                else -> {
+                    // show generic error in case there are no plans to show for any reason
+                    actionable_empty_view.title.text = getString(R.string.plans_loading_error_no_plans_title)
+                    actionable_empty_view.subtitle.text = getString(R.string.plans_loading_error_no_plans_subtitle)
+                    actionable_empty_view.button.visibility = View.GONE
+                }
+            }
         })
 
         viewModel.showDialog.observe(this, Observer {
-            if (it is PlanOffersModel && activity is PlansItemClickInterface) {
-                (activity as PlansItemClickInterface).onPlanItemClicked(it)
+            if (it is PlanOffersModel && activity is PlansListInterface) {
+                (activity as PlansListInterface).onPlanItemClicked(it)
             }
         })
     }
