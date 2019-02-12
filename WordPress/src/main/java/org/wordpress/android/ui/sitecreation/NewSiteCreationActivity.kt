@@ -98,8 +98,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
         mainViewModel.dialogActionObservable.observe(this, Observer { dialogHolder ->
             dialogHolder?.let {
                 val supportFragmentManager = requireNotNull(supportFragmentManager) {
-                    "FragmentManager can't be null " +
-                            "at this point"
+                    "FragmentManager can't be null at this point"
                 }
                 dialogHolder.show(this, supportFragmentManager, uiHelpers)
             }
@@ -107,6 +106,9 @@ class NewSiteCreationActivity : AppCompatActivity(),
         mainViewModel.exitFlowObservable.observe(this, Observer {
             setResult(Activity.RESULT_CANCELED)
             finish()
+        })
+        mainViewModel.onBackPressedObservable.observe(this, Observer {
+            super.onBackPressed()
         })
     }
 
@@ -202,8 +204,6 @@ class NewSiteCreationActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        if (!mainViewModel.onBackPressed()) {
-            super.onBackPressed()
-        }
+        mainViewModel.onBackPressed()
     }
 }

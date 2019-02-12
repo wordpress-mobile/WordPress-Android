@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -47,6 +48,7 @@ class NewSiteCreationMainVMTest {
     @Mock lateinit var wizardFinishedObserver: Observer<CreateSiteState>
     @Mock lateinit var wizardExitedObserver: Observer<Unit>
     @Mock lateinit var dialogActionsObserver: Observer<DialogHolder>
+    @Mock lateinit var onBackPressedObserver: Observer<Unit>
     @Mock lateinit var savedInstanceState: Bundle
     @Mock lateinit var wizardManager: WizardManager<SiteCreationStep>
     @Mock lateinit var siteCreationStep: SiteCreationStep
@@ -67,6 +69,7 @@ class NewSiteCreationMainVMTest {
         viewModel.wizardFinishedObservable.observeForever(wizardFinishedObserver)
         viewModel.dialogActionObservable.observeForever(dialogActionsObserver)
         viewModel.exitFlowObservable.observeForever(wizardExitedObserver)
+        viewModel.onBackPressedObservable.observeForever(onBackPressedObserver)
         whenever(wizardManager.stepsCount).thenReturn(STEP_COUNT)
         // clear invocations since viewModel.start() calls wizardManager.showNextStep
         clearInvocations(wizardManager)
@@ -150,13 +153,15 @@ class NewSiteCreationMainVMTest {
     @Test
     fun backNotSuppressedWhenNotLastStep() {
         whenever(wizardManager.isLastStep()).thenReturn(false)
-        assertThat(viewModel.onBackPressed()).isFalse()
+        viewModel.onBackPressed()
+        verify(onBackPressedObserver).onChanged(anyOrNull())
     }
 
     @Test
     fun backSuppressedWhenLastStep() {
         whenever(wizardManager.isLastStep()).thenReturn(true)
-        assertThat(viewModel.onBackPressed()).isTrue()
+        viewModel.onBackPressed()
+        verifyNoMoreInteractions(onBackPressedObserver)
     }
 
     @Test

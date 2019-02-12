@@ -65,6 +65,9 @@ class NewSiteCreationMainVM @Inject constructor(
     private val _exitFlowObservable = SingleLiveEvent<Unit>()
     val exitFlowObservable: LiveData<Unit> = _exitFlowObservable
 
+    private val _onBackPressedObservable = SingleLiveEvent<Unit>()
+    val onBackPressedObservable: LiveData<Unit> = _onBackPressedObservable
+
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
         if (savedInstanceState == null) {
@@ -92,10 +95,7 @@ class NewSiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    /**
-     * Returns true if the back pressed event was handled and the activity should suppress it, false otherwise.
-     */
-    fun onBackPressed(): Boolean {
+    fun onBackPressed() {
         return if (wizardManager.isLastStep()) {
             if (isSitePreviewLayoutShown) {
                 _exitFlowObservable.call()
@@ -108,10 +108,9 @@ class NewSiteCreationMainVM @Inject constructor(
                         negativeButton = UiStringRes(R.string.cancel)
                 )
             }
-            true
         } else {
             wizardManager.onBackPressed()
-            false
+            _onBackPressedObservable.call()
         }
     }
 
