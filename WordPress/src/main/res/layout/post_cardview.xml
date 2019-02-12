@@ -9,7 +9,7 @@
                                     android:layout_height="wrap_content"
                                     android:stateListAnimator="@anim/pressed_card"
                                     card_view:cardBackgroundColor="@color/white"
-                                    card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                                    card_view:cardCornerRadius="@dimen/default_cardview_radius"
                                     card_view:cardElevation="@dimen/card_elevation" >
 
     <LinearLayout
