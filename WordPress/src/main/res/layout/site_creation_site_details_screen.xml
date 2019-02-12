@@ -57,7 +57,7 @@
             android:layout_marginTop="@dimen/margin_extra_large"
             android:hint="@string/site_creation_tagline_hint"
             android:inputType="textNoSuggestions"
-            app:wpIconDrawable="@drawable/ic_aside_grey_24dp"
+            app:wpIconDrawable="@drawable/ic_aside_white_24dp"
             app:wpIconDrawableTint="@color/grey"/>
 
         <TextView
