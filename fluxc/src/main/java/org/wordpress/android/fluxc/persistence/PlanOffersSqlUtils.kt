@@ -7,7 +7,6 @@ import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
-import com.yarolegovich.wellsql.core.annotation.Unique
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel.Feature
 import javax.inject.Inject
@@ -69,7 +68,7 @@ class PlanOffersSqlUtils @Inject constructor() {
     data class PlanOffersFeatureBuilder(
         @PrimaryKey @Column private var id: Int = 0,
         @Column var internalPlanId: Int = 0,
-        @Column @Unique var stringId: String? = null,
+        @Column var stringId: String? = null,
         @Column var name: String? = null,
         @Column var description: String? = null
     ) : Identifiable {
