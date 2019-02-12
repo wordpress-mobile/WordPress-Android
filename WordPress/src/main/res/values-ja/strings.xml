@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-23 09:54:08+0000
+Translation-Revision-Date: 2019-02-06 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">サイトのプレビューの表示</string>
+    <string name="new_site_creation_clear_all_content_description">クリア</string>
+    <string name="site_created_but_not_fetched_snackbar_message">接続速度が遅いようです。リストに新しいサイトが表示されない場合は、再度更新してみてください。</string>
+    <string name="cancel_new_site_wizard_content_description">「Cancel Site Creation」ウィザード</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">新しいサイトを作成しています。</string>
+    <string name="notification_new_site_creation_failed">問題が発生しました</string>
+    <string name="notification_new_site_creation_title">サイトを作成</string>
+    <string name="new_site_creation_create_site_button">サイトを作成</string>
+    <string name="new_site_creation_search_domain_input_hint">ドメインを検索</string>
+    <string name="new_site_creation_domain_header_subtitle">ドメインとは、インターネット上で閲覧者があなたを見つける場所です</string>
+    <string name="new_site_creation_domain_header_title">サイトのドメイン名を選択してください</string>
+    <string name="new_site_creation_empty_domain_list_message">検索条件一致する利用可能なアドレスはありません</string>
+    <string name="site_creation_error_generic_subtitle">サーバーエラーです。もう一度お試しください</string>
+    <string name="site_creation_error_generic_title">問題が発生しました</string>
+    <string name="new_site_creation_verticals_custom_subtitle">カスタムカテゴリー</string>
+    <string name="new_site_creation_button_skip">スキップ</string>
+    <string name="new_site_creation_tag_line_description">タグラインとは、タイトルのすぐ下に表示される短いテキストです</string>
+    <string name="new_site_creation_tag_line_hint">キャッチフレーズ</string>
+    <string name="new_site_creation_site_title_hint">サイトのタイトル</string>
+    <string name="new_site_creation_site_info_header_subtitle">作成するサイトについて詳しく教えてください。</string>
+    <string name="new_site_creation_site_info_header_title">基本情報</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">問題が発生しました</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">接続できません</string>
+    <string name="site_creation_segments_subtitle">それに基づいて提案させていただきます。ただしそれに縛られることはありません。サイトはすべて進化するものですから。</string>
+    <string name="site_creation_segments_title">どのようなサイトを作りたいか教えてください</string>
+    <string name="new_site_creation_preview_title">サイトが作成されました。</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d/%2$d</string>
+    <string name="new_site_creation_screen_title_general">サイトを作成</string>
+    <string name="suggestions_updated_content_description">提案が更新されました</string>
+    <string name="site_picker_failed_selecting_added_site">新しく追加されたインストール型のサイトを選択できませんでした。</string>
+    <string name="local_post_is_conflicted">バージョンの競合</string>
+    <string name="preference_crash_reports_summary">アプリのパフォーマンス向上のため自動クラッシュレポートを許可する。</string>
+    <string name="preference_crash_reports">クラッシュレポート</string>
+    <string name="snackbar_conflict_undo">元に戻す</string>
+    <string name="snackbar_conflict_web_version_discarded">Web バージョンが破棄されました</string>
+    <string name="snackbar_conflict_local_version_discarded">ローカルバージョンが破棄されました</string>
+    <string name="toast_conflict_updating_post">投稿を更新</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Web を破棄</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">ローカルを破棄</string>
+    <string name="dialog_confirm_load_remote_post_body_2">ローカル\n%s に保存しました\n\nWeb\n%s に保存しました\n</string>
+    <string name="dialog_confirm_load_remote_post_body">この投稿には競合する2つのバージョンがあります。破棄するバージョンを選択してください。\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">同期の競合を解決</string>
     <string name="local_changes_discarding_no_connection">この操作を行うには接続が必要です。接続を確認して、もう一度お試しください。</string>
     <string name="stats_no_data_for_period">この期間のデータがありません</string>
     <string name="preference_strip_image_location">メディアから位置情報を削除する</string>
@@ -46,9 +88,6 @@ Language: ja_JP
     <string name="stats_insights_view_more">詳細を表示</string>
     <string name="stats_insights_share_post">投稿をシェア</string>
     <string name="stats_insights_create_post">投稿を作成</string>
-    <string name="stats_insights_latest_post_message">「%2$s」が公開されてから%1$sが経過しました。投稿のこれまでのパフォーマンスは次のとおりです</string>
-    <string name="stats_insights_latest_post_with_no_engagement">「%2$s」が公開されてから%1$sが経過しました。投稿をシェアして閲覧数を増やしましょう</string>
-    <string name="stats_insights_latest_post_empty">公開した投稿はまだありません公開を開始すると、最新の投稿のサマリーがここに表示されます</string>
     <string name="stats_insights_tags_and_categories">タグとカテゴリー</string>
     <string name="stats_insights_all_time_stats">一般的な統計</string>
     <string name="stats_insights_most_popular_views_label">表示回数</string>

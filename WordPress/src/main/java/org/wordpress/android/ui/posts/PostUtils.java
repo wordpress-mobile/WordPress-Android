@@ -378,10 +378,15 @@ public class PostUtils {
     }
 
     public static boolean shouldShowGutenbergEditor(boolean isNewPost, PostModel post) {
-        return AppPrefs.isGutenbergEditorEnabled()
-               && (isNewPost
-                   || contentContainsGutenbergBlocks(post.getContent())
-                   || TextUtils.isEmpty(post.getContent()));
+        // Default to Gutenberg
+
+        if (isNewPost || TextUtils.isEmpty(post.getContent())) {
+            // for a new post, use Gutenberg if the "use for new posts" switch is set
+            return AppPrefs.isGutenbergDefaultForNewPosts();
+        } else {
+            // for already existing (and non-empty) posts, open Gutenberg only if the post contains blocks
+            return contentContainsGutenbergBlocks(post.getContent());
+        }
     }
 
     public static String replaceMediaFileWithUrlInGutenbergPost(@NonNull String postContent,

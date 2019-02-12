@@ -36,9 +36,10 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/media_settings_background"
                     android:scaleType="centerCrop"
-                    tools:layout_height="224dp"
                     android:contentDescription="@string/media_settings_image_preview_desc"
-                    tools:src="@drawable/ic_gridicons_audio" >
+                    tools:layout_height="224dp"
+                    tools:src="@drawable/ic_audio_white_24dp"
+                    tools:tint="@color/grey" >
                 </ImageView>
 
                 <ImageView
@@ -56,7 +57,7 @@
                     android:layout_height="60dp"
                     android:layout_gravity="center"
                     android:visibility="gone"
-                    android:src="@drawable/play_video_selector_large"
+                    android:src="@drawable/ic_play_white_black_24dp"
                     android:contentDescription="@string/media_settings_play"
                     tools:visibility="visible" />
             </FrameLayout>

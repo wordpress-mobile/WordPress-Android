@@ -51,7 +51,6 @@ import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
-import org.wordpress.android.ui.posts.PostListAction.ShowGutenbergWarningDialog
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
@@ -360,18 +359,7 @@ class PostListViewModel @Inject constructor(
             return
         }
 
-        checkGutenbergOrEdit(site, post)
-    }
-
-    private fun checkGutenbergOrEdit(site: SiteModel, post: PostModel) {
-        // Show Gutenberg Warning Dialog if post contains GB blocks and it's not disabled
-        if (!isGutenbergEnabled() &&
-                PostUtils.contentContainsGutenbergBlocks(post.content) &&
-                !AppPrefs.isGutenbergWarningDialogDisabled()) {
-            _postListAction.postValue(ShowGutenbergWarningDialog(site, post))
-        } else {
-            editPost(site, post)
-        }
+        editPost(site, post)
     }
 
     private fun editPost(site: SiteModel, post: PostModel) {
