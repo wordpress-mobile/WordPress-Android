@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-22 10:54:09+0000
+Translation-Revision-Date: 2019-02-06 07:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Menampilkan pratinjau situs</string>
+    <string name="new_site_creation_clear_all_content_description">Hapus</string>
+    <string name="site_created_but_not_fetched_snackbar_message">Tampaknya sambungan internet Anda lambat. Jika tidak melihat situs baru Anda dalam daftar, coba segarkan halaman.</string>
+    <string name="cancel_new_site_wizard_content_description">Batalkan Wizard Pembuatan Situs</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Kami sedang membuat situs baru Anda</string>
+    <string name="notification_new_site_creation_failed">Ada masalah</string>
+    <string name="notification_new_site_creation_title">Buat Situs</string>
+    <string name="new_site_creation_create_site_button">Buat Situs</string>
+    <string name="new_site_creation_search_domain_input_hint">Cari Domain</string>
+    <string name="new_site_creation_domain_header_subtitle">Di sinilah orang akan menemukan Anda di internet.</string>
+    <string name="new_site_creation_domain_header_title">Pilih nama domain untuk situs Anda</string>
+    <string name="new_site_creation_empty_domain_list_message">Tidak ada alamat yang cocok dengan pencarian Anda</string>
+    <string name="site_creation_error_generic_subtitle">Terjadi error saat berkomunikasi dengan server, harap coba lagi</string>
+    <string name="site_creation_error_generic_title">Ada masalah</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Kategori kustom</string>
+    <string name="new_site_creation_button_skip">Lewati</string>
+    <string name="new_site_creation_tag_line_description">Slogan adalah sebaris teks singkat yang ditampilkan di bawah judul.</string>
+    <string name="new_site_creation_tag_line_hint">Slogan</string>
+    <string name="new_site_creation_site_title_hint">Judul Situs</string>
+    <string name="new_site_creation_site_info_header_subtitle">Ceritakan lebih banyak tentang situs yang Anda buat.</string>
+    <string name="new_site_creation_site_info_header_title">Informasi Dasar</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Ada masalah</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Tak ada koneksi</string>
+    <string name="site_creation_segments_subtitle">Hal ini membantu kami membuat rekomendasi. Namun Anda tidak akan pernah terikat. Semua situs berevolusi!</string>
+    <string name="site_creation_segments_title">Beri tahu kami situs seperti apa yang ingin Anda buat</string>
+    <string name="new_site_creation_preview_title">Situs Anda telah dibuat!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d dari %2$d</string>
+    <string name="new_site_creation_screen_title_general">Buat Situs</string>
+    <string name="suggestions_updated_content_description">Saran diperbarui</string>
+    <string name="site_picker_failed_selecting_added_site">Tidak dapat memilih situs hosting sendiri yang baru ditambahkan.</string>
+    <string name="local_post_is_conflicted">Konflik versi</string>
+    <string name="preference_crash_reports_summary">Izinkan pelaporan masalah crash otomatis untuk membantu kami meningkatkan performa aplikasi.</string>
+    <string name="preference_crash_reports">Laporan masalah crash</string>
+    <string name="snackbar_conflict_undo">Urungkan</string>
+    <string name="snackbar_conflict_web_version_discarded">Versi web dibuang</string>
+    <string name="snackbar_conflict_local_version_discarded">Versi lokal dibuang</string>
+    <string name="toast_conflict_updating_post">Memperbarui pos</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Buang Web</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Buang Lokal</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Lokal\nDisimpan pada %s\n\nWeb\nDisimpan pada %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">Pos ini memiliki dua versi yang berkonflik. Pilih versi yang ingin Anda buang.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Selesaikan konflik sinkronisasi</string>
     <string name="local_changes_discarding_no_connection">Perlu koneksi untuk melakukan tindakan ini. Periksa koneksi Anda dan coba lagi.</string>
     <string name="stats_no_data_for_period">Tidak ada data selama periode ini</string>
     <string name="preference_strip_image_location">Hapus lokasi dari media</string>
@@ -46,9 +88,6 @@ Language: id
     <string name="stats_insights_view_more">Lihat selengkapnya</string>
     <string name="stats_insights_share_post">Bagikan pos</string>
     <string name="stats_insights_create_post">Buat pos</string>
-    <string name="stats_insights_latest_post_message">Sudah %1$s sejak %2$s diterbitkan. Berikut performa pos sejauh ini</string>
-    <string name="stats_insights_latest_post_with_no_engagement">Sudah %1$s sejak %2$s diterbitkan. Tingkatkan aktivitas dan penayangan pos dengan membagikan pos Anda</string>
-    <string name="stats_insights_latest_post_empty">Anda belum memublikasikan pos apa pun. Setelah mulai memublikasikan, ringkasan pos terbaru Anda akan muncul di sini</string>
     <string name="stats_insights_tags_and_categories">Tag dan Kategori</string>
     <string name="stats_insights_all_time_stats">Statistik Sepanjang Waktu</string>
     <string name="stats_insights_most_popular_views_label">Tampilan</string>
