@@ -22,7 +22,7 @@
     </item>
 
     <item
-        android:drawable="@drawable/ic_themes_grey_lighten_30_18dp"
+        android:drawable="@drawable/ic_themes_white_24dp"
         android:gravity="center" >
     </item>
 
