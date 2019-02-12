@@ -566,7 +566,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
             PendingIntent commentLikePendingIntent = getCommentActionPendingIntentForService(context,
                                                                                              commentLikeIntent);
-            builder.addAction(R.drawable.ic_star_grey_32dp, context.getText(R.string.like), commentLikePendingIntent);
+            builder.addAction(R.drawable.ic_star_white_24dp, context.getText(R.string.like), commentLikePendingIntent);
         }
 
         private void addCommentApproveActionForCommentNotification(Context context, NotificationCompat.Builder builder,
