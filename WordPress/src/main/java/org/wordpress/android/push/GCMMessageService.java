@@ -545,11 +545,8 @@ public class GCMMessageService extends FirebaseMessagingService {
             RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_OR_INLINE_REPLY)
                     .setLabel(replyLabel)
                     .build();
-            NotificationCompat.Action action =
-                    new NotificationCompat.Action.Builder(R.drawable.ic_reply_grey_32dp,
-                                                          context.getString(R.string.reply), commentReplyPendingIntent)
-                            .addRemoteInput(remoteInput)
-                            .build();
+            NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.ic_reply_white_24dp,
+                    context.getString(R.string.reply), commentReplyPendingIntent).addRemoteInput(remoteInput).build();
             // now add the action corresponding to direct-reply
             builder.addAction(action);
         }
