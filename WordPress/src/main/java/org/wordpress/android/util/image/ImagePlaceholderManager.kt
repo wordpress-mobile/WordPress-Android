@@ -33,7 +33,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.PHOTO -> R.color.grey_light
             ImageType.PLAN -> R.drawable.ic_reader_white_24dp
             ImageType.PLUGIN -> R.drawable.plugin_placeholder
-            ImageType.THEME -> R.drawable.theme_loading
+            ImageType.THEME -> R.drawable.bg_rectangle_grey_lighten_20_themes_100dp
             ImageType.UNKNOWN -> R.drawable.legacy_dashicon_format_image_big_grey
             ImageType.VIDEO -> R.color.grey_light
             ImageType.ICON -> R.drawable.bg_grey_light_with_radius
