@@ -386,7 +386,8 @@ class PostListFragment : Fragment() {
         const val TAG = "post_list_fragment_tag"
 
         @JvmStatic
-        fun newInstance(site: SiteModel, targetPost: PostModel?): PostListFragment {
+        fun newInstance(site: SiteModel, listType: PostListType, targetPost: PostModel?): PostListFragment {
+            // TODO implement post status filtering
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)

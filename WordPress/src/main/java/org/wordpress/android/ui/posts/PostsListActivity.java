@@ -3,6 +3,8 @@ package org.wordpress.android.ui.posts;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +13,6 @@ import android.view.MenuItem;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -22,7 +23,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface;
 import org.wordpress.android.util.LocaleManager;
-import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
@@ -31,11 +31,12 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
         GutenbergWarningDialogClickInterface {
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
-    private PostListFragment mPostList;
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
+    private PostsPagerAdapter mPostsPagerAdapter;
+    private ViewPager mPager;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -49,8 +50,6 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
 
         setContentView(R.layout.post_list_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -58,7 +57,29 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
+        setupActionBar();
+        setupContent();
         handleIntent(getIntent());
+    }
+
+    private void setupContent() {
+        mPager = findViewById(R.id.postPager);
+        mPostsPagerAdapter = new PostsPagerAdapter(mSite, this, getSupportFragmentManager());
+        mPager.setAdapter(mPostsPagerAdapter);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(mPager);
+    }
+
+    private void setupActionBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            setTitle(getString(R.string.my_site_btn_blog_posts));
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -68,52 +89,44 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
     }
 
     private void handleIntent(Intent intent) {
-        boolean siteHasChanged = false;
-        if (intent.hasExtra(WordPress.SITE)) {
-            SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
-            if (mSite != null && site != null) {
-                siteHasChanged = site.getId() != mSite.getId();
-            }
-            mSite = site;
-        }
-
-        if (mSite == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            finish();
-            return;
-        }
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            setTitle(getString(R.string.my_site_btn_blog_posts));
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        PostModel targetPost = null;
-        int targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0);
-        if (targetPostId > 0) {
-            targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
-            if (targetPost == null) {
-                String errorMessage = getString(R.string.error_post_does_not_exist);
-                ToastUtils.showToast(this, errorMessage);
-            }
-        }
-
-        mPostList = (PostListFragment) getSupportFragmentManager().findFragmentByTag(PostListFragment.TAG);
-        if (mPostList == null || siteHasChanged || targetPost != null) {
-            PostListFragment oldFragment = mPostList;
-            mPostList = PostListFragment.newInstance(mSite, targetPost);
-            if (oldFragment == null) {
-                getSupportFragmentManager().beginTransaction()
-                                    .add(R.id.post_list_container, mPostList, PostListFragment.TAG)
-                                    .commit();
-            } else {
-                getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.post_list_container, mPostList, PostListFragment.TAG)
-                                    .commit();
-            }
-        }
+        // TODO site has changed and postListActivity opened with a target post is not implemented
+//        boolean siteHasChanged = false;
+//        if (intent.hasExtra(WordPress.SITE)) {
+//            SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+//            if (mSite != null && site != null) {
+//                siteHasChanged = site.getId() != mSite.getId();
+//            }
+//            mSite = site;
+//        }
+//
+//        if (mSite == null) {
+//            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+//            finish();
+//            return;
+//        }
+//        PostModel targetPost = null;
+//        int targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0);
+//        if (targetPostId > 0) {
+//            targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
+//            if (targetPost == null) {
+//                String errorMessage = getString(R.string.error_post_does_not_exist);
+//                ToastUtils.showToast(this, errorMessage);
+//            }
+//        }
+//
+//        mPostList = (PostListFragment) getSupportFragmentManager().findFragmentByTag(PostListFragment.TAG);
+//        if (mPostList == null || siteHasChanged || targetPost != null) {
+//            PostListFragment oldFragment = mPostList;
+//            mPostList = PostListFragment.newInstance(mSite, targetPost);
+//            if (oldFragment == null) {
+//                getSupportFragmentManager().beginTransaction()
+//                                           .add(R.id.post_list_container, mPostList, PostListFragment.TAG)
+//                                           .commit();
+//            } else {
+//                getSupportFragmentManager().beginTransaction()
+//                                           .replace(R.id.post_list_container, mPostList, PostListFragment.TAG)
+//                                           .commit();
+//            }
     }
 
     @Override
@@ -127,7 +140,7 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RequestCodes.EDIT_POST) {
-            mPostList.handleEditPostResult(resultCode, data);
+            mPostsPagerAdapter.getItem(mPager.getCurrentItem()).handleEditPostResult(resultCode, data);
         }
     }
 
@@ -150,52 +163,42 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
 
     @Override
     public void onPositiveClicked(@NotNull String instanceTag) {
-        if (mPostList != null) {
-            mPostList.onPositiveClickedForBasicDialog(instanceTag);
-        }
+        mPostsPagerAdapter.getItem(mPager.getCurrentItem()).onPositiveClickedForBasicDialog(instanceTag);
     }
 
     @Override
     public void onNegativeClicked(@NotNull String instanceTag) {
-        if (mPostList != null) {
-            mPostList.onNegativeClickedForBasicDialog(instanceTag);
-        }
+        mPostsPagerAdapter.getItem(mPager.getCurrentItem()).onNegativeClickedForBasicDialog(instanceTag);
     }
 
     @Override
     public void onDismissByOutsideTouch(@NotNull String instanceTag) {
-        if (mPostList != null) {
-            mPostList.onDismissByOutsideTouchForBasicDialog(instanceTag);
-        }
+        mPostsPagerAdapter.getItem(mPager.getCurrentItem()).onDismissByOutsideTouchForBasicDialog(instanceTag);
     }
 
-    // GutenbergWarningDialogClickInterface Callbacks
+// GutenbergWarningDialogClickInterface Callbacks
 
     @Override
     public void onGutenbergWarningDialogEditPostClicked(long gutenbergRemotePostId) {
-        if (mPostList != null) {
-            mPostList.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId);
-        }
+        mPostsPagerAdapter.getItem(mPager.getCurrentItem())
+                          .onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId);
     }
 
     @Override
     public void onGutenbergWarningDialogCancelClicked(long gutenbergRemotePostId) {
-        if (mPostList != null) {
-            mPostList.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId);
-        }
+        mPostsPagerAdapter.getItem(mPager.getCurrentItem())
+                          .onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId);
     }
 
     @Override
     public void onGutenbergWarningDialogLearnMoreLinkClicked(long gutenbergRemotePostId) {
-        if (mPostList != null) {
-            mPostList.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId);
-        }
+        mPostsPagerAdapter.getItem(mPager.getCurrentItem())
+                          .onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId);
     }
 
     @Override
     public void onGutenbergWarningDialogDontShowAgainClicked(long gutenbergRemotePostId, boolean checked) {
-        if (mPostList != null) {
-            mPostList.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked);
-        }
+        mPostsPagerAdapter.getItem(mPager.getCurrentItem())
+                          .onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked);
     }
 }

@@ -2462,6 +2462,14 @@
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
 
+
+    <!-- Posts -->
+    <string name="post_list_published">Published</string>
+    <string name="post_list_drafts">Drafts</string>
+    <string name="post_list_scheduled">Scheduled</string>
+    <string name="post_list_trashed">Trashed</string>
+
+
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
     <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
