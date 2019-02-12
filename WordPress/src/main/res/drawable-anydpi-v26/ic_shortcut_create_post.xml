@@ -3,7 +3,7 @@
     <background android:drawable="@color/grey_100"/>
     <foreground>
         <inset
-            android:drawable="@drawable/ic_gridicons_create_post"
+            android:drawable="@drawable/ic_create_blue_wordpress_48dp"
             android:inset="20%" />
     </foreground>
 </adaptive-icon>

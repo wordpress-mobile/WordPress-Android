@@ -42,7 +42,7 @@
             android:id="@+id/image_avatar"
             style="@style/ReaderImageView.Avatar.ExtraSmall"
             android:layout_centerVertical="true"
-            tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+            tools:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
             android:layout_marginEnd="@dimen/margin_medium"
             android:contentDescription="@null"/>
 
