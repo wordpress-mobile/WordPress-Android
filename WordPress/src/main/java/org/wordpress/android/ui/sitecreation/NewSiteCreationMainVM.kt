@@ -44,7 +44,7 @@ class NewSiteCreationMainVM @Inject constructor(
     private val wizardManager: WizardManager<SiteCreationStep>
 ) : ViewModel() {
     private var isStarted = false
-    private var isSitePreviewLayoutShown = false
+    private var siteCreationCompleted = false
 
     private lateinit var siteCreationState: SiteCreationState
 
@@ -97,7 +97,7 @@ class NewSiteCreationMainVM @Inject constructor(
 
     fun onBackPressed() {
         return if (wizardManager.isLastStep()) {
-            if (isSitePreviewLayoutShown) {
+            if (siteCreationCompleted) {
                 exitFlow(false)
             } else {
                 _dialogAction.value = DialogHolder(
@@ -150,8 +150,8 @@ class NewSiteCreationMainVM @Inject constructor(
         }
     }
 
-    fun onPreviewLayoutShown() {
-        isSitePreviewLayoutShown = true
+    fun onSiteCreationCompleted() {
+        siteCreationCompleted = true
     }
 
     /**

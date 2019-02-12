@@ -86,8 +86,8 @@ class NewSitePreviewViewModel @Inject constructor(
     private val _onOkButtonClicked = SingleLiveEvent<CreateSiteState>()
     val onOkButtonClicked: LiveData<CreateSiteState> = _onOkButtonClicked
 
-    private val _onPreviewShown = SingleLiveEvent<CreateSiteState>()
-    val onPreviewShown: LiveData<CreateSiteState> = _onPreviewShown
+    private val _onSiteCreationCompleted = SingleLiveEvent<CreateSiteState>()
+    val onSiteCreationCompleted: LiveData<CreateSiteState> = _onSiteCreationCompleted
 
     init {
         dispatcher.register(fetchWpComSiteUseCase)
@@ -178,6 +178,7 @@ class NewSitePreviewViewModel @Inject constructor(
                 val remoteSiteId = event.payload as Long
                 createSiteState = SiteNotInLocalDb(remoteSiteId)
                 fetchNewlyCreatedSiteModel(remoteSiteId)
+                _onSiteCreationCompleted.call()
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
@@ -222,7 +223,6 @@ class NewSitePreviewViewModel @Inject constructor(
              */
             withContext(mainDispatcher) {
                 if (uiState.value !is SitePreviewContentUiState) {
-                    _onPreviewShown.call()
                     tracker.trackPreviewWebviewShown()
                     updateUiState(SitePreviewLoadingShimmerState(createSitePreviewData()))
                 }
@@ -246,7 +246,6 @@ class NewSitePreviewViewModel @Inject constructor(
          * In other words don't update it after a configuration change.
          */
         if (uiState.value !is SitePreviewContentUiState) {
-            _onPreviewShown.call()
             updateUiState(SitePreviewContentUiState(createSitePreviewData()))
         }
     }

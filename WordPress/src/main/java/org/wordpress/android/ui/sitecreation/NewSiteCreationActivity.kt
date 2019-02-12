@@ -124,8 +124,8 @@ class NewSiteCreationActivity : AppCompatActivity(),
         mainViewModel.onDomainsScreenFinished(domain)
     }
 
-    override fun onPreviewLayoutShown() {
-        mainViewModel.onPreviewLayoutShown()
+    override fun onSiteCreationCompleted() {
+        mainViewModel.onSiteCreationCompleted()
     }
 
     override fun onSitePreviewScreenDismissed(createSiteState: CreateSiteState) {

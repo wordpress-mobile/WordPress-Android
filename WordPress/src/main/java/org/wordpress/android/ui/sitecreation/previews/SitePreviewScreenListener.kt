@@ -4,5 +4,5 @@ import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.Cr
 
 interface SitePreviewScreenListener {
     fun onSitePreviewScreenDismissed(createSiteState: CreateSiteState)
-    fun onPreviewLayoutShown()
+    fun onSiteCreationCompleted()
 }

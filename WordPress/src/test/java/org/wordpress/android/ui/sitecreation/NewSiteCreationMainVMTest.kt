@@ -165,16 +165,16 @@ class NewSiteCreationMainVMTest {
     }
 
     @Test
-    fun dialogShownOnBackPressedWhenLastStepAndPreviewNotShown() {
+    fun dialogShownOnBackPressedWhenLastStepAndSiteCreationNotCompleted() {
         whenever(wizardManager.isLastStep()).thenReturn(true)
         viewModel.onBackPressed()
         verify(dialogActionsObserver).onChanged(any())
     }
 
     @Test
-    fun flowExitedOnBackPressedWhenLastStepAndPreviewAlreadyShown() {
+    fun flowExitedOnBackPressedWhenLastStepAndSiteCreationCompleted() {
         whenever(wizardManager.isLastStep()).thenReturn(true)
-        viewModel.onPreviewLayoutShown()
+        viewModel.onSiteCreationCompleted()
         viewModel.onBackPressed()
         verify(wizardExitedObserver).onChanged(anyOrNull())
     }
