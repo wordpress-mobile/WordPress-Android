@@ -63,7 +63,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
             super(itemView);
             this.mInput = itemView.findViewById(R.id.input);
             this.mInput.setCompoundDrawablesRelativeWithIntrinsicBounds(AppCompatResources.getDrawable(
-                    itemView.getContext(), R.drawable.ic_search_grey_24dp), null, null, null);
+                    itemView.getContext(), R.drawable.ic_search_grey_lighten_10_24dp), null, null, null);
             this.mProgressBar = itemView.findViewById(R.id.progress_bar);
 
             this.mTextWatcher = new TextWatcher() {
