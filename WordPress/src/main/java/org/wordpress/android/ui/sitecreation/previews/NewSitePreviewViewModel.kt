@@ -178,7 +178,7 @@ class NewSitePreviewViewModel @Inject constructor(
                 val remoteSiteId = event.payload as Long
                 createSiteState = SiteNotInLocalDb(remoteSiteId)
                 fetchNewlyCreatedSiteModel(remoteSiteId)
-                _onSiteCreationCompleted.call()
+                _onSiteCreationCompleted.asyncCall()
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
