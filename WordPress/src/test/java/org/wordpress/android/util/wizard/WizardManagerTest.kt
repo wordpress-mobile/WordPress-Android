@@ -87,5 +87,9 @@ class WizardManagerTest {
         manager.stepPosition(VERTICALS)
     }
 
-    private fun createWizardManager(initialStepIndex: Int) = WizardManager(STEPS, initialStepIndex)
+    private fun createWizardManager(initialStepIndex: Int): WizardManager<SiteCreationStep> {
+        val wizardManager = WizardManager(STEPS)
+        wizardManager.setCurrentStepIndex(initialStepIndex)
+        return wizardManager
+    }
 }
