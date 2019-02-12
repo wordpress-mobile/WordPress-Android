@@ -2,6 +2,7 @@ package org.wordpress.android.util.wizard
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 
 private val STEPS = listOf(SEGMENTS, DOMAINS, SITE_PREVIEW)
 private val LAST_STEP_INDEX = STEPS.size - 1
@@ -35,14 +37,15 @@ class WizardManagerTest {
     @Test
     fun `showNextStep is propagated`() {
         manager.showNextStep()
-        verify(navigatorLiveDataObserver).onChanged(STEPS[0])
+        verify(navigatorLiveDataObserver).onChanged(any())
     }
 
     @Test
     fun `showNextStep increments currentStepIndex`() {
-        val initialStepIndex = manager.currentStep
-        manager.showNextStep()
-        assertThat(manager.currentStep).isEqualTo(initialStepIndex + 1)
+        for (i in 0..LAST_STEP_INDEX) {
+            manager.showNextStep()
+            assertThat(manager.currentStep).isEqualTo(i)
+        }
     }
 
     @Test
@@ -77,6 +80,11 @@ class WizardManagerTest {
     fun `exception thrown on navigation to invalid index`() {
         manager = createWizardManager(initialStepIndex = LAST_STEP_INDEX)
         manager.showNextStep()
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `exception thrown on getting position of unknown step`() {
+        manager.stepPosition(VERTICALS)
     }
 
     private fun createWizardManager(initialStepIndex: Int) = WizardManager(STEPS, initialStepIndex)
