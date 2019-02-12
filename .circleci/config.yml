@@ -1,6 +1,6 @@
 android_config: &android_config
   docker:
-    - image: circleci/android:api-27-alpha
+    - image: circleci/android:api-28-alpha
   environment:
     # kotlin.incremental=false and kotlin.compiler.execution.strategy=in-process are required due to an issue with the Kotlin compiler in
     # memory constrained environments: https://youtrack.jetbrains.com/issue/KT-15562
