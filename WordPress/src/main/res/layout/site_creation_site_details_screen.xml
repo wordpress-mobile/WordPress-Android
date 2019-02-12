@@ -47,7 +47,7 @@
             android:hint="@string/site_creation_title_hint"
             android:imeOptions="actionNext"
             android:inputType="textNoSuggestions"
-            app:wpIconDrawable="@drawable/ic_globe_grey_24dp"
+            app:wpIconDrawable="@drawable/ic_globe_white_24dp"
             app:wpIconDrawableTint="@color/grey"/>
 
         <org.wordpress.android.login.widgets.WPLoginInputRow
