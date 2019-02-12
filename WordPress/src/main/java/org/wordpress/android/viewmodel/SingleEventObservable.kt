@@ -16,7 +16,8 @@ import android.arch.lifecycle.Observer
  * Note that only one observer can be subscribed.
  */
 class SingleEventObservable<T>(private val sourceLiveData: LiveData<T>) {
-    private var lastEvent: T? = null
+    var lastEvent: T? = null
+        private set
 
     fun observe(owner: LifecycleOwner, observer: Observer<T>) {
         if (sourceLiveData.hasObservers()) {
@@ -28,5 +29,17 @@ class SingleEventObservable<T>(private val sourceLiveData: LiveData<T>) {
                 observer.onChanged(it)
             }
         })
+    }
+
+    fun observeForever(observer: Observer<T>) {
+        if (sourceLiveData.hasObservers()) {
+            throw IllegalStateException("SingleEventObservable can be observed only by a single observer.")
+        }
+        sourceLiveData.observeForever {
+            if (it !== lastEvent) {
+                lastEvent = it
+                observer.onChanged(it)
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.segments
 
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,7 +15,8 @@ import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.Header
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.IMAGE
+import org.wordpress.android.util.image.ImageManager.RequestListener
+import org.wordpress.android.util.image.ImageType.ICON
 
 sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -34,16 +36,27 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
             uiState as SegmentUiState
             title.text = uiState.title
             subtitle.text = uiState.subtitle
-            imageManager.load(icon, IMAGE, uiState.iconUrl)
-            // TODO: Check with designers on how to handle icon url or color missing, this is only temporary
-            // TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/8864
-            val blackColor = "#000000"
-            val iconColor = if (uiState.iconColor.isNotBlank()) uiState.iconColor else blackColor
-            try {
-                icon.setColorFilter(Color.parseColor(iconColor), PorterDuff.Mode.SRC_IN)
-            } catch (e: IllegalArgumentException) {
-                AppLog.e(AppLog.T.SITE_CREATION, "Error parsing segment icon color: ${uiState.iconColor}")
-            }
+            imageManager.loadWithResultListener(
+                    icon,
+                    ICON,
+                    uiState.iconUrl,
+                    null,
+                    object : RequestListener<Drawable> {
+                        override fun onLoadFailed(e: Exception?) {
+                        }
+
+                        override fun onResourceReady(resource: Drawable) {
+                            try {
+                                icon.setColorFilter(Color.parseColor(uiState.iconColor), PorterDuff.Mode.SRC_IN)
+                            } catch (e: IllegalArgumentException) {
+                                AppLog.e(
+                                        AppLog.T.SITE_CREATION,
+                                        "Error parsing segment icon color: ${uiState.iconColor}"
+                                )
+                            }
+                        }
+                    }
+            )
             requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             container.setOnClickListener {
                 uiState.onItemTapped!!.invoke()
