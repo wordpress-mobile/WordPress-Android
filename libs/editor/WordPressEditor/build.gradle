@@ -37,7 +37,7 @@ android {
         versionCode 13
         versionName "1.3"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 26
         buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", rootProject.ext.buildGutenbergFromSource.toString()
     }
     buildTypes {

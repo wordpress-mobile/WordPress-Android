@@ -44,7 +44,7 @@ android {
         versionName "alpha-150"
         versionCode 674
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 26
 
         multiDexEnabled true
 
