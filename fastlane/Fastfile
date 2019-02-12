@@ -60,7 +60,7 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{options[:codefreeze_version]}")
     setfrozentag(repository:GHHELPER_REPO, milestone: options[:codefreeze_version])
 
-    get_prs_list(repository:GHHELPER_REPO, start_tag:"#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
+    get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
   end
 
 

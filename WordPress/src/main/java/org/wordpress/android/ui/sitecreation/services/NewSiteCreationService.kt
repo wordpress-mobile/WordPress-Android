@@ -15,12 +15,13 @@ import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceStat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AutoForeground
-import org.wordpress.android.util.CrashlyticsUtils
 import org.wordpress.android.util.LocaleManager
 import java.util.HashMap
 import javax.inject.Inject
 
-class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSiteCreationServiceState(IDLE)),
+private val INITIAL_STATE = IDLE
+
+class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSiteCreationServiceState(INITIAL_STATE)),
         NewSiteCreationServiceManagerListener {
     @Inject lateinit var manager: NewSiteCreationServiceManager
 
@@ -89,19 +90,6 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
         trackStateUpdate(props)
     }
 
-    override fun logError(message: String) {
-        AppLog.e(T.NUX, message)
-        CrashlyticsUtils.log(message)
-    }
-
-    override fun logInfo(message: String) {
-        AppLog.i(T.NUX, message)
-    }
-
-    override fun logWarning(message: String) {
-        AppLog.w(T.NUX, message)
-    }
-
     companion object {
         private const val ARG_RESUME_PHASE = "ARG_RESUME_PHASE"
         private const val ARG_DATA = "ARG_DATA"
@@ -112,7 +100,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
             data: NewSiteCreationServiceData
         ) {
             val currentState = AutoForeground.getState(NewSiteCreationServiceState::class.java)
-            if (currentState == null || currentState.step == FAILURE) {
+            if (currentState == null || currentState.step == INITIAL_STATE || currentState.step == FAILURE) {
                 clearSiteCreationServiceState()
 
                 val intent = Intent(context, NewSiteCreationService::class.java)

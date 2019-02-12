@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="@dimen/card_elevation">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="@dimen/card_elevation">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_medium"
+                android:background="@drawable/wp_grey_lighten_30_rounded_bg"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_extra_large"
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_medium">
+
+                <TextView
+                    android:id="@+id/sitePreviewWebUrlTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/wp_grey_darken_20"
+                    android:textSize="@dimen/text_sz_medium"
+                    tools:text="example.wordpress.com"/>
+            </FrameLayout>
+        </FrameLayout>
+
+        <WebView
+            android:id="@+id/sitePreviewWebView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="insideInset"/>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sitePreviewWebViewShimmerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/wp_grey_lighten_30">
+
+            <include layout="@layout/new_site_creation_preview_skeleton"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

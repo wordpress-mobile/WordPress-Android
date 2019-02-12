@@ -19,6 +19,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.THEME -> R.color.grey_lighten_30
             ImageType.UNKNOWN -> R.drawable.ic_notice_grey_500_48dp
             ImageType.VIDEO -> R.color.grey_lighten_30
+            ImageType.ICON -> R.drawable.bg_grey_lighten_30_with_radius
         }
     }
 
@@ -35,6 +36,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.THEME -> R.drawable.theme_loading
             ImageType.UNKNOWN -> R.drawable.legacy_dashicon_format_image_big_grey
             ImageType.VIDEO -> R.color.grey_light
+            ImageType.ICON -> R.drawable.bg_grey_light_with_radius
         }
     }
 }

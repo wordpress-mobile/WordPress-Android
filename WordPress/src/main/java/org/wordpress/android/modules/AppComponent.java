@@ -111,7 +111,8 @@ import org.wordpress.android.ui.publicize.PublicizeListFragment;
 import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
-import org.wordpress.android.ui.quickstart.QuickStartFragment;
+import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
+import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
@@ -133,7 +134,7 @@ import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsFragm
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
-import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.OldStatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
@@ -239,7 +240,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(StatsWidgetConfigureAdapter object);
 
-    void inject(StatsActivity object);
+    void inject(OldStatsActivity object);
 
     void inject(JetpackConnectionResultActivity object);
 
@@ -439,7 +440,9 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(WordPressGlideModule object);
 
-    void inject(QuickStartFragment object);
+    void inject(QuickStartFullScreenDialogFragment object);
+
+    void inject(QuickStartReminderReceiver object);
 
     void inject(MediaGridAdapter object);
 

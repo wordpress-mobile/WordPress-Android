@@ -2,17 +2,14 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Alignment.CENTER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BACKGROUND_INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CENTERED_COLUMNS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LEFT_COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
@@ -20,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 
 sealed class BlockListItem(val type: Type) {
     fun id(): Int {
@@ -30,14 +28,13 @@ sealed class BlockListItem(val type: Type) {
 
     enum class Type {
         TITLE,
+        VALUE_ITEM,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
         INFO,
-        BACKGROUND_INFO,
         EMPTY,
         TEXT,
-        CENTERED_COLUMNS,
-        LEFT_COLUMNS,
+        COLUMNS,
         LINK,
         BAR_CHART,
         TABS,
@@ -48,6 +45,13 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
+
+    data class ValueItem(
+        val value: String,
+        @StringRes val unit: Int,
+        val change: String? = null,
+        val positive: Boolean = true
+    ) : BlockListItem(VALUE_ITEM)
 
     data class ListItem(
         val text: String,
@@ -81,8 +85,6 @@ sealed class BlockListItem(val type: Type) {
 
     data class Information(val text: String) : BlockListItem(INFO)
 
-    data class BackgroundInformation(val text: String) : BlockListItem(BACKGROUND_INFO)
-
     data class Text(val text: String, val links: List<Clickable>? = null) : BlockListItem(TEXT) {
         data class Clickable(
             val link: String,
@@ -94,13 +96,10 @@ sealed class BlockListItem(val type: Type) {
         val headers: List<Int>,
         val values: List<String>,
         val selectedColumn: Int? = null,
-        val alignment: Alignment = CENTER,
         val onColumnSelected: ((position: Int) -> Unit)? = null
-    ) : BlockListItem(if (alignment == CENTER) CENTERED_COLUMNS else LEFT_COLUMNS) {
+    ) : BlockListItem(COLUMNS) {
         override val itemId: Int
             get() = headers.hashCode()
-
-        enum class Alignment { CENTER, LEFT }
     }
 
     data class Link(
@@ -113,7 +112,8 @@ sealed class BlockListItem(val type: Type) {
     data class BarChartItem(
         val entries: List<Bar>,
         val selectedItem: String? = null,
-        val onBarSelected: ((String?) -> Unit)? = null
+        val onBarSelected: ((period: String?) -> Unit)? = null,
+        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null
     ) : BlockListItem(BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
 
