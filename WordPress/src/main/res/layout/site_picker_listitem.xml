@@ -25,7 +25,7 @@
             android:background="@color/white"
             android:gravity="center_vertical"
             android:padding="1dp"
-            android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+            android:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"
             android:contentDescription="@string/blavatar_desc"/>
 
         <LinearLayout

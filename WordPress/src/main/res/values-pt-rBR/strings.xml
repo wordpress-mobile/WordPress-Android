@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-19 17:07:37+0000
+Translation-Revision-Date: 2019-01-31 03:07:23+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Mostrando pré-visualização do site</string>
+    <string name="new_site_creation_clear_all_content_description">Limpar</string>
+    <string name="site_created_but_not_fetched_snackbar_message">Parece que sua conexão está lenta. Se você não encontrar seu site na lista, tente atualizar a tela.</string>
+    <string name="cancel_new_site_wizard_content_description">Cancelar o guia de criação do site</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Estamos criando seu novo site</string>
+    <string name="notification_new_site_creation_failed">Ocorreu um problema</string>
+    <string name="notification_new_site_creation_title">Criar site</string>
+    <string name="new_site_creation_create_site_button">Criar site</string>
+    <string name="new_site_creation_search_domain_input_hint">Pesquisar por domínios</string>
+    <string name="new_site_creation_domain_header_subtitle">É onde as pessoas encontrarão seu site na internet.</string>
+    <string name="new_site_creation_domain_header_title">Escolha um nome de domínio para seu site</string>
+    <string name="new_site_creation_empty_domain_list_message">Nenhum endereço disponível corresponde à sua pesquisa</string>
+    <string name="site_creation_error_generic_subtitle">Erro de comunicação com o servidor. Tente novamente.</string>
+    <string name="site_creation_error_generic_title">Ocorreu um problema</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Categoria personalizada</string>
+    <string name="new_site_creation_button_skip">Pular</string>
+    <string name="new_site_creation_tag_line_description">A descrição é uma linha de texto exibida logo abaixo do título.</string>
+    <string name="new_site_creation_tag_line_hint">Descrição</string>
+    <string name="new_site_creation_site_title_hint">Título do site</string>
+    <string name="new_site_creation_site_info_header_subtitle">Nos conte mais sobre o site que você está criando.</string>
+    <string name="new_site_creation_site_info_header_title">Informação básica</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Ocorreu um problema</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Sem conexão</string>
+    <string name="site_creation_segments_subtitle">Isso nos ajuda a fazer recomendações mas você não está preso a isso. Todos os sites evoluem!</string>
+    <string name="site_creation_segments_title">Nos conte que tipo de site você gostaria de fazer</string>
+    <string name="new_site_creation_preview_title">Seu site foi criado!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d de %2$d</string>
+    <string name="new_site_creation_screen_title_general">Criar site</string>
+    <string name="suggestions_updated_content_description">Sugestões atualizadas</string>
+    <string name="site_picker_failed_selecting_added_site">Não foi possível selecionar o site auto-hospedado adicionado recentemente.</string>
+    <string name="local_post_is_conflicted">Conflito de versão</string>
+    <string name="preference_crash_reports_summary">Permitir relatórios automáticos de falhas para nos ajudar a melhor o desempenho do aplicativo.</string>
+    <string name="preference_crash_reports">Relatórios de falhas</string>
+    <string name="snackbar_conflict_undo">Desfazer</string>
+    <string name="snackbar_conflict_web_version_discarded">Versão web descartada</string>
+    <string name="snackbar_conflict_local_version_discarded">Versão local descartada</string>
+    <string name="toast_conflict_updating_post">Atualizando post</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Descartar web</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Descartar local</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Versão local\nSalva em %s\n\nVersão web\nSalva em %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">Esse post tem duas versões que estão em conflito. Selecione a versão que você deseja descartar.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Resolver conflito de sincronização</string>
     <string name="local_changes_discarding_no_connection">É necessário ter uma conexão para fazer isso. Verifique sua conexão de internet e tente novamente.</string>
     <string name="stats_no_data_for_period">Nenhum dado para esse período</string>
     <string name="preference_strip_image_location">Remover localização de mídia</string>
@@ -46,9 +88,9 @@ Language: pt_BR
     <string name="stats_insights_view_more">Ver mais</string>
     <string name="stats_insights_share_post">Compartilhar post</string>
     <string name="stats_insights_create_post">Criar post</string>
-    <string name="stats_insights_latest_post_message">Há %1$s desde que %2$s foi publicado. Aqui está o desempenho do post até o momento</string>
-    <string name="stats_insights_latest_post_with_no_engagement">Há %1$s desde que %2$s foi publicado. Aumente as visualizações do post compartilhando-o</string>
-    <string name="stats_insights_latest_post_empty">Você não publicou nenhum post ainda. Assim que você começar a publicar, um resumo do post mais recente aparecerá aqui</string>
+    <string name="stats_insights_latest_post_message">Há %1$s desde que %2$s foi publicado. Aqui está o desempenho do post até o momento:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Há %1$s desde que %2$s foi publicado. Aumente as visualizações do post compartilhando-o:</string>
+    <string name="stats_insights_latest_post_empty">Você não publicou nenhum post ainda. Assim que você começar a publicar, um resumo do post mais recente aparecerá aqui:</string>
     <string name="stats_insights_tags_and_categories">Tags e categorias</string>
     <string name="stats_insights_all_time_stats">Estatísticas até o momento</string>
     <string name="stats_insights_most_popular_views_label">Visualizações</string>
@@ -1705,7 +1747,7 @@ Language: pt_BR
     <string name="error_refresh_media">Arquivo de mídia não pôde ser atualizado neste momento</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Configurações de imagem</string>
-    <string name="local_changes">Alterações de local</string>
+    <string name="local_changes">Alterações locais</string>
     <string name="privacy_policy">Política de privacidade</string>
     <string name="new_media">Nova mídia</string>
     <string name="new_post">Novo post</string>

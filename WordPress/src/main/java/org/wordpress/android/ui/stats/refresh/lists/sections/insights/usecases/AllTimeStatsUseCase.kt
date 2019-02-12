@@ -56,7 +56,7 @@ class AllTimeStatsUseCase
             if (hasPosts) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_posts_grey_dark_24dp,
+                                R.drawable.ic_posts_white_24dp,
                                 textResource = R.string.posts,
                                 value = domainModel.posts.toFormattedString(),
                                 showDivider = hasViews || hasVisitors || hasViewsBestDayTotal
@@ -66,7 +66,7 @@ class AllTimeStatsUseCase
             if (hasViews) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_visible_on_grey_dark_24dp,
+                                R.drawable.ic_visible_on_white_24dp,
                                 textResource = R.string.stats_views,
                                 value = domainModel.views.toFormattedString(),
                                 showDivider = hasVisitors || hasViewsBestDayTotal
@@ -76,7 +76,7 @@ class AllTimeStatsUseCase
             if (hasVisitors) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_user_grey_dark_24dp,
+                                R.drawable.ic_user_white_24dp,
                                 textResource = R.string.stats_visitors,
                                 value = domainModel.visitors.toFormattedString(),
                                 showDivider = hasViewsBestDayTotal
@@ -86,7 +86,7 @@ class AllTimeStatsUseCase
             if (hasViewsBestDayTotal) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_trophy_grey_dark_24dp,
+                                R.drawable.ic_trophy_white_24dp,
                                 textResource = R.string.stats_insights_best_ever,
                                 subText = statsDateFormatter.printDate(domainModel.viewsBestDay),
                                 value = domainModel.viewsBestDayTotal.toFormattedString(),
