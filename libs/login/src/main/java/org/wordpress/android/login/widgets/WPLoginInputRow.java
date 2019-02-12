@@ -75,8 +75,10 @@ public class WPLoginInputRow extends RelativeLayout {
 
             try {
                 if (a.hasValue(R.styleable.wpLoginInputRow_wpIconDrawable)) {
-                    int iconResId = a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawable, 0);
-                    int tintResId = a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawableTint, 0);
+                    int iconResId = a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawable,
+                            R.drawable.ic_user_grey_24dp);
+                    int tintResId = a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawableTint,
+                            R.color.login_input_icon_color);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         mIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, tintResId)));
