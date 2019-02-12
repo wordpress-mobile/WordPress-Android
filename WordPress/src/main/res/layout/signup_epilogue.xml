@@ -134,7 +134,7 @@
                 android:layout_width="match_parent"
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
-                app:wpIconDrawable="@drawable/ic_mention_grey_24dp"
+                app:wpIconDrawable="@drawable/ic_mention_white_24dp"
                 app:wpIconDrawableTint="@color/grey" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>
 
