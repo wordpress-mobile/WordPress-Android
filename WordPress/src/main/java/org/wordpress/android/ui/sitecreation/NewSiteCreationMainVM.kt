@@ -98,7 +98,7 @@ class NewSiteCreationMainVM @Inject constructor(
     fun onBackPressed() {
         return if (wizardManager.isLastStep()) {
             if (isSitePreviewLayoutShown) {
-                _exitFlowObservable.call()
+                exitFlow(false)
             } else {
                 _dialogAction.value = DialogHolder(
                         tag = TAG_WARNING_DIALOG,
@@ -154,6 +154,16 @@ class NewSiteCreationMainVM @Inject constructor(
         isSitePreviewLayoutShown = true
     }
 
+    /**
+     * Exits the flow and tracks an event when the user force-exits the "site creation in progress" before it completes.
+     */
+    private fun exitFlow(forceExit: Boolean) {
+        if (forceExit) {
+            tracker.trackFlowExited()
+        }
+        _exitFlowObservable.call()
+    }
+
     fun onSitePreviewScreenFinished(createSiteState: CreateSiteState) {
         _wizardFinishedObservable.value = createSiteState
     }
@@ -161,8 +171,7 @@ class NewSiteCreationMainVM @Inject constructor(
     fun onPositiveDialogButtonClicked(instanceTag: String) {
         when (instanceTag) {
             TAG_WARNING_DIALOG -> {
-                tracker.trackFlowExited()
-                _exitFlowObservable.call()
+                exitFlow(true)
             }
             else -> NotImplementedError("Unknown dialog tag: $instanceTag")
         }
