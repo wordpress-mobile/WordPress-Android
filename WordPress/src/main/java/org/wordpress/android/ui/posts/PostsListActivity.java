@@ -91,43 +91,6 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
 
     private void handleIntent(Intent intent) {
         // TODO site has changed and postListActivity opened with a target post is not implemented
-//        boolean siteHasChanged = false;
-//        if (intent.hasExtra(WordPress.SITE)) {
-//            SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
-//            if (mSite != null && site != null) {
-//                siteHasChanged = site.getId() != mSite.getId();
-//            }
-//            mSite = site;
-//        }
-//
-//        if (mSite == null) {
-//            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-//            finish();
-//            return;
-//        }
-//        PostModel targetPost = null;
-//        int targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0);
-//        if (targetPostId > 0) {
-//            targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
-//            if (targetPost == null) {
-//                String errorMessage = getString(R.string.error_post_does_not_exist);
-//                ToastUtils.showToast(this, errorMessage);
-//            }
-//        }
-//
-//        mPostList = (PostListFragment) getSupportFragmentManager().findFragmentByTag(PostListFragment.TAG);
-//        if (mPostList == null || siteHasChanged || targetPost != null) {
-//            PostListFragment oldFragment = mPostList;
-//            mPostList = PostListFragment.newInstance(mSite, targetPost);
-//            if (oldFragment == null) {
-//                getSupportFragmentManager().beginTransaction()
-//                                           .add(R.id.post_list_container, mPostList, PostListFragment.TAG)
-//                                           .commit();
-//            } else {
-//                getSupportFragmentManager().beginTransaction()
-//                                           .replace(R.id.post_list_container, mPostList, PostListFragment.TAG)
-//                                           .commit();
-//            }
     }
 
     @Override
