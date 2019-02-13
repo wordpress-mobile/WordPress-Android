@@ -645,7 +645,7 @@ public class AppPrefs {
     }
 
     public static boolean isGutenbergDefaultForNewPosts() {
-        return getBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, true);
+        return getBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, false);
     }
 
     public static void setGutenbergDefaultForNewPosts(boolean defaultForNewPosts) {
