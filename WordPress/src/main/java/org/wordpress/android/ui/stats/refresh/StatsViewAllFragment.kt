@@ -125,7 +125,7 @@ class StatsViewAllFragment : DaggerFragment() {
 
         val clazz = when (type) {
             StatsViewType.FOLLOWERS -> StatsViewAllFollowersViewModel::class.java
-            StatsViewType.COMMENTS -> TODO()
+            StatsViewType.COMMENTS -> StatsViewAllFollowersViewModel::class.java
             StatsViewType.TAGS_AND_CATEGORIES -> TODO()
             StatsViewType.INSIGHTS_ALL_TIME -> TODO()
             StatsViewType.INSIGHTS_LATEST_POST_SUMMARY -> TODO()

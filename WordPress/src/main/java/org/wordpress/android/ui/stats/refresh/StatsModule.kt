@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -27,7 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase.CommentsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
@@ -43,6 +44,7 @@ const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
 const val YEAR_STATS_USE_CASE = "YearStatsUseCase"
 const val VIEW_ALL_FOLLOWERS_USE_CASE = "ViewAllFollowersUseCase"
+const val VIEW_ALL_COMMENTS_USE_CASE = "ViewAllCommentsUseCase"
 
 // These are injected only internally
 private const val INSIGHTS_USE_CASES = "InsightsUseCases"
@@ -65,7 +67,7 @@ class StatsModule {
         latestPostSummaryUseCase: LatestPostSummaryUseCase,
         todayStatsUseCase: TodayStatsUseCase,
         followersUseCaseFactory: FollowersUseCaseFactory,
-        commentsUseCase: CommentsUseCase,
+        commentsUseCaseFactory: CommentsUseCaseFactory,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCase: TagsAndCategoriesUseCase,
         publicizeUseCase: PublicizeUseCase
@@ -75,7 +77,7 @@ class StatsModule {
                 latestPostSummaryUseCase,
                 todayStatsUseCase,
                 followersUseCaseFactory.build(UseCaseMode.BLOCK),
-                commentsUseCase,
+                commentsUseCaseFactory.build(UseCaseMode.BLOCK),
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCase,
                 publicizeUseCase
@@ -130,8 +132,8 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton FollowersUseCase that represents the Followers View all screen
-     * @param followersUseCaseFactory build the use cases for the Followers
+     * Provides a singleton FollowersUseCase for the Followers View all screen
+     * @param followersUseCaseFactory builds the use cases for the Followers
      */
     @Provides
     @Singleton
@@ -147,6 +149,27 @@ class StatsModule {
                 listOf(followersUseCaseFactory.build(UseCaseMode.VIEW_ALL))
         ) {
             listOf(FOLLOWERS)
+        }
+    }
+
+    /**
+     * Provides a singleton CommentsUseCase for the Comments View all screen
+     * @param commentsUseCaseFactory build the use cases for the comments
+     */
+    @Provides
+    @Singleton
+    @Named(VIEW_ALL_COMMENTS_USE_CASE)
+    fun provideViewAllCommentsUseCase(
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        commentsUseCaseFactory: CommentsUseCaseFactory
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                listOf(commentsUseCaseFactory.build(UseCaseMode.VIEW_ALL))
+        ) {
+            listOf(COMMENTS)
         }
     }
 
