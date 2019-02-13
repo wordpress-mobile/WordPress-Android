@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -140,7 +141,10 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RequestCodes.EDIT_POST) {
-            mPostsPagerAdapter.getItem(mPager.getCurrentItem()).handleEditPostResult(resultCode, data);
+            PostListFragment fragment = getCurrentFragment();
+            if (fragment != null) {
+                getCurrentFragment().handleEditPostResult(resultCode, data);
+            }
         }
     }
 
@@ -163,42 +167,64 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
 
     @Override
     public void onPositiveClicked(@NotNull String instanceTag) {
-        mPostsPagerAdapter.getItem(mPager.getCurrentItem()).onPositiveClickedForBasicDialog(instanceTag);
+        PostListFragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            getCurrentFragment().onPositiveClickedForBasicDialog(instanceTag);
+        }
     }
 
     @Override
     public void onNegativeClicked(@NotNull String instanceTag) {
-        mPostsPagerAdapter.getItem(mPager.getCurrentItem()).onNegativeClickedForBasicDialog(instanceTag);
+        PostListFragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            getCurrentFragment().onNegativeClickedForBasicDialog(instanceTag);
+        }
     }
 
     @Override
     public void onDismissByOutsideTouch(@NotNull String instanceTag) {
-        mPostsPagerAdapter.getItem(mPager.getCurrentItem()).onDismissByOutsideTouchForBasicDialog(instanceTag);
+        PostListFragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            getCurrentFragment().onDismissByOutsideTouchForBasicDialog(instanceTag);
+        }
     }
 
 // GutenbergWarningDialogClickInterface Callbacks
 
     @Override
     public void onGutenbergWarningDialogEditPostClicked(long gutenbergRemotePostId) {
-        mPostsPagerAdapter.getItem(mPager.getCurrentItem())
-                          .onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId);
+        PostListFragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            getCurrentFragment().onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId);
+        }
     }
 
     @Override
     public void onGutenbergWarningDialogCancelClicked(long gutenbergRemotePostId) {
-        mPostsPagerAdapter.getItem(mPager.getCurrentItem())
-                          .onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId);
+        PostListFragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            getCurrentFragment().onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId);
+        }
     }
 
     @Override
     public void onGutenbergWarningDialogLearnMoreLinkClicked(long gutenbergRemotePostId) {
-        mPostsPagerAdapter.getItem(mPager.getCurrentItem())
-                          .onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId);
+        PostListFragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            getCurrentFragment().onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId);
+        }
     }
 
     @Override
     public void onGutenbergWarningDialogDontShowAgainClicked(long gutenbergRemotePostId, boolean checked) {
-        mPostsPagerAdapter.getItem(mPager.getCurrentItem())
-                          .onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked);
+        PostListFragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            getCurrentFragment().onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked);
+        }
+    }
+
+    @Nullable
+    private PostListFragment getCurrentFragment() {
+        return mPostsPagerAdapter.getItemAtPosition(mPager.getCurrentItem());
     }
 }
