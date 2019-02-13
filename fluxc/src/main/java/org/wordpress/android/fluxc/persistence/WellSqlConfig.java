@@ -532,22 +532,18 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "CATALOG_VISIBILITY TEXT NOT NULL,DESCRIPTION TEXT NOT NULL,"
                                + "SHORT_DESCRIPTION TEXT NOT NULL,SKU TEXT NOT NULL,"
                                + "PRICE TEXT NOT NULL,REGULAR_PRICE TEXT NOT NULL, ALE_PRICE TEXT NOT NULL,"
-                               + "DATE_ON_SALE_FROM TEXT NOT NULL,DATE_ON_SALE_FROM_GMT TEXT NOT NULL,"
-                               + "DATE_ON_SALE_TO TEXT NOT NULL,DATE_ON_SALE_TO_GMT TEXT NOT NULL,"
                                + "ON_SALE INTEGER,TOTAL_SALES INTEGER,VIRTUAL INTEGER,DOWNLOADABLE INTEGER,"
-                               + "DOWNLOAD_EXPIRY INTEGER,EXTERNAL_URL TEXT NOT NULL,"
-                               + "BUTTON_TEXT TEXT NOT NULL,TAX_STATUS TEXT NOT NULL,TAX_CLASS TEXT NOT NULL,"
+                               + "TAX_STATUS TEXT NOT NULL,TAX_CLASS TEXT NOT NULL,"
                                + "MANAGE_STOCK INTEGER,STOCK_QUANTITY INTEGER,STOCK_STATUS TEXT NOT NULL,"
                                + "BACKORDERS TEXT NOT NULL,BACKORDERS_ALLOWED INTEGER,BACKORDERED INTEGER,"
                                + "SOLD_INDIVIDUALLY INTEGER,WEIGHT TEXT NOT NULL,LENGTH TEXT NOT NULL,"
-                               + "WIDTH TEXT NOT NULL,HEIGHT TEXT NOT NULL, SHIPPING_REQUIRED INTEGER,"
+                               + "WIDTH TEXT NOT NULL,HEIGHT TEXT NOT NULL,SHIPPING_REQUIRED INTEGER,"
                                + "SHIPPING_TAXABLE INTEGER,SHIPPING_CLASS TEXT NOT NULL,"
                                + "SHIPPING_CLASS_ID INTEGER,REVIEWS_ALLOWED INTEGER,AVERAGE_RATING TEXT NOT NULL,"
-                               + "RATING_COUNT INTEGER,RELATED_IDS TEXT NOT NULL,UPSELL_IDS TEXT NOT NULL,"
-                               + "CROSS_SELL_IDS TEXT NOT NULL,PARENT_ID INTEGER,PURCHASE_NOTE TEXT NOT NULL,"
-                               + "MENU_ORDER INTEGER,CATEGORIES TEXT NOT NULL,TAGS TEXT NOT NULL,"
-                               + "IMAGES TEXT NOT NULL,ATTRIBUTES TEXT NOT NULL,DEFAULT_ATTRIBUTES TEXT NOT NULL,"
-                               + "VARIATIONS TEXT NOT NULL,GROUPED_PRODUCTS TEXT NOT NULL)");
+                               + "RATING_COUNT INTEGER,PARENT_ID INTEGER,PURCHASE_NOTE TEXT NOT NULL,"
+                               + "CATEGORIES TEXT NOT NULL,TAGS TEXT NOT NULL,"
+                               + "IMAGES TEXT NOT NULL,ATTRIBUTES TEXT NOT NULL,"
+                               + "VARIATIONS TEXT NOT NULL)");
                     break;
             }
         }
