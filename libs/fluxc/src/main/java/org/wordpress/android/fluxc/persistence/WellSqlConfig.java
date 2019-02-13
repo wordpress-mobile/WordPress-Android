@@ -527,16 +527,14 @@ public class WellSqlConfig extends DefaultWellConfig {
                     db.execSQL("DROP TABLE IF EXISTS WCProductModel");
                     db.execSQL("CREATE TABLE WCProductModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "LOCAL_SITE_ID INTEGER,NAME TEXT NOT NULL,SLUG TEXT NOT NULL,PERMALINK TEXT NOT NULL,"
-                               + "DATE_CREATED TEXT NOT NULL,DATE_CREATED_GMT TEXT NOT NULL,"
-                               + "DATE_MODIFIED TEXT NOT NULL,DATE_MODIFIED_GMT TEXT NOT NULL,"
+                               + "DATE_CREATED TEXT NOT NULL,DATE_MODIFIED TEXT NOT NULL,"
                                + "TYPE TEXT NOT NULL,STATUS TEXT NOT NULL,FEATURED INTEGER,"
                                + "CATALOG_VISIBILITY TEXT NOT NULL,DESCRIPTION TEXT NOT NULL,"
                                + "SHORT_DESCRIPTION TEXT NOT NULL,SKU TEXT NOT NULL,"
                                + "PRICE TEXT NOT NULL,REGULAR_PRICE TEXT NOT NULL, ALE_PRICE TEXT NOT NULL,"
                                + "DATE_ON_SALE_FROM TEXT NOT NULL,DATE_ON_SALE_FROM_GMT TEXT NOT NULL,"
                                + "DATE_ON_SALE_TO TEXT NOT NULL,DATE_ON_SALE_TO_GMT TEXT NOT NULL,"
-                               + "ON_SALE INTEGER,TOTAL_SALES INTEGER, VIRTUAL INTEGER,"
-                               + "DOWNLOADABLE INTEGER,DOWNLOADS TEXT NOT NULL,DOWNLOAD_LIMIT INTEGER,"
+                               + "ON_SALE INTEGER,TOTAL_SALES INTEGER,VIRTUAL INTEGER,DOWNLOADABLE INTEGER,"
                                + "DOWNLOAD_EXPIRY INTEGER,EXTERNAL_URL TEXT NOT NULL,"
                                + "BUTTON_TEXT TEXT NOT NULL,TAX_STATUS TEXT NOT NULL,TAX_CLASS TEXT NOT NULL,"
                                + "MANAGE_STOCK INTEGER,STOCK_QUANTITY INTEGER,STOCK_STATUS TEXT NOT NULL,"
@@ -549,7 +547,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "CROSS_SELL_IDS TEXT NOT NULL,PARENT_ID INTEGER,PURCHASE_NOTE TEXT NOT NULL,"
                                + "MENU_ORDER INTEGER,CATEGORIES TEXT NOT NULL,TAGS TEXT NOT NULL,"
                                + "IMAGES TEXT NOT NULL,ATTRIBUTES TEXT NOT NULL,DEFAULT_ATTRIBUTES TEXT NOT NULL,"
-                               + "VARIATIONS TEXT NOT NULL,GROUPED_PRODUCTS TEXT NOT NULL,META_DATA TEXT NOT NULL)");
+                               + "VARIATIONS TEXT NOT NULL,GROUPED_PRODUCTS TEXT NOT NULL)");
                     break;
             }
         }
