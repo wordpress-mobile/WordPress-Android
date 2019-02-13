@@ -56,7 +56,7 @@ class PromoDialog : AppCompatDialogFragment() {
         title: String,
         message: String,
         positiveButtonLabel: String,
-        @DrawableRes drawableResId: Int,
+        @DrawableRes drawableResId: Int = -1,
         negativeButtonLabel: String = "",
         linkLabel: String = "",
         neutralButtonLabel: String = ""
@@ -113,10 +113,14 @@ class PromoDialog : AppCompatDialogFragment() {
     }
 
     private fun initializeView(view: View) {
-        val image = view.findViewById<ImageView>(R.id.promo_dialog_image)
-        image.setImageResource(drawableResId)
         val imageContainer = view.findViewById<LinearLayout>(R.id.promo_dialog_image_container)
-        imageContainer.visibility = if (DisplayUtils.isLandscape(activity)) View.GONE else View.VISIBLE
+        if (drawableResId == -1) {
+            imageContainer.visibility = View.GONE
+        } else {
+            val image = view.findViewById<ImageView>(R.id.promo_dialog_image)
+            image.setImageResource(drawableResId)
+            imageContainer.visibility = if (DisplayUtils.isLandscape(activity)) View.GONE else View.VISIBLE
+        }
 
         val dialogTitle = view.findViewById<WPTextView>(R.id.promo_dialog_title)
         dialogTitle.text = title

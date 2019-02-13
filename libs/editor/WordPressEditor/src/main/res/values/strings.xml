@@ -133,8 +133,4 @@
     <string name="retry_failed_upload_remove">Remove</string>
     <string name="retry_failed_upload_retry_all">Retry all</string>
 
-    <string name="gutenberg_informative_dialog_title">Block Editor Enabled</string>
-    <string name="gutenberg_informative_dialog_description">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.
-        Switch back to Classic at any time by tapping the three dots in the top bar.</string>
-
 </resources>
