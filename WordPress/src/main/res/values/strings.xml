@@ -2521,20 +2521,20 @@
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
 
     <!-- Gutenberg mobile strings -->
-    <string name="gutenberg/packages/block-library/src/paragraph/edit.native.js:115">Add text or type / to add content</string>
-    <string name="gutenberg/packages/block-library/src/image/edit.native.js:214">Add URL</string>
-    <string name="gutenberg/packages/block-library/src/image/edit.native.js:221">Alt Text</string>
-    <string name="gutenberg/packages/block-library/src/image/edit.native.js:227">Reset to Original</string>
-    <string name="gutenberg/packages/block-library/src/image/edit.native.js:282">Failed to insert media.\nPlease tap for options.</string>
-    <string name="gutenberg/packages/editor/src/components/media-placeholder/index.native.js:17">Upload a new image or select a file from your library.</string>
-    <string name="gutenberg/packages/editor/src/components/media-placeholder/index.native.js:20">Device Library</string>
-    <string name="gutenberg/packages/editor/src/components/media-placeholder/index.native.js:21">Take photo</string>
-    <string name="gutenberg/packages/editor/src/components/default-block-appender/index.native.js:26">Start writing or press ⊕ to add content</string>
-    <string name="src/block-types/unsupported-block/index.js:21">Unsupported Block</string>
-    <string name="src/block-types/unsupported-block/index.js:23">Unsupported block type.</string>
-    <string name="src/block-management/block-picker.js:30">ADD BLOCK</string>
-    <string name="src/block-management/block-manager.js:252">ADD BLOCK HERE</string>
-    <string name="src/block-management/inline-toolbar/index.js:48">Move block up</string>
-    <string name="src/block-management/inline-toolbar/index.js:55">Move block down</string>
-    <string name="src/block-management/inline-toolbar/index.js:66">Remove content</string>
+    <string name="gutenberg_packages_block_library_src_paragraph_edit_native_js_115">Add text or type / to add content</string>
+    <string name="gutenberg_packages_block_library_src_image_edit_native_js_214">Add URL</string>
+    <string name="gutenberg_packages_block_library_src_image_edit_native_js_221">Alt Text</string>
+    <string name="gutenberg_packages_block_library_src_image_edit_native_js_227">Reset to Original</string>
+    <string name="gutenberg_packages_block_library_src_image_edit_native_js_282">Failed to insert media.\nPlease tap for options.</string>
+    <string name="gutenberg_packages_editor_src_components_media_placeholder_index_native_js_17">Upload a new image or select a file from your library.</string>
+    <string name="gutenberg_packages_editor_src_components_media_placeholder_index_native_js_20">Device Library</string>
+    <string name="gutenberg_packages_editor_src_components_media_placeholder_index_native_js_21">Take photo</string>
+    <string name="gutenberg_packages_editor_src_components_default_block_appender_index_native_js_26">Start writing or press ⊕ to add content</string>
+    <string name="src_block_types_unsupported_block_index_js_21">Unsupported Block</string>
+    <string name="src_block_types_unsupported_block_index_js_23">Unsupported block type.</string>
+    <string name="src_block_management_block_picker_js_30">ADD BLOCK</string>
+    <string name="src_block_management_block_manager_js_252">ADD BLOCK HERE</string>
+    <string name="src_block_management_inline_toolbar_index_js_48">Move block up</string>
+    <string name="src_block_management_inline_toolbar_index_js_55">Move block down</string>
+    <string name="src_block_management_inline_toolbar_index_js_66">Remove content</string>
 </resources>
