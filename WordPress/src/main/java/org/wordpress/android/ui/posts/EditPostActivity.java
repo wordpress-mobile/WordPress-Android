@@ -2060,7 +2060,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
                         // Show the GB informative dialog on editing GB posts
-                        if (!mIsNewPost /*&& !AppPrefs.isGutenbergInformativeDialogDisabled()*/) {
+                        if (!mIsNewPost && !AppPrefs.isGutenbergInformativeDialogDisabled()) {
                             final PromoDialog asyncPromoDialog = new PromoDialog();
                             asyncPromoDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
                                     getString(R.string.dialog_gutenberg_informative_title),
