@@ -734,6 +734,12 @@ public class WPMainActivity extends AppCompatActivity implements
                 int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
                 final SiteModel site = getSelectedSite();
                 final PostModel post = mPostStore.getPostByLocalPostId(localId);
+
+                if (EditPostActivity.checkAndRestart(this, data, post, site)) {
+                    // a restart will happen so, no need to continue here
+                    break;
+                }
+
                 if (site != null && post != null) {
                     UploadUtils.handleEditPostResultSnackbars(
                             this,

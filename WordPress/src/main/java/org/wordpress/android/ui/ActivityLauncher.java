@@ -593,11 +593,14 @@ public class ActivityLauncher {
     }
 
     public static void addNewPostForResult(Activity activity, SiteModel site, boolean isPromo) {
+        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo);
+    }
+
+    public static void addNewPostForResult(Intent intent, Activity activity, SiteModel site, boolean isPromo) {
         if (site == null) {
             return;
         }
 
-        Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
@@ -605,11 +608,14 @@ public class ActivityLauncher {
     }
 
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
+        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post);
+    }
+
+    public static void editPostOrPageForResult(Intent intent, Activity activity, SiteModel site, PostModel post) {
         if (site == null) {
             return;
         }
 
-        Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         // PostModel objects can be quite large, since content field is not size restricted,
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.

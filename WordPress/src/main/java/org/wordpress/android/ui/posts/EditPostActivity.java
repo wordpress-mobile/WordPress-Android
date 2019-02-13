@@ -215,6 +215,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String EXTRA_IS_DISCARDABLE = "isDiscardable";
+    public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
@@ -249,6 +250,13 @@ public class EditPostActivity extends AppCompatActivity implements
         WP_MEDIA_LIBRARY,
         STOCK_PHOTO_LIBRARY
     }
+
+    enum RestartEditorOptions {
+        NO_RESTART,
+        RESTART_SUPPRESS_GUTENBERG,
+        RESTART_DONT_SUPPRESS_GUTENBERG,
+    }
+    private RestartEditorOptions mRestartEditorOption = RestartEditorOptions.NO_RESTART;
 
     private Handler mHandler;
     private int mDebounceCounter = 0;
@@ -338,6 +346,39 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
     };
+
+    public static boolean checkAndRestart(@NonNull final Activity activity,
+                                          @NonNull Intent data,
+                                          final PostModel post,
+                                          @NonNull final SiteModel site) {
+        RestartEditorOptions restartEditorOptions =
+                !data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR) ? RestartEditorOptions.NO_RESTART
+                        : RestartEditorOptions.valueOf(data.getStringExtra(EditPostActivity.EXTRA_RESTART_EDITOR));
+        if (restartEditorOptions != RestartEditorOptions.NO_RESTART) {
+            // the editor said it wants to restart...
+
+            Intent intent = new Intent(activity, EditPostActivity.class);
+            intent.putExtra(EXTRA_RESTART_EDITOR, restartEditorOptions.name());
+
+            if (post == null) {
+                if (data.getBooleanExtra(EXTRA_IS_PAGE, false)) {
+//                    ActivityLauncher
+//                            .addNewPageForResult(intent, activity, site, data.getBooleanExtra(EXTRA_IS_PROMO, false));
+                } else {
+                    ActivityLauncher
+                            .addNewPostForResult(intent, activity, site, data.getBooleanExtra(EXTRA_IS_PROMO, false));
+                }
+            } else {
+                ActivityLauncher.editPostOrPageForResult(intent, activity, site, post);
+            }
+
+            // signal that the restart will happen
+            return true;
+        }
+
+        // no restart
+        return false;
+    }
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -462,7 +503,18 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Ensure that this check happens when mPost is set
-        mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost);
+        String restartEditorOptionName;
+        if (savedInstanceState == null) {
+            restartEditorOptionName = getIntent().getStringExtra(EXTRA_RESTART_EDITOR);
+        } else {
+            restartEditorOptionName = savedInstanceState.getString(EXTRA_RESTART_EDITOR);
+        }
+        RestartEditorOptions restartEditorOption =
+                restartEditorOptionName == null ? RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
+                        : RestartEditorOptions.valueOf(restartEditorOptionName);
+
+        mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
+                               && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
 
         // Ensure we have a valid post
         if (mPost == null) {
@@ -1281,6 +1333,14 @@ public class EditPostActivity extends AppCompatActivity implements
                             TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG,
                             false);
                 }
+            } else if (itemId == R.id.menu_switch_to_aztec) {
+                // let's finish this editing instance and start again, but not letting Gutenberg be used
+                mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
+                savePostAndOptionallyFinish(true);
+            } else if (itemId == R.id.menu_switch_to_gutenberg) {
+                // let's finish this editing instance and start again, but let GB be used
+                mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG;
+                savePostAndOptionallyFinish(true);
             }
         }
         return false;
@@ -1802,6 +1862,7 @@ public class EditPostActivity extends AppCompatActivity implements
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
         i.putExtra(EXTRA_POST_REMOTE_ID, mPost.getRemotePostId());
         i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
+        i.putExtra(EXTRA_RESTART_EDITOR, mRestartEditorOption.name());
         setResult(RESULT_OK, i);
     }
 
