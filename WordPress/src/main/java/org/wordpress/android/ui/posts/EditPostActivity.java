@@ -2055,7 +2055,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
-                        return GutenbergEditorFragment.newInstance("", "", mIsNewPost);
+                        // Show the GB informative dialog on editing GB posts
+                        boolean showInformativeDialog = false;
+                        if (!mIsNewPost && !AppPrefs.isGutenbergInformativeDialogDisabled()) {
+                            showInformativeDialog = true;
+                            AppPrefs.setGutenbergInformativeDialogDisabled(true);
+                        }
+                        return GutenbergEditorFragment.newInstance("", "", mIsNewPost, showInformativeDialog);
                     } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());

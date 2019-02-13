@@ -50,7 +50,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
+    private static final String KEY_SHOW_INFORMATIVE_DIALOG = "KEY_SHOW_INFORMATIVE_DIALOG";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
+    private static final String ARG_SHOW_INFORMATIVE_DIALOG = "arg_show_informative_dialog";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
 
@@ -73,14 +75,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private boolean mIsNewPost;
 
+    private boolean mShouldShowInformativeDialog;
+
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
-                                                      boolean isNewPost) {
+                                                      boolean isNewPost,
+                                                      boolean showInformativeDialog) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
         args.putString(ARG_PARAM_CONTENT, content);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
+        args.putBoolean(ARG_SHOW_INFORMATIVE_DIALOG, showInformativeDialog);
         fragment.setArguments(args);
         return fragment;
     }
@@ -116,8 +122,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         ProfilingUtils.start("Visual Editor Startup");
         ProfilingUtils.split("EditorFragment.onCreate");
 
+        mShouldShowInformativeDialog = getArguments().getBoolean(ARG_SHOW_INFORMATIVE_DIALOG);
+
         if (savedInstanceState != null) {
             mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED);
+            mShouldShowInformativeDialog = savedInstanceState.getBoolean(KEY_SHOW_INFORMATIVE_DIALOG);
         }
     }
 
@@ -189,6 +198,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             showImplicitKeyboard();
         }
 
+        if (mShouldShowInformativeDialog) {
+            showInformativeDialog();
+        }
+
         return view;
     }
 
@@ -257,6 +270,28 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
         });
 
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showInformativeDialog() {
+        if (mIsNewPost) {
+            return;
+        }
+
+        mShouldShowInformativeDialog = false;
+
+        // Display 'GB informative' dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
+        builder.setTitle(getString(R.string.gutenberg_informative_dialog_title));
+        builder.setMessage(getString(R.string.gutenberg_informative_dialog_description));
+        builder.setPositiveButton(R.string.dialog_button_ok,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -341,6 +376,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
+        outState.putBoolean(KEY_SHOW_INFORMATIVE_DIALOG, mShouldShowInformativeDialog);
     }
 
     @Override
