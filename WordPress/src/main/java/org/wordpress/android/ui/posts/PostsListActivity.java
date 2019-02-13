@@ -1,15 +1,22 @@
 package org.wordpress.android.ui.posts;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
@@ -36,12 +43,22 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
 
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
     private PostsPagerAdapter mPostsPagerAdapter;
     private ViewPager mPager;
+    private FloatingActionButton mFab;
+    private PostListMainViewModel mViewModel;
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
     }
 
     @Override
@@ -60,15 +77,35 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
 
         setupActionBar();
         setupContent();
+        initViewModel();
         handleIntent(getIntent());
     }
 
     private void setupContent() {
         mPager = findViewById(R.id.postPager);
-        mPostsPagerAdapter = new PostsPagerAdapter(mSite, this, getSupportFragmentManager());
+        mPostsPagerAdapter = new PostsPagerAdapter(PostListMainViewModelKt.getPOST_LIST_PAGES(), mSite, this,
+                getSupportFragmentManager());
         mPager.setAdapter(mPostsPagerAdapter);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mPager);
+
+        mPager.addOnPageChangeListener(new OnPageChangeListener() {
+            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override public void onPageSelected(int position) {
+                mViewModel.onTabChanged(position);
+            }
+
+            @Override public void onPageScrollStateChanged(int state) {
+            }
+        });
+        mFab = findViewById(R.id.fab_button);
+        mFab.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                mViewModel.newPost();
+            }
+        });
     }
 
     private void setupActionBar() {
@@ -83,10 +120,25 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
         }
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        handleIntent(intent);
+    private void initViewModel() {
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PostListMainViewModel.class);
+        mViewModel.start(mSite);
+        mViewModel.getPostListAction().observe(this, new Observer<PostListAction>() {
+            @Override public void onChanged(@Nullable PostListAction postListAction) {
+                if (postListAction != null) {
+                    PostListActionKt.handlePostListAction(PostsListActivity.this, postListAction);
+                }
+            }
+        });
+        mViewModel.isFabVisible().observe(this, new Observer<Boolean>() {
+            @Override public void onChanged(@Nullable Boolean show) {
+                if (show != null && show) {
+                    mFab.show();
+                } else {
+                    mFab.hide();
+                }
+            }
+        });
     }
 
     private void handleIntent(Intent intent) {

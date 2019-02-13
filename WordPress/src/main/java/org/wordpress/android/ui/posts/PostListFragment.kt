@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -19,9 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActionableEmptyView
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID
@@ -31,7 +28,6 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AccessibilityUtils
-import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SiteUtils
@@ -60,7 +56,6 @@ class PostListFragment : Fragment() {
     private lateinit var viewModel: PostListViewModel
 
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
-    private var fabView: View? = null
 
     private var swipeRefreshLayout: CustomSwipeRefreshLayout? = null
     private var recyclerView: RecyclerView? = null
@@ -136,7 +131,7 @@ class PostListFragment : Fragment() {
             progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
         })
         viewModel.postListAction.observe(this, Observer {
-            it?.let { action -> handlePostListAction(action) }
+            it?.let { action -> handlePostListAction(requireActivity(), action) }
         })
         viewModel.postUploadAction.observe(this, Observer {
             it?.let { uploadAction -> handleUploadAction(uploadAction) }
@@ -151,48 +146,6 @@ class PostListFragment : Fragment() {
             val fragmentManager = requireNotNull(fragmentManager) { "FragmentManager can't be null at this point" }
             it?.show(nonNullActivity, fragmentManager, uiHelpers)
         })
-    }
-
-    private fun handlePostListAction(action: PostListAction) {
-        when (action) {
-            is PostListAction.EditPost -> {
-                ActivityLauncher.editPostOrPageForResult(nonNullActivity, action.site, action.post)
-            }
-            is PostListAction.NewPost -> {
-                ActivityLauncher.addNewPostForResult(nonNullActivity, action.site, action.isPromo)
-            }
-            is PostListAction.PreviewPost -> {
-                ActivityLauncher.viewPostPreviewForResult(nonNullActivity, action.site, action.post)
-            }
-            is PostListAction.RetryUpload -> {
-                // restart the UploadService with retry parameters
-                val intent = UploadService.getUploadPostServiceIntent(
-                        nonNullActivity,
-                        action.post,
-                        action.trackAnalytics,
-                        action.publish,
-                        action.retry
-                )
-                nonNullActivity.startService(intent)
-            }
-            is PostListAction.ViewStats -> {
-                ActivityLauncher.viewStatsSinglePostDetails(nonNullActivity, action.site, action.post)
-            }
-            is PostListAction.ViewPost -> {
-                ActivityLauncher.browsePostOrPage(nonNullActivity, action.site, action.post)
-            }
-            is PostListAction.ShowGutenbergWarningDialog -> {
-                PostUtils.showGutenbergCompatibilityWarningDialog(
-                        nonNullActivity,
-                        fragmentManager,
-                        action.post,
-                        action.site
-                )
-            }
-            is PostListAction.DismissPendingNotification -> {
-                NativeNotificationsUtils.dismissNotification(action.pushId, nonNullActivity)
-            }
-        }
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
@@ -268,28 +221,12 @@ class PostListFragment : Fragment() {
         outState.putSerializable(WordPress.SITE, site)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        // scale in the fab after a brief delay if it's not already showing
-        if (fabView?.visibility != View.VISIBLE) {
-            val delayMs = resources.getInteger(R.integer.fab_animation_delay).toLong()
-            Handler().postDelayed({
-                if (isAdded) {
-                    AniUtils.scaleIn(fabView, AniUtils.Duration.MEDIUM)
-                }
-            }, delayMs)
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.post_list_fragment, container, false)
 
         swipeRefreshLayout = view.findViewById(R.id.ptr_layout)
         recyclerView = view.findViewById(R.id.recycler_view)
         progressLoadMore = view.findViewById(R.id.progress)
-        fabView = view.findViewById(R.id.fab_button)
-
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
 
         val context = nonNullActivity
@@ -298,10 +235,6 @@ class PostListFragment : Fragment() {
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical))
         recyclerView?.adapter = postListAdapter
-
-        // hide the fab so we can animate it
-        fabView?.visibility = View.GONE
-        fabView?.setOnClickListener { viewModel.newPost() }
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
             if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {

@@ -5,24 +5,20 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.ViewGroup
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.PostListType.DRAFTS
-import org.wordpress.android.ui.posts.PostListType.PUBLISHED
-import org.wordpress.android.ui.posts.PostListType.SCHEDULED
-import org.wordpress.android.ui.posts.PostListType.TRASHED
 import java.lang.ref.WeakReference
 
-class PostsPagerAdapter(private val site: SiteModel, val context: Context, val fm: FragmentManager) :
-        FragmentPagerAdapter(fm) {
-    companion object {
-        val postTypes = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
-    }
-
+class PostsPagerAdapter(
+    private val pages: List<PostListType>,
+    private val site: SiteModel,
+    val context: Context,
+    val fm: FragmentManager
+) : FragmentPagerAdapter(fm) {
     private val listFragments = mutableMapOf<Int, WeakReference<PostListFragment>>()
 
-    override fun getCount(): Int = postTypes.size
+    override fun getCount(): Int = pages.size
 
     override fun getItem(position: Int): PostListFragment =
-            PostListFragment.newInstance(site, postTypes[position], null)
+            PostListFragment.newInstance(site, pages[position], null)
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val fragment = super.instantiateItem(container, position) as PostListFragment
@@ -30,7 +26,7 @@ class PostsPagerAdapter(private val site: SiteModel, val context: Context, val f
         return fragment
     }
 
-    override fun getPageTitle(position: Int): CharSequence? = context.getString(postTypes[position].titleResId)
+    override fun getPageTitle(position: Int): CharSequence? = context.getString(pages[position].titleResId)
 
     fun getItemAtPosition(position: Int): PostListFragment? {
         return listFragments[position]?.get()
