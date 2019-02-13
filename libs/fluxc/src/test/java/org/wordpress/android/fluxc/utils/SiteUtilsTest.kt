@@ -101,32 +101,32 @@ class SiteUtilsTest {
 
         siteModel.timezone = "0"
         val dateString = "2019-01-31"
-        val date = DateUtils.getDateFromString(dateString)
+        val date = SimpleDateFormat(DATE_FORMAT_DAY, Locale.ROOT).parse(dateString)
 
         with(siteModel) {
             val formattedDate = DateUtils.getDateTimeForSite(this, DATE_FORMAT_DAY, dateString)
-            val currentTimeUtc = DateUtils.formatDate(DATE_FORMAT_DAY, DateTimeUtils.localDateToUTC(date))
+            val currentTimeUtc = DateUtils.formatDate(DATE_FORMAT_DAY, date)
             assertEquals(currentTimeUtc, formattedDate)
         }
 
         siteModel.timezone = ""
         with(siteModel) {
             val formattedDate = DateUtils.getDateTimeForSite(this, DATE_FORMAT_WEEK, dateString)
-            val currentTimeUtc = DateUtils.formatDate(DATE_FORMAT_WEEK, DateTimeUtils.localDateToUTC(date))
+            val currentTimeUtc = DateUtils.formatDate(DATE_FORMAT_WEEK, date)
             assertEquals(currentTimeUtc, formattedDate)
         }
 
         siteModel.timezone = "0"
         with(siteModel) {
             val formattedDate = DateUtils.getDateTimeForSite(this, DATE_FORMAT_MONTH, dateString)
-            val currentTimeUtc = DateUtils.formatDate(DATE_FORMAT_MONTH, DateTimeUtils.localDateToUTC(date))
+            val currentTimeUtc = DateUtils.formatDate(DATE_FORMAT_MONTH, date)
             assertEquals(currentTimeUtc, formattedDate)
         }
 
         siteModel.timezone = ""
         with(siteModel) {
             val formattedDate = DateUtils.getDateTimeForSite(this, DATE_FORMAT_YEAR, dateString)
-            val currentTimeUtc = DateUtils.formatDate(DATE_FORMAT_YEAR, DateTimeUtils.localDateToUTC(date))
+            val currentTimeUtc = DateUtils.formatDate(DATE_FORMAT_YEAR, date)
             assertEquals(currentTimeUtc, formattedDate)
         }
     }
