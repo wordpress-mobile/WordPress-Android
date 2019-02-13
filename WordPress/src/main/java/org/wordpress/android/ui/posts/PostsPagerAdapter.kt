@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.view.ViewGroup
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
@@ -20,8 +21,11 @@ class PostsPagerAdapter(private val site: SiteModel, val context: Context, val f
 
     override fun getCount(): Int = postTypes.size
 
-    override fun getItem(position: Int): PostListFragment {
-        val fragment = PostListFragment.newInstance(site, postTypes[position], null)
+    override fun getItem(position: Int): PostListFragment =
+            PostListFragment.newInstance(site, postTypes[position], null)
+
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val fragment = super.instantiateItem(container, position) as PostListFragment
         listFragments[position] = WeakReference(fragment)
         return fragment
     }
