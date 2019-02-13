@@ -132,8 +132,8 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton FollowersUseCase that represents the Followers View all screen
-     * @param followersUseCaseFactory build the use cases for the Followers
+     * Provides a singleton FollowersUseCase for the Followers View all screen
+     * @param followersUseCaseFactory builds the use cases for the Followers
      */
     @Provides
     @Singleton
@@ -153,8 +153,8 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton CommentsUseCase that represents the Followers View all screen
-     * @param commentsUseCaseFactory build the use cases for the Followers
+     * Provides a singleton CommentsUseCase for the Comments View all screen
+     * @param commentsUseCaseFactory build the use cases for the comments
      */
     @Provides
     @Singleton
