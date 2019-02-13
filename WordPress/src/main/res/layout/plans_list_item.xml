@@ -26,7 +26,6 @@
             android:contentDescription="@string/description_user"
             android:src="@drawable/ic_plans_white_24dp"
             tools:tint="@color/grey"/>
-        </ImageView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,8 +46,7 @@
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_dark"
-                tools:text="Free Plan">
-            </org.wordpress.android.widgets.WPTextView>
+                tools:text="Free Plan"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/plan_subtitle"
@@ -58,8 +56,7 @@
                 android:singleLine="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 android:textColor="@color/grey_darken_10"
-                tools:text="Best for beginners">
-            </org.wordpress.android.widgets.WPTextView>
+                tools:text="Best for beginners"/>
 
         </LinearLayout>
 
