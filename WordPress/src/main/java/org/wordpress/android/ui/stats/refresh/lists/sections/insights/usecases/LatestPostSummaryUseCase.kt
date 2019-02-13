@@ -98,7 +98,7 @@ class LatestPostSummaryUseCase
     private fun buildLink(model: InsightsLatestPostModel?): Link {
         return when {
             model == null -> Link(
-                    R.drawable.ic_create_blue_medium_24dp,
+                    R.drawable.ic_create_white_24dp,
                     R.string.stats_insights_create_post,
                     navigateAction = NavigationAction.create(this::onAddNewPostClick)
             )
@@ -110,7 +110,7 @@ class LatestPostSummaryUseCase
                     )
             )
             else -> Link(
-                    R.drawable.ic_share_blue_medium_24dp,
+                    R.drawable.ic_share_white_24dp,
                     R.string.stats_insights_share_post,
                     navigateAction = NavigationAction.create(
                             SharePostParams(model.postURL, model.postTitle),

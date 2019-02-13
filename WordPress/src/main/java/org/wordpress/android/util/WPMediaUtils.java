@@ -339,17 +339,17 @@ public class WPMediaUtils {
 
     public static int getPlaceholder(String url) {
         if (MediaUtils.isValidImage(url)) {
-            return R.drawable.ic_gridicons_image;
+            return R.drawable.ic_image_white_24dp;
         } else if (MediaUtils.isDocument(url)) {
-            return R.drawable.ic_gridicons_page;
+            return R.drawable.ic_pages_white_24dp;
         } else if (MediaUtils.isPowerpoint(url)) {
             return R.drawable.media_powerpoint;
         } else if (MediaUtils.isSpreadsheet(url)) {
             return R.drawable.media_spreadsheet;
         } else if (MediaUtils.isVideo(url)) {
-            return R.drawable.ic_gridicons_video_camera;
+            return R.drawable.ic_video_camera_white_24dp;
         } else if (MediaUtils.isAudio(url)) {
-            return R.drawable.ic_gridicons_audio;
+            return R.drawable.ic_audio_white_24dp;
         } else {
             return 0;
         }

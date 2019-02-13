@@ -40,7 +40,7 @@
                 android:id="@+id/image_comment_avatar"
                 android:layout_width="@dimen/avatar_sz_extra_small"
                 android:layout_height="@dimen/avatar_sz_extra_small"
-                tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+                tools:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
                 android:layout_marginEnd="@dimen/margin_small"/>
 
             <org.wordpress.android.widgets.WPTextView

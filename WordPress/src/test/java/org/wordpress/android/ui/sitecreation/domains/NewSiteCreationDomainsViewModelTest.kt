@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation.domains
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.firstValue
+import com.nhaarman.mockitokotlin2.lastValue
 import com.nhaarman.mockitokotlin2.secondValue
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -22,16 +23,19 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode
+import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.hamcrest.CoreMatchers.`is` as Is
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
+private const val ERROR_RESULT_FETCH_QUERY = "error_result_query"
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair("multi_result_query", MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE)
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = Pair("empty_result_query", 0)
 
@@ -82,6 +86,16 @@ class NewSiteCreationDomainsViewModelTest {
         }
     }
 
+    private fun <T> testWithErrorResponse(
+        block: suspend CoroutineScope.() -> T
+    ) {
+        test {
+            whenever(fetchDomainsUseCase.fetchDomains(ERROR_RESULT_FETCH_QUERY))
+                    .thenReturn(createFailedOnSuggestedDomains(ERROR_RESULT_FETCH_QUERY))
+            block()
+        }
+    }
+
     /**
      * Verifies the UI state for when the VM is started with an empty site title.
      */
@@ -112,6 +126,17 @@ class NewSiteCreationDomainsViewModelTest {
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(2)).onChanged(captor.capture())
         verifyVisibleItemsContentUiState(captor.secondValue)
+    }
+
+    /**
+     * Verifies the UI state for after the VM is started with a non-empty site title and fetchDomains results in error
+     */
+    @Test
+    fun verifyErrorResultTitleQueryUiStateAfterResponse() = testWithErrorResponse {
+        viewModel.start(ERROR_RESULT_FETCH_QUERY)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verifyInitialContentUiState(captor.secondValue)
     }
 
     /**
@@ -152,6 +177,21 @@ class NewSiteCreationDomainsViewModelTest {
     }
 
     /**
+     * Verifies the UI state for after the user enters a non-empty query which results in error.
+     */
+    @Test
+    fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = testWithErrorResponse {
+        viewModel.updateQuery(ERROR_RESULT_FETCH_QUERY)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verifyVisibleItemsContentUiState(captor.secondValue, showClearButton = true, numberOfItems = 1)
+        assertThat(
+                captor.secondValue.contentState.items[0],
+                instanceOf(DomainsFetchSuggestionsErrorUiState::class.java)
+        )
+    }
+
+    /**
      * Verifies that help button is properly propagated.
      */
     @Test
@@ -182,6 +222,39 @@ class NewSiteCreationDomainsViewModelTest {
         val captor = ArgumentCaptor.forClass(String::class.java)
         verify(createSiteBtnObserver, times(1)).onChanged(captor.capture())
         assertThat(captor.firstValue, Is(domainName))
+    }
+
+    /**
+     * Verifies the input focus is requested when the VM is started with a non-empty site title.
+     */
+    @Test
+    fun verifyInputFocusRequestedAfterVMStartedWithNonEmptyTitle() = testWithSuccessResponse {
+        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(RequestFocusMode::class.java)
+        verify(onInputFocusRequestedObserver, times(1)).onChanged(captor.capture())
+        assertThat(captor.lastValue, Is(RequestFocusMode.FOCUS_ONLY))
+    }
+
+    /**
+     * Verifies the input focus and keyboard is requested when the VM is started with an empty site title.
+     */
+    @Test
+    fun verifyInputFocusAndKeyboardRequestedAfterVMStartedWithEmptyTitle() = testWithSuccessResponse {
+        viewModel.start("")
+        val captor = ArgumentCaptor.forClass(RequestFocusMode::class.java)
+        verify(onInputFocusRequestedObserver, times(1)).onChanged(captor.capture())
+        assertThat(captor.lastValue, Is(RequestFocusMode.FOCUS_AND_KEYBOARD))
+    }
+
+    /**
+     * Verifies the input focus and keyboard is requested when the VM is started with null site title.
+     */
+    @Test
+    fun verifyInputFocusAndKeyboardRequestedAfterVMStartedWithNullTitle() = testWithSuccessResponse {
+        viewModel.start(null)
+        val captor = ArgumentCaptor.forClass(RequestFocusMode::class.java)
+        verify(onInputFocusRequestedObserver, times(1)).onChanged(captor.capture())
+        assertThat(captor.lastValue, Is(RequestFocusMode.FOCUS_AND_KEYBOARD))
     }
 
     /**
@@ -235,5 +308,14 @@ class NewSiteCreationDomainsViewModelTest {
             response
         }
         return OnSuggestedDomains(queryResultSizePair.first, suggestions)
+    }
+
+    /**
+     * Helper function that creates an error [OnSuggestedDomains] event.
+     */
+    private fun createFailedOnSuggestedDomains(searchQuery: String): OnSuggestedDomains {
+        val event = OnSuggestedDomains(searchQuery, emptyList())
+        event.error = SuggestDomainError("GENERIC_ERROR", "test")
+        return event
     }
 }

@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-16 20:58:32+0000
+Translation-Revision-Date: 2019-01-29 13:59:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Visar förhandsvisning av webbplatsen</string>
+    <string name="new_site_creation_clear_all_content_description">Rensa</string>
+    <string name="site_created_but_not_fetched_snackbar_message">Det verkar som om din uppkoppling är långsam. Om den nya webbplatsen inte syns i listan kan du prova att ladda om sidan.</string>
+    <string name="cancel_new_site_wizard_content_description">Avbryt guiden för skapande av ny webbplats</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Vi håller på att skapa din nya webbplats</string>
+    <string name="notification_new_site_creation_failed">Ett problem har inträffat</string>
+    <string name="notification_new_site_creation_title">Skapa webbplats</string>
+    <string name="new_site_creation_create_site_button">Skapa webbplats</string>
+    <string name="new_site_creation_search_domain_input_hint">Sök domäner</string>
+    <string name="new_site_creation_domain_header_subtitle">Det är där andra människor hittar dig på internet.</string>
+    <string name="new_site_creation_domain_header_title">Välj ett domännamn för din webbplats</string>
+    <string name="new_site_creation_empty_domain_list_message">Det inns ingen adress som matchar din sökning</string>
+    <string name="site_creation_error_generic_subtitle">Kommunikationen med servern fungerar inte. Försök igen</string>
+    <string name="site_creation_error_generic_title">Ett fel har inträffat</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Anpassad kategori</string>
+    <string name="new_site_creation_button_skip">Hoppa över</string>
+    <string name="new_site_creation_tag_line_description">Webbplatsens slogan är en kort textrad som visas direkt under webbplatsens namn.</string>
+    <string name="new_site_creation_tag_line_hint">Slogan</string>
+    <string name="new_site_creation_site_title_hint">Webbplatsnamn</string>
+    <string name="new_site_creation_site_info_header_subtitle">Berätta lite mer om webbplatsen du håller på att skapa.</string>
+    <string name="new_site_creation_site_info_header_title">Grundläggande information</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Ett fel har inträffat</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Ingen förbindelse</string>
+    <string name="site_creation_segments_subtitle">Detta hjälper oss att ge dig rekommentationer. Men du är aldrig låst till detta – alla webbplatser fortsätter att utvecklas!</string>
+    <string name="site_creation_segments_title">Berätta vilken typ av webbplats du vill skapa</string>
+    <string name="new_site_creation_preview_title">Din webbplats har skapats!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d av %2$d</string>
+    <string name="new_site_creation_screen_title_general">Skapa webbplats</string>
+    <string name="suggestions_updated_content_description">Förslagen har uppdaterats</string>
+    <string name="site_picker_failed_selecting_added_site">Det gick inte att välja din just tillagda webbplats som körs på egen server.</string>
+    <string name="local_post_is_conflicted">Versionskonflikt</string>
+    <string name="preference_crash_reports_summary">Tillåt automatiska automatiska kraschrapporter för att hjälpa oss förbättra appens prestanda.</string>
+    <string name="preference_crash_reports">Kraschrapporter</string>
+    <string name="snackbar_conflict_undo">Ångra</string>
+    <string name="snackbar_conflict_web_version_discarded">Versionen på webben har kastats</string>
+    <string name="snackbar_conflict_local_version_discarded">Den lokala versionen har kastats</string>
+    <string name="toast_conflict_updating_post">Inlägget uppdateras</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Kasta webbversionen</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Kasta den lokala</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Lokal version\nSparades %s\n\nWebbversion\nSparades %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">Detta inlägg har två versioner som inte stämmer överens. Välj vilken version du vill kasta.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Lös synkroniseringskonflikt</string>
     <string name="local_changes_discarding_no_connection">För att utföra denna åtgärd krävs en förbindelse. Kontrollera din internetuppkoppling och försök igen.</string>
     <string name="stats_no_data_for_period">Inga uppgifter för denna tidsperiod</string>
     <string name="preference_strip_image_location">Avlägsna position från media</string>
@@ -46,9 +88,9 @@ Language: sv_SE
     <string name="stats_insights_view_more">Visa mer</string>
     <string name="stats_insights_share_post">Dela inlägg</string>
     <string name="stats_insights_create_post">Skapa inlägg</string>
-    <string name="stats_insights_latest_post_message">Det har gått %1$s sedan ”%2$s” publicerades. Så här har det gått hittills för inlägget</string>
-    <string name="stats_insights_latest_post_with_no_engagement">Det har gått %1$s sedan ”%2$s” publicerades. Sätt bollen i rullning och skaffa fler visningar genom att dela ditt inlägg</string>
-    <string name="stats_insights_latest_post_empty">Du har inte publicerat några inlägg än. När du börjar publicera kommer en sammanfattning för ditt senaste inlägg att visas här</string>
+    <string name="stats_insights_latest_post_message">Nu har det gått %1$s sedan ”%2$s” publicerades. Så här har det gått hittills för inlägget:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Nu har det gått %1$s sedan ”%2$s” publicerades. Sätt bollen i rullning och skaffa fler visningar genom att dela ditt inlägg:</string>
+    <string name="stats_insights_latest_post_empty">Du har inte publicerat några inlägg än. När du börjar publicera kommer en sammanfattning för ditt senaste inlägg att visas här:</string>
     <string name="stats_insights_tags_and_categories">Etiketter och kategorier</string>
     <string name="stats_insights_all_time_stats">Total statistik</string>
     <string name="stats_insights_most_popular_views_label">Visningar</string>
