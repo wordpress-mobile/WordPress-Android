@@ -30,7 +30,7 @@
                 <ImageView
                     android:id="@+id/theme_grid_item_image"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/theme_browser_preview_image_height"
+                    android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/theme_image_desc"/>
 
