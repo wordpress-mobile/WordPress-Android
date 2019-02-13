@@ -144,6 +144,7 @@ public class DeviceUtils {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
             return stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
         } else {
+            //noinspection deprecation - Deprecated calls properly handled
             bytesAvailable = (long) stat.getBlockSize() * (long) stat.getAvailableBlocks();
         }
         return bytesAvailable;
