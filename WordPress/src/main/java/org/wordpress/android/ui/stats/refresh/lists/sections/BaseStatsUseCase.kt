@@ -6,10 +6,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.Loading
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
@@ -138,7 +138,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param site for which we fetch the data
      * @param forced is true when we want to get the fresh data
      */
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean)
+    protected abstract suspend fun fetchRemoteData(
+        site: SiteModel,
+        forced: Boolean
+    )
 
     /**
      * Transforms given domain model and ui state into the UI model
@@ -203,5 +206,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         }
 
         object NotUsedUiState
+    }
+
+    enum class UseCaseMode {
+        BLOCK,
+        VIEW_ALL
     }
 }

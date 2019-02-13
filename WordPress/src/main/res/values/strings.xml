@@ -1024,6 +1024,7 @@
     <string name="stats_insights_create_post">Create post</string>
     <string name="stats_insights_share_post">Share post</string>
     <string name="stats_insights_view_more">View more</string>
+    <string name="stats_insights_load_more">Load more</string>
     <string name="stats_insights_facebook">Facebook</string>
     <string name="stats_insights_twitter">Twitter</string>
     <string name="stats_insights_tumblr">Tumblr</string>

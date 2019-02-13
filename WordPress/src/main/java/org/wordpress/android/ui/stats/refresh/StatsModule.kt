@@ -11,11 +11,13 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.CountryViewsUseCase.CountryViewsUseCaseFactory
@@ -26,7 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.S
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
@@ -40,6 +42,8 @@ const val DAY_STATS_USE_CASE = "DayStatsUseCase"
 const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
 const val YEAR_STATS_USE_CASE = "YearStatsUseCase"
+const val VIEW_ALL_FOLLOWERS_USE_CASE = "ViewAllFollowersUseCase"
+
 // These are injected only internally
 private const val INSIGHTS_USE_CASES = "InsightsUseCases"
 private const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
@@ -60,7 +64,7 @@ class StatsModule {
         allTimeStatsUseCase: AllTimeStatsUseCase,
         latestPostSummaryUseCase: LatestPostSummaryUseCase,
         todayStatsUseCase: TodayStatsUseCase,
-        followersUseCase: FollowersUseCase,
+        followersUseCaseFactory: FollowersUseCaseFactory,
         commentsUseCase: CommentsUseCase,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCase: TagsAndCategoriesUseCase,
@@ -70,7 +74,7 @@ class StatsModule {
                 allTimeStatsUseCase,
                 latestPostSummaryUseCase,
                 todayStatsUseCase,
-                followersUseCase,
+                followersUseCaseFactory.build(UseCaseMode.BLOCK),
                 commentsUseCase,
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCase,
@@ -94,7 +98,7 @@ class StatsModule {
         searchTermsUseCaseFactory: SearchTermsUseCaseFactory,
         authorsUseCaseFactory: AuthorsUseCaseFactory,
         overviewUseCaseFactory: OverviewUseCaseFactory
-    ): List<@JvmSuppressWildcards UseCaseFactory> {
+    ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
                 postsAndPagesUseCaseFactory,
                 referrersUseCaseFactory,
@@ -126,20 +130,23 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton usecase that represents the Day stats screen.
-     * @param useCasesFactories build the use cases for the DAYS granularity
+     * Provides a singleton FollowersUseCase that represents the Followers View all screen
+     * @param followersUseCaseFactory build the use cases for the Followers
      */
     @Provides
     @Singleton
-    @Named(DAY_STATS_USE_CASE)
-    fun provideDayStatsUseCase(
-        statsStore: StatsStore,
+    @Named(VIEW_ALL_FOLLOWERS_USE_CASE)
+    fun provideViewAllFollowersUseCase(
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
+        followersUseCaseFactory: FollowersUseCaseFactory
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(DAYS) }) {
-            statsStore.getTimeStatsTypes()
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                listOf(followersUseCaseFactory.build(UseCaseMode.VIEW_ALL))
+        ) {
+            listOf(FOLLOWERS)
         }
     }
 
@@ -154,7 +161,7 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>
     ): BaseListUseCase {
         return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(WEEKS) }) {
             statsStore.getTimeStatsTypes()
@@ -172,7 +179,7 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>
     ): BaseListUseCase {
         return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(MONTHS) }) {
             statsStore.getTimeStatsTypes()
@@ -190,9 +197,27 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>
     ): BaseListUseCase {
         return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(YEARS) }) {
+            statsStore.getTimeStatsTypes()
+        }
+    }
+
+    /**
+     * Provides a singleton usecase that represents the Day stats screen.
+     * @param useCasesFactories build the use cases for the DAYS granularity
+     */
+    @Provides
+    @Singleton
+    @Named(DAY_STATS_USE_CASE)
+    fun provideDayStatsUseCase(
+        statsStore: StatsStore,
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>
+    ): BaseListUseCase {
+        return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(DAYS) }) {
             statsStore.getTimeStatsTypes()
         }
     }
