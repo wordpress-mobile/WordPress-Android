@@ -17,6 +17,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -363,14 +364,6 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun editPost(site: SiteModel, post: PostModel) {
-        val properties = HashMap<String, Any>()
-        properties["button"] = "edit"
-        if (!post.isLocalDraft) {
-            properties["post_id"] = post.remotePostId
-        }
-        properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils.contentContainsGutenbergBlocks(post.content)
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, site, properties)
-
         if (UploadService.isPostUploadingOrQueued(post)) {
             // If the post is uploading media, allow the media to continue uploading, but don't upload the
             // post itself when they finish (since we're about to edit it again)
@@ -559,9 +552,44 @@ class PostListViewModel @Inject constructor(
 
         return PostAdapterItem(
                 data = postData,
-                onSelected = { handlePostButton(PostListButton.BUTTON_EDIT, post) },
-                onButtonClicked = { handlePostButton(it, post) }
+                onSelected = {
+                    trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
+                    handlePostButton(PostListButton.BUTTON_EDIT, post)
+                },
+                onButtonClicked = {
+                    trackAction(it, post, AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED)
+                    handlePostButton(it, post)
+                }
         )
+    }
+
+    private fun trackAction(buttonType: Int, postData: PostModel, statsEvent: Stat) {
+        val properties = HashMap<String, Any?>()
+        if (!postData.isLocalDraft) {
+            properties["post_id"] = postData.remotePostId
+        }
+
+        when (buttonType) {
+            PostListButton.BUTTON_EDIT -> {
+                properties["action"] = "edit"
+                properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils
+                        .contentContainsGutenbergBlocks(postData.content)
+            }
+            PostListButton.BUTTON_RETRY -> properties["action"] = "retry"
+            PostListButton.BUTTON_SUBMIT -> properties["action"] = "submit"
+            PostListButton.BUTTON_VIEW -> properties["action"] = "view"
+            PostListButton.BUTTON_PREVIEW -> properties["action"] = "preview"
+            PostListButton.BUTTON_STATS -> properties["action"] = "stats"
+            PostListButton.BUTTON_TRASH -> properties["action"] = "trash"
+            PostListButton.BUTTON_DELETE -> properties["action"] = "delete"
+            PostListButton.BUTTON_PUBLISH -> properties["action"] = "publish"
+            PostListButton.BUTTON_SYNC -> properties["action"] = "sync"
+            PostListButton.BUTTON_MORE -> properties["action"] = "more"
+            PostListButton.BUTTON_BACK -> properties["action"] = "back"
+            else -> AppLog.e(AppLog.T.POSTS, "Unknown button type")
+        }
+
+        AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)
     }
 
     private fun getFeaturedImageUrl(featuredImageId: Long, postContent: String): String? {

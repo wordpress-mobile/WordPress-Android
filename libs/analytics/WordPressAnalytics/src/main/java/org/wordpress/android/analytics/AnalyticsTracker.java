@@ -132,6 +132,7 @@ public final class AnalyticsTracker {
         EDITOR_SCHEDULED_POST,
         EDITOR_OPENED,
         POST_LIST_BUTTON_PRESSED,
+        POST_LIST_ITEM_SELECTED,
         EDITOR_CLOSED,
         EDITOR_PUBLISHED_POST,
         EDITOR_SAVED_DRAFT,
