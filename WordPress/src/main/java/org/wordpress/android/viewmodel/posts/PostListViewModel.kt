@@ -51,6 +51,7 @@ import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
+import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
@@ -214,15 +215,15 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel, targetLocalPostId: Int?) {
+    fun start(site: SiteModel, postListType: PostListType, targetLocalPostId: Int?) {
         if (isStarted) {
             return
         }
         this.site = site
         this.listDescriptor = if (site.isUsingWpComRestApi) {
-            PostListDescriptorForRestSite(site)
+            PostListDescriptorForRestSite(site, postListType.postStatuses)
         } else {
-            PostListDescriptorForXmlRpcSite(site)
+            PostListDescriptorForXmlRpcSite(site, postListType.postStatuses)
         }
         // We want to update the target post only for the first time ViewModel is started
         this.targetLocalPostId = targetLocalPostId

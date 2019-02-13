@@ -51,6 +51,8 @@ import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
+private const val EXTRA_POST_LIST_TYPE = "post_list_type"
+
 class PostListFragment : Fragment() {
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -117,9 +119,10 @@ class PostListFragment : Fragment() {
         val targetLocalPostId = activity?.intent?.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, -1)?.let {
             if (it != -1) it else null
         }
+        val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(site, targetLocalPostId)
+        viewModel.start(site, postListType, targetLocalPostId)
         viewModel.pagedListDataAndScrollPosition.observe(this, Observer {
             it?.let { (pagedListData, scrollPosition) -> updatePagedListData(pagedListData, scrollPosition) }
         })
@@ -386,11 +389,11 @@ class PostListFragment : Fragment() {
         const val TAG = "post_list_fragment_tag"
 
         @JvmStatic
-        fun newInstance(site: SiteModel, listType: PostListType, targetPost: PostModel?): PostListFragment {
-            // TODO implement post status filtering
+        fun newInstance(site: SiteModel, postListType: PostListType, targetPost: PostModel?): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
+            bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
             targetPost?.let {
                 bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, it.id)
             }
