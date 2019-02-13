@@ -65,4 +65,3 @@ fun handlePostListAction(activity: FragmentActivity, action: PostListAction) {
         }
     }
 }
-
