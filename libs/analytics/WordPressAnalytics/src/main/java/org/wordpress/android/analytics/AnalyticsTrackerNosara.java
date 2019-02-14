@@ -1549,6 +1549,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "gutenberg_warning_confirm_dialog_dont_show_again_unchecked";
             case GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED:
                 return "gutenberg_warning_confirm_dialog_learn_more_tapped";
+            case APP_REVIEWS_SAW_PROMPT:
+                return "app_reviews_saw_prompt";
+            case APP_REVIEWS_CANCELLED_PROMPT:
+                return "app_reviews_cancelled_prompt";
+            case APP_REVIEWS_RATED_APP:
+                return "app_reviews_rated_app";
+            case APP_REVIEWS_DECLINED_TO_RATE_APP:
+                return "app_reviews_declined_to_rate_apt";
+            case APP_REVIEWS_DECIDED_TO_RATE_LATER:
+                return "app_reviews_decided_to_rate_later";
         }
         return null;
     }
