@@ -1997,8 +1997,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
 
                     PostStatus status = PostStatus.fromPost(mPost);
+                    boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
                     if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
-                        && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                        && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext()) && isNotRestarting) {
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
                         savePostLocallyAndFinishAsync(doFinish);
