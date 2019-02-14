@@ -114,6 +114,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
@@ -2015,6 +2016,8 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded() || post == null) {
             return;
         }
+
+        AppRatingDialog.INSTANCE.incrementInteractions();
 
         if (post.isBookmarked) {
             if (isBookmarksList()) {
