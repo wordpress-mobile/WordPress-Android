@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.uploads.UploadService
@@ -328,7 +327,7 @@ class PostListFragment : Fragment() {
             bundle.putSerializable(WordPress.SITE, site)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
             targetPost?.let {
-                bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, it.id)
+                bundle.putInt(EXTRA_TARGET_POST_LOCAL_ID, it.id)
             }
             fragment.arguments = bundle
             return fragment
