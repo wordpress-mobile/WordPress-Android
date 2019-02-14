@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.firstValue
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -18,6 +19,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.list.ListDescriptor
+import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
@@ -27,6 +29,7 @@ import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERRO
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
+import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 
 private fun onlyOnce() = times(1)
@@ -137,6 +140,20 @@ class PagedListWrapperTest {
     @Test
     fun `onListChanged invokes updates isEmpty`() {
         triggerOnListChanged()
+        // PagedListWrapper.init will trigger `isEmpty` once
+        verify(mockIsListEmpty, times(2)).invoke()
+    }
+
+    @Test
+    fun `onListItemsChanged invokes invalidate property`() {
+        triggerOnListItemsChanged()
+        verify(mockInvalidate, onlyOnce()).invoke()
+    }
+
+    @Test
+    fun `onListItemsChanged invokes updates isEmpty`() {
+        triggerOnListItemsChanged()
+        // PagedListWrapper.init will trigger `isEmpty` once
         verify(mockIsListEmpty, times(2)).invoke()
     }
 
@@ -174,5 +191,17 @@ class PagedListWrapperTest {
                 error = error
         )
         pagedListWrapper.onListChanged(event)
+    }
+
+    private fun triggerOnListItemsChanged(
+        error: ListError? = null
+    ) {
+        val pagedListWrapper = createPagedListWrapper()
+        whenever(mockListDescriptor.typeIdentifier).thenReturn(ListDescriptorTypeIdentifier(0))
+        val event = OnListItemsChanged(
+                type = mockListDescriptor.typeIdentifier,
+                error = error
+        )
+        pagedListWrapper.onListItemsChanged(event)
     }
 }
