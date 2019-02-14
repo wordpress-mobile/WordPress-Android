@@ -2512,4 +2512,11 @@
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
     <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
+
+    <!-- App rating dialog -->
+    <string name="app_rating_title">Enjoying WordPress?</string>
+    <string name="app_rating_message">Nice to see you again! If you’re digging the app, we\’d love a rating on the Google Play Store.</string>
+    <string name="app_rating_rate_now">Rate now</string>
+    <string name="app_rating_rate_later">Later</string>
+    <string name="app_rating_rate_never">No thanks</string>
 </resources>
