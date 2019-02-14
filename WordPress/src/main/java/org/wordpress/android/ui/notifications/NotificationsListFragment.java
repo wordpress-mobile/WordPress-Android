@@ -47,6 +47,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -290,6 +291,8 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             if (TextUtils.isEmpty(noteId)) {
                 return;
             }
+
+            AppRatingDialog.INSTANCE.incrementInteractions();
 
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
