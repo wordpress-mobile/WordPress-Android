@@ -46,7 +46,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: TagsAndCategoriesUseCase
-    private val pageSize = 6
+    private val blockItemCount = 6
     private val singleTagViews: Long = 10
     private val firstTag = TagModel.Item("tag1", "tag", "url.com")
     private val secondTag = TagModel.Item("tag2", "tag", "url2.com")
@@ -74,7 +74,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 listOf(firstTag, secondTag),
                 categoryViews
         )
-        whenever(insightsStore.fetchTags(site, FetchMode.Top(pageSize), forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, FetchMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
                         TagsModel(listOf(singleTag, category), hasMore = false)
                 )
@@ -122,7 +122,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         val singleTagViews: Long = 10
         val tagItem = TagModel.Item("tag1", "tag", "url.com")
         val tag = TagModel(listOf(tagItem), singleTagViews)
-        whenever(insightsStore.fetchTags(site, FetchMode.Top(pageSize), forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, FetchMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
                         TagsModel(listOf(tag), hasMore = true)
                 )
@@ -143,7 +143,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty tags to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchTags(site, FetchMode.Top(pageSize), forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, FetchMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(TagsModel(listOf(), hasMore = false))
         )
 
@@ -161,7 +161,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(insightsStore.fetchTags(site, FetchMode.Top(pageSize), forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, FetchMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
