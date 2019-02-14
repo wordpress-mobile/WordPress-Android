@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:minHeight="?attr/listPreferredItemHeight"
+    tools:layout_height="?attr/listPreferredItemHeightLarge">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/plan_image"
+            android:layout_width="@dimen/activity_log_icon_size"
+            android:layout_height="@dimen/activity_log_icon_size"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/activity_log_icon_margin"
+            android:contentDescription="@string/description_user"
+            tools:src="@drawable/bg_oval_grey_plans_32dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/activity_log_icon_margin"
+            android:layout_toEndOf="@id/plan_image"
+            android:orientation="vertical">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/plan_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:singleLine="true"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_dark"
+                tools:text="Free Plan"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/plan_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:textColor="@color/grey_darken_10"
+                tools:text="Best for beginners"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_divider_height"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/notifications_list_divider_full_width">
+        </View>
+
+    </RelativeLayout>
+
+</FrameLayout>

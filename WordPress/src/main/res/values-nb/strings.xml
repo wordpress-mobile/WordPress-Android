@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-17 15:58:59+0000
+Translation-Revision-Date: 2019-02-03 19:10:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Forhåndsvisning av nettsted</string>
+    <string name="new_site_creation_clear_all_content_description">Tøm</string>
+    <string name="site_created_but_not_fetched_snackbar_message">Det ser ut til at du er på en treg nettforbindelse. Om du ikke kan se ditt nye nettsted i oversikten kan du prøve å oppfriske.</string>
+    <string name="cancel_new_site_wizard_content_description">Avbryt veiviseren til å lage nettsted</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Vi lager ditt nye nettsted</string>
+    <string name="notification_new_site_creation_failed">Det oppsto et problem</string>
+    <string name="notification_new_site_creation_title">Lag nettsted</string>
+    <string name="new_site_creation_create_site_button">Lag nettsted</string>
+    <string name="new_site_creation_search_domain_input_hint">Søk domener</string>
+    <string name="new_site_creation_domain_header_subtitle">Dette er der folk vil finne deg på nettet.</string>
+    <string name="new_site_creation_domain_header_title">Velg et domenenavn for ditt nettsted</string>
+    <string name="new_site_creation_empty_domain_list_message">Ingen tilgjengelige adresser passet til ditt søk</string>
+    <string name="site_creation_error_generic_title">Det oppsto et problem</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Tilpasset kategori</string>
+    <string name="new_site_creation_button_skip">Hopp over</string>
+    <string name="new_site_creation_tag_line_description">Slagordet er en kort tekst som vises rett under nettstedtittelen</string>
+    <string name="new_site_creation_tag_line_hint">Slagord</string>
+    <string name="new_site_creation_site_title_hint">Tittel på nettstedet</string>
+    <string name="new_site_creation_site_info_header_subtitle">Fortell oss mer om nettstedet du lager.</string>
+    <string name="new_site_creation_site_info_header_title">Grunnleggende informasjon</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Det oppsto et problem</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Ingen forbindelse</string>
+    <string name="new_site_creation_preview_title">Ditt nettsted er laget!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d av %2$d</string>
+    <string name="new_site_creation_screen_title_general">Lag nettsted</string>
+    <string name="suggestions_updated_content_description">Forslag oppdatert</string>
+    <string name="local_post_is_conflicted">Versjonskonflikt</string>
+    <string name="snackbar_conflict_undo">Omgjør</string>
+    <string name="toast_conflict_updating_post">Oppdaterer innlegg</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Forkast nettversjon</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Forkast lokal versjon</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Lokal\nLagret den %s\n\nNett\nLagret den %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">Dette innlegget har to versjoner som er i konflikt. Velg den versjonen du vil forkaste\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Løs synkroniseringskonflikt</string>
+    <string name="local_changes_discarding_no_connection">En nettforbindelse er nødvendig for å utføre denne handlingen. Vennligst kontroller din oppkobling og forsøk igjen.</string>
     <string name="stats_no_data_for_period">Ingen data for denne perioden</string>
     <string name="preference_strip_image_location">Fjern dette stedet fra media</string>
     <string name="stats_cannot_be_started">Vi kan ikke åpne statistikken i øyeblikket. Vennligst prøv igjen senere</string>
@@ -44,9 +79,9 @@ Language: nb_NO
     <string name="stats_insights_view_more">Vis mer</string>
     <string name="stats_insights_share_post">Del innlegg</string>
     <string name="stats_insights_create_post">Lag innlegg</string>
-    <string name="stats_insights_latest_post_message">Det har gått %1$s siden %2$s ble publisert. Her er hvordan det har gått med det så langt</string>
-    <string name="stats_insights_latest_post_with_no_engagement">Det har gått %1$s siden %2$s ble publisert. Få ballen til å rulle og øk dine innleggsvisninger ved å dele ditt innlegg.</string>
-    <string name="stats_insights_latest_post_empty">Du har ikke publisert noe innlegg ennå. Straks du starter publisere vil sammendraget av dine siste innlegg dukke opp her</string>
+    <string name="stats_insights_latest_post_message">Det har gått %1$s siden %2$s ble publisert. Her er hvordan det har gått med innlegget så langt:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Det har gått %1$s siden %2$s ble publisert. Få ballen til å rulle og øk ditt antall visninger ved å dele ditt innlegg:</string>
+    <string name="stats_insights_latest_post_empty">Du har ikke publisert noe innlegg ennå. Straks du starter publisere vil sammendraget av dine siste innlegg dukke opp her:</string>
     <string name="stats_insights_tags_and_categories">Stikkord og kategorier</string>
     <string name="stats_insights_all_time_stats">Statistikk til alle tider</string>
     <string name="stats_insights_most_popular_views_label">Visninger</string>
@@ -181,6 +216,7 @@ Language: nb_NO
     <string name="quick_start_dialog_follow_sites_message">Finn nettsteder som snakker til deg og følg dem for å få oppdateringer når de publiserer.</string>
     <string name="quick_start_dialog_customize_site_title">Tilpass ditt nettsted</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Trykk %1$s Tema %2$s for å fortsette</string>
+    <string name="quick_start_dialog_continue_setup_title">Fortsett med oppsett av nettsted</string>
     <string name="quick_start_dialog_choose_theme_title">Velg et tema</string>
     <string name="quick_start_dialog_choose_theme_message_short">Trykk %1$s Tema %2$s for å oppdage nye tema</string>
     <string name="quick_start_dialog_choose_theme_message">Bla gjennom alle våre tema for å finne et som passer perfekt.</string>
