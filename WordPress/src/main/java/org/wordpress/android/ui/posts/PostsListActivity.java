@@ -65,7 +65,7 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
 
     private void setupContent() {
         mPager = findViewById(R.id.postPager);
-        mPostsPagerAdapter = new PostsPagerAdapter(mSite, this, getSupportFragmentManager());
+        mPostsPagerAdapter = new PostsPagerAdapter(mSite, getSupportFragmentManager());
         mPager.setAdapter(mPostsPagerAdapter);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mPager);
@@ -152,7 +152,7 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
         }
     }
 
-// GutenbergWarningDialogClickInterface Callbacks
+    // GutenbergWarningDialogClickInterface Callbacks
 
     @Override
     public void onGutenbergWarningDialogEditPostClicked(long gutenbergRemotePostId) {
@@ -186,8 +186,7 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
         }
     }
 
-    @Nullable
-    private PostListFragment getCurrentFragment() {
+    private @Nullable PostListFragment getCurrentFragment() {
         return mPostsPagerAdapter.getItemAtPosition(mPager.getCurrentItem());
     }
 }
