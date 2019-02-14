@@ -43,6 +43,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.EditPostActivity.EditorRestarter
 import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -103,12 +104,34 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         initializeViewModels(nonNullActivity, savedInstanceState)
     }
 
+    private fun restartEditorIfRequested(data: Intent?): Boolean {
+        if (data == null) {
+            return false
+        }
+
+        val nonNullActivity = checkNotNull(activity)
+        return EditPostActivity.checkAndRestart(nonNullActivity, data, object: EditorRestarter {
+                    override fun doEditPostOrPageForResult(data: Intent, postLocalId: Int) {
+                        ActivityLauncher.editPageForResult(this@PagesFragment, viewModel.site, postLocalId)
+                    }
+
+                    override fun doAddNewPostOrPageForResult(data: Intent, isPromo: Boolean,
+                        isPage: Boolean) {
+                        if (!isPage) {
+                            // we don't launch the new-post UI from the pages list so, ignore this case
+                            return
+                        }
+
+                        ActivityLauncher.addNewPageForResult(this@PagesFragment, viewModel.site)
+                    }
+                })
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
 
-            val nonNullActivity = checkNotNull(activity)
-            if (EditPostActivity.checkAndRestart(nonNullActivity, data, viewModel.site)) {
+            if (restartEditorIfRequested(data)) {
                 // a restart will happen so, no need to continue here
                 return
             }

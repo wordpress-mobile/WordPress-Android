@@ -348,9 +348,18 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     };
 
+    public interface EditorRestarter {
+        void doEditPostOrPageForResult(@NonNull Intent data,
+                                       int postLocalId);
+
+        void doAddNewPostOrPageForResult(@NonNull Intent data,
+                                         boolean isPromo,
+                                         boolean isPage);
+    }
+
     public static boolean checkAndRestart(@NonNull final Activity activity,
                                           @NonNull Intent data,
-                                          @NonNull final SiteModel site) {
+                                          EditorRestarter editorRestarter) {
         RestartEditorOptions restartEditorOptions =
                 !data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR) ? RestartEditorOptions.NO_RESTART
                         : RestartEditorOptions.valueOf(data.getStringExtra(EditPostActivity.EXTRA_RESTART_EDITOR));
@@ -363,15 +372,10 @@ public class EditPostActivity extends AppCompatActivity implements
             final int postLocalId = data.getIntExtra(EXTRA_POST_LOCAL_ID, 0);
             final boolean isNewPost = data.getBooleanExtra(EXTRA_IS_NEW_POST, false);
             if (postLocalId == 0 || isNewPost) {
-                if (data.getBooleanExtra(EXTRA_IS_PAGE, false)) {
-//                    ActivityLauncher
-//                            .addNewPageForResult(intent, activity, site, data.getBooleanExtra(EXTRA_IS_PROMO, false));
-                } else {
-                    ActivityLauncher
-                            .addNewPostForResult(intent, activity, site, data.getBooleanExtra(EXTRA_IS_PROMO, false));
-                }
+                editorRestarter.doAddNewPostOrPageForResult(intent, data.getBooleanExtra(EXTRA_IS_PROMO, false),
+                        data.getBooleanExtra(EXTRA_IS_PAGE, false));
             } else {
-                ActivityLauncher.editPostOrPageForResult(intent, activity, site, postLocalId);
+                editorRestarter.doEditPostOrPageForResult(intent, postLocalId);
             }
 
             // signal that the restart will happen

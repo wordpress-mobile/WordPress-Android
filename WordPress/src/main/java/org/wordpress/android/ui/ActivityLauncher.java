@@ -625,9 +625,13 @@ public class ActivityLauncher {
     }
 
     public static void editPageForResult(@NonNull Fragment fragment, @NonNull PageModel page) {
+        editPageForResult(fragment, page.getSite(), page.getPageId());
+    }
+
+    public static void editPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int pageLocalId) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, page.getSite());
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, pageLocalId);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
