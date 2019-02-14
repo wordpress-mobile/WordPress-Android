@@ -110,15 +110,17 @@ class PostsListActivity : AppCompatActivity(),
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListMainViewModel::class.java)
         viewModel.start(site)
         viewModel.postListAction.observe(this, Observer { postListAction ->
-            if (postListAction != null) {
-                handlePostListAction(this@PostsListActivity, postListAction)
+            postListAction?.let { action ->
+                handlePostListAction(this@PostsListActivity, action)
             }
         })
         viewModel.isFabVisible.observe(this, Observer { show ->
-            if (show != null && show) {
-                fab.show()
-            } else {
-                fab.hide()
+            show?.let {
+                if (show) {
+                    fab.show()
+                } else {
+                    fab.hide()
+                }
             }
         })
     }
