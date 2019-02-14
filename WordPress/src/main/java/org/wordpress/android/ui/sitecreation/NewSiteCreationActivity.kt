@@ -15,6 +15,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
@@ -40,6 +42,7 @@ import org.wordpress.android.ui.sitecreation.siteinfo.SiteInfoScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
 import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
@@ -50,8 +53,11 @@ class NewSiteCreationActivity : AppCompatActivity(),
         SiteInfoScreenListener,
         SitePreviewScreenListener,
         OnSkipClickedListener,
-        OnHelpClickedListener {
+        OnHelpClickedListener,
+        BasicDialogPositiveClickInterface,
+        BasicDialogNegativeClickInterface {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var mainViewModel: NewSiteCreationMainVM
 
     override fun attachBaseContext(newBase: Context?) {
@@ -95,6 +101,21 @@ class NewSiteCreationActivity : AppCompatActivity(),
                 finish()
             }
         })
+        mainViewModel.dialogActionObservable.observe(this, Observer { dialogHolder ->
+            dialogHolder?.let {
+                val supportFragmentManager = requireNotNull(supportFragmentManager) {
+                    "FragmentManager can't be null at this point"
+                }
+                dialogHolder.show(this, supportFragmentManager, uiHelpers)
+            }
+        })
+        mainViewModel.exitFlowObservable.observe(this, Observer {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+        })
+        mainViewModel.onBackPressedObservable.observe(this, Observer {
+            super.onBackPressed()
+        })
     }
 
     override fun onSegmentSelected(segmentId: Long) {
@@ -107,6 +128,10 @@ class NewSiteCreationActivity : AppCompatActivity(),
 
     override fun onDomainSelected(domain: String) {
         mainViewModel.onDomainsScreenFinished(domain)
+    }
+
+    override fun onSiteCreationCompleted() {
+        mainViewModel.onSiteCreationCompleted()
     }
 
     override fun onSitePreviewScreenDismissed(createSiteState: CreateSiteState) {
@@ -168,6 +193,14 @@ class NewSiteCreationActivity : AppCompatActivity(),
         fragmentTransaction.commit()
     }
 
+    override fun onPositiveClicked(instanceTag: String) {
+        mainViewModel.onPositiveDialogButtonClicked(instanceTag)
+    }
+
+    override fun onNegativeClicked(instanceTag: String) {
+        mainViewModel.onNegativeDialogButtonClicked(instanceTag)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
@@ -177,9 +210,6 @@ class NewSiteCreationActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        if (!mainViewModel.shouldSuppressBackPress()) {
-            mainViewModel.onBackPressed()
-            super.onBackPressed()
-        }
+        mainViewModel.onBackPressed()
     }
 }
