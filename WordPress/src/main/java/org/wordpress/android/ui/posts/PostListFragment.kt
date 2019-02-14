@@ -312,6 +312,11 @@ class PostListFragment : Fragment() {
 
     fun handleEditPostResult(resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
+            if (data != null && EditPostActivity.checkAndRestart(nonNullActivity, data, site)) {
+                // a restart will happen so, no need to continue here
+                return
+            }
+
             viewModel.handleEditPostResult(data)
         }
     }

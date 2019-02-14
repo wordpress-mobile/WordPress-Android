@@ -735,7 +735,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 final SiteModel site = getSelectedSite();
                 final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
-                if (EditPostActivity.checkAndRestart(this, data, post, site)) {
+                if (EditPostActivity.checkAndRestart(this, data, site)) {
                     // a restart will happen so, no need to continue here
                     break;
                 }

@@ -349,7 +349,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     public static boolean checkAndRestart(@NonNull final Activity activity,
                                           @NonNull Intent data,
-                                          final PostModel post,
                                           @NonNull final SiteModel site) {
         RestartEditorOptions restartEditorOptions =
                 !data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR) ? RestartEditorOptions.NO_RESTART
@@ -360,7 +359,8 @@ public class EditPostActivity extends AppCompatActivity implements
             Intent intent = new Intent(activity, EditPostActivity.class);
             intent.putExtra(EXTRA_RESTART_EDITOR, restartEditorOptions.name());
 
-            if (post == null) {
+            final int postLocalId = data.getIntExtra(EXTRA_POST_LOCAL_ID, 0);
+            if (postLocalId == 0) {
                 if (data.getBooleanExtra(EXTRA_IS_PAGE, false)) {
 //                    ActivityLauncher
 //                            .addNewPageForResult(intent, activity, site, data.getBooleanExtra(EXTRA_IS_PROMO, false));
@@ -369,7 +369,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             .addNewPostForResult(intent, activity, site, data.getBooleanExtra(EXTRA_IS_PROMO, false));
                 }
             } else {
-                ActivityLauncher.editPostOrPageForResult(intent, activity, site, post);
+                ActivityLauncher.editPostOrPageForResult(intent, activity, site, postLocalId);
             }
 
             // signal that the restart will happen
