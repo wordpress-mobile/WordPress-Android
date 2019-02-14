@@ -1131,8 +1131,8 @@ public class EditPostActivity extends AppCompatActivity implements
         //  since it extracts the content from the editor, which can be slow in Gutenberg at the time of writing.
         boolean hasBlocks = false;
         try {
-            hasBlocks =
-                    PostUtils.contentContainsGutenbergBlocks((String) mEditorFragment.getContent(mPost.getContent()));
+            final String content = (String) mEditorFragment.getContent(mPost.getContent());
+            hasBlocks = PostUtils.contentContainsGutenbergBlocks(content) || TextUtils.isEmpty(content);
         } catch (EditorFragmentNotAddedException e) {
             // legacy exception; just ignore.
         }
