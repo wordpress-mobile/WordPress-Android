@@ -4,13 +4,14 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
-import org.wordpress.android.analytics.AnalyticsTracker.track
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -23,8 +24,10 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -40,6 +43,7 @@ class StatsViewModel
     @Named(YEAR_STATS_USE_CASE) private val yearStatsUseCase: BaseListUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val selectedDateProvider: SelectedDateProvider,
+    private val statsDateFormatter: StatsDateFormatter,
     private val statsSectionManager: SelectedSectionManager,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ScopedViewModel(mainDispatcher) {
@@ -55,15 +59,28 @@ class StatsViewModel
 
     val selectedDateChanged = selectedDateProvider.selectedDateChanged
 
-    fun start(site: SiteModel) {
+    private val mutableShowDateSelector = MutableLiveData<DateSelectorUiModel>()
+    val showDateSelector: LiveData<DateSelectorUiModel> = mutableShowDateSelector
+
+    fun start(site: SiteModel, launchedFromWidget: Boolean, initialSection: StatsSection?) {
         // Check if VM is not already initialized
         if (!isInitialized) {
             isInitialized = true
 
             this.site = site
 
+            initialSection?.let { statsSectionManager.setSelectedSection(it) }
+
             loadStats()
+
+            if (launchedFromWidget) {
+                analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
+            }
         }
+        if (showDateSelector.value == null) {
+            mutableShowDateSelector.value = DateSelectorUiModel(false)
+        }
+        updateDateSelector()
     }
 
     private fun loadStats() {
@@ -106,12 +123,29 @@ class StatsViewModel
     }
 
     fun onSelectedDateChange(statsGranularity: StatsGranularity) {
-        loadData {
+        launch {
             when (statsGranularity) {
                 DAYS -> dayStatsUseCase.refreshData(site)
                 WEEKS -> weekStatsUseCase.refreshData(site)
                 MONTHS -> monthStatsUseCase.refreshData(site)
                 YEARS -> yearStatsUseCase.refreshData(site)
+            }
+        }
+        updateDateSelector()
+    }
+
+    fun onNextDateSelected() {
+        launch(Dispatchers.Default) {
+            statsSectionManager.getSelectedSection().toStatsGranularity()?.let { statsGranularity ->
+                selectedDateProvider.selectNextDate(statsGranularity)
+            }
+        }
+    }
+
+    fun onPreviousDateSelected() {
+        launch(Dispatchers.Default) {
+            statsSectionManager.getSelectedSection().toStatsGranularity()?.let { statsGranularity ->
+                selectedDateProvider.selectPreviousDate(statsGranularity)
             }
         }
     }
@@ -120,6 +154,7 @@ class StatsViewModel
 
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
+        updateDateSelector(statsSection)
         when (statsSection) {
             StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
             StatsSection.DAYS -> analyticsTracker.track(STATS_PERIOD_DAYS_ACCESSED)
@@ -129,8 +164,66 @@ class StatsViewModel
         }
     }
 
+    private fun updateDateSelector(statsSection: StatsSection = statsSectionManager.getSelectedSection()) {
+        val shouldShowDateSelection = statsSection != INSIGHTS
+
+        val updatedDate = getDateLabelForSection(statsSection)
+        val currentState = showDateSelector.value
+        val statsGranularity = statsSection.toStatsGranularity()
+        if ((!shouldShowDateSelection && currentState?.isVisible != false) || statsGranularity == null) {
+            emitValue(currentState, DateSelectorUiModel(false))
+        } else {
+            val updatedState = DateSelectorUiModel(
+                    shouldShowDateSelection,
+                    updatedDate,
+                    enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsGranularity),
+                    enableSelectNext = selectedDateProvider.hasNextData(statsGranularity)
+            )
+            emitValue(currentState, updatedState)
+        }
+    }
+
+    private fun emitValue(
+        currentState: DateSelectorUiModel?,
+        updatedState: DateSelectorUiModel
+    ) {
+        if (currentState == null ||
+                currentState.isVisible != updatedState.isVisible ||
+                currentState.date != updatedState.date ||
+                currentState.enableSelectNext != updatedState.enableSelectNext ||
+                currentState.enableSelectPrevious != updatedState.enableSelectPrevious) {
+            mutableShowDateSelector.value = updatedState
+        }
+    }
+
+    private fun getDateLabelForSection(statsSection: StatsSection): String? {
+        return statsSection.toStatsGranularity()?.let { statsGranularity ->
+            statsDateFormatter.printGranularDate(
+                    selectedDateProvider.getSelectedDate(statsGranularity) ?: selectedDateProvider.getCurrentDate(),
+                    statsGranularity
+            )
+        }
+    }
+
+    private fun StatsSection.toStatsGranularity(): StatsGranularity? {
+        return when (this) {
+            INSIGHTS -> null
+            StatsSection.DAYS -> DAYS
+            StatsSection.WEEKS -> WEEKS
+            StatsSection.MONTHS -> MONTHS
+            StatsSection.YEARS -> YEARS
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         selectedDateProvider.clear()
     }
+
+    data class DateSelectorUiModel(
+        val isVisible: Boolean = false,
+        val date: String? = null,
+        val enableSelectPrevious: Boolean = false,
+        val enableSelectNext: Boolean = false
+    )
 }

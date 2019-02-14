@@ -102,29 +102,6 @@ class LatestPostSummaryMapperTest {
     }
 
     @Test
-    fun `builds columns item with formatted items`() {
-        val postLikeCount = 20000
-        val postCommentCount = 15000000
-        val postViewsCount = 10
-
-        val columnItem = mapper.buildColumnItem(postViewsCount, postLikeCount, postCommentCount)
-
-        columnItem.headers.apply {
-            assertThat(this).hasSize(3)
-            assertThat(this[0]).isEqualTo(R.string.stats_views)
-            assertThat(this[1]).isEqualTo(R.string.stats_likes)
-            assertThat(this[2]).isEqualTo(R.string.stats_comments)
-        }
-
-        columnItem.values.apply {
-            assertThat(this).hasSize(3)
-            assertThat(this[0]).isEqualTo("10")
-            assertThat(this[1]).isEqualTo("20k")
-            assertThat(this[2]).isEqualTo("15M")
-        }
-    }
-
-    @Test
     fun `builds chart item with parsed date`() {
         val unparsedDate = "2018-01-01"
         val parsedDate = "Jan 1, 2018"

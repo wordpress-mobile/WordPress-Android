@@ -14,6 +14,8 @@ import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceStat
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -55,7 +57,7 @@ class NewSiteCreationServiceManager @Inject constructor(
         }
 
         if (NewSiteCreationServiceState(phaseToExecute).isTerminal) {
-            this.serviceListener.logError("IllegalState: NewSiteCreationService can't resume a terminal step!")
+            AppLog.e(T.SITE_CREATION, "IllegalState: NewSiteCreationService can't resume a terminal step!")
         } else {
             executePhase(phaseToExecute)
         }
@@ -79,7 +81,7 @@ class NewSiteCreationServiceManager @Inject constructor(
             SUCCESS -> updateServiceState(SUCCESS, newSiteRemoteId)
             FAILURE -> {
                 val currentState = serviceListener.getCurrentState()
-                serviceListener.logError(
+                AppLog.e(T.SITE_CREATION,
                         "NewSiteCreationService entered state FAILURE while on step: ${currentState?.step?.name}"
                 )
                 updateServiceState(FAILURE, currentState)
@@ -89,25 +91,26 @@ class NewSiteCreationServiceManager @Inject constructor(
 
     private fun createSite() {
         launch {
-            serviceListener.logInfo(
+            AppLog.i(
+                    T.SITE_CREATION,
                     "Dispatching Create Site Action, title: ${siteData.siteTitle}, SiteName: ${siteData.domain}"
             )
             val createSiteEvent: OnNewSiteCreated
             try {
                 createSiteEvent = createSiteUseCase.createSite(siteData, languageId)
             } catch (e: IllegalStateException) {
-                serviceListener.logError(e.message ?: "Unexpected error.")
+                AppLog.e(T.SITE_CREATION, e.message ?: "Unexpected error.")
                 executePhase(FAILURE)
                 return@launch
             }
 
             newSiteRemoteId = createSiteEvent.newSiteRemoteId
-            serviceListener.logInfo(createSiteEvent.toString())
+            AppLog.i(T.SITE_CREATION, createSiteEvent.toString())
             if (createSiteEvent.isError) {
                 if (createSiteEvent.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {
                     if (isRetry) {
                         // Move to the next step. The site was already created on the server by our previous attempt.
-                        serviceListener.logWarning(
+                        AppLog.w(T.SITE_CREATION,
                                 "WPCOM site already created but we are in retrying mode so, just move on."
                         )
                         executePhase(SUCCESS)
@@ -118,7 +121,7 @@ class NewSiteCreationServiceManager @Inject constructor(
                          * the first got it.
                          */
                         val errorMsg = "Site already exists - seems like an issue with domain suggestions endpoint"
-                        serviceListener.logError(errorMsg)
+                        AppLog.e(T.SITE_CREATION, errorMsg)
                         throw IllegalStateException(errorMsg)
                     }
                 } else {
@@ -144,14 +147,5 @@ class NewSiteCreationServiceManager @Inject constructor(
         fun getCurrentState(): NewSiteCreationServiceState?
 
         fun updateState(state: NewSiteCreationServiceState)
-
-        // TODO replace with an injectable AppLog
-        fun logError(message: String)
-
-        // TODO replace with an injectable AppLog
-        fun logWarning(message: String)
-
-        // TODO replace with an injectable AppLog
-        fun logInfo(message: String)
     }
 }
