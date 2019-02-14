@@ -142,8 +142,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            String localeString = getResources().getConfiguration().locale.getLanguage();
             GutenbergContainerFragment gutenbergContainerFragment =
-                    GutenbergContainerFragment.newInstance(isNewPost, this.getTranslations());
+                    GutenbergContainerFragment.newInstance(isNewPost, localeString, this.getTranslations());
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();

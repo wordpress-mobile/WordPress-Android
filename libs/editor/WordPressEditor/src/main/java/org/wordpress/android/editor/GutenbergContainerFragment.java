@@ -13,6 +13,7 @@ public class GutenbergContainerFragment extends Fragment {
     public static final String TAG = "gutenberg_container_fragment_tag";
 
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
+    private static final String ARG_LOCALE = "param_locale";
     private static final String ARG_TRANSLATIONS = "param_translations";
 
     private boolean mHtmlModeEnabled;
@@ -20,10 +21,11 @@ public class GutenbergContainerFragment extends Fragment {
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
 
-    public static GutenbergContainerFragment newInstance(boolean isNewPost, Bundle translations) {
+    public static GutenbergContainerFragment newInstance(boolean isNewPost, String localeString, Bundle translations) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
+        args.putString(ARG_LOCALE, localeString);
         args.putBundle(ARG_TRANSLATIONS, translations);
         fragment.setArguments(args);
         return fragment;
@@ -43,6 +45,7 @@ public class GutenbergContainerFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         boolean isNewPost = getArguments() != null && getArguments().getBoolean(ARG_IS_NEW_POST);
+        String localeString = getArguments().getString(ARG_LOCALE);
         Bundle translations = getArguments().getBundle(ARG_TRANSLATIONS);
 
         mWPAndroidGlueCode = new WPAndroidGlueCode();
@@ -54,6 +57,7 @@ public class GutenbergContainerFragment extends Fragment {
                 BuildConfig.DEBUG,
                 BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
                 isNewPost,
+                localeString,
                 translations);
 
         // clear the content initialization flag since a new ReactRootView has been created;
