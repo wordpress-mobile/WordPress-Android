@@ -59,7 +59,4 @@
     <item name="spacing_multiplier_body" format="float" type="dimen">1.2</item>
 
     <dimen name="aztec_title_size">24sp</dimen>
-
-    <dimen name="text_small">12sp</dimen>
-
 </resources>

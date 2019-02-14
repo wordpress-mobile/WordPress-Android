@@ -47,6 +47,7 @@ fun BarChart.draw(
     } else {
         buildEmptyDataSet(context, cut.size)
     }
+    item.onBarChartDrawn?.invoke(dataSet.entryCount)
     data = if (hasData && item.onBarSelected != null) {
         BarData(dataSet, getHighlightDataSet(context, mappedEntries))
     } else {
@@ -83,11 +84,11 @@ fun BarChart.draw(
         axisMaximum = if (maxYValue < MIN_VALUE) {
             MIN_VALUE
         } else {
-            maxYValue.toFloat()
+            maxYValue.toFloat() * 1.1f
         }
         textColor = greyColor
         gridColor = lightGreyColor
-        textSize = 12f
+        textSize = 10f
         gridLineWidth = 1f
     }
     axisRight.apply {
@@ -114,13 +115,15 @@ fun BarChart.draw(
         setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
                 item.selectedItem
-                highlightColumn(cut.indexOfFirst { it.id == item.selectedItem })
+                val index = cut.indexOfFirst { it.id == item.selectedItem }
+                highlightColumn(index)
                 item.onBarSelected?.invoke(item.selectedItem)
             }
 
             override fun onValueSelected(e: Entry, h: Highlight) {
                 val value = (e as? BarEntry)?.data as? String
-                highlightColumn(e.x.toInt())
+                val index = e.x.toInt()
+                highlightColumn(index)
                 item.onBarSelected?.invoke(value)
             }
         })

@@ -104,6 +104,10 @@ public class InstallationReferrerServiceLogic {
                         // if this is retried but the error persists
                         AppLog.i(T.UTILS, "installation referrer: service unavailable");
                         break;
+                    case InstallReferrerResponse.DEVELOPER_ERROR:
+                        break;
+                    case InstallReferrerResponse.SERVICE_DISCONNECTED:
+                        break;
                 }
 
                 stopService();

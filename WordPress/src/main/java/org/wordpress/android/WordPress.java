@@ -75,6 +75,7 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
@@ -347,6 +348,14 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // or other notification behaviors after this
             notificationManager.createNotificationChannel(importantChannel);
 
+            // Create the REMINDER channel (used for various reminders, like Quick Start, etc.)
+            NotificationChannel reminderChannel = new NotificationChannel(
+                    getString(R.string.notification_channel_reminder_id),
+                    getString(R.string.notification_channel_reminder_title), NotificationManager.IMPORTANCE_LOW);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager.createNotificationChannel(reminderChannel);
+
             // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
             // or media upload)
             NotificationChannel transientChannel = new NotificationChannel(
@@ -576,6 +585,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // Reset Notifications Data
         NotificationsTable.reset();
+
+        // Cancel QuickStart reminders
+        QuickStartUtils.cancelQuickStartReminder(context);
     }
 
     private static String mDefaultUserAgent;
