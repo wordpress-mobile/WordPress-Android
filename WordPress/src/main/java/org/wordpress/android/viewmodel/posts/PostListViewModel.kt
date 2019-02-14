@@ -569,23 +569,23 @@ class PostListViewModel @Inject constructor(
             properties["post_id"] = postData.remotePostId
         }
 
-        when (buttonType) {
+        properties["action"] = when (buttonType) {
             PostListButton.BUTTON_EDIT -> {
-                properties["action"] = "edit"
                 properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils
                         .contentContainsGutenbergBlocks(postData.content)
+                "edit"
             }
-            PostListButton.BUTTON_RETRY -> properties["action"] = "retry"
-            PostListButton.BUTTON_SUBMIT -> properties["action"] = "submit"
-            PostListButton.BUTTON_VIEW -> properties["action"] = "view"
-            PostListButton.BUTTON_PREVIEW -> properties["action"] = "preview"
-            PostListButton.BUTTON_STATS -> properties["action"] = "stats"
-            PostListButton.BUTTON_TRASH -> properties["action"] = "trash"
-            PostListButton.BUTTON_DELETE -> properties["action"] = "delete"
-            PostListButton.BUTTON_PUBLISH -> properties["action"] = "publish"
-            PostListButton.BUTTON_SYNC -> properties["action"] = "sync"
-            PostListButton.BUTTON_MORE -> properties["action"] = "more"
-            PostListButton.BUTTON_BACK -> properties["action"] = "back"
+            PostListButton.BUTTON_RETRY -> "retry"
+            PostListButton.BUTTON_SUBMIT -> "submit"
+            PostListButton.BUTTON_VIEW -> "view"
+            PostListButton.BUTTON_PREVIEW -> "preview"
+            PostListButton.BUTTON_STATS -> "stats"
+            PostListButton.BUTTON_TRASH -> "trash"
+            PostListButton.BUTTON_DELETE -> "delete"
+            PostListButton.BUTTON_PUBLISH -> "publish"
+            PostListButton.BUTTON_SYNC -> "sync"
+            PostListButton.BUTTON_MORE -> "more"
+            PostListButton.BUTTON_BACK -> "back"
             else -> AppLog.e(AppLog.T.POSTS, "Unknown button type")
         }
 
@@ -752,8 +752,10 @@ class PostListViewModel @Inject constructor(
         val onDismissAction = {
             originalPostCopyForConflictUndo = null
         }
-        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_local_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        val snackbarHolder = SnackbarMessageHolder(
+                R.string.snackbar_conflict_local_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+        )
         _snackbarAction.postValue(snackbarHolder)
     }
 
@@ -787,8 +789,10 @@ class PostListViewModel @Inject constructor(
                 dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
             }
         }
-        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_web_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        val snackbarHolder = SnackbarMessageHolder(
+                R.string.snackbar_conflict_web_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+        )
         _snackbarAction.postValue(snackbarHolder)
     }
 
