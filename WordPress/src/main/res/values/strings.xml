@@ -349,9 +349,9 @@
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.
-        Switch back to Classic at any time by tapping &#8942; in the top bar.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Post.
-        Switch back to Classic at any time by tapping &#8942; in the top bar.</string>
+        Switch back to Classic at any time by tapping&#160;&#160;&#8942;&#160;&#160;in the top bar.</string>
+    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Page.
+        Switch back to Classic at any time by tapping&#160;&#160;&#8942;&#160;&#160;in the top bar.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
