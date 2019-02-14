@@ -24,6 +24,9 @@ import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
+import org.wordpress.android.fluxc.store.ListStore.OnListChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
+import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 
 private fun onlyOnce() = times(1)
@@ -125,6 +128,18 @@ class PagedListWrapperTest {
         testListStateIsPropagatedCorrectly(ListState.ERROR, ListError(GENERIC_ERROR))
     }
 
+    @Test
+    fun `onListChanged invokes invalidate property`() {
+        triggerOnListChanged()
+        verify(mockInvalidate, onlyOnce()).invoke()
+    }
+
+    @Test
+    fun `onListChanged invokes updates isEmpty`() {
+        triggerOnListChanged()
+        verify(mockIsListEmpty, times(2)).invoke()
+    }
+
     private fun testListStateIsPropagatedCorrectly(listState: ListState, listError: ListError? = null) {
         val pagedListWrapper = createPagedListWrapper()
         val isFetchingFirstPageObserver = mock<Observer<Boolean>>()
@@ -146,5 +161,18 @@ class PagedListWrapperTest {
         val captor = ArgumentCaptor.forClass(T::class.java)
         verify(observer, onlyOnce()).onChanged(captor.capture())
         assertThat(captor.firstValue).isEqualTo(result)
+    }
+
+    private fun triggerOnListChanged(
+        causeOfListChange: CauseOfListChange = FIRST_PAGE_FETCHED,
+        error: ListError? = null
+    ) {
+        val pagedListWrapper = createPagedListWrapper()
+        val event = OnListChanged(
+                listDescriptors = listOf(mockListDescriptor),
+                causeOfChange = causeOfListChange,
+                error = error
+        )
+        pagedListWrapper.onListChanged(event)
     }
 }
