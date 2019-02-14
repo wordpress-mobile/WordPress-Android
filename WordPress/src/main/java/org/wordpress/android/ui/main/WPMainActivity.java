@@ -101,6 +101,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.List;
@@ -315,6 +316,9 @@ public class WPMainActivity extends AppCompatActivity implements
             GCMRegistrationIntentService.enqueueWork(this,
                     new Intent(this, GCMRegistrationIntentService.class));
         }
+
+        AppRatingDialog.INSTANCE.init(this);
+        AppRatingDialog.INSTANCE.showRateDialogIfNeeded(this);
     }
 
     public boolean isGooglePlayServicesAvailable(Activity activity) {
