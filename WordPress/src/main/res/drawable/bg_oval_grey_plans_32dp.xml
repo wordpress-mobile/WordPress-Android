@@ -25,7 +25,7 @@
     </item>
 
     <item
-        android:drawable="@drawable/ic_user_white_24dp" >
+        android:drawable="@drawable/ic_plans_white_24dp" >
     </item>
 
 </layer-list>
