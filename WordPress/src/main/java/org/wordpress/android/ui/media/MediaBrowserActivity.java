@@ -83,6 +83,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1007,6 +1008,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         UploadService.uploadMedia(this, mediaModels);
+        AppRatingDialog.INSTANCE.incrementInteractions();
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {
