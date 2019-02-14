@@ -14,9 +14,9 @@ import org.wordpress.android.R
  */
 class BasicFragmentDialog : AppCompatDialogFragment() {
     private lateinit var mTag: String
-    private lateinit var mTitle: String
     private lateinit var mMessage: String
     private lateinit var mPositiveButtonLabel: String
+    private var mTitle: String? = null
     private var mNegativeButtonLabel: String? = null
     private var mCancelButtonLabel: String? = null
     private var dismissedByPositiveButton = false
@@ -37,7 +37,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
 
     fun initialize(
         tag: String,
-        title: String,
+        title: String?,
         message: String,
         positiveButtonLabel: String,
         negativeButtonLabel: String? = null,
@@ -79,8 +79,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = Builder(ContextThemeWrapper(activity, R.style.Calypso_Dialog_Alert))
-        builder.setTitle(mTitle)
-                .setMessage(mMessage)
+        builder.setMessage(mMessage)
                 .setPositiveButton(mPositiveButtonLabel) { _, _ ->
                     dismissedByPositiveButton = true
                     val activity = activity
@@ -88,6 +87,10 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
                         (activity as BasicDialogPositiveClickInterface).onPositiveClicked(mTag)
                     }
                 }.setCancelable(true)
+
+        mTitle?.let {
+            builder.setTitle(mTitle)
+        }
 
         mNegativeButtonLabel?.let {
             builder.setNegativeButton(mNegativeButtonLabel) { _, _ ->
