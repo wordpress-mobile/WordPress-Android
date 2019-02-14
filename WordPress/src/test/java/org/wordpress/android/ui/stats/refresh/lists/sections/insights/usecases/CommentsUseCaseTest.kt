@@ -50,7 +50,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     private val user = "John Smith"
     private val url = "www.url.com"
     private val totalCount = 50
-    private val pageSize = 6
+    private val blockItemCount = 6
     @Before
     fun setUp() {
         useCase = CommentsUseCase(
@@ -64,7 +64,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps posts comments to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
                                 listOf(Post(postId, postTitle, totalCount, url)),
@@ -90,7 +90,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `adds link to UI model when has more posts`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
                                 listOf(Post(postId, postTitle, totalCount, url)),
@@ -114,7 +114,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `adds link to UI model when has more authors`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
                                 listOf(Post(postId, postTitle, totalCount, url)),
@@ -138,7 +138,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps comment authors to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
                                 listOf(),
@@ -165,7 +165,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty comments to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(listOf(), listOf(), hasMorePosts = false, hasMoreAuthors = false)
                 )
@@ -181,7 +181,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(insightsStore.fetchComments(site, FetchMode.Top(pageSize), forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, FetchMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )

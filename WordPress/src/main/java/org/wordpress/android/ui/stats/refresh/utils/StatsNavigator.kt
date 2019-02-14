@@ -33,13 +33,13 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCatego
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
 import org.wordpress.android.util.ToastUtils
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class StatsNavigator(
-    private val site: SiteModel,
-    private val activity: FragmentActivity,
-    private val statsDateFormatter: StatsDateFormatter
-) {
-    fun navigate(target: NavigationTarget) {
+@Singleton
+class StatsNavigator
+@Inject constructor(private val statsDateFormatter: StatsDateFormatter) {
+    fun navigate(site: SiteModel, activity: FragmentActivity, target: NavigationTarget) {
         when (target) {
             is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, site, false)
             is ViewPost -> {

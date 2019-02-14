@@ -35,8 +35,8 @@ class StatsListFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
+    @Inject lateinit var navigator: StatsNavigator
     private lateinit var viewModel: StatsListViewModel
-    private lateinit var navigator: StatsNavigator
 
     private var layoutManager: LayoutManager? = null
 
@@ -123,12 +123,10 @@ class StatsListFragment : DaggerFragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
-        this.navigator = StatsNavigator(site, activity, statsDateFormatter)
-
-        setupObservers()
+        setupObservers(site, activity)
     }
 
-    private fun setupObservers() {
+    private fun setupObservers(site: SiteModel, activity: FragmentActivity) {
         viewModel.data.observe(this, Observer {
             if (it != null) {
                 updateInsights(it)
@@ -136,7 +134,7 @@ class StatsListFragment : DaggerFragment() {
         })
 
         viewModel.navigationTarget.observeEvent(this) { target ->
-            navigator.navigate(target)
+            navigator.navigate(site, activity, target)
             return@observeEvent true
         }
     }
