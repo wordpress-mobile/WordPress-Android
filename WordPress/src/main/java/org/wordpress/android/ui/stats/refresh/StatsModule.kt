@@ -176,8 +176,8 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton TagsAndCategoriesUseCase that represents the Followers View all screen
-     * @param tagsAndCategoriesUseCaseFactory build the use cases for the Followers
+     * Provides a singleton TagsAndCategoriesUseCase for the Tags and categories View all screen
+     * @param tagsAndCategoriesUseCaseFactory build the use cases for the tags and categories
      */
     @Provides
     @Singleton
