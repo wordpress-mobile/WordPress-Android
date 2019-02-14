@@ -1124,6 +1124,22 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
 
+        MenuItem switchToAztecMenuItem = menu.findItem(R.id.menu_switch_to_aztec);
+        switchToAztecMenuItem.setVisible(mShowGutenbergEditor);
+
+        // Check whether the content has blocks. Warning: this can be a very slow operation if the post if big/complex
+        //  since it extracts the content from the editor, which can be slow in Gutenberg at the time of writing.
+        boolean hasBlocks = false;
+        try {
+            hasBlocks =
+                    PostUtils.contentContainsGutenbergBlocks((String) mEditorFragment.getContent(mPost.getContent()));
+        } catch (EditorFragmentNotAddedException e) {
+            // legacy exception; just ignore.
+        }
+
+        MenuItem switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg);
+        switchToGutenbergMenuItem.setVisible(!mShowGutenbergEditor && hasBlocks);
+
         return super.onPrepareOptionsMenu(menu);
     }
 
