@@ -106,6 +106,13 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
+
+            val nonNullActivity = checkNotNull(activity)
+            if (EditPostActivity.checkAndRestart(nonNullActivity, data, viewModel.site)) {
+                // a restart will happen so, no need to continue here
+                return
+            }
+
             val wasPageUpdated = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false)
             if (pageId != -1L) {
                 onPageEditFinished(pageId, wasPageUpdated)
