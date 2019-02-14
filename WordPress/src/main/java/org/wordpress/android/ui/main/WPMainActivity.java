@@ -78,7 +78,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeCli
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.EditPostActivity.EditorRestarter;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -724,29 +723,6 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-    private boolean restartEditorIfRequested(final Intent data, final SiteModel site) {
-        if (data == null) {
-            return false;
-        }
-
-        return EditPostActivity.checkAndRestart(this, data, new EditorRestarter() {
-            @Override
-            public void doEditPostOrPageForResult(Intent data, int postLocalId) {
-                ActivityLauncher.editPostOrPageForResult(data, WPMainActivity.this, site, postLocalId);
-            }
-
-            @Override
-            public void doAddNewPostOrPageForResult(Intent data, boolean isPromo, boolean isPage) {
-                if (isPage) {
-                    // we don't launch the new-page UI from the main screen so, ignore this case
-                    return;
-                }
-
-                ActivityLauncher.addNewPostForResult(data, WPMainActivity.this, site, isPromo);
-            }
-        });
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -759,7 +735,10 @@ public class WPMainActivity extends AppCompatActivity implements
                 final SiteModel site = getSelectedSite();
                 final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
-                if (restartEditorIfRequested(data, site)) {
+                if (EditPostActivity.checkToRestart(data)) {
+                    ActivityLauncher.editPostOrPageForResult(data, WPMainActivity.this, site,
+                            data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+
                     // a restart will happen so, no need to continue here
                     break;
                 }

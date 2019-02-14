@@ -348,47 +348,35 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     };
 
-    public interface EditorRestarter {
-        void doEditPostOrPageForResult(@NonNull Intent data,
-                                       int postLocalId);
-
-        void doAddNewPostOrPageForResult(@NonNull Intent data,
-                                         boolean isPromo,
-                                         boolean isPage);
-    }
-
-    public static boolean checkAndRestart(@NonNull final Activity activity,
-                                          @NonNull Intent data,
-                                          EditorRestarter editorRestarter) {
-        RestartEditorOptions restartEditorOptions =
-                !data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR) ? RestartEditorOptions.NO_RESTART
-                        : RestartEditorOptions.valueOf(data.getStringExtra(EditPostActivity.EXTRA_RESTART_EDITOR));
-        if (restartEditorOptions != RestartEditorOptions.NO_RESTART) {
-            // the editor said it wants to restart...
-
-            Intent intent = new Intent(activity, EditPostActivity.class);
-            intent.putExtra(EXTRA_RESTART_EDITOR, restartEditorOptions.name());
-
-            final int postLocalId = data.getIntExtra(EXTRA_POST_LOCAL_ID, 0);
-            final boolean isNewPost = data.getBooleanExtra(EXTRA_IS_NEW_POST, false);
-            if (postLocalId == 0 || isNewPost) {
-                editorRestarter.doAddNewPostOrPageForResult(intent, data.getBooleanExtra(EXTRA_IS_PROMO, false),
-                        data.getBooleanExtra(EXTRA_IS_PAGE, false));
-            } else {
-                editorRestarter.doEditPostOrPageForResult(intent, postLocalId);
-            }
-
-            // signal that the restart will happen
-            return true;
-        }
-
-        // no restart
-        return false;
+    public static boolean checkToRestart(@NonNull Intent data) {
+        return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
+               && RestartEditorOptions.valueOf(data.getStringExtra(EditPostActivity.EXTRA_RESTART_EDITOR))
+                  != RestartEditorOptions.NO_RESTART;
     }
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    private void newPostSetup() {
+        mIsNewPost = true;
+
+        if (mSite == null) {
+            showErrorAndFinish(R.string.blog_not_found);
+            return;
+        }
+        if (!mSite.isVisible()) {
+            showErrorAndFinish(R.string.error_blog_hidden);
+            return;
+        }
+
+        // Create a new post
+        mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
+        mPost.setStatus(PostStatus.PUBLISHED.toString());
+        EventBus.getDefault().postSticky(
+                new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
+        mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
     }
 
     @Override
@@ -429,6 +417,7 @@ public class EditPostActivity extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
+        boolean isRestarting = !RestartEditorOptions.NO_RESTART.name().equals(extras.getString(EXTRA_RESTART_EDITOR));
         if (savedInstanceState == null) {
             if (!getIntent().hasExtra(EXTRA_POST_LOCAL_ID)
                 || Intent.ACTION_SEND.equals(action)
@@ -444,28 +433,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (extras != null) {
                     mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 }
-                mIsNewPost = true;
-
-                if (mSite == null) {
-                    showErrorAndFinish(R.string.blog_not_found);
-                    return;
-                }
-                if (!mSite.isVisible()) {
-                    showErrorAndFinish(R.string.error_blog_hidden);
-                    return;
-                }
-
-                // Create a new post
-                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
-                mPost.setStatus(PostStatus.PUBLISHED.toString());
-                EventBus.getDefault().postSticky(
-                        new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
-                mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
+                newPostSetup();
             } else if (extras != null) {
                 // Load post passed in extras
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
+
                 if (mPost != null) {
                     initializePostObject();
+                } else if (isRestarting) {
+                    newPostSetup();
                 }
             }
         } else {

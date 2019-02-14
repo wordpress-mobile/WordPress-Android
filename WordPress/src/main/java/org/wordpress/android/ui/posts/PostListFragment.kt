@@ -24,7 +24,6 @@ import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.EditPostActivity.EditorRestarter
 import org.wordpress.android.ui.posts.PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -311,31 +310,12 @@ class PostListFragment : Fragment() {
         return view
     }
 
-    private fun restartEditorIfRequested(data: Intent?): Boolean {
-        if (data == null) {
-            return false
-        }
-
-        val nonNullActivity = checkNotNull(activity)
-        return EditPostActivity.checkAndRestart(nonNullActivity, data, object: EditorRestarter {
-            override fun doEditPostOrPageForResult(data: Intent, postLocalId: Int) {
-                ActivityLauncher.editPostOrPageForResult(data, nonNullActivity, site, postLocalId)
-            }
-
-            override fun doAddNewPostOrPageForResult(data: Intent, isPromo: Boolean, isPage: Boolean) {
-                if (isPage) {
-                    // we don't launch the new-page UI from the past list so, ignore this case
-                    return
-                }
-
-                ActivityLauncher.addNewPostForResult(data, nonNullActivity, site, isPromo)
-            }
-        })
-    }
-
     fun handleEditPostResult(resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
-            if (restartEditorIfRequested(data)) {
+            if (data != null && EditPostActivity.checkToRestart(data)) {
+                ActivityLauncher.editPostOrPageForResult(data, nonNullActivity, site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0))
+
                 // a restart will happen so, no need to continue here
                 return
             }
