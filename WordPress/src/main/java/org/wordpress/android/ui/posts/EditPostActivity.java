@@ -217,6 +217,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_IS_DISCARDABLE = "isDiscardable";
     public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
+    public static final String EXTRA_IS_NEW_POST = "isNewPost";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -360,7 +361,8 @@ public class EditPostActivity extends AppCompatActivity implements
             intent.putExtra(EXTRA_RESTART_EDITOR, restartEditorOptions.name());
 
             final int postLocalId = data.getIntExtra(EXTRA_POST_LOCAL_ID, 0);
-            if (postLocalId == 0) {
+            final boolean isNewPost = data.getBooleanExtra(EXTRA_IS_NEW_POST, false);
+            if (postLocalId == 0 || isNewPost) {
                 if (data.getBooleanExtra(EXTRA_IS_PAGE, false)) {
 //                    ActivityLauncher
 //                            .addNewPageForResult(intent, activity, site, data.getBooleanExtra(EXTRA_IS_PROMO, false));
@@ -1863,6 +1865,7 @@ public class EditPostActivity extends AppCompatActivity implements
         i.putExtra(EXTRA_POST_REMOTE_ID, mPost.getRemotePostId());
         i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
         i.putExtra(EXTRA_RESTART_EDITOR, mRestartEditorOption.name());
+        i.putExtra(EXTRA_IS_NEW_POST, mIsNewPost);
         setResult(RESULT_OK, i);
     }
 
