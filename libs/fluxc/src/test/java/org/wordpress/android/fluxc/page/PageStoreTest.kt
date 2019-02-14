@@ -150,7 +150,8 @@ class PageStoreTest {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(post)
         val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(post.id, post.remotePostId), 0)
-        val page = createPageFromPost(post, site, null)
+        val page = PageModel(site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
+                post.remotePostId, null, post.featuredImageId)
         var result: OnPostChanged? = null
         launch {
             result = store.deletePageFromServer(page)
@@ -173,7 +174,8 @@ class PageStoreTest {
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(null)
         val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(post.id, post.remotePostId), 0)
         event.error = PostError(UNKNOWN_POST)
-        val page = createPageFromPost(post, site, null)
+        val page = PageModel(site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
+            post.remotePostId, null, post.featuredImageId)
         var result: OnPostChanged? = null
         launch {
             result = store.deletePageFromServer(page)
@@ -283,10 +285,5 @@ class PageStoreTest {
         }
         page.remotePostId = remoteId
         return page
-    }
-
-    private fun createPageFromPost(post: PostModel, site: SiteModel, parent: PageModel? = null): PageModel {
-        return PageModel(site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
-                post.remotePostId, parent)
     }
 }

@@ -605,9 +605,18 @@ public class PostStore extends Store {
             Map<Long, PostModel> posts = getPostsByRemotePostIds(postIds, site);
             for (PostListItem item : payload.postListItems) {
                 PostModel post = posts.get(item.remotePostId);
-                // Dispatch a fetch action for the posts that are changed
                 if (post != null && !post.getLastModified().equals(item.lastModified)) {
-                    mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(new RemotePostPayload(post, site)));
+                    // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
+                    // as we'd otherwise overwrite and lose these local changes forever
+                    if (!post.isLocallyChanged()) {
+                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(new RemotePostPayload(post, site)));
+                    } else {
+                        // at this point we know there's a potential version conflict (the post has been modified
+                        // both locally and on the remote), so flag the local version of the Post so the
+                        // hosting app can inform the user and the user can decide and take action
+                        post.setRemoteLastModified(item.lastModified);
+                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+                    }
                 }
             }
         }

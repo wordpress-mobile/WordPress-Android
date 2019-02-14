@@ -51,6 +51,15 @@ import javax.inject.Singleton;
 @Singleton
 public class SiteStore extends Store {
     // Payloads
+    public static class CompleteQuickStartPayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public String variant;
+        public CompleteQuickStartPayload(@NonNull SiteModel site, String variant) {
+            this.site = site;
+            this.variant = variant;
+        }
+    }
+
     public static class RefreshSitesXMLRPCPayload extends Payload<BaseNetworkError> {
         public RefreshSitesXMLRPCPayload() {}
         public String username;
@@ -58,18 +67,32 @@ public class SiteStore extends Store {
         public String url;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class NewSitePayload extends Payload<BaseNetworkError> {
-        public String siteName;
-        public String siteTitle;
-        public String language;
-        public SiteVisibility visibility;
-        public boolean dryRun;
+        @NonNull public String siteName;
+        @NonNull public String siteTitle;
+        @NonNull public String language;
+        @NonNull public SiteVisibility visibility;
+        @Nullable public String verticalId;
+        @Nullable public Long segmentId;
+        @Nullable public String tagLine;
+        @NonNull public boolean dryRun;
+
         public NewSitePayload(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
-                              SiteVisibility visibility, boolean dryRun) {
+                              @NonNull SiteVisibility visibility, boolean dryRun) {
+            this(siteName, siteTitle, language, visibility, null, null, null, dryRun);
+        }
+
+        public NewSitePayload(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
+                              @NonNull SiteVisibility visibility, @Nullable String verticalId, @Nullable Long segmentId,
+                              @Nullable String tagLine, boolean dryRun) {
             this.siteName = siteName;
             this.siteTitle = siteTitle;
             this.language = language;
             this.visibility = visibility;
+            this.verticalId = verticalId;
+            this.segmentId = segmentId;
+            this.tagLine = tagLine;
             this.dryRun = dryRun;
         }
     }
@@ -848,6 +871,21 @@ public class SiteStore extends Store {
         }
     }
 
+    public enum CompleteQuickStartVariant {
+        NEXT_STEPS("next-steps");
+
+        private final String mString;
+
+        CompleteQuickStartVariant(final String s) {
+            mString = s;
+        }
+
+        @Override
+        public String toString() {
+            return mString;
+        }
+    }
+
     private SiteRestClient mSiteRestClient;
     private SiteXMLRPCClient mSiteXMLRPCClient;
 
@@ -1286,7 +1324,7 @@ public class SiteStore extends Store {
                 handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
                 break;
             case COMPLETE_QUICK_START:
-                completeQuickStart((SiteModel) action.getPayload());
+                completeQuickStart((CompleteQuickStartPayload) action.getPayload());
                 break;
             case COMPLETED_QUICK_START:
                 handleQuickStartCompleted((QuickStartCompletedResponsePayload) action.getPayload());
@@ -1450,7 +1488,7 @@ public class SiteStore extends Store {
 
     private void createNewSite(NewSitePayload payload) {
         mSiteRestClient.newSite(payload.siteName, payload.siteTitle, payload.language, payload.visibility,
-                payload.dryRun);
+                payload.verticalId, payload.segmentId, payload.tagLine, payload.dryRun);
     }
 
     private void handleCreateNewSiteCompleted(NewSiteResponsePayload payload) {
@@ -1637,8 +1675,8 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void completeQuickStart(@NonNull SiteModel site) {
-        mSiteRestClient.completeQuickStart(site);
+    private void completeQuickStart(@NonNull CompleteQuickStartPayload payload) {
+        mSiteRestClient.completeQuickStart(payload.site, payload.variant);
     }
 
     private void handleQuickStartCompleted(QuickStartCompletedResponsePayload payload) {
