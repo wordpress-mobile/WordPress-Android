@@ -184,6 +184,7 @@ public class AppPrefs {
         IS_INSTALLATION_REFERRER_OBTAINED,
 
         // used to indicate that user dont want to see the Gutenberg warning dialog anymore
+        // Deprecated, not used anymore
         IS_GUTENBERG_WARNING_DIALOG_DISABLED
     }
 
@@ -820,11 +821,4 @@ public class AppPrefs {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
     }
 
-    public static void setGutenbergWarningDialogDisabled(Boolean isDisabled) {
-        setBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, isDisabled);
-    }
-
-    public static boolean isGutenbergWarningDialogDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, false);
-    }
 }
