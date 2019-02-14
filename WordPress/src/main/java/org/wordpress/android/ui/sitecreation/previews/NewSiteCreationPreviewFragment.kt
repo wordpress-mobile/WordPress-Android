@@ -149,6 +149,9 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
         })
+        viewModel.onSiteCreationCompleted.observe(this, Observer {
+            sitePreviewScreenListener.onSiteCreationCompleted()
+        })
         viewModel.onOkButtonClicked.observe(this, Observer { createSiteState ->
             createSiteState?.let {
                 sitePreviewScreenListener.onSitePreviewScreenDismissed(createSiteState)

@@ -524,18 +524,6 @@ public class AppPrefs {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
     }
 
-    public static void setGlobalPlansFeatures(String jsonOfFeatures) {
-        if (jsonOfFeatures != null) {
-            setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
-        } else {
-            remove(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES);
-        }
-    }
-
-    public static String getGlobalPlansFeatures() {
-        return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
-    }
-
     public static boolean isInAppPurchaseRefreshRequired() {
         return getBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, false);
     }
@@ -648,7 +636,7 @@ public class AppPrefs {
     }
 
     public static boolean isGutenbergDefaultForNewPosts() {
-        return getBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, true);
+        return getBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, false);
     }
 
     public static void setGutenbergDefaultForNewPosts(boolean defaultForNewPosts) {

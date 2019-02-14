@@ -87,6 +87,9 @@ class NewSitePreviewViewModel @Inject constructor(
     private val _onOkButtonClicked = SingleLiveEvent<CreateSiteState>()
     val onOkButtonClicked: LiveData<CreateSiteState> = _onOkButtonClicked
 
+    private val _onSiteCreationCompleted = SingleLiveEvent<CreateSiteState>()
+    val onSiteCreationCompleted: LiveData<CreateSiteState> = _onSiteCreationCompleted
+
     init {
         dispatcher.register(fetchWpComSiteUseCase)
     }
@@ -176,6 +179,7 @@ class NewSitePreviewViewModel @Inject constructor(
                 val remoteSiteId = event.payload as Long
                 createSiteState = SiteNotInLocalDb(remoteSiteId)
                 fetchNewlyCreatedSiteModel(remoteSiteId)
+                _onSiteCreationCompleted.asyncCall()
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState

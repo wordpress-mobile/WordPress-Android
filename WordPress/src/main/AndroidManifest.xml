@@ -261,7 +261,7 @@
         <activity android:name=".ui.plans.PlansActivity"
                   android:theme="@style/Calypso.NoActionBar"
                   android:launchMode="singleTop"
-                  android:label="@string/plans"/>
+                  android:parentActivityName=".ui.main.WPMainActivity"/>
 
         <!-- Stats Activities -->
         <activity
@@ -634,10 +634,6 @@
             android:name=".ui.suggestion.service.SuggestionService"
             android:exported="false"
             android:label="Suggestion Service" />
-        <service
-            android:name=".ui.plans.PlanUpdateService"
-            android:exported="false"
-            android:label="Plans Update Service" />
         <service
             android:name=".push.NotificationsProcessingService"
             android:exported="false"

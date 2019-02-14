@@ -109,6 +109,7 @@
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
     <string name="dismiss">dismiss</string>
+    <string name="exit">exit</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -2007,8 +2008,12 @@
     <!-- Plans -->
     <string name="plan">Plan</string>
     <string name="plans">Plans</string>
-    <string name="plans_loading_error">Unable to load plans</string>
-    <string name="plans_manage">Manage your plan at\nWordPress.com/plans</string>
+    <string name="plans_loading_error_network_title">No connection</string>
+    <string name="plans_loading_error_no_plans_title">Cannot load Plans</string>
+    <string name="plans_loading_error_no_plans_subtitle">We cannot load Plans at the moment. Please try again later.</string>
+    <string name="plans_loading_error_no_cache_subtitle">An internet connection is required to view Plans.</string>
+    <string name="plans_loading_error_with_cache_subtitle">An internet connection is required to view Plans, so details may be out-of-date.</string>
+    <string name="plans_loading_error_with_cache_button">View Plans Anyway</string>
 
     <!-- gravatar -->
     <string name="error_cropping_image">Error cropping the image</string>
@@ -2511,4 +2516,5 @@
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
+    <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
 </resources>
