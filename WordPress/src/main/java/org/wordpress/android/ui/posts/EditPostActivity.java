@@ -1355,6 +1355,21 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    private void showGutenbergInformativeDialog() {
+        // Show the GB informative dialog on editing GB posts
+        if (!mIsNewPost /*&& !AppPrefs.isGutenbergInformativeDialogDisabled()*/) {
+            final PromoDialog asyncPromoDialog = new PromoDialog();
+            asyncPromoDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
+                    getString(R.string.dialog_gutenberg_informative_title),
+                    mPost.isPage() ? getString(R.string.dialog_gutenberg_informative_description_page)
+                    : getString(R.string.dialog_gutenberg_informative_description_post),
+                    getString(org.wordpress.android.editor.R.string.dialog_button_ok));
+
+            asyncPromoDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
+            AppPrefs.setGutenbergInformativeDialogDisabled(true);
+        }
+    }
+
     private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish, boolean doFinishActivity) {
         new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -2060,16 +2075,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
                         // Show the GB informative dialog on editing GB posts
-                        if (!mIsNewPost && !AppPrefs.isGutenbergInformativeDialogDisabled()) {
-                            final PromoDialog asyncPromoDialog = new PromoDialog();
-                            asyncPromoDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
-                                    getString(R.string.dialog_gutenberg_informative_title),
-                                    getString(R.string.dialog_gutenberg_informative_description),
-                                    getString(org.wordpress.android.editor.R.string.dialog_button_ok));
-
-                            asyncPromoDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
-                            AppPrefs.setGutenbergInformativeDialogDisabled(true);
-                        }
+                        showGutenbergInformativeDialog();
                         return GutenbergEditorFragment.newInstance("", "", mIsNewPost);
                     } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
