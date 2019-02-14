@@ -820,5 +820,4 @@ public class AppPrefs {
     public static void setAvatarVersion(int version) {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
     }
-
 }
