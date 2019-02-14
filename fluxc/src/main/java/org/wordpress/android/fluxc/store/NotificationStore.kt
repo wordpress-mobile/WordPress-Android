@@ -235,6 +235,20 @@ constructor(
             notificationSqlUtils.getNotificationsForSite(site, ORDER_DESCENDING, filterByType, filterBySubtype)
 
     /**
+     * Returns true if the given site has unread notifications
+     *
+     * @param site The [SiteModel] to check notifications for
+     * @param filterByType Optional. A list of notification type strings to filter by
+     * @param filterBySubtype Optional. A list of notification subtype strings to filter by
+     */
+    fun hasUnreadNotificationsForSite(
+        site: SiteModel,
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null
+    ): Boolean =
+            notificationSqlUtils.hasUnreadNotificationsForSite(site, filterByType, filterBySubtype)
+
+    /**
      * Fetch the first notification matching the parameters specified in [NoteIdSet].
      *
      * @param idSet A [NoteIdSet] containing the localSiteId, remoteNoteId, and localNoteId

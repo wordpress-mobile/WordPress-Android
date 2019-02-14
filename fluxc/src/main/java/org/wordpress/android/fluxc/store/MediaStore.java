@@ -48,7 +48,7 @@ public class MediaStore extends Store {
     //
 
     /**
-     * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOAD(ED)_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
+     * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOADED_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
      */
     public static class MediaPayload extends Payload<MediaError> {
         public SiteModel site;
@@ -60,6 +60,23 @@ public class MediaStore extends Store {
             this.site = site;
             this.media = media;
             this.error = error;
+        }
+    }
+
+    /**
+     * Action: UPLOAD_MEDIA
+     */
+    public static class UploadMediaPayload extends MediaPayload {
+        public final boolean stripLocation;
+
+        public UploadMediaPayload(SiteModel site, MediaModel media, boolean stripLocation) {
+            super(site, media, null);
+            this.stripLocation = stripLocation;
+        }
+
+        public UploadMediaPayload(SiteModel site, MediaModel media, MediaError error, boolean stripLocation) {
+            super(site, media, error);
+            this.stripLocation = stripLocation;
         }
     }
 
@@ -427,7 +444,7 @@ public class MediaStore extends Store {
                 performPushMedia((MediaPayload) action.getPayload());
                 break;
             case UPLOAD_MEDIA:
-                performUploadMedia((MediaPayload) action.getPayload());
+                performUploadMedia((UploadMediaPayload) action.getPayload());
                 break;
             case FETCH_MEDIA_LIST:
                 performFetchMediaList((FetchMediaListPayload) action.getPayload());
@@ -731,7 +748,7 @@ public class MediaStore extends Store {
         emitChange(onMediaUploaded);
     }
 
-    private void performUploadMedia(MediaPayload payload) {
+    private void performUploadMedia(UploadMediaPayload payload) {
         String errorMessage = MediaUtils.getMediaValidationError(payload.media);
         if (errorMessage != null) {
             AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + errorMessage);
@@ -743,6 +760,10 @@ public class MediaStore extends Store {
 
         payload.media.setUploadState(MediaUploadState.UPLOADING);
         MediaSqlUtils.insertOrUpdateMedia(payload.media);
+
+        if (payload.stripLocation) {
+            MediaUtils.stripLocation(payload.media.getFilePath());
+        }
 
         if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);

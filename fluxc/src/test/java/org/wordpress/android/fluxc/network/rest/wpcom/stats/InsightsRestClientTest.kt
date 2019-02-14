@@ -36,16 +36,16 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.stats.FOLLOWERS_RESPONSE
 import org.wordpress.android.fluxc.store.stats.POST_STATS_RESPONSE
 import org.wordpress.android.fluxc.store.stats.PUBLICIZE_RESPONSE
-import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.stats.TAGS_RESPONSE
 import org.wordpress.android.fluxc.store.stats.TOP_COMMENTS_RESPONSE
 import org.wordpress.android.fluxc.store.stats.VISITS_RESPONSE
 import org.wordpress.android.fluxc.test
-import java.text.SimpleDateFormat
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -56,6 +56,7 @@ class InsightsRestClientTest {
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
+    @Mock private lateinit var statsUtils: StatsUtils
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var insightsRestClient: InsightsRestClient
@@ -73,7 +74,8 @@ class InsightsRestClientTest {
                 null,
                 requestQueue,
                 accessToken,
-                userAgent
+                userAgent,
+                statsUtils
         )
     }
 
@@ -219,8 +221,9 @@ class InsightsRestClientTest {
     fun `returns visits per time period`() = test {
         initVisitResponse(VISITS_RESPONSE)
 
-        val date = Date()
-        val format = SimpleDateFormat("yyyy-MM-dd")
+        val date = Date(10)
+        val formattedDate = "2019-01-17"
+        whenever(statsUtils.getFormattedDate(date)).thenReturn(formattedDate)
         val responseModel = insightsRestClient.fetchTimePeriodStats(site, DAYS, date, false)
 
         assertThat(responseModel.response).isNotNull()
@@ -228,7 +231,7 @@ class InsightsRestClientTest {
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/visits/")
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
-                        "date" to format.format(date),
+                        "date" to formattedDate,
                         "quantity" to "1",
                         "unit" to "day"
                 )
