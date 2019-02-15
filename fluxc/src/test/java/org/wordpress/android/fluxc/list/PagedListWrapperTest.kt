@@ -39,7 +39,6 @@ class PagedListWrapperTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    private val mockLiveData = MutableLiveData<PagedList<PagedListItemType<String>>>()
     private val mockDispatcher = mock<Dispatcher>()
     private val mockListDescriptor = mock<ListDescriptor>()
     private val mockRefresh = mock<() -> Unit>()
@@ -47,7 +46,7 @@ class PagedListWrapperTest {
     private val mockIsListEmpty = mock<() -> Boolean>()
 
     private fun createPagedListWrapper(lifecycle: Lifecycle = mock()) = PagedListWrapper(
-            data = mockLiveData,
+            data = MutableLiveData<PagedList<PagedListItemType<String>>>(),
             dispatcher = mockDispatcher,
             listDescriptor = mockListDescriptor,
             lifecycle = lifecycle,
