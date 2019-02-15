@@ -89,7 +89,6 @@
         <ignore path="**/.gradle/caches/**" />
         <ignore path="**/generated/**" />
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
-        <ignore regexp="^gutenberg_mobile_"/>
     </issue>
 
     <issue id="Typos" severity="error">
