@@ -682,6 +682,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_closed";
             case POST_LIST_BUTTON_PRESSED:
                 return "post_list_button_pressed";
+            case POST_LIST_ITEM_SELECTED:
+                return "post_list_item_selected";
             case EDITOR_OPENED:
                 return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:
