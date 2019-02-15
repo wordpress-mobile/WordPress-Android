@@ -1,16 +1,20 @@
 package org.wordpress.android.widgets
 
+import android.app.Dialog
+import android.app.DialogFragment
+import android.app.FragmentManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import java.lang.ref.WeakReference
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -36,9 +40,6 @@ object AppRatingDialog {
     private var optOut = false
 
     private lateinit var preferences: SharedPreferences
-
-    // Weak ref to avoid leaking the context
-    private var dialogRef: WeakReference<AlertDialog>? = null
 
     /**
      * Call this when the launcher activity is launched.
@@ -68,9 +69,9 @@ object AppRatingDialog {
      * Show the rate dialog if the criteria is satisfied.
      * @return true if shown, false otherwise.
      */
-    fun showRateDialogIfNeeded(context: Context): Boolean {
+    fun showRateDialogIfNeeded(fragmentManger: FragmentManager): Boolean {
         return if (shouldShowRateDialog()) {
-            showRateDialog(context)
+            showRateDialog(fragmentManger)
             true
         } else {
             false
@@ -101,51 +102,61 @@ object AppRatingDialog {
         }
     }
 
-    private fun showRateDialog(context: Context) {
-        dialogRef?.get()?.let {
-            // Dialog is already present
-            return
+    private fun showRateDialog(fragmentManger: FragmentManager) {
+        var dialog = fragmentManger.findFragmentByTag(AppRatingDialog.TAG_APP_RATING_PROMPT_DIALOG)
+        if (dialog == null) {
+            dialog = AppRatingDialog()
+            dialog.show(fragmentManger, AppRatingDialog.TAG_APP_RATING_PROMPT_DIALOG)
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_SAW_PROMPT)
+        }
+    }
+
+    class AppRatingDialog : DialogFragment() {
+        companion object {
+            internal const val TAG_APP_RATING_PROMPT_DIALOG = "TAG_APP_RATING_PROMPT_DIALOG"
         }
 
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(R.string.app_rating_title)
-                .setMessage(R.string.app_rating_message)
-                .setCancelable(true)
-                .setPositiveButton(R.string.app_rating_rate_now) { _, _ ->
-                    val appPackage = context.packageName
-                    val url: String? = "market://details?id=$appPackage"
-                    try {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                    } catch (e: android.content.ActivityNotFoundException) {
-                        // play store app isn't on this device so open app's page in browser instead
-                        context.startActivity(
-                                Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("http://play.google.com/store/apps/details?id=" + context.packageName)
-                                )
-                        )
-                    }
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val builder = AlertDialog.Builder(activity)
+            builder.setTitle(R.string.app_rating_title)
+                    .setMessage(R.string.app_rating_message)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.app_rating_rate_now) { _, _ ->
+                        val appPackage = activity.packageName
+                        val url: String? = "market://details?id=$appPackage"
+                        try {
+                            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                        } catch (e: android.content.ActivityNotFoundException) {
+                            // play store app isn't on this device so open app's page in browser instead
+                            activity.startActivity(
+                                    Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse("http://play.google.com/store/apps/details?id=" + activity.packageName)
+                                    )
+                            )
+                        }
 
-                    setOptOut(true)
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_RATED_APP)
-                }
-                .setNeutralButton(R.string.app_rating_rate_later) { _, _ ->
-                    clearSharedPreferences()
-                    storeAskLaterDate()
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECIDED_TO_RATE_LATER)
-                }
-                .setNegativeButton(R.string.app_rating_rate_never) { _, _ ->
-                    setOptOut(true)
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECLINED_TO_RATE_APP)
-                }
-                .setOnCancelListener {
-                    clearSharedPreferences()
-                    storeAskLaterDate()
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_CANCELLED_PROMPT)
-                }
-                .setOnDismissListener { dialogRef?.clear() }
-        dialogRef = WeakReference(builder.show())
-        AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_SAW_PROMPT)
+                        setOptOut(true)
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_RATED_APP)
+                    }
+                    .setNeutralButton(R.string.app_rating_rate_later) { _, _ ->
+                        clearSharedPreferences()
+                        storeAskLaterDate()
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECIDED_TO_RATE_LATER)
+                    }
+                    .setNegativeButton(R.string.app_rating_rate_never) { _, _ ->
+                        setOptOut(true)
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECLINED_TO_RATE_APP)
+                    }
+            return builder.create()
+        }
+
+        override fun onCancel(dialog: DialogInterface?) {
+            super.onCancel(dialog)
+            clearSharedPreferences()
+            storeAskLaterDate()
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_CANCELLED_PROMPT)
+        }
     }
 
     /**

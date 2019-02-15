@@ -318,7 +318,7 @@ public class WPMainActivity extends AppCompatActivity implements
         }
 
         AppRatingDialog.INSTANCE.init(this);
-        AppRatingDialog.INSTANCE.showRateDialogIfNeeded(this);
+        AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
     }
 
     public boolean isGooglePlayServicesAvailable(Activity activity) {
