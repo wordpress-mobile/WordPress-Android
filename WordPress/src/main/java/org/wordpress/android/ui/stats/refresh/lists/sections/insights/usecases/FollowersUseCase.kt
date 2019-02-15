@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
-import org.wordpress.android.fluxc.store.stats.InsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
@@ -41,7 +41,7 @@ private const val VIEW_ALL_PAGE_SIZE = 10
 class FollowersUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsStore: InsightsStore,
+    private val followersStore: FollowersStore,
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -56,8 +56,8 @@ class FollowersUseCase
 
     override suspend fun loadCachedData(site: SiteModel) {
         lastSite = site
-        val wpComFollowers = insightsStore.getWpComFollowers(site, CacheMode.Top(itemsToLoad))
-        val emailFollowers = insightsStore.getEmailFollowers(site, CacheMode.Top(itemsToLoad))
+        val wpComFollowers = followersStore.getWpComFollowers(site, CacheMode.Top(itemsToLoad))
+        val emailFollowers = followersStore.getEmailFollowers(site, CacheMode.Top(itemsToLoad))
         if (wpComFollowers != null && emailFollowers != null) {
             onModel(wpComFollowers to emailFollowers)
         }
@@ -70,10 +70,10 @@ class FollowersUseCase
     private suspend fun fetchData(site: SiteModel, forced: Boolean, fetchMode: FetchMode.Paged) {
         lastSite = site
         val deferredWpComResponse = GlobalScope.async {
-            insightsStore.fetchWpComFollowers(site, fetchMode, forced)
+            followersStore.fetchWpComFollowers(site, fetchMode, forced)
         }
         val deferredEmailResponse = GlobalScope.async {
-            insightsStore.fetchEmailFollowers(site, fetchMode, forced)
+            followersStore.fetchEmailFollowers(site, fetchMode, forced)
         }
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
@@ -180,7 +180,7 @@ class FollowersUseCase
     class FollowersUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-        private val insightsStore: InsightsStore,
+        private val followersStore: FollowersStore,
         private val statsUtilsWrapper: StatsUtilsWrapper,
         private val resourceProvider: ResourceProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
@@ -188,7 +188,7 @@ class FollowersUseCase
         override fun build(useCaseMode: UseCaseMode) =
                 FollowersUseCase(
                         mainDispatcher,
-                        insightsStore,
+                        followersStore,
                         statsUtilsWrapper,
                         resourceProvider,
                         analyticsTracker,

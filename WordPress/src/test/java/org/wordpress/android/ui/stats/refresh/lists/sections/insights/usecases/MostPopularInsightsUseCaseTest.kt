@@ -10,10 +10,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
-import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Error
@@ -30,7 +30,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.math.roundToInt
 
 class MostPopularInsightsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var insightsStore: MostPopularInsightsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dateUtils: DateUtils
     @Mock lateinit var resourceProvider: ResourceProvider

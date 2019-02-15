@@ -10,7 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_S
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
-import org.wordpress.android.fluxc.store.stats.InsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
@@ -32,17 +32,17 @@ import javax.inject.Named
 class LatestPostSummaryUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsStore: InsightsStore,
+    private val latestPostStore: LatestPostInsightsStore,
     private val latestPostSummaryMapper: LatestPostSummaryMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getLatestPostInsights(site)
+        val dbModel = latestPostStore.getLatestPostInsights(site)
         dbModel?.let { onModel(it) }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchLatestPostInsights(site, forced)
+        val response = latestPostStore.fetchLatestPostInsights(site, forced)
         val model = response.model
         val error = response.error
 

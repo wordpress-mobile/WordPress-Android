@@ -13,10 +13,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
-import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Error
@@ -34,7 +34,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var insightsStore: LatestPostInsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
