@@ -221,9 +221,9 @@ class PostListViewModel @Inject constructor(
         }
         this.site = site
         this.listDescriptor = if (site.isUsingWpComRestApi) {
-            PostListDescriptorForRestSite(site, postListType.postStatuses)
+            PostListDescriptorForRestSite(site = site, statusList = postListType.postStatuses)
         } else {
-            PostListDescriptorForXmlRpcSite(site, postListType.postStatuses)
+            PostListDescriptorForXmlRpcSite(site = site, statusList = postListType.postStatuses)
         }
         // We want to update the target post only for the first time ViewModel is started
         this.targetLocalPostId = targetLocalPostId
