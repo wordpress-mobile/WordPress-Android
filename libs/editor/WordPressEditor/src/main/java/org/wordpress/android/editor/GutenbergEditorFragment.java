@@ -163,7 +163,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
                 new OnEditorMountListener() {
-                    @Override public void onEditorDidMount(boolean hasUnsupportedBlocks) {
+                    @Override
+                    public void onEditorDidMount(boolean hasUnsupportedBlocks) {
                         // TODO: add Tracks
                     }
                 }
