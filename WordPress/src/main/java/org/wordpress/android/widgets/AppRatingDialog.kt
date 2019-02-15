@@ -131,7 +131,10 @@ object AppRatingDialog {
                             activity.startActivity(
                                     Intent(
                                             Intent.ACTION_VIEW,
-                                            Uri.parse("http://play.google.com/store/apps/details?id=" + activity.packageName)
+                                            Uri.parse(
+                                                    "http://play.google.com/store/apps/details?id=" +
+                                                            activity.packageName
+                                            )
                                     )
                             )
                         }
