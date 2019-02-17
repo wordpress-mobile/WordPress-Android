@@ -34,6 +34,7 @@ class StatsSqlUtils
         if (replaceExistingData) {
             WellSql.delete(StatsBlockBuilder::class.java)
                     .where()
+                    .equals(StatsBlockTable.LOCAL_SITE_ID, site.id)
                     .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
                     .equals(StatsBlockTable.STATS_TYPE, statsType.name)
                     .equals(StatsBlockTable.DATE, date)
