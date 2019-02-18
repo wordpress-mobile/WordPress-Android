@@ -2,144 +2,252 @@ package org.wordpress.android.fluxc.list.post
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameters
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.list.ListOrder
+import org.wordpress.android.fluxc.model.list.ListOrder.ASC
+import org.wordpress.android.fluxc.model.list.ListOrder.DESC
+import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.model.list.PostListOrderBy.DATE
 import org.wordpress.android.fluxc.model.list.PostListOrderBy.ID
-import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
-import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.post.PostStatus
 
-@RunWith(MockitoJUnitRunner::class)
-class PostListDescriptorForRestSiteTest {
-    private val mockSite = mock<SiteModel>()
+internal class PostListDescriptorTestCase(
+    val typeIdentifierReason: String,
+    val uniqueIdentifierReason: String,
+    val descriptor1: PostListDescriptor,
+    val descriptor2: PostListDescriptor,
+    val shouldHaveSameTypeIdentifier: Boolean,
+    val shouldHaveSameUniqueIdentifier: Boolean
+)
 
-    @Before
-    fun setup() {
-        whenever(mockSite.id).thenReturn(LIST_DESCRIPTOR_TEST_FIRST_MOCK_SITE_LOCAL_SITE_ID)
+@RunWith(Parameterized::class)
+internal class PostListDescriptorTest(
+    private val testCase: PostListDescriptorTestCase
+) {
+    companion object {
+        @JvmStatic
+        @Parameters
+        fun testCases(): List<PostListDescriptorTestCase> {
+            val mockSite = mock<SiteModel>()
+            val mockSite2 = mock<SiteModel>()
+            whenever(mockSite.id).thenReturn(LIST_DESCRIPTOR_TEST_FIRST_MOCK_SITE_LOCAL_SITE_ID)
+            whenever(mockSite2.id).thenReturn(LIST_DESCRIPTOR_TEST_SECOND_MOCK_SITE_LOCAL_SITE_ID)
+            return listOf(
+                    // PostListDescriptorForRestSite - PostListDescriptorForXmlRpcSite
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different descriptor types have different type identifiers",
+                            uniqueIdentifierReason = "Different descriptor types have different unique identifiers",
+                            descriptor1 = PostListDescriptorForRestSite(site = mockSite),
+                            // We need to use a different site because the same site can't be both rest and xml-rpc
+                            descriptor2 = PostListDescriptorForXmlRpcSite(site = mockSite2),
+                            shouldHaveSameTypeIdentifier = false,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
+                    // Same site
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Same sites should have same type identifier",
+                            uniqueIdentifierReason = "Same sites should have same unique identifier",
+                            descriptor1 = PostListDescriptorForRestSite(site = mockSite),
+                            descriptor2 = PostListDescriptorForRestSite(site = mockSite),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = true
+                    ),
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Same sites should have same type identifier",
+                            uniqueIdentifierReason = "Same sites should have same unique identifier",
+                            descriptor1 = PostListDescriptorForXmlRpcSite(site = mockSite),
+                            descriptor2 = PostListDescriptorForXmlRpcSite(site = mockSite),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = true
+                    ),
+                    // Different site
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different sites should have different type identifiers",
+                            uniqueIdentifierReason = "Different sites should have different unique identifiers",
+                            descriptor1 = PostListDescriptorForRestSite(site = mockSite),
+                            descriptor2 = PostListDescriptorForRestSite(site = mockSite2),
+                            shouldHaveSameTypeIdentifier = false,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different sites should have different type identifiers",
+                            uniqueIdentifierReason = "Different sites should have different unique identifiers",
+                            descriptor1 = PostListDescriptorForXmlRpcSite(site = mockSite),
+                            descriptor2 = PostListDescriptorForXmlRpcSite(site = mockSite2),
+                            shouldHaveSameTypeIdentifier = false,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
+                    // Different status list
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different status lists should have same type identifiers",
+                            uniqueIdentifierReason = "Different status lists should have different unique identifiers",
+                            descriptor1 = PostListDescriptorForRestSite(
+                                    mockSite,
+                                    statusList = listOf(PostStatus.PUBLISHED)
+                            ),
+                            descriptor2 = PostListDescriptorForRestSite(
+                                    mockSite,
+                                    statusList = listOf(PostStatus.DRAFT)
+                            ),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different status lists should have same type identifiers",
+                            uniqueIdentifierReason = "Different status lists should have different unique identifiers",
+                            descriptor1 = PostListDescriptorForXmlRpcSite(
+                                    mockSite,
+                                    statusList = listOf(PostStatus.PUBLISHED)
+                            ),
+                            descriptor2 = PostListDescriptorForXmlRpcSite(
+                                    mockSite,
+                                    statusList = listOf(PostStatus.DRAFT)
+                            ),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
+                    // Different order
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different order should have same type identifiers",
+                            uniqueIdentifierReason = "Different order should have different unique identifiers",
+                            descriptor1 = PostListDescriptorForRestSite(
+                                    mockSite,
+                                    order = ASC
+                            ),
+                            descriptor2 = PostListDescriptorForRestSite(
+                                    mockSite,
+                                    order = DESC
+                            ),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different order should have same type identifiers",
+                            uniqueIdentifierReason = "Different order should have different unique identifiers",
+                            descriptor1 = PostListDescriptorForXmlRpcSite(
+                                    mockSite,
+                                    order = ASC
+                            ),
+                            descriptor2 = PostListDescriptorForXmlRpcSite(
+                                    mockSite,
+                                    order = DESC
+                            ),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
+                    // Different order by
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different order by should have same type identifiers",
+                            uniqueIdentifierReason = "Different order by should have different unique identifiers",
+                            descriptor1 = PostListDescriptorForRestSite(
+                                    mockSite,
+                                    orderBy = DATE
+                            ),
+                            descriptor2 = PostListDescriptorForRestSite(
+                                    mockSite,
+                                    orderBy = ID
+                            ),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different order by should have same type identifiers",
+                            uniqueIdentifierReason = "Different order by should have different unique identifiers",
+                            descriptor1 = PostListDescriptorForXmlRpcSite(
+                                    mockSite,
+                                    orderBy = DATE
+                            ),
+                            descriptor2 = PostListDescriptorForXmlRpcSite(
+                                    mockSite,
+                                    orderBy = ID
+                            ),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
+                    // Different search query
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different search query should have same type identifiers",
+                            uniqueIdentifierReason = "Different search query should have different unique identifiers",
+                            descriptor1 = PostListDescriptorForRestSite(
+                                    mockSite,
+                                    searchQuery = LIST_DESCRIPTOR_TEST_QUERY_1
+                            ),
+                            descriptor2 = PostListDescriptorForRestSite(
+                                    mockSite,
+                                    searchQuery = LIST_DESCRIPTOR_TEST_QUERY_2
+                            ),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
+                    // Different list config
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different list configs should have same type identifiers",
+                            uniqueIdentifierReason = "Different list configs should have same unique identifiers",
+                            descriptor1 = PostListDescriptorForRestSite(
+                                    mockSite,
+                                    config = LIST_DESCRIPTOR_TEST_LIST_CONFIG_1
+                            ),
+                            descriptor2 = PostListDescriptorForRestSite(
+                                    mockSite,
+                                    config = LIST_DESCRIPTOR_TEST_LIST_CONFIG_2
+                            ),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = true
+                    ),
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different list configs should have same type identifiers",
+                            uniqueIdentifierReason = "Different list configs should have same unique identifiers",
+                            descriptor1 = PostListDescriptorForXmlRpcSite(
+                                    mockSite,
+                                    config = LIST_DESCRIPTOR_TEST_LIST_CONFIG_1
+                            ),
+                            descriptor2 = PostListDescriptorForXmlRpcSite(
+                                    mockSite,
+                                    config = LIST_DESCRIPTOR_TEST_LIST_CONFIG_2
+                            ),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = true
+                    )
+            )
+        }
     }
 
     @Test
-    fun `type and unique identifiers of same descriptors should be the same`() {
-        val descriptor1 = PostListDescriptorForRestSite(mockSite)
-        val descriptor2 = PostListDescriptorForRestSite(mockSite)
-        assertSameTypeIdentifiers(descriptor1, descriptor2)
-        assertSameUniqueIdentifiers(descriptor1, descriptor2)
-    }
-
-    // Different sites
-
-    @Test
-    fun `type identifier of different site descriptors should be different`() {
-        val mockSite2 = mock<SiteModel>()
-        whenever(mockSite2.id).thenReturn(LIST_DESCRIPTOR_TEST_SECOND_MOCK_SITE_LOCAL_SITE_ID)
-        assertDifferentTypeIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite),
-                descriptor2 = PostListDescriptorForRestSite(mockSite2)
-        )
+    fun `test type identifier`() {
+        if (testCase.shouldHaveSameTypeIdentifier) {
+            assertSameTypeIdentifiers(
+                    reason = testCase.typeIdentifierReason,
+                    descriptor1 = testCase.descriptor1,
+                    descriptor2 = testCase.descriptor2
+            )
+        } else {
+            assertDifferentTypeIdentifiers(
+                    reason = testCase.typeIdentifierReason,
+                    descriptor1 = testCase.descriptor1,
+                    descriptor2 = testCase.descriptor2
+            )
+        }
     }
 
     @Test
-    fun `unique identifier of different site descriptors should be different`() {
-        val mockSite2 = mock<SiteModel>()
-        whenever(mockSite2.id).thenReturn(LIST_DESCRIPTOR_TEST_SECOND_MOCK_SITE_LOCAL_SITE_ID)
-        assertDifferentUniqueIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite),
-                descriptor2 = PostListDescriptorForRestSite(mockSite2)
-        )
-    }
-
-    // Different status list
-
-    @Test
-    fun `type identifier of different status list descriptors should be the same`() {
-        assertSameTypeIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite, statusList = listOf(PUBLISHED)),
-                descriptor2 = PostListDescriptorForRestSite(mockSite, statusList = listOf(DRAFT))
-        )
-    }
-
-    @Test
-    fun `unique identifier of different status list descriptors should be different`() {
-        assertDifferentUniqueIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite, statusList = listOf(PUBLISHED)),
-                descriptor2 = PostListDescriptorForRestSite(mockSite, statusList = listOf(DRAFT))
-        )
-    }
-
-    // Different order
-
-    @Test
-    fun `type identifier of different order descriptors should be the same`() {
-        assertSameTypeIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite, order = ListOrder.ASC),
-                descriptor2 = PostListDescriptorForRestSite(mockSite, order = ListOrder.DESC)
-        )
-    }
-
-    @Test
-    fun `unique identifier of different order descriptors should be different`() {
-        assertDifferentUniqueIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite, order = ListOrder.ASC),
-                descriptor2 = PostListDescriptorForRestSite(mockSite, order = ListOrder.DESC)
-        )
-    }
-
-    // Different order by
-
-    @Test
-    fun `type identifier of different order by descriptors should be the same`() {
-        assertSameTypeIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite, orderBy = DATE),
-                descriptor2 = PostListDescriptorForRestSite(mockSite, orderBy = ID)
-        )
-    }
-
-    @Test
-    fun `unique identifier of different order by descriptors should be different`() {
-        assertDifferentUniqueIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite, orderBy = DATE),
-                descriptor2 = PostListDescriptorForRestSite(mockSite, orderBy = ID)
-        )
-    }
-
-    // Different search query
-
-    @Test
-    fun `type identifier of different search descriptors should be the same`() {
-        assertSameTypeIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite, searchQuery = LIST_DESCRIPTOR_TEST_QUERY_1),
-                descriptor2 = PostListDescriptorForRestSite(mockSite, searchQuery = LIST_DESCRIPTOR_TEST_QUERY_2)
-        )
-    }
-
-    @Test
-    fun `unique identifier of different search descriptors should be different`() {
-        assertDifferentUniqueIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite, searchQuery = LIST_DESCRIPTOR_TEST_QUERY_1),
-                descriptor2 = PostListDescriptorForRestSite(mockSite, searchQuery = LIST_DESCRIPTOR_TEST_QUERY_2)
-        )
-    }
-
-    // Different config
-
-    @Test
-    fun `type identifier of different configs should be the same`() {
-        assertSameTypeIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite, config = LIST_DESCRIPTOR_TEST_LIST_CONFIG_1),
-                descriptor2 = PostListDescriptorForRestSite(mockSite, config = LIST_DESCRIPTOR_TEST_LIST_CONFIG_2)
-        )
-    }
-
-    @Test
-    fun `unique identifier of different configs should be the same`() {
-        assertSameUniqueIdentifiers(
-                descriptor1 = PostListDescriptorForRestSite(mockSite, config = LIST_DESCRIPTOR_TEST_LIST_CONFIG_1),
-                descriptor2 = PostListDescriptorForRestSite(mockSite, config = LIST_DESCRIPTOR_TEST_LIST_CONFIG_2)
-        )
+    fun `test unique identifier`() {
+        if (testCase.shouldHaveSameUniqueIdentifier) {
+            assertSameUniqueIdentifiers(
+                    reason = testCase.uniqueIdentifierReason,
+                    descriptor1 = testCase.descriptor1,
+                    descriptor2 = testCase.descriptor2
+            )
+        } else {
+            assertDifferentUniqueIdentifiers(
+                    reason = testCase.uniqueIdentifierReason,
+                    descriptor1 = testCase.descriptor1,
+                    descriptor2 = testCase.descriptor2
+            )
+        }
     }
 }
