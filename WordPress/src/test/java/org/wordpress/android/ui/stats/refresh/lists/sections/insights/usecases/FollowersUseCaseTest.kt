@@ -17,10 +17,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
-import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
@@ -45,7 +45,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
 class FollowersUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var insightsStore: FollowersStore
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel

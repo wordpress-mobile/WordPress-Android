@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
-import org.wordpress.android.fluxc.store.stats.InsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
@@ -40,7 +40,7 @@ private const val VIEW_ALL_ITEM_COUNT = 100
 class TagsAndCategoriesUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsStore: InsightsStore,
+    private val tagsStore: TagsStore,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     useCaseMode: UseCaseMode
@@ -52,7 +52,7 @@ class TagsAndCategoriesUseCase
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchTags(site, FetchMode.Top(itemsToLoad), forced)
+        val response = tagsStore.fetchTags(site, FetchMode.Top(itemsToLoad), forced)
         val model = response.model
         val error = response.error
 
@@ -64,7 +64,7 @@ class TagsAndCategoriesUseCase
     }
 
     override suspend fun loadCachedData(site: SiteModel) {
-        val model = insightsStore.getTags(site, CacheMode.Top(itemsToLoad))
+        val model = tagsStore.getTags(site, CacheMode.Top(itemsToLoad))
         model?.let { onModel(model) }
     }
 
@@ -174,14 +174,14 @@ class TagsAndCategoriesUseCase
     class TagsAndCategoriesUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-        private val insightsStore: InsightsStore,
+        private val tagsStore: TagsStore,
         private val resourceProvider: ResourceProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 TagsAndCategoriesUseCase(
                         mainDispatcher,
-                        insightsStore,
+                        tagsStore,
                         resourceProvider,
                         analyticsTracker,
                         useCaseMode

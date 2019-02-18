@@ -10,10 +10,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
-import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Error
@@ -28,7 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 
 class TodayStatsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var insightsStore: TodayInsightsStore
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: TodayStatsUseCase
     private val views = 10

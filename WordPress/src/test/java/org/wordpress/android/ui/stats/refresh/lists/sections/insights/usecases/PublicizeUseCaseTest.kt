@@ -13,10 +13,10 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel.Service
-import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Error
@@ -35,7 +35,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 class PublicizeUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var insightsStore: PublicizeStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var serviceMapper: ServiceMapper
     @Mock lateinit var tracker: AnalyticsTrackerWrapper

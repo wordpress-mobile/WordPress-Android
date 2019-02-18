@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.model.stats.CacheMode
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
-import org.wordpress.android.fluxc.store.stats.InsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
@@ -37,13 +37,13 @@ private const val BLOCK_ITEM_COUNT = 6
 class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsStore: InsightsStore,
+    private val commentsStore: CommentsStore,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val fetchMode = if (useCaseMode == VIEW_ALL) FetchMode.All else FetchMode.Top(BLOCK_ITEM_COUNT)
-        val response = insightsStore.fetchComments(site, fetchMode, forced)
+        val response = commentsStore.fetchComments(site, fetchMode, forced)
         val model = response.model
         val error = response.error
 
@@ -56,7 +56,7 @@ class CommentsUseCase
 
     override suspend fun loadCachedData(site: SiteModel) {
         val cacheMode = if (useCaseMode == VIEW_ALL) CacheMode.All else CacheMode.Top(BLOCK_ITEM_COUNT)
-        val dbModel = insightsStore.getComments(site, cacheMode)
+        val dbModel = commentsStore.getComments(site, cacheMode)
         dbModel?.let { onModel(dbModel) }
     }
 
@@ -137,13 +137,13 @@ class CommentsUseCase
     class CommentsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-        private val insightsStore: InsightsStore,
+        private val commentsStore: CommentsStore,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 CommentsUseCase(
                         mainDispatcher,
-                        insightsStore,
+                        commentsStore,
                         analyticsTracker,
                         useCaseMode
                 )

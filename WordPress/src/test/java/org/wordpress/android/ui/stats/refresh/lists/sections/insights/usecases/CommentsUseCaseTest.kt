@@ -13,10 +13,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel.Post
 import org.wordpress.android.fluxc.model.stats.FetchMode
-import org.wordpress.android.fluxc.store.stats.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Error
@@ -40,7 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 class CommentsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var insightsStore: CommentsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: CommentsUseCase

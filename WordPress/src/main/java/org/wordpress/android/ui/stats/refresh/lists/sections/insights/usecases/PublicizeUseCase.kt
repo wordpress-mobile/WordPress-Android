@@ -7,7 +7,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
-import org.wordpress.android.fluxc.store.stats.InsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPublicizeStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
@@ -27,19 +27,19 @@ private const val PAGE_SIZE = 5
 class PublicizeUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsStore: InsightsStore,
+    private val publicizeStore: PublicizeStore,
     private val mapper: ServiceMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<org.wordpress.android.fluxc.model.stats.PublicizeModel>(PUBLICIZE, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel) {
-        insightsStore.getPublicizeData(
+        publicizeStore.getPublicizeData(
                 site,
                 PAGE_SIZE
         )?.let { onModel(it) }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchPublicizeData(
+        val response = publicizeStore.fetchPublicizeData(
                 site,
                 PAGE_SIZE, forced
         )
