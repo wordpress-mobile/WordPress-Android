@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.arch.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -41,6 +43,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var statsSectionManager: SelectedSectionManager
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var site: SiteModel
     private lateinit var viewModel: StatsViewModel
     private val selectedDate = Date(0)
@@ -48,6 +51,11 @@ class StatsViewModelTest : BaseUnitTest() {
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
+        whenever(insightsUseCase.snackbarMessage).thenReturn(MutableLiveData())
+        whenever(dayStatsUseCase.snackbarMessage).thenReturn(MutableLiveData())
+        whenever(weekStatsUseCase.snackbarMessage).thenReturn(MutableLiveData())
+        whenever(monthStatsUseCase.snackbarMessage).thenReturn(MutableLiveData())
+        whenever(yearStatsUseCase.snackbarMessage).thenReturn(MutableLiveData())
         viewModel = StatsViewModel(
                 insightsUseCase,
                 dayStatsUseCase,
@@ -58,7 +66,8 @@ class StatsViewModelTest : BaseUnitTest() {
                 selectedDateProvider,
                 statsDateFormatter,
                 statsSectionManager,
-                analyticsTracker
+                analyticsTracker,
+                networkUtilsWrapper
         )
 
         whenever(selectedDateProvider.getSelectedDate(any())).thenReturn(selectedDate)

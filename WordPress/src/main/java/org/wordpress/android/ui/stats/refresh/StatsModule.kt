@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
+import org.wordpress.android.ui.stats.refresh.lists.UiModelMapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.M
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
+import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -118,11 +120,17 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(INSIGHTS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>
+        @Named(INSIGHTS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        networkUtilsWrapper: NetworkUtilsWrapper,
+        uiModelMapper: UiModelMapper
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher, useCases) {
-            statsStore.getInsights()
-        }
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                useCases,
+                { statsStore.getInsights() },
+                uiModelMapper::mapInsights
+        )
     }
 
     /**
@@ -136,11 +144,17 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
+        networkUtilsWrapper: NetworkUtilsWrapper,
+        uiModelMapper: UiModelMapper
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(DAYS) }) {
-            statsStore.getTimeStatsTypes()
-        }
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                useCasesFactories.map { it.build(DAYS) },
+                { statsStore.getTimeStatsTypes() },
+                uiModelMapper::mapTimeStats
+        )
     }
 
     /**
@@ -154,11 +168,17 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
+        networkUtilsWrapper: NetworkUtilsWrapper,
+        uiModelMapper: UiModelMapper
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(WEEKS) }) {
-            statsStore.getTimeStatsTypes()
-        }
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                useCasesFactories.map { it.build(WEEKS) },
+                { statsStore.getTimeStatsTypes() },
+                uiModelMapper::mapTimeStats
+        )
     }
 
     /**
@@ -172,11 +192,17 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
+        networkUtilsWrapper: NetworkUtilsWrapper,
+        uiModelMapper: UiModelMapper
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(MONTHS) }) {
-            statsStore.getTimeStatsTypes()
-        }
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                useCasesFactories.map { it.build(MONTHS) },
+                { statsStore.getTimeStatsTypes() },
+                uiModelMapper::mapTimeStats
+        )
     }
 
     /**
@@ -190,11 +216,17 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
+        networkUtilsWrapper: NetworkUtilsWrapper,
+        uiModelMapper: UiModelMapper
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher, useCasesFactories.map { it.build(YEARS) }) {
-            statsStore.getTimeStatsTypes()
-        }
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                useCasesFactories.map { it.build(YEARS) },
+                { statsStore.getTimeStatsTypes() },
+                uiModelMapper::mapTimeStats
+        )
     }
 
     @Provides

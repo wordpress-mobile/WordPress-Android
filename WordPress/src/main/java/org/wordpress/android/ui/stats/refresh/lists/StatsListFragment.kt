@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView.LayoutManager
@@ -14,7 +13,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
@@ -287,19 +285,6 @@ class StatsListFragment : DaggerFragment() {
                 }
             }
             true
-        }
-
-        viewModel.snackbarMessage.observeEvent(this) { message ->
-            val parent: View? = activity.findViewById(android.R.id.content)
-            if (parent != null) {
-                val snackbar = Snackbar.make(parent, message.message, Snackbar.LENGTH_LONG)
-                val snackbarText = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
-                snackbarText.maxLines = 2
-                snackbar.show()
-                true
-            } else {
-                false
-            }
         }
     }
 

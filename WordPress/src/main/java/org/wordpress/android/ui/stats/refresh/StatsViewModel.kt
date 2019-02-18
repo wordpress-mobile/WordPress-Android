@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED
@@ -28,9 +29,10 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.ScopedViewModel
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -45,7 +47,8 @@ class StatsViewModel
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val statsSectionManager: SelectedSectionManager,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
 
@@ -54,7 +57,15 @@ class StatsViewModel
 
     private var isInitialized = false
 
-    private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
+    private val _showSnackbarMessage = mergeNotNull(
+            insightsUseCase.snackbarMessage,
+            dayStatsUseCase.snackbarMessage,
+            weekStatsUseCase.snackbarMessage,
+            monthStatsUseCase.snackbarMessage,
+            yearStatsUseCase.snackbarMessage,
+            distinct = true,
+            singleEvent = true
+    )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
     val selectedDateChanged = selectedDateProvider.selectedDateChanged
@@ -113,14 +124,20 @@ class StatsViewModel
     }
 
     fun onPullToRefresh() {
-        loadData {
-            when(statsSectionManager.getSelectedSection()) {
-                StatsSection.INSIGHTS -> insightsUseCase.refreshData(site, true)
-                StatsSection.DAYS -> dayStatsUseCase.refreshData(site, true)
-                StatsSection.WEEKS -> weekStatsUseCase.refreshData(site, true)
-                StatsSection.MONTHS -> monthStatsUseCase.refreshData(site, true)
-                StatsSection.YEARS -> yearStatsUseCase.refreshData(site, true)
+        _showSnackbarMessage.value = null
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            loadData {
+                when (statsSectionManager.getSelectedSection()) {
+                    StatsSection.INSIGHTS -> insightsUseCase.refreshData(site, true)
+                    StatsSection.DAYS -> dayStatsUseCase.refreshData(site, true)
+                    StatsSection.WEEKS -> weekStatsUseCase.refreshData(site, true)
+                    StatsSection.MONTHS -> monthStatsUseCase.refreshData(site, true)
+                    StatsSection.YEARS -> yearStatsUseCase.refreshData(site, true)
+                }
             }
+        } else {
+            _isRefreshing.value = false
+            _showSnackbarMessage.value = SnackbarMessageHolder(R.string.no_network_title)
         }
     }
 
@@ -219,6 +236,7 @@ class StatsViewModel
 
     override fun onCleared() {
         super.onCleared()
+        _showSnackbarMessage.value = null
         selectedDateProvider.clear()
     }
 

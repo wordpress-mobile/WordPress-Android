@@ -48,8 +48,10 @@ class SelectedDateProvider
     }
 
     private fun updateSelectedDate(selectedDate: SelectedDate, statsGranularity: StatsGranularity) {
-        mutableDates[statsGranularity] = selectedDate
-        mutableSelectedDateChanged.postValue(statsGranularity)
+        if (mutableDates[statsGranularity] != selectedDate) {
+            mutableDates[statsGranularity] = selectedDate
+            mutableSelectedDateChanged.postValue(statsGranularity)
+        }
     }
 
     fun getSelectedDate(statsGranularity: StatsGranularity): Date? {

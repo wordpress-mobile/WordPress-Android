@@ -1,24 +1,17 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
-import org.wordpress.android.util.Event
-import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.map
 import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 open class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
-    private val statsUseCase: BaseListUseCase,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val toUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel
+    private val statsUseCase: BaseListUseCase
 ) : ScopedViewModel(defaultDispatcher) {
     enum class StatsSection(@StringRes val titleRes: Int) {
         INSIGHTS(R.string.stats_insights),
@@ -29,18 +22,8 @@ open class StatsListViewModel(
     }
 
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
-    private val mutableSnackbarMessage by lazy {
-        MutableLiveData<Int>().throttle(this, distinct = false, offset = 1000)
-    }
-    val snackbarMessage: LiveData<SnackbarMessage> = mutableSnackbarMessage.map { SnackbarMessage(it) }
 
-    val uiModel: LiveData<UiModel> by lazy {
-        statsUseCase.data.map { useCaseModels ->
-            toUiModel(useCaseModels) { message ->
-                mutableSnackbarMessage.postValue(message)
-            }
-        }.throttle(this)
-    }
+    val uiModel: LiveData<UiModel> = statsUseCase.data.throttle(this, distinct = true)
 
     override fun onCleared() {
         statsUseCase.onCleared()
@@ -48,12 +31,8 @@ open class StatsListViewModel(
     }
 
     fun onRetryClick(site: SiteModel) {
-        if (networkUtilsWrapper.isNetworkAvailable()) {
-            launch {
-                statsUseCase.refreshData(site, true)
-            }
-        } else {
-            mutableSnackbarMessage.value = R.string.no_network_title
+        launch {
+            statsUseCase.refreshData(site, true)
         }
     }
 
@@ -61,6 +40,4 @@ open class StatsListViewModel(
         data class Success(val data: List<StatsBlock>) : UiModel()
         class Error(val message: Int = R.string.stats_loading_error) : UiModel()
     }
-
-    data class SnackbarMessage(@StringRes val message: Int) : Event()
 }

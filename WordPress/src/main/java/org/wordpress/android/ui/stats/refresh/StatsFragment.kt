@@ -147,6 +147,23 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
+        /*
+
+
+        viewModel.snackbarMessage.observeEvent(this) { message ->
+            val parent: View? = activity.findViewById(android.R.id.content)
+            if (parent != null) {
+                val snackbar = Snackbar.make(parent, message.message, Snackbar.LENGTH_LONG)
+                val snackbarText = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
+                snackbarText.maxLines = 2
+                snackbar.show()
+                true
+            } else {
+                false
+            }
+        }
+         */
+
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
