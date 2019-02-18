@@ -20,6 +20,10 @@ import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.util.LanguageUtils;
 
 public abstract class BaseWPComRestClient {
+    private static final String WPCOM_V2_PREFIX = "/wpcom/v2";
+    private static final String LOCALE_PARAM_NAME_FOR_V1 = "locale";
+    private static final String LOCALE_PARAM_NAME_FOR_V2 = "_locale";
+
     private AccessToken mAccessToken;
     private final RequestQueue mRequestQueue;
 
@@ -65,7 +69,7 @@ public abstract class BaseWPComRestClient {
 
     protected Request add(WPComGsonRequest request, boolean addLocaleParameter) {
         if (addLocaleParameter) {
-            request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
+            addLocaleToRequest(request);
         }
         // TODO: If !mAccountToken.exists() then trigger the mOnAuthFailedListener
         return addRequest(setRequestAuthParams(request, true));
@@ -78,7 +82,7 @@ public abstract class BaseWPComRestClient {
 
     protected Request addUnauthedRequest(AccountSocialRequest request, boolean addLocaleParameter) {
         if (addLocaleParameter) {
-            request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
+            addLocaleToRequest(request);
             request.setOnParseErrorListener(mOnParseErrorListener);
             request.setUserAgent(mUserAgent.getUserAgent());
         }
@@ -92,7 +96,7 @@ public abstract class BaseWPComRestClient {
 
     protected Request addUnauthedRequest(WPComGsonRequest request, boolean addLocaleParameter) {
         if (addLocaleParameter) {
-            request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
+            addLocaleToRequest(request);
         }
         return addRequest(setRequestAuthParams(request, false));
     }
@@ -115,5 +119,16 @@ public abstract class BaseWPComRestClient {
             mRequestQueue.getCache().invalidate(request.mUri.toString(), true);
         }
         return mRequestQueue.add(request);
+    }
+
+    private void addLocaleToRequest(BaseRequest request) {
+        String url = request.getUrl();
+        // Sanity check
+        if (url != null) {
+            // WPCOM V2 endpoints use a different locale parameter than other endpoints
+            String localeParamName =
+                    url.contains(WPCOM_V2_PREFIX) ? LOCALE_PARAM_NAME_FOR_V2 : LOCALE_PARAM_NAME_FOR_V1;
+            request.addQueryParameter(localeParamName, LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
+        }
     }
 }
