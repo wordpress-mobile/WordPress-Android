@@ -1147,8 +1147,9 @@ public class EditPostActivity extends AppCompatActivity implements
             switchToAztecMenuItem.setVisible(mCurrentEditorSelection == UserSwitchedEditor.GUTENBERG);
             switchToGutenbergMenuItem.setVisible(mCurrentEditorSelection == UserSwitchedEditor.AZTEC);
         } else {
-            // Check whether the content has blocks. Warning: this can be a very slow operation if the post if big/complex
-            //  since it extracts the content from the editor, which can be slow in Gutenberg at the time of writing.
+            // Check whether the content has blocks. Warning: this can be a very slow operation if the post if
+            // big/complex since it extracts the content from the editor, which can be slow in Gutenberg at the
+            // time of writing.
             boolean hasBlocks = false;
             try {
                 final String content = (String) mEditorFragment.getContent(mPost.getContent());
