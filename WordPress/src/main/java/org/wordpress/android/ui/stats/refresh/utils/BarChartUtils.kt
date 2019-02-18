@@ -294,7 +294,7 @@ private fun toBarEntry(bar: Bar, index: Int): BarEntry {
 
 private fun roundUp(input: Float): Float {
     return if (input > 100) {
-        roundUp(input/10) * 10
+        roundUp(input / 10) * 10
     } else {
         for (i in 1..25) {
             val limit = 4 * i
