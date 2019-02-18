@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.store.stats.insights
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CacheMode
-import org.wordpress.android.fluxc.model.stats.CacheMode.Top
 import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.TagsModel
@@ -33,7 +32,7 @@ class TagsStore @Inject constructor(
                     response.response != null -> {
                         sqlUtils.insert(siteModel, response.response)
                         OnStatsFetched(
-                                insightsMapper.map(response.response, Top(fetchMode.limit))
+                                insightsMapper.map(response.response, CacheMode.Top(fetchMode.limit))
                         )
                     }
                     else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
