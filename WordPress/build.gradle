@@ -29,6 +29,10 @@ android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompi
 
 android {
     useLibrary 'org.apache.http.legacy'
+    useLibrary 'android.test.runner'
+
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
 
     dexOptions {
         jumboMode = true
