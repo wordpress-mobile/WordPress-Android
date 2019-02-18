@@ -2183,8 +2183,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
                         // Set up custom headers for the visual editor's internal WebView
                         mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
-
-                        reattachUploadingMedia();
                     }
                     break;
                 case 1:
