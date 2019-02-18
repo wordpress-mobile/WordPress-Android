@@ -35,8 +35,8 @@ constructor(
                 url,
                 params,
                 PlanOffersResponse::class.java,
-                enableCaching = true,
-                forced = false
+                enableCaching = false,
+                forced = true
         )
         return when (response) {
             is Success -> {
