@@ -346,6 +346,13 @@
     <string name="dialog_gutenberg_compatibility_learn_more_url_wpcom" translatable="false">https://apps.wordpress.com/gutenberg?flavor=wpcom</string>
     <string name="dialog_gutenberg_compatibility_learn_more_url_wporg" translatable="false">https://apps.wordpress.com/gutenberg?flavor=wporg</string>
 
+    <!-- gutenberg informative dialog -->
+    <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
+    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.
+        Switch back to Classic at any time by tapping&#160;&#160;&#8942;&#160;&#160;in the top bar.</string>
+    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Page.
+        Switch back to Classic at any time by tapping&#160;&#160;&#8942;&#160;&#160;in the top bar.</string>
+
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 

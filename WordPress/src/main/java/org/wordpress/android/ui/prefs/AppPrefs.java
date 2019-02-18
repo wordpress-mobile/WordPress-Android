@@ -184,7 +184,10 @@ public class AppPrefs {
         IS_INSTALLATION_REFERRER_OBTAINED,
 
         // used to indicate that user dont want to see the Gutenberg warning dialog anymore
-        IS_GUTENBERG_WARNING_DIALOG_DISABLED
+        IS_GUTENBERG_WARNING_DIALOG_DISABLED,
+
+        // used to indicate that user dont want to see the Gutenberg informative dialog anymore
+        IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED
     }
 
     private static SharedPreferences prefs() {
@@ -826,5 +829,13 @@ public class AppPrefs {
 
     public static boolean isGutenbergWarningDialogDisabled() {
         return getBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, false);
+    }
+
+    public static void setGutenbergInformativeDialogDisabled(Boolean isDisabled) {
+        setBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, isDisabled);
+    }
+
+    public static boolean isGutenbergInformativeDialogDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, false);
     }
 }

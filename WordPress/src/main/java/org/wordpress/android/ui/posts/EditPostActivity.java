@@ -232,6 +232,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG = "tag_discarding_changes_no_network_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
+    private static final String TAG_GB_INFORMATIVE_DIALOG = "tag_gb_informative_dialog";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -1412,6 +1413,21 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    private void showGutenbergInformativeDialog() {
+        // Show the GB informative dialog on editing GB posts
+        if (!mIsNewPost && !AppPrefs.isGutenbergInformativeDialogDisabled()) {
+            final PromoDialog gbInformativeDialog = new PromoDialog();
+            gbInformativeDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
+                    getString(R.string.dialog_gutenberg_informative_title),
+                    mPost.isPage() ? getString(R.string.dialog_gutenberg_informative_description_page)
+                    : getString(R.string.dialog_gutenberg_informative_description_post),
+                    getString(org.wordpress.android.editor.R.string.dialog_button_ok));
+
+            gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
+            AppPrefs.setGutenbergInformativeDialogDisabled(true);
+        }
+    }
+
     private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish, boolean doFinishActivity) {
         new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1651,6 +1667,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 break;
             case ASYNC_PROMO_DIALOG_TAG:
                 publishPost();
+                break;
+            case TAG_GB_INFORMATIVE_DIALOG:
+                // no op
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -2116,6 +2135,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
+                        // Show the GB informative dialog on editing GB posts
+                        showGutenbergInformativeDialog();
                         return GutenbergEditorFragment.newInstance("", "", mIsNewPost);
                     } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
