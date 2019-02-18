@@ -154,7 +154,7 @@ class ListStore @Inject constructor(
     private fun handleFetchList(
         listDescriptor: ListDescriptor,
         loadMore: Boolean,
-        fetchList: (Int) -> Unit
+        fetchList: (Long) -> Unit
     ) {
         val currentState = getListState(listDescriptor)
         if (!loadMore && currentState.isFetchingFirstPage()) {
@@ -172,7 +172,7 @@ class ListStore @Inject constructor(
         val listModel = requireNotNull(listSqlUtils.getList(listDescriptor)) {
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
         }
-        val offset = if (loadMore) listItemSqlUtils.getListItems(listModel.id).size else 0
+        val offset = if (loadMore) listItemSqlUtils.getListItemsCount(listModel.id) else 0L
         fetchList(offset)
     }
 
