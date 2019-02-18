@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.main
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
 import android.support.annotation.StringRes
+import android.support.design.bottomnavigation.LabelVisibilityMode
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
@@ -27,8 +27,6 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderPostListFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -95,30 +93,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         currentPosition = AppPrefs.getMainPageIndex()
     }
 
-    /*
-     * uses reflection to disable "shift mode" so the item are equal width
-     */
-    @SuppressLint("RestrictedApi")
     private fun disableShiftMode() {
-        val menuView = getChildAt(0) as BottomNavigationMenuView
-        try {
-            menuView.javaClass.getDeclaredField("mShiftingMode").apply {
-                isAccessible = true
-                setBoolean(menuView, false)
-                isAccessible = false
-            }
-            for (i in 0 until menuView.childCount) {
-                (menuView.getChildAt(i) as BottomNavigationItemView).apply {
-                    setShiftingMode(false)
-                    // force the view to update
-                    setChecked(itemData.isChecked)
-                }
-            }
-        } catch (e: NoSuchFieldException) {
-            AppLog.e(T.MAIN, "Unable to disable shift mode", e)
-        } catch (e: IllegalAccessException) {
-            AppLog.e(T.MAIN, "Unable to disable shift mode", e)
-        }
+        labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
     }
 
     private fun assignNavigationListeners(assign: Boolean) {

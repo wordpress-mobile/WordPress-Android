@@ -40,7 +40,7 @@
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="match_parent"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation"
                 app:cardUseCompatPadding="true" >
 

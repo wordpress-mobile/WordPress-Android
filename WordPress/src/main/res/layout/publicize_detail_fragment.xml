@@ -19,7 +19,7 @@
         android:layout_marginTop="@dimen/margin_large"
         android:visibility="gone"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="@dimen/cardview_default_radius"
+        app:cardCornerRadius="@dimen/default_cardview_radius"
         tools:visibility="visible" >
 
         <LinearLayout
@@ -55,7 +55,7 @@
         android:layout_marginTop="@dimen/margin_large"
         android:layout_width="match_parent"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="@dimen/cardview_default_radius" >
+        app:cardCornerRadius="@dimen/default_cardview_radius" >
 
         <LinearLayout
             android:layout_width="match_parent"
