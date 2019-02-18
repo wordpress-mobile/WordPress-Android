@@ -215,7 +215,9 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String EXTRA_IS_DISCARDABLE = "isDiscardable";
+    public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
+    public static final String EXTRA_IS_NEW_POST = "isNewPost";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -250,6 +252,13 @@ public class EditPostActivity extends AppCompatActivity implements
         WP_MEDIA_LIBRARY,
         STOCK_PHOTO_LIBRARY
     }
+
+    enum RestartEditorOptions {
+        NO_RESTART,
+        RESTART_SUPPRESS_GUTENBERG,
+        RESTART_DONT_SUPPRESS_GUTENBERG,
+    }
+    private RestartEditorOptions mRestartEditorOption = RestartEditorOptions.NO_RESTART;
 
     private Handler mHandler;
     private int mDebounceCounter = 0;
@@ -340,9 +349,35 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     };
 
+    public static boolean checkToRestart(@NonNull Intent data) {
+        return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
+               && RestartEditorOptions.valueOf(data.getStringExtra(EditPostActivity.EXTRA_RESTART_EDITOR))
+                  != RestartEditorOptions.NO_RESTART;
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    private void newPostSetup() {
+        mIsNewPost = true;
+
+        if (mSite == null) {
+            showErrorAndFinish(R.string.blog_not_found);
+            return;
+        }
+        if (!mSite.isVisible()) {
+            showErrorAndFinish(R.string.error_blog_hidden);
+            return;
+        }
+
+        // Create a new post
+        mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
+        mPost.setStatus(PostStatus.PUBLISHED.toString());
+        EventBus.getDefault().postSticky(
+                new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
+        mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
     }
 
     @Override
@@ -383,6 +418,7 @@ public class EditPostActivity extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
+        boolean isRestarting = !RestartEditorOptions.NO_RESTART.name().equals(extras.getString(EXTRA_RESTART_EDITOR));
         if (savedInstanceState == null) {
             if (!getIntent().hasExtra(EXTRA_POST_LOCAL_ID)
                 || Intent.ACTION_SEND.equals(action)
@@ -398,28 +434,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (extras != null) {
                     mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 }
-                mIsNewPost = true;
-
-                if (mSite == null) {
-                    showErrorAndFinish(R.string.blog_not_found);
-                    return;
-                }
-                if (!mSite.isVisible()) {
-                    showErrorAndFinish(R.string.error_blog_hidden);
-                    return;
-                }
-
-                // Create a new post
-                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
-                mPost.setStatus(PostStatus.PUBLISHED.toString());
-                EventBus.getDefault().postSticky(
-                        new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
-                mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
+                newPostSetup();
             } else if (extras != null) {
                 // Load post passed in extras
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
+
                 if (mPost != null) {
                     initializePostObject();
+                } else if (isRestarting) {
+                    newPostSetup();
                 }
             }
         } else {
@@ -463,7 +486,18 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Ensure that this check happens when mPost is set
-        mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost);
+        String restartEditorOptionName;
+        if (savedInstanceState == null) {
+            restartEditorOptionName = getIntent().getStringExtra(EXTRA_RESTART_EDITOR);
+        } else {
+            restartEditorOptionName = savedInstanceState.getString(EXTRA_RESTART_EDITOR);
+        }
+        RestartEditorOptions restartEditorOption =
+                restartEditorOptionName == null ? RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
+                        : RestartEditorOptions.valueOf(restartEditorOptionName);
+
+        mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
+                               && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
 
         // Ensure we have a valid post
         if (mPost == null) {
@@ -1091,6 +1125,22 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
 
+        MenuItem switchToAztecMenuItem = menu.findItem(R.id.menu_switch_to_aztec);
+        switchToAztecMenuItem.setVisible(mShowGutenbergEditor);
+
+        // Check whether the content has blocks. Warning: this can be a very slow operation if the post if big/complex
+        //  since it extracts the content from the editor, which can be slow in Gutenberg at the time of writing.
+        boolean hasBlocks = false;
+        try {
+            final String content = (String) mEditorFragment.getContent(mPost.getContent());
+            hasBlocks = PostUtils.contentContainsGutenbergBlocks(content) || TextUtils.isEmpty(content);
+        } catch (EditorFragmentNotAddedException e) {
+            // legacy exception; just ignore.
+        }
+
+        MenuItem switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg);
+        switchToGutenbergMenuItem.setVisible(!mShowGutenbergEditor && hasBlocks);
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -1282,6 +1332,14 @@ public class EditPostActivity extends AppCompatActivity implements
                             TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG,
                             false);
                 }
+            } else if (itemId == R.id.menu_switch_to_aztec) {
+                // let's finish this editing instance and start again, but not letting Gutenberg be used
+                mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
+                savePostAndOptionallyFinish(true);
+            } else if (itemId == R.id.menu_switch_to_gutenberg) {
+                // let's finish this editing instance and start again, but let GB be used
+                mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG;
+                savePostAndOptionallyFinish(true);
             }
         }
         return false;
@@ -1821,6 +1879,8 @@ public class EditPostActivity extends AppCompatActivity implements
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
         i.putExtra(EXTRA_POST_REMOTE_ID, mPost.getRemotePostId());
         i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
+        i.putExtra(EXTRA_RESTART_EDITOR, mRestartEditorOption.name());
+        i.putExtra(EXTRA_IS_NEW_POST, mIsNewPost);
         setResult(RESULT_OK, i);
     }
 
@@ -1972,8 +2032,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
 
                     PostStatus status = PostStatus.fromPost(mPost);
+                    boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
                     if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
-                        && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                        && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext()) && isNotRestarting) {
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
                         savePostLocallyAndFinishAsync(doFinish);

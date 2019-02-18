@@ -732,8 +732,17 @@ public class WPMainActivity extends AppCompatActivity implements
                     return;
                 }
                 int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
-                final SiteModel site = getSelectedSite();
+                final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
                 final PostModel post = mPostStore.getPostByLocalPostId(localId);
+
+                if (EditPostActivity.checkToRestart(data)) {
+                    ActivityLauncher.editPostOrPageForResult(data, WPMainActivity.this, site,
+                            data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+
+                    // a restart will happen so, no need to continue here
+                    break;
+                }
+
                 if (site != null && post != null) {
                     UploadUtils.handleEditPostResultSnackbars(
                             this,

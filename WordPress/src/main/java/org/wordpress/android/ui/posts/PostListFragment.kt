@@ -312,6 +312,14 @@ class PostListFragment : Fragment() {
 
     fun handleEditPostResult(resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
+            if (data != null && EditPostActivity.checkToRestart(data)) {
+                ActivityLauncher.editPostOrPageForResult(data, nonNullActivity, site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0))
+
+                // a restart will happen so, no need to continue here
+                return
+            }
+
             viewModel.handleEditPostResult(data)
         }
     }
