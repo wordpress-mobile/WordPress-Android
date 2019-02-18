@@ -681,11 +681,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
         EventBus.getDefault().register(this);
 
-        reattachUploadingMedia();
+        reattachUploadingMediaForAztec();
     }
 
-    private void reattachUploadingMedia() {
-        if (mEditorMediaUploadListener != null) {
+    private void reattachUploadingMediaForAztec() {
+        if (mEditorFragment instanceof AztecEditorFragment && mEditorMediaUploadListener != null) {
             // UploadService.getPendingMediaForPost will be populated only when the user exits the editor
             // But if the user doesn't exit the editor and sends the app to the background, a reattachment
             // for the media within this Post is needed as soon as the app comes back to foreground,
@@ -2183,6 +2183,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
                         // Set up custom headers for the visual editor's internal WebView
                         mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
+
+                        reattachUploadingMediaForAztec();
                     }
                     break;
                 case 1:
