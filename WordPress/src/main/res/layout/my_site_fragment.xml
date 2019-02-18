@@ -166,6 +166,7 @@
                         android:minHeight="?attr/listPreferredItemHeightSmall" >
 
                         <org.wordpress.android.widgets.WPTextView
+                            android:textAlignment="viewStart"
                             android:id="@+id/quick_start_title"
                             android:ellipsize="end"
                             android:fontFamily="sans-serif-light"
