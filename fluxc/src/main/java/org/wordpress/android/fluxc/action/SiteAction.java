@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPCo
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
@@ -70,7 +71,7 @@ public enum SiteAction implements IAction {
     FETCH_DOMAIN_SUPPORTED_STATES,
     @Action
     FETCH_DOMAIN_SUPPORTED_COUNTRIES,
-    @Action(payloadType = SiteModel.class)
+    @Action(payloadType = CompleteQuickStartPayload.class)
     COMPLETE_QUICK_START,
 
     // Remote responses
