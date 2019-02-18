@@ -7,37 +7,27 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageParentViewHolder
-import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
-import org.wordpress.android.util.image.ImageManager
 
-class PagesAdapter(
-    private val onMenuAction: (PageItem.Action, Page) -> Boolean = { _, _ -> false },
-    private val onItemTapped: (Page) -> Unit = { },
-    private val onEmptyActionButtonTapped: () -> Unit = { },
-    private val onParentSelected: (ParentPage) -> Unit = { },
-    private val isSitePhotonCapable: Boolean = false,
-    private val imageManager: ImageManager? = null,
+class PageParentAdapter(
+    private val onParentSelected: (ParentPage) -> Unit,
     private val uiScope: CoroutineScope
 ) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
         return when (viewType) {
-            PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped, imageManager!!,
-                    isSitePhotonCapable)
-            PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
-            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent, onEmptyActionButtonTapped)
             PageItem.Type.PARENT.viewType -> PageParentViewHolder(parent,
                     this::selectParent,
                     R.layout.page_parent_list_item)
             PageItem.Type.TOP_LEVEL_PARENT.viewType -> PageParentViewHolder(parent,
                     this::selectParent,
                     R.layout.page_parent_top_level_item)
+            PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
+            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent) { }
             else -> throw Throwable("Unexpected view type")
         }
     }
@@ -65,25 +55,5 @@ class PagesAdapter(
         items.clear()
         items.addAll(result)
         diffResult.dispatchUpdatesTo(this)
-    }
-
-    private class PageItemDiffUtil(val items: List<PageItem>, val result: List<PageItem>) : DiffUtil.Callback() {
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldItem = items[oldItemPosition]
-            val newItem = result[newItemPosition]
-            return oldItem.type == newItem.type && when (oldItem) {
-                is Page -> oldItem.id == (newItem as Page).id
-                is ParentPage -> oldItem.id == (newItem as ParentPage).id
-                else -> oldItem == newItem
-            }
-        }
-
-        override fun getOldListSize(): Int = items.size
-
-        override fun getNewListSize(): Int = result.size
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return items[oldItemPosition] == result[newItemPosition]
-        }
     }
 }

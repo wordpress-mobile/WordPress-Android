@@ -1,1 +1,1 @@
-
+* Fixes a crash when searching pages
