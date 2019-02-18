@@ -1416,14 +1416,14 @@ public class EditPostActivity extends AppCompatActivity implements
     private void showGutenbergInformativeDialog() {
         // Show the GB informative dialog on editing GB posts
         if (!mIsNewPost && !AppPrefs.isGutenbergInformativeDialogDisabled()) {
-            final PromoDialog asyncPromoDialog = new PromoDialog();
-            asyncPromoDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
+            final PromoDialog gbInformativeDialog = new PromoDialog();
+            gbInformativeDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
                     getString(R.string.dialog_gutenberg_informative_title),
                     mPost.isPage() ? getString(R.string.dialog_gutenberg_informative_description_page)
                     : getString(R.string.dialog_gutenberg_informative_description_post),
                     getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
-            asyncPromoDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
+            gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
             AppPrefs.setGutenbergInformativeDialogDisabled(true);
         }
     }
