@@ -101,7 +101,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                mTopPagerContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                mTopPagerContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 if (!isAdded()) {
                     return;
                 }
