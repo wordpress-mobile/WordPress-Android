@@ -14,6 +14,16 @@
         android:orderInCategory="1" >
 
         <item
+            android:id="@+id/menu_switch_to_aztec"
+            android:title="@string/menu_switch_to_aztec_editor">
+        </item>
+
+        <item
+            android:id="@+id/menu_switch_to_gutenberg"
+            android:title="@string/menu_switch_to_gutenberg_editor">
+        </item>
+
+        <item
             android:id="@+id/menu_save_as_draft_or_publish"
             android:title="@string/menu_save_as_draft" >
         </item>

@@ -106,6 +106,15 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
+
+            if (EditPostActivity.checkToRestart(data)) {
+                ActivityLauncher.editPageForResult(data, this@PagesFragment, viewModel.site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0))
+
+                // a restart will happen so, no need to continue here
+                return
+            }
+
             val wasPageUpdated = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false)
             if (pageId != -1L) {
                 onPageEditFinished(pageId, wasPageUpdated)
@@ -263,15 +272,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
 
         viewModel.editPage.observe(this, Observer { page ->
             page?.let {
-                val post = postStore.getPostByLocalPostId(page.pageId)
-                val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content)
-                if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
-                    PostUtils.showGutenbergCompatibilityWarningDialog(
-                            getActivity(), fragmentManager, post, viewModel.site
-                    )
-                } else {
-                    ActivityLauncher.editPageForResult(this, page)
-                }
+                ActivityLauncher.editPageForResult(this, page)
             }
         })
 

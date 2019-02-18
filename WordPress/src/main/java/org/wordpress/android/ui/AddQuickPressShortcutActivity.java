@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -75,18 +74,18 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
         ListView listView = (ListView) findViewById(android.R.id.list);
 
-        ImageView iv = new ImageView(this);
-        iv.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_divider));
+        View iv = new View(this);
+        iv.setBackgroundResource(R.drawable.list_divider);
         listView.addFooterView(iv);
         listView.setVerticalFadingEdgeEnabled(false);
         listView.setVerticalScrollBarEnabled(true);
 
         if (sites.size() > 0) {
             ScrollView sv = new ScrollView(this);
-            sv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            sv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             LinearLayout layout = new LinearLayout(this);
             layout.setPadding(10, 10, 10, 0);
-            layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
             layout.setOrientation(LinearLayout.VERTICAL);
 
