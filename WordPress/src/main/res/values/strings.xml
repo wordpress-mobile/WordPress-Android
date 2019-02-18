@@ -2520,7 +2520,7 @@
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
-<<<<<<< HEAD
+    <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
 
     <!-- Gutenberg mobile strings -->
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_115">Add text or type / to add content</string>
@@ -2539,7 +2539,4 @@
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Move block up</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Move block down</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Remove content</string>
-=======
-    <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
->>>>>>> origin/develop
 </resources>
