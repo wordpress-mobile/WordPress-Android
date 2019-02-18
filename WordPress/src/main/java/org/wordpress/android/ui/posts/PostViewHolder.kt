@@ -175,7 +175,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                 statusIconResId = R.drawable.ic_cloud_upload_white_24dp
             } else if (postAdapterItem.isConflicted) {
                 statusTextResId = R.string.local_post_is_conflicted
-                statusIconResId = R.drawable.ic_gridicons_notice
+                statusIconResId = R.drawable.ic_notice_white_24dp
                 statusColorResId = R.color.alert_red
             } else if (postAdapterItem.isLocalDraft) {
                 statusTextResId = R.string.local_draft
@@ -304,8 +304,8 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
             when (buttonType) {
                 PostListButton.BUTTON_MORE -> animateButtonRows(postData, false)
                 PostListButton.BUTTON_BACK -> animateButtonRows(postData, true)
-                else -> postAdapterItem.onButtonClicked(buttonType)
             }
+            postAdapterItem.onButtonClicked(buttonType)
         }
         editButton.setOnClickListener(btnClickListener)
         viewButton.setOnClickListener(btnClickListener)

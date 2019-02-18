@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.SupportHelper
+import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.AppLogViewerActivity
@@ -177,9 +178,27 @@ class HelpActivity : AppCompatActivity() {
             if (selectedSite != null) {
                 intent.putExtra(WordPress.SITE, selectedSite)
             }
-            if (extraSupportTags != null && !extraSupportTags.isEmpty()) {
-                intent.putStringArrayListExtra(HelpActivity.EXTRA_TAGS_KEY, extraSupportTags as ArrayList<String>?)
+
+            val tagsList: ArrayList<String>? = if (AppPrefs.isGutenbergDefaultForNewPosts()) {
+                // construct a mutable list to add the Gutenberg related extra tag
+                val list = ArrayList<String>()
+
+                // add the provided list of tags if any
+                extraSupportTags?.let {
+                    list.addAll(extraSupportTags)
+                }
+
+                // Append the "mobile_gutenberg_is_default" tag if gutenberg is set to default for new posts
+                list.add(ZendeskExtraTags.gutenbergIsDefault)
+                list // "return" the list
+            } else {
+                extraSupportTags as ArrayList<String>?
             }
+
+            if (tagsList != null && !tagsList.isEmpty()) {
+                intent.putStringArrayListExtra(HelpActivity.EXTRA_TAGS_KEY, tagsList)
+            }
+
             return intent
         }
     }
