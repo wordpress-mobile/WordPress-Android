@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/PluginCardView"
     card_view:cardBackgroundColor="@color/white"
-    card_view:cardCornerRadius="@dimen/cardview_default_radius">
+    card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
     <RelativeLayout
         android:id="@+id/plugin_ratings_section_container"

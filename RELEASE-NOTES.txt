@@ -1,1 +1,2 @@
 * Make "<em>" the default markup for italic in the editor
+* Updated Plans with new design

@@ -36,7 +36,7 @@
                 android:layout_marginStart="@dimen/content_margin"
                 android:layout_marginTop="@dimen/margin_medium"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
                 <RelativeLayout
