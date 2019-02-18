@@ -493,6 +493,12 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorFragment.setImageLoader(mImageLoader);
         }
 
+        // Ensure we have a valid post
+        if (mPost == null) {
+            showErrorAndFinish(R.string.post_not_found);
+            return;
+        }
+
         // Ensure that this check happens when mPost is set
         String restartEditorOptionName;
         String userSwitchedEditorsOptionName = null;
@@ -512,12 +518,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
                                && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
-
-        // Ensure we have a valid post
-        if (mPost == null) {
-            showErrorAndFinish(R.string.post_not_found);
-            return;
-        }
 
         if (savedInstanceState == null) {
             // Bump the stat the first time the editor is opened.
