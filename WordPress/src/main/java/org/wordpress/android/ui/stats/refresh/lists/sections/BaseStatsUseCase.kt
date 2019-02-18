@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -15,6 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase.NotUsedUiState
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
 
 /**
@@ -26,7 +28,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private val defaultUiState: UI_STATE
 ) {
     private val domainModel = MutableLiveData<State<DOMAIN_MODEL>>()
-    private val uiState = MutableLiveData<UI_STATE>()
+    protected val uiState = MediatorLiveData<UI_STATE>()
     val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { data, uiState ->
         try {
             when (data) {
@@ -39,7 +41,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             AppLog.e(AppLog.T.STATS, e)
             Error(type, "An error occurred (${e.message ?: "Unknown"})")
         }
-    }
+    }.distinct()
 
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
@@ -96,7 +98,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * Trigger this method when the UI state has changed.
      * @param newState
      */
-    fun onUiState(newState: UI_STATE?) {
+    fun onUiState(newState: UI_STATE? = null) {
         uiState.value = newState ?: uiState.value
     }
 

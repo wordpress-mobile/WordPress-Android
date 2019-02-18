@@ -33,13 +33,13 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                app:title="@string/stats"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:title="@string/stats"/>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
@@ -47,14 +47,18 @@
                 android:layout_height="48dp"
                 android:layout_gravity="start"
                 android:background="@color/color_primary"
-                app:tabPaddingStart="16dp"
-                app:tabPaddingEnd="16dp"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/white"
                 app:tabMode="scrollable"
+                app:tabPaddingEnd="16dp"
+                app:tabPaddingStart="16dp"
                 app:tabSelectedTextColor="@color/white"
                 app:tabTextColor="@color/white"
                 app:theme="@style/Base.Widget.Design.TabLayout"/>
+
+            <include
+                android:id="@+id/date_selection_toolbar"
+                layout="@layout/stats_date_selector"/>
 
         </android.support.design.widget.AppBarLayout>
 

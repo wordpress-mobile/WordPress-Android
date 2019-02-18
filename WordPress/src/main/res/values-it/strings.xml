@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-22 11:54:07+0000
+Translation-Revision-Date: 2019-02-05 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Mostra anteprima del sito</string>
+    <string name="new_site_creation_clear_all_content_description">Pulisci</string>
+    <string name="site_created_but_not_fetched_snackbar_message">Sembra che tu sia collegato a una connessione lenta. Se il tuo nuovo sito non è presente nell\'elenco, prova ad aggiornare.</string>
+    <string name="cancel_new_site_wizard_content_description">Annulla la procedura guidata per la creazione del sito</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Stiamo creando il tuo nuovo sito</string>
+    <string name="notification_new_site_creation_failed">Si è verificato un problema</string>
+    <string name="notification_new_site_creation_title">Creazione del sito</string>
+    <string name="new_site_creation_create_site_button">Crea il sito</string>
+    <string name="new_site_creation_search_domain_input_hint">Cerca domini</string>
+    <string name="new_site_creation_domain_header_subtitle">Ecco dove gli utenti ti troveranno su Internet.</string>
+    <string name="new_site_creation_domain_header_title">Scegli un nome di dominio per il tuo sito</string>
+    <string name="new_site_creation_empty_domain_list_message">Nessun indirizzo corrispondente alla ricerca</string>
+    <string name="site_creation_error_generic_subtitle">Errore di comunicazione con il server, prova di nuovo</string>
+    <string name="site_creation_error_generic_title">Si è verificato un problema</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Categoria personalizzata</string>
+    <string name="new_site_creation_button_skip">Salta</string>
+    <string name="new_site_creation_tag_line_description">La tagline è una breve linea di testo mostrata proprio sotto il titolo.</string>
+    <string name="new_site_creation_tag_line_hint">Tagline</string>
+    <string name="new_site_creation_site_title_hint">Titolo sito</string>
+    <string name="new_site_creation_site_info_header_subtitle">Raccontaci di più sul sito che stai creando.</string>
+    <string name="new_site_creation_site_info_header_title">Informazioni di base</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Si è verificato un problema</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Nessuna connessione</string>
+    <string name="site_creation_segments_subtitle">Questo ci aiuta a dare consigli. Non rimani mai bloccato però. Tutti i siti si evolvono.</string>
+    <string name="site_creation_segments_title">Descrivici il tipo di sito che vorresti creare</string>
+    <string name="new_site_creation_preview_title">Il sito è stato creato.</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d di %2$d</string>
+    <string name="new_site_creation_screen_title_general">Creazione del sito</string>
+    <string name="suggestions_updated_content_description">Suggerimenti aggiornati</string>
+    <string name="site_picker_failed_selecting_added_site">Impossibile selezionare il sito ospitato personalmente appena aggiunto.</string>
+    <string name="local_post_is_conflicted">Conflitto versione</string>
+    <string name="preference_crash_reports_summary">Consenti ai report di arresto anomalo di aiutarci a migliorare le prestazioni dell\'app.</string>
+    <string name="preference_crash_reports">Report di arresto anomalo</string>
+    <string name="snackbar_conflict_undo">Annulla</string>
+    <string name="snackbar_conflict_web_version_discarded">Versione web eliminata</string>
+    <string name="snackbar_conflict_local_version_discarded">Versione locale eliminata</string>
+    <string name="toast_conflict_updating_post">Aggiornamento dell\'articolo</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Elimina web</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Elimina locale</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Locale\nSalvato su %s\n\nWeb\nSalvato su %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">Questo articolo ha due versioni che sono in conflitto. Seleziona la versione che desideri eliminare.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Risoluzione del conflitto di sincronizzazione</string>
     <string name="local_changes_discarding_no_connection">È richiesta una connessione per eseguire questa azione. Controlla la connessione e riprova.</string>
     <string name="preference_strip_image_location">Rimuovi posizione dal contenuto multimediale</string>
     <string name="site_creation_label_domain_selection">Scegli un indirizzo tra quelli disponibili per consentire alle persone di trovarti nel web.</string>
@@ -44,9 +86,6 @@ Language: it
     <string name="stats_insights_view_more">Visualizza altro</string>
     <string name="stats_insights_share_post">Condividi articolo</string>
     <string name="stats_insights_create_post">Crea articolo</string>
-    <string name="stats_insights_latest_post_message">Sono passati %1$s dalla pubblicazione di %2$s. Ecco come il tuo articolo è andato finora</string>
-    <string name="stats_insights_latest_post_with_no_engagement">Sono passati %1$s dalla pubblicazione di %2$s. Sblocca la situazione e incrementa le visualizzazioni condividendo il tuo articolo.</string>
-    <string name="stats_insights_latest_post_empty">Non hai ancora pubblicato alcun articolo. Una volta avviata la pubblicazione, il riepilogo del tuo ultimo articolo verrà visualizzato qui.</string>
     <string name="stats_insights_tags_and_categories">Tag e Categorie</string>
     <string name="stats_insights_all_time_stats">Tutte le statistiche</string>
     <string name="stats_insights_most_popular_views_label">Visualizzazioni</string>

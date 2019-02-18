@@ -46,7 +46,12 @@ sealed class BlockListItem(val type: Type) {
 
     data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
 
-    data class ValueItem(val value: String, @StringRes val unit: Int) : BlockListItem(VALUE_ITEM)
+    data class ValueItem(
+        val value: String,
+        @StringRes val unit: Int,
+        val change: String? = null,
+        val positive: Boolean = true
+    ) : BlockListItem(VALUE_ITEM)
 
     data class ListItem(
         val text: String,
@@ -107,7 +112,8 @@ sealed class BlockListItem(val type: Type) {
     data class BarChartItem(
         val entries: List<Bar>,
         val selectedItem: String? = null,
-        val onBarSelected: ((String?) -> Unit)? = null
+        val onBarSelected: ((period: String?) -> Unit)? = null,
+        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null
     ) : BlockListItem(BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
 

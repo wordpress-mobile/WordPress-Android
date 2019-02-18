@@ -105,7 +105,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
             assertThat(title.textResource).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
             val link = this[2] as Link
-            assertThat(link.icon).isEqualTo(R.drawable.ic_share_blue_medium_24dp)
+            assertThat(link.icon).isEqualTo(R.drawable.ic_share_white_24dp)
             assertThat(link.text).isEqualTo(R.string.stats_insights_share_post)
 
             link.toNavigationTarget().apply {

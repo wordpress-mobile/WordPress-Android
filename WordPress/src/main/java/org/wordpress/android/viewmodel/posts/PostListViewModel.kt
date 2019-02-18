@@ -17,6 +17,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -51,7 +52,6 @@ import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
-import org.wordpress.android.ui.posts.PostListAction.ShowGutenbergWarningDialog
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
@@ -360,29 +360,10 @@ class PostListViewModel @Inject constructor(
             return
         }
 
-        checkGutenbergOrEdit(site, post)
-    }
-
-    private fun checkGutenbergOrEdit(site: SiteModel, post: PostModel) {
-        // Show Gutenberg Warning Dialog if post contains GB blocks and it's not disabled
-        if (!isGutenbergEnabled() &&
-                PostUtils.contentContainsGutenbergBlocks(post.content) &&
-                !AppPrefs.isGutenbergWarningDialogDisabled()) {
-            _postListAction.postValue(ShowGutenbergWarningDialog(site, post))
-        } else {
-            editPost(site, post)
-        }
+        editPost(site, post)
     }
 
     private fun editPost(site: SiteModel, post: PostModel) {
-        val properties = HashMap<String, Any>()
-        properties["button"] = "edit"
-        if (!post.isLocalDraft) {
-            properties["post_id"] = post.remotePostId
-        }
-        properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils.contentContainsGutenbergBlocks(post.content)
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, site, properties)
-
         if (UploadService.isPostUploadingOrQueued(post)) {
             // If the post is uploading media, allow the media to continue uploading, but don't upload the
             // post itself when they finish (since we're about to edit it again)
@@ -571,9 +552,44 @@ class PostListViewModel @Inject constructor(
 
         return PostAdapterItem(
                 data = postData,
-                onSelected = { handlePostButton(PostListButton.BUTTON_EDIT, post) },
-                onButtonClicked = { handlePostButton(it, post) }
+                onSelected = {
+                    trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
+                    handlePostButton(PostListButton.BUTTON_EDIT, post)
+                },
+                onButtonClicked = {
+                    trackAction(it, post, AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED)
+                    handlePostButton(it, post)
+                }
         )
+    }
+
+    private fun trackAction(buttonType: Int, postData: PostModel, statsEvent: Stat) {
+        val properties = HashMap<String, Any?>()
+        if (!postData.isLocalDraft) {
+            properties["post_id"] = postData.remotePostId
+        }
+
+        properties["action"] = when (buttonType) {
+            PostListButton.BUTTON_EDIT -> {
+                properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils
+                        .contentContainsGutenbergBlocks(postData.content)
+                "edit"
+            }
+            PostListButton.BUTTON_RETRY -> "retry"
+            PostListButton.BUTTON_SUBMIT -> "submit"
+            PostListButton.BUTTON_VIEW -> "view"
+            PostListButton.BUTTON_PREVIEW -> "preview"
+            PostListButton.BUTTON_STATS -> "stats"
+            PostListButton.BUTTON_TRASH -> "trash"
+            PostListButton.BUTTON_DELETE -> "delete"
+            PostListButton.BUTTON_PUBLISH -> "publish"
+            PostListButton.BUTTON_SYNC -> "sync"
+            PostListButton.BUTTON_MORE -> "more"
+            PostListButton.BUTTON_BACK -> "back"
+            else -> AppLog.e(AppLog.T.POSTS, "Unknown button type")
+        }
+
+        AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)
     }
 
     private fun getFeaturedImageUrl(featuredImageId: Long, postContent: String): String? {
@@ -736,8 +752,10 @@ class PostListViewModel @Inject constructor(
         val onDismissAction = {
             originalPostCopyForConflictUndo = null
         }
-        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_local_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        val snackbarHolder = SnackbarMessageHolder(
+                R.string.snackbar_conflict_local_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+        )
         _snackbarAction.postValue(snackbarHolder)
     }
 
@@ -771,8 +789,10 @@ class PostListViewModel @Inject constructor(
                 dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
             }
         }
-        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_web_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        val snackbarHolder = SnackbarMessageHolder(
+                R.string.snackbar_conflict_web_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+        )
         _snackbarAction.postValue(snackbarHolder)
     }
 

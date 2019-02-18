@@ -22,7 +22,7 @@ public class SmoothScrollLinearLayoutManager extends LinearLayoutManager {
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
         final View firstVisibleChild = recyclerView.getChildAt(0);
         final int itemHeight = firstVisibleChild.getHeight();
-        final int currentPosition = recyclerView.getChildPosition(firstVisibleChild);
+        final int currentPosition = recyclerView.getChildAdapterPosition(firstVisibleChild);
         int distanceInPixels = Math.abs((currentPosition - position) * itemHeight);
 
         if (distanceInPixels == 0) {

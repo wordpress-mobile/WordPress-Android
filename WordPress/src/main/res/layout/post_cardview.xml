@@ -70,7 +70,7 @@
                 android:layout_height="16dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                tools:src="@drawable/ic_gridicons_cloud_upload"
+                tools:src="@drawable/ic_cloud_upload_white_24dp"
                 android:layout_marginEnd="@dimen/margin_small"/>
 
             <org.wordpress.android.widgets.WPTextView

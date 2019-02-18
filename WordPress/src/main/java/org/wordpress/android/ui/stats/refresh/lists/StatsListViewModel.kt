@@ -5,12 +5,11 @@ import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher, private val statsUseCase: BaseListUseCase) :
         ScopedViewModel(defaultDispatcher) {
-    private val _data = statsUseCase.data
-
     enum class StatsSection(@StringRes val titleRes: Int) {
         INSIGHTS(R.string.stats_insights),
         DAYS(R.string.stats_timeframe_days),
@@ -21,7 +20,7 @@ abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher, privat
 
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
 
-    val data: LiveData<List<StatsBlock>> = _data
+    val data: LiveData<List<StatsBlock>> by lazy { statsUseCase.data.throttle(this) }
 
     override fun onCleared() {
         statsUseCase.onCleared()

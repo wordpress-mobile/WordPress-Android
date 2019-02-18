@@ -133,9 +133,9 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         mImageManager.load(holder.mImgBlavatar, ImageType.BLAVATAR, site.getBlavatarUrl());
 
         if (site.getLocalId() == mPrimarySiteId) {
-            holder.mLayoutContainer.setBackgroundDrawable(mSelectedItemBackground);
+            holder.mLayoutContainer.setBackground(mSelectedItemBackground);
         } else {
-            holder.mLayoutContainer.setBackgroundDrawable(null);
+            holder.mLayoutContainer.setBackground(null);
         }
 
         // different styling for visible/hidden sites

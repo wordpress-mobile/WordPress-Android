@@ -3354,22 +3354,6 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        category="Performance"
-        priority="3"
-        summary="Overdraw: Painting regions more than once"
-        explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../WordPress/src/main/res/layout/quick_start_fragment.xml"
-            line="9"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        severity="Warning"
         message="Possible overdraw: Root element paints background `@color/black` with a theme that also paints a background (inferred theme is `@style/ReaderMediaViewerTheme`)"
         category="Performance"
         priority="3"
@@ -3969,60 +3953,6 @@
             file="../WordPress/src/main/res/values-tr/strings.xml"
             line="494"
             column="61"/>
-    </issue>
-
-    <issue
-        id="IconXmlAndPng"
-        severity="Error"
-        message="The following images appear both as density independent `.xml` files and as bitmap files: src/main/res/drawable-anydpi/ic_checkmark_grey_32dp.xml, src/main/res/drawable-hdpi/ic_checkmark_grey_32dp.png"
-        category="Usability:Icons"
-        priority="7"
-        summary="Icon is specified both as `.xml` file and as a bitmap"
-        explanation="If a drawable resource appears as an `.xml` file in the `drawable/` folder, it&apos;s usually not intentional for it to also appear as a bitmap using the same name; generally you expect the drawable XML file to define states and each state has a corresponding drawable bitmap.">
-        <location
-            file="../WordPress/src/main/res/drawable-xxhdpi/ic_checkmark_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-xhdpi/ic_checkmark_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-hdpi/ic_checkmark_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-anydpi/ic_checkmark_grey_32dp.xml"/>
-    </issue>
-
-    <issue
-        id="IconXmlAndPng"
-        severity="Error"
-        message="The following images appear both as density independent `.xml` files and as bitmap files: src/main/res/drawable-anydpi/ic_reply_grey_32dp.xml, src/main/res/drawable-hdpi/ic_reply_grey_32dp.png"
-        category="Usability:Icons"
-        priority="7"
-        summary="Icon is specified both as `.xml` file and as a bitmap"
-        explanation="If a drawable resource appears as an `.xml` file in the `drawable/` folder, it&apos;s usually not intentional for it to also appear as a bitmap using the same name; generally you expect the drawable XML file to define states and each state has a corresponding drawable bitmap.">
-        <location
-            file="../WordPress/src/main/res/drawable-xxhdpi/ic_reply_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-xhdpi/ic_reply_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-hdpi/ic_reply_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-anydpi/ic_reply_grey_32dp.xml"/>
-    </issue>
-
-    <issue
-        id="IconXmlAndPng"
-        severity="Error"
-        message="The following images appear both as density independent `.xml` files and as bitmap files: src/main/res/drawable-anydpi/ic_star_grey_32dp.xml, src/main/res/drawable-hdpi/ic_star_grey_32dp.png"
-        category="Usability:Icons"
-        priority="7"
-        summary="Icon is specified both as `.xml` file and as a bitmap"
-        explanation="If a drawable resource appears as an `.xml` file in the `drawable/` folder, it&apos;s usually not intentional for it to also appear as a bitmap using the same name; generally you expect the drawable XML file to define states and each state has a corresponding drawable bitmap.">
-        <location
-            file="../WordPress/src/main/res/drawable-xxhdpi/ic_star_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-xhdpi/ic_star_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-hdpi/ic_star_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-anydpi/ic_star_grey_32dp.xml"/>
     </issue>
 
     <issue
