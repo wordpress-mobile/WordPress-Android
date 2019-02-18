@@ -95,9 +95,7 @@ class ListStore @Inject constructor(
                 dataStore.fetchList(listDescriptor, offset)
             }
         }
-        val isEmpty = {
-            getListItems(listDescriptor).isEmpty()
-        }
+        val isEmpty = { getListItemsCount(listDescriptor) == 0L }
 
         // Create the PagedList
         val factory = PagedListFactory(dataStore, listDescriptor, getList, isListFullyFetched, transform)
@@ -136,6 +134,14 @@ class ListStore @Inject constructor(
         return if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id).map { it.remoteItemId }
         } else emptyList()
+    }
+
+    /**
+     * A helper function that returns if the list is empty for the given [ListDescriptor].
+     */
+    private fun getListItemsCount(listDescriptor: ListDescriptor): Long {
+        val listModel = listSqlUtils.getList(listDescriptor)
+        return if (listModel != null) listItemSqlUtils.getListItemsCount(listModel.id) else 0L
     }
 
     /**
