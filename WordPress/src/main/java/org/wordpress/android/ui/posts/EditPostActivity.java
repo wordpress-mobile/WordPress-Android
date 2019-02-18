@@ -228,6 +228,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
+    private static final String STATE_KEY_EDITOR_SWITCH = "stateKeyEditorSwitch";
     private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
     private static final String TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG = "tag_discarding_changes_no_network_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
@@ -259,6 +260,13 @@ public class EditPostActivity extends AppCompatActivity implements
         RESTART_DONT_SUPPRESS_GUTENBERG,
     }
     private RestartEditorOptions mRestartEditorOption = RestartEditorOptions.NO_RESTART;
+
+    enum UserSwitchedEditor {
+        NONE, // user hasn't switched for this session yet
+        AZTEC, // user has switched to Classic (Aztec)
+        GUTENBERG, // user has switched to Block editor (Gutenberg)
+    }
+    private UserSwitchedEditor mCurrentEditorSelection = UserSwitchedEditor.NONE;
 
     private Handler mHandler;
     private int mDebounceCounter = 0;
@@ -487,14 +495,20 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // Ensure that this check happens when mPost is set
         String restartEditorOptionName;
+        String userSwitchedEditorsOptionName = null;
         if (savedInstanceState == null) {
             restartEditorOptionName = getIntent().getStringExtra(EXTRA_RESTART_EDITOR);
+            userSwitchedEditorsOptionName = getIntent().getStringExtra(STATE_KEY_EDITOR_SWITCH);
         } else {
             restartEditorOptionName = savedInstanceState.getString(EXTRA_RESTART_EDITOR);
+            userSwitchedEditorsOptionName = savedInstanceState.getString(STATE_KEY_EDITOR_SWITCH);
         }
         RestartEditorOptions restartEditorOption =
                 restartEditorOptionName == null ? RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
                         : RestartEditorOptions.valueOf(restartEditorOptionName);
+        mCurrentEditorSelection =
+                userSwitchedEditorsOptionName == null ? UserSwitchedEditor.NONE
+                    : UserSwitchedEditor.valueOf(userSwitchedEditorsOptionName);
 
         mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
                                && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
@@ -774,6 +788,7 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
+        outState.putString(STATE_KEY_EDITOR_SWITCH, mCurrentEditorSelection.name());
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putParcelable(STATE_KEY_REVISION, mRevision);
 
@@ -1126,20 +1141,24 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         MenuItem switchToAztecMenuItem = menu.findItem(R.id.menu_switch_to_aztec);
-        switchToAztecMenuItem.setVisible(mShowGutenbergEditor);
-
-        // Check whether the content has blocks. Warning: this can be a very slow operation if the post if big/complex
-        //  since it extracts the content from the editor, which can be slow in Gutenberg at the time of writing.
-        boolean hasBlocks = false;
-        try {
-            final String content = (String) mEditorFragment.getContent(mPost.getContent());
-            hasBlocks = PostUtils.contentContainsGutenbergBlocks(content) || TextUtils.isEmpty(content);
-        } catch (EditorFragmentNotAddedException e) {
-            // legacy exception; just ignore.
-        }
-
         MenuItem switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg);
-        switchToGutenbergMenuItem.setVisible(!mShowGutenbergEditor && hasBlocks);
+        if (mCurrentEditorSelection != UserSwitchedEditor.NONE) {
+            // if user has made a forced choice, we don't need to check for blocks etc again
+            switchToAztecMenuItem.setVisible(mCurrentEditorSelection == UserSwitchedEditor.GUTENBERG);
+            switchToGutenbergMenuItem.setVisible(mCurrentEditorSelection == UserSwitchedEditor.AZTEC);
+        } else {
+            // Check whether the content has blocks. Warning: this can be a very slow operation if the post if big/complex
+            //  since it extracts the content from the editor, which can be slow in Gutenberg at the time of writing.
+            boolean hasBlocks = false;
+            try {
+                final String content = (String) mEditorFragment.getContent(mPost.getContent());
+                hasBlocks = PostUtils.contentContainsGutenbergBlocks(content) || TextUtils.isEmpty(content);
+            } catch (EditorFragmentNotAddedException e) {
+                // legacy exception; just ignore.
+            }
+
+            switchToGutenbergMenuItem.setVisible(!mShowGutenbergEditor && hasBlocks);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -1335,10 +1354,12 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_switch_to_aztec) {
                 // let's finish this editing instance and start again, but not letting Gutenberg be used
                 mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
+                mCurrentEditorSelection = UserSwitchedEditor.AZTEC;
                 savePostAndOptionallyFinish(true);
             } else if (itemId == R.id.menu_switch_to_gutenberg) {
                 // let's finish this editing instance and start again, but let GB be used
                 mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG;
+                mCurrentEditorSelection = UserSwitchedEditor.GUTENBERG;
                 savePostAndOptionallyFinish(true);
             }
         }
@@ -1880,6 +1901,7 @@ public class EditPostActivity extends AppCompatActivity implements
         i.putExtra(EXTRA_POST_REMOTE_ID, mPost.getRemotePostId());
         i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
         i.putExtra(EXTRA_RESTART_EDITOR, mRestartEditorOption.name());
+        i.putExtra(STATE_KEY_EDITOR_SWITCH, mCurrentEditorSelection.name());
         i.putExtra(EXTRA_IS_NEW_POST, mIsNewPost);
         setResult(RESULT_OK, i);
     }
