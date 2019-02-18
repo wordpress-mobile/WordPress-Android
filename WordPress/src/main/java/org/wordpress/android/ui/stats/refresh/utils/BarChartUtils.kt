@@ -81,6 +81,7 @@ fun BarChart.draw(
             }
         }
         setDrawGridLines(true)
+        setDrawTopYLabelEntry(true)
         setDrawZeroLine(false)
         setDrawAxisLine(false)
         granularity = 1f
@@ -88,13 +89,15 @@ fun BarChart.draw(
         axisMaximum = if (maxYValue < MIN_VALUE) {
             MIN_VALUE
         } else {
-            maxYValue.toFloat() * 1.1f
+            roundUp(maxYValue.toFloat())
         }
+        setLabelCount(5, true)
         textColor = greyColor
         gridColor = lightGreyColor
         textSize = 10f
         gridLineWidth = 1f
     }
+    extraLeftOffset = 8f
     axisRight.apply {
         setDrawGridLines(false)
         setDrawZeroLine(false)
@@ -287,4 +290,18 @@ private fun toBarEntry(bar: Bar, index: Int): BarEntry {
             bar.value.toFloat(),
             bar.id
     )
+}
+
+private fun roundUp(input: Float): Float {
+    return if (input > 100) {
+        roundUp(input/10) * 10
+    } else {
+        for (i in 1..25) {
+            val limit = 4 * i
+            if (input < limit) {
+                return limit.toFloat()
+            }
+        }
+        return 100F
+    }
 }
