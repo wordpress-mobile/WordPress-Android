@@ -3956,60 +3956,6 @@
     </issue>
 
     <issue
-        id="IconXmlAndPng"
-        severity="Error"
-        message="The following images appear both as density independent `.xml` files and as bitmap files: src/main/res/drawable-anydpi/ic_checkmark_grey_32dp.xml, src/main/res/drawable-hdpi/ic_checkmark_grey_32dp.png"
-        category="Usability:Icons"
-        priority="7"
-        summary="Icon is specified both as `.xml` file and as a bitmap"
-        explanation="If a drawable resource appears as an `.xml` file in the `drawable/` folder, it&apos;s usually not intentional for it to also appear as a bitmap using the same name; generally you expect the drawable XML file to define states and each state has a corresponding drawable bitmap.">
-        <location
-            file="../WordPress/src/main/res/drawable-xxhdpi/ic_checkmark_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-xhdpi/ic_checkmark_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-hdpi/ic_checkmark_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-anydpi/ic_checkmark_grey_32dp.xml"/>
-    </issue>
-
-    <issue
-        id="IconXmlAndPng"
-        severity="Error"
-        message="The following images appear both as density independent `.xml` files and as bitmap files: src/main/res/drawable-anydpi/ic_reply_grey_32dp.xml, src/main/res/drawable-hdpi/ic_reply_grey_32dp.png"
-        category="Usability:Icons"
-        priority="7"
-        summary="Icon is specified both as `.xml` file and as a bitmap"
-        explanation="If a drawable resource appears as an `.xml` file in the `drawable/` folder, it&apos;s usually not intentional for it to also appear as a bitmap using the same name; generally you expect the drawable XML file to define states and each state has a corresponding drawable bitmap.">
-        <location
-            file="../WordPress/src/main/res/drawable-xxhdpi/ic_reply_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-xhdpi/ic_reply_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-hdpi/ic_reply_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-anydpi/ic_reply_grey_32dp.xml"/>
-    </issue>
-
-    <issue
-        id="IconXmlAndPng"
-        severity="Error"
-        message="The following images appear both as density independent `.xml` files and as bitmap files: src/main/res/drawable-anydpi/ic_star_grey_32dp.xml, src/main/res/drawable-hdpi/ic_star_grey_32dp.png"
-        category="Usability:Icons"
-        priority="7"
-        summary="Icon is specified both as `.xml` file and as a bitmap"
-        explanation="If a drawable resource appears as an `.xml` file in the `drawable/` folder, it&apos;s usually not intentional for it to also appear as a bitmap using the same name; generally you expect the drawable XML file to define states and each state has a corresponding drawable bitmap.">
-        <location
-            file="../WordPress/src/main/res/drawable-xxhdpi/ic_star_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-xhdpi/ic_star_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-hdpi/ic_star_grey_32dp.png"/>
-        <location
-            file="../WordPress/src/main/res/drawable-anydpi/ic_star_grey_32dp.xml"/>
-    </issue>
-
-    <issue
         id="IconDensities"
         severity="Warning"
         message="Missing the following drawables in `drawable-hdpi`: rppreview1.png, rppreview2.png, rppreview3.png"

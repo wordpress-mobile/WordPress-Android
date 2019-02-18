@@ -1,0 +1,18 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="48dp"
+    android:width="48dp"
+    android:viewportHeight="48"
+    android:viewportWidth="48" >
+
+    <path
+        android:fillColor="@color/blue_wordpress"
+        android:pathData="M33,26L33,31C33,32.105 32.105,33 31,33L17,33C15.895,33 15,32.105 15,31L15,17C15,15.895 15.895,15 17,15L22,15L22,17L17,17L17,31L31,31L31,26L33,26Z" >
+    </path>
+
+    <path
+        android:fillColor="@color/blue_wordpress"
+        android:pathData="M33,19l-4,0l0,-4l-2,0l0,4l-4,0l0,2l4,0l0,4l2,0l0,-4l4,0" >
+    </path>
+
+</vector>
