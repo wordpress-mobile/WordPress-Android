@@ -51,6 +51,15 @@ import javax.inject.Singleton;
 @Singleton
 public class SiteStore extends Store {
     // Payloads
+    public static class CompleteQuickStartPayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public String variant;
+        public CompleteQuickStartPayload(@NonNull SiteModel site, String variant) {
+            this.site = site;
+            this.variant = variant;
+        }
+    }
+
     public static class RefreshSitesXMLRPCPayload extends Payload<BaseNetworkError> {
         public RefreshSitesXMLRPCPayload() {}
         public String username;
@@ -862,6 +871,21 @@ public class SiteStore extends Store {
         }
     }
 
+    public enum CompleteQuickStartVariant {
+        NEXT_STEPS("next-steps");
+
+        private final String mString;
+
+        CompleteQuickStartVariant(final String s) {
+            mString = s;
+        }
+
+        @Override
+        public String toString() {
+            return mString;
+        }
+    }
+
     private SiteRestClient mSiteRestClient;
     private SiteXMLRPCClient mSiteXMLRPCClient;
 
@@ -1300,7 +1324,7 @@ public class SiteStore extends Store {
                 handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
                 break;
             case COMPLETE_QUICK_START:
-                completeQuickStart((SiteModel) action.getPayload());
+                completeQuickStart((CompleteQuickStartPayload) action.getPayload());
                 break;
             case COMPLETED_QUICK_START:
                 handleQuickStartCompleted((QuickStartCompletedResponsePayload) action.getPayload());
@@ -1651,8 +1675,8 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void completeQuickStart(@NonNull SiteModel site) {
-        mSiteRestClient.completeQuickStart(site);
+    private void completeQuickStart(@NonNull CompleteQuickStartPayload payload) {
+        mSiteRestClient.completeQuickStart(payload.site, payload.variant);
     }
 
     private void handleQuickStartCompleted(QuickStartCompletedResponsePayload payload) {
