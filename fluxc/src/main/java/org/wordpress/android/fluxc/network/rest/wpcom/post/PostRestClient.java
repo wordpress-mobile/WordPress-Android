@@ -96,7 +96,7 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchPostList(final PostListDescriptorForRestSite listDescriptor, final int offset) {
+    public void fetchPostList(final PostListDescriptorForRestSite listDescriptor, final long offset) {
         String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
@@ -510,7 +510,7 @@ public class PostRestClient extends BaseWPComRestClient {
     }
 
     private Map<String, String> createFetchPostListParameters(final boolean getPages,
-                                                              final int offset,
+                                                              final long offset,
                                                               final int number,
                                                               @Nullable final List<PostStatus> statusList,
                                                               @Nullable final String fields,
