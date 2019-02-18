@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.persistence
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.wellsql.generated.StatsBlockTable
+import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
@@ -28,18 +29,19 @@ class StatsSqlUtils
         statsType: StatsType,
         item: T,
         replaceExistingData: Boolean,
-        date: String = ""
+        date: String? = null
     ) {
         val json = gson.toJson(item)
         if (replaceExistingData) {
-            WellSql.delete(StatsBlockBuilder::class.java)
+            var deleteStatement = WellSql.delete(StatsBlockBuilder::class.java)
                     .where()
                     .equals(StatsBlockTable.LOCAL_SITE_ID, site.id)
                     .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
                     .equals(StatsBlockTable.STATS_TYPE, statsType.name)
-                    .equals(StatsBlockTable.DATE, date)
-                    .endWhere()
-                    .execute()
+            if (date != null) {
+                deleteStatement = deleteStatement.equals(StatsBlockTable.DATE, date)
+            }
+            deleteStatement.endWhere().execute()
         }
         WellSql.insert(
                 StatsBlockBuilder(
@@ -58,15 +60,9 @@ class StatsSqlUtils
         blockType: BlockType,
         statsType: StatsType,
         classOfT: Class<T>,
-        date: String = ""
+        date: String? = null
     ): List<T> {
-        val models = WellSql.select(StatsBlockBuilder::class.java)
-                .where()
-                .equals(StatsBlockTable.LOCAL_SITE_ID, site.id)
-                .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
-                .equals(StatsBlockTable.STATS_TYPE, statsType.name)
-                .equals(StatsBlockTable.DATE, date)
-                .endWhere().asModel
+        val models = createSelectStatement(site, blockType, statsType, date).asModel
         return models.map { gson.fromJson(it.json, classOfT) }
     }
 
@@ -75,19 +71,30 @@ class StatsSqlUtils
         blockType: BlockType,
         statsType: StatsType,
         classOfT: Class<T>,
-        date: String = ""
+        date: String? = null
     ): T? {
-        val model = WellSql.select(StatsBlockBuilder::class.java)
-                .where()
-                .equals(StatsBlockTable.LOCAL_SITE_ID, site.id)
-                .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
-                .equals(StatsBlockTable.STATS_TYPE, statsType.name)
-                .equals(StatsBlockTable.DATE, date)
-                .endWhere().asModel.firstOrNull()
+        val model = createSelectStatement(site, blockType, statsType, date).asModel.firstOrNull()
         if (model != null) {
             return gson.fromJson(model.json, classOfT)
         }
         return null
+    }
+
+    private fun createSelectStatement(
+        site: SiteModel,
+        blockType: BlockType,
+        statsType: StatsType,
+        date: String?
+    ): SelectQuery<StatsBlockBuilder> {
+        var select = WellSql.select(StatsBlockBuilder::class.java)
+                .where()
+                .equals(StatsBlockTable.LOCAL_SITE_ID, site.id)
+                .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
+                .equals(StatsBlockTable.STATS_TYPE, statsType.name)
+        if (date != null) {
+            select = select.equals(StatsBlockTable.DATE, date)
+        }
+        return select.endWhere()
     }
 
     @Table(name = "StatsBlock")
@@ -96,10 +103,10 @@ class StatsSqlUtils
         @Column var localSiteId: Int,
         @Column var blockType: String,
         @Column var statsType: String,
-        @Column var date: String,
+        @Column var date: String?,
         @Column var json: String
     ) : Identifiable {
-        constructor() : this(-1, -1, "", "", "", "")
+        constructor() : this(-1, -1, "", "", null, "")
 
         override fun setId(id: Int) {
             this.mId = id
