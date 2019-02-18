@@ -161,7 +161,10 @@ class StatsFragment : DaggerFragment() {
         })
 
         viewModel.toolbarHasShadow.observe(this, Observer { toolbarElevation ->
-            ViewCompat.setElevation(app_bar_layout, toolbarElevation?.toFloat() ?: 0.0f)
+            app_bar_layout.postDelayed(
+                    { ViewCompat.setElevation(app_bar_layout, toolbarElevation?.toFloat() ?: 0.0f) },
+                    100
+            )
         })
     }
 }

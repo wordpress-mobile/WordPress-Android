@@ -67,6 +67,8 @@ class StatsViewModel
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
 
+            _toolbarHasShadow.value = statsSectionManager.getSelectedSection() == INSIGHTS
+
             loadStats()
 
             if (launchedFromWidget) {
