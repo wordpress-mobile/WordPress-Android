@@ -137,7 +137,7 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * A helper function that returns if the list is empty for the given [ListDescriptor].
+     * A helper function that returns the number of records a list has for the given [ListDescriptor].
      */
     private fun getListItemsCount(listDescriptor: ListDescriptor): Long {
         val listModel = listSqlUtils.getList(listDescriptor)
