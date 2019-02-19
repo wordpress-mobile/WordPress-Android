@@ -2519,7 +2519,7 @@
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_17">Upload a new image or select a file from your library.</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_20">Device Library</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_21">Take photo</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_default_block_appender_index_native_js_26">Start writing or press ⊕ to add content</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_default_block_appender_index_native_js_26">Start writing or press %s to add content</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Unsupported Block</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Unsupported block type.</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_block_picker_js_30">ADD BLOCK</string>
