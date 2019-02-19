@@ -59,3 +59,29 @@ class StatsViewAllTagsAndCategoriesViewModel
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE) useCase: BaseListUseCase
 ) : StatsViewAllViewModel(mainDispatcher, useCase)
+
+// region ViewAllPostsAndPagesViewModels
+class DailyViewAllPostsAndPagesViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(DAILY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase
+) : StatsViewAllViewModel(mainDispatcher, useCase)
+
+class WeeklyViewAllPostsAndPagesViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(WEEKLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase
+) : StatsViewAllViewModel(mainDispatcher, useCase)
+
+class MonthlyViewAllPostsAndPagesViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(MONTHLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase
+) : StatsViewAllViewModel(mainDispatcher, useCase)
+
+class YearlyViewAllPostsAndPagesViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(YEARLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase
+) : StatsViewAllViewModel(mainDispatcher, useCase)
+// endregion

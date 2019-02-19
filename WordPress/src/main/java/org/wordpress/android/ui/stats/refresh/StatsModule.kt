@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAGES
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -48,6 +49,10 @@ const val YEAR_STATS_USE_CASE = "YearStatsUseCase"
 const val VIEW_ALL_FOLLOWERS_USE_CASE = "ViewAllFollowersUseCase"
 const val VIEW_ALL_COMMENTS_USE_CASE = "ViewAllCommentsUseCase"
 const val VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE = "ViewAllTagsAndCategoriesUseCase"
+const val DAILY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE = "DailyViewAllPostsAndPagesUseCase"
+const val WEEKLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE = "WeeklyViewAllPostsAndPagesUseCase"
+const val MONTHLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE = "MonthlyViewAllPostsAndPagesUseCase"
+const val YEARLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE = "YearlyViewAllPostsAndPagesUseCase"
 
 // These are injected only internally
 private const val INSIGHTS_USE_CASES = "InsightsUseCases"
@@ -194,6 +199,90 @@ class StatsModule {
                 listOf(tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL))
         ) {
             listOf(TAGS_AND_CATEGORIES)
+        }
+    }
+
+    /**
+     * Provides a singleton PostsAndPagesUseCase for the Posts and Pages View all screen
+     * @param postsAndPagesUseCaseFactory build the use cases for the posts and pages (daily granularity)
+     */
+    @Provides
+    @Singleton
+    @Named(DAILY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE)
+    fun provideDailyViewAllPostsAndPagesUseCase(
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                listOf(postsAndPagesUseCaseFactory.build(DAYS, UseCaseMode.VIEW_ALL))
+        ) {
+            listOf(POSTS_AND_PAGES)
+        }
+    }
+
+    /**
+     * Provides a singleton PostsAndPagesUseCase for the Posts and Pages View all screen
+     * @param postsAndPagesUseCaseFactory build the use cases for the posts and pages (weekly granularity)
+     */
+    @Provides
+    @Singleton
+    @Named(WEEKLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE)
+    fun provideWeeklyViewAllPostsAndPagesUseCase(
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                listOf(postsAndPagesUseCaseFactory.build(WEEKS, UseCaseMode.VIEW_ALL))
+        ) {
+            listOf(POSTS_AND_PAGES)
+        }
+    }
+
+    /**
+     * Provides a singleton PostsAndPagesUseCase for the Posts and Pages View all screen
+     * @param postsAndPagesUseCaseFactory build the use cases for the posts and pages (monthly granularity)
+     */
+    @Provides
+    @Singleton
+    @Named(MONTHLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE)
+    fun provideMonthlyViewAllPostsAndPagesUseCase(
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                listOf(postsAndPagesUseCaseFactory.build(MONTHS, UseCaseMode.VIEW_ALL))
+        ) {
+            listOf(POSTS_AND_PAGES)
+        }
+    }
+
+    /**
+     * Provides a singleton PostsAndPagesUseCase for the Posts and Pages View all screen
+     * @param postsAndPagesUseCaseFactory build the use cases for the posts and pages (yearly granularity)
+     */
+    @Provides
+    @Singleton
+    @Named(YEARLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE)
+    fun provideYearlyViewAllPostsAndPagesUseCase(
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                listOf(postsAndPagesUseCaseFactory.build(YEARS, UseCaseMode.VIEW_ALL))
+        ) {
+            listOf(POSTS_AND_PAGES)
         }
     }
 
