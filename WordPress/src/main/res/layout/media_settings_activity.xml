@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
                 <LinearLayout
@@ -227,7 +227,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/card1"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
                 <LinearLayout
@@ -341,7 +341,7 @@
                 android:layout_below="@+id/card2"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
                 <LinearLayout

@@ -29,7 +29,7 @@
         app:cardBackgroundColor="@color/white"
         app:cardElevation="@dimen/card_elevation"
         app:cardUseCompatPadding="true"
-        app:cardCornerRadius="@dimen/cardview_default_radius">
+        app:cardCornerRadius="@dimen/default_cardview_radius">
 
         <LinearLayout
             android:layout_width="match_parent"

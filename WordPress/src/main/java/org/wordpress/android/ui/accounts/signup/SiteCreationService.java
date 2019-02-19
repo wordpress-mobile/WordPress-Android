@@ -130,7 +130,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
                                                        progress,
                                                        titleString,
                                                        stepString,
-                                                       R.drawable.ic_my_sites_24dp,
+                                                       R.drawable.ic_my_sites_white_24dp,
                                                        R.color.blue_wordpress);
         }
 
@@ -139,7 +139,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
                                                       context.getString(R.string.notification_channel_normal_id),
                                                       R.string.notification_site_creation_title_success,
                                                       R.string.notification_site_creation_created,
-                                                      R.drawable.ic_my_sites_24dp,
+                                                      R.drawable.ic_my_sites_white_24dp,
                                                       R.color.blue_wordpress);
         }
 
@@ -148,7 +148,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
                                                       context.getString(R.string.notification_channel_normal_id),
                                                       R.string.notification_site_creation_title_stopped,
                                                       content,
-                                                      R.drawable.ic_my_sites_24dp,
+                                                      R.drawable.ic_my_sites_white_24dp,
                                                       R.color.blue_wordpress);
         }
     }

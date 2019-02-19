@@ -8,10 +8,10 @@
     </solid>
 
     <corners
-        android:bottomLeftRadius="@dimen/cardview_default_radius"
-        android:bottomRightRadius="@dimen/cardview_default_radius"
-        android:topLeftRadius="@dimen/cardview_default_radius"
-        android:topRightRadius="@dimen/cardview_default_radius" >
+        android:bottomLeftRadius="@dimen/default_cardview_radius"
+        android:bottomRightRadius="@dimen/default_cardview_radius"
+        android:topLeftRadius="@dimen/default_cardview_radius"
+        android:topRightRadius="@dimen/default_cardview_radius" >
     </corners>
 
 </shape>

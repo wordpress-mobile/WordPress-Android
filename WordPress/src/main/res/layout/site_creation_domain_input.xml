@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:drawableTint="@color/grey_text_min"
+        android:drawableStart="@drawable/ic_search_grey_text_min_24dp"
         android:drawablePadding="@dimen/margin_extra_large"
         android:hint="@string/site_creation_domain_keywords_hint"
         android:singleLine="true"
