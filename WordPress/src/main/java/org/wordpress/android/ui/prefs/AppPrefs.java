@@ -822,15 +822,7 @@ public class AppPrefs {
     public static void setAvatarVersion(int version) {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
     }
-
-    public static void setGutenbergWarningDialogDisabled(Boolean isDisabled) {
-        setBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, isDisabled);
-    }
-
-    public static boolean isGutenbergWarningDialogDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, false);
-    }
-
+    
     public static void setGutenbergInformativeDialogDisabled(Boolean isDisabled) {
         setBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, isDisabled);
     }
