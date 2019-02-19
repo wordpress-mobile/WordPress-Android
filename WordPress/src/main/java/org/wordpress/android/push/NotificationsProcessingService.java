@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
@@ -42,15 +43,17 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.QuickActionTrackPropertyValue;
 
 import java.util.HashMap;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.RequestCodes.QUICK_START_REMINDER_NOTIFICATION;
 
 /**
  * service which makes it possible to process Notifications quick actions in the background,
@@ -207,6 +210,8 @@ public class NotificationsProcessingService extends Service {
                     int notificationId = mIntent.getIntExtra(ARG_PUSH_ID, 0);
                     if (notificationId == GCMMessageService.GROUP_NOTIFICATION_ID) {
                         GCMMessageService.clearNotifications();
+                    } else if (notificationId == QUICK_START_REMINDER_NOTIFICATION) {
+                        AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
                     } else {
                         GCMMessageService.removeNotification(notificationId);
                         // Dismiss the grouped notification if a user dismisses all notifications from a wear device

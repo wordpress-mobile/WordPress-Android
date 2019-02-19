@@ -60,7 +60,7 @@ public class EditPostPreviewFragment extends Fragment {
                 if (getActivity() != null) {
                     loadPost();
                 }
-                mWebView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                mWebView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
 

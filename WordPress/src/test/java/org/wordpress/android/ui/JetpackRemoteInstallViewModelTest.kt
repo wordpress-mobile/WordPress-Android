@@ -160,7 +160,7 @@ class JetpackRemoteInstallViewModelTest {
         assertEquals(state.type, JetpackRemoteInstallViewState.Type.START)
         assertEquals(state.titleResource, R.string.install_jetpack)
         assertEquals(state.messageResource, R.string.install_jetpack_message)
-        assertEquals(state.icon, R.drawable.ic_plans_jetpack_green_88dp)
+        assertEquals(state.icon, R.drawable.ic_plans_white_24dp)
         assertEquals(state.buttonResource, R.string.install_jetpack_continue)
         assertEquals(state.progressBarVisible, false)
     }
@@ -170,7 +170,7 @@ class JetpackRemoteInstallViewModelTest {
         assertEquals(state.type, JetpackRemoteInstallViewState.Type.INSTALLING)
         assertEquals(state.titleResource, R.string.installing_jetpack)
         assertEquals(state.messageResource, R.string.installing_jetpack_message)
-        assertEquals(state.icon, R.drawable.ic_plans_jetpack_green_88dp)
+        assertEquals(state.icon, R.drawable.ic_plans_white_24dp)
         assertNull(state.buttonResource)
         assertEquals(state.progressBarVisible, true)
     }
@@ -180,7 +180,7 @@ class JetpackRemoteInstallViewModelTest {
         assertEquals(state.type, JetpackRemoteInstallViewState.Type.INSTALLED)
         assertEquals(state.titleResource, R.string.jetpack_installed)
         assertEquals(state.messageResource, R.string.jetpack_installed_message)
-        assertEquals(state.icon, R.drawable.ic_plans_jetpack_green_88dp)
+        assertEquals(state.icon, R.drawable.ic_plans_white_24dp)
         assertEquals(state.buttonResource, R.string.install_jetpack_continue)
         assertEquals(state.progressBarVisible, false)
     }

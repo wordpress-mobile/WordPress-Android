@@ -34,7 +34,7 @@
                 android:id="@+id/image_avatar_or_blavatar"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/margin_large"
-                android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+                android:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"
                 android:contentDescription="@string/reader_blavatar_desc"
                 style="@style/ReaderImageView.Avatar" >
             </ImageView>
@@ -124,7 +124,7 @@
                 android:layout_gravity="center"
                 android:layout_height="@dimen/reader_video_overlay_size"
                 android:layout_width="@dimen/reader_video_overlay_size"
-                android:src="@drawable/play_video_selector"
+                android:src="@drawable/ic_play_white_black_black_white_24dp_selector"
                 android:visibility="gone"
                 tools:visibility="visible" >
             </ImageView>
@@ -180,7 +180,7 @@
                 android:background="?android:selectableItemBackground"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/margin_large"
-                android:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+                android:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
                 android:contentDescription="@string/reader_blavatar_desc"
                 style="@style/ReaderImageView.Avatar.Small" >
             </ImageView>
@@ -254,12 +254,12 @@
                 android:contentDescription="@string/reader_add_bookmark"
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_centerVertical="true"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
+                android:layout_height="@dimen/reader_button_minimum_height"
+                android:layout_width="@dimen/reader_button_minimum_height"
                 android:layout_toStartOf="@id/count_comments"
-                android:minWidth="@dimen/reader_button_minimum_height"
                 android:padding="@dimen/margin_medium"
-                android:src="@drawable/ic_bookmark_selector_18dp" >
+                android:src="@drawable/ic_bookmark_outline_bookmark_selector_24dp"
+                android:tint="@color/grey_min_blue_medium_grey_disabled_selector" >
             </ImageView>
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView

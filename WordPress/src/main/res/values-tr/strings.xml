@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-24 11:41:41+0000
+Translation-Revision-Date: 2019-02-05 09:54:09+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Site önizlemesi gösteriliyor</string>
+    <string name="new_site_creation_clear_all_content_description">Temizle</string>
+    <string name="site_created_but_not_fetched_snackbar_message">Yavaş bir bağlantı kullanıyorsunuz gibi duruyor. Yeni sitenizi listede görmüyorsanız listeyi yenilemeyi deneyin.</string>
+    <string name="cancel_new_site_wizard_content_description">Site Oluşturma Sihirbazını İptal Et</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Yeni sitenizi oluşturuyoruz</string>
+    <string name="notification_new_site_creation_failed">Bir sorun vardı</string>
+    <string name="notification_new_site_creation_title">Site Oluştur</string>
+    <string name="new_site_creation_create_site_button">Site oluştur</string>
+    <string name="new_site_creation_search_domain_input_hint">Alan adı ara</string>
+    <string name="new_site_creation_domain_header_subtitle">Bu, insanların sizi internette bulacakları yerdir.</string>
+    <string name="new_site_creation_domain_header_title">Siteniz için bir alan adı seçin</string>
+    <string name="new_site_creation_empty_domain_list_message">Aramanızla eşleşen hiçbir adres bulunamadı</string>
+    <string name="site_creation_error_generic_subtitle">Sunucu ile iletişim kurulurken hata oluştu, lütfen tekrar deneyin</string>
+    <string name="site_creation_error_generic_title">Bir hata oluştu</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Özel kategori</string>
+    <string name="new_site_creation_button_skip">Atla</string>
+    <string name="new_site_creation_tag_line_description">Etiket satırı, başlığın hemen altında gösterilen kısa bir metin satırıdır</string>
+    <string name="new_site_creation_tag_line_hint">Etiket Satırı</string>
+    <string name="new_site_creation_site_title_hint">Site Başlığı</string>
+    <string name="new_site_creation_site_info_header_subtitle">Bize oluşturduğunuz site hakkında daha fazla bilgi verin.</string>
+    <string name="new_site_creation_site_info_header_title">Temel Bilgiler</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Bir hata oluştu</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Bağlantı yok</string>
+    <string name="site_creation_segments_subtitle">Bu, öneriler sunmamıza yardımcı olur. Ancak bu sizi asla kısıtlamaz çünkü tüm siteler değişir!</string>
+    <string name="site_creation_segments_title">Ne tür bir site oluşturmak istediğinizi bize söyleyin</string>
+    <string name="new_site_creation_preview_title">Siteniz oluşturuldu!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d/%2$d</string>
+    <string name="new_site_creation_screen_title_general">Site Oluştur</string>
+    <string name="suggestions_updated_content_description">Öneriler güncelleştirildi</string>
+    <string name="site_picker_failed_selecting_added_site">Yeni eklenen, kullanıcı tarafından barındırılan site seçilemedi.</string>
+    <string name="local_post_is_conflicted">Sürüm çakışması</string>
+    <string name="preference_crash_reports_summary">Uygulamanın performansını geliştirmemize yardımcı olmak için otomatik kilitlenme raporlarına izin verin.</string>
+    <string name="preference_crash_reports">Kilitlenme raporları</string>
+    <string name="snackbar_conflict_undo">Geri al</string>
+    <string name="snackbar_conflict_web_version_discarded">Web sürümü atıldı</string>
+    <string name="snackbar_conflict_local_version_discarded">Yerel sürüm atıldı</string>
+    <string name="toast_conflict_updating_post">Gönderi güncelleniyor</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Web’i At</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Yereli At</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Yerel\n%s tarihinde kaydedildi\n\nWeb\n%s tarihinde kaydedildi\n</string>
+    <string name="dialog_confirm_load_remote_post_body">Bu gönderinin birbiriyle çakışan iki sürümü var. Atmak istediğiniz sürümü seçin.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Senkron sorununu çöz</string>
     <string name="local_changes_discarding_no_connection">Bu işlemi gerçekleştirmek için bir bağlantı gereklidir. Lütfen bağlantınızı kontrol edin ve tekrar deneyin.</string>
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
     <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
@@ -46,9 +88,9 @@ Language: tr
     <string name="stats_insights_view_more">Daha fazlasını görüntüle</string>
     <string name="stats_insights_share_post">Yazıyı paylaş</string>
     <string name="stats_insights_create_post">Yeni yazı oluştur</string>
-    <string name="stats_insights_latest_post_message">%2$s yayınlandığından beri %1$s geçti. Yazının şimdiye kadar ki performansı şöyle</string>
-    <string name="stats_insights_latest_post_with_no_engagement">%2$s yayınlandığından beri %1$s geçti. Şimdi işe başlayın ve yazılarınızı paylaşarak yazı görüntülemenizi arttırın.</string>
-    <string name="stats_insights_latest_post_empty">Henüz hiç yazı yayınlamadınız. Yayınlamaya başladığınızda en son yazınızın özeti burada görünecektir.</string>
+    <string name="stats_insights_latest_post_message">%2$s yayınlandığından beri %1$s geçti. Yazının şimdiye kadar ki performansı şöyle:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">%2$s yayımlandığından beri %1$s geçti. Şimdi işe başlayın ve yazılarınızı paylaşarak yazı görüntülemenizi arttırın:</string>
+    <string name="stats_insights_latest_post_empty">Henüz hiç yazı yayımnlamadınız. Yayımlamaya başladığınızda en son yazınızın özeti burada görünecektir:</string>
     <string name="stats_insights_tags_and_categories">Etiketler ve kategoriler</string>
     <string name="stats_insights_all_time_stats">Tüm zamanlar istatistiği</string>
     <string name="stats_insights_most_popular_views_label">Görüntülemeler</string>

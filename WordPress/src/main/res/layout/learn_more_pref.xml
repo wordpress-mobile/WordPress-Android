@@ -22,7 +22,7 @@
             android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
             android:layout_width="@dimen/settings_icon_size"
             android:visibility="invisible"
-            tools:src="@drawable/ic_info_black_24dp"
+            tools:src="@drawable/ic_info_outline_white_24dp"
             tools:tint="@color/grey_text_min"
             tools:visibility="visible" >
         </ImageView>
