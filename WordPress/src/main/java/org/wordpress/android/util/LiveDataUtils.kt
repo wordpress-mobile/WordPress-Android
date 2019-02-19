@@ -4,6 +4,7 @@ import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 
@@ -41,7 +42,7 @@ fun <T> mergeNotNull(
     sources: Iterable<LiveData<T>>,
     distinct: Boolean = true,
     singleEvent: Boolean = false
-): LiveData<T> {
+): MediatorLiveData<T> {
     val mediator = if (singleEvent) SingleMediatorLiveEvent() else MediatorLiveData<T>()
     for (source in sources) {
         mediator.addSource(source) {
@@ -160,6 +161,13 @@ fun <T, U> LiveData<T>.map(mapper: (T) -> U?): MediatorLiveData<U> {
     val result = MediatorLiveData<U>()
     result.addSource(this) { x -> result.value = x?.let { mapper(x) } }
     return result
+}
+
+/**
+ * Simple wrapper of the map utility method that is null safe
+ */
+fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U?): LiveData<U> {
+    return Transformations.map(this) { mapper(it) }
 }
 
 /**

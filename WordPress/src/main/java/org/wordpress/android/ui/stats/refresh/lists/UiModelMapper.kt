@@ -15,10 +15,10 @@ import javax.inject.Inject
 class UiModelMapper
 @Inject constructor(private val networkUtilsWrapper: NetworkUtilsWrapper) {
     fun mapInsights(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
-        val allFailing = useCaseModels.fold(true) { acc, useCaseModel ->
+        val allFailing = useCaseModels.isNotEmpty() && useCaseModels.fold(true) { acc, useCaseModel ->
             acc && useCaseModel.state == ERROR
         }
-        val allFailingWithoutData = useCaseModels.fold(true) { acc, useCaseModel ->
+        val allFailingWithoutData = useCaseModels.isNotEmpty() && useCaseModels.fold(true) { acc, useCaseModel ->
             acc && useCaseModel.state == ERROR && useCaseModel.data == null
         }
         return if (!allFailing && !allFailingWithoutData) {
@@ -53,7 +53,7 @@ class UiModelMapper
     }
 
     fun mapTimeStats(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
-        val allFailing = useCaseModels
+        val allFailing = useCaseModels.isNotEmpty() && useCaseModels
                 .fold(true) { acc, useCaseModel ->
                     acc && useCaseModel.state == ERROR
                 }

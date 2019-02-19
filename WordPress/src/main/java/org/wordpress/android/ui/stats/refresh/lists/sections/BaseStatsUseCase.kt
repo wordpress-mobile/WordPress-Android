@@ -67,6 +67,11 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
         val firstLoad = domainModel.value == null
         var emptyDb = false
+        if (firstLoad) {
+            withContext(mainDispatcher) {
+                updateUseCaseState(LOADING)
+            }
+        }
         if (firstLoad || domainState.value == LOADING) {
             val cachedData = loadCachedData(site)
             withContext(mainDispatcher) {
@@ -79,7 +84,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         }
         if (firstLoad || refresh || domainState.value != SUCCESS || emptyDb) {
             withContext(mainDispatcher) {
-                domainState.value = LOADING
+                updateUseCaseState(LOADING)
             }
             val state = fetchRemoteData(site, forced)
             withContext(mainDispatcher) {
@@ -92,7 +97,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
                     is Empty -> EMPTY
                     is Loading -> LOADING
                 }
-                domainState.value = useCaseState
+                updateUseCaseState(useCaseState)
             }
         }
     }
@@ -114,6 +119,12 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         val updatedState = update(previousState)
         if (previousState != updatedState) {
             uiState.value = updatedState
+        }
+    }
+
+    private fun updateUseCaseState(newState: UseCaseState) {
+        if (domainState.value != newState) {
+            domainState.value = newState
         }
     }
 

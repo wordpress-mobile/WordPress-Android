@@ -13,13 +13,13 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -93,12 +93,6 @@ class StatsFragment : DaggerFragment() {
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
         }
-        select_next_date.setOnClickListener {
-            viewModel.onNextDateSelected()
-        }
-        select_previous_date.setOnClickListener {
-            viewModel.onPreviousDateSelected()
-        }
     }
 
     private fun initializeViewModels(activity: FragmentActivity, isFirstStart: Boolean) {
@@ -147,23 +141,6 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        /*
-
-
-        viewModel.snackbarMessage.observeEvent(this) { message ->
-            val parent: View? = activity.findViewById(android.R.id.content)
-            if (parent != null) {
-                val snackbar = Snackbar.make(parent, message.message, Snackbar.LENGTH_LONG)
-                val snackbarText = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
-                snackbarText.maxLines = 2
-                snackbar.show()
-                true
-            } else {
-                false
-            }
-        }
-         */
-
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
@@ -183,20 +160,11 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
-            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
-            if (date_selection_toolbar.visibility != dateSelectorVisibility) {
-                date_selection_toolbar.visibility = dateSelectorVisibility
-            }
-            selected_date.text = dateSelectorUiModel?.date ?: ""
-            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (select_previous_date.isEnabled != enablePreviousButton) {
-                select_previous_date.isEnabled = enablePreviousButton
-            }
-            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (select_next_date.isEnabled != enableNextButton) {
-                select_next_date.isEnabled = enableNextButton
-            }
+        viewModel.toolbarHasShadow.observe(this, Observer { toolbarElevation ->
+            app_bar_layout.postDelayed(
+                    { ViewCompat.setElevation(app_bar_layout, toolbarElevation?.toFloat() ?: 0.0f) },
+                    100
+            )
         })
     }
 }

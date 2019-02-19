@@ -1,2 +1,2 @@
 * Updated Plans with new design
-
+* Add Visitors overlay to the Overview block in Stats
