@@ -318,7 +318,7 @@ class PostUploadNotifier {
                 break;
         }
 
-        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
+        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_white_24dp);
         notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
 
         notificationBuilder.setContentTitle(notificationTitle);
@@ -389,7 +389,7 @@ class PostUploadNotifier {
                                                                 (int) notificationId,
                                                                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
+        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_white_24dp);
         notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
 
         String notificationTitle = buildSuccessMessageForMedia(mediaList.size());

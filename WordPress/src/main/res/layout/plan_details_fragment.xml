@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<org.wordpress.android.widgets.WPScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/content_margin"
+        android:paddingStart="@dimen/content_margin"
+        android:paddingTop="@dimen/margin_extra_large">
+
+        <ImageView
+            android:id="@+id/image_plan_icon"
+            android:layout_width="@dimen/plan_icon_size"
+            android:layout_height="@dimen/plan_icon_size"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@null"
+            tools:src="@drawable/bg_oval_grey_plans_32dp"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/plan_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_extra_large"
+            tools:text="Personal Plan"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/plan_tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:gravity="center_horizontal"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="italic"
+            tools:text="Best for beginners"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:background="@color/divider_grey"/>
+
+        <LinearLayout
+            android:id="@+id/plan_features_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_large"/>
+    </LinearLayout>
+
+</org.wordpress.android.widgets.WPScrollView>

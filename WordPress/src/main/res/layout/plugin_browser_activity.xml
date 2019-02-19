@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                card_view:cardCornerRadius="@dimen/default_cardview_radius"
                 tools:visibility="visible">
 
                 <RelativeLayout
@@ -58,7 +58,7 @@
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                card_view:cardCornerRadius="@dimen/default_cardview_radius"
                 tools:visibility="visible">
 
                 <RelativeLayout
@@ -90,7 +90,7 @@
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                card_view:cardCornerRadius="@dimen/default_cardview_radius"
                 tools:visibility="visible">
 
                 <RelativeLayout
@@ -122,7 +122,7 @@
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                card_view:cardCornerRadius="@dimen/default_cardview_radius"
                 tools:visibility="visible">
 
                 <RelativeLayout

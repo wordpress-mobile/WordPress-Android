@@ -184,7 +184,10 @@ public class AppPrefs {
         IS_INSTALLATION_REFERRER_OBTAINED,
 
         // used to indicate that user dont want to see the Gutenberg warning dialog anymore
-        IS_GUTENBERG_WARNING_DIALOG_DISABLED
+        IS_GUTENBERG_WARNING_DIALOG_DISABLED,
+
+        // used to indicate that user dont want to see the Gutenberg informative dialog anymore
+        IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED
     }
 
     private static SharedPreferences prefs() {
@@ -521,18 +524,6 @@ public class AppPrefs {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
     }
 
-    public static void setGlobalPlansFeatures(String jsonOfFeatures) {
-        if (jsonOfFeatures != null) {
-            setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
-        } else {
-            remove(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES);
-        }
-    }
-
-    public static String getGlobalPlansFeatures() {
-        return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
-    }
-
     public static boolean isInAppPurchaseRefreshRequired() {
         return getBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, false);
     }
@@ -645,7 +636,7 @@ public class AppPrefs {
     }
 
     public static boolean isGutenbergDefaultForNewPosts() {
-        return getBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, true);
+        return getBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, false);
     }
 
     public static void setGutenbergDefaultForNewPosts(boolean defaultForNewPosts) {
@@ -838,5 +829,13 @@ public class AppPrefs {
 
     public static boolean isGutenbergWarningDialogDisabled() {
         return getBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, false);
+    }
+
+    public static void setGutenbergInformativeDialogDisabled(Boolean isDisabled) {
+        setBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, isDisabled);
+    }
+
+    public static boolean isGutenbergInformativeDialogDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, false);
     }
 }

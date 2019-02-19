@@ -682,6 +682,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_closed";
             case POST_LIST_BUTTON_PRESSED:
                 return "post_list_button_pressed";
+            case POST_LIST_ITEM_SELECTED:
+                return "post_list_item_selected";
             case EDITOR_OPENED:
                 return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:
@@ -1215,6 +1217,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_success_preview_loaded";
             case ENHANCED_SITE_CREATION_COMPLETED:
                 return "enhanced_site_creation_completed";
+            case ENHANCED_SITE_CREATION_EXITED:
+                return "enhanced_site_creation_exited";
             case ENHANCED_SITE_CREATION_ERROR_SHOWN:
                 return "enhanced_site_creation_error_shown";
             case PERSON_REMOVED:
