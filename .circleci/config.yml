@@ -38,6 +38,9 @@ jobs:
       - android/restore-gradle-cache:
           cache-prefix: lint-cache
       - <<: *copy_gradle_properties
+      - run: 
+          name: Validate login strings
+          command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
       - run:
           name: Checkstyle
           command: $GRADLEW checkstyle
