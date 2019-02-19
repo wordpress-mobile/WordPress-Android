@@ -942,7 +942,7 @@
     <string name="stats_empty_tags_and_categories">No tagged posts or pages viewed</string>
     <string name="stats_empty_tags_and_categories_desc">Get an overview of the most popular topics on your site, as reflected in your top posts from the past week.</string>
     <string name="stats_empty_video">No videos played</string>
-    <string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched.</string>
+    <string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched!</string>
     <string name="stats_empty_comments">No comments yet</string>
     <string name="stats_empty_comments_desc">If you allow comments on your site, track your top commenters and discover what content sparks the liveliest conversations, based on the most recent 1,000 comments.</string>
     <string name="stats_bar_graph_empty">No stats available</string>
@@ -2179,7 +2179,7 @@
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
-    <string name="login_error_suffix">\nMaybe try a different account??</string>
+    <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
