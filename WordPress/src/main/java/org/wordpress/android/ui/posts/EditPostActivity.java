@@ -1138,17 +1138,20 @@ public class EditPostActivity extends AppCompatActivity implements
             switchToAztecMenuItem.setVisible(false);
 
             // Check whether the content has blocks.
-            boolean hasBlocksOrEmpty = false;
+            boolean hasBlocks = false;
+            boolean isEmpty = false;
             try {
                 final String content = (String) mEditorFragment.getContent(mPost.getContent());
-                hasBlocksOrEmpty = PostUtils.contentContainsGutenbergBlocks(content) || TextUtils.isEmpty(content);
+                hasBlocks = PostUtils.contentContainsGutenbergBlocks(content);
+                isEmpty = TextUtils.isEmpty(content);
             } catch (EditorFragmentNotAddedException e) {
                 // legacy exception; just ignore.
             }
 
             // if content has blocks or empty, offer the switch to Gutenberg. The block editor doesn't have good
-            //  "Classic Block" support yet so, don't offer a switch to it if content doesn't have blocks.
-            switchToGutenbergMenuItem.setVisible(hasBlocksOrEmpty);
+            //  "Classic Block" support yet so, don't offer a switch to it if content doesn't have blocks. If the post
+            //  is empty but the user hasn't enabled "Use Gutenberg for new posts" App setting, don't offer the switch.
+            switchToGutenbergMenuItem.setVisible(hasBlocks || (AppPrefs.isGutenbergDefaultForNewPosts() && isEmpty));
         }
 
         return super.onPrepareOptionsMenu(menu);
