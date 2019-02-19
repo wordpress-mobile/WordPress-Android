@@ -162,12 +162,10 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             themeViewHolder.mActiveView.setVisibility(View.VISIBLE);
             themeViewHolder.mCardView.setCardBackgroundColor(resources.getColor(R.color.blue_wordpress));
         } else {
-            themeViewHolder.mDetailsView.setBackgroundColor(resources.getColor(
-                    android.support.v7.cardview.R.color.cardview_light_background));
+            themeViewHolder.mDetailsView.setBackgroundColor(resources.getColor(R.color.white));
             themeViewHolder.mNameView.setTextColor(resources.getColor(R.color.black));
             themeViewHolder.mActiveView.setVisibility(View.GONE);
-            themeViewHolder.mCardView.setCardBackgroundColor(resources.getColor(
-                    android.support.v7.cardview.R.color.cardview_light_background));
+            themeViewHolder.mCardView.setCardBackgroundColor(resources.getColor(R.color.white));
         }
     }
 

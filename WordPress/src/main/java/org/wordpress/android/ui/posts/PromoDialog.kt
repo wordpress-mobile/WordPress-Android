@@ -27,10 +27,11 @@ class PromoDialog : AppCompatDialogFragment() {
         private const val STATE_KEY_POSITIVE_BUTTON_LABEL = "state_key_positive_button_label"
         private const val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
         private const val STATE_KEY_NEUTRAL_BUTTON_LABEL = "state_key_neutral_button_label"
+        private const val UNDEFINED_RES_ID = -1
     }
 
     @DrawableRes
-    private var drawableResId: Int = -1
+    private var drawableResId: Int = UNDEFINED_RES_ID
     private lateinit var fragmentTag: String
     private lateinit var linkLabel: String
     private lateinit var message: String
@@ -56,7 +57,7 @@ class PromoDialog : AppCompatDialogFragment() {
         title: String,
         message: String,
         positiveButtonLabel: String,
-        @DrawableRes drawableResId: Int,
+        @DrawableRes drawableResId: Int = UNDEFINED_RES_ID,
         negativeButtonLabel: String = "",
         linkLabel: String = "",
         neutralButtonLabel: String = ""
@@ -113,10 +114,14 @@ class PromoDialog : AppCompatDialogFragment() {
     }
 
     private fun initializeView(view: View) {
-        val image = view.findViewById<ImageView>(R.id.promo_dialog_image)
-        image.setImageResource(drawableResId)
         val imageContainer = view.findViewById<LinearLayout>(R.id.promo_dialog_image_container)
-        imageContainer.visibility = if (DisplayUtils.isLandscape(activity)) View.GONE else View.VISIBLE
+        if (drawableResId == UNDEFINED_RES_ID) {
+            imageContainer.visibility = View.GONE
+        } else {
+            val image = view.findViewById<ImageView>(R.id.promo_dialog_image)
+            image.setImageResource(drawableResId)
+            imageContainer.visibility = if (DisplayUtils.isLandscape(activity)) View.GONE else View.VISIBLE
+        }
 
         val dialogTitle = view.findViewById<WPTextView>(R.id.promo_dialog_title)
         dialogTitle.text = title

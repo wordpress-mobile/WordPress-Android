@@ -682,50 +682,6 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    // Gutenberg Events
-
-    fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
-        if (post != null) {
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, site
-            )
-            editPost(site, post)
-        }
-    }
-
-    fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
-        if (post != null) {
-            // We only want to track the event if the post is not null
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_CANCEL_TAPPED, post, site
-            )
-        }
-    }
-
-    fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
-        if (post != null) {
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED, post, site
-            )
-        }
-    }
-
-    fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePageId: Long, checked: Boolean) {
-        AppPrefs.setGutenbergWarningDialogDisabled(checked)
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, site)
-        if (post != null) { // We only want to track the event if the post is not null
-            val trackValue = if (checked) {
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_CHECKED
-            } else {
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_UNCHECKED
-            }
-            PostUtils.trackGutenbergDialogEvent(trackValue, post, site)
-        }
-    }
-
     // Post Conflict Resolution
 
     private fun updateConflictedPostWithItsRemoteVersion(localPostId: Int) {

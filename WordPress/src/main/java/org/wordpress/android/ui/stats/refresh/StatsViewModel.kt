@@ -71,6 +71,8 @@ class StatsViewModel
 
             loadStats()
 
+            analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, site)
+
             if (launchedFromWidget) {
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
             }

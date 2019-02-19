@@ -30,7 +30,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -39,13 +38,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface
-import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.DisplayUtils
@@ -64,7 +59,7 @@ import org.wordpress.android.widgets.WPDialogSnackbar
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
+class PagesFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PagesViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
@@ -106,6 +101,15 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
+
+            if (EditPostActivity.checkToRestart(data)) {
+                ActivityLauncher.editPageForResult(data, this@PagesFragment, viewModel.site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0))
+
+                // a restart will happen so, no need to continue here
+                return
+            }
+
             val wasPageUpdated = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false)
             if (pageId != -1L) {
                 onPageEditFinished(pageId, wasPageUpdated)
@@ -263,15 +267,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
 
         viewModel.editPage.observe(this, Observer { page ->
             page?.let {
-                val post = postStore.getPostByLocalPostId(page.pageId)
-                val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content)
-                if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
-                    PostUtils.showGutenbergCompatibilityWarningDialog(
-                            getActivity(), fragmentManager, post, viewModel.site
-                    )
-                } else {
-                    ActivityLauncher.editPageForResult(this, page)
-                }
+                ActivityLauncher.editPageForResult(this, page)
             }
         })
 
@@ -318,67 +314,6 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
 
     fun onPageDeleteConfirmed(remoteId: Long) {
         viewModel.onDeleteConfirmed(remoteId)
-    }
-
-    override fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePageId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
-        // track event
-        PostUtils.trackGutenbergDialogEvent(
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, viewModel.site
-        )
-        ActivityLauncher.editPostOrPageForResult(activity, viewModel.site, post)
-    }
-
-    override fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePageId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
-        // guarding against null post as we only want to track here
-        if (post != null) {
-            // track event
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_CANCEL_TAPPED, post, viewModel.site
-            )
-        }
-    }
-
-    override fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePageId: Long) {
-        // here launch the web the Gutenberg Learn more
-        val site = viewModel.site
-        val urlToUse =
-                if (site.isWPCom || site.isJetpackConnected) {
-                    getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wpcom)
-                } else {
-                    getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wporg)
-                }
-        WPWebViewActivity.openURL(activity, urlToUse)
-
-        // guarding against null post as we only want to track here
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
-        if (post != null) {
-            // track event
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED,
-                    post, viewModel.site
-            )
-        }
-    }
-
-    override fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePageId: Long, checked: Boolean) {
-        AppPrefs.setGutenbergWarningDialogDisabled(checked)
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
-        // guarding against null post as we only want to track here
-        if (post != null) {
-            // track event
-            val trackValue =
-                    if (checked) {
-                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_CHECKED
-                    } else {
-                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_UNCHECKED
-                    }
-            PostUtils.trackGutenbergDialogEvent(
-                    trackValue,
-                    post, viewModel.site
-            )
-        }
     }
 
     private fun refreshProgressBars(listState: PageListState?) {
