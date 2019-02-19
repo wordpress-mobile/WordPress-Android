@@ -124,8 +124,8 @@ class StatsListFragment : DaggerFragment() {
                 )
         )
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                if (!recyclerView!!.canScrollVertically(1) && dy != 0) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (!recyclerView.canScrollVertically(1) && dy != 0) {
                     viewModel.onScrolledToBottom()
                 }
             }
