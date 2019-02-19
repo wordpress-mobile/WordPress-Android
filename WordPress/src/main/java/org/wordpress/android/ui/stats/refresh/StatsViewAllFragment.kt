@@ -18,6 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
@@ -68,9 +69,13 @@ class StatsViewAllFragment : DaggerFragment() {
             if (intent.hasExtra(WordPress.SITE)) {
                 outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
             }
-            if (intent.hasExtra(WordPress.SITE)) {
+            if (intent.hasExtra(StatsAbstractFragment.ARGS_VIEW_TYPE)) {
                 outState.putSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE,
                         intent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE))
+            }
+            if (intent.hasExtra(StatsAbstractFragment.ARGS_TIMEFRAME)) {
+                outState.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME,
+                        intent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME))
             }
         }
 
