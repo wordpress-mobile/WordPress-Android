@@ -111,6 +111,7 @@ public class AppPrefs {
         NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
         GUTENBERG_EDITOR_ENABLED,
+        GUTENBERG_DEAFULT_FOR_NEW_POSTS,
 
         IS_QUICK_START_NOTICE_REQUIRED
     }
@@ -451,7 +452,8 @@ public class AppPrefs {
     }
 
     public static boolean isAztecEditorEnabled() {
-        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
+        // hardcode Aztec enabled to "true". It's Aztec and Gutenberg that we're going to expose to the user now.
+        return true;
     }
 
     public static boolean isAztecEditorToolbarExpanded() {
@@ -476,12 +478,13 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorAvailable() {
+        // hardcode the Visual editor availability to "false". Aztec and Gutenberg are the only ones supported now.
         return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, true);
     }
 
     public static boolean isVisualEditorEnabled() {
-        return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED,
-                !isAztecEditorEnabled());
+        // hardcode the Visual editor enable to "false". Aztec and Gutenberg are the only ones supported now.
+        return false;
     }
 
     public static boolean isAsyncPromoRequired() {
@@ -633,11 +636,20 @@ public class AppPrefs {
     }
 
     public static boolean isGutenbergEditorEnabled() {
-        return getBoolean(DeletablePrefKey.GUTENBERG_EDITOR_ENABLED, false);
+        // hardcode Gutenberg enabled to "true". It's Aztec and Gutenberg that we're going to expose to the user now.
+        return true;
     }
 
     public static void enableGutenbergEditor(boolean enabled) {
         setBoolean(DeletablePrefKey.GUTENBERG_EDITOR_ENABLED, enabled);
+    }
+
+    public static boolean isGutenbergDefaultForNewPosts() {
+        return getBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, true);
+    }
+
+    public static void setGutenbergDefaultForNewPosts(boolean defaultForNewPosts) {
+        setBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, defaultForNewPosts);
     }
 
     public static void setVideoOptimizeWidth(int width) {
