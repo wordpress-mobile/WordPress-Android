@@ -15,6 +15,7 @@ copy_gradle_properties: &copy_gradle_properties
 orbs:
   danger: wordpress-mobile/danger@0.0.19
   android: wordpress-mobile/android@0.0.19
+  bundle-install: toshimaru/bundle-install@0.1.1
 
 version: 2.1
 jobs:
@@ -38,9 +39,6 @@ jobs:
       - android/restore-gradle-cache:
           cache-prefix: lint-cache
       - <<: *copy_gradle_properties
-      - run: 
-          name: Validate login strings
-          command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
       - run:
           name: Checkstyle
           command: $GRADLEW checkstyle
@@ -55,10 +53,20 @@ jobs:
       - store_artifacts:
           path: WordPress/build/reports
           destination: reports
+  strings-check:
+    docker:
+      - image: circleci/ruby:2.3
+    steps:
+      - checkout
+      - bundle-install/bundle-install
+      - run:
+          name: Validate login strings
+          command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
 
 workflows:
   wordpress_android:
     jobs:
+      - strings-check
       - test
       - lint
       - danger/danger-ruby:
