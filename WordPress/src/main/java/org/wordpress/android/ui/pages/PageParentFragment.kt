@@ -138,15 +138,12 @@ class PageParentFragment : Fragment() {
     }
 
     private fun setPages(pages: List<PageItem>) {
-        val adapter: PagesAdapter
+        val adapter: PageParentAdapter
         if (recyclerView.adapter == null) {
-            adapter = PagesAdapter(
-                    onParentSelected = { page -> viewModel.onParentSelected(page) },
-                    uiScope = uiScope
-            )
+            adapter = PageParentAdapter({ page -> viewModel.onParentSelected(page) }, uiScope)
             recyclerView.adapter = adapter
         } else {
-            adapter = recyclerView.adapter as PagesAdapter
+            adapter = recyclerView.adapter as PageParentAdapter
         }
         adapter.update(pages)
     }

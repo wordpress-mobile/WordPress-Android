@@ -30,15 +30,15 @@ class PublicizeUseCase
     private val insightsStore: InsightsStore,
     private val mapper: ServiceMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper
-) : StatelessUseCase<org.wordpress.android.fluxc.model.stats.PublicizeModel>(PUBLICIZE, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel) {
-        insightsStore.getPublicizeData(
+) : StatelessUseCase<PublicizeModel>(PUBLICIZE, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel): PublicizeModel? {
+        return insightsStore.getPublicizeData(
                 site,
                 PAGE_SIZE
-        )?.let { onModel(it) }
+        )
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<PublicizeModel> {
         val response = insightsStore.fetchPublicizeData(
                 site,
                 PAGE_SIZE, forced
@@ -46,12 +46,12 @@ class PublicizeUseCase
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(
+        return when {
+            error != null -> State.Error(
                     error.message ?: error.type.name
             )
-            model != null -> onModel(model)
-            else -> onEmpty()
+            model != null && model.services.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 

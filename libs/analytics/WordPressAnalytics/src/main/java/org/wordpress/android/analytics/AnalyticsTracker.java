@@ -132,6 +132,7 @@ public final class AnalyticsTracker {
         EDITOR_SCHEDULED_POST,
         EDITOR_OPENED,
         POST_LIST_BUTTON_PRESSED,
+        POST_LIST_ITEM_SELECTED,
         EDITOR_CLOSED,
         EDITOR_PUBLISHED_POST,
         EDITOR_SAVED_DRAFT,
@@ -172,6 +173,8 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
         EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
         EDITOR_AZTEC_ENABLED, // Aztec editor only
+        EDITOR_GUTENBERG_ENABLED, // Gutenberg editor only
+        EDITOR_GUTENBERG_DISABLED, // Gutenberg editor only
         REVISIONS_LIST_VIEWED,
         REVISIONS_DETAIL_VIEWED_FROM_LIST,
         REVISIONS_DETAIL_VIEWED_FROM_SWIPE,

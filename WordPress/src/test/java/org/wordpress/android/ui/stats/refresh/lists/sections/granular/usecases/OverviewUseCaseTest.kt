@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,13 +17,11 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
@@ -64,7 +61,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
         )
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
         whenever(overviewMapper.buildTitle(any(), isNull(), any())).thenReturn(title)
-        whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(barChartItem)
+        whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(listOf(barChartItem))
         whenever(overviewMapper.buildColumns(any(), any(), any())).thenReturn(columns)
     }
 
@@ -80,11 +77,12 @@ class OverviewUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items[0]).isEqualTo(title)
-            assertThat(this.items[1]).isEqualTo(barChartItem)
-            assertThat(this.items[2]).isEqualTo(columns)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.OVERVIEW)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this[0]).isEqualTo(title)
+            assertThat(this[1]).isEqualTo(barChartItem)
+            assertThat(this[2]).isEqualTo(columns)
         }
     }
 
@@ -100,14 +98,11 @@ class OverviewUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            Assertions.assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

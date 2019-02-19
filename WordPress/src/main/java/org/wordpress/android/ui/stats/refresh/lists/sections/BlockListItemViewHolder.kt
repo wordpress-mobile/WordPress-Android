@@ -43,6 +43,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -82,6 +83,7 @@ sealed class BlockListItemViewHolder(
             parent,
             R.layout.stats_block_value_item
     ) {
+        private val container = itemView.findViewById<LinearLayout>(R.id.value_container)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val unit = itemView.findViewById<TextView>(R.id.unit)
         private val positiveChange = itemView.findViewById<TextView>(R.id.positive_change)
@@ -94,6 +96,10 @@ sealed class BlockListItemViewHolder(
             negativeChange.visibility = if (hasChange && !item.positive) View.VISIBLE else View.GONE
             positiveChange.text = item.change
             negativeChange.text = item.change
+            val params = container.layoutParams as RecyclerView.LayoutParams
+            val topMargin = if (item.isFirst) container.resources.getDimensionPixelSize(R.dimen.margin_medium) else 0
+            params.setMargins(0, topMargin, 0, 0)
+            container.layoutParams = params
         }
     }
 
@@ -185,7 +191,9 @@ sealed class BlockListItemViewHolder(
     ) {
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(textItem: Text) {
-            val spannableString = SpannableString(textItem.text)
+            val loadedText = textItem.text
+                    ?: textItem.textResource?.let { text.resources.getString(textItem.textResource) } ?: ""
+            val spannableString = SpannableString(loadedText)
             textItem.links?.forEach { link ->
                 spannableString.withClickableSpan(text.context, link.link) {
                     link.navigationAction.click()
@@ -312,6 +320,16 @@ sealed class BlockListItemViewHolder(
                 delay(50)
                 chart.draw(item, labelStart, labelEnd)
             }
+        }
+    }
+
+    class ChartLegendViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+            parent,
+            R.layout.stats_block_legend_item
+    ) {
+        private val legend = itemView.findViewById<TextView>(R.id.legend)
+        fun bind(item: ChartLegend) {
+            legend.setText(item.text)
         }
     }
 
