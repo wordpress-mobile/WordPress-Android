@@ -52,17 +52,16 @@ constructor(
 ) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_authors))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = authorsStore.getAuthors(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): AuthorsModel? {
+        return authorsStore.getAuthors(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
                 selectedDate
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<AuthorsModel> {
         val response = authorsStore.fetchAuthors(
                 site,
                 PAGE_SIZE,
@@ -73,10 +72,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.authors.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 

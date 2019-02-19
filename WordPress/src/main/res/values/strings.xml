@@ -334,18 +334,6 @@
     <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
     <string name="snackbar_conflict_undo">Undo</string>
 
-    <!-- gutenberg compatibility dialog -->
-    <string name="dialog_gutenberg_compatibility_title">Before you continue</string>
-    <string name="dialog_gutenberg_compatibility_message">We are working on the brand new WordPress editor. You can still edit this post, but we recommend previewing it before publishing.</string>
-    <string name="dialog_gutenberg_compatibility_message_page">We are working on the brand new WordPress editor. You can still edit this page, but we recommend previewing it before publishing.</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Edit Post</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Edit Page</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Go Back</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Don\'t show again</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Learn more</string>
-    <string name="dialog_gutenberg_compatibility_learn_more_url_wpcom" translatable="false">https://apps.wordpress.com/gutenberg?flavor=wpcom</string>
-    <string name="dialog_gutenberg_compatibility_learn_more_url_wporg" translatable="false">https://apps.wordpress.com/gutenberg?flavor=wporg</string>
-
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.
@@ -582,7 +570,8 @@
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
-    <string name="site_settings_gutenberg_default_for_new_posts">Use block editor for new posts</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the block editor</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
@@ -1051,6 +1040,9 @@
 
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_select_next_period_description">Select next period</string>
+
+    <string name="stats_loading_error">Data not loaded</string>
+    <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
@@ -2531,7 +2523,7 @@
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_17">Upload a new image or select a file from your library.</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_20">Device Library</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_21">Take photo</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_default_block_appender_index_native_js_26">Start writing or press ⊕ to add content</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_default_block_appender_index_native_js_26">Start writing or press %s to add content</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Unsupported Block</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Unsupported block type.</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_block_picker_js_30">ADD BLOCK</string>

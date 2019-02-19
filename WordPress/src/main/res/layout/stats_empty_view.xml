@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<org.wordpress.android.ui.ActionableEmptyView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/actionable_empty_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
-        android:background="@color/background_grey"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        app:aevButton="@string/stats_button_manage_insights"
-        app:aevImage="@drawable/img_illustration_insights_94dp"
-        app:aevTitle="@string/stats_empty_insights_title"
-        app:aevSubtitle="@string/stats_empty_insights_description" />
-
-</RelativeLayout>
+    android:layout_height="match_parent"
+    android:background="@color/background_grey"
+    android:visibility="gone"
+    app:aevButton="@string/stats_button_manage_insights"
+    app:aevImage="@drawable/img_illustration_insights_94dp"
+    app:aevSubtitle="@string/stats_empty_insights_description"
+    app:aevTitle="@string/stats_empty_insights_title"/>

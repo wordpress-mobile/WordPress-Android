@@ -36,21 +36,20 @@ class CommentsUseCase
     private val insightsStore: InsightsStore,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<CommentsModel> {
         val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && (model.authors.isNotEmpty() || model.posts.isNotEmpty()) -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getComments(site, PAGE_SIZE)
-        dbModel?.let { onModel(dbModel) }
+    override suspend fun loadCachedData(site: SiteModel): CommentsModel? {
+        return insightsStore.getComments(site, PAGE_SIZE)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_comments))

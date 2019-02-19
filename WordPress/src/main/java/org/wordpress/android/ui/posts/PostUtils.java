@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
@@ -351,30 +350,6 @@ public class PostUtils {
     */
     public static boolean contentContainsGutenbergBlocks(String postContent) {
         return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
-    }
-
-    public static void showGutenbergCompatibilityWarningDialog(Context ctx,
-                                                               FragmentManager fragmentManager,
-                                                               PostModel post,
-                                                               SiteModel site) {
-        GutenbergWarningFragmentDialog gutenbergCompatibilityDialog = new GutenbergWarningFragmentDialog();
-        gutenbergCompatibilityDialog.initialize(post.getRemotePostId(), post.isPage());
-        gutenbergCompatibilityDialog.show(fragmentManager, "tag_gutenberg_confirm_dialog");
-
-        // track event
-        trackGutenbergDialogEvent(AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN,
-                post, site);
-    }
-
-    public static void trackGutenbergDialogEvent(AnalyticsTracker.Stat stat, PostModel post, SiteModel site) {
-        // track event
-        Map<String, Object> properties = new HashMap<>();
-        if (!post.isLocalDraft()) {
-            properties.put("post_id", post.getRemotePostId());
-        }
-        properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY, true);
-        properties.put("is_page", post.isPage());
-        AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
     }
 
     public static boolean shouldShowGutenbergEditor(boolean isNewPost, PostModel post) {

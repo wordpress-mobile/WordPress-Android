@@ -228,6 +228,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
+    private static final String STATE_KEY_GUTENERG_IS_SHOWN = "stateKeyGutenbergIsShown";
     private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
     private static final String TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG = "tag_discarding_changes_no_network_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
@@ -486,18 +487,17 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Ensure that this check happens when mPost is set
-        String restartEditorOptionName;
         if (savedInstanceState == null) {
-            restartEditorOptionName = getIntent().getStringExtra(EXTRA_RESTART_EDITOR);
-        } else {
-            restartEditorOptionName = savedInstanceState.getString(EXTRA_RESTART_EDITOR);
-        }
-        RestartEditorOptions restartEditorOption =
-                restartEditorOptionName == null ? RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
-                        : RestartEditorOptions.valueOf(restartEditorOptionName);
+            String restartEditorOptionName = getIntent().getStringExtra(EXTRA_RESTART_EDITOR);
+            RestartEditorOptions restartEditorOption =
+                    restartEditorOptionName == null ? RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
+                            : RestartEditorOptions.valueOf(restartEditorOptionName);
 
-        mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
-                               && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
+            mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
+                                   && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
+        } else {
+            mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENERG_IS_SHOWN);
+        }
 
         // Ensure we have a valid post
         if (mPost == null) {
@@ -681,11 +681,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
         EventBus.getDefault().register(this);
 
-        reattachUploadingMedia();
+        reattachUploadingMediaForAztec();
     }
 
-    private void reattachUploadingMedia() {
-        if (mEditorMediaUploadListener != null) {
+    private void reattachUploadingMediaForAztec() {
+        if (mEditorFragment instanceof AztecEditorFragment && mEditorMediaUploadListener != null) {
             // UploadService.getPendingMediaForPost will be populated only when the user exits the editor
             // But if the user doesn't exit the editor and sends the app to the background, a reattachment
             // for the media within this Post is needed as soon as the app comes back to foreground,
@@ -776,6 +776,7 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putParcelable(STATE_KEY_REVISION, mRevision);
+        outState.putBoolean(STATE_KEY_GUTENERG_IS_SHOWN, mShowGutenbergEditor);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
@@ -1126,20 +1127,32 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         MenuItem switchToAztecMenuItem = menu.findItem(R.id.menu_switch_to_aztec);
-        switchToAztecMenuItem.setVisible(mShowGutenbergEditor);
-
-        // Check whether the content has blocks. Warning: this can be a very slow operation if the post if big/complex
-        //  since it extracts the content from the editor, which can be slow in Gutenberg at the time of writing.
-        boolean hasBlocks = false;
-        try {
-            final String content = (String) mEditorFragment.getContent(mPost.getContent());
-            hasBlocks = PostUtils.contentContainsGutenbergBlocks(content) || TextUtils.isEmpty(content);
-        } catch (EditorFragmentNotAddedException e) {
-            // legacy exception; just ignore.
-        }
-
         MenuItem switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg);
-        switchToGutenbergMenuItem.setVisible(!mShowGutenbergEditor && hasBlocks);
+
+        if (mShowGutenbergEditor) {
+            // we're showing Gutenberg so, just offer the Aztec switch
+            switchToAztecMenuItem.setVisible(true);
+            switchToGutenbergMenuItem.setVisible(false);
+        } else {
+            // we're showing Aztec so, hide the "Switch to Aztec" menu
+            switchToAztecMenuItem.setVisible(false);
+
+            // Check whether the content has blocks.
+            boolean hasBlocks = false;
+            boolean isEmpty = false;
+            try {
+                final String content = (String) mEditorFragment.getContent(mPost.getContent());
+                hasBlocks = PostUtils.contentContainsGutenbergBlocks(content);
+                isEmpty = TextUtils.isEmpty(content);
+            } catch (EditorFragmentNotAddedException e) {
+                // legacy exception; just ignore.
+            }
+
+            // if content has blocks or empty, offer the switch to Gutenberg. The block editor doesn't have good
+            //  "Classic Block" support yet so, don't offer a switch to it if content doesn't have blocks. If the post
+            //  is empty but the user hasn't enabled "Use Gutenberg for new posts" App setting, don't offer the switch.
+            switchToGutenbergMenuItem.setVisible(hasBlocks || (AppPrefs.isGutenbergDefaultForNewPosts() && isEmpty));
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -2184,7 +2197,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         // Set up custom headers for the visual editor's internal WebView
                         mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
 
-                        reattachUploadingMedia();
+                        reattachUploadingMediaForAztec();
                     }
                     break;
                 case 1:

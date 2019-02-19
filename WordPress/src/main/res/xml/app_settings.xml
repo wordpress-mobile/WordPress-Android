@@ -66,7 +66,8 @@
             android:id="@+id/pref_gutenberg_default_for_new_posts"
             android:key="@string/pref_key_gutenberg_default_for_new_posts"
             android:layout="@layout/wp_preference_layout"
-            android:title="@string/site_settings_gutenberg_default_for_new_posts"/>
+            android:title="@string/site_settings_gutenberg_default_for_new_posts"
+            android:summary="@string/site_settings_gutenberg_default_for_new_posts_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory
