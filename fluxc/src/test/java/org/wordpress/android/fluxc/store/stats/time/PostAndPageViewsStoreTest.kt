@@ -74,7 +74,9 @@ class PostAndPageViewsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<PostAndPageViewsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchPostAndPageViews(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchPostAndPageViews(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(
+                errorPayload
+        )
 
         val responseModel = store.fetchPostAndPageViews(site, DAYS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
@@ -166,7 +168,9 @@ class PostAndPageViewsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<PostAndPageViewsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchPostAndPageViews(site, MONTHS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchPostAndPageViews(site, MONTHS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(
+                errorPayload
+        )
 
         val responseModel = store.fetchPostAndPageViews(site, MONTHS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
@@ -211,7 +215,9 @@ class PostAndPageViewsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<PostAndPageViewsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchPostAndPageViews(site, YEARS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchPostAndPageViews(site, YEARS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(
+                errorPayload
+        )
 
         val responseModel = store.fetchPostAndPageViews(site, YEARS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
