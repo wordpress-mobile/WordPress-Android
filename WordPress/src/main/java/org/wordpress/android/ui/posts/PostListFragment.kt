@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.prefs.AppPrefs

@@ -32,7 +32,7 @@ const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
 class PostsListActivity : AppCompatActivity(),
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
-        BasicDialogOnDismissByOutsideTouchInterface{
+        BasicDialogOnDismissByOutsideTouchInterface {
     @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
