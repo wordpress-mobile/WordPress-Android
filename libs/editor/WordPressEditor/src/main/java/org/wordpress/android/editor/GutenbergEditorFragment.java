@@ -45,6 +45,8 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButton
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.HashSet;
 import java.util.Set;
@@ -128,7 +130,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             String currentResourceString = currentResources.getString(resourceId);
             String defaultResourceString = defaultResources.getString(resourceId);
             if (currentResourceString.length() > 0 && defaultResourceString.length() > 0) {
-                translations.putString(defaultResourceString, currentResourceString);
+                translations.putStringArrayList(
+                        defaultResourceString,
+                        new ArrayList<>(Arrays.asList(currentResourceString))
+                );
             }
         }
         return translations;
