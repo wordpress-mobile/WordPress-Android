@@ -1127,20 +1127,29 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         MenuItem switchToAztecMenuItem = menu.findItem(R.id.menu_switch_to_aztec);
-        switchToAztecMenuItem.setVisible(mShowGutenbergEditor);
-
-        // Check whether the content has blocks. Warning: this can be a very slow operation if the post if big/complex
-        //  since it extracts the content from the editor, which can be slow in Gutenberg at the time of writing.
-        boolean hasBlocks = false;
-        try {
-            final String content = (String) mEditorFragment.getContent(mPost.getContent());
-            hasBlocks = PostUtils.contentContainsGutenbergBlocks(content) || TextUtils.isEmpty(content);
-        } catch (EditorFragmentNotAddedException e) {
-            // legacy exception; just ignore.
-        }
-
         MenuItem switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg);
-        switchToGutenbergMenuItem.setVisible(!mShowGutenbergEditor && hasBlocks);
+
+        if (mShowGutenbergEditor) {
+            // we're showing Gutenberg so, just offer the Aztec switch
+            switchToAztecMenuItem.setVisible(true);
+            switchToGutenbergMenuItem.setVisible(false);
+        } else {
+            // we're showing Aztec so, hide the "Switch to Aztec" menu
+            switchToAztecMenuItem.setVisible(false);
+
+            // Check whether the content has blocks.
+            boolean hasBlocksOrEmpty = false;
+            try {
+                final String content = (String) mEditorFragment.getContent(mPost.getContent());
+                hasBlocksOrEmpty = PostUtils.contentContainsGutenbergBlocks(content) || TextUtils.isEmpty(content);
+            } catch (EditorFragmentNotAddedException e) {
+                // legacy exception; just ignore.
+            }
+
+            // if content has blocks or empty, offer the switch to Gutenberg. The block editor doesn't have good
+            //  "Classic Block" support yet so, don't offer a switch to it if content doesn't have blocks.
+            switchToGutenbergMenuItem.setVisible(hasBlocksOrEmpty);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
