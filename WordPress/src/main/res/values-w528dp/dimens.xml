@@ -5,6 +5,5 @@
     <dimen name="stats_list_card_bottom_spacing">4dp</dimen>
     <dimen name="stats_list_card_first_spacing">8dp</dimen>
     <dimen name="stats_list_card_last_spacing">8dp</dimen>
-    <dimen name="stats_list_card_left_padding">24dp</dimen>
     <dimen name="stats_list_item_left_margin">48dp</dimen>
 </resources>
