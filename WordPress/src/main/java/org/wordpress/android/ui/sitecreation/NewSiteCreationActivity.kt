@@ -4,6 +4,7 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.sitecreation.siteinfo.NewSiteCreationSiteInfoFra
 import org.wordpress.android.ui.sitecreation.siteinfo.SiteInfoScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
 import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
+import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
@@ -57,6 +59,10 @@ class NewSiteCreationActivity : AppCompatActivity(),
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var mainViewModel: NewSiteCreationMainVM
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -173,7 +179,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
         }
     }
 
-    private fun slideInFragment(fragment: Fragment?, tag: String) {
+    private fun slideInFragment(fragment: Fragment, tag: String) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
         if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {

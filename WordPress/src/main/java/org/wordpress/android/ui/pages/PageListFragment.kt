@@ -12,10 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
-import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.pages.PageListViewModel
@@ -23,12 +21,10 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
-import javax.inject.Named
 
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var imageManager: ImageManager
-    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
 
@@ -103,19 +99,18 @@ class PageListFragment : Fragment() {
     }
 
     private fun setPages(pages: List<PageItem>, isSitePhotonCapable: Boolean) {
-        val adapter: PagesAdapter
+        val adapter: PageListAdapter
         if (recyclerView.adapter == null) {
-            adapter = PagesAdapter(
-                    onMenuAction = { action, page -> viewModel.onMenuAction(action, page) },
-                    onItemTapped = { page -> viewModel.onItemTapped(page) },
-                    onEmptyActionButtonTapped = { viewModel.onEmptyListNewPageButtonTapped() },
-                    imageManager = imageManager,
-                    isSitePhotonCapable = isSitePhotonCapable,
-                    uiScope = uiScope
+            adapter = PageListAdapter(
+                    { action, page -> viewModel.onMenuAction(action, page) },
+                    { page -> viewModel.onItemTapped(page) },
+                    { viewModel.onEmptyListNewPageButtonTapped() },
+                    isSitePhotonCapable,
+                    imageManager
             )
             recyclerView.adapter = adapter
         } else {
-            adapter = recyclerView.adapter as PagesAdapter
+            adapter = recyclerView.adapter as PageListAdapter
         }
         adapter.update(pages)
     }

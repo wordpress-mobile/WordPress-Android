@@ -101,6 +101,15 @@ class PagesFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
+
+            if (EditPostActivity.checkToRestart(data)) {
+                ActivityLauncher.editPageForResult(data, this@PagesFragment, viewModel.site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0))
+
+                // a restart will happen so, no need to continue here
+                return
+            }
+
             val wasPageUpdated = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false)
             if (pageId != -1L) {
                 onPageEditFinished(pageId, wasPageUpdated)
