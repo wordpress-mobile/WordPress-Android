@@ -50,6 +50,7 @@ class OverviewMapper
         return ValueItem(
                 value = value.toFormattedString(HUNDRED_THOUSAND),
                 unit = units[selectedPosition],
+                isFirst = true,
                 change = change,
                 positive = positive
         )

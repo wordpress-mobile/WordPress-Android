@@ -76,7 +76,7 @@ constructor(
         useCases.forEach { it.clear() }
     }
 
-    fun updateDateSelector(statsGranularity: StatsGranularity? = statsSectionManager.getSelectedStatsGranularity()) {
+    fun updateDateSelector(statsGranularity: StatsGranularity?) {
         val shouldShowDateSelection = statsGranularity != null
 
         val updatedDate = getDateLabelForSection(statsGranularity)

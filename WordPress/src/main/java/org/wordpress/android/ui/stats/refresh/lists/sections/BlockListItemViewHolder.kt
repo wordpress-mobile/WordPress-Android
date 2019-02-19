@@ -83,6 +83,7 @@ sealed class BlockListItemViewHolder(
             parent,
             R.layout.stats_block_value_item
     ) {
+        private val container = itemView.findViewById<LinearLayout>(R.id.value_container)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val unit = itemView.findViewById<TextView>(R.id.unit)
         private val positiveChange = itemView.findViewById<TextView>(R.id.positive_change)
@@ -95,6 +96,10 @@ sealed class BlockListItemViewHolder(
             negativeChange.visibility = if (hasChange && !item.positive) View.VISIBLE else View.GONE
             positiveChange.text = item.change
             negativeChange.text = item.change
+            val params = container.layoutParams as RecyclerView.LayoutParams
+            val topMargin = if (item.isFirst) container.resources.getDimensionPixelSize(R.dimen.margin_medium) else 0
+            params.setMargins(0, topMargin, 0, 0)
+            container.layoutParams = params
         }
     }
 

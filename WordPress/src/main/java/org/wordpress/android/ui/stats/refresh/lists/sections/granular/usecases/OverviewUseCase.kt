@@ -48,7 +48,7 @@ constructor(
     }
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
-                    ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views)
+                    ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views, isFirst = true)
             )
 
     override suspend fun loadCachedData(site: SiteModel) {

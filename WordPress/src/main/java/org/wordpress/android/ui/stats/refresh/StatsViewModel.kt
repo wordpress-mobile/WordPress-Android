@@ -75,7 +75,7 @@ class StatsViewModel
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
             }
         }
-        listUseCases.values.forEach { it.updateDateSelector() }
+        listUseCases.values.forEach { it.updateDateSelector(statsSectionManager.getSelectedStatsGranularity()) }
     }
 
     private fun loadStats() {
@@ -126,7 +126,7 @@ class StatsViewModel
 
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
-        listUseCases[statsSection]?.updateDateSelector()
+        listUseCases[statsSection]?.updateDateSelector(statsSectionManager.getSelectedStatsGranularity())
         _toolbarHasShadow.value = statsSection == INSIGHTS
         when (statsSection) {
             StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)

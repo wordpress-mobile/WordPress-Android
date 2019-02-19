@@ -51,6 +51,7 @@ sealed class BlockListItem(val type: Type) {
     data class ValueItem(
         val value: String,
         @StringRes val unit: Int,
+        val isFirst: Boolean = false,
         val change: String? = null,
         val positive: Boolean = true
     ) : BlockListItem(VALUE_ITEM)
