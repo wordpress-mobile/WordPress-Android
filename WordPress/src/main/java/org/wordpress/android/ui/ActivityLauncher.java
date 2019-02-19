@@ -24,6 +24,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
+import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -292,17 +293,11 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewPostsAndPagesStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
-                                              String selectedDate) {
-        Intent intent = new Intent(context, StatsViewAllActivity.class);
+    public static void viewPostsAndPagesStats(Context context, SiteModel site, StatsGranularity granularity) {
+        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.TOP_POSTS_AND_PAGES);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
-        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
-        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
-
-        String title = context.getResources().getString(R.string.stats_view_tags_and_categories);
-        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity);
         context.startActivity(intent);
     }
 

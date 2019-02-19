@@ -91,8 +91,7 @@ class StatsNavigator
                 ActivityLauncher.viewPostsAndPagesStats(
                         activity,
                         site,
-                        target.statsGranularity.toStatsTimeFrame(),
-                        statsDateFormatter.printStatsDate(target.selectedDate)
+                        target.statsGranularity
                 )
             }
             is ViewReferrers -> {
