@@ -5,6 +5,8 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.CacheMode
+import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.PAGE
@@ -34,7 +36,8 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_ITEM_COUNT = 6
+private const val VIEW_ALL_ITEM_COUNT = 100
 
 class PostsAndPagesUseCase
 constructor(
@@ -56,8 +59,8 @@ constructor(
         val dbModel = postsAndPageViewsStore.getPostAndPageViews(
                 site,
                 statsGranularity,
-                selectedDate,
-                PAGE_SIZE
+                CacheMode.Top(BLOCK_ITEM_COUNT),
+                selectedDate
         )
         dbModel?.let { onModel(it) }
     }
@@ -65,8 +68,8 @@ constructor(
     override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
         val response = postsAndPageViewsStore.fetchPostAndPageViews(
                 site,
-                PAGE_SIZE,
                 statsGranularity,
+                FetchMode.Top(BLOCK_ITEM_COUNT),
                 selectedDate,
                 forced
         )
