@@ -8,6 +8,7 @@ import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_BAR_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.TAB_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
@@ -38,6 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.BarChartViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.ChartLegendViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.DividerViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.ExpandableItemViewHolder
@@ -93,6 +96,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             COLUMNS -> FourColumnsViewHolder(parent)
             LINK -> LinkViewHolder(parent)
             BAR_CHART -> BarChartViewHolder(parent)
+            CHART_LEGEND -> ChartLegendViewHolder(parent)
             TABS -> TabsViewHolder(parent, imageManager)
             INFO -> InformationViewHolder(parent)
             HEADER -> HeaderViewHolder(parent)
@@ -120,6 +124,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is FourColumnsViewHolder -> holder.bind(item as Columns, payloads)
             is LinkViewHolder -> holder.bind(item as Link)
             is BarChartViewHolder -> holder.bind(item as BarChartItem, payloads.contains(SELECTED_BAR_CHANGED))
+            is ChartLegendViewHolder -> holder.bind(item as ChartLegend)
             is TabsViewHolder -> holder.bind(item as TabsItem, payloads.contains(TAB_CHANGED))
             is InformationViewHolder -> holder.bind(item as Information)
             is HeaderViewHolder -> holder.bind(item as Header)

@@ -6,9 +6,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.ScopedViewModel
 
@@ -33,6 +36,10 @@ abstract class StatsListViewModel(
 
     val data: LiveData<List<StatsBlock>> by lazy { statsUseCase.data.throttle(this) }
 
+    val showDateSelector: LiveData<DateSelectorUiModel> = statsUseCase.showDateSelector.mapNullable {
+        it ?: DateSelectorUiModel(false)
+    }
+
     override fun onCleared() {
         statsUseCase.onCleared()
         super.onCleared()
@@ -44,6 +51,18 @@ abstract class StatsListViewModel(
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_SCROLLED_TO_BOTTOM)
                 delay(SCROLL_EVENT_DELAY)
             }
+        }
+    }
+
+    fun onNextDateSelected() {
+        launch(Dispatchers.Default) {
+            statsUseCase.onNextDateSelected()
+        }
+    }
+
+    fun onPreviousDateSelected() {
+        launch(Dispatchers.Default) {
+            statsUseCase.onPreviousDateSelected()
         }
     }
 }

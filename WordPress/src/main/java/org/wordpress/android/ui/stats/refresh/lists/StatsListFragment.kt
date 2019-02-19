@@ -10,12 +10,12 @@ import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.LayoutManager
-import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
@@ -130,6 +130,12 @@ class StatsListFragment : DaggerFragment() {
                 }
             }
         })
+        select_next_date.setOnClickListener {
+            viewModel.onNextDateSelected()
+        }
+        select_previous_date.setOnClickListener {
+            viewModel.onPreviousDateSelected()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -169,6 +175,22 @@ class StatsListFragment : DaggerFragment() {
         viewModel.data.observe(this, Observer {
             if (it != null) {
                 updateInsights(it)
+            }
+        })
+
+        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
+            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
+            if (date_selection_toolbar.visibility != dateSelectorVisibility) {
+                date_selection_toolbar.visibility = dateSelectorVisibility
+            }
+            selected_date.text = dateSelectorUiModel?.date ?: ""
+            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
+            if (select_previous_date.isEnabled != enablePreviousButton) {
+                select_previous_date.isEnabled = enablePreviousButton
+            }
+            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
+            if (select_next_date.isEnabled != enableNextButton) {
+                select_next_date.isEnabled = enableNextButton
             }
         })
 

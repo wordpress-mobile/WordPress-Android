@@ -4,8 +4,10 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.utils.HUNDRED_THOUSAND
@@ -48,6 +50,7 @@ class OverviewMapper
         return ValueItem(
                 value = value.toFormattedString(HUNDRED_THOUSAND),
                 unit = units[selectedPosition],
+                isFirst = true,
                 change = change,
                 positive = positive
         )
@@ -86,11 +89,11 @@ class OverviewMapper
     fun buildChart(
         dates: List<PeriodData>,
         statsGranularity: StatsGranularity,
-        onBarSelected: (selectedPeriod: String?) -> Unit,
+        onBarSelected: (String?) -> Unit,
         onBarChartDrawn: (visibleBarCount: Int) -> Unit,
         selectedType: Int,
         selectedPosition: Int
-    ): BarChartItem {
+    ): List<BlockListItem> {
         val chartItems = dates.map {
             val value = when (selectedType) {
                 0 -> it.views
@@ -105,11 +108,30 @@ class OverviewMapper
                     value.toInt()
             )
         }
-        return BarChartItem(
+        // Only show overlapping visitors when we are showing views
+        val shouldShowVisitors = selectedType == 0
+        val overlappingItems = if (shouldShowVisitors) {
+            dates.map {
+                Bar(
+                        statsDateFormatter.printGranularDate(it.period, statsGranularity),
+                        it.period,
+                        it.visitors.toInt()
+                )
+            }
+        } else {
+            null
+        }
+        val result = mutableListOf<BlockListItem>()
+        if (shouldShowVisitors) {
+            result.add(ChartLegend(R.string.stats_visitors))
+        }
+        result.add(BarChartItem(
                 chartItems,
+                overlappingEntries = overlappingItems,
                 selectedItem = dates[selectedPosition].period,
                 onBarSelected = onBarSelected,
                 onBarChartDrawn = onBarChartDrawn
-        )
+        ))
+        return result
     }
 }

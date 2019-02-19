@@ -151,6 +151,13 @@ fun <T, U> LiveData<T>.map(mapper: (T) -> U?): LiveData<U> {
 }
 
 /**
+ * Simple wrapper of the map utility method that is null safe
+ */
+fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U?): LiveData<U> {
+    return Transformations.map(this) { mapper(it) }
+}
+
+/**
  * This method ensures that the LiveData instance doesn't emit the same item twice
  */
 fun <T> LiveData<T>.distinct(): LiveData<T> {
