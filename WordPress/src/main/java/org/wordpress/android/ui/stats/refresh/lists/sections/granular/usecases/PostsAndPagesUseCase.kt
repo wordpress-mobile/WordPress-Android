@@ -42,7 +42,8 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore,
     selectedDateProvider: SelectedDateProvider,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<PostAndPageViewsModel>(
         POSTS_AND_PAGES,
         mainDispatcher,
@@ -155,13 +156,14 @@ constructor(
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
-        override fun build(granularity: StatsGranularity) =
+        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 PostsAndPagesUseCase(
                         granularity,
                         mainDispatcher,
                         postsAndPageViewsStore,
                         selectedDateProvider,
-                        analyticsTracker
+                        analyticsTracker,
+                        useCaseMode
                 )
     }
 }
