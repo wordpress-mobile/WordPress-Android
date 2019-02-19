@@ -51,14 +51,6 @@ fun handlePostListAction(activity: FragmentActivity, action: PostListAction) {
         is PostListAction.ViewPost -> {
             ActivityLauncher.browsePostOrPage(activity, action.site, action.post)
         }
-        is PostListAction.ShowGutenbergWarningDialog -> {
-            PostUtils.showGutenbergCompatibilityWarningDialog(
-                    activity,
-                    activity.supportFragmentManager,
-                    action.post,
-                    action.site
-            )
-        }
         is PostListAction.DismissPendingNotification -> {
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)
         }
