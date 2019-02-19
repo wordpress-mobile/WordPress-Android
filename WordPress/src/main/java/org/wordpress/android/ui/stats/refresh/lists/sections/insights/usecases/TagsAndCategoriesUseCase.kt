@@ -141,6 +141,7 @@ class TagsAndCategoriesUseCase
     private fun mapItem(item: TagModel.Item): ListItemWithIcon {
         return ListItemWithIcon(
                 icon = getIcon(item.type),
+                isSubItem = true,
                 text = item.name,
                 showDivider = false,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick)

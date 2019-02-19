@@ -107,6 +107,7 @@ constructor(
                             ListItemWithIcon(
                                     text = post.title,
                                     value = post.views.toFormattedString(),
+                                    isSubItem = true,
                                     showDivider = false,
                                     navigationAction = create(
                                             PostClickParams(post.id, post.url, post.title),

@@ -126,6 +126,12 @@ sealed class BlockListItemViewHolder(
         fun bind(item: ListItemWithIcon) {
             iconContainer.setIconOrAvatar(item, imageManager)
             text.setTextOrHide(item.textResource, item.text)
+            val textColor = if (item.isSubItem) {
+                R.color.grey_darken_20
+            } else {
+                R.color.grey_dark
+            }
+            text.setTextColor(ContextCompat.getColor(text.context, textColor))
             subtext.setTextOrHide(item.subTextResource, item.subText)
             value.setTextOrHide(item.valueResource, item.value)
             divider.visibility = if (item.showDivider) {
@@ -271,11 +277,13 @@ sealed class BlockListItemViewHolder(
                 }
             }
         }
+
         private fun LinearLayout.setSelection(isSelected: Boolean) {
             key().isSelected = isSelected
             value().isSelected = isSelected
             selector().visibility = if (isSelected) View.VISIBLE else View.GONE
         }
+
         private fun LinearLayout.key(): TextView = this.findViewById(R.id.key)
         private fun LinearLayout.value(): TextView = this.findViewById(R.id.value)
         private fun LinearLayout.selector(): View = this.findViewById(R.id.selector)
@@ -549,6 +557,8 @@ sealed class BlockListItemViewHolder(
                     avatar.setAvatarOrLoad(item, imageManager)
                 }
             }
+        } else if (item.isSubItem) {
+            this.visibility = View.INVISIBLE
         } else {
             this.visibility = View.GONE
         }

@@ -105,6 +105,7 @@ constructor(
                         items.addAll(group.clicks.map { click ->
                             ListItemWithIcon(
                                     iconUrl = click.icon,
+                                    isSubItem = true,
                                     text = click.name,
                                     value = click.views.toFormattedString(),
                                     showDivider = false,

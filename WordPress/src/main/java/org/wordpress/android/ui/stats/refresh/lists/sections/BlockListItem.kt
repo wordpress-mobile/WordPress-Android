@@ -76,6 +76,7 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
         val showDivider: Boolean = true,
+        val isSubItem: Boolean = false,
         val navigationAction: NavigationAction? = null
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int

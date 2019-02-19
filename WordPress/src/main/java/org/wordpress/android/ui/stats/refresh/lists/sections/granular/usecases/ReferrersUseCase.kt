@@ -110,6 +110,7 @@ constructor(
                         items.addAll(group.referrers.map { referrer ->
                             ListItemWithIcon(
                                     iconUrl = referrer.icon,
+                                    isSubItem = true,
                                     text = referrer.name,
                                     value = referrer.views.toFormattedString(),
                                     showDivider = false,
