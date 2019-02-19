@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -640,6 +641,7 @@ public class AppPrefs {
     }
 
     public static void setGutenbergDefaultForNewPosts(boolean defaultForNewPosts) {
+        AnalyticsTracker.track(defaultForNewPosts ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED);
         setBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, defaultForNewPosts);
     }
 
