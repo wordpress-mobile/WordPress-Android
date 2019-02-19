@@ -128,26 +128,15 @@ class StatsViewAllFragment : DaggerFragment() {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
         }
 
-        val clazz = when (type) {
-            StatsViewType.FOLLOWERS -> StatsViewAllFollowersViewModel::class.java
-            StatsViewType.COMMENTS -> StatsViewAllCommentsViewModel::class.java
-            StatsViewType.TAGS_AND_CATEGORIES -> StatsViewAllTagsAndCategoriesViewModel::class.java
-            StatsViewType.INSIGHTS_ALL_TIME -> TODO()
-            StatsViewType.INSIGHTS_LATEST_POST_SUMMARY -> TODO()
-            StatsViewType.INSIGHTS_MOST_POPULAR -> TODO()
-            StatsViewType.INSIGHTS_TODAY -> TODO()
-            StatsViewType.PUBLICIZE -> TODO()
-            StatsViewType.TOP_POSTS_AND_PAGES -> TODO()
-            StatsViewType.REFERRERS -> TODO()
-            StatsViewType.CLICKS -> TODO()
-            StatsViewType.AUTHORS -> TODO()
-            StatsViewType.GEOVIEWS -> TODO()
-            StatsViewType.SEARCH_TERMS -> TODO()
-            StatsViewType.VIDEO_PLAYS -> TODO()
-            else -> throw IllegalStateException("View all screen: Unsupported use case type: ${type.name}")
+        val granularity = if (savedInstanceState == null) {
+            val nonNullIntent = checkNotNull(activity.intent)
+            nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
+        } else {
+            savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         }
 
-        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(clazz)
+        val viewModelType = StatsViewAllViewModel.get(type, granularity)
+        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(viewModelType)
         setupObservers(site, activity)
         viewModel.start(site)
     }
