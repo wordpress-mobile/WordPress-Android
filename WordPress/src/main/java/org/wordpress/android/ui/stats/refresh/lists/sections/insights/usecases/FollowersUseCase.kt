@@ -44,15 +44,19 @@ class FollowersUseCase
         mainDispatcher,
         0
 ) {
-    override suspend fun loadCachedData(site: SiteModel) {
+    override suspend fun loadCachedData(site: SiteModel): Pair<FollowersModel, FollowersModel>? {
         val wpComFollowers = insightsStore.getWpComFollowers(site, PAGE_SIZE)
         val emailFollowers = insightsStore.getEmailFollowers(site, PAGE_SIZE)
         if (wpComFollowers != null && emailFollowers != null) {
-            onModel(wpComFollowers to emailFollowers)
+            return wpComFollowers to emailFollowers
         }
+        return null
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(
+        site: SiteModel,
+        forced: Boolean
+    ): State<Pair<FollowersModel, FollowersModel>> {
         val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, PAGE_SIZE, forced) }
         val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, PAGE_SIZE, forced) }
         val wpComResponse = deferredWpComResponse.await()
@@ -61,10 +65,13 @@ class FollowersUseCase
         val emailModel = emailResponse.model
         val error = wpComResponse.error ?: emailResponse.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            wpComModel != null && emailModel != null -> onModel(wpComModel to emailModel)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            wpComModel != null && emailModel != null &&
+                    (wpComModel.followers.isNotEmpty() || emailModel.followers.isNotEmpty()) -> State.Data(
+                    wpComModel to emailModel
+            )
+            else -> State.Empty()
         }
     }
 

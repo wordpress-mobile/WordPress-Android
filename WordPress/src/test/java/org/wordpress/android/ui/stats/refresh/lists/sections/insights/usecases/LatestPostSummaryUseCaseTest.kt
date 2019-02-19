@@ -18,12 +18,11 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -66,20 +65,18 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(Error::class.java)
-        val failed = result as Error
-        assertThat(failed.errorMessage).isEqualTo(message)
+        assertThat(result!!.state).isEqualTo(UseCaseState.ERROR)
     }
 
     @Test
-    fun `returns null item when model is missing`() = test {
+    fun `returns empty item when model is missing`() = test {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(OnStatsFetched())
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isNull()
+        assertThat(result!!.state).isEqualTo(UseCaseState.EMPTY)
     }
 
     @Test
@@ -99,8 +96,8 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(BlockList::class.java)
-        (result as BlockList).items.apply {
+        assertThat(result!!.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
             val title = this[0] as Title
             assertThat(title.textResource).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
@@ -136,8 +133,8 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(BlockList::class.java)
-        (result as BlockList).items.apply {
+        assertThat(result!!.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
             val title = this[0] as Title
             assertThat(title.textResource).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
@@ -167,8 +164,8 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     private suspend fun loadLatestPostSummary(
         refresh: Boolean,
         forced: Boolean
-    ): StatsBlock? {
-        var result: StatsBlock? = null
+    ): UseCaseModel? {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return result

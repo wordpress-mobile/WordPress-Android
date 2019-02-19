@@ -24,11 +24,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
+import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -39,6 +40,7 @@ class StatsViewModel
     private val selectedDateProvider: SelectedDateProvider,
     private val statsSectionManager: SelectedSectionManager,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
@@ -48,7 +50,11 @@ class StatsViewModel
 
     private var isInitialized = false
 
-    private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
+    private val _showSnackbarMessage = mergeNotNull(
+            listUseCases.values.map { it.snackbarMessage },
+            distinct = true,
+            singleEvent = true
+    )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
     val selectedDateChanged = selectedDateProvider.selectedDateChanged
@@ -69,8 +75,6 @@ class StatsViewModel
 
             _toolbarHasShadow.value = statsSectionManager.getSelectedSection() == INSIGHTS
 
-            loadStats()
-
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, site)
 
             if (launchedFromWidget) {
@@ -78,14 +82,6 @@ class StatsViewModel
             }
         }
         listUseCases.values.forEach { it.updateDateSelector(statsSectionManager.getSelectedStatsGranularity()) }
-    }
-
-    private fun loadStats() {
-        loadData {
-            listUseCases.values.forEach {
-                it.loadData(site)
-            }
-        }
     }
 
     private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
@@ -108,10 +104,14 @@ class StatsViewModel
     }
 
     fun onPullToRefresh() {
-        loadData {
-            listUseCases.values.forEach {
-                it.refreshData(site, true)
+        _showSnackbarMessage.value = null
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            loadData {
+                listUseCases[statsSectionManager.getSelectedSection()]?.refreshData(site, true)
             }
+        } else {
+            _isRefreshing.value = false
+            _showSnackbarMessage.value = SnackbarMessageHolder(R.string.no_network_title)
         }
     }
 
@@ -141,6 +141,7 @@ class StatsViewModel
 
     override fun onCleared() {
         super.onCleared()
+        _showSnackbarMessage.value = null
         selectedDateProvider.clear()
     }
 

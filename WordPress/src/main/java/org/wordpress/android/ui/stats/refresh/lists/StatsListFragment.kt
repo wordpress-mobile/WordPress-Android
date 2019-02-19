@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_date_selector.*
+import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
@@ -51,6 +52,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAnd
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewVideoPlays
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel
@@ -169,12 +171,24 @@ class StatsListFragment : DaggerFragment() {
         }
 
         setupObservers(activity, site)
+        viewModel.start(site)
     }
 
     private fun setupObservers(activity: FragmentActivity, site: SiteModel) {
-        viewModel.data.observe(this, Observer {
+        viewModel.uiModel.observe(this, Observer {
             if (it != null) {
-                updateInsights(it)
+                when (it) {
+                    is UiModel.Success -> {
+                        updateInsights(it.data)
+                    }
+                    is UiModel.Error -> {
+                        recyclerView.visibility = View.GONE
+                        actionable_error_view.visibility = View.VISIBLE
+                        actionable_error_view.button.setOnClickListener {
+                            viewModel.onRetryClick(site)
+                        }
+                    }
+                }
             }
         })
 
@@ -307,6 +321,8 @@ class StatsListFragment : DaggerFragment() {
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {
+        recyclerView.visibility = View.VISIBLE
+        actionable_error_view.visibility = View.GONE
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
             adapter = StatsBlockAdapter(imageManager)

@@ -21,22 +21,24 @@ class TodayStatsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
 ) : StatelessUseCase<VisitsModel>(TODAY_STATS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getTodayInsights(site)
-        dbModel?.let { onModel(it) }
+    override suspend fun loadCachedData(site: SiteModel): VisitsModel? {
+        return insightsStore.getTodayInsights(site)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<VisitsModel> {
         val response = insightsStore.fetchTodayInsights(site, forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.hasData() -> State.Data(model)
+            else -> State.Empty()
         }
     }
+
+    private fun VisitsModel.hasData() =
+            this.comments > 0 || this.views > 0 || this.likes > 0 || this.visitors > 0
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_today_stats))
 

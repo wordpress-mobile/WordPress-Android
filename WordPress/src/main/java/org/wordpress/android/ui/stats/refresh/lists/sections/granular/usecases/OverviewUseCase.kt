@@ -13,7 +13,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -51,16 +50,15 @@ constructor(
                     ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views, isFirst = true)
             )
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = visitsAndViewsStore.getVisits(
+    override suspend fun loadCachedData(site: SiteModel): VisitsAndViewsModel? {
+        return visitsAndViewsStore.getVisits(
                 site,
                 selectedDateProvider.getCurrentDate(),
                 statsGranularity
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
                 site,
                 PAGE_SIZE,
@@ -71,10 +69,19 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> {
+                selectedDateProvider.dateLoadingFailed(statsGranularity)
+                State.Error(error.message ?: error.type.name)
+            }
+            model != null && model.dates.isNotEmpty() -> {
+                selectedDateProvider.dateLoadingSucceeded(statsGranularity)
+                State.Data(model)
+            }
+            else -> {
+                selectedDateProvider.dateLoadingSucceeded(statsGranularity)
+                State.Empty()
+            }
         }
     }
 
@@ -94,10 +101,8 @@ constructor(
             val index = availableDates.indexOf(selectedDate)
 
             selectedDateProvider.selectDate(
-                    SelectedDate(
-                            index,
-                            availableDates
-                    ),
+                    index,
+                    availableDates,
                     statsGranularity
             )
             val shiftedIndex = index + domainModel.dates.size - visibleBarCount
@@ -118,6 +123,7 @@ constructor(
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
         } else {
+            selectedDateProvider.dateLoadingFailed(statsGranularity)
             AppLog.e(T.STATS, "There is no data to be shown in the overview block")
         }
         return items
