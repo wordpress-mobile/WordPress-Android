@@ -20,7 +20,6 @@ sealed class PostListAction {
 
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListAction()
-    class ShowGutenbergWarningDialog(val site: SiteModel, val post: PostModel) : PostListAction()
     class DismissPendingNotification(val pushId: Int) : PostListAction()
 }
 
@@ -51,14 +50,6 @@ fun handlePostListAction(activity: FragmentActivity, action: PostListAction) {
         }
         is PostListAction.ViewPost -> {
             ActivityLauncher.browsePostOrPage(activity, action.site, action.post)
-        }
-        is PostListAction.ShowGutenbergWarningDialog -> {
-            PostUtils.showGutenbergCompatibilityWarningDialog(
-                    activity,
-                    activity.supportFragmentManager,
-                    action.post,
-                    action.site
-            )
         }
         is PostListAction.DismissPendingNotification -> {
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)

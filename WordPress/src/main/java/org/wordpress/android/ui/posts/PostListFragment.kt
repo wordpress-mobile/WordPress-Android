@@ -19,7 +19,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
-import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -247,6 +247,14 @@ class PostListFragment : Fragment() {
 
     fun handleEditPostResult(resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
+            if (data != null && EditPostActivity.checkToRestart(data)) {
+                ActivityLauncher.editPostOrPageForResult(data, nonNullActivity, site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0))
+
+                // a restart will happen so, no need to continue here
+                return
+            }
+
             viewModel.handleEditPostResult(data)
         }
     }
@@ -290,31 +298,6 @@ class PostListFragment : Fragment() {
 
     fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
-    }
-
-    // GutenbergWarningDialogClickInterface
-
-    fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
-        viewModel.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId)
-    }
-
-    fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {
-        viewModel.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId)
-    }
-
-    fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long) {
-        // here launch the web the Gutenberg Learn more
-        val urlToUse = if (site.isWPCom || site.isJetpackConnected) {
-            getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wpcom)
-        } else {
-            getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wporg)
-        }
-        WPWebViewActivity.openURL(nonNullActivity, urlToUse)
-        viewModel.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId)
-    }
-
-    fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId: Long, checked: Boolean) {
-        viewModel.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked)
     }
 
     companion object {

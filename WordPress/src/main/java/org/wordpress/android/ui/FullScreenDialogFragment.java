@@ -264,22 +264,24 @@ public class FullScreenDialogFragment extends DialogFragment {
             }
         });
 
-        Menu menu = mToolbar.getMenu();
-        MenuItem action = menu.add(0, ID_ACTION, 0, this.mAction);
-        action.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        action.setOnMenuItemClickListener(
-                new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == ID_ACTION) {
-                            onConfirmClicked();
-                            return true;
-                        } else {
-                            return false;
+        if (!mAction.isEmpty()) {
+            Menu menu = mToolbar.getMenu();
+            MenuItem action = menu.add(0, ID_ACTION, 0, this.mAction);
+            action.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            action.setOnMenuItemClickListener(
+                    new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == ID_ACTION) {
+                                onConfirmClicked();
+                                return true;
+                            } else {
+                                return false;
+                            }
                         }
                     }
-                }
-        );
+            );
+        }
     }
 
     public void onBackPressed() {

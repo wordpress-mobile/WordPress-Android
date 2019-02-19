@@ -34,8 +34,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         parentView: ViewGroup,
         private val onMenuAction: (PageItem.Action, Page) -> Boolean,
         private val onItemTapped: (Page) -> Unit,
-        private val imageManager: ImageManager,
-        private val isSitePhotonCapable: Boolean
+        private val imageManager: ImageManager? = null,
+        private val isSitePhotonCapable: Boolean = false
     ) : PageItemViewHolder(parentView, R.layout.page_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(R.id.page_more)
@@ -92,19 +92,19 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             val imageSize = DisplayUtils.dpToPx(parent.context, FEATURED_IMAGE_THUMBNAIL_SIZE_DP)
             if (imageUrl == null) {
                 featuredImage.visibility = View.GONE
-                imageManager.cancelRequestAndClearImageView(featuredImage)
+                imageManager?.cancelRequestAndClearImageView(featuredImage)
             } else if (imageUrl.startsWith("http")) {
                 featuredImage.visibility = View.VISIBLE
                 val photonUrl = ReaderUtils.getResizedImageUrl(imageUrl, imageSize, imageSize, !isSitePhotonCapable)
-                imageManager.load(featuredImage, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
+                imageManager?.load(featuredImage, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
             } else {
                 val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(featuredImage.context, imageUrl, imageSize)
                 if (bmp != null) {
                     featuredImage.visibility = View.VISIBLE
-                    imageManager.load(featuredImage, bmp)
+                    imageManager?.load(featuredImage, bmp)
                 } else {
                     featuredImage.visibility = View.GONE
-                    imageManager.cancelRequestAndClearImageView(featuredImage)
+                    imageManager?.cancelRequestAndClearImageView(featuredImage)
                 }
             }
         }

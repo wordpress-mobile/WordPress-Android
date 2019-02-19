@@ -22,7 +22,6 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashlyticsUtils
 import org.wordpress.android.util.LocaleManager
@@ -33,8 +32,7 @@ const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
 class PostsListActivity : AppCompatActivity(),
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
-        BasicDialogOnDismissByOutsideTouchInterface,
-        GutenbergWarningDialogClickInterface {
+        BasicDialogOnDismissByOutsideTouchInterface {
     @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -137,7 +135,7 @@ class PostsListActivity : AppCompatActivity(),
         ActivityId.trackLastActivity(ActivityId.POSTS)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RequestCodes.EDIT_POST) {
@@ -170,25 +168,6 @@ class PostsListActivity : AppCompatActivity(),
 
     override fun onDismissByOutsideTouch(instanceTag: String) {
         currentFragment?.onDismissByOutsideTouchForBasicDialog(instanceTag) ?: logFragmentNullError()
-    }
-
-    // GutenbergWarningDialogClickInterface Callbacks
-
-    override fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
-        currentFragment?.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId) ?: logFragmentNullError()
-    }
-
-    override fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {
-        currentFragment?.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId) ?: logFragmentNullError()
-    }
-
-    override fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long) {
-        currentFragment?.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId) ?: logFragmentNullError()
-    }
-
-    override fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId: Long, checked: Boolean) {
-        currentFragment?.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked)
-                ?: logFragmentNullError()
     }
 
     private fun logFragmentNullError() {
