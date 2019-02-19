@@ -547,7 +547,7 @@ public class ReaderPostListFragment extends Fragment
             && isAdded() && getActivity() instanceof WPMainActivity) {
             Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
                     R.string.quick_start_dialog_follow_sites_message_short_search,
-                    R.drawable.ic_search_grey_24dp);
+                    R.drawable.ic_search_white_24dp);
 
             WPDialogSnackbar snackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator),
                     title, AccessibilityUtils.getSnackbarDuration(requireContext(),

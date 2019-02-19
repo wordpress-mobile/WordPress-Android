@@ -4,9 +4,11 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -24,6 +26,7 @@ import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.Cr
 import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.DialogHolder
 
 private const val LOCAL_SITE_ID = 1
 private const val SEGMENT_ID = 1L
@@ -43,6 +46,9 @@ class NewSiteCreationMainVMTest {
     @Mock lateinit var tracker: NewSiteCreationTracker
     @Mock lateinit var navigationTargetObserver: Observer<NavigationTarget>
     @Mock lateinit var wizardFinishedObserver: Observer<CreateSiteState>
+    @Mock lateinit var wizardExitedObserver: Observer<Unit>
+    @Mock lateinit var dialogActionsObserver: Observer<DialogHolder>
+    @Mock lateinit var onBackPressedObserver: Observer<Unit>
     @Mock lateinit var savedInstanceState: Bundle
     @Mock lateinit var wizardManager: WizardManager<SiteCreationStep>
     @Mock lateinit var siteCreationStep: SiteCreationStep
@@ -61,6 +67,9 @@ class NewSiteCreationMainVMTest {
         viewModel.start(null)
         viewModel.navigationTargetObservable.observeForever(navigationTargetObserver)
         viewModel.wizardFinishedObservable.observeForever(wizardFinishedObserver)
+        viewModel.dialogActionObservable.observeForever(dialogActionsObserver)
+        viewModel.exitFlowObservable.observeForever(wizardExitedObserver)
+        viewModel.onBackPressedObservable.observeForever(onBackPressedObserver)
         whenever(wizardManager.stepsCount).thenReturn(STEP_COUNT)
         // clear invocations since viewModel.start() calls wizardManager.showNextStep
         clearInvocations(wizardManager)
@@ -144,13 +153,36 @@ class NewSiteCreationMainVMTest {
     @Test
     fun backNotSuppressedWhenNotLastStep() {
         whenever(wizardManager.isLastStep()).thenReturn(false)
-        assertThat(viewModel.shouldSuppressBackPress()).isFalse()
+        viewModel.onBackPressed()
+        verify(onBackPressedObserver).onChanged(anyOrNull())
     }
 
     @Test
-    fun backSuppressedForLastStep() {
+    fun backSuppressedWhenLastStep() {
         whenever(wizardManager.isLastStep()).thenReturn(true)
-        assertThat(viewModel.shouldSuppressBackPress()).isTrue()
+        viewModel.onBackPressed()
+        verifyNoMoreInteractions(onBackPressedObserver)
+    }
+
+    @Test
+    fun dialogShownOnBackPressedWhenLastStepAndSiteCreationNotCompleted() {
+        whenever(wizardManager.isLastStep()).thenReturn(true)
+        viewModel.onBackPressed()
+        verify(dialogActionsObserver).onChanged(any())
+    }
+
+    @Test
+    fun flowExitedOnBackPressedWhenLastStepAndSiteCreationCompleted() {
+        whenever(wizardManager.isLastStep()).thenReturn(true)
+        viewModel.onSiteCreationCompleted()
+        viewModel.onBackPressed()
+        verify(wizardExitedObserver).onChanged(anyOrNull())
+    }
+
+    @Test
+    fun flowExitedOnDialogPositiveButtonClicked() {
+        viewModel.onPositiveDialogButtonClicked(TAG_WARNING_DIALOG)
+        verify(wizardExitedObserver).onChanged(anyOrNull())
     }
 
     @Test

@@ -109,6 +109,7 @@
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
     <string name="dismiss">dismiss</string>
+    <string name="exit">exit</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -333,17 +334,12 @@
     <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
     <string name="snackbar_conflict_undo">Undo</string>
 
-    <!-- gutenberg compatibility dialog -->
-    <string name="dialog_gutenberg_compatibility_title">Before you continue</string>
-    <string name="dialog_gutenberg_compatibility_message">We are working on the brand new WordPress editor. You can still edit this post, but we recommend previewing it before publishing.</string>
-    <string name="dialog_gutenberg_compatibility_message_page">We are working on the brand new WordPress editor. You can still edit this page, but we recommend previewing it before publishing.</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Edit Post</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Edit Page</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Go Back</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Don\'t show again</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Learn more</string>
-    <string name="dialog_gutenberg_compatibility_learn_more_url_wpcom" translatable="false">https://apps.wordpress.com/gutenberg?flavor=wpcom</string>
-    <string name="dialog_gutenberg_compatibility_learn_more_url_wporg" translatable="false">https://apps.wordpress.com/gutenberg?flavor=wporg</string>
+    <!-- gutenberg informative dialog -->
+    <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
+    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.
+        Switch back to Classic at any time by tapping&#160;&#160;&#8942;&#160;&#160;in the top bar.</string>
+    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Page.
+        Switch back to Classic at any time by tapping&#160;&#160;&#8942;&#160;&#160;in the top bar.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -1275,6 +1271,8 @@
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
     <string name="menu_debug">Debug Menu</string>
+    <string name="menu_switch_to_aztec_editor">Switch to Classic Editor</string>
+    <string name="menu_switch_to_gutenberg_editor">Switch to Block Editor</string>
 
     <string name="post_title">Title</string>
 
@@ -2002,8 +2000,12 @@
     <!-- Plans -->
     <string name="plan">Plan</string>
     <string name="plans">Plans</string>
-    <string name="plans_loading_error">Unable to load plans</string>
-    <string name="plans_manage">Manage your plan at\nWordPress.com/plans</string>
+    <string name="plans_loading_error_network_title">No connection</string>
+    <string name="plans_loading_error_no_plans_title">Cannot load Plans</string>
+    <string name="plans_loading_error_no_plans_subtitle">We cannot load Plans at the moment. Please try again later.</string>
+    <string name="plans_loading_error_no_cache_subtitle">An internet connection is required to view Plans.</string>
+    <string name="plans_loading_error_with_cache_subtitle">An internet connection is required to view Plans, so details may be out-of-date.</string>
+    <string name="plans_loading_error_with_cache_button">View Plans Anyway</string>
 
     <!-- gravatar -->
     <string name="error_cropping_image">Error cropping the image</string>
@@ -2506,4 +2508,23 @@
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
+    <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
+
+    <!-- Gutenberg mobile strings -->
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_115">Add text or type / to add content</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Add URL</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_221">Alt Text</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_227">Reset to Original</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_282">Failed to insert media.\nPlease tap for options.</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_17">Upload a new image or select a file from your library.</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_20">Device Library</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_21">Take photo</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_default_block_appender_index_native_js_26">Start writing or press %s to add content</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Unsupported Block</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Unsupported block type.</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_block_picker_js_30">ADD BLOCK</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_block_manager_js_252">ADD BLOCK HERE</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Move block up</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Move block down</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Remove content</string>
 </resources>

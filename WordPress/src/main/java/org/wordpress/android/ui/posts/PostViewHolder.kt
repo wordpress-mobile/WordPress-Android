@@ -304,8 +304,8 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
             when (buttonType) {
                 PostListButton.BUTTON_MORE -> animateButtonRows(postData, false)
                 PostListButton.BUTTON_BACK -> animateButtonRows(postData, true)
-                else -> postAdapterItem.onButtonClicked(buttonType)
             }
+            postAdapterItem.onButtonClicked(buttonType)
         }
         editButton.setOnClickListener(btnClickListener)
         viewButton.setOnClickListener(btnClickListener)

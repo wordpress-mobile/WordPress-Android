@@ -17,6 +17,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -363,14 +364,6 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun editPost(site: SiteModel, post: PostModel) {
-        val properties = HashMap<String, Any>()
-        properties["button"] = "edit"
-        if (!post.isLocalDraft) {
-            properties["post_id"] = post.remotePostId
-        }
-        properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils.contentContainsGutenbergBlocks(post.content)
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, site, properties)
-
         if (UploadService.isPostUploadingOrQueued(post)) {
             // If the post is uploading media, allow the media to continue uploading, but don't upload the
             // post itself when they finish (since we're about to edit it again)
@@ -559,9 +552,44 @@ class PostListViewModel @Inject constructor(
 
         return PostAdapterItem(
                 data = postData,
-                onSelected = { handlePostButton(PostListButton.BUTTON_EDIT, post) },
-                onButtonClicked = { handlePostButton(it, post) }
+                onSelected = {
+                    trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
+                    handlePostButton(PostListButton.BUTTON_EDIT, post)
+                },
+                onButtonClicked = {
+                    trackAction(it, post, AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED)
+                    handlePostButton(it, post)
+                }
         )
+    }
+
+    private fun trackAction(buttonType: Int, postData: PostModel, statsEvent: Stat) {
+        val properties = HashMap<String, Any?>()
+        if (!postData.isLocalDraft) {
+            properties["post_id"] = postData.remotePostId
+        }
+
+        properties["action"] = when (buttonType) {
+            PostListButton.BUTTON_EDIT -> {
+                properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils
+                        .contentContainsGutenbergBlocks(postData.content)
+                "edit"
+            }
+            PostListButton.BUTTON_RETRY -> "retry"
+            PostListButton.BUTTON_SUBMIT -> "submit"
+            PostListButton.BUTTON_VIEW -> "view"
+            PostListButton.BUTTON_PREVIEW -> "preview"
+            PostListButton.BUTTON_STATS -> "stats"
+            PostListButton.BUTTON_TRASH -> "trash"
+            PostListButton.BUTTON_DELETE -> "delete"
+            PostListButton.BUTTON_PUBLISH -> "publish"
+            PostListButton.BUTTON_SYNC -> "sync"
+            PostListButton.BUTTON_MORE -> "more"
+            PostListButton.BUTTON_BACK -> "back"
+            else -> AppLog.e(AppLog.T.POSTS, "Unknown button type")
+        }
+
+        AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)
     }
 
     private fun getFeaturedImageUrl(featuredImageId: Long, postContent: String): String? {
@@ -654,50 +682,6 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    // Gutenberg Events
-
-    fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
-        if (post != null) {
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, site
-            )
-            editPost(site, post)
-        }
-    }
-
-    fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
-        if (post != null) {
-            // We only want to track the event if the post is not null
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_CANCEL_TAPPED, post, site
-            )
-        }
-    }
-
-    fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
-        if (post != null) {
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED, post, site
-            )
-        }
-    }
-
-    fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePageId: Long, checked: Boolean) {
-        AppPrefs.setGutenbergWarningDialogDisabled(checked)
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, site)
-        if (post != null) { // We only want to track the event if the post is not null
-            val trackValue = if (checked) {
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_CHECKED
-            } else {
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_UNCHECKED
-            }
-            PostUtils.trackGutenbergDialogEvent(trackValue, post, site)
-        }
-    }
-
     // Post Conflict Resolution
 
     private fun updateConflictedPostWithItsRemoteVersion(localPostId: Int) {
@@ -724,8 +708,10 @@ class PostListViewModel @Inject constructor(
         val onDismissAction = {
             originalPostCopyForConflictUndo = null
         }
-        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_local_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        val snackbarHolder = SnackbarMessageHolder(
+                R.string.snackbar_conflict_local_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+        )
         _snackbarAction.postValue(snackbarHolder)
     }
 
@@ -759,8 +745,10 @@ class PostListViewModel @Inject constructor(
                 dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
             }
         }
-        val snackbarHolder = SnackbarMessageHolder(R.string.snackbar_conflict_web_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction)
+        val snackbarHolder = SnackbarMessageHolder(
+                R.string.snackbar_conflict_web_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+        )
         _snackbarAction.postValue(snackbarHolder)
     }
 

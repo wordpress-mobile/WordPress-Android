@@ -39,6 +39,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
@@ -196,6 +197,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onQueryCurrentProgressForUploadingMedia() {
                         updateFailedMediaState();
                         updateMediaProgress();
+                    }
+                },
+                new OnEditorMountListener() {
+                    @Override
+                    public void onEditorDidMount(boolean hasUnsupportedBlocks) {
+                        // TODO: add Tracks
                     }
                 }
             );

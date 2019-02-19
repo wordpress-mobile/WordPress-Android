@@ -23,7 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@drawable/ic_wordpress_grey_20dp"
+        android:src="@drawable/ic_my_sites_white_24dp"
+        android:tint="@color/grey"
         android:contentDescription="@null"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_medium"/>

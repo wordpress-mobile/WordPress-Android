@@ -12,6 +12,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.LargeValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ViewPortHandler
 import org.wordpress.android.R
@@ -32,14 +33,9 @@ fun BarChart.draw(
     resetChart()
     val graphWidth = DisplayUtils.pxToDp(context, width)
     val columnNumber = (graphWidth / 24) - 1
-    val cut = cutEntries(if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT, item)
-    val mappedEntries = cut.mapIndexed { index, pair ->
-        BarEntry(
-                index.toFloat(),
-                pair.value.toFloat(),
-                pair.id
-        )
-    }
+    val count = if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT
+    val cut = cutEntries(count, item.entries)
+    val mappedEntries = cut.mapIndexed { index, pair -> toBarEntry(pair, index) }
     val maxYValue = cut.maxBy { it.value }!!.value
     val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
     val dataSet = if (hasData) {
@@ -48,11 +44,19 @@ fun BarChart.draw(
         buildEmptyDataSet(context, cut.size)
     }
     item.onBarChartDrawn?.invoke(dataSet.entryCount)
-    data = if (hasData && item.onBarSelected != null) {
-        BarData(dataSet, getHighlightDataSet(context, mappedEntries))
-    } else {
-        BarData(dataSet)
+    val dataSets = mutableListOf<IBarDataSet>()
+    dataSets.add(dataSet)
+    val hasOverlappingEntries = hasData && item.overlappingEntries != null
+    if (hasData && item.overlappingEntries != null) {
+        val overlappingCut = cutEntries(count, item.overlappingEntries)
+        val mappedOverlappingEntries = overlappingCut.mapIndexed { index, pair -> toBarEntry(pair, index) }
+        val overlappingDataSet = buildOverlappingDataSet(context, mappedOverlappingEntries)
+        dataSets.add(overlappingDataSet)
     }
+    if (hasData && item.onBarSelected != null) {
+        getHighlightDataSet(context, mappedEntries)?.let { dataSets.add(it) }
+    }
+    data = BarData(dataSets)
     val greyColor = ContextCompat.getColor(
             context,
             color.wp_grey
@@ -77,6 +81,7 @@ fun BarChart.draw(
             }
         }
         setDrawGridLines(true)
+        setDrawTopYLabelEntry(true)
         setDrawZeroLine(false)
         setDrawAxisLine(false)
         granularity = 1f
@@ -84,13 +89,15 @@ fun BarChart.draw(
         axisMaximum = if (maxYValue < MIN_VALUE) {
             MIN_VALUE
         } else {
-            maxYValue.toFloat() * 1.1f
+            roundUp(maxYValue.toFloat())
         }
+        setLabelCount(5, true)
         textColor = greyColor
         gridColor = lightGreyColor
         textSize = 10f
         gridLineWidth = 1f
     }
+    extraLeftOffset = 8f
     axisRight.apply {
         setDrawGridLines(false)
         setDrawZeroLine(false)
@@ -115,15 +122,13 @@ fun BarChart.draw(
         setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
                 item.selectedItem
-                val index = cut.indexOfFirst { it.id == item.selectedItem }
-                highlightColumn(index)
+                highlightColumn(cut.indexOfFirst { it.id == item.selectedItem }, hasOverlappingEntries)
                 item.onBarSelected?.invoke(item.selectedItem)
             }
 
             override fun onValueSelected(e: Entry, h: Highlight) {
                 val value = (e as? BarEntry)?.data as? String
-                val index = e.x.toInt()
-                highlightColumn(index)
+                highlightColumn(e.x.toInt(), hasOverlappingEntries)
                 item.onBarSelected?.invoke(value)
             }
         })
@@ -140,7 +145,7 @@ fun BarChart.draw(
     if (item.selectedItem != null) {
         val index = cut.indexOfFirst { it.id == item.selectedItem }
         if (index >= 0) {
-            highlightColumn(index)
+            highlightColumn(index, hasOverlappingEntries)
         } else {
             highlightValue(null, false)
         }
@@ -148,12 +153,22 @@ fun BarChart.draw(
     invalidate()
 }
 
-private fun BarChart.highlightColumn(index: Int) {
-    val high = Highlight(index.toFloat(), 0, 0)
-    val high2 = Highlight(index.toFloat(), 1, 0)
-    high.dataIndex = index
-    high2.dataIndex = index
-    highlightValues(arrayOf(high2, high))
+private fun BarChart.highlightColumn(index: Int, hasOverlappingColumns: Boolean) {
+    if (hasOverlappingColumns) {
+        val high = Highlight(index.toFloat(), 0, 0)
+        val high2 = Highlight(index.toFloat(), 1, 1)
+        val high3 = Highlight(index.toFloat(), 2, 2)
+        high.dataIndex = index
+        high2.dataIndex = index
+        high3.dataIndex = index
+        highlightValues(arrayOf(high3, high, high2))
+    } else {
+        val high = Highlight(index.toFloat(), 0, 0)
+        val high2 = Highlight(index.toFloat(), 1, 1)
+        high.dataIndex = index
+        high2.dataIndex = index
+        highlightValues(arrayOf(high2, high))
+    }
 }
 
 private fun buildEmptyDataSet(context: Context, count: Int): BarDataSet {
@@ -198,6 +213,29 @@ private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
     return dataSet
 }
 
+fun buildOverlappingDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
+    val dataSet = BarDataSet(cut, "Overlapping data")
+    dataSet.color = ContextCompat.getColor(context, R.color.blue_dark)
+    dataSet.setGradientColor(
+            ContextCompat.getColor(
+                    context,
+                    R.color.blue_dark
+            ), ContextCompat.getColor(
+            context,
+            R.color.blue_dark
+    )
+    )
+    dataSet.formLineWidth = 0f
+    dataSet.setDrawValues(false)
+    dataSet.isHighlightEnabled = true
+    dataSet.highLightColor = ContextCompat.getColor(
+            context,
+            color.orange_dark_active
+    )
+    dataSet.highLightAlpha = 255
+    return dataSet
+}
+
 private fun getHighlightDataSet(context: Context, cut: List<BarEntry>): BarDataSet? {
     val maxEntry = cut.maxBy { it.y } ?: return null
     val highlightedDataSet = cut.map {
@@ -227,13 +265,13 @@ private fun getHighlightDataSet(context: Context, cut: List<BarEntry>): BarDataS
 
 private fun cutEntries(
     count: Int,
-    item: BarChartItem
+    entries: List<Bar>
 ): List<Bar> {
-    return if (count < item.entries.size) item.entries.subList(
-            item.entries.size - count,
-            item.entries.size
+    return if (count < entries.size) entries.subList(
+            entries.size - count,
+            entries.size
     ) else {
-        item.entries
+        entries
     }
 }
 
@@ -244,4 +282,26 @@ private fun BarChart.resetChart() {
     notifyDataSetChanged()
     clear()
     invalidate()
+}
+
+private fun toBarEntry(bar: Bar, index: Int): BarEntry {
+    return BarEntry(
+            index.toFloat(),
+            bar.value.toFloat(),
+            bar.id
+    )
+}
+
+private fun roundUp(input: Float): Float {
+    return if (input > 100) {
+        roundUp(input / 10) * 10
+    } else {
+        for (i in 1..25) {
+            val limit = 4 * i
+            if (input < limit) {
+                return limit.toFloat()
+            }
+        }
+        return 100F
+    }
 }

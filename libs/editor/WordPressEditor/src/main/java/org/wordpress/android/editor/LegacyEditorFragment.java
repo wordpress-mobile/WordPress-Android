@@ -268,7 +268,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener
             = new ViewTreeObserver.OnGlobalLayoutListener() {
         public void onGlobalLayout() {
-            mRootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            mRootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             mFullViewBottom = mRootView.getBottom();
         }
     };
