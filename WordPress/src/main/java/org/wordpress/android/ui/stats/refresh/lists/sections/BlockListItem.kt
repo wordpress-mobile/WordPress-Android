@@ -88,7 +88,12 @@ sealed class BlockListItem(val type: Type) {
 
     data class Information(val text: String) : BlockListItem(INFO)
 
-    data class Text(val text: String? = null, val textResource: Int? = null, val links: List<Clickable>? = null) :
+    data class Text(
+        val text: String? = null,
+        val textResource: Int? = null,
+        val links: List<Clickable>? = null,
+        val isLast: Boolean = false
+    ) :
             BlockListItem(TEXT) {
         data class Clickable(
             val link: String,

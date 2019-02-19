@@ -189,6 +189,7 @@ sealed class BlockListItemViewHolder(
             parent,
             R.layout.stats_block_text_item
     ) {
+        private val container = itemView.findViewById<FrameLayout>(R.id.container)
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(textItem: Text) {
             val loadedText = textItem.text
@@ -202,6 +203,14 @@ sealed class BlockListItemViewHolder(
             text.text = spannableString
             text.linksClickable = true
             text.movementMethod = LinkMovementMethod.getInstance()
+            val params = container.layoutParams as RecyclerView.LayoutParams
+            val bottomMargin = if (textItem.isLast) {
+                container.resources.getDimensionPixelSize(R.dimen.margin_extra_large)
+            } else {
+                0
+            }
+            params.setMargins(0, 0, 0, bottomMargin)
+            container.layoutParams = params
         }
 
         private fun SpannableString.withClickableSpan(
