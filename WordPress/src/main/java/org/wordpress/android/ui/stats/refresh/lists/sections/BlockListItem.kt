@@ -76,14 +76,18 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
         val showDivider: Boolean = true,
-        val isSubItem: Boolean = false,
+        val textStyle: TextStyle = TextStyle.NORMAL,
         val navigationAction: NavigationAction? = null
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
 
         enum class IconStyle {
-            NORMAL, AVATAR
+            NORMAL, AVATAR, EMPTY_SPACE
+        }
+
+        enum class TextStyle {
+            NORMAL, LIGHT
         }
     }
 

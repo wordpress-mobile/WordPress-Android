@@ -19,6 +19,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.EMPTY_SPACE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -103,9 +106,15 @@ constructor(
                     })
                     if (isExpanded) {
                         items.addAll(group.clicks.map { click ->
+                            val iconStyle = if (group.icon != null && click.icon == null) {
+                                EMPTY_SPACE
+                            } else {
+                                NORMAL
+                            }
                             ListItemWithIcon(
                                     iconUrl = click.icon,
-                                    isSubItem = true,
+                                    iconStyle = iconStyle,
+                                    textStyle = LIGHT,
                                     text = click.name,
                                     value = click.views.toFormattedString(),
                                     showDivider = false,
