@@ -26,21 +26,20 @@ class PostingActivityStore
         site: SiteModel,
         startDate: Date,
         endDate: Date,
-        max: Int,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchPostingActivity(site, startDate, endDate, max + 1, forced)
+        val payload = restClient.fetchPostingActivity(site, startDate, endDate, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response)
-                OnStatsFetched(mapper.map(payload.response, max))
+                OnStatsFetched(mapper.map(payload.response, startDate, endDate))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
-    fun getPostingActivity(site: SiteModel, max: Int): PostingActivityModel? {
-        return sqlUtils.selectPostingActivity(site)?.let { mapper.map(it, max) }
+    fun getPostingActivity(site: SiteModel, startDate: Date, endDate: Date): PostingActivityModel? {
+        return sqlUtils.selectPostingActivity(site)?.let { mapper.map(it, startDate, endDate) }
     }
 }
