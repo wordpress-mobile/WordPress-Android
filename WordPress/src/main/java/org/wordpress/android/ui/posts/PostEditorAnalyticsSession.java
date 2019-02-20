@@ -116,6 +116,8 @@ public class PostEditorAnalyticsSession implements Serializable {
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_OUTCOME, mOutcome.toString().toLowerCase(Locale.ROOT));
             AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
+        } else {
+            AppLog.e(T.EDITOR, "A non-started editor session cannot be attempted to be ended");
         }
     }
 
