@@ -42,7 +42,7 @@ class PostAndPageViewsRestClient
         val params = mapOf(
                 "period" to granularity.toString(),
                 "max" to pageSize.toString(),
-                "date" to statsUtils.getFormattedDate(date)
+                "date" to statsUtils.toFormattedDate(date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,

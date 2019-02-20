@@ -10,8 +10,16 @@ const val DATE_FORMAT_DAY = "yyyy-MM-dd"
 
 class StatsUtils
 @Inject constructor(private val currentDateUtils: CurrentDateUtils) {
-    fun getFormattedDate(date: Date? = null): String {
+    fun toFormattedDate(date: Date? = null): String {
         val dateFormat = SimpleDateFormat(DATE_FORMAT_DAY, Locale.ROOT)
         return dateFormat.format(date ?: currentDateUtils.getCurrentDate())
+    }
+
+    fun fromFormattedDate(date: String): Date? {
+        if (date.isEmpty()) {
+            return null
+        }
+        val dateFormat = SimpleDateFormat(DATE_FORMAT_DAY, Locale.ROOT)
+        return dateFormat.parse(date)
     }
 }

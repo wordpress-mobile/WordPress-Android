@@ -3,6 +3,8 @@ package org.wordpress.android.fluxc.model.stats
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.StreakModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
@@ -16,6 +18,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
 import java.util.Date
@@ -30,7 +34,7 @@ private const val COMMENTS = "comments"
 private const val POSTS = "posts"
 
 class InsightsMapper
-@Inject constructor() {
+@Inject constructor(val statsUtils: StatsUtils) {
     fun map(response: AllTimeResponse, site: SiteModel): InsightsAllTimeModel {
         val stats = response.stats
         return InsightsAllTimeModel(
@@ -75,7 +79,7 @@ class InsightsMapper
                 postResponse.title ?: "",
                 postResponse.url ?: "",
                 postResponse.date ?: Date(0),
-                postResponse.id ?: 0,
+                postResponse.id,
                 viewsCount ?: 0,
                 commentCount,
                 postResponse.likeCount ?: 0,
@@ -165,5 +169,32 @@ class InsightsMapper
                 response.services.take(pageSize).map { PublicizeModel.Service(it.service, it.followers) },
                 response.services.size > pageSize
         )
+    }
+
+    fun map(response: PostingActivityResponse, limit: Int): PostingActivityModel {
+        if (response.streak == null) {
+            AppLog.e(STATS, "PostingActivityResponse: Mandatory field streak is null")
+        }
+        val currentStreakStart = response.streak?.currentStreak?.start?.let { statsUtils.fromFormattedDate(it) }
+        val currentStreakEnd = response.streak?.currentStreak?.end?.let { statsUtils.fromFormattedDate(it) }
+        val currentStreakLength = response.streak?.currentStreak?.length
+        val longStreakStart = response.streak?.longStreak?.start?.let { statsUtils.fromFormattedDate(it) }
+        val longStreakEnd = response.streak?.longStreak?.end?.let { statsUtils.fromFormattedDate(it) }
+        val longStreakLength = response.streak?.longStreak?.length
+        val streak = StreakModel(
+                currentStreakStart = currentStreakStart,
+                currentStreakEnd = currentStreakEnd,
+                currentStreakLength = currentStreakLength,
+                longestStreakStart = longStreakStart,
+                longestStreakEnd = longStreakEnd,
+                longestStreakLength = longStreakLength
+        )
+        val nonNullData = response.data ?: mapOf()
+        val events = nonNullData
+                .toList()
+                .sortedBy { (key, _) -> key }
+                .take(limit)
+                .map { (key, value) -> PostingActivityModel.StreakEvent(Date(key), value) }
+        return PostingActivityModel(streak, events, nonNullData.count() > limit)
     }
 }

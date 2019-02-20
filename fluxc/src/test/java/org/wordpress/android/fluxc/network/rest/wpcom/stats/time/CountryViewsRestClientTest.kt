@@ -64,7 +64,7 @@ class CountryViewsRestClientTest {
                 userAgent,
                 statsUtils
         )
-        whenever(statsUtils.getFormattedDate(eq(currentDate))).thenReturn(currentDateValue)
+        whenever(statsUtils.toFormattedDate(eq(currentDate))).thenReturn(currentDateValue)
     }
 
     @Test

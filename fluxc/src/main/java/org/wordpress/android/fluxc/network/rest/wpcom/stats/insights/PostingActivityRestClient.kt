@@ -1,7 +1,8 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
+package org.wordpress.android.fluxc.network.rest.wpcom.stats.insights
 
 import android.content.Context
 import com.android.volley.RequestQueue
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
@@ -12,7 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
 import java.util.Date
@@ -21,7 +22,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class VisitAndViewsRestClient
+class PostingActivityRestClient
 @Inject constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
@@ -29,26 +30,28 @@ class VisitAndViewsRestClient
     @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent,
+    val gson: Gson,
     private val statsUtils: StatsUtils
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchVisits(
+    suspend fun fetchPostingActivity(
         site: SiteModel,
-        date: Date,
-        granularity: StatsGranularity,
-        pageSize: Int,
+        startDate: Date,
+        endDate: Date,
+        max: Int,
         forced: Boolean
-    ): FetchStatsPayload<VisitsAndViewsResponse> {
-        val url = WPCOMREST.sites.site(site.siteId).stats.visits.urlV1_1
+    ): FetchStatsPayload<PostingActivityResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.streak.urlV1_1
         val params = mapOf(
-                "unit" to granularity.toString(),
-                "quantity" to pageSize.toString(),
-                "date" to statsUtils.toFormattedDate(date)
+                "startDate" to statsUtils.toFormattedDate(startDate),
+                "endDate" to statsUtils.toFormattedDate(endDate),
+                "gmtOffset" to 0.toString(),
+                "max" to max.toString()
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
                 params,
-                VisitsAndViewsResponse::class.java,
+                PostingActivityResponse::class.java,
                 enableCaching = false,
                 forced = forced
         )
@@ -62,10 +65,19 @@ class VisitAndViewsRestClient
         }
     }
 
-    data class VisitsAndViewsResponse(
-        @SerializedName("date") val date: String?,
-        @SerializedName("fields") val fields: List<String>?,
-        @SerializedName("data") val data: List<List<String>?>?,
-        @SerializedName("unit") val unit: String?
-    )
+    data class PostingActivityResponse(
+        @SerializedName("streak") val streak: Streaks?,
+        @SerializedName("data") val data: Map<Long, Int>?
+    ) {
+        data class Streaks(
+            @SerializedName("long") val longStreak: Streak?,
+            @SerializedName("current") val currentStreak: Streak?
+        )
+
+        data class Streak(
+            @SerializedName("start") val start: String?,
+            @SerializedName("end") val end: String?,
+            @SerializedName("length") val length: Int?
+        )
+    }
 }
