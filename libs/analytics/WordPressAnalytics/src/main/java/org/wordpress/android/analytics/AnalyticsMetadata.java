@@ -8,6 +8,7 @@ public class AnalyticsMetadata {
     private int mNumBlogs;
     private String mUsername = "";
     private String mEmail = "";
+    private boolean mIsGutenbergEnabled;
 
     public AnalyticsMetadata() {
     }
@@ -66,5 +67,13 @@ public class AnalyticsMetadata {
 
     public void setEmail(String email) {
         this.mEmail = email;
+    }
+
+    public boolean isGutenbergEnabled() {
+        return mIsGutenbergEnabled;
+    }
+
+    public void setGutenbergEnabled(boolean gutenbergEnabled) {
+        this.mIsGutenbergEnabled = gutenbergEnabled;
     }
 }
