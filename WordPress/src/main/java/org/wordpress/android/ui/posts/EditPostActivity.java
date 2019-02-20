@@ -379,8 +379,6 @@ public class EditPostActivity extends AppCompatActivity implements
         // Create a new post
         mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
         mPost.setStatus(PostStatus.PUBLISHED.toString());
-        createPostEditorAnalyticsSessionTracker();
-        mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
         EventBus.getDefault().postSticky(
                 new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
@@ -391,6 +389,10 @@ public class EditPostActivity extends AppCompatActivity implements
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
                     mShowGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
                     mPost, mSite);
+            // set initial outcome for published posts
+            if (mPost.getStatus().equals(PostStatus.PUBLISHED.toString())) {
+                mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
+            }
         }
     }
 

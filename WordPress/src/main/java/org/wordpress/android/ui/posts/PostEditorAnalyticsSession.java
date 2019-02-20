@@ -112,14 +112,14 @@ public class PostEditorAnalyticsSession implements Serializable {
                 mOutcome = Outcome.CANCEL;
             }
             Map<String, Object> properties = getCommonProperties();
-            properties.put(KEY_OUTCOME, mOutcome);
+            properties.put(KEY_OUTCOME, mOutcome.toString().toLowerCase());
             AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
         }
     }
 
     private Map<String, Object> getCommonProperties() {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(KEY_EDITOR, mCurrentEditor);
+        properties.put(KEY_EDITOR, mCurrentEditor.toString().toLowerCase());
         properties.put(KEY_CONTENT_TYPE, mContentType);
         properties.put(KEY_POST_TYPE, mPostType);
         properties.put(KEY_BLOG_TYPE, mBlogType);
