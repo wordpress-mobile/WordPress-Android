@@ -125,11 +125,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             if (!stringField.getName().startsWith("gutenberg_mobile_")) {
                 continue;
             }
-            int resourceId = 0;
+            int resourceId;
             try {
                 resourceId = stringField.getInt(R.string.class);
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+            } catch (IllegalArgumentException | IllegalAccessException iae) {
+                AppLog.e(T.EDITOR, iae);
                 continue;
             }
 
