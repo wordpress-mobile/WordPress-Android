@@ -37,7 +37,7 @@ class TimeStatsSqlUtils
                 POSTS_AND_PAGES_VIEWS,
                 granularity.toStatsType(),
                 data,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -47,7 +47,7 @@ class TimeStatsSqlUtils
                 REFERRERS,
                 granularity.toStatsType(),
                 data,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -57,7 +57,7 @@ class TimeStatsSqlUtils
                 CLICKS,
                 granularity.toStatsType(),
                 data,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -67,7 +67,7 @@ class TimeStatsSqlUtils
                 VISITS_AND_VIEWS,
                 granularity.toStatsType(),
                 data,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -77,7 +77,7 @@ class TimeStatsSqlUtils
                 COUNTRY_VIEWS,
                 granularity.toStatsType(),
                 data,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -87,7 +87,7 @@ class TimeStatsSqlUtils
                 AUTHORS,
                 granularity.toStatsType(),
                 data,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -97,7 +97,7 @@ class TimeStatsSqlUtils
                 SEARCH_TERMS,
                 granularity.toStatsType(),
                 data,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -107,7 +107,7 @@ class TimeStatsSqlUtils
                 VIDEO_PLAYS,
                 granularity.toStatsType(),
                 data,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -117,7 +117,7 @@ class TimeStatsSqlUtils
                 POSTS_AND_PAGES_VIEWS,
                 granularity.toStatsType(),
                 PostAndPageViewsResponse::class.java,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -127,7 +127,7 @@ class TimeStatsSqlUtils
                 REFERRERS,
                 granularity.toStatsType(),
                 ReferrersResponse::class.java,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -137,7 +137,7 @@ class TimeStatsSqlUtils
                 CLICKS,
                 granularity.toStatsType(),
                 ClicksResponse::class.java,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -147,7 +147,7 @@ class TimeStatsSqlUtils
                 VISITS_AND_VIEWS,
                 granularity.toStatsType(),
                 VisitsAndViewsResponse::class.java,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -157,7 +157,7 @@ class TimeStatsSqlUtils
                 COUNTRY_VIEWS,
                 granularity.toStatsType(),
                 CountryViewsResponse::class.java,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -167,7 +167,7 @@ class TimeStatsSqlUtils
                 AUTHORS,
                 granularity.toStatsType(),
                 AuthorsResponse::class.java,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -177,7 +177,7 @@ class TimeStatsSqlUtils
                 SEARCH_TERMS,
                 granularity.toStatsType(),
                 SearchTermsResponse::class.java,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 
@@ -187,7 +187,7 @@ class TimeStatsSqlUtils
                 VIDEO_PLAYS,
                 granularity.toStatsType(),
                 VideoPlaysResponse::class.java,
-                statsUtils.getFormattedDate(date)
+                statsUtils.toFormattedDate(date)
         )
     }
 

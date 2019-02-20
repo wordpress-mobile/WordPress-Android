@@ -107,6 +107,7 @@ class StatsSqlUtils
         AUTHORS,
         SEARCH_TERMS,
         VIDEO_PLAYS,
-        PUBLICIZE_INSIGHTS
+        PUBLICIZE_INSIGHTS,
+        POSTING_ACTIVITY
     }
 }
