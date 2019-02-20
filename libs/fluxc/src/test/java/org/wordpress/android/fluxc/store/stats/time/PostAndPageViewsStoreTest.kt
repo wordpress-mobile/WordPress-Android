@@ -11,8 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CacheMode
-import org.wordpress.android.fluxc.model.stats.FetchMode
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient
@@ -60,9 +59,9 @@ class PostAndPageViewsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(DAY_POST_AND_PAGE_VIEWS_RESPONSE, CacheMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
+        whenever(mapper.map(DAY_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val responseModel = store.fetchPostAndPageViews(site, DAYS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
+        val responseModel = store.fetchPostAndPageViews(site, DAYS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, DAY_POST_AND_PAGE_VIEWS_RESPONSE, DAYS, DATE)
@@ -78,7 +77,7 @@ class PostAndPageViewsStoreTest {
                 errorPayload
         )
 
-        val responseModel = store.fetchPostAndPageViews(site, DAYS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
+        val responseModel = store.fetchPostAndPageViews(site, DAYS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -90,9 +89,9 @@ class PostAndPageViewsStoreTest {
     fun `returns post and page day views from db`() {
         whenever(sqlUtils.selectPostAndPageViews(site, DAYS, DATE)).thenReturn(DAY_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(DAY_POST_AND_PAGE_VIEWS_RESPONSE, CacheMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
+        whenever(mapper.map(DAY_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val result = store.getPostAndPageViews(site, DAYS, CacheMode.Top(ITEMS_TO_LOAD), DATE)
+        val result = store.getPostAndPageViews(site, DAYS, LimitMode.Top(ITEMS_TO_LOAD), DATE)
 
         assertThat(result).isEqualTo(model)
     }
@@ -107,9 +106,9 @@ class PostAndPageViewsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(WEEK_POST_AND_PAGE_VIEWS_RESPONSE, CacheMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
+        whenever(mapper.map(WEEK_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val responseModel = store.fetchPostAndPageViews(site, WEEKS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
+        val responseModel = store.fetchPostAndPageViews(site, WEEKS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, WEEK_POST_AND_PAGE_VIEWS_RESPONSE, WEEKS, DATE)
@@ -125,7 +124,7 @@ class PostAndPageViewsStoreTest {
                 errorPayload
         )
 
-        val responseModel = store.fetchPostAndPageViews(site, WEEKS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
+        val responseModel = store.fetchPostAndPageViews(site, WEEKS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -137,9 +136,9 @@ class PostAndPageViewsStoreTest {
     fun `returns post and page week views from db`() {
         whenever(sqlUtils.selectPostAndPageViews(site, WEEKS, DATE)).thenReturn(WEEK_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(WEEK_POST_AND_PAGE_VIEWS_RESPONSE, CacheMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
+        whenever(mapper.map(WEEK_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val result = store.getPostAndPageViews(site, WEEKS, CacheMode.Top(ITEMS_TO_LOAD), DATE)
+        val result = store.getPostAndPageViews(site, WEEKS, LimitMode.Top(ITEMS_TO_LOAD), DATE)
 
         assertThat(result).isEqualTo(model)
     }
@@ -154,9 +153,9 @@ class PostAndPageViewsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(MONTH_POST_AND_PAGE_VIEWS_RESPONSE, CacheMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
+        whenever(mapper.map(MONTH_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val responseModel = store.fetchPostAndPageViews(site, MONTHS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
+        val responseModel = store.fetchPostAndPageViews(site, MONTHS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, MONTH_POST_AND_PAGE_VIEWS_RESPONSE, MONTHS, DATE)
@@ -172,7 +171,7 @@ class PostAndPageViewsStoreTest {
                 errorPayload
         )
 
-        val responseModel = store.fetchPostAndPageViews(site, MONTHS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
+        val responseModel = store.fetchPostAndPageViews(site, MONTHS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -184,9 +183,9 @@ class PostAndPageViewsStoreTest {
     fun `returns post and page month views from db`() {
         whenever(sqlUtils.selectPostAndPageViews(site, MONTHS, DATE)).thenReturn(MONTH_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(MONTH_POST_AND_PAGE_VIEWS_RESPONSE, CacheMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
+        whenever(mapper.map(MONTH_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val result = store.getPostAndPageViews(site, MONTHS, CacheMode.Top(ITEMS_TO_LOAD), DATE)
+        val result = store.getPostAndPageViews(site, MONTHS, LimitMode.Top(ITEMS_TO_LOAD), DATE)
 
         assertThat(result).isEqualTo(model)
     }
@@ -201,9 +200,9 @@ class PostAndPageViewsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(YEAR_POST_AND_PAGE_VIEWS_RESPONSE, CacheMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
+        whenever(mapper.map(YEAR_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val responseModel = store.fetchPostAndPageViews(site, YEARS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
+        val responseModel = store.fetchPostAndPageViews(site, YEARS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, YEAR_POST_AND_PAGE_VIEWS_RESPONSE, YEARS, DATE)
@@ -219,7 +218,7 @@ class PostAndPageViewsStoreTest {
                 errorPayload
         )
 
-        val responseModel = store.fetchPostAndPageViews(site, YEARS, FetchMode.Top(ITEMS_TO_LOAD), DATE, forced)
+        val responseModel = store.fetchPostAndPageViews(site, YEARS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -231,9 +230,9 @@ class PostAndPageViewsStoreTest {
     fun `returns post and page year views from db`() {
         whenever(sqlUtils.selectPostAndPageViews(site, YEARS, DATE)).thenReturn(YEAR_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(YEAR_POST_AND_PAGE_VIEWS_RESPONSE, CacheMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
+        whenever(mapper.map(YEAR_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val result = store.getPostAndPageViews(site, YEARS, CacheMode.Top(ITEMS_TO_LOAD), DATE)
+        val result = store.getPostAndPageViews(site, YEARS, LimitMode.Top(ITEMS_TO_LOAD), DATE)
 
         assertThat(result).isEqualTo(model)
     }

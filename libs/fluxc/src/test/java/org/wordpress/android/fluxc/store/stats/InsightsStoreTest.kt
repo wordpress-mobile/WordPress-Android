@@ -11,14 +11,14 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CacheMode
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
-import org.wordpress.android.fluxc.model.stats.FetchMode
+import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
@@ -64,8 +64,8 @@ import kotlin.test.assertNotNull
 
 private const val PAGE_SIZE = 8
 private const val PAGE = 1
-private val LOAD_MODE_INITIAL = FetchMode.Paged(PAGE_SIZE, false)
-private val CACHE_MODE_TOP = CacheMode.Top(PAGE_SIZE)
+private val LOAD_MODE_INITIAL = PagedMode(PAGE_SIZE, false)
+private val CACHE_MODE_TOP = LimitMode.Top(PAGE_SIZE)
 
 @RunWith(MockitoJUnitRunner::class)
 class InsightsStoreTest {
@@ -375,7 +375,7 @@ class InsightsStoreTest {
         )
         val model = FollowersModel(0, emptyList(), false)
         whenever(sqlUtils.selectAllFollowers(site, WP_COM)).thenReturn(listOf(FOLLOWERS_RESPONSE))
-        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), WP_COM, CacheMode.All))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), WP_COM, LimitMode.All))
                 .thenReturn(model)
         val responseModel = followersStore.fetchWpComFollowers(site, LOAD_MODE_INITIAL, forced)
 
@@ -394,7 +394,7 @@ class InsightsStoreTest {
         )
         val model = FollowersModel(0, emptyList(), false)
         whenever(sqlUtils.selectAllFollowers(site, EMAIL)).thenReturn(listOf(FOLLOWERS_RESPONSE))
-        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), EMAIL, CacheMode.All))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), EMAIL, LimitMode.All))
                 .thenReturn(model)
         val responseModel = followersStore.fetchEmailFollowers(site, LOAD_MODE_INITIAL, forced)
 
@@ -406,7 +406,7 @@ class InsightsStoreTest {
     fun `returns WPCOM followers from db`() {
         val model = mock<FollowersModel>()
         whenever(sqlUtils.selectAllFollowers(site, WP_COM)).thenReturn(listOf(FOLLOWERS_RESPONSE))
-        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), WP_COM, CacheMode.Top(PAGE_SIZE)))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), WP_COM, LimitMode.Top(PAGE_SIZE)))
                 .thenReturn(model)
 
         val result = followersStore.getWpComFollowers(site, CACHE_MODE_TOP)
@@ -418,7 +418,7 @@ class InsightsStoreTest {
     fun `returns email followers from db`() {
         val model = mock<FollowersModel>()
         whenever(sqlUtils.selectAllFollowers(site, EMAIL)).thenReturn(listOf(FOLLOWERS_RESPONSE))
-        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), EMAIL, CacheMode.Top(PAGE_SIZE)))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), EMAIL, LimitMode.Top(PAGE_SIZE)))
                 .thenReturn(model)
 
         val result = followersStore.getEmailFollowers(site, CACHE_MODE_TOP)
@@ -468,9 +468,9 @@ class InsightsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<CommentsModel>()
-        whenever(mapper.map(TOP_COMMENTS_RESPONSE, CacheMode.Top(PAGE_SIZE))).thenReturn(model)
+        whenever(mapper.map(TOP_COMMENTS_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val responseModel = commentsStore.fetchComments(site, FetchMode.Top(PAGE_SIZE), forced)
+        val responseModel = commentsStore.fetchComments(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, TOP_COMMENTS_RESPONSE)
@@ -480,9 +480,9 @@ class InsightsStoreTest {
     fun `returns top comments from db`() {
         whenever(sqlUtils.selectCommentInsights(site)).thenReturn(TOP_COMMENTS_RESPONSE)
         val model = mock<CommentsModel>()
-        whenever(mapper.map(TOP_COMMENTS_RESPONSE, CacheMode.Top(PAGE_SIZE))).thenReturn(model)
+        whenever(mapper.map(TOP_COMMENTS_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val result = commentsStore.getComments(site, CacheMode.Top(PAGE_SIZE))
+        val result = commentsStore.getComments(site, LimitMode.Top(PAGE_SIZE))
 
         assertThat(result).isEqualTo(model)
     }
@@ -495,7 +495,7 @@ class InsightsStoreTest {
         val forced = true
         whenever(commentsRestClient.fetchTopComments(site, forced)).thenReturn(errorPayload)
 
-        val responseModel = commentsStore.fetchComments(site, FetchMode.Top(PAGE_SIZE), forced)
+        val responseModel = commentsStore.fetchComments(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -513,9 +513,9 @@ class InsightsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<TagsModel>()
-        whenever(mapper.map(TAGS_RESPONSE, CacheMode.Top(PAGE_SIZE))).thenReturn(model)
+        whenever(mapper.map(TAGS_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val responseModel = tagsStore.fetchTags(site, FetchMode.Top(PAGE_SIZE), forced)
+        val responseModel = tagsStore.fetchTags(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, TAGS_RESPONSE)
@@ -525,9 +525,9 @@ class InsightsStoreTest {
     fun `returns tags and categories from db`() {
         whenever(sqlUtils.selectTags(site)).thenReturn(TAGS_RESPONSE)
         val model = mock<TagsModel>()
-        whenever(mapper.map(TAGS_RESPONSE, CacheMode.Top(PAGE_SIZE))).thenReturn(model)
+        whenever(mapper.map(TAGS_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val result = tagsStore.getTags(site, CacheMode.Top(PAGE_SIZE))
+        val result = tagsStore.getTags(site, LimitMode.Top(PAGE_SIZE))
 
         assertThat(result).isEqualTo(model)
     }
@@ -540,7 +540,7 @@ class InsightsStoreTest {
         val forced = true
         whenever(tagsRestClient.fetchTags(site, PAGE_SIZE + 1, forced = forced)).thenReturn(errorPayload)
 
-        val responseModel = tagsStore.fetchTags(site, FetchMode.Top(PAGE_SIZE), forced)
+        val responseModel = tagsStore.fetchTags(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
