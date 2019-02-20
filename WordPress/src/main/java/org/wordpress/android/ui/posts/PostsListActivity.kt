@@ -52,6 +52,11 @@ class PostsListActivity : AppCompatActivity(),
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        if (!intent.hasExtra(WordPress.SITE)) {
+            AppLog.e(AppLog.T.POSTS, "PostListActivity started without a site.")
+            finish()
+            return
+        }
         handleIntent(intent)
     }
 
@@ -127,7 +132,13 @@ class PostsListActivity : AppCompatActivity(),
     }
 
     private fun handleIntent(intent: Intent) {
-        // TODO site has changed and postListActivity opened with a target post is not implemented
+        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        if (site.id != this.site.id) {
+            // restart the activity when the site has changed
+            finish()
+            startActivity(intent)
+            return
+        }
     }
 
     public override fun onResume() {
