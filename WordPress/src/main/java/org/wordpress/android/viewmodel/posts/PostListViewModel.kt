@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PagedListItemType
-import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
@@ -155,30 +154,7 @@ class PostListViewModel @Inject constructor(
     val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
     val isLoadingMore: LiveData<Boolean> by lazy { pagedListWrapper.isLoadingMore }
     // Since we can only scroll to a post when the data is loaded, we are keeping the information together
-    val pagedListDataAndScrollPosition: LiveData<Pair<PagedPostList, Int?>> by lazy {
-        val result = MediatorLiveData<Pair<PagedPostList, Int?>>()
-        result.addSource(pagedListWrapper.data) { pagedListData ->
-            pagedListData?.let { list ->
-                if (targetLocalPostId == null) {
-                    result.value = Pair(list, null)
-                    return@let
-                }
-                val scrollIndex = list.listIterator().withIndex().asSequence().find { listItem ->
-                    if (listItem.value is ReadyItem<PostAdapterItem>) {
-                        val readyItem = listItem.value as ReadyItem<PostAdapterItem>
-                        readyItem.item.data.localPostId == targetLocalPostId
-                    } else {
-                        false
-                    }
-                }?.let {
-                    targetLocalPostId = null
-                    it.index
-                }
-                result.value = Pair(list, scrollIndex)
-            }
-        }
-        result
-    }
+    val pagedListData: LiveData<PagedPostList> by lazy { pagedListWrapper.data }
     val emptyViewState: LiveData<PostListEmptyViewState> by lazy {
         val result = MediatorLiveData<PostListEmptyViewState>()
         val update = {
@@ -216,7 +192,7 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel, postListType: PostListType, targetLocalPostId: Int?) {
+    fun start(site: SiteModel, postListType: PostListType) {
         if (isStarted) {
             return
         }
@@ -226,8 +202,6 @@ class PostListViewModel @Inject constructor(
         } else {
             PostListDescriptorForXmlRpcSite(site = site, statusList = postListType.postStatuses)
         }
-        // We want to update the target post only for the first time ViewModel is started
-        this.targetLocalPostId = targetLocalPostId
 
         // We should register after we have the SiteModel and ListDescriptor set
         EventBus.getDefault().register(this)

@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
@@ -110,15 +109,12 @@ class PostListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val targetLocalPostId = activity?.intent?.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, -1)?.let {
-            if (it != -1) it else null
-        }
         val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(site, postListType, targetLocalPostId)
-        viewModel.pagedListDataAndScrollPosition.observe(this, Observer {
-            it?.let { (pagedListData, scrollPosition) -> updatePagedListData(pagedListData, scrollPosition) }
+        viewModel.start(site, postListType)
+        viewModel.pagedListData.observe(this, Observer {
+            it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
         viewModel.emptyViewState.observe(this, Observer {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
@@ -259,9 +255,8 @@ class PostListFragment : Fragment() {
         }
     }
 
-    private fun updatePagedListData(pagedListData: PagedPostList, scrollPosition: Int?) {
+    private fun updatePagedListData(pagedListData: PagedPostList) {
         postListAdapter.submitList(pagedListData)
-        scrollPosition?.let { recyclerView?.smoothScrollToPosition(it) }
     }
 
     private fun updateEmptyViewForState(emptyViewState: PostListEmptyViewState) {
@@ -304,14 +299,11 @@ class PostListFragment : Fragment() {
         const val TAG = "post_list_fragment_tag"
 
         @JvmStatic
-        fun newInstance(site: SiteModel, postListType: PostListType, targetPost: PostModel?): PostListFragment {
+        fun newInstance(site: SiteModel, postListType: PostListType): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
-            targetPost?.let {
-                bundle.putInt(EXTRA_TARGET_POST_LOCAL_ID, it.id)
-            }
             fragment.arguments = bundle
             return fragment
         }
