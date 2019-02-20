@@ -59,7 +59,7 @@ public class PostEditorAnalyticsSession implements Serializable {
 
         // fill in mBlogType
         if (site.isWPCom()) {
-            mBlogType = "dotcom";
+            mBlogType = "wpcom";
         } else if (site.isJetpackConnected()) {
             mBlogType = "jetpack";
         } else {
