@@ -228,7 +228,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
-    private static final String STATE_KEY_GUTENERG_IS_SHOWN = "stateKeyGutenbergIsShown";
+    private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
     private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
     private static final String TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG = "tag_discarding_changes_no_network_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
@@ -496,7 +496,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
                                    && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
         } else {
-            mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENERG_IS_SHOWN);
+            mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENBERG_IS_SHOWN);
         }
 
         // Ensure we have a valid post
@@ -776,7 +776,7 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putParcelable(STATE_KEY_REVISION, mRevision);
-        outState.putBoolean(STATE_KEY_GUTENERG_IS_SHOWN, mShowGutenbergEditor);
+        outState.putBoolean(STATE_KEY_GUTENBERG_IS_SHOWN, mShowGutenbergEditor);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
