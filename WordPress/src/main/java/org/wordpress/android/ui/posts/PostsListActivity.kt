@@ -93,6 +93,7 @@ class PostsListActivity : AppCompatActivity(),
         pager.clearOnPageChangeListeners()
 
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        // this method call needs to be below `clearOnPageChangeListeners` as it internally adds an OnPageChangeListener
         tabLayout.setupWithViewPager(pager)
         pager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
