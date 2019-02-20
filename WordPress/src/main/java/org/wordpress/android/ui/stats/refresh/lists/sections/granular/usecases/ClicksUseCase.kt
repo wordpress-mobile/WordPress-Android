@@ -88,7 +88,6 @@ constructor(
             items.add(Header(R.string.stats_clicks_link_label, R.string.stats_clicks_label))
             domainModel.groups.forEachIndexed { index, group ->
                 val headerItem = ListItemWithIcon(
-                        iconUrl = group.icon,
                         text = group.name,
                         value = group.views?.toFormattedString(),
                         showDivider = index < domainModel.groups.size - 1,
@@ -104,7 +103,6 @@ constructor(
                     if (isExpanded) {
                         items.addAll(group.clicks.map { click ->
                             ListItemWithIcon(
-                                    iconUrl = click.icon,
                                     text = click.name,
                                     value = click.views.toFormattedString(),
                                     showDivider = false,

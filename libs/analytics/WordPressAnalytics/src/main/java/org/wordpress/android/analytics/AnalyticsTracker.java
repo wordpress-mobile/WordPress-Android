@@ -176,6 +176,8 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
         EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
         EDITOR_AZTEC_ENABLED, // Aztec editor only
+        EDITOR_GUTENBERG_ENABLED, // Gutenberg editor only
+        EDITOR_GUTENBERG_DISABLED, // Gutenberg editor only
         REVISIONS_LIST_VIEWED,
         REVISIONS_DETAIL_VIEWED_FROM_LIST,
         REVISIONS_DETAIL_VIEWED_FROM_SWIPE,

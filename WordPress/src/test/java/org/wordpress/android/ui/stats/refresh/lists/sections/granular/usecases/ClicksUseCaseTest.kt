@@ -101,10 +101,9 @@ class ClicksUseCaseTest : BaseUnitTest() {
         assertSingleItem(
                 this[2],
                 singleClick.name!!,
-                singleClick.views,
-                singleClick.icon
+                singleClick.views
         )
-        return assertExpandableItem(this[3], group.name!!, group.views!!, group.icon)
+        return assertExpandableItem(this[3], group.name!!, group.views!!)
     }
 
     private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
@@ -114,11 +113,10 @@ class ClicksUseCaseTest : BaseUnitTest() {
         assertSingleItem(
                 this[2],
                 singleClick.name!!,
-                singleClick.views,
-                singleClick.icon
+                singleClick.views
         )
-        val expandableItem = assertExpandableItem(this[3], group.name!!, group.views!!, group.icon)
-        assertSingleItem(this[4], click.name, click.views, click.icon)
+        val expandableItem = assertExpandableItem(this[3], group.name!!, group.views!!)
+        assertSingleItem(this[4], click.name, click.views)
         assertThat(this[5]).isEqualTo(Divider)
         return expandableItem
     }
@@ -145,8 +143,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
             assertSingleItem(
                     this[2],
                     singleClick.name!!,
-                    singleClick.views,
-                    singleClick.icon
+                    singleClick.views
             )
             assertLink(this[3])
         }
@@ -202,8 +199,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
     private fun assertSingleItem(
         item: BlockListItem,
         key: String,
-        views: Int?,
-        icon: String?
+        views: Int?
     ) {
         assertThat(item.type).isEqualTo(LIST_ITEM_WITH_ICON)
         assertThat((item as ListItemWithIcon).text).isEqualTo(key)
@@ -212,19 +208,18 @@ class ClicksUseCaseTest : BaseUnitTest() {
         } else {
             assertThat(item.value).isNull()
         }
-        assertThat(item.iconUrl).isEqualTo(icon)
+        assertThat(item.iconUrl).isNull()
     }
 
     private fun assertExpandableItem(
         item: BlockListItem,
         label: String,
-        views: Int,
-        icon: String?
+        views: Int
     ): ExpandableItem {
         assertThat(item.type).isEqualTo(EXPANDABLE_ITEM)
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
         assertThat(item.header.value).isEqualTo(views.toFormattedString())
-        assertThat(item.header.iconUrl).isEqualTo(icon)
+        assertThat(item.header.iconUrl).isNull()
         return item
     }
 
