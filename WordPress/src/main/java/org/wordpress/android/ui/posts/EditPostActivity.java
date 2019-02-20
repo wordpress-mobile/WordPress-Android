@@ -391,10 +391,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
                     mShowGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
                     mPost, mSite);
-            // set initial outcome for published posts
-            if (mPost.getStatus().equals(PostStatus.PUBLISHED.toString())) {
-                mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
-            }
         }
     }
 
