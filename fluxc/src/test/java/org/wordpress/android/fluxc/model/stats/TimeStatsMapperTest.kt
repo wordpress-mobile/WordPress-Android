@@ -42,7 +42,7 @@ class TimeStatsMapperTest {
     fun `parses empty posts and views`() {
         val response = PostAndPageViewsResponse(null, emptyMap(), "DAYS")
 
-        val result = timeStatsMapper.map(response, CacheMode.Top(5))
+        val result = timeStatsMapper.map(response, LimitMode.Top(5))
 
         assertThat(result.views).isEmpty()
         assertThat(result.hasMore).isFalse()
