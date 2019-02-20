@@ -18,15 +18,13 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -35,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -59,6 +58,12 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 tracker
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
+        whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
+                SelectedDate(
+                        0,
+                        listOf(selectedDate)
+                )
+        )
     }
 
     @Test
@@ -78,9 +83,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is Error).isTrue()
-        assertThat(result.type).isEqualTo(ERROR)
-        assertThat((result as Error).errorMessage).isEqualTo(message)
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
     }
 
     @Test
@@ -100,9 +104,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        val items = result.stateData!!
         assertThat(items.size).isEqualTo(2)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
@@ -127,9 +131,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        val items = result.data!!
         assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
@@ -161,9 +165,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        val items = result.data!!
         assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
@@ -195,9 +199,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        val items = result.data!!
         assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
@@ -228,9 +232,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        val items = result.data!!
         assertThat(items.size).isEqualTo(4)
         assertHeader(items[1])
         assertThat(items[2] is ListItemWithIcon).isTrue()
@@ -260,9 +264,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(refresh, forced)
 
-        assertThat(result is BlockList).isTrue()
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        val items = result.data!!
         assertThat(items.size).isEqualTo(4)
         assertThat(items[2] is ListItemWithIcon).isTrue()
         assertThat(items[3] is Link).isTrue()
@@ -283,8 +287,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(item.rightLabel).isEqualTo(R.string.stats_posts_and_pages_views_label)
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

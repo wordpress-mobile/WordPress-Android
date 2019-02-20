@@ -498,4 +498,5 @@ private object TicketFieldIds {
 
 object ZendeskExtraTags {
     const val connectingJetpack = "connecting_jetpack"
+    const val gutenbergIsDefault = "mobile_gutenberg_is_default"
 }

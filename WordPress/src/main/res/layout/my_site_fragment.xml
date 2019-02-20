@@ -36,7 +36,7 @@
                 android:layout_marginStart="@dimen/content_margin"
                 android:layout_marginTop="@dimen/margin_medium"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
                 <RelativeLayout
@@ -69,7 +69,7 @@
                             android:contentDescription="@string/my_site_icon_content_description"
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"
-                            tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
+                            tools:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -150,7 +150,7 @@
                 android:layout_marginStart="@dimen/content_margin"
                 android:layout_width="match_parent"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
                 <RelativeLayout

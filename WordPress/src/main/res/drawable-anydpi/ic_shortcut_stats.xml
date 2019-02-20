@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/ic_shortcut_background"/>
-    <item android:drawable="@drawable/ic_gridicons_stats_alt"/>
+    <item android:drawable="@drawable/bg_oval_grey_100_44dp"/>
+    <item android:drawable="@drawable/ic_stats_alt_blue_wordpress_48dp"/>
 </layer-list>

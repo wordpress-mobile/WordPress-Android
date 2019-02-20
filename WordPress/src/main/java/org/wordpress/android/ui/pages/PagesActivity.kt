@@ -9,15 +9,13 @@ import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface
 
 const val EXTRA_PAGE_REMOTE_ID_KEY = "extra_page_remote_id_key"
 const val EXTRA_PAGE_PARENT_ID_KEY = "extra_page_parent_id_key"
 
 class PagesActivity : AppCompatActivity(),
         BasicDialogPositiveClickInterface,
-        BasicDialogNegativeClickInterface,
-        GutenbergWarningDialogClickInterface {
+        BasicDialogNegativeClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -60,30 +58,6 @@ class PagesActivity : AppCompatActivity(),
     }
 
     override fun onNegativeClicked(instanceTag: String) {
-    }
-
-    override fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
-        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
-                as GutenbergWarningDialogClickInterface
-        fragment.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId)
-    }
-
-    override fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {
-        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
-                as GutenbergWarningDialogClickInterface
-        fragment.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId)
-    }
-
-    override fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long) {
-        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
-                as GutenbergWarningDialogClickInterface
-        fragment.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId)
-    }
-
-    override fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId: Long, checked: Boolean) {
-        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
-                as GutenbergWarningDialogClickInterface
-        fragment.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked)
     }
 
     private fun passDeleteConfirmation(remoteId: Long) {

@@ -1,13 +1,18 @@
 package org.wordpress.android.login.widgets;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -70,7 +75,21 @@ public class WPLoginInputRow extends RelativeLayout {
 
             try {
                 if (a.hasValue(R.styleable.wpLoginInputRow_wpIconDrawable)) {
-                    mIcon.setImageResource(a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawable, 0));
+                    int iconResId = a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawable,
+                            R.drawable.ic_user_grey_24dp);
+                    int tintResId = a.getResourceId(R.styleable.wpLoginInputRow_wpIconDrawableTint,
+                            R.color.login_input_icon_color);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, tintResId)));
+                        mIcon.setImageResource(iconResId);
+                    } else {
+                        Drawable drawable = context.getResources().getDrawable(iconResId);
+                        DrawableCompat.setTint(drawable, context.getResources().getColor(tintResId));
+                        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
+                        mIcon.setImageDrawable(drawable);
+                    }
+
                     mIcon.setVisibility(View.VISIBLE);
                 } else {
                     mIcon.setVisibility(View.GONE);

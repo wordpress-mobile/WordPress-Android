@@ -19,6 +19,7 @@ public class AnalyticsTrackerNosara extends Tracker {
     private static final String TRACKS_ANON_ID = "nosara_tracks_anon_id";
     @SuppressWarnings("checkstyle:RegexpSingleline")
     private static final String WPCOM_USER = "dotcom_user";
+    private static final String IS_GUTENBERG_ENABLED = "gutenberg_enabled";
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
@@ -511,6 +512,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
             properties.put(WPCOM_USER, metadata.isWordPressComUser());
+            properties.put(IS_GUTENBERG_ENABLED, metadata.isGutenbergEnabled());
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
@@ -680,8 +682,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_upload_media_retried";
             case EDITOR_CLOSED:
                 return "editor_closed";
+            case EDITOR_GUTENBERG_ENABLED:
+                return "gutenberg_enabled";
+            case EDITOR_GUTENBERG_DISABLED:
+                return "gutenberg_disabled";
             case POST_LIST_BUTTON_PRESSED:
                 return "post_list_button_pressed";
+            case POST_LIST_ITEM_SELECTED:
+                return "post_list_item_selected";
             case EDITOR_OPENED:
                 return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:
@@ -1215,6 +1223,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_success_preview_loaded";
             case ENHANCED_SITE_CREATION_COMPLETED:
                 return "enhanced_site_creation_completed";
+            case ENHANCED_SITE_CREATION_EXITED:
+                return "enhanced_site_creation_exited";
             case ENHANCED_SITE_CREATION_ERROR_SHOWN:
                 return "enhanced_site_creation_error_shown";
             case PERSON_REMOVED:
