@@ -8,10 +8,10 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CacheMode
-import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.modules.UI_THREAD
@@ -56,18 +56,18 @@ class FollowersUseCase
 
     override suspend fun loadCachedData(site: SiteModel) {
         lastSite = site
-        val wpComFollowers = followersStore.getWpComFollowers(site, CacheMode.Top(itemsToLoad))
-        val emailFollowers = followersStore.getEmailFollowers(site, CacheMode.Top(itemsToLoad))
+        val wpComFollowers = followersStore.getWpComFollowers(site, LimitMode.Top(itemsToLoad))
+        val emailFollowers = followersStore.getEmailFollowers(site, LimitMode.Top(itemsToLoad))
         if (wpComFollowers != null && emailFollowers != null) {
             onModel(wpComFollowers to emailFollowers)
         }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        fetchData(site, forced, FetchMode.Paged(itemsToLoad, false))
+        fetchData(site, forced, PagedMode(itemsToLoad, false))
     }
 
-    private suspend fun fetchData(site: SiteModel, forced: Boolean, fetchMode: FetchMode.Paged) {
+    private suspend fun fetchData(site: SiteModel, forced: Boolean, fetchMode: PagedMode) {
         lastSite = site
         val deferredWpComResponse = GlobalScope.async {
             followersStore.fetchWpComFollowers(site, fetchMode, forced)
@@ -169,7 +169,7 @@ class FollowersUseCase
     private fun onLinkClick() {
         if (useCaseMode == VIEW_ALL) {
             GlobalScope.launch {
-                fetchData(lastSite, true, FetchMode.Paged(itemsToLoad, true))
+                fetchData(lastSite, true, PagedMode(itemsToLoad, true))
             }
         } else {
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)

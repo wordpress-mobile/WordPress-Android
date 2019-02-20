@@ -5,8 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CacheMode
-import org.wordpress.android.fluxc.model.stats.FetchMode
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.PAGE
@@ -19,9 +18,12 @@ import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_HOME_PAGE
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_POST
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
@@ -37,7 +39,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private const val BLOCK_ITEM_COUNT = 6
-private const val VIEW_ALL_ITEM_COUNT = 100
+private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class PostsAndPagesUseCase
 constructor(
@@ -53,13 +55,15 @@ constructor(
         selectedDateProvider,
         statsGranularity
 ) {
+    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
+
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_posts_and_pages))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
         val dbModel = postsAndPageViewsStore.getPostAndPageViews(
                 site,
                 statsGranularity,
-                CacheMode.Top(BLOCK_ITEM_COUNT),
+                LimitMode.Top(itemsToLoad),
                 selectedDate
         )
         dbModel?.let { onModel(it) }
@@ -69,7 +73,7 @@ constructor(
         val response = postsAndPageViewsStore.fetchPostAndPageViews(
                 site,
                 statsGranularity,
-                FetchMode.Top(BLOCK_ITEM_COUNT),
+                LimitMode.Top(itemsToLoad),
                 selectedDate,
                 forced
         )
@@ -85,6 +89,7 @@ constructor(
 
     override fun buildUiModel(domainModel: PostAndPageViewsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
+        items.add(Information(selectedDateProvider.getSelectedDate(statsGranularity).toString()))
         items.add(Title(string.stats_posts_and_pages))
 
         if (domainModel.views.isEmpty()) {
@@ -107,7 +112,7 @@ constructor(
                         )
                 )
             })
-            if (domainModel.hasMore) {
+            if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,

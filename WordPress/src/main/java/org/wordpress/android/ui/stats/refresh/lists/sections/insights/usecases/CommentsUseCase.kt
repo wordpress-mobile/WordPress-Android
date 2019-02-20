@@ -5,9 +5,8 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CacheMode
 import org.wordpress.android.fluxc.model.stats.CommentsModel
-import org.wordpress.android.fluxc.model.stats.FetchMode
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
 import org.wordpress.android.modules.UI_THREAD
@@ -42,7 +41,7 @@ class CommentsUseCase
     private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val fetchMode = if (useCaseMode == VIEW_ALL) FetchMode.All else FetchMode.Top(BLOCK_ITEM_COUNT)
+        val fetchMode = if (useCaseMode == VIEW_ALL) LimitMode.All else LimitMode.Top(BLOCK_ITEM_COUNT)
         val response = commentsStore.fetchComments(site, fetchMode, forced)
         val model = response.model
         val error = response.error
@@ -55,7 +54,7 @@ class CommentsUseCase
     }
 
     override suspend fun loadCachedData(site: SiteModel) {
-        val cacheMode = if (useCaseMode == VIEW_ALL) CacheMode.All else CacheMode.Top(BLOCK_ITEM_COUNT)
+        val cacheMode = if (useCaseMode == VIEW_ALL) LimitMode.All else LimitMode.Top(BLOCK_ITEM_COUNT)
         val dbModel = commentsStore.getComments(site, cacheMode)
         dbModel?.let { onModel(dbModel) }
     }

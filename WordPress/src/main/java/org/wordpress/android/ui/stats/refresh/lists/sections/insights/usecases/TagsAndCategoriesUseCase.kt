@@ -6,8 +6,7 @@ import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CacheMode
-import org.wordpress.android.fluxc.model.stats.FetchMode
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
@@ -16,6 +15,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
@@ -35,7 +35,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private const val BLOCK_ITEM_COUNT = 6
-private const val VIEW_ALL_ITEM_COUNT = 100
+private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class TagsAndCategoriesUseCase
 @Inject constructor(
@@ -43,7 +43,7 @@ class TagsAndCategoriesUseCase
     private val tagsStore: TagsStore,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    useCaseMode: UseCaseMode
+    private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<TagsModel, TagsAndCategoriesUiState>(
         TAGS_AND_CATEGORIES,
         mainDispatcher,
@@ -52,7 +52,7 @@ class TagsAndCategoriesUseCase
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = tagsStore.fetchTags(site, FetchMode.Top(itemsToLoad), forced)
+        val response = tagsStore.fetchTags(site, LimitMode.Top(itemsToLoad), forced)
         val model = response.model
         val error = response.error
 
@@ -64,7 +64,7 @@ class TagsAndCategoriesUseCase
     }
 
     override suspend fun loadCachedData(site: SiteModel) {
-        val model = tagsStore.getTags(site, CacheMode.Top(itemsToLoad))
+        val model = tagsStore.getTags(site, LimitMode.Top(itemsToLoad))
         model?.let { onModel(model) }
     }
 
@@ -105,7 +105,7 @@ class TagsAndCategoriesUseCase
             }
 
             items.addAll(tagsList)
-            if (domainModel.hasMore) {
+            if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
                                 text = R.string.stats_insights_view_more,
