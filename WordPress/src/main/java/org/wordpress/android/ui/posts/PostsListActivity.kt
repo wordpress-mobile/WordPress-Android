@@ -88,12 +88,12 @@ class PostsListActivity : AppCompatActivity(),
                 supportFragmentManager
         )
         pager.adapter = postsPagerAdapter
-        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
-        tabLayout.setupWithViewPager(pager)
 
         // Just a safety measure - there shouldn't by any existing listeners since this method is called just once.
         pager.clearOnPageChangeListeners()
 
+        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        tabLayout.setupWithViewPager(pager)
         pager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
