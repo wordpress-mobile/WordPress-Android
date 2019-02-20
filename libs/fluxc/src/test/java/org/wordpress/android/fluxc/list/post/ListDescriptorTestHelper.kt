@@ -23,18 +23,18 @@ val LIST_DESCRIPTOR_TEST_LIST_CONFIG_2 = ListConfig(
         prefetchDistance = 20
 )
 
-fun assertSameTypeIdentifiers(descriptor1: ListDescriptor, descriptor2: ListDescriptor) {
-    assertThat(descriptor1.typeIdentifier, equalTo(descriptor2.typeIdentifier))
+fun assertSameTypeIdentifiers(reason: String, descriptor1: ListDescriptor, descriptor2: ListDescriptor) {
+    assertThat(reason, descriptor1.typeIdentifier, equalTo(descriptor2.typeIdentifier))
 }
 
-fun assertDifferentTypeIdentifiers(descriptor1: ListDescriptor, descriptor2: ListDescriptor) {
-    assertThat(descriptor1.typeIdentifier, not(equalTo(descriptor2.typeIdentifier)))
+fun assertDifferentTypeIdentifiers(reason: String, descriptor1: ListDescriptor, descriptor2: ListDescriptor) {
+    assertThat(reason, descriptor1.typeIdentifier, not(equalTo(descriptor2.typeIdentifier)))
 }
 
-fun assertSameUniqueIdentifiers(descriptor1: ListDescriptor, descriptor2: ListDescriptor) {
-    assertThat(descriptor1.uniqueIdentifier, equalTo(descriptor2.uniqueIdentifier))
+fun assertSameUniqueIdentifiers(reason: String, descriptor1: ListDescriptor, descriptor2: ListDescriptor) {
+    assertThat(reason, descriptor1.uniqueIdentifier, equalTo(descriptor2.uniqueIdentifier))
 }
 
-fun assertDifferentUniqueIdentifiers(descriptor1: ListDescriptor, descriptor2: ListDescriptor) {
-    assertThat(descriptor1.uniqueIdentifier, not(equalTo(descriptor2.uniqueIdentifier)))
+fun assertDifferentUniqueIdentifiers(reason: String, descriptor1: ListDescriptor, descriptor2: ListDescriptor) {
+    assertThat(reason, descriptor1.uniqueIdentifier, not(equalTo(descriptor2.uniqueIdentifier)))
 }
