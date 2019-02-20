@@ -32,7 +32,6 @@ constructor(
             if (map.containsKey(it)) {
                 map[it]
             } else {
-                AppLog.e(T.STATS, "There is no use case consuming given Stats type: $it")
                 null
             }
         }
