@@ -122,6 +122,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         Resources defaultResources = new Resources(getActivity().getAssets(), metrics, configuration);
 
         for (Field stringField : R.string.class.getFields()) {
+            if (!stringField.getName().startsWith("gutenberg_mobile_")) {
+                continue;
+            }
             int resourceId = 0;
             try {
                 resourceId = stringField.getInt(R.string.class);
