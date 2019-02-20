@@ -69,8 +69,7 @@ class PostingActivityRestClientTest {
     fun `returns posting activity`() = test {
         initResponse(POSTING_ACTIVITY_RESPONSE)
 
-        val pageSize = 10
-        val responseModel = restClient.fetchPostingActivity(site, startDate, endDate, pageSize, forced = false)
+        val responseModel = restClient.fetchPostingActivity(site, startDate, endDate, forced = false)
 
         Assertions.assertThat(responseModel.response).isNotNull
         Assertions.assertThat(responseModel.response).isEqualTo(POSTING_ACTIVITY_RESPONSE)
@@ -80,7 +79,7 @@ class PostingActivityRestClientTest {
                 mapOf(
                         "endDate" to "2019-01-01",
                         "gmtOffset" to "0",
-                        "max" to "$pageSize",
+                        "max" to "3000",
                         "startDate" to "2018-01-01"
                 )
         )
@@ -99,7 +98,7 @@ class PostingActivityRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchPostingActivity(site, startDate, endDate, 3000, forced = false)
+        val responseModel = restClient.fetchPostingActivity(site, startDate, endDate, forced = false)
 
         Assertions.assertThat(responseModel.error).isNotNull
         Assertions.assertThat(responseModel.error.type).isEqualTo(API_ERROR)
