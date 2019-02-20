@@ -274,6 +274,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
     private List<String> mMediaMarkedUploadingOnStartIds = new ArrayList<>();
     private PostEditorAnalyticsSession mPostEditorAnalyticsSession;
+    private boolean mIsConfigChange = false;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -758,7 +759,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
-        mPostEditorAnalyticsSession.end();
+        if (!mIsConfigChange) {
+            mPostEditorAnalyticsSession.end();
+        }
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
         if (mHandler != null) {
@@ -799,6 +802,8 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putParcelable(STATE_KEY_REVISION, mRevision);
         outState.putSerializable(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
+        // don't call sessionData.end() in onDestroy() if this is an Android config change
+        mIsConfigChange = true;
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
