@@ -2107,7 +2107,6 @@ public class EditPostActivity extends AppCompatActivity implements
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                         savePostLocallyAndFinishAsync(doFinish);
                     }
-
                 } else {
                     // discard post if new & empty
                     if (isDiscardable()) {
