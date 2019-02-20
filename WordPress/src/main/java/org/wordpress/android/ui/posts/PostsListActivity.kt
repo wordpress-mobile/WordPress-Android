@@ -57,7 +57,16 @@ class PostsListActivity : AppCompatActivity(),
             finish()
             return
         }
-        handleIntent(intent)
+        restartWhenSiteHasChanged(intent)
+    }
+
+    private fun restartWhenSiteHasChanged(intent: Intent) {
+        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        if (site.id != this.site.id) {
+            finish()
+            startActivity(intent)
+            return
+        }
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +83,6 @@ class PostsListActivity : AppCompatActivity(),
         setupActionBar()
         setupContent()
         initViewModel()
-        handleIntent(intent)
     }
 
     private fun setupActionBar() {
@@ -129,16 +137,6 @@ class PostsListActivity : AppCompatActivity(),
                 }
             }
         })
-    }
-
-    private fun handleIntent(intent: Intent) {
-        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        if (site.id != this.site.id) {
-            // restart the activity when the site has changed
-            finish()
-            startActivity(intent)
-            return
-        }
     }
 
     public override fun onResume() {
