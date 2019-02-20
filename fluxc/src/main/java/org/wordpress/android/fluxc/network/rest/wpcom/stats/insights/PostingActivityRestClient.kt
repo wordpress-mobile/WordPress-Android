@@ -20,6 +20,8 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+private const val MAX_ITEMS = 3000
+
 @Singleton
 class PostingActivityRestClient
 @Inject constructor(
@@ -35,7 +37,6 @@ class PostingActivityRestClient
         site: SiteModel,
         startDate: Date,
         endDate: Date,
-        max: Int,
         forced: Boolean
     ): FetchStatsPayload<PostingActivityResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.streak.urlV1_1
@@ -43,7 +44,7 @@ class PostingActivityRestClient
                 "startDate" to statsUtils.toFormattedDate(startDate),
                 "endDate" to statsUtils.toFormattedDate(endDate),
                 "gmtOffset" to 0.toString(),
-                "max" to max.toString()
+                "max" to MAX_ITEMS.toString()
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,

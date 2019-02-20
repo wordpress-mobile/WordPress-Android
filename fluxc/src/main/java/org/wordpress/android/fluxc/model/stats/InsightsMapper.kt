@@ -171,7 +171,7 @@ class InsightsMapper
         )
     }
 
-    fun map(response: PostingActivityResponse, limit: Int): PostingActivityModel {
+    fun map(response: PostingActivityResponse, startDate: Date, endDate: Date): PostingActivityModel {
         if (response.streak == null) {
             AppLog.e(STATS, "PostingActivityResponse: Mandatory field streak is null")
         }
@@ -190,11 +190,11 @@ class InsightsMapper
                 longestStreakLength = longStreakLength
         )
         val nonNullData = response.data ?: mapOf()
-        val events = nonNullData
+        val limitedEvents = nonNullData
                 .toList()
                 .sortedBy { (key, _) -> key }
-                .take(limit)
                 .map { (key, value) -> PostingActivityModel.StreakEvent(Date(key), value) }
-        return PostingActivityModel(streak, events, nonNullData.count() > limit)
+                .takeWhile { event -> event.date > startDate && event.date < endDate }
+        return PostingActivityModel(streak, limitedEvents, limitedEvents.count() < nonNullData.count())
     }
 }
