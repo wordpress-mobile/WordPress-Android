@@ -85,7 +85,7 @@ public class PostEditorAnalyticsSession implements Serializable {
             AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
             mStarted = true;
         } else {
-            AppLog.w(T.EDITOR, "An editor session cannot be started more than once, "
+            AppLog.w(T.EDITOR, "An editor session cannot be attempted to be started more than once, "
                                + "unless it's due to rotation or Editor switch");
         }
     }
