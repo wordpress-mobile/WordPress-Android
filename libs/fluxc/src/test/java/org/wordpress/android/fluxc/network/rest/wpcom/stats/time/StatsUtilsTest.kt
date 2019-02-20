@@ -25,7 +25,7 @@ class StatsUtilsTest {
         val cal = Calendar.getInstance()
         cal.set(2018, 10, 10, 23, 55)
 
-        val result = statsUtils.getFormattedDate(cal.time)
+        val result = statsUtils.toFormattedDate(cal.time)
 
         assertThat(result).isEqualTo("2018-11-10")
     }
@@ -35,7 +35,7 @@ class StatsUtilsTest {
         val cal = Calendar.getInstance()
         cal.set(2018, 10, 10, 0, 15)
 
-        val result = statsUtils.getFormattedDate(cal.time)
+        val result = statsUtils.toFormattedDate(cal.time)
 
         assertThat(result).isEqualTo("2018-11-10")
     }
