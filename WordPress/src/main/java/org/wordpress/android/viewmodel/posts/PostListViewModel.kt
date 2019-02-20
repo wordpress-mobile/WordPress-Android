@@ -9,6 +9,8 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import android.content.Intent
+import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import de.greenrobot.event.EventBus
 import org.apache.commons.text.StringEscapeUtils
 import org.greenrobot.eventbus.Subscribe
@@ -34,7 +36,8 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.ListStore
-import org.wordpress.android.fluxc.store.ListStore.ListErrorType
+import org.wordpress.android.fluxc.store.ListStore.ListError
+import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
@@ -53,6 +56,10 @@ import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
 import org.wordpress.android.ui.posts.PostListType
+import org.wordpress.android.ui.posts.PostListType.DRAFTS
+import org.wordpress.android.ui.posts.PostListType.PUBLISHED
+import org.wordpress.android.ui.posts.PostListType.SCHEDULED
+import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
@@ -69,6 +76,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -83,14 +91,6 @@ const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
 const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 
-enum class PostListEmptyViewState {
-    EMPTY_LIST,
-    HIDDEN_LIST,
-    LOADING,
-    REFRESH_ERROR,
-    PERMISSION_ERROR
-}
-
 typealias PagedPostList = PagedList<PagedListItemType<PostAdapterItem>>
 
 class PostListViewModel @Inject constructor(
@@ -99,6 +99,7 @@ class PostListViewModel @Inject constructor(
     private val uploadStore: UploadStore,
     private val mediaStore: MediaStore,
     private val postStore: PostStore,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     connectionStatus: LiveData<ConnectionStatus>
 ) : ViewModel(), LifecycleOwner {
     private val isStatsSupported: Boolean by lazy {
@@ -107,6 +108,7 @@ class PostListViewModel @Inject constructor(
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
     private lateinit var site: SiteModel
+    private lateinit var postListType: PostListType
 
     // Cache upload statuses and featured images for posts for quicker access
     private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
@@ -179,28 +181,98 @@ class PostListViewModel @Inject constructor(
         }
         result
     }
-    val emptyViewState: LiveData<PostListEmptyViewState> by lazy {
-        val result = MediatorLiveData<PostListEmptyViewState>()
+    val emptyViewState: LiveData<PostListEmptyUiState> by lazy {
+        val result = MediatorLiveData<PostListEmptyUiState>()
         val update = {
-            val error = pagedListWrapper.listError.value
-            if (pagedListWrapper.isEmpty.value != false) {
-                if (error != null) {
-                    if (error.type == ListErrorType.PERMISSION_ERROR) {
-                        PostListEmptyViewState.PERMISSION_ERROR
-                    } else PostListEmptyViewState.REFRESH_ERROR
-                } else if (pagedListWrapper.isFetchingFirstPage.value == true) {
-                    PostListEmptyViewState.LOADING
-                } else {
-                    PostListEmptyViewState.EMPTY_LIST
-                }
-            } else {
-                PostListEmptyViewState.HIDDEN_LIST
-            }
+            createEmptyUiState()
         }
         result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
         result.addSource(pagedListWrapper.isFetchingFirstPage) { result.value = update() }
         result.addSource(pagedListWrapper.listError) { result.value = update() }
         result
+    }
+
+    private fun createEmptyUiState(): PostListEmptyUiState {
+        return if (pagedListWrapper.isEmpty.value != false) {
+            val error = pagedListWrapper.listError.value
+            val isLoadingFirstPage = pagedListWrapper.isFetchingFirstPage.value == true
+            when {
+                error != null -> createErrorListUiState(error)
+                isLoadingFirstPage -> PostListEmptyUiState.Loading
+                else -> createEmptyListUiState()
+            }
+        } else {
+            PostListEmptyUiState.HiddenList
+        }
+    }
+
+    private fun createErrorListUiState(error: ListError): PostListEmptyUiState {
+        return if (error.type == PERMISSION_ERROR) {
+            PostListEmptyUiState.PermissionsError
+        } else {
+            if (networkUtilsWrapper.isNetworkAvailable()) {
+                PostListEmptyUiState.RefreshError(R.string.error_refresh_posts)
+            } else {
+                PostListEmptyUiState.RefreshError(R.string.no_network_message)
+            }
+        }
+    }
+
+    private fun createEmptyListUiState(): PostListEmptyUiState.EmptyList {
+        return when (postListType) {
+            PUBLISHED -> PostListEmptyUiState.EmptyList(
+                    R.string.posts_published_empty,
+                    R.string.posts_empty_list_button,
+                    this@PostListViewModel::newPost
+            )
+            DRAFTS -> PostListEmptyUiState.EmptyList(
+                    R.string.posts_draft_empty,
+                    R.string.posts_empty_list_button,
+                    this@PostListViewModel::newPost
+            )
+            SCHEDULED -> PostListEmptyUiState.EmptyList(
+                    R.string.posts_scheduled_empty,
+                    R.string.posts_empty_list_button,
+                    this@PostListViewModel::newPost
+            )
+            TRASHED -> PostListEmptyUiState.EmptyList(R.string.posts_trashed_empty)
+        }
+    }
+
+    sealed class PostListEmptyUiState(
+        @StringRes val titleResId: Int? = null,
+        @DrawableRes val imgResId: Int? = null,
+        @StringRes val buttonTextResId: Int? = null,
+        val onButtonClick: (() -> Unit)? = null,
+        val listVisible: Boolean = true
+    ) {
+        class EmptyList(
+            titleResId: Int,
+            @StringRes buttonTextResId: Int? = null,
+            onButtonClick: (() -> Unit)? = null
+        ) : PostListEmptyUiState(
+                titleResId,
+                R.drawable.img_illustration_posts_75dp,
+                buttonTextResId,
+                onButtonClick
+        )
+
+        object HiddenList : PostListEmptyUiState(listVisible = false)
+
+        object Loading : PostListEmptyUiState(
+                R.string.posts_fetching,
+                R.drawable.img_illustration_posts_75dp
+        )
+
+        class RefreshError(@StringRes titleResId: Int) : PostListEmptyUiState(
+                titleResId,
+                R.drawable.img_illustration_posts_75dp
+        )
+
+        object PermissionsError : PostListEmptyUiState(
+                R.string.error_refresh_unauthorized_posts,
+                R.drawable.img_illustration_posts_75dp
+        )
     }
 
     private var isNetworkAvailable: Boolean = true
@@ -221,6 +293,7 @@ class PostListViewModel @Inject constructor(
             return
         }
         this.site = site
+        this.postListType = postListType
         this.listDescriptor = if (site.isUsingWpComRestApi) {
             PostListDescriptorForRestSite(site = site, statusList = postListType.postStatuses)
         } else {

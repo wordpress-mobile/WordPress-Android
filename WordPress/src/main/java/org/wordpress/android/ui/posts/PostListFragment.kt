@@ -13,7 +13,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
@@ -36,13 +39,8 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.posts.PagedPostList
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.PERMISSION_ERROR
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.REFRESH_ERROR
 import org.wordpress.android.viewmodel.posts.PostListViewModel
+import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
@@ -264,27 +262,42 @@ class PostListFragment : Fragment() {
         scrollPosition?.let { recyclerView?.smoothScrollToPosition(it) }
     }
 
-    private fun updateEmptyViewForState(emptyViewState: PostListEmptyViewState) {
-        actionableEmptyView?.visibility = if (emptyViewState == HIDDEN_LIST) View.GONE else View.VISIBLE
-        val stringId = when (emptyViewState) {
-            HIDDEN_LIST -> return // nothing else to do!
-            EMPTY_LIST -> R.string.posts_empty_list
-            LOADING -> R.string.posts_fetching
-            REFRESH_ERROR -> if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-                R.string.error_refresh_posts
-            } else R.string.no_network_message
-            PERMISSION_ERROR -> R.string.error_refresh_unauthorized_posts
-        }
-        val isNewPostActionVisible = emptyViewState == EMPTY_LIST
-        actionableEmptyView?.let {
-            it.image.setImageResource(R.drawable.img_illustration_posts_75dp)
-            it.image.visibility = if (isNewPostActionVisible) View.VISIBLE else View.GONE
-            it.title.setText(stringId)
-            it.button.setText(R.string.posts_empty_list_button)
-            it.button.visibility = if (isNewPostActionVisible) View.VISIBLE else View.GONE
-            it.button.setOnClickListener {
-                viewModel.newPost()
+    private fun updateEmptyViewForState(state: PostListEmptyUiState) {
+        if (state.listVisible) {
+            actionableEmptyView?.visibility = View.GONE
+        } else {
+            actionableEmptyView?.visibility = View.VISIBLE
+            actionableEmptyView?.let { view ->
+                setTextOrHide(view.title, state.titleResId)
+                setImageOrHide(view.image, state.imgResId)
+                setupButtonOrHide(view.button, state.buttonTextResId, state.onButtonClick)
             }
+        }
+    }
+
+    private fun setupButtonOrHide(
+        buttonView: Button,
+        textResId: Int?,
+        onButtonClick: (() -> Unit)?
+    ) {
+        buttonView.visibility = if (textResId == null) View.GONE else View.VISIBLE
+        textResId?.let {
+            buttonView.setText(textResId)
+            buttonView.setOnClickListener { onButtonClick?.invoke() }
+        }
+    }
+
+    private fun setImageOrHide(imageView: ImageView, resId: Int?) {
+        imageView.visibility = if (resId == null) View.GONE else View.VISIBLE
+        resId?.let {
+            imageView.setImageResource(resId)
+        }
+    }
+
+    private fun setTextOrHide(textView: TextView, resId: Int?) {
+        textView.visibility = if (resId == null) View.GONE else View.VISIBLE
+        resId?.let {
+            textView.text = resources.getString(resId)
         }
     }
 
