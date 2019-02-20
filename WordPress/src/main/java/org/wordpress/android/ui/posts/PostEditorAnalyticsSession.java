@@ -1,0 +1,136 @@
+package org.wordpress.android.ui.posts;
+
+import android.text.TextUtils;
+
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+public class PostEditorAnalyticsSession implements Serializable {
+    private static final String KEY_BLOG_TYPE = "blog_type";
+    private static final String KEY_CONTENT_TYPE = "content_type";
+    private static final String KEY_EDITOR = "editor";
+    private static final String KEY_HAS_UNSUPPORTED_BLOCKS = "has_unsupported_blocks";
+    private static final String KEY_POST_TYPE = "post_type";
+    private static final String KEY_OUTCOME = "outcome";
+    private static final String KEY_SESSION_ID = "session_id";
+
+    private String mSessionId = UUID.randomUUID().toString();
+    private String mPostType;
+    private String mBlogType;
+    private String mContentType;
+    private boolean mStarted = false;
+    private Editor mCurrentEditor;
+    private boolean mHasUnsupportedBlocks = false;
+    private Outcome mOutcome = null;
+
+    enum Editor {
+        GUTENBERG,
+        CLASSIC,
+        HTML
+    }
+
+    enum Outcome {
+        CANCEL,
+        DISCARD,    // not used in WPAndroid, but kept for parity with iOS
+                    // see https://github.com/wordpress-mobile/gutenberg-mobile/issues/556#issuecomment-462678807
+        SAVE,
+        PUBLISH
+    }
+
+    PostEditorAnalyticsSession(Editor editor, PostModel post, SiteModel site) {
+        // fill in which the current Editor is
+        mCurrentEditor = editor;
+
+        // fill in mPostType
+        if (post.isPage()) {
+            mPostType = "page";
+        } else {
+            mPostType = "post";
+        }
+
+        // fill in mBlogType
+        if (site.isWPCom()) {
+            mBlogType = "dotcom";
+        } else if (site.isJetpackConnected()) {
+            mBlogType = "jetpack";
+        } else {
+            mBlogType = "core";
+        }
+
+        // fill in mContentType
+        String postContent = post.getContent();
+        if (TextUtils.isEmpty(post.getContent())) {
+            mContentType = "new";
+        } else if (PostUtils.contentContainsGutenbergBlocks(postContent)) {
+            mContentType = "gutenberg";
+        } else {
+            mContentType = "classic";
+        }
+    }
+
+    public void start(boolean hasUnsupportedBlocks) {
+        if (!mStarted) {
+            mHasUnsupportedBlocks = hasUnsupportedBlocks;
+            Map<String, Object> properties = getCommonProperties();
+            AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
+            mStarted = true;
+        } else {
+            AppLog.w(T.EDITOR, "An editor session was attempted to start more than once");
+        }
+    }
+
+    public void switchEditor(Editor editor) {
+        mCurrentEditor = editor;
+        Map<String, Object> properties = getCommonProperties();
+        AnalyticsTracker.track(Stat.EDITOR_SESSION_SWITCH_EDITOR, properties);
+    }
+
+    public void forceOutcome(Outcome newOutcome) {
+        // We're allowing an outcome to be forced in a few specific cases:
+        // - If a post was published, that should be the outcome no matter what happens later
+        // - If a post is saved, that should be the outcome unless it's published later
+        // - Otherwise, we'll use whatever outcome is set when the session ends
+        if (mOutcome == Outcome.PUBLISH) {
+            // no op
+        } else if (mOutcome == Outcome.SAVE && newOutcome != Outcome.PUBLISH) {
+            // no op
+        } else {
+            mOutcome = newOutcome;
+        }
+    }
+
+    public void end(Outcome newOutcome) {
+        // don't try to send an "end" event if the session wasn't started in the first place
+        if (mStarted) {
+            Outcome outcome = mOutcome != null ? mOutcome : newOutcome;
+            if (outcome == null) {
+                // outcome should have already been set with forceOutcome at specific user actions
+                // if outcome is still unknown, chances are Activity was killed / user cancelled so, set to CANCEL.
+                outcome = Outcome.CANCEL;
+            }
+            Map<String, Object> properties = getCommonProperties();
+            properties.put(KEY_OUTCOME, outcome);
+            AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
+        }
+    }
+
+    private Map<String, Object> getCommonProperties() {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(KEY_EDITOR, mCurrentEditor);
+        properties.put(KEY_CONTENT_TYPE, mContentType);
+        properties.put(KEY_POST_TYPE, mPostType);
+        properties.put(KEY_BLOG_TYPE, mBlogType);
+        properties.put(KEY_SESSION_ID, mSessionId);
+        properties.put(KEY_HAS_UNSUPPORTED_BLOCKS, mHasUnsupportedBlocks ? "1" : "0");
+        return properties;
+    }
+}
