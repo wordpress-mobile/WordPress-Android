@@ -23,7 +23,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
@@ -89,7 +88,6 @@ constructor(
 
     override fun buildUiModel(domainModel: PostAndPageViewsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Information(selectedDateProvider.getSelectedDate(statsGranularity).toString()))
         items.add(Title(string.stats_posts_and_pages))
 
         if (domainModel.views.isEmpty()) {
