@@ -14,7 +14,7 @@ interface ListDataStoreInterface<T> {
     /**
      * Should fetch the list for the given [ListDescriptor] and an offset.
      */
-    fun fetchList(listDescriptor: ListDescriptor, offset: Int)
+    fun fetchList(listDescriptor: ListDescriptor, offset: Long)
 
     /**
      * Should return the item for the given [ListDescriptor] and [remoteItemId] or null if it's not available.
