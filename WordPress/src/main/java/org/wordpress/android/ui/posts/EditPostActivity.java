@@ -807,9 +807,10 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putParcelable(STATE_KEY_REVISION, mRevision);
+
         outState.putSerializable(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
-        // don't call sessionData.end() in onDestroy() if this is an Android config change
-        mIsConfigChange = true;
+        mIsConfigChange = true; // don't call sessionData.end() in onDestroy() if this is an Android config change
+
         outState.putBoolean(STATE_KEY_GUTENERG_IS_SHOWN, mShowGutenbergEditor);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
