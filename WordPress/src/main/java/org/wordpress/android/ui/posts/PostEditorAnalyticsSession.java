@@ -94,31 +94,25 @@ public class PostEditorAnalyticsSession implements Serializable {
         AnalyticsTracker.track(Stat.EDITOR_SESSION_SWITCH_EDITOR, properties);
     }
 
-    public void forceOutcome(Outcome newOutcome) {
-        // We're allowing an outcome to be forced in a few specific cases:
-        // - If a post was published, that should be the outcome no matter what happens later
-        // - If a post is saved, that should be the outcome unless it's published later
-        // - Otherwise, we'll use whatever outcome is set when the session ends
-        if (mOutcome == Outcome.PUBLISH) {
-            // no op
-        } else if (mOutcome == Outcome.SAVE && newOutcome != Outcome.PUBLISH) {
-            // no op
-        } else {
-            mOutcome = newOutcome;
-        }
+    public void setOutcome(Outcome newOutcome) {
+        // on WPiOS we're using `forceOutcome` and some exception logic to allow / not allow forcing an outcome,
+        // but in WPAndroid we slightly changed the interface as we're not
+        // really `forcing` but just `setting` the outcome on specific places where we know what happened
+        // or is going to happen.
+        // Session ending will only properly end the session with the outcome already being set.
+        mOutcome = newOutcome;
     }
 
-    public void end(Outcome newOutcome) {
+    public void end() {
         // don't try to send an "end" event if the session wasn't started in the first place
         if (mStarted) {
-            Outcome outcome = mOutcome != null ? mOutcome : newOutcome;
-            if (outcome == null) {
-                // outcome should have already been set with forceOutcome at specific user actions
+            if (mOutcome == null) {
+                // outcome should have already been set with setOutcome at specific user actions
                 // if outcome is still unknown, chances are Activity was killed / user cancelled so, set to CANCEL.
-                outcome = Outcome.CANCEL;
+                mOutcome = Outcome.CANCEL;
             }
             Map<String, Object> properties = getCommonProperties();
-            properties.put(KEY_OUTCOME, outcome);
+            properties.put(KEY_OUTCOME, mOutcome);
             AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
         }
     }

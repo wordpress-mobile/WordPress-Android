@@ -380,7 +380,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
         mPost.setStatus(PostStatus.PUBLISHED.toString());
         createPostEditorAnalyticsSessionTracker();
-        mPostEditorAnalyticsSession.forceOutcome(Outcome.PUBLISH);
+        mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
         EventBus.getDefault().postSticky(
                 new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
@@ -756,7 +756,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
-        mPostEditorAnalyticsSession.end(null);
+        mPostEditorAnalyticsSession.end();
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
         if (mHandler != null) {
@@ -1239,7 +1239,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else if (isPhotoPickerShowing()) {
             hidePhotoPicker();
         } else {
-            mPostEditorAnalyticsSession.forceOutcome(Outcome.SAVE);
+            mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
             savePostAndOptionallyFinish(true);
         }
 
@@ -1317,7 +1317,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (isNewPost()) {
                         mPost.setStatus(PostStatus.DRAFT.toString());
                     }
-                    mPostEditorAnalyticsSession.forceOutcome(Outcome.SAVE);
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                     savePostAndOptionallyFinish(false);
                 }
             } else if (itemId == R.id.menu_html_mode) {
@@ -1359,13 +1359,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 // let's finish this editing instance and start again, but not letting Gutenberg be used
                 mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
                 mPostEditorAnalyticsSession.switchEditor(Editor.CLASSIC);
-                mPostEditorAnalyticsSession.forceOutcome(Outcome.SAVE);
+                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 savePostAndOptionallyFinish(true);
             } else if (itemId == R.id.menu_switch_to_gutenberg) {
                 // let's finish this editing instance and start again, but let GB be used
                 mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG;
                 mPostEditorAnalyticsSession.switchEditor(Editor.GUTENBERG);
-                mPostEditorAnalyticsSession.forceOutcome(Outcome.SAVE);
+                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 savePostAndOptionallyFinish(true);
             }
         }
@@ -1693,7 +1693,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
-                mPostEditorAnalyticsSession.forceOutcome(Outcome.PUBLISH);
+                mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                 publishPost();
                 break;
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
@@ -1937,7 +1937,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                           public void onClick(DialogInterface dialog, int id) {
                                               ToastUtils.showToast(EditPostActivity.this,
                                                                    getString(R.string.toast_saving_post_as_draft));
-                                              mPostEditorAnalyticsSession.forceOutcome(Outcome.SAVE);
+                                              mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                                               savePostAndOptionallyFinish(true);
                                           }
                                       })
@@ -1990,11 +1990,11 @@ public class EditPostActivity extends AppCompatActivity implements
                                 }
                             });
                         } else {
-                            mPostEditorAnalyticsSession.forceOutcome(Outcome.PUBLISH);
+                            mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                             savePostOnlineAndFinishAsync(isFirstTimePublish, true);
                         }
                     } else {
-                        mPostEditorAnalyticsSession.forceOutcome(Outcome.PUBLISH);
+                        mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                         savePostLocallyAndFinishAsync(true);
                     }
                 } else {
@@ -2059,7 +2059,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         // new post - user just left the editor without publishing, they probably want
                         // to keep the post as a draft (unless they explicitly changed the status)
                         mPost.setStatus(PostStatus.DRAFT.toString());
-                        mPostEditorAnalyticsSession.forceOutcome(Outcome.SAVE);
+                        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                         if (mEditPostSettingsFragment != null) {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -2074,16 +2074,17 @@ public class EditPostActivity extends AppCompatActivity implements
                     boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
                     if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
                         && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext()) && isNotRestarting) {
-                        mPostEditorAnalyticsSession.forceOutcome(Outcome.SAVE);
+                        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
-                        mPostEditorAnalyticsSession.forceOutcome(Outcome.SAVE);
+                        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                         savePostLocallyAndFinishAsync(doFinish);
                     }
 
                 } else {
                     // discard post if new & empty
                     if (isDiscardable()) {
+                        mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                     }
                     removePostOpenInEditorStickyEvent();
