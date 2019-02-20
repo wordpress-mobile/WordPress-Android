@@ -12,8 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_fragment.*
-import kotlinx.android.synthetic.main.stats_list_fragment.*
+import kotlinx.android.synthetic.main.stats_date_selector.*
+import kotlinx.android.synthetic.main.stats_date_selector.view.*
+import kotlinx.android.synthetic.main.stats_view_all_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
@@ -102,6 +103,13 @@ class StatsViewAllFragment : DaggerFragment() {
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
         }
+
+        select_next_date.setOnClickListener {
+            viewModel.onNextDateSelected()
+        }
+        select_previous_date.setOnClickListener {
+            viewModel.onPreviousDateSelected()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -138,7 +146,7 @@ class StatsViewAllFragment : DaggerFragment() {
         val viewModelType = StatsViewAllViewModel.get(type, granularity)
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(viewModelType)
         setupObservers(site, activity)
-        viewModel.start(site)
+        viewModel.start(site, granularity)
     }
 
     private fun setupObservers(site: SiteModel, activity: FragmentActivity) {
@@ -158,6 +166,26 @@ class StatsViewAllFragment : DaggerFragment() {
             navigator.navigate(site, activity, target)
             return@observeEvent true
         }
+
+        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
+            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
+            if (dateSelectionToolbar.visibility != dateSelectorVisibility) {
+                dateSelectionToolbar.visibility = dateSelectorVisibility
+            }
+            selected_date.text = dateSelectorUiModel?.date ?: ""
+            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
+            if (dateSelectionToolbar.select_previous_date.isEnabled != enablePreviousButton) {
+                dateSelectionToolbar.select_previous_date.isEnabled = enablePreviousButton
+            }
+            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
+            if (dateSelectionToolbar.select_next_date.isEnabled != enableNextButton) {
+                dateSelectionToolbar.select_next_date.isEnabled = enableNextButton
+            }
+        })
+
+        viewModel.selectedDateChanged.observe(this, Observer {
+            viewModel.onSelectedDateChange()
+        })
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {
