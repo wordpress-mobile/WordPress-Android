@@ -11,6 +11,7 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -113,14 +114,14 @@ public class PostEditorAnalyticsSession implements Serializable {
                 mOutcome = Outcome.CANCEL;
             }
             Map<String, Object> properties = getCommonProperties();
-            properties.put(KEY_OUTCOME, mOutcome.toString().toLowerCase());
+            properties.put(KEY_OUTCOME, mOutcome.toString().toLowerCase(Locale.ROOT));
             AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
         }
     }
 
     private Map<String, Object> getCommonProperties() {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(KEY_EDITOR, mCurrentEditor.toString().toLowerCase());
+        properties.put(KEY_EDITOR, mCurrentEditor.toString().toLowerCase(Locale.ROOT));
         properties.put(KEY_CONTENT_TYPE, mContentType);
         properties.put(KEY_POST_TYPE, mPostType);
         properties.put(KEY_BLOG_TYPE, mBlogType);
