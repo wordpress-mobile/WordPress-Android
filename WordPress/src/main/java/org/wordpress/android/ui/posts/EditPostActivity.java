@@ -2107,11 +2107,12 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else {
                     // discard post if new & empty
                     if (isDiscardable()) {
-                        mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                     }
                     removePostOpenInEditorStickyEvent();
                     if (doFinish) {
+                        // if we shouldn't save and we should exit, set the session tracking outcome to CANCEL
+                        mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
                         finish();
                     }
                 }
