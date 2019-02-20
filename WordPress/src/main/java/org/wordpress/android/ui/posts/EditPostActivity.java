@@ -379,10 +379,19 @@ public class EditPostActivity extends AppCompatActivity implements
         // Create a new post
         mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
         mPost.setStatus(PostStatus.PUBLISHED.toString());
+        createPostEditorAnalyticsSessionTracker();
         mPostEditorAnalyticsSession.forceOutcome(Outcome.PUBLISH);
         EventBus.getDefault().postSticky(
                 new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
+    }
+
+    private void createPostEditorAnalyticsSessionTracker() {
+        if (mPostEditorAnalyticsSession == null) {
+            mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
+                    mShowGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
+                    mPost, mSite);
+        }
     }
 
     @Override
@@ -512,11 +521,8 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
-        if (mPostEditorAnalyticsSession == null) {
-            mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
-                    mShowGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
-                    mPost, mSite);
-        }
+        // ok now we are sure to have a valid Post, let's start the editing session tracker
+        createPostEditorAnalyticsSessionTracker();
 
         if (savedInstanceState == null) {
             // Bump the stat the first time the editor is opened.
@@ -3651,6 +3657,11 @@ public class EditPostActivity extends AppCompatActivity implements
         } else if (mShowAztecEditor && mEditorFragment instanceof AztecEditorFragment) {
             mPostEditorAnalyticsSession.start(false);
         }
+    }
+
+    @Override
+    public void onEditorFragmentContentReady(boolean hasUnsupportedContent) {
+        mPostEditorAnalyticsSession.start(hasUnsupportedContent);
     }
 
     @Override
