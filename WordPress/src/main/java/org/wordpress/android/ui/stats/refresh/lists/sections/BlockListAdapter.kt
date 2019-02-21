@@ -39,8 +39,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BlockListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BarChartViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BlockListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ChartLegendViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.DividerViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.EmptyViewHolder
@@ -90,29 +90,18 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
     override fun onCreateViewHolder(parent: ViewGroup, itemType: Int): BlockListItemViewHolder {
         return when (values()[itemType]) {
             TITLE -> TitleViewHolder(parent)
-            LIST_ITEM_WITH_ICON -> ListItemWithIconViewHolder(
-                    parent,
-                    imageManager
-            )
+            LIST_ITEM_WITH_ICON -> ListItemWithIconViewHolder(parent, imageManager)
             LIST_ITEM -> ListItemViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             TEXT -> TextViewHolder(parent)
             COLUMNS -> FourColumnsViewHolder(parent)
             LINK -> LinkViewHolder(parent)
             BAR_CHART -> BarChartViewHolder(parent)
-            CHART_LEGEND -> ChartLegendViewHolder(
-                    parent
-            )
-            TABS -> TabsViewHolder(
-                    parent,
-                    imageManager
-            )
+            CHART_LEGEND -> ChartLegendViewHolder(parent)
+            TABS -> TabsViewHolder(parent, imageManager)
             INFO -> InformationViewHolder(parent)
             HEADER -> HeaderViewHolder(parent)
-            EXPANDABLE_ITEM -> ExpandableItemViewHolder(
-                    parent,
-                    imageManager
-            )
+            EXPANDABLE_ITEM -> ExpandableItemViewHolder(parent, imageManager)
             DIVIDER -> DividerViewHolder(parent)
             MAP -> MapViewHolder(parent)
             VALUE_ITEM -> ValueViewHolder(parent)
