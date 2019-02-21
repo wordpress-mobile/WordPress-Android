@@ -191,7 +191,9 @@ sealed class BlockListItemViewHolder(
     ) {
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(textItem: Text) {
-            val spannableString = SpannableString(textItem.text)
+            val loadedText = textItem.text
+                    ?: textItem.textResource?.let { text.resources.getString(textItem.textResource) } ?: ""
+            val spannableString = SpannableString(loadedText)
             textItem.links?.forEach { link ->
                 spannableString.withClickableSpan(text.context, link.link) {
                     link.navigationAction.click()

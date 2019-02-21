@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.arch.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
@@ -24,28 +25,30 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var baseListUseCase: BaseListUseCase
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var statsSectionManager: SelectedSectionManager
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var site: SiteModel
     private lateinit var viewModel: StatsViewModel
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
+        whenever(baseListUseCase.snackbarMessage).thenReturn(MutableLiveData())
         viewModel = StatsViewModel(
                 mapOf(StatsSection.DAYS to baseListUseCase),
                 Dispatchers.Unconfined,
                 selectedDateProvider,
                 statsSectionManager,
                 analyticsTracker,
+                networkUtilsWrapper,
                 resourceProvider
         )
 

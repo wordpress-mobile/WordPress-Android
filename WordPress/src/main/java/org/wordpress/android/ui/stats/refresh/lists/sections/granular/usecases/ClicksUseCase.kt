@@ -51,17 +51,16 @@ constructor(
 ) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_clicks))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = store.getClicks(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): ClicksModel? {
+        return store.getClicks(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
                 selectedDate
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<ClicksModel> {
         val response = store.fetchClicks(
                 site,
                 PAGE_SIZE,
@@ -72,10 +71,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.groups.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
@@ -89,7 +88,6 @@ constructor(
             items.add(Header(R.string.stats_clicks_link_label, R.string.stats_clicks_label))
             domainModel.groups.forEachIndexed { index, group ->
                 val headerItem = ListItemWithIcon(
-                        iconUrl = group.icon,
                         text = group.name,
                         value = group.views?.toFormattedString(),
                         showDivider = index < domainModel.groups.size - 1,
@@ -105,7 +103,6 @@ constructor(
                     if (isExpanded) {
                         items.addAll(group.clicks.map { click ->
                             ListItemWithIcon(
-                                    iconUrl = click.icon,
                                     text = click.name,
                                     value = click.views.toFormattedString(),
                                     showDivider = false,

@@ -570,7 +570,8 @@
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
-    <string name="site_settings_gutenberg_default_for_new_posts">Use block editor for new posts</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the block editor</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
@@ -1039,6 +1040,9 @@
 
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_select_next_period_description">Select next period</string>
+
+    <string name="stats_loading_error">Data not loaded</string>
+    <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>

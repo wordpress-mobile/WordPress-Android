@@ -3,14 +3,15 @@ package org.wordpress.android.ui.stats.refresh.lists
 import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.Dispatchers
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -23,6 +24,7 @@ abstract class StatsListViewModel(
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
+    private var isInitialized = false
 
     enum class StatsSection(@StringRes val titleRes: Int) {
         INSIGHTS(R.string.stats_insights),
@@ -34,7 +36,7 @@ abstract class StatsListViewModel(
 
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
 
-    val data: LiveData<List<StatsBlock>> by lazy { statsUseCase.data.throttle(this) }
+    val uiModel: LiveData<UiModel> = statsUseCase.data.throttle(this, distinct = true)
 
     val showDateSelector: LiveData<DateSelectorUiModel> = statsUseCase.showDateSelector.mapNullable {
         it ?: DateSelectorUiModel(false)
@@ -64,5 +66,25 @@ abstract class StatsListViewModel(
         launch(Dispatchers.Default) {
             statsUseCase.onPreviousDateSelected()
         }
+    }
+
+    fun onRetryClick(site: SiteModel) {
+        launch {
+            statsUseCase.refreshData(site, true)
+        }
+    }
+
+    fun start(site: SiteModel) {
+        if (!isInitialized) {
+            isInitialized = true
+            launch {
+                statsUseCase.loadData(site)
+            }
+        }
+    }
+
+    sealed class UiModel {
+        data class Success(val data: List<StatsBlock>) : UiModel()
+        class Error(val message: Int = R.string.stats_loading_error) : UiModel()
     }
 }
