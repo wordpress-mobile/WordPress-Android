@@ -193,8 +193,8 @@ class InsightsMapper
         val limitedEvents = nonNullData
                 .toList()
                 .sortedBy { (key, _) -> key }
-                .map { (key, value) -> PostingActivityModel.StreakEvent(Date(key), value) }
-                .takeWhile { event -> event.date > startDate && event.date < endDate }
+                .map { (key, value) -> PostingActivityModel.StreakEvent(Date(key * 1000), value) }
+                .filter { event -> event.date.after(startDate) && event.date.before(endDate) }
         return PostingActivityModel(streak, limitedEvents, limitedEvents.count() < nonNullData.count())
     }
 }
