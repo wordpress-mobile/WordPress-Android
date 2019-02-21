@@ -140,7 +140,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
             int resourceId;
             try {
-                resourceId = stringField.getInt(RString);
+                resourceId = stringField.getInt(rString);
             } catch (IllegalArgumentException | IllegalAccessException iae) {
                 AppLog.e(T.EDITOR, iae);
                 continue;
