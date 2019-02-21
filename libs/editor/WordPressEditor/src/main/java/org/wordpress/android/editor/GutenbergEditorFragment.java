@@ -165,7 +165,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnEditorMountListener() {
                     @Override
                     public void onEditorDidMount(boolean hasUnsupportedBlocks) {
-                        // TODO: add Tracks
+                        mEditorFragmentListener.onEditorFragmentContentReady(hasUnsupportedBlocks);
                     }
                 }
             );
