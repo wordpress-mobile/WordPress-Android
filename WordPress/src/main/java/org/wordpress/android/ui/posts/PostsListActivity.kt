@@ -147,7 +147,7 @@ class PostsListActivity : AppCompatActivity(),
                 tabLayout.getTabAt(tabIndex)?.select()
             }
         })
-        viewModel.scrollToLocalPostId.observe(this, Observer {targetLocalPostId ->
+        viewModel.scrollToLocalPostId.observe(this, Observer { targetLocalPostId ->
             targetLocalPostId?.let {
                 postsPagerAdapter.getItemAtPosition(pager.currentItem)?.scrollToTargetPost(targetLocalPostId)
             }
