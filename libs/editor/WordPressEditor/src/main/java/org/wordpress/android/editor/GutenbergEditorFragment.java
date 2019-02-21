@@ -122,10 +122,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         Resources defaultResources = new Resources(getActivity().getAssets(), metrics, configuration);
 
         Class<?> R_String;
-        String maingPackage = getActivity().getApplication().getClass().getPackage().getName();
+        Package mainPackage = getActivity().getApplication().getClass().getPackage();
+
+        if ( mainPackage == null ) {
+            return translations;
+        }
 
         try {
-            R_String = getActivity().getApplication().getClassLoader().loadClass(maingPackage+".R$string");
+            R_String = getActivity().getApplication().getClassLoader().loadClass(mainPackage.getName()+".R$string");
         } catch ( ClassNotFoundException ex ) {
             return translations;
         }
