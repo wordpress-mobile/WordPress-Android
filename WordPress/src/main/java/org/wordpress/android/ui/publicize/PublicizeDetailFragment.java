@@ -110,7 +110,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
         setTitle(mService.getLabel());
 
         // disable the ability to add another G+ connection
-        if (mService.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
+        if (isGooglePlus()) {
             mServiceCardView.setVisibility(View.GONE);
         } else {
             String serviceLabel = String.format(getString(R.string.connection_service_label), mService.getLabel());
@@ -121,31 +121,43 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
             TextView txtDescription = (TextView) mServiceCardView.findViewById(R.id.text_description);
             txtDescription.setText(description);
 
-            if (mService.getId().equals(PublicizeConstants.FACEBOOK_ID)) {
-                String noticeText = getString(R.string.connection_service_facebook_notice);
-                TextView txtNotice = (TextView) mServiceCardView.findViewById(R.id.text_description_notice);
-                txtNotice.setText(noticeText);
-                txtNotice.setVisibility(View.VISIBLE);
-
-                TextView learnMoreButton = (TextView) mServiceCardView.findViewById(R.id.learn_more_button);
-                learnMoreButton.setOnClickListener(new OnClickListener() {
-                    @Override public void onClick(View v) {
-                        WPWebViewActivity.openURL(getActivity(),
-                                FACEBOOK_SHARING_CHANGE_BLOG_POST);
-                    }
-                });
-                learnMoreButton.setVisibility(View.VISIBLE);
+            if (isFacebook()) {
+                showFacebookWarning();
             }
         }
 
         long currentUserId = mAccountStore.getAccount().getUserId();
         PublicizeConnectionAdapter adapter = new PublicizeConnectionAdapter(
-                getActivity(), mSite.getSiteId(), mServiceId, currentUserId);
+                getActivity(), mSite.getSiteId(), mService, currentUserId);
         adapter.setOnPublicizeActionListener(getOnPublicizeActionListener());
         adapter.setOnAdapterLoadedListener(this);
 
         mRecycler.setAdapter(adapter);
         adapter.refresh();
+    }
+
+    private boolean isGooglePlus() {
+        return mService.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID);
+    }
+
+    private boolean isFacebook() {
+        return mService.getId().equals(PublicizeConstants.FACEBOOK_ID);
+    }
+
+    private void showFacebookWarning() {
+        String noticeText = getString(R.string.connection_service_facebook_notice);
+        TextView txtNotice = (TextView) mServiceCardView.findViewById(R.id.text_description_notice);
+        txtNotice.setText(noticeText);
+        txtNotice.setVisibility(View.VISIBLE);
+
+        TextView learnMoreButton = (TextView) mServiceCardView.findViewById(R.id.learn_more_button);
+        learnMoreButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                WPWebViewActivity.openURL(getActivity(),
+                        FACEBOOK_SHARING_CHANGE_BLOG_POST);
+            }
+        });
+        learnMoreButton.setVisibility(View.VISIBLE);
     }
 
     private boolean hasOnPublicizeActionListener() {
