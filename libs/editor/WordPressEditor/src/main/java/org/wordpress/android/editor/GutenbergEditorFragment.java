@@ -121,26 +121,26 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         configuration.locale = defaultLocale;
         Resources defaultResources = new Resources(getActivity().getAssets(), metrics, configuration);
 
-        Class<?> R_String;
+        Class<?> RString;
         Package mainPackage = getActivity().getApplication().getClass().getPackage();
 
-        if ( mainPackage == null ) {
+        if (mainPackage == null) {
             return translations;
         }
 
         try {
-            R_String = getActivity().getApplication().getClassLoader().loadClass(mainPackage.getName()+".R$string");
-        } catch ( ClassNotFoundException ex ) {
+            RString = getActivity().getApplication().getClassLoader().loadClass(mainPackage.getName() + ".R$string");
+        } catch (ClassNotFoundException ex) {
             return translations;
         }
 
-        for (Field stringField : R_String.getDeclaredFields()) {
+        for (Field stringField : RString.getDeclaredFields()) {
             if (!stringField.getName().startsWith("gutenberg_mobile_")) {
                 continue;
             }
             int resourceId;
             try {
-                resourceId = stringField.getInt(R_String);
+                resourceId = stringField.getInt(RString);
             } catch (IllegalArgumentException | IllegalAccessException iae) {
                 AppLog.e(T.EDITOR, iae);
                 continue;
