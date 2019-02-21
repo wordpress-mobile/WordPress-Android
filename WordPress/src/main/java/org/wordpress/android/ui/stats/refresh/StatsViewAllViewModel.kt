@@ -2,10 +2,12 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -27,7 +29,8 @@ abstract class StatsViewAllViewModel(
     mainDispatcher: CoroutineDispatcher,
     protected val useCase: BaseListUseCase,
     private val dateFormatter: StatsDateFormatter,
-    private val selectedDateProvider: SelectedDateProvider
+    private val selectedDateProvider: SelectedDateProvider,
+    @StringRes val title: Int
 ) : StatsListViewModel(mainDispatcher, useCase) {
     companion object {
         fun get(type: StatsViewType, granularity: StatsGranularity?): Class<out StatsViewAllViewModel> {
@@ -205,7 +208,7 @@ class StatsViewAllCommentsViewModel
     @Named(VIEW_ALL_COMMENTS_USE_CASE) useCase: BaseListUseCase,
     dateFormatter: StatsDateFormatter,
     selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider)
+) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider, R.string.stats_view_comments)
 
 class StatsViewAllFollowersViewModel
 @Inject constructor(
@@ -213,7 +216,7 @@ class StatsViewAllFollowersViewModel
     @Named(VIEW_ALL_FOLLOWERS_USE_CASE) useCase: BaseListUseCase,
     dateFormatter: StatsDateFormatter,
     selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider)
+) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider, R.string.stats_view_followers)
 
 class StatsViewAllTagsAndCategoriesViewModel
 @Inject constructor(
@@ -221,7 +224,13 @@ class StatsViewAllTagsAndCategoriesViewModel
     @Named(VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE) useCase: BaseListUseCase,
     dateFormatter: StatsDateFormatter,
     selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider)
+) : StatsViewAllViewModel(
+        mainDispatcher,
+        useCase,
+        dateFormatter,
+        selectedDateProvider,
+        R.string.stats_view_tags_and_categories
+)
 
 // region ViewAllPostsAndPagesViewModels
 class DailyViewAllPostsAndPagesViewModel
@@ -230,7 +239,13 @@ class DailyViewAllPostsAndPagesViewModel
     @Named(DAILY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
     dateFormatter: StatsDateFormatter,
     selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider)
+) : StatsViewAllViewModel(
+        mainDispatcher,
+        useCase,
+        dateFormatter,
+        selectedDateProvider,
+        R.string.stats_view_top_posts_and_pages
+)
 
 class WeeklyViewAllPostsAndPagesViewModel
 @Inject constructor(
@@ -238,7 +253,13 @@ class WeeklyViewAllPostsAndPagesViewModel
     @Named(WEEKLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
     dateFormatter: StatsDateFormatter,
     selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider)
+) : StatsViewAllViewModel(
+        mainDispatcher,
+        useCase,
+        dateFormatter,
+        selectedDateProvider,
+        R.string.stats_view_top_posts_and_pages
+)
 
 class MonthlyViewAllPostsAndPagesViewModel
 @Inject constructor(
@@ -246,7 +267,13 @@ class MonthlyViewAllPostsAndPagesViewModel
     @Named(MONTHLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
     dateFormatter: StatsDateFormatter,
     selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider)
+) : StatsViewAllViewModel(
+        mainDispatcher,
+        useCase,
+        dateFormatter,
+        selectedDateProvider,
+        R.string.stats_view_top_posts_and_pages
+)
 
 class YearlyViewAllPostsAndPagesViewModel
 @Inject constructor(
@@ -254,5 +281,11 @@ class YearlyViewAllPostsAndPagesViewModel
     @Named(YEARLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
     dateFormatter: StatsDateFormatter,
     selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider)
+) : StatsViewAllViewModel(
+        mainDispatcher,
+        useCase,
+        dateFormatter,
+        selectedDateProvider,
+        R.string.stats_view_top_posts_and_pages
+)
 // endregion
