@@ -250,6 +250,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }
 
 configurations.all {
