@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView.LayoutManager
 import android.view.LayoutInflater
@@ -15,6 +17,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_date_selector.view.*
 import kotlinx.android.synthetic.main.stats_view_all_fragment.*
+import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
@@ -119,6 +122,12 @@ class StatsViewAllFragment : DaggerFragment() {
 
         initializeViews(savedInstanceState)
         initializeViewModels(nonNullActivity, savedInstanceState)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        (activity as AppCompatActivity).supportActionBar?.title = getString(viewModel.title)
     }
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
