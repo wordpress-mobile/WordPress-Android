@@ -386,11 +386,11 @@ public class EditPostActivity extends AppCompatActivity implements
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
     }
 
-    private void createPostEditorAnalyticsSessionTracker() {
+    private void createPostEditorAnalyticsSessionTracker(boolean showGutenbergEditor, PostModel post, SiteModel site) {
         if (mPostEditorAnalyticsSession == null) {
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
-                    mShowGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
-                    mPost, mSite);
+                    showGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
+                    post, site);
         }
     }
 
@@ -526,8 +526,8 @@ public class EditPostActivity extends AppCompatActivity implements
             mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENERG_IS_SHOWN);
         }
 
-        // ok now we are sure to have a valid Post, let's start the editing session tracker
-        createPostEditorAnalyticsSessionTracker();
+        // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
+        createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mPost, mSite);
 
         if (savedInstanceState == null) {
             // Bump the stat the first time the editor is opened.
