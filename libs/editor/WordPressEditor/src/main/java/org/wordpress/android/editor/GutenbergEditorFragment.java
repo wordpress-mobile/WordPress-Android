@@ -121,7 +121,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         configuration.locale = defaultLocale;
         Resources defaultResources = new Resources(getActivity().getAssets(), metrics, configuration);
 
-        Class<?> RString;
+        Class<?> rString;
         Package mainPackage = getActivity().getApplication().getClass().getPackage();
 
         if (mainPackage == null) {
@@ -129,12 +129,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         try {
-            RString = getActivity().getApplication().getClassLoader().loadClass(mainPackage.getName() + ".R$string");
+            rString = getActivity().getApplication().getClassLoader().loadClass(mainPackage.getName() + ".R$string");
         } catch (ClassNotFoundException ex) {
             return translations;
         }
 
-        for (Field stringField : RString.getDeclaredFields()) {
+        for (Field stringField : rString.getDeclaredFields()) {
             if (!stringField.getName().startsWith("gutenberg_mobile_")) {
                 continue;
             }
