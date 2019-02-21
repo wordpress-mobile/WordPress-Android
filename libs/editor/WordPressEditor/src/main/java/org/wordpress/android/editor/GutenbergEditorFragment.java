@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -30,10 +29,10 @@ import android.webkit.URLUtil;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
@@ -47,7 +46,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
-        View.OnTouchListener,
         EditorMediaUploadListener,
         IHistoryListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
@@ -55,8 +53,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
 
-    private boolean mEditorWasPaused = false;
-    private boolean mHideActionBarOnSoftKeyboardUp = false;
     private boolean mHtmlModeEnabled;
 
     private Handler mInvalidateOptionsHandler;
@@ -309,29 +305,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mEditorWasPaused = true;
-    }
-
     private void showImplicitKeyboard() {
         InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         keyboard.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // If the editor was previously paused and the current orientation is landscape,
-        // hide the actionbar because the keyboard is going to appear (even if it was hidden
-        // prior to being paused).
-        if (mEditorWasPaused
-                && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        }
     }
 
     @Override
@@ -605,63 +581,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Toggle action bar auto-hiding for the new orientation
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
-                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        } else {
-            mHideActionBarOnSoftKeyboardUp = false;
-            showActionBarIfNeeded();
-        }
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        // In landscape mode, if the title or content view has received a touch event, the keyboard will be
-        // displayed and the action bar should hide
-        if (event.getAction() == MotionEvent.ACTION_UP
-                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        }
-        return false;
-    }
-
-    /**
-     * Hide the action bar if needed. Don't hide it if
-     * - a hardware keyboard is connected.
-     * - the soft keyboard is not visible.
-     * - it's not visible.
-     */
-    private void hideActionBarIfNeeded() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
-        }
-        if (!isHardwareKeyboardPresent()
-                && mHideActionBarOnSoftKeyboardUp
-                && actionBar.isShowing()) {
-            getActionBar().hide();
-        }
-    }
-
-    /**
-     * Show the action bar if needed.
-     */
-    private void showActionBarIfNeeded() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
-        }
-        if (!actionBar.isShowing()) {
-            actionBar.show();
-        }
     }
 
     /**
