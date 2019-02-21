@@ -174,7 +174,7 @@ class StatsViewAllFragment : DaggerFragment() {
             return@observeEvent true
         }
 
-        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
+        viewModel.dateSelectorUiModel.observe(this, Observer { dateSelectorUiModel ->
             val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
             if (dateSelectionToolbar.visibility != dateSelectorVisibility) {
                 dateSelectionToolbar.visibility = dateSelectorVisibility

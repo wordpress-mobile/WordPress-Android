@@ -19,8 +19,7 @@ import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DateSelectorViewModel
 import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Named
@@ -28,8 +27,7 @@ import javax.inject.Named
 abstract class StatsViewAllViewModel(
     mainDispatcher: CoroutineDispatcher,
     protected val useCase: BaseListUseCase,
-    private val dateFormatter: StatsDateFormatter,
-    private val selectedDateProvider: SelectedDateProvider,
+    private val dateSelectorViewModel: DateSelectorViewModel,
     @StringRes val title: Int
 ) : StatsListViewModel(mainDispatcher, useCase) {
     companion object {
@@ -100,13 +98,12 @@ abstract class StatsViewAllViewModel(
         }
     }
 
-    val selectedDateChanged = selectedDateProvider.selectedDateChanged
+    val selectedDateChanged = dateSelectorViewModel.selectedDateChanged
 
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val mutableShowDateSelector = MutableLiveData<DateSelectorUiModel>()
-    val showDateSelector: LiveData<DateSelectorUiModel> = mutableShowDateSelector
+    val dateSelectorUiModel: LiveData<DateSelectorUiModel> = dateSelectorViewModel.uiModel
 
     private lateinit var site: SiteModel
     private var statsGranularity: StatsGranularity? = null
@@ -116,7 +113,7 @@ abstract class StatsViewAllViewModel(
         this.statsGranularity = granularity
 
         loadData {
-            updateDateSelector()
+            dateSelectorViewModel.updateDateSelector(statsGranularity)
             useCase.loadData(site)
         }
     }
@@ -135,32 +132,10 @@ abstract class StatsViewAllViewModel(
         _isRefreshing.value = false
     }
 
-    private fun updateDateSelector() {
-        val shouldShowDateSelection = statsGranularity != null
-        if (shouldShowDateSelection) {
-            statsGranularity?.let { granularity ->
-                val updatedDate = getDateLabelForSection(granularity)
-                val currentState = showDateSelector.value
-                if (!shouldShowDateSelection && currentState?.isVisible != false) {
-                    emitValue(currentState, DateSelectorUiModel(false))
-                } else {
-                    val updatedState = DateSelectorUiModel(
-                            shouldShowDateSelection,
-                            updatedDate,
-                            enableSelectPrevious = selectedDateProvider.hasPreviousDate(granularity),
-                            enableSelectNext = selectedDateProvider.hasNextData(granularity)
-                    )
-                    emitValue(currentState, updatedState)
-                }
-            }
-        } else {
-            emitValue(showDateSelector.value, DateSelectorUiModel(false))
-        }
-    }
 
     fun onSelectedDateChange() {
         loadData {
-            updateDateSelector()
+            dateSelectorViewModel.updateDateSelector(statsGranularity)
             useCase.refreshData(site)
         }
     }
@@ -168,7 +143,7 @@ abstract class StatsViewAllViewModel(
     fun onNextDateSelected() {
         launch(Dispatchers.Default) {
             statsGranularity?.let { granularity ->
-                selectedDateProvider.selectNextDate(granularity)
+                dateSelectorViewModel.onNextDateSelected(granularity)
             }
         }
     }
@@ -176,29 +151,9 @@ abstract class StatsViewAllViewModel(
     fun onPreviousDateSelected() {
         launch(Dispatchers.Default) {
             statsGranularity?.let { granularity ->
-                selectedDateProvider.selectPreviousDate(granularity)
+                dateSelectorViewModel.onPreviousDateSelected(granularity)
             }
         }
-    }
-
-    private fun emitValue(
-        currentState: DateSelectorUiModel?,
-        updatedState: DateSelectorUiModel
-    ) {
-        if (currentState == null ||
-                currentState.isVisible != updatedState.isVisible ||
-                currentState.date != updatedState.date ||
-                currentState.enableSelectNext != updatedState.enableSelectNext ||
-                currentState.enableSelectPrevious != updatedState.enableSelectPrevious) {
-            mutableShowDateSelector.value = updatedState
-        }
-    }
-
-    private fun getDateLabelForSection(granularity: StatsGranularity): String? {
-        return dateFormatter.printGranularDate(
-                selectedDateProvider.getSelectedDate(granularity) ?: selectedDateProvider.getCurrentDate(),
-                granularity
-        )
     }
 }
 
@@ -206,86 +161,49 @@ class StatsViewAllCommentsViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEW_ALL_COMMENTS_USE_CASE) useCase: BaseListUseCase,
-    dateFormatter: StatsDateFormatter,
-    selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider, R.string.stats_view_comments)
+    dateSelectorViewModel: DateSelectorViewModel
+) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_comments)
 
 class StatsViewAllFollowersViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEW_ALL_FOLLOWERS_USE_CASE) useCase: BaseListUseCase,
-    dateFormatter: StatsDateFormatter,
-    selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateFormatter, selectedDateProvider, R.string.stats_view_followers)
+    dateSelectorViewModel: DateSelectorViewModel
+) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_followers)
 
 class StatsViewAllTagsAndCategoriesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE) useCase: BaseListUseCase,
-    dateFormatter: StatsDateFormatter,
-    selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(
-        mainDispatcher,
-        useCase,
-        dateFormatter,
-        selectedDateProvider,
-        R.string.stats_view_tags_and_categories
-)
+    dateSelectorViewModel: DateSelectorViewModel
+) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_tags_and_categories)
 
 // region ViewAllPostsAndPagesViewModels
 class DailyViewAllPostsAndPagesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(DAILY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
-    dateFormatter: StatsDateFormatter,
-    selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(
-        mainDispatcher,
-        useCase,
-        dateFormatter,
-        selectedDateProvider,
-        R.string.stats_view_top_posts_and_pages
-)
+    dateSelectorViewModel: DateSelectorViewModel
+) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_top_posts_and_pages)
 
 class WeeklyViewAllPostsAndPagesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(WEEKLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
-    dateFormatter: StatsDateFormatter,
-    selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(
-        mainDispatcher,
-        useCase,
-        dateFormatter,
-        selectedDateProvider,
-        R.string.stats_view_top_posts_and_pages
-)
+    dateSelectorViewModel: DateSelectorViewModel
+) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_top_posts_and_pages)
 
 class MonthlyViewAllPostsAndPagesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(MONTHLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
-    dateFormatter: StatsDateFormatter,
-    selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(
-        mainDispatcher,
-        useCase,
-        dateFormatter,
-        selectedDateProvider,
-        R.string.stats_view_top_posts_and_pages
-)
+    dateSelectorViewModel: DateSelectorViewModel
+) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_top_posts_and_pages)
 
 class YearlyViewAllPostsAndPagesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(YEARLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
-    dateFormatter: StatsDateFormatter,
-    selectedDateProvider: SelectedDateProvider
-) : StatsViewAllViewModel(
-        mainDispatcher,
-        useCase,
-        dateFormatter,
-        selectedDateProvider,
-        R.string.stats_view_top_posts_and_pages
-)
+    dateSelectorViewModel: DateSelectorViewModel
+) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_top_posts_and_pages)
 // endregion
