@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsViewType
-import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DateSelectorViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DateSelectorViewModel
@@ -131,7 +131,6 @@ abstract class StatsViewAllViewModel(
 
         _isRefreshing.value = false
     }
-
 
     fun onSelectedDateChange() {
         loadData {

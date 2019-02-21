@@ -23,7 +23,11 @@ class DateSelectorViewModel
                 val updatedDate = getDateLabelForSection(granularity)
                 val currentState = _uiModel.value
                 if (!shouldShowDateSelection && currentState?.isVisible != false) {
-                    emitValue(currentState, DateSelectorUiModel(false))
+                    emitValue(currentState,
+                            DateSelectorUiModel(
+                                    false
+                            )
+                    )
                 } else {
                     val updatedState = DateSelectorUiModel(
                             shouldShowDateSelection,
