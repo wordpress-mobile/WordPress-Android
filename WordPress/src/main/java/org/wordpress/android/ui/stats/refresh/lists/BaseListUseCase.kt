@@ -52,7 +52,10 @@ class BaseListUseCase(
         }
     }.distinct()
 
-    val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(useCases.map { it.navigationTarget })
+    val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(
+            useCases.map { it.navigationTarget },
+            distinct = false
+    )
 
     private val mutableShowDateSelector = MutableLiveData<DateSelectorUiModel>()
     val showDateSelector: LiveData<DateSelectorUiModel> = mutableShowDateSelector
