@@ -745,7 +745,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
         cancelAddMediaListThread();
         removePostOpenInEditorStickyEvent();
-        savePostAndOptionallyFinish(false);
+        handlePostStatusForNewPost();
+        savePostLocallyAndFinishAsync(false);
 
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment) mEditorFragment).disableContentLogOnCrashes();
@@ -2032,19 +2033,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 definitelyDeleteBackspaceDeletedMediaItems();
 
                 if (shouldSave) {
-                    if (isNewPost() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
-                        // new post - user just left the editor without publishing, they probably want
-                        // to keep the post as a draft (unless they explicitly changed the status)
-                        mPost.setStatus(PostStatus.DRAFT.toString());
-                        if (mEditPostSettingsFragment != null) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mEditPostSettingsFragment.updatePostStatusRelatedViews();
-                                }
-                            });
-                        }
-                    }
+                    handlePostStatusForNewPost();
 
                     PostStatus status = PostStatus.fromPost(mPost);
                     boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
@@ -2066,6 +2055,22 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         }).start();
+    }
+
+    private void handlePostStatusForNewPost() {
+        if (isNewPost() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
+            // new post - user just left the editor without publishing, they probably want
+            // to keep the post as a draft (unless they explicitly changed the status)
+            mPost.setStatus(PostStatus.DRAFT.toString());
+            if (mEditPostSettingsFragment != null) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mEditPostSettingsFragment.updatePostStatusRelatedViews();
+                    }
+                });
+            }
+        }
     }
 
     private boolean shouldSavePost() {
