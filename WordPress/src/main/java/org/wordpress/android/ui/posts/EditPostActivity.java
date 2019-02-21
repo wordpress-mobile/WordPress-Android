@@ -2138,7 +2138,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         // Show the GB informative dialog on editing GB posts
                         showGutenbergInformativeDialog();
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
-                        String wpcomLocaleSlug = languageString.replace("_","-").toLowerCase();
+                        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase();
                         return GutenbergEditorFragment.newInstance("", "", mIsNewPost, wpcomLocaleSlug);
                     } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
