@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PagedListItemType
+import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
@@ -119,8 +120,7 @@ class PostListViewModel @Inject constructor(
     private var localPostIdForConflictResolutionDialog: Int? = null
     private var originalPostCopyForConflictUndo: PostModel? = null
     private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
-    // Initial target post to scroll to
-    private var targetLocalPostId: Int? = null
+    private var scrollToLocalPostId: Int? = null
 
     private val _postListAction = SingleLiveEvent<PostListAction>()
     val postListAction: LiveData<PostListAction> = _postListAction
@@ -136,6 +136,9 @@ class PostListViewModel @Inject constructor(
 
     private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
     val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
+
+    private val _scrollToPosition = SingleLiveEvent<Int>()
+    val scrollToPosition: LiveData<Int> = _scrollToPosition
 
     private val pagedListWrapper: PagedListWrapper<PostAdapterItem> by lazy {
         val listDescriptor = requireNotNull(listDescriptor) {
@@ -725,6 +728,38 @@ class PostListViewModel @Inject constructor(
                 R.string.snackbar_conflict_undo, undoAction, onDismissAction
         )
         _snackbarAction.postValue(snackbarHolder)
+    }
+
+    fun scrollToPost(localPostId: Int) {
+        val data = pagedListData.value
+        if (data != null) {
+            _scrollToPosition.value = findItemListPosition(data, localPostId)
+        } else {
+            // store the target post id and scroll there when the data is loaded
+            scrollToLocalPostId = localPostId
+        }
+    }
+
+    fun onDataUpdated(data: PagedPostList) {
+        val localPostId = scrollToLocalPostId
+        if (localPostId != null) {
+            scrollToLocalPostId = null
+            _scrollToPosition.value = findItemListPosition(data, localPostId) ?: run {
+                AppLog.e(AppLog.T.POSTS, "ScrollToPost failed - the post not found.")
+                null
+            }
+        }
+    }
+
+    private fun findItemListPosition(data: PagedPostList, localPostId: Int): Int? {
+        return data.listIterator().withIndex().asSequence().find { listItem ->
+            if (listItem.value is ReadyItem<PostAdapterItem>) {
+                val readyItem = listItem.value as ReadyItem<PostAdapterItem>
+                readyItem.item.data.localPostId == localPostId
+            } else {
+                false
+            }
+        }?.index
     }
 
     // Utils

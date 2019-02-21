@@ -141,6 +141,11 @@ class PostListFragment : Fragment() {
             val fragmentManager = requireNotNull(fragmentManager) { "FragmentManager can't be null at this point" }
             it?.show(nonNullActivity, fragmentManager, uiHelpers)
         })
+        viewModel.scrollToPosition.observe(this, Observer {
+            it?.let { index ->
+                recyclerView?.scrollToPosition(index)
+            }
+        })
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
@@ -257,6 +262,7 @@ class PostListFragment : Fragment() {
 
     private fun updatePagedListData(pagedListData: PagedPostList) {
         postListAdapter.submitList(pagedListData)
+        viewModel.onDataUpdated(pagedListData)
     }
 
     private fun updateEmptyViewForState(emptyViewState: PostListEmptyViewState) {
@@ -293,6 +299,10 @@ class PostListFragment : Fragment() {
 
     fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
+    }
+
+    fun scrollToTargetPost(localPostId: Int) {
+        viewModel.scrollToPost(localPostId)
     }
 
     companion object {

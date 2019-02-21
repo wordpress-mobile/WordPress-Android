@@ -17,7 +17,7 @@ class PostsPagerAdapter(
     override fun getCount(): Int = pages.size
 
     override fun getItem(position: Int): PostListFragment =
-            PostListFragment.newInstance(site, pages[position], null)
+            PostListFragment.newInstance(site, pages[position])
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val fragment = super.instantiateItem(container, position) as PostListFragment
