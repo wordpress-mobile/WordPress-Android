@@ -21,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapIt
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
@@ -105,6 +106,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             DIVIDER -> DividerViewHolder(parent)
             MAP -> MapViewHolder(parent)
             VALUE_ITEM -> ValueViewHolder(parent)
+            ACTIVITY_ITEM -> TODO()
         }
     }
 
