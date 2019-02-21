@@ -99,7 +99,7 @@
         this problem.</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
 
-    <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
+    <string name="error_generic_network">A network error occurred. Please check your connection and try again!</string>
 
     <string name="notification_login_title_success">Logged in!</string>
     <string name="notification_logged_in">Tap to continue.</string>
