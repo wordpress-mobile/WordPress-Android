@@ -107,20 +107,32 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return mRetainedGutenbergContainerFragment;
     }
 
+    /**
+     * Returns the gutenberg-mobile specific translations
+     *
+     * @return Bundle a map of "english string" => [ "current locale string" ]
+     */
     public Bundle getTranslations() {
         Bundle translations = new Bundle();
         Locale defaultLocale = new Locale("en");
         Resources currentResources = getResources();
         Configuration configuration = currentResources.getConfiguration();
+        // if the current locale of the app is english stop here and return an empty map
         if (configuration.locale.equals(defaultLocale)) {
             return translations;
         }
 
+        // Let's create a Resources object for the default locale (english) to get the original values for our strings
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         configuration.locale = defaultLocale;
         Resources defaultResources = new Resources(getActivity().getAssets(), metrics, configuration);
 
+        // Strings are only being translated in the WordPress package
+        // thus we need to get a reference of the R class for this package
+        // Here we assume the Application class is at the same level as the R class
+        // It will not work if this lib is used outside of WordPress-Android,
+        // in this case let's just return an empty map
         Class<?> rString;
         Package mainPackage = getActivity().getApplication().getClass().getPackage();
 
@@ -135,9 +147,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         for (Field stringField : rString.getDeclaredFields()) {
+            // Filter out all strings that are not prefixed with `gutenberg_mobile_`
             if (!stringField.getName().startsWith("gutenberg_mobile_")) {
                 continue;
             }
+            // Get the integer reference of the string
             int resourceId;
             try {
                 resourceId = stringField.getInt(rString);
@@ -146,6 +160,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 continue;
             }
 
+            // Add the mapping english => [ translated ] to the bundle if both string are not empty
             String currentResourceString = currentResources.getString(resourceId);
             String defaultResourceString = defaultResources.getString(resourceId);
             if (currentResourceString.length() > 0 && defaultResourceString.length() > 0) {
