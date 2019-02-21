@@ -14,9 +14,9 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -60,9 +60,9 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private val wordPressLabel = "wordpress"
     private val blockPageSize = 6
     private val viewAllPageSize = 10
-    private val blockInitialMode = FetchMode.Paged(blockPageSize, false)
-    private val viewAllInitialLoadMode = FetchMode.Paged(viewAllPageSize, false)
-    private val viewAllMoreLoadMode = FetchMode.Paged(viewAllPageSize, true)
+    private val blockInitialMode = PagedMode(blockPageSize, false)
+    private val viewAllInitialLoadMode = PagedMode(viewAllPageSize, false)
+    private val viewAllMoreLoadMode = PagedMode(viewAllPageSize, true)
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
