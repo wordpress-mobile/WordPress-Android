@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -17,7 +16,6 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_date_selector.view.*
 import kotlinx.android.synthetic.main.stats_view_all_fragment.*
-import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
