@@ -66,6 +66,33 @@ public class PublicizeActions {
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
+    public static void reconnect(@NonNull final PublicizeConnection connection) {
+        String path = String.format(Locale.ROOT,
+                "sites/%d/publicize-connections/%d/delete", connection.siteId, connection.connectionId);
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                AppLog.d(AppLog.T.SHARING, "disconnect succeeded");
+                EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.RECONNECT,
+                        connection.getService()));
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.SHARING, volleyError);
+                PublicizeTable.addOrUpdateConnection(connection);
+                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.RECONNECT,
+                        connection.getService()));
+            }
+        };
+
+        // delete connection immediately - will be restored upon failure
+        PublicizeTable.deleteConnection(connection.connectionId);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
+    }
+
     /*
      * create a new publicize service connection for a specific site
      */

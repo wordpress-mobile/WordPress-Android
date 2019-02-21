@@ -245,7 +245,8 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onRequestReconnect(PublicizeService service, PublicizeConnection publicizeConnection) {
-        showWebViewFragment(service, publicizeConnection);
+        PublicizeActions.reconnect(publicizeConnection);
+        showWebViewFragment(service, null);
     }
 
     /*
@@ -298,17 +299,20 @@ public class PublicizeListActivity extends AppCompatActivity
             return;
         }
 
-        closeWebViewFragment();
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+        if (event.getAction() != ConnectAction.RECONNECT) {
+            closeWebViewFragment();
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+            reloadDetailFragment();
         }
-        reloadDetailFragment();
 
         if (event.didSucceed()) {
             Map<String, Object> analyticsProperties = new HashMap<>();
             analyticsProperties.put("service", event.getService());
 
-            if (event.getAction() == ConnectAction.CONNECT || event.getAction() == ConnectAction.RECONNECT) {
+
+            if (event.getAction() == ConnectAction.CONNECT) {
                 AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_CONNECTED, mSite, analyticsProperties);
             } else if (event.getAction() == ConnectAction.DISCONNECT) {
                 AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_DISCONNECTED, mSite, analyticsProperties);

@@ -65,19 +65,19 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 
 
 #####################################################################################
-# update_ps_strings 
+# update_appstore_strings 
 # -----------------------------------------------------------------------------------
 # This lane gets the data from the txt files in the WordPress/metadata/ folder
 # and updates the .po file that is then picked by GlotPress for translations.
 # -----------------------------------------------------------------------------------
 # Usage:
-# fastlane update_ps_strings version:<version>
+# fastlane update_appstore_strings version:<version>
 #
 # Example:
-# fastlane update_ps_strings version:10.3
+# fastlane update_appstore_strings version:10.3
 #####################################################################################
   desc "Updates the PlayStoreStrings.po file"
-  lane :update_ps_strings do |options| 
+  lane :update_appstore_strings do |options| 
     prj_folder = Dir.pwd + "/.."
 
     files = {
