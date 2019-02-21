@@ -115,18 +115,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public Bundle getTranslations() {
         Bundle translations = new Bundle();
         Locale defaultLocale = new Locale("en");
-        Resources currentResources = getResources();
-        Configuration configuration = currentResources.getConfiguration();
+        Resources currentResources = getActivity().getApplicationContext().getResources();
+        Configuration currentConfiguration = currentResources.getConfiguration();
         // if the current locale of the app is english stop here and return an empty map
-        if (configuration.locale.equals(defaultLocale)) {
+        if (currentConfiguration.locale.equals(defaultLocale)) {
             return translations;
         }
 
         // Let's create a Resources object for the default locale (english) to get the original values for our strings
         DisplayMetrics metrics = new DisplayMetrics();
+        Configuration defaultLocaleConfiguration = new Configuration(currentConfiguration);
+        defaultLocaleConfiguration.setLocale(defaultLocale);
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        configuration.locale = defaultLocale;
-        Resources defaultResources = new Resources(getActivity().getAssets(), metrics, configuration);
+        Resources defaultResources = new Resources(getActivity().getAssets(), metrics, defaultLocaleConfiguration);
 
         // Strings are only being translated in the WordPress package
         // thus we need to get a reference of the R class for this package
@@ -147,16 +148,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         for (Field stringField : rString.getDeclaredFields()) {
-            // Filter out all strings that are not prefixed with `gutenberg_mobile_`
-            if (!stringField.getName().startsWith("gutenberg_mobile_")) {
-                continue;
-            }
-            // Get the integer reference of the string
             int resourceId;
             try {
                 resourceId = stringField.getInt(rString);
             } catch (IllegalArgumentException | IllegalAccessException iae) {
                 AppLog.e(T.EDITOR, iae);
+                continue;
+            }
+
+            String fieldName = stringField.getName();
+            // Filter out all strings that are not prefixed with `gutenberg_mobile_`
+            if (!fieldName.startsWith("gutenberg_mobile_")) {
                 continue;
             }
 
