@@ -68,13 +68,13 @@ class FollowersUseCase
         fetchData(site, forced, PagedMode(itemsToLoad, false))
     }
 
-    private suspend fun fetchData(site: SiteModel, forced: Boolean, fetchMode: PagedMode) {
+    private suspend fun fetchData(site: SiteModel, forced: Boolean, pagedMode: PagedMode) {
         lastSite = site
         val deferredWpComResponse = GlobalScope.async {
-            followersStore.fetchWpComFollowers(site, fetchMode, forced)
+            followersStore.fetchWpComFollowers(site, pagedMode, forced)
         }
         val deferredEmailResponse = GlobalScope.async {
-            followersStore.fetchEmailFollowers(site, fetchMode, forced)
+            followersStore.fetchEmailFollowers(site, pagedMode, forced)
         }
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
