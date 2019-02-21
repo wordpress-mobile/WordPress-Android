@@ -745,6 +745,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
         cancelAddMediaListThread();
         removePostOpenInEditorStickyEvent();
+        savePostAndOptionallyFinish(false);
+
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment) mEditorFragment).disableContentLogOnCrashes();
         }
