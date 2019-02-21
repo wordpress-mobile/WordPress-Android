@@ -72,7 +72,11 @@ class TagsAndCategoriesUseCase
 
     override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_insights_tags_and_categories))
+
+        if (useCaseMode == BLOCK) {
+            items.add(Title(R.string.stats_insights_tags_and_categories))
+        }
+
         if (domainModel.tags.isEmpty()) {
             items.add(Empty())
         } else {

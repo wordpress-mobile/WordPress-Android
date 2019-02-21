@@ -88,7 +88,10 @@ constructor(
 
     override fun buildUiModel(domainModel: PostAndPageViewsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(string.stats_posts_and_pages))
+
+        if (useCaseMode == BLOCK) {
+            items.add(Title(string.stats_posts_and_pages))
+        }
 
         if (domainModel.views.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))

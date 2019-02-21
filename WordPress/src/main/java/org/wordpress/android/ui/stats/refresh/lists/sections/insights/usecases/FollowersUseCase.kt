@@ -18,6 +18,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -97,7 +98,11 @@ class FollowersUseCase
         val wpComModel = domainModel.first
         val emailModel = domainModel.second
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(string.stats_view_followers))
+
+        if (useCaseMode == BLOCK) {
+            items.add(Title(string.stats_view_followers))
+        }
+
         if (domainModel.first.followers.isNotEmpty() || domainModel.second.followers.isNotEmpty()) {
             items.add(
                     TabsItem(
