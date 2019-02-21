@@ -166,7 +166,7 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
+        viewModel.dateSelectorUiModel.observe(this, Observer { dateSelectorUiModel ->
             val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
             if (date_selection_toolbar.visibility != dateSelectorVisibility) {
                 date_selection_toolbar.visibility = dateSelectorVisibility

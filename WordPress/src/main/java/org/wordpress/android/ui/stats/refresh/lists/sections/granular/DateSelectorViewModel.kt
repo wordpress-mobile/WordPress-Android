@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import javax.inject.Inject
 
@@ -67,4 +66,11 @@ class DateSelectorViewModel
                 granularity
         )
     }
+
+    data class DateSelectorUiModel(
+        val isVisible: Boolean = false,
+        val date: String? = null,
+        val enableSelectPrevious: Boolean = false,
+        val enableSelectNext: Boolean = false
+    )
 }

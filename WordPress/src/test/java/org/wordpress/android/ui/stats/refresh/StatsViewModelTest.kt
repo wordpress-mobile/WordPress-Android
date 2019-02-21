@@ -18,7 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DateSelectorViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
@@ -110,7 +110,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Test
     fun `hides date selector on insights screen`() {
         var model: DateSelectorUiModel? = null
-        viewModel.showDateSelector.observeForever { model = it }
+        viewModel.dateSelectorUiModel.observeForever { model = it }
 
         viewModel.onSectionSelected(INSIGHTS)
 
@@ -121,7 +121,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Test
     fun `does not reemit hidden date selector`() {
         val models = mutableListOf<DateSelectorUiModel>()
-        viewModel.showDateSelector.observeForever { model -> model?.let { models.add(it) } }
+        viewModel.dateSelectorUiModel.observeForever { model -> model?.let { models.add(it) } }
 
         viewModel.onSectionSelected(INSIGHTS)
 
@@ -142,7 +142,7 @@ class StatsViewModelTest : BaseUnitTest() {
         whenever(selectedDateProvider.hasPreviousDate(statsGranularity)).thenReturn(true)
         whenever(selectedDateProvider.hasNextData(statsGranularity)).thenReturn(true)
         var model: DateSelectorUiModel? = null
-        viewModel.showDateSelector.observeForever { model = it }
+        viewModel.dateSelectorUiModel.observeForever { model = it }
 
         viewModel.onSectionSelected(DAYS)
 
@@ -163,7 +163,7 @@ class StatsViewModelTest : BaseUnitTest() {
         whenever(selectedDateProvider.hasNextData(statsGranularity)).thenReturn(true)
         whenever(statsSectionManager.getSelectedSection()).thenReturn(DAYS)
         var model: DateSelectorUiModel? = null
-        viewModel.showDateSelector.observeForever { model = it }
+        viewModel.dateSelectorUiModel.observeForever { model = it }
 
         viewModel.onSectionSelected(DAYS)
 
