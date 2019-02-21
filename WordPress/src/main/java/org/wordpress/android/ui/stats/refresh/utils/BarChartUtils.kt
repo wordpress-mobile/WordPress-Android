@@ -31,6 +31,7 @@ fun BarChart.draw(
     labelEnd: TextView
 ) {
     resetChart()
+    this.setNoDataText("")
     val graphWidth = DisplayUtils.pxToDp(context, width)
     val columnNumber = (graphWidth / 24) - 1
     val count = if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT

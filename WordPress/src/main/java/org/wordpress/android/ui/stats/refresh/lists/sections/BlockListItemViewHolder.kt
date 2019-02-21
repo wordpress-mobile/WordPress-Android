@@ -61,8 +61,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.utils.draw
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
-import org.wordpress.android.util.image.ImageType.IMAGE
+import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
+import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.util.setVisible
 
 sealed class BlockListItemViewHolder(
@@ -510,7 +510,7 @@ sealed class BlockListItemViewHolder(
             }
             item.iconUrl != null -> {
                 this.visibility = View.VISIBLE
-                imageManager.load(this, IMAGE, item.iconUrl)
+                imageManager.load(this, ICON, item.iconUrl)
             }
             else -> this.visibility = View.GONE
         }
@@ -527,7 +527,7 @@ sealed class BlockListItemViewHolder(
             }
             item.iconUrl != null -> {
                 this.visibility = View.VISIBLE
-                imageManager.loadIntoCircle(this, AVATAR_WITHOUT_BACKGROUND, item.iconUrl)
+                imageManager.loadIntoCircle(this, AVATAR_WITH_BACKGROUND, item.iconUrl)
             }
             else -> this.visibility = View.GONE
         }
