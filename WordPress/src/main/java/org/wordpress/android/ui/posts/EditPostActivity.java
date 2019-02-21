@@ -410,8 +410,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
-        // AppPrefs.setAztecEditorAvailable(true);
-        // AppPrefs.setAztecEditorEnabled(true);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
@@ -450,8 +448,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
                 newPostSetup();
             } else if (extras != null) {
-                // Load post passed in extras
-                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
+                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID)); // Load post from extras
 
                 if (mPost != null) {
                     initializePostObject();
@@ -476,8 +473,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
             showDialogProgress(mIsDialogProgressShown);
 
-            // if we have a remote id saved, let's first try with that, as the local Id might have changed
-            // after FETCH_POSTS
+            // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
             if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {
                 mPost = mPostStore.getPostByRemotePostId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID), mSite);
                 initializePostObject();
@@ -544,9 +540,8 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
         } else {
-            // if we are opening a Post for which an error notification exists, we need to remove
-            // it from the dashboard to prevent the user from tapping RETRY on a Post that is
-            // being currently edited
+            // if we are opening a Post for which an error notification exists, we need to remove it from the dashboard
+            // to prevent the user from tapping RETRY on a Post that is being currently edited
             UploadService.cancelFinalNotification(this, mPost);
             resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
@@ -560,9 +555,8 @@ public class EditPostActivity extends AppCompatActivity implements
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setPagingEnabled(false);
 
-        // When swiping between different sections, select the corresponding
-        // tab. We can also use ActionBar.Tab#select() to do this if we have
-        // a reference to the Tab.
+        // When swiping between different sections, select the corresponding tab. We can also use ActionBar.Tab#select()
+        // to do this if we have a reference to the Tab.
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -2211,7 +2205,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (mShowGutenbergEditor) {
                         // Show the GB informative dialog on editing GB posts
                         showGutenbergInformativeDialog();
-                        return GutenbergEditorFragment.newInstance("", "", mIsNewPost);
+                        String languageString = LocaleManager.getLanguage(EditPostActivity.this);
+                        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+                        return GutenbergEditorFragment.newInstance("", "", mIsNewPost, wpcomLocaleSlug);
                     } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());
