@@ -44,6 +44,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         item: BarChartItem,
         barSelected: Boolean
     ) {
+        chart.setNoDataText("")
         GlobalScope.launch(Dispatchers.Main) {
             delay(50)
             chart.draw(item, labelStart, labelEnd)

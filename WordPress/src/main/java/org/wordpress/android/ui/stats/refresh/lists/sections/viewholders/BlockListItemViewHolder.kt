@@ -56,7 +56,7 @@ open class BlockListItemViewHolder(
             }
             item.iconUrl != null -> {
                 this.visibility = View.VISIBLE
-                imageManager.load(this, IMAGE, item.iconUrl)
+                imageManager.load(this, ICON, item.iconUrl)
             }
             else -> this.visibility = View.GONE
         }
@@ -74,7 +74,7 @@ open class BlockListItemViewHolder(
             item.iconUrl != null -> {
                 this.visibility = View.VISIBLE
                 imageManager.loadIntoCircle(this,
-                        AVATAR_WITHOUT_BACKGROUND, item.iconUrl)
+                        AVATAR_WITH_BACKGROUND, item.iconUrl)
             }
             else -> this.visibility = View.GONE
         }
