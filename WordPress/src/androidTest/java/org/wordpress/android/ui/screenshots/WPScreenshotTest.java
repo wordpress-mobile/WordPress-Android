@@ -44,7 +44,7 @@ import static org.wordpress.android.support.WPSupportUtils.waitForSwipeRefreshLa
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class WPScreenshotTest extends BaseTest  {
+public class WPScreenshotTest extends BaseTest {
     @ClassRule
     public static final WPLocaleTestRule LOCALE_TEST_RULE = new WPLocaleTestRule();
 

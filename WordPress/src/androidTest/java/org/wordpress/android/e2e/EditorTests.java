@@ -14,13 +14,11 @@ import org.wordpress.android.ui.WPLaunchActivity;
 import static org.wordpress.android.BuildConfig.E2E_DEFAULT_USER_SITE_ADDRESS;
 
 public class EditorTests extends BaseTest {
-
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
     @Test
     public void testPublishPost() {
-
         String title = "Title";
         String content = "Content";
 
@@ -37,8 +35,6 @@ public class EditorTests extends BaseTest {
                 .enterTitle(title)
                 .enterContent(content)
                 .publishPost();
-
-        new MySitesPage();
 
         // Unfortunately it seems to take quite a while to upload, this shouldn't be necessary once we're mocking
         sleep(10000);

@@ -11,7 +11,6 @@ import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class LoginFlow {
-
     public void login() {
         // If we're already logged in, log out before starting
         if (!isElementDisplayed(R.id.login_button)) {
