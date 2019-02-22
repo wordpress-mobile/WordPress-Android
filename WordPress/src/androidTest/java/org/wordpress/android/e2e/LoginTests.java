@@ -11,7 +11,6 @@ import static org.wordpress.android.BuildConfig.E2E_DEFAULT_USER_USERNAME;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTests extends BaseTest {
-
     @Test
     public void testWPComLoginLogout() {
         wpLogin();
@@ -20,6 +19,4 @@ public class LoginTests extends BaseTest {
         new MePage().go().verifyUsername(E2E_DEFAULT_USER_USERNAME);
         wpLogout();
     }
-
-
 }

@@ -15,11 +15,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 public class AppSettingsPage {
-
     private static ViewInteraction appSettingsLabel = onView(withText("App Settings"));
     private static ViewInteraction backArrow = onView(withContentDescription("Navigate up"));
 
-    private static ViewInteraction editorTypeButton = onView(allOf(withId(android.R.id.summary), hasSibling(withText("Set editor type"))));
+    private static ViewInteraction editorTypeButton = onView(allOf(withId(android.R.id.summary),
+            hasSibling(withText("Set editor type"))));
 
     public AppSettingsPage() {
         appSettingsLabel.check(matches(isDisplayed()));

@@ -10,8 +10,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 
 public class SnackbarComponent {
-
-    private static ViewInteraction publishConfirmation = onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("Post published")));
+    private static ViewInteraction publishConfirmation = onView(allOf(withId(android.support.design.R.id.snackbar_text),
+            withText("Post published")));
 
     public void verifyPostPublished() {
         publishConfirmation.check(matches(isDisplayed()));
