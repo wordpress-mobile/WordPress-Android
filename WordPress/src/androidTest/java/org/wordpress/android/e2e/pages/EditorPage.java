@@ -5,15 +5,15 @@ import android.support.test.espresso.action.ViewActions;
 
 import org.wordpress.android.R;
 
-import static android.support.test.espresso.matcher.RootMatchers.isDialog;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 public class EditorPage {
@@ -21,7 +21,7 @@ public class EditorPage {
 
     private static ViewInteraction editor = onView(withId(R.id.aztec));
 
-    private static ViewInteraction titleField = onView(allOf(withId(R.id.title), withContentDescription("Title")));
+    private static ViewInteraction titleField = onView(allOf(withId(R.id.title), withHint("Title")));
 
     public EditorPage() {
         editor.check(matches(isDisplayed()));
