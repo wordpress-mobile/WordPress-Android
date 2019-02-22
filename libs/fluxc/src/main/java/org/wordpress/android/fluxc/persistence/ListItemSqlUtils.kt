@@ -24,13 +24,22 @@ class ListItemSqlUtils @Inject constructor() {
     /**
      * This function returns a list of [ListItemModel] records for the given [listId].
      */
-    fun getListItems(listId: Int): List<ListItemModel> =
+    fun getListItems(listId: Int): List<ListItemModel> = getListItemsQuery(listId).asModel
+
+    /**
+     * This function returns the number of records a list has for the given [listId].
+     */
+    fun getListItemsCount(listId: Int): Long = getListItemsQuery(listId).count()
+
+    /**
+     * A helper function that returns the select query for a list of [ListItemModel] records for the given [listId].
+     */
+    private fun getListItemsQuery(listId: Int): SelectQuery<ListItemModel> =
             WellSql.select(ListItemModel::class.java)
                     .where()
                     .equals(ListItemModelTable.LIST_ID, listId)
                     .endWhere()
                     .orderBy(ListModelTable.ID, SelectQuery.ORDER_ASCENDING)
-                    .asModel
 
     /**
      * This function deletes [ListItemModel] records for the [listIds].
