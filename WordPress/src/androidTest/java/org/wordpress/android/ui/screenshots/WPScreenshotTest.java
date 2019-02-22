@@ -25,24 +25,24 @@ import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINUSERNAME;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOn;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOnChildAtIndex;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.focusEditPostTitle;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.getCurrentActivity;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.isElementDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.populateTextField;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.pressBackUntilElementIsDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.scrollToThenClickOn;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.selectItemAtIndexInSpinner;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementOfTypeToBeDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementWithIdToBeDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForConditionToBeTrue;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToBeDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToBeDisplayedWithoutFailure;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToNotBeDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForImagesOfTypeWithPlaceholder;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForRecyclerViewToStopReloading;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForSwipeRefreshLayoutToStopReloading;
+import static org.wordpress.android.support.WPScreenshotSupport.clickOn;
+import static org.wordpress.android.support.WPScreenshotSupport.clickOnChildAtIndex;
+import static org.wordpress.android.support.WPScreenshotSupport.focusEditPostTitle;
+import static org.wordpress.android.support.WPScreenshotSupport.getCurrentActivity;
+import static org.wordpress.android.support.WPScreenshotSupport.isElementDisplayed;
+import static org.wordpress.android.support.WPScreenshotSupport.populateTextField;
+import static org.wordpress.android.support.WPScreenshotSupport.pressBackUntilElementIsDisplayed;
+import static org.wordpress.android.support.WPScreenshotSupport.scrollToThenClickOn;
+import static org.wordpress.android.support.WPScreenshotSupport.selectItemAtIndexInSpinner;
+import static org.wordpress.android.support.WPScreenshotSupport.waitForAtLeastOneElementOfTypeToBeDisplayed;
+import static org.wordpress.android.support.WPScreenshotSupport.waitForAtLeastOneElementWithIdToBeDisplayed;
+import static org.wordpress.android.support.WPScreenshotSupport.waitForConditionToBeTrue;
+import static org.wordpress.android.support.WPScreenshotSupport.waitForElementToBeDisplayed;
+import static org.wordpress.android.support.WPScreenshotSupport.waitForElementToBeDisplayedWithoutFailure;
+import static org.wordpress.android.support.WPScreenshotSupport.waitForElementToNotBeDisplayed;
+import static org.wordpress.android.support.WPScreenshotSupport.waitForImagesOfTypeWithPlaceholder;
+import static org.wordpress.android.support.WPScreenshotSupport.waitForRecyclerViewToStopReloading;
+import static org.wordpress.android.support.WPScreenshotSupport.waitForSwipeRefreshLayoutToStopReloading;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)

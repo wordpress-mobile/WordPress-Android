@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.screenshots.support;
+package org.wordpress.android.support;
 
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
