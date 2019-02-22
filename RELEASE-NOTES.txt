@@ -5,3 +5,4 @@
 * Fixed an issue where posts show up as scheduled even after they are published
 
 * Add Visitors overlay to the Overview block in Stats
+* Change Stats design to flat on smaller devices

@@ -168,7 +168,12 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     protected abstract fun buildLoadingItem(): List<BlockListItem>
 
     protected open fun buildErrorItem(): List<BlockListItem> {
-        return buildLoadingItem() + listOf(BlockListItem.Text(textResource = R.string.stats_loading_block_error))
+        return buildLoadingItem() + listOf(
+                BlockListItem.Text(
+                        textResource = R.string.stats_loading_block_error,
+                        isLast = true
+                )
+        )
     }
 
     protected open fun buildEmptyItem(): List<BlockListItem> {

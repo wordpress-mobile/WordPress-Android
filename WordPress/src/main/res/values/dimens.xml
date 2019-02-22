@@ -393,6 +393,12 @@
     <dimen name="stats_header_height">32dp</dimen>
     <dimen name="stats_bar_chart_height">180dp</dimen>
     <dimen name="stats_block_icon_size">24dp</dimen>
+    <dimen name="stats_list_card_horizontal_spacing">0dp</dimen>
+    <dimen name="stats_list_card_top_spacing">0dp</dimen>
+    <dimen name="stats_list_card_bottom_spacing">16dp</dimen>
+    <dimen name="stats_list_card_first_spacing">0dp</dimen>
+    <dimen name="stats_list_card_last_spacing">16dp</dimen>
+    <dimen name="stats_list_item_left_margin">56dp</dimen>
 
     <dimen name="settings_icon_size">24dp</dimen>
 
