@@ -39,7 +39,7 @@ public class NativeNotificationsUtils {
 
     public static NotificationCompat.Builder getBuilder(Context context, String channelId) {
         return new NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                 .setColor(context.getResources().getColor(R.color.blue_wordpress))
                 .setContentTitle(context.getString(R.string.app_name))
                 .setAutoCancel(true);

@@ -19,14 +19,14 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.automattic:tracks:1.1.5'
+    implementation 'com.automattic:tracks:1.1.6'
     implementation 'org.wordpress:utils:1.19.0'
 
     lintChecks 'org.wordpress:lint:1.0.1'
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion "28.0.3"
 
     defaultConfig {

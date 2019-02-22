@@ -9,6 +9,7 @@
         <attr name="maxSummaryLines" format="integer" />
         <attr name="longClickHint" />
         <attr name="dialogMessage" format="string" />
+        <attr name="iconTint" format="color" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->

@@ -65,7 +65,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private DetailListPreference mImageMaxSizePref;
     private DetailListPreference mImageQualityPref;
     private WPSwitchPreference mOptimizedVideo;
-    private WPSwitchPreference mEnableGutenberg;
+    private WPSwitchPreference mGutenbergDefaultForNewPosts;
     private DetailListPreference mVideoWidthPref;
     private DetailListPreference mVideoEncorderBitratePref;
     private PreferenceScreen mPrivacySettings;
@@ -135,9 +135,9 @@ public class AppSettingsFragment extends PreferenceFragment
                 (WPSwitchPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
 
-        mEnableGutenberg =
+        mGutenbergDefaultForNewPosts =
                 (WPSwitchPreference) WPPrefUtils
-                        .getPrefAndSetChangeListener(this, R.string.pref_key_enable_gutenberg, this);
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_gutenberg_default_for_new_posts, this);
         mVideoWidthPref =
                 (DetailListPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
@@ -168,14 +168,12 @@ public class AppSettingsFragment extends PreferenceFragment
                                      String.valueOf(AppPrefs.getVideoOptimizeQuality()),
                                      getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
 
-        mEnableGutenberg.setChecked(AppPrefs.isGutenbergEditorEnabled());
+        mGutenbergDefaultForNewPosts.setChecked(AppPrefs.isGutenbergDefaultForNewPosts());
         mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
 
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
         }
-
-        updateEditorSettings();
     }
 
     private void removeExperimentalCategory() {
@@ -307,8 +305,10 @@ public class AppSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
                                          newValue.toString(),
                                          getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
-        } else if (preference == mEnableGutenberg) {
-            AppPrefs.enableGutenbergEditor((Boolean) newValue);
+        } else if (preference == mGutenbergDefaultForNewPosts) {
+            AppPrefs.setGutenbergDefaultForNewPosts((Boolean) newValue);
+            // we need to refresh metadata as gutenberg_enabled is now part of the user data
+            AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
         }

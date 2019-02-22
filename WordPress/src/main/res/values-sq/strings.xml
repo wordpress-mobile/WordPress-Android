@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-16 19:07:19+0000
+Translation-Revision-Date: 2019-01-29 18:29:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Po shfaqet paraparje sajti</string>
+    <string name="new_site_creation_clear_all_content_description">Pastroje</string>
+    <string name="site_created_but_not_fetched_snackbar_message">Duket sikur gjendeni në një lidhje të ngadaltë. Nëse nuk e shihni sajtin e ri te lista, provoni rifreskimin.</string>
+    <string name="cancel_new_site_wizard_content_description">Anuloje Mekanizmin e Krijimit të Sajtit</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Po krijojmë sajtin tuaj të ri</string>
+    <string name="notification_new_site_creation_failed">Pati një problem</string>
+    <string name="notification_new_site_creation_title">Krijoni Sajt</string>
+    <string name="new_site_creation_create_site_button">Krijoje Sajtin</string>
+    <string name="new_site_creation_search_domain_input_hint">Kërkoni te Përkatësitë</string>
+    <string name="new_site_creation_domain_header_subtitle">Ky është vendi ku do t’ju gjejnë njerëzit në internet.</string>
+    <string name="new_site_creation_domain_header_title">Zgjidhni emër përkatësie për sajtin tuaj</string>
+    <string name="new_site_creation_empty_domain_list_message">S’ka adresa me përputhje me kërkimin tuaj</string>
+    <string name="site_creation_error_generic_subtitle">Gabim gjatë komunikimit me shërbyesin, ju lutemi, riprovoni</string>
+    <string name="site_creation_error_generic_title">Pati një problem</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Kategori vetjake</string>
+    <string name="new_site_creation_button_skip">Anashkaloje</string>
+    <string name="new_site_creation_tag_line_description">Motoja është një rresht i shkurtër teksti, i shfaqur fill nën titullin.</string>
+    <string name="new_site_creation_tag_line_hint">Përmbledhtas</string>
+    <string name="new_site_creation_site_title_hint">Titull Sajti</string>
+    <string name="new_site_creation_site_info_header_subtitle">Na tregoni më tepër rreth sajtit që po krijoni.</string>
+    <string name="new_site_creation_site_info_header_title">Të dhëna Bazë</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Pati një problem</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">S\'ka lidhje</string>
+    <string name="site_creation_segments_subtitle">Kjo na ndihmon të bëjmë rekomandime. Por s’jeni kurrë të kyçur në to - krejt sajtet evoluojnë!</string>
+    <string name="site_creation_segments_title">Tregonani se ç’lloj sajti do të donit të bënit</string>
+    <string name="new_site_creation_preview_title">Sajti juaj u krijua!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d nga %2$d</string>
+    <string name="new_site_creation_screen_title_general">Krijoje Sajtin</string>
+    <string name="suggestions_updated_content_description">U përditësuan sugjerimet</string>
+    <string name="site_picker_failed_selecting_added_site">S’u përzgjodh dot sajt i vetëstrehuar i saposhtuar.</string>
+    <string name="local_post_is_conflicted">Përplasje versionesh</string>
+    <string name="preference_crash_reports_summary">Lejoni njoftime të vetvetishme vithisjesh, që të na ndihmoni të përmirësojmë punimin e aplikacionit.</string>
+    <string name="preference_crash_reports">Njoftime vithisjesh</string>
+    <string name="snackbar_conflict_undo">Zhbëje</string>
+    <string name="snackbar_conflict_web_version_discarded">Versioni Web u hodh tej</string>
+    <string name="snackbar_conflict_local_version_discarded">Ndryshimet vendore u hodhën tej</string>
+    <string name="toast_conflict_updating_post">Përditësim postimi</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Hidh tej versionin Web</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Hidh tej versionin Vendor</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Vendor\nRuajtur në %s\n\nWeb\nRuajtur në %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">Ky postim ka dy versione që janë në kundërshti. Përzgjidhni versionin që do të donit të hidhej tej.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Zgjidheni përplasjen e njëkohësimit</string>
     <string name="local_changes_discarding_no_connection">Për kryerjen e këtij veprimi lypset një lidhje në internet. Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>
     <string name="stats_no_data_for_period">S’ka të dhëna për këtë periudhë</string>
     <string name="preference_strip_image_location">Hiqe vendndodhjen prej mediash</string>
@@ -46,9 +88,9 @@ Language: sq_AL
     <string name="stats_insights_view_more">Shihni më tepër</string>
     <string name="stats_insights_share_post">Ndajeni postimin me të tjerët</string>
     <string name="stats_insights_create_post">Krijoje postimin</string>
-    <string name="stats_insights_latest_post_message">U bënë %1$s qëkur qe botuar %2$s. Ja se si ka ecur postimi deri tani</string>
-    <string name="stats_insights_latest_post_with_no_engagement">U bënë %1$s qëkur u botua %2$s. Vëreni punën në lëvizje dhe shtoni parjen e postimit tuaj duke e ndarë atë me të tjerët</string>
-    <string name="stats_insights_latest_post_empty">S’keni botuar ende ndonjë postim. Sapo të filloni të botoni, këtu do të shfaqet përmbledhja e postimit tuaj më të ri</string>
+    <string name="stats_insights_latest_post_message">U bënë %1$s qëkur qe botuar %2$s. Ja se si ka ecur postimi deri tani:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">U bënë %1$s qëkur u botua %2$s. Vëreni punën në lëvizje dhe shtoni parjen e postimit tuaj duke e ndarë atë me të tjerët:</string>
+    <string name="stats_insights_latest_post_empty">S’keni botuar ende ndonjë postim. Sapo të filloni të botoni, këtu do të shfaqet përmbledhja e postimit tuaj më të ri:</string>
     <string name="stats_insights_tags_and_categories">Etiketa dhe Kategori</string>
     <string name="stats_insights_all_time_stats">Statistika Për Krejt Kohën</string>
     <string name="stats_insights_most_popular_views_label">Parje</string>

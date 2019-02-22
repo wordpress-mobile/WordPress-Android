@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,12 +17,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -30,32 +31,35 @@ import android.webkit.URLUtil;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
-        View.OnTouchListener,
         EditorMediaUploadListener,
         IHistoryListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
+    private static final String ARG_LOCALE_SLUG = "param_locale_slug";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
 
-    private boolean mEditorWasPaused = false;
-    private boolean mHideActionBarOnSoftKeyboardUp = false;
     private boolean mHtmlModeEnabled;
 
     private Handler mInvalidateOptionsHandler;
@@ -75,12 +79,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
-                                                      boolean isNewPost) {
+                                                      boolean isNewPost,
+                                                      String localeSlug) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
         args.putString(ARG_PARAM_CONTENT, content);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
+        args.putString(ARG_LOCALE_SLUG, localeSlug);
         fragment.setArguments(args);
         return fragment;
     }
@@ -97,17 +103,86 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return mRetainedGutenbergContainerFragment;
     }
 
+    /**
+     * Returns the gutenberg-mobile specific translations
+     *
+     * @return Bundle a map of "english string" => [ "current locale string" ]
+     */
+    public Bundle getTranslations() {
+        Bundle translations = new Bundle();
+        Locale defaultLocale = new Locale("en");
+        Resources currentResources = getActivity().getApplicationContext().getResources();
+        Configuration currentConfiguration = currentResources.getConfiguration();
+        // if the current locale of the app is english stop here and return an empty map
+        if (currentConfiguration.locale.equals(defaultLocale)) {
+            return translations;
+        }
+
+        // Let's create a Resources object for the default locale (english) to get the original values for our strings
+        DisplayMetrics metrics = new DisplayMetrics();
+        Configuration defaultLocaleConfiguration = new Configuration(currentConfiguration);
+        defaultLocaleConfiguration.setLocale(defaultLocale);
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Resources defaultResources = new Resources(getActivity().getAssets(), metrics, defaultLocaleConfiguration);
+
+        // Strings are only being translated in the WordPress package
+        // thus we need to get a reference of the R class for this package
+        // Here we assume the Application class is at the same level as the R class
+        // It will not work if this lib is used outside of WordPress-Android,
+        // in this case let's just return an empty map
+        Class<?> rString;
+        Package mainPackage = getActivity().getApplication().getClass().getPackage();
+
+        if (mainPackage == null) {
+            return translations;
+        }
+
+        try {
+            rString = getActivity().getApplication().getClassLoader().loadClass(mainPackage.getName() + ".R$string");
+        } catch (ClassNotFoundException ex) {
+            return translations;
+        }
+
+        for (Field stringField : rString.getDeclaredFields()) {
+            int resourceId;
+            try {
+                resourceId = stringField.getInt(rString);
+            } catch (IllegalArgumentException | IllegalAccessException iae) {
+                AppLog.e(T.EDITOR, iae);
+                continue;
+            }
+
+            String fieldName = stringField.getName();
+            // Filter out all strings that are not prefixed with `gutenberg_mobile_`
+            if (!fieldName.startsWith("gutenberg_mobile_")) {
+                continue;
+            }
+
+            // Add the mapping english => [ translated ] to the bundle if both string are not empty
+            String currentResourceString = currentResources.getString(resourceId);
+            String defaultResourceString = defaultResources.getString(resourceId);
+            if (currentResourceString.length() > 0 && defaultResourceString.length() > 0) {
+                translations.putStringArrayList(
+                        defaultResourceString,
+                        new ArrayList<>(Arrays.asList(currentResourceString))
+                );
+            }
+        }
+        return translations;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
             boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
+            String localeSlug = getArguments().getString(ARG_LOCALE_SLUG);
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             GutenbergContainerFragment gutenbergContainerFragment =
-                    GutenbergContainerFragment.newInstance(isNewPost);
+                    GutenbergContainerFragment.newInstance(isNewPost, localeSlug, this.getTranslations());
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
@@ -159,6 +234,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onQueryCurrentProgressForUploadingMedia() {
                         updateFailedMediaState();
                         updateMediaProgress();
+                    }
+                },
+                new OnEditorMountListener() {
+                    @Override
+                    public void onEditorDidMount(boolean hasUnsupportedBlocks) {
+                        mEditorFragmentListener.onEditorFragmentContentReady(hasUnsupportedBlocks);
                     }
                 }
             );
@@ -302,29 +383,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mEditorWasPaused = true;
-    }
-
     private void showImplicitKeyboard() {
         InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         keyboard.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // If the editor was previously paused and the current orientation is landscape,
-        // hide the actionbar because the keyboard is going to appear (even if it was hidden
-        // prior to being paused).
-        if (mEditorWasPaused
-                && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        }
     }
 
     @Override
@@ -598,63 +659,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Toggle action bar auto-hiding for the new orientation
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
-                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        } else {
-            mHideActionBarOnSoftKeyboardUp = false;
-            showActionBarIfNeeded();
-        }
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        // In landscape mode, if the title or content view has received a touch event, the keyboard will be
-        // displayed and the action bar should hide
-        if (event.getAction() == MotionEvent.ACTION_UP
-                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        }
-        return false;
-    }
-
-    /**
-     * Hide the action bar if needed. Don't hide it if
-     * - a hardware keyboard is connected.
-     * - the soft keyboard is not visible.
-     * - it's not visible.
-     */
-    private void hideActionBarIfNeeded() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
-        }
-        if (!isHardwareKeyboardPresent()
-                && mHideActionBarOnSoftKeyboardUp
-                && actionBar.isShowing()) {
-            getActionBar().hide();
-        }
-    }
-
-    /**
-     * Show the action bar if needed.
-     */
-    private void showActionBarIfNeeded() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
-        }
-        if (!actionBar.isShowing()) {
-            actionBar.show();
-        }
     }
 
     /**

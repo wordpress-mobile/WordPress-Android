@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -157,6 +158,13 @@ class StatsFragment : DaggerFragment() {
             statsGranularity?.let {
                 viewModel.onSelectedDateChange(statsGranularity)
             }
+        })
+
+        viewModel.toolbarHasShadow.observe(this, Observer { toolbarElevation ->
+            app_bar_layout.postDelayed(
+                    { ViewCompat.setElevation(app_bar_layout, toolbarElevation?.toFloat() ?: 0.0f) },
+                    100
+            )
         })
     }
 }

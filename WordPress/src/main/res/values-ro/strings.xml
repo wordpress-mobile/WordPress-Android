@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-17 09:31:43+0000
+Translation-Revision-Date: 2019-01-29 17:09:39+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Arăt previzualizarea sitului</string>
+    <string name="new_site_creation_clear_all_content_description">Anulează</string>
+    <string name="site_created_but_not_fetched_snackbar_message">Se pare că ai o conexiune lentă. Dacă nu vezi noul sit în listă, încearcă o reîmprospătare.</string>
+    <string name="cancel_new_site_wizard_content_description">Contramandează asistentul de creare a sitului</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Îți creăm noul sit</string>
+    <string name="notification_new_site_creation_failed">A fost o problemă</string>
+    <string name="notification_new_site_creation_title">Crează un sit</string>
+    <string name="new_site_creation_create_site_button">Crează situl</string>
+    <string name="new_site_creation_search_domain_input_hint">Caută domenii</string>
+    <string name="new_site_creation_domain_header_subtitle">Aici vei fi găsit pe internet.</string>
+    <string name="new_site_creation_domain_header_title">Alege un nume de domeniu pentru situl tău</string>
+    <string name="new_site_creation_empty_domain_list_message">Nu se potrivește nicio adresă disponibilă cu căutarea ta</string>
+    <string name="site_creation_error_generic_subtitle">Eroare de comunicare cu serverul, te rog încercă din nou</string>
+    <string name="site_creation_error_generic_title">A fost o problemă</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Categorie personalizată</string>
+    <string name="new_site_creation_button_skip">Sari</string>
+    <string name="new_site_creation_tag_line_description">Sloganul este un text scurt afișat chiar sub titlu.</string>
+    <string name="new_site_creation_tag_line_hint">Slogan</string>
+    <string name="new_site_creation_site_title_hint">Titlu sit</string>
+    <string name="new_site_creation_site_info_header_subtitle">Spune-ne mai multe despre situl pe care îl creezi.</string>
+    <string name="new_site_creation_site_info_header_title">Informații de bază</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">A fost o problemă</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Nicio conexiune</string>
+    <string name="site_creation_segments_subtitle">Acest lucru ne ajută să facem recomandări. Dar nu trebuie să te limitezi la ele - toate siturile evoluează!</string>
+    <string name="site_creation_segments_title">Spune-ne ce fel de sit vrei să creezi</string>
+    <string name="new_site_creation_preview_title">Situl tău a fost creat!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d din %2$d</string>
+    <string name="new_site_creation_screen_title_general">Crează un sit</string>
+    <string name="suggestions_updated_content_description">Sugestiile au fost actualizate</string>
+    <string name="site_picker_failed_selecting_added_site">Nu am putut selecta situl auto-găzduit adăugat recent.</string>
+    <string name="local_post_is_conflicted">Conflict între versiuni</string>
+    <string name="preference_crash_reports_summary">Permite rapoarte automate pentru erori fatale pentru a ne ajuta să îmbunătățim performanța aplicației.</string>
+    <string name="preference_crash_reports">Rapoarte erori fatale</string>
+    <string name="snackbar_conflict_undo">Revenire</string>
+    <string name="snackbar_conflict_web_version_discarded">Versiunea de pe web a fost eliminată</string>
+    <string name="snackbar_conflict_local_version_discarded">Versiunea locală a fost eliminată</string>
+    <string name="toast_conflict_updating_post">Actualizez articolul</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Elimină versiunea de pe web</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Elimină versiunea locală</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Locală\nSalvată pe %s\n\nWeb\nSalvată pe %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">Acest articol are două versiuni care sunt în conflict. Selectează versiunea pe care vrei s-o elimini.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Rezolvă conflictul de sincronizare</string>
     <string name="local_changes_discarding_no_connection">Pentru a efectua această acțiune este necesară o conexiune. Te rog verifică-ți conexiunea și reîncearcă.</string>
     <string name="stats_no_data_for_period">Nu există date pentru această perioadă</string>
     <string name="preference_strip_image_location">Înlătură locația din Media</string>
@@ -46,9 +88,9 @@ Language: ro
     <string name="stats_insights_view_more">Vezi mai multe</string>
     <string name="stats_insights_share_post">Partajează articolul</string>
     <string name="stats_insights_create_post">Creează un articol</string>
-    <string name="stats_insights_latest_post_message">Au trecut %1$s de când a fost publicat %2$s. Iată ce a realizat articolul până acum</string>
-    <string name="stats_insights_latest_post_with_no_engagement">Au trecut %1$s de când a fost publicat %2$s. Începe să-ți mărești vizualizările de articol prin partajarea lui</string>
-    <string name="stats_insights_latest_post_empty">Nu ai publicat încă niciun articol. După ce începi să publici, rezumatul ultimului articol va apărea aici</string>
+    <string name="stats_insights_latest_post_message">Au trecut %1$s de când a fost publicat %2$s. Iată ce a realizat articolul până acum:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Au trecut %1$s de când a fost publicat %2$s. Începe să-ți mărești vizualizările articolului prin partajarea lui:</string>
+    <string name="stats_insights_latest_post_empty">Nu ai publicat încă niciun articol. După ce începi să publici, rezumatul ultimului articol va apărea aici:</string>
     <string name="stats_insights_tags_and_categories">Etichete și categorii</string>
     <string name="stats_insights_all_time_stats">Toate vizualizările</string>
     <string name="stats_insights_most_popular_views_label">Vizualizări</string>

@@ -55,8 +55,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
-        .IS_TAPPED_ON_NOTIFICATION;
+import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 
 public class GCMMessageService extends FirebaseMessagingService {
     private static final ArrayMap<Integer, Bundle> ACTIVE_NOTIFICATIONS_MAP = new ArrayMap<>();
@@ -546,11 +545,8 @@ public class GCMMessageService extends FirebaseMessagingService {
             RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_OR_INLINE_REPLY)
                     .setLabel(replyLabel)
                     .build();
-            NotificationCompat.Action action =
-                    new NotificationCompat.Action.Builder(R.drawable.ic_reply_grey_32dp,
-                                                          context.getString(R.string.reply), commentReplyPendingIntent)
-                            .addRemoteInput(remoteInput)
-                            .build();
+            NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.ic_reply_white_24dp,
+                    context.getString(R.string.reply), commentReplyPendingIntent).addRemoteInput(remoteInput).build();
             // now add the action corresponding to direct-reply
             builder.addAction(action);
         }
@@ -570,7 +566,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
             PendingIntent commentLikePendingIntent = getCommentActionPendingIntentForService(context,
                                                                                              commentLikeIntent);
-            builder.addAction(R.drawable.ic_star_grey_32dp, context.getText(R.string.like), commentLikePendingIntent);
+            builder.addAction(R.drawable.ic_star_white_24dp, context.getText(R.string.like), commentLikePendingIntent);
         }
 
         private void addCommentApproveActionForCommentNotification(Context context, NotificationCompat.Builder builder,
@@ -588,7 +584,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
             PendingIntent commentApprovePendingIntent = getCommentActionPendingIntentForService(context,
                                                                                                 commentApproveIntent);
-            builder.addAction(R.drawable.ic_checkmark_grey_32dp, context.getText(R.string.approve),
+            builder.addAction(R.drawable.ic_checkmark_white_24dp, context.getText(R.string.approve),
                               commentApprovePendingIntent);
         }
 
@@ -659,7 +655,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             // Build the new notification, add group to support wearable stacking
             return new NotificationCompat.Builder(context,
                     context.getString(R.string.notification_channel_normal_id))
-                    .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
@@ -714,7 +710,7 @@ public class GCMMessageService extends FirebaseMessagingService {
                 NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context,
                         context.getString(R.string.notification_channel_normal_id))
                         .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
-                        .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                        .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                         .setColor(context.getResources().getColor(R.color.blue_wordpress))
                         .setGroup(NOTIFICATION_GROUP_KEY)
                         .setGroupSummary(true)
@@ -990,7 +986,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
                     context.getString(R.string.notification_channel_important_id))
-                    .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
@@ -1024,7 +1020,7 @@ public class GCMMessageService extends FirebaseMessagingService {
                     PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
                                               PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
-            builder.addAction(R.drawable.ic_checkmark_grey_32dp, context.getText(R.string.approve),
+            builder.addAction(R.drawable.ic_checkmark_white_24dp, context.getText(R.string.approve),
                               authApprovePendingIntent);
 
 

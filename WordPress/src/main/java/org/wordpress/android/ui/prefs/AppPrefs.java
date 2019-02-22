@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
@@ -102,12 +101,6 @@ public class AppPrefs {
         // Used to flag the account created stat needs to be bumped after account information is synced.
         SHOULD_TRACK_MAGIC_LINK_SIGNUP,
 
-        // indicates how many times quick start dialog for a single task wash shown
-        NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN,
-
-        // keeps track of quick start tasks that is prompted to user
-        PROMPTED_QUICK_START_TASK,
-
         // Support email address and name that's independent of any account or site
         SUPPORT_EMAIL,
         SUPPORT_NAME,
@@ -117,7 +110,10 @@ public class AppPrefs {
         // Store a version of the last shown News Card
         NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
-        GUTENBERG_EDITOR_ENABLED
+        GUTENBERG_EDITOR_ENABLED,
+        GUTENBERG_DEAFULT_FOR_NEW_POSTS,
+
+        IS_QUICK_START_NOTICE_REQUIRED
     }
 
     /**
@@ -181,11 +177,17 @@ public class AppPrefs {
         // used to indicate that user opted out of quick start
         IS_QUICK_START_DISABLED,
 
+        // quick start migration dialog is shown only once for all sites
+        HAS_QUICK_START_MIGRATION_SHOWN,
+
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
 
         // used to indicate that user dont want to see the Gutenberg warning dialog anymore
-        IS_GUTENBERG_WARNING_DIALOG_DISABLED
+        IS_GUTENBERG_WARNING_DIALOG_DISABLED,
+
+        // used to indicate that user dont want to see the Gutenberg informative dialog anymore
+        IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED
     }
 
     private static SharedPreferences prefs() {
@@ -453,7 +455,8 @@ public class AppPrefs {
     }
 
     public static boolean isAztecEditorEnabled() {
-        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
+        // hardcode Aztec enabled to "true". It's Aztec and Gutenberg that we're going to expose to the user now.
+        return true;
     }
 
     public static boolean isAztecEditorToolbarExpanded() {
@@ -478,12 +481,13 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorAvailable() {
+        // hardcode the Visual editor availability to "false". Aztec and Gutenberg are the only ones supported now.
         return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, true);
     }
 
     public static boolean isVisualEditorEnabled() {
-        return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED,
-                !isAztecEditorEnabled());
+        // hardcode the Visual editor enable to "false". Aztec and Gutenberg are the only ones supported now.
+        return false;
     }
 
     public static boolean isAsyncPromoRequired() {
@@ -518,18 +522,6 @@ public class AppPrefs {
 
     public static int getAnalyticsForStatsWidgetPromo() {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
-    }
-
-    public static void setGlobalPlansFeatures(String jsonOfFeatures) {
-        if (jsonOfFeatures != null) {
-            setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
-        } else {
-            remove(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES);
-        }
-    }
-
-    public static String getGlobalPlansFeatures() {
-        return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
     }
 
     public static boolean isInAppPurchaseRefreshRequired() {
@@ -635,11 +627,21 @@ public class AppPrefs {
     }
 
     public static boolean isGutenbergEditorEnabled() {
-        return getBoolean(DeletablePrefKey.GUTENBERG_EDITOR_ENABLED, false);
+        // hardcode Gutenberg enabled to "true". It's Aztec and Gutenberg that we're going to expose to the user now.
+        return true;
     }
 
     public static void enableGutenbergEditor(boolean enabled) {
         setBoolean(DeletablePrefKey.GUTENBERG_EDITOR_ENABLED, enabled);
+    }
+
+    public static boolean isGutenbergDefaultForNewPosts() {
+        return getBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, false);
+    }
+
+    public static void setGutenbergDefaultForNewPosts(boolean defaultForNewPosts) {
+        AnalyticsTracker.track(defaultForNewPosts ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED);
+        setBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, defaultForNewPosts);
     }
 
     public static void setVideoOptimizeWidth(int width) {
@@ -790,21 +792,20 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
     }
 
-    public static int getNumberOfTimesQuickStartDialogShown() {
-        return getInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, 0);
+    public static void setQuickStartMigrationDialogShown(Boolean shown) {
+        setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
     }
 
-    public static void setNumberOfTimesQuickStartDialogShown(int value) {
-        setInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, value);
+    public static boolean hasQuickStartMigrationDialogShown() {
+        return getBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, false);
     }
 
-    @Nullable
-    public static String getPromptedQuickStartTask() {
-        return getString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, null);
+    public static void setQuickStartNoticeRequired(Boolean shown) {
+        setBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, shown);
     }
 
-    public static void setPromptedQuickStartTask(@Nullable String task) {
-        setString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, task);
+    public static boolean isQuickStartNoticeRequired() {
+        return getBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, false);
     }
 
     public static void setInstallationReferrerObtained(Boolean isObtained) {
@@ -822,12 +823,12 @@ public class AppPrefs {
     public static void setAvatarVersion(int version) {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
     }
-
-    public static void setGutenbergWarningDialogDisabled(Boolean isDisabled) {
-        setBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, isDisabled);
+    
+    public static void setGutenbergInformativeDialogDisabled(Boolean isDisabled) {
+        setBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, isDisabled);
     }
 
-    public static boolean isGutenbergWarningDialogDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, false);
+    public static boolean isGutenbergInformativeDialogDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, false);
     }
 }

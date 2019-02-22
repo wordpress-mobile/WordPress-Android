@@ -97,6 +97,10 @@ class NewSiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWr
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_COMPLETED)
     }
 
+    fun trackFlowExited() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_EXITED)
+    }
+
     fun trackErrorShown(errorContext: String, errorType: NewSiteCreationErrorType, errorDescription: String? = null) {
         trackErrorShown(errorContext, errorType.toString().toLowerCase(), errorDescription)
     }

@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-22 11:54:07+0000
+Translation-Revision-Date: 2019-02-06 08:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">מציג תצוגה מקדימה של האתר</string>
+    <string name="new_site_creation_clear_all_content_description">ניקוי</string>
+    <string name="site_created_but_not_fetched_snackbar_message">נראה שהחיבור שלך איטי. אם אינך רואה את האתר החדש ברשימה, מומלץ לרענן את העמוד.</string>
+    <string name="cancel_new_site_wizard_content_description">ביטול אסף היצירה של האתר</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">אנחנו יוצרים את האתר החדש שלך</string>
+    <string name="notification_new_site_creation_failed">הייתה בעיה</string>
+    <string name="notification_new_site_creation_title">יצירת אתר</string>
+    <string name="new_site_creation_create_site_button">יצירת אתר</string>
+    <string name="new_site_creation_search_domain_input_hint">חיפוש דומיינים</string>
+    <string name="new_site_creation_domain_header_subtitle">כאן הגולשים ימצאו אותך באינטרנט.</string>
+    <string name="new_site_creation_domain_header_title">בחירת דומיין לאתר שלך</string>
+    <string name="new_site_creation_empty_domain_list_message">לא נמצאו כתובות זמינות שתואמות לחיפוש שלך</string>
+    <string name="site_creation_error_generic_subtitle">שגיאה בתקשורת עם השרת, יש לנסות שוב</string>
+    <string name="site_creation_error_generic_title">הייתה בעיה</string>
+    <string name="new_site_creation_verticals_custom_subtitle">קטגוריה מותאמת אישית</string>
+    <string name="new_site_creation_button_skip">דילוג</string>
+    <string name="new_site_creation_tag_line_description">התיאור הקצר הוא שורה קצרה של מלל שמוצגת ישירות מתחת לכותרת.</string>
+    <string name="new_site_creation_tag_line_hint">תיאור קצר</string>
+    <string name="new_site_creation_site_title_hint">שם האתר</string>
+    <string name="new_site_creation_site_info_header_subtitle">יש לספק פרטים על האתר שאותו ברצונך ליצור.</string>
+    <string name="new_site_creation_site_info_header_title">מידע בסיסי</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">הייתה בעיה</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">אין חיבור</string>
+    <string name="site_creation_segments_subtitle">המידע יעזור לנו לתת לך המלצות. אבל תמיד יש מקום לצמוח - כל האתרים מתפתחים!</string>
+    <string name="site_creation_segments_title">נשמח לשמוע איזה סוג של אתר ברצונך ליצור</string>
+    <string name="new_site_creation_preview_title">האתר שלך נוצר!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d מתוך %2$d</string>
+    <string name="new_site_creation_screen_title_general">יצירת אתר</string>
+    <string name="suggestions_updated_content_description">ההצעות עודכנו</string>
+    <string name="site_picker_failed_selecting_added_site">לא הייתה אפשרות לבחור אתר באחסון עצמי שנוסף לאחרונה.</string>
+    <string name="local_post_is_conflicted">התנגשויות גרסה</string>
+    <string name="preference_crash_reports_summary">כדי לעזור לנו לשפר את הביצועים באפליקציה, מומלץ לאפשר יצירה אוטומטית של דוחות קריסה.</string>
+    <string name="preference_crash_reports">דוחות קריסה</string>
+    <string name="snackbar_conflict_undo">ביטול פעולה אחרונה</string>
+    <string name="snackbar_conflict_web_version_discarded">מחיקה של גרסת אינטרנט</string>
+    <string name="snackbar_conflict_local_version_discarded">מחיקה של הגרסה המקומית</string>
+    <string name="toast_conflict_updating_post">מעדכן את הפוסט</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">מחיקה של גרסת הרשת</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">מחיקה של הגרסה המקומית</string>
+    <string name="dialog_confirm_load_remote_post_body_2">מקומי\nנשמר בתאריך %s\n\nרשת\nנשמר בתאריך %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">לפוסט הנוכחי יש שתי גרסאות עם התנגשות. יש לבחור את הגרסה שברצונך למחוק.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">פתרון התנגשות בסנכרון</string>
     <string name="local_changes_discarding_no_connection">לביצוע הפעולה הזו נדרש חיבור. יש לבדוק את החיבור ולנסות שוב.</string>
     <string name="stats_no_data_for_period">אין נתונים לתקופה זו</string>
     <string name="preference_strip_image_location">הסרת מיקום ממדיה</string>
@@ -46,9 +88,6 @@ Language: he_IL
     <string name="stats_insights_view_more">הצגת פריטים נוספים</string>
     <string name="stats_insights_share_post">שיתוף פוסט</string>
     <string name="stats_insights_create_post">יצירת פוסט</string>
-    <string name="stats_insights_latest_post_message">%2$s התפרסם לפני %1$s. אלו הביצועים של הפוסט עד כה</string>
-    <string name="stats_insights_latest_post_with_no_engagement">%2$s התפרסם לפני %1$s. אפשר לקבל חשיפה רבה יותר לפוסט שלך על ידי שיתוף</string>
-    <string name="stats_insights_latest_post_empty">עדיין לא פרסמת אף פוסט. לאחר פרסום של תוכן, סיכום הפוסטים האחרונים שלך יופיע כאן</string>
     <string name="stats_insights_tags_and_categories">תגיות וקטגוריות</string>
     <string name="stats_insights_all_time_stats">נתונים סטטיסטיים של כל הזמנים</string>
     <string name="stats_insights_most_popular_views_label">צפיות</string>

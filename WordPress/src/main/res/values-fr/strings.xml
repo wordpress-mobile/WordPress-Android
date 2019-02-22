@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-22 15:54:11+0000
+Translation-Revision-Date: 2019-02-05 14:55:54+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Affichage de l\'aperçu du site</string>
+    <string name="new_site_creation_clear_all_content_description">Effacer</string>
+    <string name="site_created_but_not_fetched_snackbar_message">Il semblerait que votre connexion soit lente. Si votre nouveau site n\'apparaît pas dans la liste, essayez de la réactualiser.</string>
+    <string name="cancel_new_site_wizard_content_description">Annuler l\'assistant de création de sites</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Nous créons votre nouveau site</string>
+    <string name="notification_new_site_creation_failed">Un problème est survenu</string>
+    <string name="notification_new_site_creation_title">Créer un site</string>
+    <string name="new_site_creation_create_site_button">Créer un site</string>
+    <string name="new_site_creation_search_domain_input_hint">Rechercher des domaines</string>
+    <string name="new_site_creation_domain_header_subtitle">C\'est ici que les internautes vous trouveront sur Internet.</string>
+    <string name="new_site_creation_domain_header_title">Choisir un nom de domaine pour votre site</string>
+    <string name="new_site_creation_empty_domain_list_message">Aucune adresse ne correspond à votre recherche</string>
+    <string name="site_creation_error_generic_subtitle">Erreur de communication avec le serveur, veuillez essayer à nouveau.</string>
+    <string name="site_creation_error_generic_title">Un problème est survenu</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Catégorie personnalisée</string>
+    <string name="new_site_creation_button_skip">Ignorer</string>
+    <string name="new_site_creation_tag_line_description">La description est une ligne de texte courte située sous le titre.</string>
+    <string name="new_site_creation_tag_line_hint">Description</string>
+    <string name="new_site_creation_site_title_hint">Titre du site</string>
+    <string name="new_site_creation_site_info_header_subtitle">Dites-nous en plus à propos du site que vous créez.</string>
+    <string name="new_site_creation_site_info_header_title">Informations de base</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Un problème est survenu</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Pas de connexion</string>
+    <string name="site_creation_segments_subtitle">Cela nous aide à faire des recommandations. Vous pourrez modifier ce paramètre ultérieurement : tous les sites évoluent !</string>
+    <string name="site_creation_segments_title">Dites-nous quel type de site vous aimeriez créer</string>
+    <string name="new_site_creation_preview_title">Votre site a été créé.</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d sur %2$d</string>
+    <string name="new_site_creation_screen_title_general">Créer un site</string>
+    <string name="suggestions_updated_content_description">Suggestions mises à jour</string>
+    <string name="site_picker_failed_selecting_added_site">Impossible de sélectionner le site auto-hébergé nouvellement ajouté.</string>
+    <string name="local_post_is_conflicted">Conflit de version</string>
+    <string name="preference_crash_reports_summary">Autoriser les rapports d\'incident automatiques pour nous aider à améliorer les performances de l\'application.</string>
+    <string name="preference_crash_reports">Rapports d\'incident</string>
+    <string name="snackbar_conflict_undo">Annuler</string>
+    <string name="snackbar_conflict_web_version_discarded">Version Web supprimée</string>
+    <string name="snackbar_conflict_local_version_discarded">Version locale supprimée</string>
+    <string name="toast_conflict_updating_post">Mise à jour de l\'article</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Supprimer sur le Web</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Supprimer en local</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Local\nEnregistré sur %s\n\nWeb\nEnregistré sur %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">Cet article existe en deux versions, ce qui crée un conflit. Sélectionnez la version à supprimer.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Résoudre le conflit de synchronisation</string>
     <string name="local_changes_discarding_no_connection">Une connexion est obligatoire pour exécuter cette action. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="stats_no_data_for_period">Aucune donnée pour cette période</string>
     <string name="preference_strip_image_location">Supprimer l\'emplacement du média</string>
@@ -46,9 +88,6 @@ Language: fr
     <string name="stats_insights_view_more">Voir plus</string>
     <string name="stats_insights_share_post">Partager lʼarticle</string>
     <string name="stats_insights_create_post">Créer une publication</string>
-    <string name="stats_insights_latest_post_message">%2$s est publié depuis %1$s. Voilà les performances de l’article</string>
-    <string name="stats_insights_latest_post_with_no_engagement">%2$s est publié depuis %1$s. Lancez-vous et augmentez le nombre de vues de votre article en le partageant</string>
-    <string name="stats_insights_latest_post_empty">Vous n’avez pas encore publié d’articles. Lorsque vous commencez à publier, le résumé de votre dernier article apparaît ici</string>
     <string name="stats_insights_tags_and_categories">Étiquettes et catégories</string>
     <string name="stats_insights_all_time_stats">Statistiques globales</string>
     <string name="stats_insights_most_popular_views_label">Vues</string>

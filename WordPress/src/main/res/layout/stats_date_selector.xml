@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="@dimen/one_line_list_item_height"
+                                             android:elevation="@dimen/appbar_elevation"
+                                             android:background="@color/white">
+
+    <TextView
+        android:id="@+id/selected_date"
+        style="@style/StatsBlockTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/unknown"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/select_previous_date"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.518"/>
+
+    <ImageButton
+        android:id="@+id/select_previous_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/stats_select_previous_period_description"
+        android:padding="4dp"
+        android:src="@drawable/ic_chevron_left_white_24dp"
+        android:tint="@color/grey_dark_grey_lighten_10_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/select_next_date"
+        app:layout_constraintStart_toEndOf="@+id/selected_date"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/select_next_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/stats_select_next_period_description"
+        android:padding="4dp"
+        android:src="@drawable/ic_chevron_right_white_24dp"
+        android:tint="@color/grey_dark_grey_lighten_10_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
