@@ -4,19 +4,19 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CacheMode.Top
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient.CommentsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.WP_COM
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostStatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse.PostResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse.TagsGroup.TagResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient.VisitResponse
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
 import java.util.Date
@@ -187,10 +187,22 @@ class InsightsMapper
         return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
 
-    fun map(response: TagsResponse, pageSize: Int): TagsModel {
-        return TagsModel(response.tags.take(pageSize).map { tag ->
-            TagModel(tag.tags.mapNotNull { it.toItem() }.take(pageSize), tag.views ?: 0)
-        }, response.tags.size > pageSize)
+    fun map(response: TagsResponse, cacheMode: CacheMode): TagsModel {
+        return TagsModel(response.tags.let {
+            if (cacheMode is CacheMode.Top) {
+                return@let it.take(cacheMode.limit)
+            } else {
+                return@let it
+            }
+        }.map { tag ->
+            TagModel(tag.tags.mapNotNull { it.toItem() }.let {
+                if (cacheMode is CacheMode.Top) {
+                    return@let it.take(cacheMode.limit)
+                } else {
+                    return@let it
+                }
+            }, tag.views ?: 0)
+        }, cacheMode is CacheMode.Top && response.tags.size > cacheMode.limit)
     }
 
     private fun TagResponse.toItem(): TagModel.Item? {
