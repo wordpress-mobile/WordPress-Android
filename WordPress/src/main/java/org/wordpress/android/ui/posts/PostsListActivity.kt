@@ -52,7 +52,21 @@ class PostsListActivity : AppCompatActivity(),
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleIntent(intent)
+        if (!intent.hasExtra(WordPress.SITE)) {
+            AppLog.e(AppLog.T.POSTS, "PostListActivity started without a site.")
+            finish()
+            return
+        }
+        restartWhenSiteHasChanged(intent)
+    }
+
+    private fun restartWhenSiteHasChanged(intent: Intent) {
+        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        if (site.id != this.site.id) {
+            finish()
+            startActivity(intent)
+            return
+        }
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +83,6 @@ class PostsListActivity : AppCompatActivity(),
         setupActionBar()
         setupContent()
         initViewModel()
-        handleIntent(intent)
     }
 
     private fun setupActionBar() {
@@ -125,10 +138,6 @@ class PostsListActivity : AppCompatActivity(),
                 }
             }
         })
-    }
-
-    private fun handleIntent(intent: Intent) {
-        // TODO site has changed and postListActivity opened with a target post is not implemented
     }
 
     public override fun onResume() {
