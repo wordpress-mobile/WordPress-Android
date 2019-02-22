@@ -17,8 +17,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
-import org.wordpress.android.util.image.ImageType.IMAGE
+import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
+import org.wordpress.android.util.image.ImageType.ICON
 
 open class BlockListItemViewHolder(
     parent: ViewGroup,
