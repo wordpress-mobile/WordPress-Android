@@ -2531,6 +2531,7 @@
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Paste URL</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Unsupported Block</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Unsupported block type.</string>
+    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Unsupported</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_block_manager_js_285">ADD BLOCK HERE</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Move block up</string>
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Move block down</string>
