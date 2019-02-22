@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 54;
+        return 55;
     }
 
     @Override
@@ -437,6 +437,15 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 53:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE QuickStartTaskModel ADD TASK_TYPE TEXT");
+                oldVersion++;
+            case 54:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE StatsBlockTemp (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,JSON TEXT NOT NULL)");
+                db.execSQL("INSERT INTO StatsBlockTemp SELECT * FROM StatsBlock");
+                db.execSQL("DROP TABLE StatsBlock");
+                db.execSQL("ALTER TABLE StatsBlockTemp RENAME TO StatsBlock");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
