@@ -120,8 +120,11 @@ class StatsListFragment : DaggerFragment() {
         recyclerView.layoutManager = this.layoutManager
         recyclerView.addItemDecoration(
                 StatsListItemDecoration(
-                        resources.getDimensionPixelSize(dimen.margin_small),
-                        resources.getDimensionPixelSize(dimen.margin_small),
+                        resources.getDimensionPixelSize(dimen.stats_list_card_horizontal_spacing),
+                        resources.getDimensionPixelSize(dimen.stats_list_card_top_spacing),
+                        resources.getDimensionPixelSize(dimen.stats_list_card_bottom_spacing),
+                        resources.getDimensionPixelSize(dimen.stats_list_card_first_spacing),
+                        resources.getDimensionPixelSize(dimen.stats_list_card_last_spacing),
                         columns
                 )
         )

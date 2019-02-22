@@ -4,7 +4,14 @@ import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.view.View
 
-data class StatsListItemDecoration(val horizontalSpacing: Int, val verticalSpacing: Int, val columnCount: Int) :
+data class StatsListItemDecoration(
+    val horizontalSpacing: Int,
+    val topSpacing: Int,
+    val bottomSpacing: Int,
+    val firstSpacing: Int,
+    val lastSpacing: Int,
+    val columnCount: Int
+) :
         RecyclerView.ItemDecoration() {
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
@@ -12,9 +19,9 @@ data class StatsListItemDecoration(val horizontalSpacing: Int, val verticalSpaci
         val isLast = parent.adapter?.let { parent.getChildAdapterPosition(view) == it.itemCount - 1 } ?: false
         outRect.set(
                 if (columnCount == 1) 2 * horizontalSpacing else horizontalSpacing,
-                if (isFirst) 2 * verticalSpacing else verticalSpacing,
+                if (isFirst) firstSpacing else topSpacing,
                 if (columnCount == 1) 2 * horizontalSpacing else horizontalSpacing,
-                if (isLast) 2 * verticalSpacing else verticalSpacing
+                if (isLast) lastSpacing else bottomSpacing
         )
     }
 }
