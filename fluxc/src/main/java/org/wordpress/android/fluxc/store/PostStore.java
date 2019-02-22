@@ -71,9 +71,9 @@ public class PostStore extends Store {
 
     public static class FetchPostListPayload extends Payload<BaseNetworkError> {
         public PostListDescriptor listDescriptor;
-        public int offset;
+        public long offset;
 
-        public FetchPostListPayload(PostListDescriptor listDescriptor, int offset) {
+        public FetchPostListPayload(PostListDescriptor listDescriptor, long offset) {
             this.listDescriptor = listDescriptor;
             this.offset = offset;
         }
