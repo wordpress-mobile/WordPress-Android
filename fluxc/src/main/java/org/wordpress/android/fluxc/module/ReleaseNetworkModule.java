@@ -36,7 +36,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
@@ -192,12 +199,89 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public InsightsRestClient provideInsightsRestClient(Context appContext, Dispatcher dispatcher,
+    public AllTimeInsightsRestClient provideAllTimeInsightsRestClient(Context appContext, Dispatcher dispatcher,
+                                                                      @Named("regular") RequestQueue requestQueue,
+                                                                      AccessToken token, UserAgent userAgent,
+                                                                      WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                                      StatsUtils statsUtils) {
+        return new AllTimeInsightsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent, statsUtils);
+    }
+
+    @Singleton
+    @Provides
+    public CommentsRestClient provideCommentsInsightsRestClient(Context appContext, Dispatcher dispatcher,
+                                                                @Named("regular") RequestQueue requestQueue,
+                                                                AccessToken token, UserAgent userAgent,
+                                                                WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                                StatsUtils statsUtils) {
+        return new CommentsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent, statsUtils);
+    }
+
+    @Singleton
+    @Provides
+    public FollowersRestClient provideFollowersInsightsRestClient(Context appContext, Dispatcher dispatcher,
+                                                                  @Named("regular") RequestQueue requestQueue,
+                                                                  AccessToken token, UserAgent userAgent,
+                                                                  WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                                  StatsUtils statsUtils) {
+        return new FollowersRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent, statsUtils);
+    }
+
+    @Singleton
+    @Provides
+    public LatestPostInsightsRestClient provideLatestPostsInsightsRestClient(Context appContext, Dispatcher dispatcher,
+                                                                     @Named("regular") RequestQueue requestQueue,
+                                                                     AccessToken token, UserAgent userAgent,
+                                                                     WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                                     StatsUtils statsUtils) {
+        return new LatestPostInsightsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent, statsUtils);
+    }
+
+    @Singleton
+    @Provides
+    public MostPopularRestClient provideMostPopularInsightsRestClient(Context appContext, Dispatcher dispatcher,
+                                                                      @Named("regular") RequestQueue requestQueue,
+                                                                      AccessToken token, UserAgent userAgent,
+                                                                      WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                                      StatsUtils statsUtils) {
+        return new MostPopularRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent, statsUtils);
+    }
+
+    @Singleton
+    @Provides
+    public PublicizeRestClient providePublicizeInsightsRestClient(Context appContext, Dispatcher dispatcher,
+                                                                  @Named("regular") RequestQueue requestQueue,
+                                                                  AccessToken token, UserAgent userAgent,
+                                                                  WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                                  StatsUtils statsUtils) {
+        return new PublicizeRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent, statsUtils);
+    }
+
+    @Singleton
+    @Provides
+    public TagsRestClient provideTagsInsightsRestClient(Context appContext, Dispatcher dispatcher,
                                                         @Named("regular") RequestQueue requestQueue,
                                                         AccessToken token, UserAgent userAgent,
                                                         WPComGsonRequestBuilder wpComGsonRequestBuilder,
                                                         StatsUtils statsUtils) {
-        return new InsightsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+        return new TagsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent, statsUtils);
+    }
+
+    @Singleton
+    @Provides
+    public TodayInsightsRestClient provideInsightsRestClient(Context appContext, Dispatcher dispatcher,
+                                                             @Named("regular") RequestQueue requestQueue,
+                                                             AccessToken token, UserAgent userAgent,
+                                                             WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                             StatsUtils statsUtils) {
+        return new TodayInsightsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
                 userAgent, statsUtils);
     }
 
