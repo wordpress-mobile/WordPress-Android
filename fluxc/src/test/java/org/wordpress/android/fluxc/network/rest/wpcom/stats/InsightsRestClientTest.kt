@@ -316,16 +316,11 @@ class InsightsRestClientTest {
         initCommentsResponse(TOP_COMMENTS_RESPONSE)
 
         val pageSize = 10
-        val responseModel = insightsRestClient.fetchTopComments(site, pageSize, forced = false)
+        val responseModel = insightsRestClient.fetchTopComments(site, forced = false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(TOP_COMMENTS_RESPONSE)
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/comments/")
-        assertThat(paramsCaptor.lastValue).isEqualTo(
-                mapOf(
-                        "max" to "$pageSize"
-                )
-        )
     }
 
     @Test
@@ -341,7 +336,7 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchTopComments(site, pageSize = pageSize, forced = false)
+        val responseModel = insightsRestClient.fetchTopComments(site, forced = false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
