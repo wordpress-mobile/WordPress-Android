@@ -1,29 +1,24 @@
 package org.wordpress.android.e2e;
 
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.e2e.pages.MePage;
-import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.support.BaseTest;
+
+import static org.wordpress.android.BuildConfig.E2E_DEFAULT_USER_USERNAME;
 
 @RunWith(AndroidJUnit4.class)
-public class LoginTests {
-
-    @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
+public class LoginTests extends BaseTest {
 
     @Test
     public void testWPComLoginLogout() {
-        LoginFlow loginFlow = new LoginFlow();
-        loginFlow.login();
+        wpLogin();
+        sleep();
 
-        new MePage()
-                .verifyUsername("thenomadicwordsmith")
-                .logout();
+        new MePage().go().verifyUsername(E2E_DEFAULT_USER_USERNAME);
+        wpLogout();
     }
 
 

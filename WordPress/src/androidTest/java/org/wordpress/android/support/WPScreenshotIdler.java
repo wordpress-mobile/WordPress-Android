@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.screenshots.support;
+package org.wordpress.android.support;
 
 import android.support.test.espresso.IdlingResource;
 import static junit.framework.Assert.fail;

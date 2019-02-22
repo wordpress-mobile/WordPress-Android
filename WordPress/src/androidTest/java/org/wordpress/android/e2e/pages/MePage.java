@@ -10,7 +10,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOn;
+import static org.wordpress.android.support.WPScreenshotSupport.clickOn;
 
 public class MePage {
     // Labels
@@ -23,8 +23,13 @@ public class MePage {
     private static ViewInteraction logoutConfirmationButton = onView(withId(android.R.id.button1));
 
     public MePage() {
+    }
+
+    public MePage go() {
         clickOn(R.id.nav_me);
         displayName.check(matches(isDisplayed()));
+
+        return this;
     }
 
     public MePage verifyUsername(String username) {

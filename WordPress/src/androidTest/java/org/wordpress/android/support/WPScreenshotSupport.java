@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.screenshots.support;
+package org.wordpress.android.support;
 
 import android.app.Activity;
 import android.support.test.InstrumentationRegistry;
