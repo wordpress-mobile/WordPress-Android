@@ -86,9 +86,11 @@ constructor(
         } else {
             items.add(Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label))
             domainModel.groups.forEachIndexed { index, group ->
+                val icon = buildIcon(group.icon)
                 if (group.referrers.isEmpty()) {
                     val headerItem = ListItemWithIcon(
-                            iconUrl = group.icon,
+                            icon = icon,
+                            iconUrl = if (icon == null) group.icon else null,
                             text = group.name,
                             value = group.total?.toFormattedString(),
                             showDivider = index < domainModel.groups.size - 1,
@@ -97,7 +99,8 @@ constructor(
                     items.add(headerItem)
                 } else {
                     val headerItem = ListItemWithIcon(
-                            iconUrl = group.icon,
+                            icon = icon,
+                            iconUrl = if (icon == null) group.icon else null,
                             text = group.name,
                             value = group.total?.toFormattedString(),
                             showDivider = index < domainModel.groups.size - 1
@@ -108,8 +111,10 @@ constructor(
                     })
                     if (isExpanded) {
                         items.addAll(group.referrers.map { referrer ->
+                            val referrerIcon = buildIcon(referrer.icon)
                             ListItemWithIcon(
-                                    iconUrl = referrer.icon,
+                                    icon = referrerIcon,
+                                    iconUrl = if (referrerIcon == null) referrer.icon else null,
                                     text = referrer.name,
                                     value = referrer.views.toFormattedString(),
                                     showDivider = false,
@@ -132,6 +137,14 @@ constructor(
             }
         }
         return items
+    }
+
+    private fun buildIcon(iconUrl: String?): Int? {
+        return when (iconUrl) {
+            null -> R.drawable.ic_globe_white_24dp
+            "https://wordpress.com/i/stats/search-engine.png" -> R.drawable.ic_search_white_24dp
+            else -> null
+        }
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
