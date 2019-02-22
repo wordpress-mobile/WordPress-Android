@@ -19,6 +19,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.EMPTY_SPACE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
@@ -50,17 +53,16 @@ constructor(
 ) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_referrers))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = referrersStore.getReferrers(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): ReferrersModel? {
+        return referrersStore.getReferrers(
                 site,
                 statsGranularity,
                 selectedDate,
                 PAGE_SIZE
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<ReferrersModel> {
         val response = referrersStore.fetchReferrers(
                 site,
                 PAGE_SIZE,
@@ -71,10 +73,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.groups.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
@@ -87,9 +89,11 @@ constructor(
         } else {
             items.add(Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label))
             domainModel.groups.forEachIndexed { index, group ->
+                val icon = buildIcon(group.icon)
                 if (group.referrers.isEmpty()) {
                     val headerItem = ListItemWithIcon(
-                            iconUrl = group.icon,
+                            icon = icon,
+                            iconUrl = if (icon == null) group.icon else null,
                             text = group.name,
                             value = group.total?.toFormattedString(),
                             showDivider = index < domainModel.groups.size - 1,
@@ -98,7 +102,8 @@ constructor(
                     items.add(headerItem)
                 } else {
                     val headerItem = ListItemWithIcon(
-                            iconUrl = group.icon,
+                            icon = icon,
+                            iconUrl = if (icon == null) group.icon else null,
                             text = group.name,
                             value = group.total?.toFormattedString(),
                             showDivider = index < domainModel.groups.size - 1
@@ -109,8 +114,17 @@ constructor(
                     })
                     if (isExpanded) {
                         items.addAll(group.referrers.map { referrer ->
+                            val referrerIcon = buildIcon(referrer.icon)
+                            val iconStyle = if (group.icon != null && referrer.icon == null && referrerIcon == null) {
+                                EMPTY_SPACE
+                            } else {
+                                NORMAL
+                            }
                             ListItemWithIcon(
-                                    iconUrl = referrer.icon,
+                                    icon = referrerIcon,
+                                    iconUrl = if (referrerIcon == null) referrer.icon else null,
+                                    iconStyle = iconStyle,
+                                    textStyle = LIGHT,
                                     text = referrer.name,
                                     value = referrer.views.toFormattedString(),
                                     showDivider = false,
@@ -135,9 +149,22 @@ constructor(
         return items
     }
 
+    private fun buildIcon(iconUrl: String?): Int? {
+        return when (iconUrl) {
+            null -> R.drawable.ic_globe_white_24dp
+            "https://wordpress.com/i/stats/search-engine.png" -> R.drawable.ic_search_white_24dp
+            else -> null
+        }
+    }
+
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewReferrers(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(
+                ViewReferrers(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+                )
+        )
     }
 
     private fun onItemClick(url: String) {

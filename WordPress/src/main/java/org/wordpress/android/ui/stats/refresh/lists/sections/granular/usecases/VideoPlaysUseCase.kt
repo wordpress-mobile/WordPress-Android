@@ -41,17 +41,16 @@ constructor(
 ) : GranularStatelessUseCase<VideoPlaysModel>(VIDEOS, mainDispatcher, selectedDateProvider, statsGranularity) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(string.stats_videos))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = store.getVideoPlays(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): VideoPlaysModel? {
+        return store.getVideoPlays(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
                 selectedDate
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<VideoPlaysModel> {
         val response = store.fetchVideoPlays(
                 site,
                 PAGE_SIZE,
@@ -62,10 +61,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.plays.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
@@ -100,7 +99,12 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewVideoPlays(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(
+                ViewVideoPlays(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+                )
+        )
     }
 
     private fun onItemClick(url: String) {

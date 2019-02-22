@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
+    <include
+        layout="@layout/stats_error_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include
+        layout="@layout/stats_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"

@@ -17,9 +17,10 @@ class ThrottleLiveData<T> constructor(private val offset: Long = 100, private va
         if (tempValue == null || tempValue != value) {
             currentJob?.cancel()
             currentJob = coroutineScope.launch(Dispatchers.Default) {
+                tempValue = value
                 delay(offset)
                 withContext(Dispatchers.Main) {
-                    tempValue = value
+                    tempValue = null
                     super.postValue(value)
                 }
             }

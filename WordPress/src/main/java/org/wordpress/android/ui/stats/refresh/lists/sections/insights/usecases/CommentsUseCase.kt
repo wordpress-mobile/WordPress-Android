@@ -41,23 +41,22 @@ class CommentsUseCase
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<CommentsModel> {
         val fetchMode = if (useCaseMode == VIEW_ALL) FetchMode.All else FetchMode.Top(BLOCK_ITEM_COUNT)
         val response = commentsStore.fetchComments(site, fetchMode, forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && (model.authors.isNotEmpty() || model.posts.isNotEmpty()) -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel) {
+    override suspend fun loadCachedData(site: SiteModel): CommentsModel? {
         val cacheMode = if (useCaseMode == VIEW_ALL) CacheMode.All else CacheMode.Top(BLOCK_ITEM_COUNT)
-        val dbModel = commentsStore.getComments(site, cacheMode)
-        dbModel?.let { onModel(dbModel) }
+        return commentsStore.getComments(site, cacheMode)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_comments))

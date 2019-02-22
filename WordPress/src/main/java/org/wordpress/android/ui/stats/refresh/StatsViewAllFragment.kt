@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_fragment.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlockAdapter
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -88,8 +90,11 @@ class StatsViewAllFragment : DaggerFragment() {
         recyclerView.layoutManager = this.layoutManager
         recyclerView.addItemDecoration(
                 StatsListItemDecoration(
-                        resources.getDimensionPixelSize(dimen.margin_small),
-                        resources.getDimensionPixelSize(dimen.margin_small),
+                        resources.getDimensionPixelSize(dimen.stats_list_card_horizontal_spacing),
+                        resources.getDimensionPixelSize(dimen.stats_list_card_top_spacing),
+                        resources.getDimensionPixelSize(dimen.stats_list_card_bottom_spacing),
+                        resources.getDimensionPixelSize(dimen.stats_list_card_first_spacing),
+                        resources.getDimensionPixelSize(dimen.stats_list_card_last_spacing),
                         1
                 )
         )
@@ -154,9 +159,20 @@ class StatsViewAllFragment : DaggerFragment() {
             }
         })
 
-        viewModel.data.observe(this, Observer {
+        viewModel.uiModel.observe(this, Observer {
             if (it != null) {
-                updateInsights(it)
+                when (it) {
+                    is UiModel.Success -> {
+                        updateInsights(it.data)
+                    }
+                    is UiModel.Error -> {
+                        recyclerView.visibility = View.GONE
+                        actionable_error_view.visibility = View.VISIBLE
+                        actionable_error_view.button.setOnClickListener {
+                            viewModel.onRetryClick(site)
+                        }
+                    }
+                }
             }
         })
 
@@ -167,6 +183,8 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {
+        recyclerView.visibility = View.VISIBLE
+        actionable_error_view.visibility = View.GONE
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
             adapter = StatsBlockAdapter(imageManager)

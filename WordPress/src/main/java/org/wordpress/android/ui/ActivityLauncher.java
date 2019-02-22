@@ -301,7 +301,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
         intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
-        String title = context.getResources().getString(R.string.stats_view_tags_and_categories);
+        String title = context.getResources().getString(R.string.stats_view_top_posts_and_pages);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
         context.startActivity(intent);
     }

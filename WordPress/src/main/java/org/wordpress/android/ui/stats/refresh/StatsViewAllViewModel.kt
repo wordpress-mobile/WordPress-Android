@@ -9,18 +9,21 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
 abstract class StatsViewAllViewModel(
     mainDispatcher: CoroutineDispatcher,
+    analyticsTracker: AnalyticsTrackerWrapper,
     protected val useCase: BaseListUseCase
-) : StatsListViewModel(mainDispatcher, useCase) {
+) : StatsListViewModel(mainDispatcher, useCase, analyticsTracker) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     private lateinit var site: SiteModel
-    fun start(site: SiteModel) {
+
+    override fun start(site: SiteModel) {
         this.site = site
         loadData {
             useCase.loadData(site)
@@ -45,17 +48,20 @@ abstract class StatsViewAllViewModel(
 class StatsViewAllCommentsViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(VIEW_ALL_COMMENTS_USE_CASE) useCase: BaseListUseCase
-) : StatsViewAllViewModel(mainDispatcher, useCase)
+    @Named(VIEW_ALL_COMMENTS_USE_CASE) useCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper
+) : StatsViewAllViewModel(mainDispatcher, analyticsTracker, useCase)
 
 class StatsViewAllFollowersViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(VIEW_ALL_FOLLOWERS_USE_CASE) useCase: BaseListUseCase
-) : StatsViewAllViewModel(mainDispatcher, useCase)
+    @Named(VIEW_ALL_FOLLOWERS_USE_CASE) useCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper
+) : StatsViewAllViewModel(mainDispatcher, analyticsTracker, useCase)
 
 class StatsViewAllTagsAndCategoriesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE) useCase: BaseListUseCase
-) : StatsViewAllViewModel(mainDispatcher, useCase)
+    @Named(VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE) useCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper
+) : StatsViewAllViewModel(mainDispatcher, analyticsTracker, useCase)

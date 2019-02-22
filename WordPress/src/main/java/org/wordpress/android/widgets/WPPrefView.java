@@ -340,7 +340,7 @@ public class WPPrefView extends LinearLayout implements
     }
 
     /*
-     * the list of items when the PrefType is CHECKLIST or RADIOLIST
+     * the list of data when the PrefType is CHECKLIST or RADIOLIST
      */
     public @NonNull PrefListItems getListItems() {
         return mListItems;
