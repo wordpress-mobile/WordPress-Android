@@ -7,13 +7,10 @@ import org.wordpress.android.e2e.pages.MePage;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.wordpress.android.support.WPScreenshotSupport.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.Matchers.startsWith;
 
 public class MasterbarComponent {
 

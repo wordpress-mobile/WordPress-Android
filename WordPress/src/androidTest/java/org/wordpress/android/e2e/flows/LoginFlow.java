@@ -5,10 +5,10 @@ import org.wordpress.android.e2e.pages.MePage;
 
 import static org.wordpress.android.BuildConfig.E2E_DEFAULT_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_DEFAULT_USER_PASSWORD;
-import static org.wordpress.android.support.WPScreenshotSupport.clickOn;
-import static org.wordpress.android.support.WPScreenshotSupport.isElementDisplayed;
-import static org.wordpress.android.support.WPScreenshotSupport.populateTextField;
-import static org.wordpress.android.support.WPScreenshotSupport.waitForElementToBeDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.populateTextField;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class LoginFlow {
 

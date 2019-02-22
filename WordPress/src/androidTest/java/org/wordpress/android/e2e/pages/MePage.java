@@ -10,7 +10,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.wordpress.android.support.WPScreenshotSupport.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.clickOn;
 
 public class MePage {
     // Labels

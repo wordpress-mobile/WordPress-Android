@@ -7,7 +7,6 @@ import org.wordpress.android.R;
 
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.wordpress.android.support.WPScreenshotSupport.clickOn;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
