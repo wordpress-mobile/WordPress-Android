@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
+import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView.LayoutManager
@@ -156,6 +157,19 @@ class StatsViewAllFragment : DaggerFragment() {
         viewModel.isRefreshing.observe(this, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
+            }
+        })
+
+        viewModel.showSnackbarMessage.observe(this, Observer { holder ->
+            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+            if (holder != null && parent != null) {
+                if (holder.buttonTitleRes == null) {
+                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                } else {
+                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
+                    snackbar.show()
+                }
             }
         })
 

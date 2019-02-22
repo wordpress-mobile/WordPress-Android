@@ -7,9 +7,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.mergeNotNull
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -21,16 +23,24 @@ abstract class StatsViewAllViewModel(
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
+    private val _showSnackbarMessage = mergeNotNull(
+            useCase.snackbarMessage,
+            distinct = true,
+            singleEvent = true
+    )
+    val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
+
     private lateinit var site: SiteModel
 
     override fun start(site: SiteModel) {
         this.site = site
-        loadData {
+        launch {
             useCase.loadData(site)
         }
     }
 
     fun onPullToRefresh() {
+        _showSnackbarMessage.value = null
         loadData {
             useCase.refreshData(site, true)
         }
