@@ -12,9 +12,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.R.color
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.EMPTY_SPACE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
@@ -45,12 +45,7 @@ open class BlockListItemViewHolder(
     ) {
         when {
             item.icon != null -> {
-                this.imageTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(
-                                this.context,
-                                color.grey_dark
-                        )
-                )
+                this.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this.context, R.color.grey_dark))
                 this.visibility = View.VISIBLE
                 imageManager.load(this, item.icon)
             }
@@ -73,8 +68,7 @@ open class BlockListItemViewHolder(
             }
             item.iconUrl != null -> {
                 this.visibility = View.VISIBLE
-                imageManager.loadIntoCircle(this,
-                        AVATAR_WITH_BACKGROUND, item.iconUrl)
+                imageManager.loadIntoCircle(this, AVATAR_WITH_BACKGROUND, item.iconUrl)
             }
             else -> this.visibility = View.GONE
         }
@@ -95,7 +89,12 @@ open class BlockListItemViewHolder(
                     icon.visibility = View.GONE
                     avatar.setAvatarOrLoad(item, imageManager)
                 }
+                EMPTY_SPACE -> {
+                    this.visibility = View.INVISIBLE
+                }
             }
+        } else if (item.iconStyle == EMPTY_SPACE) {
+            this.visibility = View.INVISIBLE
         } else {
             this.visibility = View.GONE
         }
