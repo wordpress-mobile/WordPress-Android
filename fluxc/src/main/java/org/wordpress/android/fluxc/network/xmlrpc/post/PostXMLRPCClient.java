@@ -117,7 +117,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchPostList(final PostListDescriptorForXmlRpcSite listDescriptor, final int offset) {
+    public void fetchPostList(final PostListDescriptorForXmlRpcSite listDescriptor, final long offset) {
         SiteModel site = listDescriptor.getSite();
         List<String> fields = Arrays.asList("post_id", "post_modified_gmt", "post_status");
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
@@ -609,7 +609,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             final String username,
             final String password,
             final boolean getPages,
-            final int offset,
+            final long offset,
             final int number,
             @Nullable final List<PostStatus> statusList,
             @Nullable final List<String> fields,

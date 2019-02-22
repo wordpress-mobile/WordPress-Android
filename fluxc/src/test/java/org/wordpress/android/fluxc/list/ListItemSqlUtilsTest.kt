@@ -43,6 +43,16 @@ class ListItemSqlUtilsTest {
     }
 
     @Test
+    fun testGetListItemsCount() {
+        val count = 17
+        val testList = generateInsertAndAssertListItems(
+                listDescriptor = PostListDescriptorForRestSite(testSite()),
+                count = count
+        )
+        assertEquals(count.toLong(), listItemSqlUtils.getListItemsCount(testList.id))
+    }
+
+    @Test
     fun testListIdForeignKeyCascadeDelete() {
         val listDescriptor = PostListDescriptorForRestSite(testSite())
         val testList = generateInsertAndAssertListItems(listDescriptor)
