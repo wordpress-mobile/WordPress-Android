@@ -4,6 +4,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CacheMode
 import org.wordpress.android.fluxc.model.stats.CommentsModel
+import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
@@ -157,14 +158,14 @@ class InsightsStore
             1
         }
 
-        val response = restClient.fetchFollowers(siteModel, followerType, nextPage, fetchMode.pageSize, forced)
+        val responsePayload = restClient.fetchFollowers(siteModel, followerType, nextPage, fetchMode.pageSize, forced)
         return@withContext when {
-            response.isError -> {
-                OnStatsFetched(response.error)
+            responsePayload.isError -> {
+                OnStatsFetched(responsePayload.error)
             }
-            response.response != null -> {
+            responsePayload.response != null -> {
                 val replace = !fetchMode.loadMore
-                sqlUtils.insert(siteModel, response.response, followerType, replaceExistingData = replace)
+                sqlUtils.insert(siteModel, responsePayload.response, followerType, replaceExistingData = replace)
                 val followerResponses = sqlUtils.selectAllFollowers(siteModel, followerType)
                 val allFollowers = insightsMapper.mapAndMergeFollowersModels(
                         followerResponses,
@@ -191,23 +192,27 @@ class InsightsStore
     }
 
     // Comments stats
-    suspend fun fetchComments(siteModel: SiteModel, pageSize: Int, forced: Boolean = false) =
+    suspend fun fetchComments(siteModel: SiteModel, fetchMode: FetchMode, forced: Boolean = false) =
             withContext(coroutineContext) {
-                val response = restClient.fetchTopComments(siteModel, pageSize = pageSize + 1, forced = forced)
+                val responsePayload = restClient.fetchTopComments(siteModel, forced = forced)
                 return@withContext when {
-                    response.isError -> {
-                        OnStatsFetched(response.error)
+                    responsePayload.isError -> {
+                        OnStatsFetched(responsePayload.error)
                     }
-                    response.response != null -> {
-                        sqlUtils.insert(siteModel, response.response)
-                        OnStatsFetched(insightsMapper.map(response.response, pageSize))
+                    responsePayload.response != null -> {
+                        sqlUtils.insert(siteModel, responsePayload.response)
+                        val cacheMode = if (fetchMode is FetchMode.Top)
+                            CacheMode.Top(fetchMode.limit)
+                        else
+                            CacheMode.All
+                        OnStatsFetched(insightsMapper.map(responsePayload.response, cacheMode))
                     }
                     else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
                 }
             }
 
-    fun getComments(site: SiteModel, pageSize: Int): CommentsModel? {
-        return sqlUtils.selectCommentInsights(site)?.let { insightsMapper.map(it, pageSize) }
+    fun getComments(site: SiteModel, cacheMode: CacheMode): CommentsModel? {
+        return sqlUtils.selectCommentInsights(site)?.let { insightsMapper.map(it, cacheMode) }
     }
 
     // Tags
