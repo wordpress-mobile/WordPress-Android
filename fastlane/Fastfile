@@ -56,29 +56,27 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
   desc "Creates a new release branch from the current develop"
   lane :code_freeze do | options |
     old_version = android_codefreeze(options)
-    
+   
     localize_libs()
-
-    setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{options[:codefreeze_version]}")
     setfrozentag(repository:GHHELPER_REPO, milestone: options[:codefreeze_version])
 
     get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
   end
 
 #####################################################################################
-# update_ps_strings 
+# update_appstore_strings 
 # -----------------------------------------------------------------------------------
 # This lane gets the data from the txt files in the WordPress/metadata/ folder
 # and updates the .po file that is then picked by GlotPress for translations.
 # -----------------------------------------------------------------------------------
 # Usage:
-# fastlane update_ps_strings version:<version>
+# fastlane update_appstore_strings version:<version>
 #
 # Example:
-# fastlane update_ps_strings version:10.3
+# fastlane update_appstore_strings version:10.3
 #####################################################################################
   desc "Updates the PlayStoreStrings.po file"
-  lane :update_ps_strings do |options| 
+  lane :update_appstore_strings do |options| 
     prj_folder = Dir.pwd + "/.."
 
     files = {

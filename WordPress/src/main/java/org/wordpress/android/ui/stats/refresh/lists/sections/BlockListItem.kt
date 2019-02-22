@@ -4,6 +4,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
@@ -37,6 +38,7 @@ sealed class BlockListItem(val type: Type) {
         COLUMNS,
         LINK,
         BAR_CHART,
+        CHART_LEGEND,
         TABS,
         HEADER,
         MAP,
@@ -49,6 +51,7 @@ sealed class BlockListItem(val type: Type) {
     data class ValueItem(
         val value: String,
         @StringRes val unit: Int,
+        val isFirst: Boolean = false,
         val change: String? = null,
         val positive: Boolean = true
     ) : BlockListItem(VALUE_ITEM)
@@ -73,19 +76,30 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
         val showDivider: Boolean = true,
+        val textStyle: TextStyle = TextStyle.NORMAL,
         val navigationAction: NavigationAction? = null
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
 
         enum class IconStyle {
-            NORMAL, AVATAR
+            NORMAL, AVATAR, EMPTY_SPACE
+        }
+
+        enum class TextStyle {
+            NORMAL, LIGHT
         }
     }
 
     data class Information(val text: String) : BlockListItem(INFO)
 
-    data class Text(val text: String, val links: List<Clickable>? = null) : BlockListItem(TEXT) {
+    data class Text(
+        val text: String? = null,
+        val textResource: Int? = null,
+        val links: List<Clickable>? = null,
+        val isLast: Boolean = false
+    ) :
+            BlockListItem(TEXT) {
         data class Clickable(
             val link: String,
             val navigationAction: NavigationAction
@@ -111,6 +125,7 @@ sealed class BlockListItem(val type: Type) {
 
     data class BarChartItem(
         val entries: List<Bar>,
+        val overlappingEntries: List<Bar>? = null,
         val selectedItem: String? = null,
         val onBarSelected: ((period: String?) -> Unit)? = null,
         val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null
@@ -120,6 +135,8 @@ sealed class BlockListItem(val type: Type) {
         override val itemId: Int
             get() = entries.hashCode()
     }
+
+    data class ChartLegend(@StringRes val text: Int) : BlockListItem(CHART_LEGEND)
 
     data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
             BlockListItem(TABS) {

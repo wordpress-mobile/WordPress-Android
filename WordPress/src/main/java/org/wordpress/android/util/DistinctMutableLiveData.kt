@@ -18,4 +18,8 @@ class DistinctMutableLiveData<T>(private val defaultValue: T) : MutableLiveData<
     override fun getValue(): T {
         return super.getValue() ?: defaultValue
     }
+
+    fun clear() {
+        value = defaultValue
+    }
 }
