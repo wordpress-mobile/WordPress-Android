@@ -95,9 +95,7 @@ class ListStore @Inject constructor(
                 dataStore.fetchList(listDescriptor, offset)
             }
         }
-        val isEmpty = {
-            getListItems(listDescriptor).isEmpty()
-        }
+        val isEmpty = { getListItemsCount(listDescriptor) == 0L }
 
         // Create the PagedList
         val factory = PagedListFactory(dataStore, listDescriptor, getList, isListFullyFetched, transform)
@@ -139,6 +137,14 @@ class ListStore @Inject constructor(
     }
 
     /**
+     * A helper function that returns the number of records a list has for the given [ListDescriptor].
+     */
+    private fun getListItemsCount(listDescriptor: ListDescriptor): Long {
+        val listModel = listSqlUtils.getList(listDescriptor)
+        return if (listModel != null) listItemSqlUtils.getListItemsCount(listModel.id) else 0L
+    }
+
+    /**
      * A helper function that initiates the fetch from remote for the given [ListDescriptor].
      *
      * Before fetching the list, it'll first check if this is a valid fetch depending on the list's state. Then, it'll
@@ -148,7 +154,7 @@ class ListStore @Inject constructor(
     private fun handleFetchList(
         listDescriptor: ListDescriptor,
         loadMore: Boolean,
-        fetchList: (Int) -> Unit
+        fetchList: (Long) -> Unit
     ) {
         val currentState = getListState(listDescriptor)
         if (!loadMore && currentState.isFetchingFirstPage()) {
@@ -166,7 +172,7 @@ class ListStore @Inject constructor(
         val listModel = requireNotNull(listSqlUtils.getList(listDescriptor)) {
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
         }
-        val offset = if (loadMore) listItemSqlUtils.getListItems(listModel.id).size else 0
+        val offset = if (loadMore) listItemSqlUtils.getListItemsCount(listModel.id) else 0L
         fetchList(offset)
     }
 

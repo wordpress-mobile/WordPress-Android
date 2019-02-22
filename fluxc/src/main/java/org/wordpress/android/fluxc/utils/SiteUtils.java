@@ -51,9 +51,9 @@ public class SiteUtils {
      * Given a {@link SiteModel}, {@link SimpleDateFormat} and a {@link Date},
      * returns a formatted date that accounts for the site's timezone setting.
      */
-    private static @NonNull String getDateTimeForSite(@NonNull SiteModel site,
-                                                      @NonNull SimpleDateFormat dateFormat,
-                                                      @NonNull Date date) {
+    public static @NonNull String getDateTimeForSite(@NonNull SiteModel site,
+                                                     @NonNull SimpleDateFormat dateFormat,
+                                                     @NonNull Date date) {
         String wpTimeZone = site.getTimezone();
 
         /*

@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 55;
+        return 56;
     }
 
     @Override
@@ -440,6 +440,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 54:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 55:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL(
                         "CREATE TABLE StatsBlockTemp (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,JSON TEXT NOT NULL)");
@@ -526,6 +530,14 @@ public class WellSqlConfig extends DefaultWellConfig {
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("CREATE TABLE WCOrderStatusModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "LOCAL_SITE_ID INTEGER,STATUS_KEY TEXT NOT NULL,LABEL TEXT NOT NULL)");
+                    break;
+                case 54:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD IS_CUSTOM_FIELD INTEGER");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD DATE TEXT");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD ENDDATE TEXT");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD STARTDATE TEXT");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD QUANTITY TEXT");
                     break;
             }
         }
