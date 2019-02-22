@@ -5,12 +5,12 @@ import android.support.test.rule.ActivityTestRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.e2e.components.MasterbarComponent;
-import org.wordpress.android.e2e.components.SnackbarComponent;
 import org.wordpress.android.e2e.pages.EditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.wordpress.android.BuildConfig.E2E_DEFAULT_USER_SITE_ADDRESS;
 
 public class EditorTests extends BaseTest {
@@ -31,15 +31,10 @@ public class EditorTests extends BaseTest {
         new MySitesPage()
                 .startNewPost(E2E_DEFAULT_USER_SITE_ADDRESS);
 
-        new EditorPage()
+        boolean isPublished = new EditorPage()
                 .enterTitle(title)
                 .enterContent(content)
                 .publishPost();
-
-        // Unfortunately it seems to take quite a while to upload, this shouldn't be necessary once we're mocking
-        sleep(10000);
-
-        new SnackbarComponent()
-                .verifyPostPublished();
+        assertTrue(isPublished);
     }
 }
