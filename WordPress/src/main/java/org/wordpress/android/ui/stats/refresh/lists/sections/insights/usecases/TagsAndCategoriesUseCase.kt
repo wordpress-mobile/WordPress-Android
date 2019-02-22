@@ -21,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
@@ -141,6 +142,7 @@ class TagsAndCategoriesUseCase
     private fun mapItem(item: TagModel.Item): ListItemWithIcon {
         return ListItemWithIcon(
                 icon = getIcon(item.type),
+                textStyle = LIGHT,
                 text = item.name,
                 showDivider = false,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick)

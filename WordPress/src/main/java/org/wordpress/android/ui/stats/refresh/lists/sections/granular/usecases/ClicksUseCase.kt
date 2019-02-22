@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -104,6 +105,7 @@ constructor(
                         items.addAll(group.clicks.map { click ->
                             ListItemWithIcon(
                                     text = click.name,
+                                    textStyle = LIGHT,
                                     value = click.views.toFormattedString(),
                                     showDivider = false,
                                     navigationAction = click.url?.let { NavigationAction.create(it, this::onItemClick) }
