@@ -19,6 +19,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.EMPTY_SPACE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
@@ -112,9 +115,16 @@ constructor(
                     if (isExpanded) {
                         items.addAll(group.referrers.map { referrer ->
                             val referrerIcon = buildIcon(referrer.icon)
+                            val iconStyle = if (group.icon != null && referrer.icon == null && referrerIcon == null) {
+                                EMPTY_SPACE
+                            } else {
+                                NORMAL
+                            }
                             ListItemWithIcon(
                                     icon = referrerIcon,
                                     iconUrl = if (referrerIcon == null) referrer.icon else null,
+                                    iconStyle = iconStyle,
+                                    textStyle = LIGHT,
                                     text = referrer.name,
                                     value = referrer.views.toFormattedString(),
                                     showDivider = false,

@@ -53,7 +53,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.EMPTY_SPACE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
@@ -126,6 +129,11 @@ sealed class BlockListItemViewHolder(
         fun bind(item: ListItemWithIcon) {
             iconContainer.setIconOrAvatar(item, imageManager)
             text.setTextOrHide(item.textResource, item.text)
+            val textColor = when (item.textStyle) {
+                TextStyle.NORMAL -> R.color.grey_dark
+                LIGHT -> R.color.grey_darken_20
+            }
+            text.setTextColor(ContextCompat.getColor(text.context, textColor))
             subtext.setTextOrHide(item.subTextResource, item.subText)
             value.setTextOrHide(item.valueResource, item.value)
             divider.visibility = if (item.showDivider) {
@@ -271,11 +279,13 @@ sealed class BlockListItemViewHolder(
                 }
             }
         }
+
         private fun LinearLayout.setSelection(isSelected: Boolean) {
             key().isSelected = isSelected
             value().isSelected = isSelected
             selector().visibility = if (isSelected) View.VISIBLE else View.GONE
         }
+
         private fun LinearLayout.key(): TextView = this.findViewById(R.id.key)
         private fun LinearLayout.value(): TextView = this.findViewById(R.id.value)
         private fun LinearLayout.selector(): View = this.findViewById(R.id.selector)
@@ -549,7 +559,12 @@ sealed class BlockListItemViewHolder(
                     icon.visibility = GONE
                     avatar.setAvatarOrLoad(item, imageManager)
                 }
+                EMPTY_SPACE -> {
+                    this.visibility = View.INVISIBLE
+                }
             }
+        } else if (item.iconStyle == EMPTY_SPACE) {
+            this.visibility = View.INVISIBLE
         } else {
             this.visibility = View.GONE
         }
