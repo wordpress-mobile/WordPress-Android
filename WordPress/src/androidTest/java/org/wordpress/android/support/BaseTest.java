@@ -8,7 +8,6 @@ import org.wordpress.android.e2e.pages.MePage;
 import org.wordpress.android.ui.WPLaunchActivity;
 
 public class BaseTest {
-
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
