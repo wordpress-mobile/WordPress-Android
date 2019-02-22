@@ -102,7 +102,7 @@ class InsightsMapper
         )
     }
 
-    fun map(response: FollowersResponse, followerType: FollowerType, pageSize: Int): FollowersModel {
+    fun map(response: FollowersResponse, followerType: FollowerType): FollowersModel {
         val followers = response.subscribers.mapNotNull {
             if (it.avatar != null && it.label != null && it.dateSubscribed != null) {
                 FollowerModel(
@@ -115,12 +115,39 @@ class InsightsMapper
                 AppLog.e(STATS, "CommentsResponse.posts: Non-null field is coming as null from API")
                 null
             }
-        }.take(pageSize)
+        }
         val total = when (followerType) {
             WP_COM -> response.totalWpCom
             EMAIL -> response.totalEmail
         }
-        return FollowersModel(total ?: 0, followers, response.subscribers.size > pageSize)
+        val hasMore = if (response.page != null && response.pages != null) {
+            response.page < response.pages
+        } else {
+            false
+        }
+        return FollowersModel(total ?: 0, followers, hasMore)
+    }
+
+    fun mapAndMergeFollowersModels(
+        followerResponses: List<FollowersResponse>,
+        followerType: FollowerType,
+        cacheMode: CacheMode
+    ): FollowersModel {
+        return followerResponses.fold(FollowersModel(0, emptyList(), false)) { accumulator, next ->
+                val nextModel = map(next, followerType)
+                accumulator.copy(
+                        totalCount = nextModel.totalCount,
+                        followers = accumulator.followers + nextModel.followers,
+                        hasMore = nextModel.hasMore
+                )
+            }
+            .let {
+                if (cacheMode is CacheMode.Top) {
+                    return@let it.copy(followers = it.followers.take(cacheMode.limit))
+                } else {
+                    return@let it
+                }
+            }
     }
 
     fun map(response: CommentsResponse, pageSize: Int): CommentsModel {

@@ -51,8 +51,8 @@ class InsightsSqlUtils
         insert(site, TODAYS_INSIGHTS, data)
     }
 
-    fun insert(site: SiteModel, data: FollowersResponse, followerType: FollowerType) {
-        insert(site, followerType.toDbKey(), data)
+    fun insert(site: SiteModel, data: FollowersResponse, followerType: FollowerType, replaceExistingData: Boolean) {
+        insert(site, followerType.toDbKey(), data, replaceExistingData)
     }
 
     fun insert(site: SiteModel, data: CommentsResponse) {
@@ -91,6 +91,10 @@ class InsightsSqlUtils
         return select(site, followerType.toDbKey(), FollowersResponse::class.java)
     }
 
+    fun selectAllFollowers(site: SiteModel, followerType: FollowerType): List<FollowersResponse> {
+        return selectAll(site, followerType.toDbKey(), FollowersResponse::class.java)
+    }
+
     fun selectPublicizeInsights(site: SiteModel): PublicizeResponse? {
         return select(site, PUBLICIZE_INSIGHTS, PublicizeResponse::class.java)
     }
@@ -110,11 +114,15 @@ class InsightsSqlUtils
         return select(site, TAGS_AND_CATEGORIES_INSIGHTS, TagsResponse::class.java)
     }
 
-    private fun <T> insert(site: SiteModel, blockType: BlockType, data: T) {
-        statsSqlUtils.insert(site, blockType, INSIGHTS, data)
+    private fun <T> insert(site: SiteModel, blockType: BlockType, data: T, replaceExistingData: Boolean = true) {
+        statsSqlUtils.insert(site, blockType, INSIGHTS, data, replaceExistingData)
     }
 
     private fun <T> select(site: SiteModel, blockType: BlockType, classOfT: Class<T>): T? {
         return statsSqlUtils.select(site, blockType, INSIGHTS, classOfT)
+    }
+
+    private fun <T> selectAll(site: SiteModel, blockType: BlockType, classOfT: Class<T>): List<T> {
+        return statsSqlUtils.selectAll(site, blockType, INSIGHTS, classOfT)
     }
 }
