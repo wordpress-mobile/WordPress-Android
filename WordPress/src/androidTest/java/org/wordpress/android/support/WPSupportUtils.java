@@ -36,7 +36,7 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 
 
-public class WPScreenshotSupport {
+public class WPSupportUtils {
     // HIGH-LEVEL METHODS
 
     public static boolean isElementDisplayed(Integer elementID) {
