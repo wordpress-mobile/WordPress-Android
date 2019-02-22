@@ -1803,24 +1803,34 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void loadRevision() {
+        final boolean isRevisionSameAsPost = mPost.getTitle().equals(mRevision.getPostTitle())
+                                             && mPost.getContent().equals(mRevision.getPostContent());
         showDialogProgress(true);
-        mPostForUndo = mPost.clone();
-        mPost.setTitle(mRevision.getPostTitle());
-        mPost.setContent(mRevision.getPostContent());
-        mPost.setIsLocallyChanged(true);
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-        refreshEditorContent();
+
+        // We go through dummy revision loading flow when content of revision is identical to post
+        // Visually revision is loaded as normal, but actually nothing happens and Undo function does nothing
+
+        if (!isRevisionSameAsPost) {
+            mPostForUndo = mPost.clone();
+            mPost.setTitle(mRevision.getPostTitle());
+            mPost.setContent(mRevision.getPostContent());
+            mPost.setIsLocallyChanged(true);
+            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            refreshEditorContent();
+        }
 
         Snackbar.make(mViewPager, getString(R.string.history_loaded_revision),
                 AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, 4000))
                 .setAction(getString(R.string.undo), new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
-                        RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
-                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                        mPost = mPostForUndo.clone();
-                        refreshEditorContent();
+                        if (!isRevisionSameAsPost) {
+                            AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
+                            RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
+                            mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                            mPost = mPostForUndo.clone();
+                            refreshEditorContent();
+                        }
                     }
                 })
                 .show();
