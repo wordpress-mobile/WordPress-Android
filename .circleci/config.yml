@@ -13,7 +13,6 @@ copy_gradle_properties: &copy_gradle_properties
     command: cp gradle.properties-example gradle.properties && cp libs/login/gradle.properties-example libs/login/gradle.properties
 
 orbs:
-  danger: wordpress-mobile/danger@0.0.19
   android: wordpress-mobile/android@0.0.19
   bundle-install: toshimaru/bundle-install@0.1.1
 
@@ -69,5 +68,3 @@ workflows:
       - strings-check
       - test
       - lint
-      - danger/danger-ruby:
-          name: danger
