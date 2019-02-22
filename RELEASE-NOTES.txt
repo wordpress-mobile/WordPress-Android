@@ -1,5 +1,6 @@
 11.9
 -----
+* Make "<em>" the default markup for italic in the editor
 * Updated Plans with new design
 * Fixed an issue where posts show up as scheduled even after they are published
 

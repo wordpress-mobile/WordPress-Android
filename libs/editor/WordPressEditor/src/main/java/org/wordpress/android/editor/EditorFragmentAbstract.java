@@ -178,6 +178,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
      */
     public interface EditorFragmentListener {
         void onEditorFragmentInitialized();
+        void onEditorFragmentContentReady(boolean hasUnsupportedContent);
         void onSettingsClicked();
         void onAddMediaClicked();
         void onAddPhotoClicked();
