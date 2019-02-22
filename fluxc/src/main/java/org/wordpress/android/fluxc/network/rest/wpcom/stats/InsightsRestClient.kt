@@ -159,15 +159,21 @@ constructor(
     suspend fun fetchFollowers(
         site: SiteModel,
         type: FollowerType,
+        page: Int,
         pageSize: Int,
         forced: Boolean
     ): FetchStatsPayload<FollowersResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.followers.urlV1_1
 
-        val params = mapOf(
+        val params = mutableMapOf(
                 "type" to type.path,
                 "max" to pageSize.toString()
         )
+
+        if (page > 1) {
+            params["page"] = page.toString()
+        }
+
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,

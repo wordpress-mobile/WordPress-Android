@@ -63,7 +63,7 @@ class ClicksSqlUtilsTest {
         mappedTypes.forEach { statsType, dbGranularity ->
             timeStatsSqlUtils.insert(site, CLICKS_RESPONSE, dbGranularity, DATE)
 
-            verify(statsSqlUtils).insert(site, CLICKS, statsType, CLICKS_RESPONSE, DATE_VALUE)
+            verify(statsSqlUtils).insert(site, CLICKS, statsType, CLICKS_RESPONSE, true, DATE_VALUE)
         }
     }
 }

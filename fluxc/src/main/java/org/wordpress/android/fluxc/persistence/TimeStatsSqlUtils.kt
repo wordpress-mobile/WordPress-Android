@@ -37,6 +37,7 @@ class TimeStatsSqlUtils
                 POSTS_AND_PAGES_VIEWS,
                 granularity.toStatsType(),
                 data,
+                true,
                 statsUtils.getFormattedDate(date)
         )
     }
@@ -47,6 +48,7 @@ class TimeStatsSqlUtils
                 REFERRERS,
                 granularity.toStatsType(),
                 data,
+                true,
                 statsUtils.getFormattedDate(date)
         )
     }
@@ -57,6 +59,7 @@ class TimeStatsSqlUtils
                 CLICKS,
                 granularity.toStatsType(),
                 data,
+                true,
                 statsUtils.getFormattedDate(date)
         )
     }
@@ -67,6 +70,7 @@ class TimeStatsSqlUtils
                 VISITS_AND_VIEWS,
                 granularity.toStatsType(),
                 data,
+                true,
                 statsUtils.getFormattedDate(date)
         )
     }
@@ -77,6 +81,7 @@ class TimeStatsSqlUtils
                 COUNTRY_VIEWS,
                 granularity.toStatsType(),
                 data,
+                true,
                 statsUtils.getFormattedDate(date)
         )
     }
@@ -87,6 +92,7 @@ class TimeStatsSqlUtils
                 AUTHORS,
                 granularity.toStatsType(),
                 data,
+                true,
                 statsUtils.getFormattedDate(date)
         )
     }
@@ -97,6 +103,7 @@ class TimeStatsSqlUtils
                 SEARCH_TERMS,
                 granularity.toStatsType(),
                 data,
+                true,
                 statsUtils.getFormattedDate(date)
         )
     }
@@ -107,6 +114,7 @@ class TimeStatsSqlUtils
                 VIDEO_PLAYS,
                 granularity.toStatsType(),
                 data,
+                true,
                 statsUtils.getFormattedDate(date)
         )
     }
