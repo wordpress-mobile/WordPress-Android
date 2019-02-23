@@ -1339,6 +1339,13 @@ public class EditPostActivity extends AppCompatActivity implements
                                 getString(R.string.error_save_empty_draft), Duration.SHORT);
                         return false;
                     }
+
+                    if (status == PostStatus.SCHEDULED && isNewPost()) {
+                        // if user pressed `Save as draft` on a new, Scheduled Post, re-convert it to draft.
+                        if (mEditPostSettingsFragment != null) {
+                            mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
+                        }
+                    }
                     UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                     savePostAndOptionallyFinish(false);

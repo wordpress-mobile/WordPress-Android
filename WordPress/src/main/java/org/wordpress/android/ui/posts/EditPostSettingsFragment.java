@@ -653,7 +653,7 @@ public class EditPostSettingsFragment extends Fragment {
         updateCategoriesTextView();
     }
 
-    private void updatePostStatus(String postStatus) {
+    public void updatePostStatus(String postStatus) {
         getPost().setStatus(postStatus);
         updatePostStatusRelatedViews();
         updateSaveButton();
