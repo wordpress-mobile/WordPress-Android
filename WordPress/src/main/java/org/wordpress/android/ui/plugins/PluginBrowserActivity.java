@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -39,6 +38,7 @@ import org.wordpress.android.models.networkresource.ListState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -441,8 +441,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 holder.mStatusText.setText(textResId);
                 holder.mStatusText.setTextColor(color);
                 holder.mStatusIcon.setVisibility(isAutoManaged ? View.GONE : View.VISIBLE);
-                holder.mStatusIcon.setImageResource(drawableResId);
-                holder.mStatusIcon.setImageTintList(ColorStateList.valueOf(color));
+                ColorUtils.INSTANCE.setImageResourceWithTint(holder.mStatusIcon, drawableResId, color);
                 holder.mStatusContainer.setVisibility(View.VISIBLE);
                 holder.mRatingBar.setVisibility(View.GONE);
             } else {

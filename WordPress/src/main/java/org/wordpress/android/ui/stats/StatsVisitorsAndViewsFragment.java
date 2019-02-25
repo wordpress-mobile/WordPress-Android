@@ -2,10 +2,8 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +26,7 @@ import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -169,17 +168,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             updateBackGroundAndIcon(0);
         }
 
-        private Drawable getTabIcon() {
+        private @DrawableRes int getTabIcon() {
             switch (mLabelItem) {
                 case VISITORS:
-                    return getResources().getDrawable(R.drawable.ic_user_white_24dp);
+                    return R.drawable.ic_user_white_24dp;
                 case COMMENTS:
-                    return getResources().getDrawable(R.drawable.ic_comment_white_24dp);
+                    return R.drawable.ic_comment_white_24dp;
                 case LIKES:
-                    return getResources().getDrawable(R.drawable.ic_star_white_24dp);
+                    return R.drawable.ic_star_white_24dp;
                 default:
                     // Views and when no prev match
-                    return getResources().getDrawable(R.drawable.ic_visible_on_white_24dp);
+                    return R.drawable.ic_visible_on_white_24dp;
             }
         }
 
@@ -194,9 +193,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 }
             }
 
-            mIcon.setImageDrawable(getTabIcon());
-            mIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(requireActivity(),
-                    R.color.grey_dark)));
+            ColorUtils.INSTANCE.setImageResourceWithTint(mIcon, getTabIcon(), R.color.grey_dark);
 
             if (mIsLastItem) {
                 if (mIsChecked) {
