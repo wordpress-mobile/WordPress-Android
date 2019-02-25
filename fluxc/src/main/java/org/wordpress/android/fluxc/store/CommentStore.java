@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -187,6 +188,7 @@ public class CommentStore extends Store {
      *                             If false, order the results by descending published date.
      * @param statuses Array of status or CommentStatus.ALL to get all of them.
      */
+    @SuppressLint("WrongConstant")
     public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending,
                                                  CommentStatus... statuses) {
         @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;

@@ -71,9 +71,9 @@ public class PostStore extends Store {
 
     public static class FetchPostListPayload extends Payload<BaseNetworkError> {
         public PostListDescriptor listDescriptor;
-        public int offset;
+        public long offset;
 
-        public FetchPostListPayload(PostListDescriptor listDescriptor, int offset) {
+        public FetchPostListPayload(PostListDescriptor listDescriptor, long offset) {
             this.listDescriptor = listDescriptor;
             this.offset = offset;
         }
@@ -82,10 +82,12 @@ public class PostStore extends Store {
     public static class PostListItem {
         public Long remotePostId;
         public String lastModified;
+        public String status;
 
-        public PostListItem(Long remotePostId, String lastModified) {
+        public PostListItem(Long remotePostId, String lastModified, String status) {
             this.remotePostId = remotePostId;
             this.lastModified = lastModified;
+            this.status = status;
         }
     }
 
@@ -605,7 +607,15 @@ public class PostStore extends Store {
             Map<Long, PostModel> posts = getPostsByRemotePostIds(postIds, site);
             for (PostListItem item : payload.postListItems) {
                 PostModel post = posts.get(item.remotePostId);
-                if (post != null && !post.getLastModified().equals(item.lastModified)) {
+                if (post == null) {
+                    // Post doesn't exist in the DB, nothing to do.
+                    continue;
+                }
+                // Check if the post's last modified date or status has changed. We need to check status separately
+                // because when a scheduled post is published, its modified date will not be updated.
+                boolean isPostChanged =
+                        !post.getLastModified().equals(item.lastModified) || !post.getStatus().equals(item.status);
+                if (isPostChanged) {
                     // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
                     // as we'd otherwise overwrite and lose these local changes forever
                     if (!post.isLocallyChanged()) {
