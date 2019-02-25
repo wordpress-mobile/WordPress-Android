@@ -29,6 +29,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
@@ -263,26 +264,26 @@ class PostListFragment : Fragment() {
     }
 
     private fun updateEmptyViewForState(state: PostListEmptyUiState) {
-        if (state.listVisible) {
-            actionableEmptyView?.visibility = View.GONE
-        } else {
-            actionableEmptyView?.visibility = View.VISIBLE
-            actionableEmptyView?.let { view ->
-                setTextOrHide(view.title, state.titleResId)
-                setImageOrHide(view.image, state.imgResId)
-                setupButtonOrHide(view.button, state.buttonTextResId, state.onButtonClick)
+        actionableEmptyView?.let { emptyView ->
+            if (state.listVisible) {
+                emptyView.visibility = View.GONE
+            } else {
+                emptyView.visibility = View.VISIBLE
+                setTextOrHide(emptyView.title, state.title)
+                setImageOrHide(emptyView.image, state.imgResId)
+                setupButtonOrHide(emptyView.button, state.buttonText, state.onButtonClick)
             }
         }
     }
 
     private fun setupButtonOrHide(
         buttonView: Button,
-        textResId: Int?,
+        text: UiString?,
         onButtonClick: (() -> Unit)?
     ) {
-        buttonView.visibility = if (textResId == null) View.GONE else View.VISIBLE
-        textResId?.let {
-            buttonView.setText(textResId)
+        buttonView.visibility = if (text == null) View.GONE else View.VISIBLE
+        text?.let {
+            buttonView.text = uiHelpers.getTextOfUiString(nonNullActivity, text)
             buttonView.setOnClickListener { onButtonClick?.invoke() }
         }
     }
@@ -294,10 +295,10 @@ class PostListFragment : Fragment() {
         }
     }
 
-    private fun setTextOrHide(textView: TextView, resId: Int?) {
-        textView.visibility = if (resId == null) View.GONE else View.VISIBLE
-        resId?.let {
-            textView.text = resources.getString(resId)
+    private fun setTextOrHide(textView: TextView, text: UiString?) {
+        textView.visibility = if (text == null) View.GONE else View.VISIBLE
+        text?.let {
+            textView.text = uiHelpers.getTextOfUiString(nonNullActivity, text)
         }
     }
 

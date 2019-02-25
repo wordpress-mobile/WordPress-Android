@@ -10,7 +10,6 @@ import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import android.content.Intent
 import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import de.greenrobot.event.EventBus
 import org.apache.commons.text.StringEscapeUtils
 import org.greenrobot.eventbus.Subscribe
@@ -72,6 +71,7 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.VideoOptimizer
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
@@ -211,9 +211,9 @@ class PostListViewModel @Inject constructor(
             PostListEmptyUiState.PermissionsError
         } else {
             if (networkUtilsWrapper.isNetworkAvailable()) {
-                PostListEmptyUiState.RefreshError(R.string.error_refresh_posts)
+                PostListEmptyUiState.RefreshError(UiStringRes(R.string.error_refresh_posts))
             } else {
-                PostListEmptyUiState.RefreshError(R.string.no_network_message)
+                PostListEmptyUiState.RefreshError(UiStringRes(R.string.no_network_message))
             }
         }
     }
@@ -221,56 +221,56 @@ class PostListViewModel @Inject constructor(
     private fun createEmptyListUiState(): PostListEmptyUiState.EmptyList {
         return when (postListType) {
             PUBLISHED -> PostListEmptyUiState.EmptyList(
-                    R.string.posts_published_empty,
-                    R.string.posts_empty_list_button,
+                    UiStringRes(R.string.posts_published_empty),
+                    UiStringRes(R.string.posts_empty_list_button),
                     this@PostListViewModel::newPost
             )
             DRAFTS -> PostListEmptyUiState.EmptyList(
-                    R.string.posts_draft_empty,
-                    R.string.posts_empty_list_button,
+                    UiStringRes(R.string.posts_draft_empty),
+                    UiStringRes(R.string.posts_empty_list_button),
                     this@PostListViewModel::newPost
             )
             SCHEDULED -> PostListEmptyUiState.EmptyList(
-                    R.string.posts_scheduled_empty,
-                    R.string.posts_empty_list_button,
+                    UiStringRes(R.string.posts_scheduled_empty),
+                    UiStringRes(R.string.posts_empty_list_button),
                     this@PostListViewModel::newPost
             )
-            TRASHED -> PostListEmptyUiState.EmptyList(R.string.posts_trashed_empty)
+            TRASHED -> PostListEmptyUiState.EmptyList(UiStringRes(R.string.posts_trashed_empty))
         }
     }
 
     sealed class PostListEmptyUiState(
-        @StringRes val titleResId: Int? = null,
+        val title: UiString? = null,
         @DrawableRes val imgResId: Int? = null,
-        @StringRes val buttonTextResId: Int? = null,
+        val buttonText: UiString? = null,
         val onButtonClick: (() -> Unit)? = null,
         val listVisible: Boolean = true
     ) {
         class EmptyList(
-            titleResId: Int,
-            @StringRes buttonTextResId: Int? = null,
+            title: UiString,
+            buttonText: UiString? = null,
             onButtonClick: (() -> Unit)? = null
         ) : PostListEmptyUiState(
-                titleResId,
+                title,
                 R.drawable.img_illustration_posts_75dp,
-                buttonTextResId,
+                buttonText,
                 onButtonClick
         )
 
         object HiddenList : PostListEmptyUiState(listVisible = false)
 
         object Loading : PostListEmptyUiState(
-                R.string.posts_fetching,
+                UiStringRes(R.string.posts_fetching),
                 R.drawable.img_illustration_posts_75dp
         )
 
-        class RefreshError(@StringRes titleResId: Int) : PostListEmptyUiState(
-                titleResId,
+        class RefreshError(title: UiString) : PostListEmptyUiState(
+                title,
                 R.drawable.img_illustration_posts_75dp
         )
 
         object PermissionsError : PostListEmptyUiState(
-                R.string.error_refresh_unauthorized_posts,
+                UiStringRes(R.string.error_refresh_unauthorized_posts),
                 R.drawable.img_illustration_posts_75dp
         )
     }
