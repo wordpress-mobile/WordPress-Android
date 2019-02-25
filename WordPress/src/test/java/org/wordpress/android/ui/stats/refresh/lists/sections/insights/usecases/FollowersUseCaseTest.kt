@@ -21,11 +21,11 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -219,8 +219,6 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
-    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean = false): UseCaseModel {
-        var result: UseCaseModel? = null
     @Test
     fun `maps email followers to UI model in the view all mode`() = test {
         useCase = FollowersUseCase(
@@ -273,17 +271,17 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val tabsItem = (result as BlockList).assertEmptyTabSelectedViewAllMode(0)
+        assertThat(result.state).isEqualTo(SUCCESS)
+        val tabsItem = result.data!!.assertEmptyTabSelectedViewAllMode(0)
 
         tabsItem.onTabSelected(1)
         var updatedResult = loadFollowers(refresh)
-        val button = (updatedResult as BlockList).assertViewAllFollowersFirstLoad(position = 1)
+        val button = updatedResult.data!!.assertViewAllFollowersFirstLoad(position = 1)
 
         button.navigateAction.click()
         delay(1000)
-        updatedResult = useCase.liveData.value!! as BlockList
-        updatedResult.assertViewAllFollowersSecondLoad()
+        updatedResult = useCase.liveData.value!!
+        updatedResult.data!!.assertViewAllFollowersSecondLoad()
     }
 
     private suspend fun loadFollowers(refresh: Boolean, forced: Boolean = false): UseCaseModel {
