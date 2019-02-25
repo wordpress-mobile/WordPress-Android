@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -15,7 +16,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -35,14 +35,14 @@ class PostingActivityRestClient
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchPostingActivity(
         site: SiteModel,
-        startDate: Date,
-        endDate: Date,
+        startDay: Day,
+        endDay: Day,
         forced: Boolean
     ): FetchStatsPayload<PostingActivityResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.streak.urlV1_1
         val params = mapOf(
-                "startDate" to statsUtils.toFormattedDate(startDate),
-                "endDate" to statsUtils.toFormattedDate(endDate),
+                "startDate" to statsUtils.toFormattedDate(startDay),
+                "endDate" to statsUtils.toFormattedDate(endDay),
                 "gmtOffset" to 0.toString(),
                 "max" to MAX_ITEMS.toString()
         )

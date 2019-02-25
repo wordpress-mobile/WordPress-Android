@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.model.stats.insights
 
 import java.util.Date
 
-data class PostingActivityModel(val streak: StreakModel, val events: List<StreakEvent>, val hasMore: Boolean) {
+data class PostingActivityModel(val streak: StreakModel, val  months: List<Month>, val hasMore: Boolean) {
     data class StreakModel(
         val currentStreakStart: Date?,
         val currentStreakEnd: Date?,
@@ -11,5 +11,6 @@ data class PostingActivityModel(val streak: StreakModel, val events: List<Streak
         val longestStreakEnd: Date?,
         val longestStreakLength: Int?
     )
-    data class StreakEvent(val date: Date, val postCount: Int)
+    data class Month(val year: Int, val month: Int, val days: Map<Int, Int>)
+    data class Day(val year: Int, val month: Int, val day: Int)
 }

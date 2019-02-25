@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.StreakEvent
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse.Streak
@@ -72,7 +72,8 @@ class InsightsMapperTest {
     fun `maps latest posts response`() {
         val model = mapper.map(
                 LATEST_POST,
-                POST_STATS_RESPONSE, site)
+                POST_STATS_RESPONSE, site
+        )
 
         assertThat(model.siteId).isEqualTo(siteId)
         assertThat(model.postTitle).isEqualTo(LATEST_POST.title)
@@ -108,13 +109,16 @@ class InsightsMapperTest {
 
     @Test
     fun `maps posting activity and crops by start and end date`() {
-        val startCalendar = Calendar.getInstance()
-        startCalendar.set(2018, 10, 3)
-        val endCalendar = Calendar.getInstance()
-        endCalendar.set(2019, 1, 17)
-        val timeStampBeforeStart = 1541094264L
-        val timeStampInLimit = 1541437699L
-        val timeStampAfterEnd = 1550676012L
+        val startDay = Day(2019, 1, 20)
+        val endDay = Day(2019, 2, 5)
+        val dayBeforeStart = Calendar.getInstance()
+        dayBeforeStart.set(2019, 1, 19)
+        val dateOnStart = Calendar.getInstance()
+        dateOnStart.set(2019, 1, 20)
+        val dateOnEnd = Calendar.getInstance()
+        dateOnEnd.set(2019, 2, 5)
+        val dayAfterEnd = Calendar.getInstance()
+        dayAfterEnd.set(2019, 2, 6)
         val postCount = 2
         val date = "2010-10-11"
         val formattedDate = Date(123)
@@ -124,15 +128,17 @@ class InsightsMapperTest {
         val response = PostingActivityResponse(
                 Streaks(longStreak, currentStreak),
                 mapOf(
-                timeStampBeforeStart to 1,
-                timeStampInLimit to postCount,
-                timeStampAfterEnd to 3
+                        dayBeforeStart.timeInMillis / 1000 to 1,
+                        dateOnStart.timeInMillis / 1000 to postCount,
+                        dateOnEnd.timeInMillis / 1000 to postCount,
+                        dayAfterEnd.timeInMillis / 1000 to 3
+                )
         )
-        )
-        val model = mapper.map(response, startCalendar.time, endCalendar.time)
+        val model = mapper.map(response, startDay, endDay)
 
-        assertThat(model.events).hasSize(1)
-        assertThat(model.events).containsOnly(StreakEvent(Date(timeStampInLimit*1000), postCount))
+        assertThat(model.months).hasSize(2)
+        assertThat(model.months[0].days[20]).isEqualTo(postCount)
+        assertThat(model.months[1].days[5]).isEqualTo(postCount)
         assertThat(model.streak.longestStreakStart).isEqualTo(formattedDate)
         assertThat(model.streak.longestStreakEnd).isEqualTo(formattedDate)
         assertThat(model.streak.longestStreakLength).isEqualTo(longStreak.length)
