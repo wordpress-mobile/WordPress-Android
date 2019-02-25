@@ -4,6 +4,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Month
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.StreakModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
@@ -22,6 +24,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActi
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
@@ -171,7 +174,7 @@ class InsightsMapper
         )
     }
 
-    fun map(response: PostingActivityResponse, startDate: Date, endDate: Date): PostingActivityModel {
+    fun map(response: PostingActivityResponse, startDay: Day, endDay: Day): PostingActivityModel {
         if (response.streak == null) {
             AppLog.e(STATS, "PostingActivityResponse: Mandatory field streak is null")
         }
@@ -190,11 +193,49 @@ class InsightsMapper
                 longestStreakLength = longStreakLength
         )
         val nonNullData = response.data ?: mapOf()
-        val limitedEvents = nonNullData
-                .toList()
-                .sortedBy { (key, _) -> key }
-                .map { (key, value) -> PostingActivityModel.StreakEvent(Date(key * 1000), value) }
-                .filter { event -> event.date.after(startDate) && event.date.before(endDate) }
-        return PostingActivityModel(streak, limitedEvents, limitedEvents.count() < nonNullData.count())
+        val days = mutableMapOf<Day, Int>()
+        nonNullData.toList().forEach { (timeStamp, value) ->
+            val day = toDay(timeStamp)
+            days[day] = (days[day] ?: 0) + value
+        }
+        val startCalendar = Calendar.getInstance()
+        startCalendar.set(startDay.year, startDay.month, startDay.day, 0, 0)
+        val endCalendar = Calendar.getInstance()
+        endCalendar.set(
+                endDay.year,
+                endDay.month,
+                endDay.day,
+                endCalendar.getActualMaximum(Calendar.HOUR_OF_DAY),
+                endCalendar.getActualMaximum(Calendar.MINUTE)
+        )
+        var currentYear = startDay.year
+        var currentMonth = startDay.month
+        var currentMonthDays = mutableMapOf<Int, Int>()
+        val result = mutableListOf<Month>()
+        var count = 0
+        while (!startCalendar.after(endCalendar)) {
+            if (currentYear != startCalendar.get(Calendar.YEAR) || currentMonth != startCalendar.get(Calendar.MONTH)) {
+                result.add(Month(currentYear, currentMonth, currentMonthDays))
+                currentYear = startCalendar.get(Calendar.YEAR)
+                currentMonth = startCalendar.get(Calendar.MONTH)
+                currentMonthDays = mutableMapOf()
+            }
+            val currentDay = days[Day(
+                    startCalendar.get(Calendar.YEAR),
+                    startCalendar.get(Calendar.MONTH),
+                    startCalendar.get(Calendar.DAY_OF_MONTH)
+            )]
+            currentMonthDays[startCalendar.get(Calendar.DAY_OF_MONTH)] = currentDay ?: 0
+            count++
+            startCalendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+        result.add(Month(currentYear, currentMonth, currentMonthDays))
+        return PostingActivityModel(streak, result, count < nonNullData.count())
+    }
+
+    private fun toDay(timeStamp: Long): Day {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timeStamp * 1000
+        return Day(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
     }
 }
