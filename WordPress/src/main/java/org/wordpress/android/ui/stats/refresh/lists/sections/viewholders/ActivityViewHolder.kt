@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.stats_block_single_activity.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
@@ -27,22 +31,40 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
     fun bind(
         item: ActivityItem
     ) {
-        val widthInDp = parent.width / parent.context.resources.displayMetrics.density
         drawBlock(firstBlock.activity, item.blocks[0].boxes)
         firstBlock.label.text = item.blocks[0].label
+        if (item.blocks.size > 1) {
+            drawBlock(secondBlock.activity, item.blocks[1].boxes)
+            secondBlock.label.text = item.blocks[1].label
+        }
+        if (item.blocks.size > 2) {
+            drawBlock(thirdBlock.activity, item.blocks[2].boxes)
+            thirdBlock.label.text = item.blocks[2].label
+        }
+        val widthInDp = parent.width / parent.context.resources.displayMetrics.density
+        if (widthInDp > BLOCK_WIDTH + 2 * GAP) {
+            updateVisibility(item, widthInDp)
+        } else {
+            GlobalScope.launch(Dispatchers.Main) {
+                delay(50)
+                updateVisibility(item, parent.width / parent.context.resources.displayMetrics.density)
+            }
+        }
+    }
+
+    private fun updateVisibility(
+        item: ActivityItem,
+        widthInDp: Float
+    ) {
         val canFitTwoBlocks = widthInDp > 2 * BLOCK_WIDTH + GAP + SIZE_PADDING
         if (canFitTwoBlocks && item.blocks.size > 1) {
             secondBlock.visibility = View.VISIBLE
-            drawBlock(secondBlock.activity, item.blocks[1].boxes)
-            secondBlock.label.text = item.blocks[1].label
         } else {
             secondBlock.visibility = View.GONE
         }
         val canFitThreeBlocks = widthInDp > 3 * BLOCK_WIDTH + 2 * GAP + SIZE_PADDING
         if (canFitThreeBlocks && item.blocks.size > 2) {
             thirdBlock.visibility = View.VISIBLE
-            drawBlock(thirdBlock.activity, item.blocks[2].boxes)
-            thirdBlock.label.text = item.blocks[2].label
         } else {
             thirdBlock.visibility = View.GONE
         }
@@ -63,7 +85,12 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
         val offsets = recyclerView.resources.getDimensionPixelSize(R.dimen.stats_activity_spacing)
         recyclerView.addItemDecoration(
                 object : RecyclerView.ItemDecoration() {
-                    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                    override fun getItemOffsets(
+                        outRect: Rect,
+                        view: View,
+                        parent: RecyclerView,
+                        state: RecyclerView.State
+                    ) {
                         super.getItemOffsets(outRect, view, parent, state)
                         outRect.set(offsets, offsets, offsets, offsets)
                     }
