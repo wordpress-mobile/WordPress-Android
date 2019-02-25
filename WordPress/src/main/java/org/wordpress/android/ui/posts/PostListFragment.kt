@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.DrawableRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -281,14 +282,11 @@ class PostListFragment : Fragment() {
         text: UiString?,
         onButtonClick: (() -> Unit)?
     ) {
-        buttonView.visibility = if (text == null) View.GONE else View.VISIBLE
-        text?.let {
-            buttonView.text = uiHelpers.getTextOfUiString(nonNullActivity, text)
-            buttonView.setOnClickListener { onButtonClick?.invoke() }
-        }
+        setTextOrHide(buttonView, text)
+        buttonView.setOnClickListener { onButtonClick?.invoke() }
     }
 
-    private fun setImageOrHide(imageView: ImageView, resId: Int?) {
+    private fun setImageOrHide(imageView: ImageView, @DrawableRes resId: Int?) {
         imageView.visibility = if (resId == null) View.GONE else View.VISIBLE
         resId?.let {
             imageView.setImageResource(resId)
