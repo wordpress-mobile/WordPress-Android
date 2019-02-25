@@ -1,32 +1,69 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
+import android.graphics.Rect
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import com.github.mikephil.charting.charts.BarChart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
-import org.wordpress.android.ui.stats.refresh.utils.draw
+import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
 
-class ActivityViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+private const val SIZE_PADDING = 32
+private const val GAP = 8
+private const val BLOCK_WIDTH = 104
+private const val SPAN_COUNT = 7
+
+class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
         parent,
-        layout.stats_block_bar_chart_item
+        R.layout.stats_block_activity_item
 ) {
-    private val chart = itemView.findViewById<BarChart>(id.chart)
-    private val labelStart = itemView.findViewById<TextView>(id.label_start)
-    private val labelEnd = itemView.findViewById<TextView>(id.label_end)
+    private val firstBlock = itemView.findViewById<RecyclerView>(R.id.first_block)
+    private val secondBlock = itemView.findViewById<RecyclerView>(R.id.second_block)
+    private val thirdBlock = itemView.findViewById<RecyclerView>(R.id.third_block)
 
     fun bind(
-        item: BarChartItem,
-        barSelected: Boolean
+        item: ActivityItem
     ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            delay(50)
-            chart.draw(item, labelStart, labelEnd)
+        val widthInDp = parent.width / parent.context.resources.displayMetrics.density
+        drawBlock(firstBlock, item.blocks[0].boxes)
+        val canFitTwoBlocks = widthInDp > 2 * BLOCK_WIDTH + GAP + SIZE_PADDING
+        if (canFitTwoBlocks && item.blocks.size > 1) {
+            secondBlock.visibility = View.VISIBLE
+            drawBlock(secondBlock, item.blocks[1].boxes)
+        } else {
+            secondBlock.visibility = View.GONE
         }
+        val canFitThreeBlocks = widthInDp > 3 * BLOCK_WIDTH + 2 * GAP + SIZE_PADDING
+        if (canFitThreeBlocks && item.blocks.size > 2) {
+            thirdBlock.visibility = View.VISIBLE
+            drawBlock(thirdBlock, item.blocks[2].boxes)
+        } else {
+            thirdBlock.visibility = View.GONE
+        }
+    }
+
+    private fun drawBlock(recyclerView: RecyclerView, boxes: List<Box>) {
+        if (recyclerView.adapter == null) {
+            recyclerView.adapter = MonthActivityAdapter()
+        }
+        if (recyclerView.layoutManager == null) {
+            recyclerView.layoutManager = GridLayoutManager(
+                    recyclerView.context,
+                    SPAN_COUNT,
+                    GridLayoutManager.HORIZONTAL,
+                    false
+            )
+        }
+        val offsets = recyclerView.resources.getDimensionPixelSize(R.dimen.stats_activity_spacing)
+        recyclerView.addItemDecoration(
+                object : RecyclerView.ItemDecoration() {
+                    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                        super.getItemOffsets(outRect, view, parent, state)
+                        outRect.set(offsets, offsets, offsets, offsets)
+                    }
+                }
+        )
+        (recyclerView.adapter as MonthActivityAdapter).update(boxes)
     }
 }
