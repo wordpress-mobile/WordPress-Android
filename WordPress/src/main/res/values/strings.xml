@@ -337,9 +337,9 @@
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.
-        Switch back to Classic at any time by tapping&#160;&#160;&#8942;&#160;&#160;in the top bar.</string>
+        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
     <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Page.
-        Switch back to Classic at any time by tapping&#160;&#160;&#8942;&#160;&#160;in the top bar.</string>
+        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -2405,7 +2405,7 @@
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
     <string name="quick_start_dialog_share_site_title">Share your site</string>
-    <string name="quick_start_dialog_share_site_message">Connect to your social media accounts &#8211; your site will automatically share new posts.</string>
+    <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_create_new_page_message_short" tools:ignore="UnusedResources">Tap %1$s Site Pages %2$s to continue.</string>
