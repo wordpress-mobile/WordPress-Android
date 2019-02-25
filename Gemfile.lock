@@ -1,10 +1,13 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: d571a9fa2c1adbc8a2ae0015fb4a66aa7ca2287e
+  revision: 1cfb99dcb2d7284165a6ee4fa149f1c9374db312
+  tag: 0.1.8
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.1.7)
+    fastlane-plugin-wpmreleasetoolkit (0.1.8)
       diffy
+      git
       nokogiri
+      octokit
 
 GEM
   remote: https://rubygems.org/
@@ -72,6 +75,7 @@ GEM
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
     gh_inspector (1.1.3)
+    git (1.5.0)
     google-api-client (0.23.9)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (>= 0.5, < 0.7.0)
@@ -106,6 +110,8 @@ GEM
     naturally (2.2.0)
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
+    octokit (4.13.0)
+      sawyer (~> 0.8.0, >= 0.5.3)
     os (1.0.0)
     plist (3.4.0)
     public_suffix (2.0.5)
@@ -116,6 +122,9 @@ GEM
     retriable (3.1.2)
     rouge (2.0.7)
     rubyzip (1.2.2)
+    sawyer (0.8.1)
+      addressable (>= 2.3.5, < 2.6)
+      faraday (~> 0.8, < 1.0)
     security (0.1.3)
     signet (0.11.0)
       addressable (~> 2.3)
