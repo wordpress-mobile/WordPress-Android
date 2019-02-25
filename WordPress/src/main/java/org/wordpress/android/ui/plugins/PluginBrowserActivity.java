@@ -437,11 +437,10 @@ public class PluginBrowserActivity extends AppCompatActivity
                     colorResId = R.color.grey;
                     drawableResId = R.drawable.ic_cross_white_24dp;
                 }
-                int color = getResources().getColor(colorResId);
                 holder.mStatusText.setText(textResId);
-                holder.mStatusText.setTextColor(color);
+                holder.mStatusText.setTextColor(getResources().getColor(colorResId));
                 holder.mStatusIcon.setVisibility(isAutoManaged ? View.GONE : View.VISIBLE);
-                ColorUtils.INSTANCE.setImageResourceWithTint(holder.mStatusIcon, drawableResId, color);
+                ColorUtils.INSTANCE.setImageResourceWithTint(holder.mStatusIcon, drawableResId, colorResId);
                 holder.mStatusContainer.setVisibility(View.VISIBLE);
                 holder.mRatingBar.setVisibility(View.GONE);
             } else {
