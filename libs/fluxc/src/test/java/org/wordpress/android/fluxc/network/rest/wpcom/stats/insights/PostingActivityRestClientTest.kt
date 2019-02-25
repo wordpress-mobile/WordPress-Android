@@ -16,6 +16,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.UserAgent
@@ -29,7 +30,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.stats.POSTING_ACTIVITY_RESPONSE
 import org.wordpress.android.fluxc.test
-import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class PostingActivityRestClientTest {
@@ -44,9 +44,9 @@ class PostingActivityRestClientTest {
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: PostingActivityRestClient
     private val siteId: Long = 12
-    private val startDate = Date(10)
+    private val startDay = Day(2018, 1, 1)
     private val formattedStartDate = "2018-01-01"
-    private val endDate = Date(1000)
+    private val endDay = Day(2019, 1, 1)
     private val formattedEndDate = "2019-01-01"
     @Before
     fun setUp() {
@@ -61,15 +61,15 @@ class PostingActivityRestClientTest {
                 userAgent,
                 statsUtils
         )
-        whenever(statsUtils.toFormattedDate(startDate)).thenReturn(formattedStartDate)
-        whenever(statsUtils.toFormattedDate(endDate)).thenReturn(formattedEndDate)
+        whenever(statsUtils.toFormattedDate(startDay)).thenReturn(formattedStartDate)
+        whenever(statsUtils.toFormattedDate(endDay)).thenReturn(formattedEndDate)
     }
 
     @Test
     fun `returns posting activity`() = test {
         initResponse(POSTING_ACTIVITY_RESPONSE)
 
-        val responseModel = restClient.fetchPostingActivity(site, startDate, endDate, forced = false)
+        val responseModel = restClient.fetchPostingActivity(site, startDay, endDay, forced = false)
 
         Assertions.assertThat(responseModel.response).isNotNull
         Assertions.assertThat(responseModel.response).isEqualTo(POSTING_ACTIVITY_RESPONSE)
@@ -98,7 +98,7 @@ class PostingActivityRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchPostingActivity(site, startDate, endDate, forced = false)
+        val responseModel = restClient.fetchPostingActivity(site, startDay, endDay, forced = false)
 
         Assertions.assertThat(responseModel.error).isNotNull
         Assertions.assertThat(responseModel.error.type).isEqualTo(API_ERROR)
