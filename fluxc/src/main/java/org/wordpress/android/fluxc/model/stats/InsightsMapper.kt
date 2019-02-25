@@ -213,6 +213,7 @@ class InsightsMapper
         var currentMonthDays = mutableMapOf<Int, Int>()
         val result = mutableListOf<Month>()
         var count = 0
+        var max = 0
         while (!startCalendar.after(endCalendar)) {
             if (currentYear != startCalendar.get(Calendar.YEAR) || currentMonth != startCalendar.get(Calendar.MONTH)) {
                 result.add(Month(currentYear, currentMonth, currentMonthDays))
@@ -225,12 +226,16 @@ class InsightsMapper
                     startCalendar.get(Calendar.MONTH),
                     startCalendar.get(Calendar.DAY_OF_MONTH)
             )]
-            currentMonthDays[startCalendar.get(Calendar.DAY_OF_MONTH)] = currentDay ?: 0
+            val currentDayPostCount = currentDay ?: 0
+            if (currentDayPostCount > max) {
+                max = currentDayPostCount
+            }
+            currentMonthDays[startCalendar.get(Calendar.DAY_OF_MONTH)] = currentDayPostCount
             count++
             startCalendar.add(Calendar.DAY_OF_MONTH, 1)
         }
         result.add(Month(currentYear, currentMonth, currentMonthDays))
-        return PostingActivityModel(streak, result, count < nonNullData.count())
+        return PostingActivityModel(streak, result, max, count < nonNullData.count())
     }
 
     private fun toDay(timeStamp: Long): Day {
