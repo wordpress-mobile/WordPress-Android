@@ -83,9 +83,9 @@ class PlanOffersRestClientTest {
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
                         eq(PlanOffersResponse::class.java),
-                        eq(true),
+                        eq(false),
                         any(),
-                        eq(false)
+                        eq(true)
                 )
         ).thenReturn(response)
     }
