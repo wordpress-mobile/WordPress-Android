@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-22 20:23:03+0000
+Translation-Revision-Date: 2019-02-15 14:59:09+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -77,24 +77,16 @@ Language: cs_CZ
     <string name="set_parent">Nastavit nadřazenou stránku</string>
     <string name="dismiss">schovat</string>
     <string name="quick_start_focus_point_description">kliknout zde</string>
-    <string name="quick_start_sites">Rychlý start</string>
     <string name="quick_start_list_create_site_title">Vytvořit stránku</string>
-    <string name="quick_start_list_complete_title">Rychlý start dokončen, gratulujeme!</string>
-    <string name="quick_start_list_complete_subtitle">Dobrý pocit odškrtnout něco ze seznamu, co?</string>
     <string name="quick_start_dialog_view_site_title">Zobrazit stránku</string>
     <string name="quick_start_dialog_view_site_message_short">Klikněte na %1$s Zobrazit web %2$s pro zobrazení náhledu.</string>
-    <string name="quick_start_dialog_view_site_message">Zobrazte náhled pro kontrolu, jak uvidí stránku ostatní</string>
-    <string name="quick_start_dialog_skip_title">Přeskočit Rychlý start</string>
-    <string name="quick_start_dialog_skip_message">Rychlý start je průvodce základním nastavením stránky. Určitě chcete průvodce přeskočit?</string>
     <string name="quick_start_dialog_share_site_title">Sdílení stránky</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">Klikněte na %1$s Sdílení %2$s</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">Propojte se sociální sítí klikem na položku v sekci %1$s Připojení %2$s </string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Klikněte na %1$s Sdílení %2$s</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">Propojte se sociální sítí klikem na položku v sekci %1$s Připojení %2$s </string>
     <string name="quick_start_dialog_share_site_message">Propojte se socialní sítí - příspěvky se budou automaticky sdílet.</string>
     <string name="quick_start_dialog_publish_post_title">Zveřejnit příspěvek</string>
     <string name="quick_start_dialog_publish_post_message_short">Klikněte na %1$s Vytvořit příspěvek %2$s</string>
-    <string name="quick_start_dialog_publish_post_message">Je to tady! Vytvořte koncept a zveřejněte první příspěvek.</string>
     <string name="quick_start_dialog_need_help_title">Chcete pomoci se základním nastavením?</string>
-    <string name="quick_start_dialog_need_help_message">Rychlý start slouží k seznámení se základními kroky nastavení stránky.</string>
     <string name="quick_start_dialog_need_help_button_positive">Ano</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
     <string name="quick_start_dialog_need_help_button_negative">Ne</string>
@@ -105,18 +97,12 @@ Language: cs_CZ
     <string name="quick_start_dialog_customize_site_title">Přizpůsobte si stránku</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Klikněte na %1$s Šablony %2$s</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">Klikněte na %1$s Přizpůsobit %2$s</string>
-    <string name="quick_start_dialog_customize_site_message">Přizpůsobte si stránku - upravte barvy, fonty(písmo) a obrázky.</string>
-    <string name="quick_start_dialog_continue_setup_title">Pokračovat s nastavováním</string>
-    <string name="quick_start_dialog_continue_setup_message">Je čas stránku dotáhnout do konce! Náš seznam kroků vám s tím pomůže.</string>
     <string name="quick_start_dialog_choose_theme_title">Volba šablony</string>
-    <string name="quick_start_dialog_choose_theme_message_short">Klikněte na %1$s Šablony %2$s a prozkoumejte možnosti </string>
+    <string name="quick_start_dialog_browse_themes_message_short">Klikněte na %1$s Šablony %2$s a prozkoumejte možnosti </string>
     <string name="quick_start_dialog_choose_theme_message">Prozkoumejte seznam šablon a nejděte tu co se hodí nejvíce.</string>
-    <string name="quick_start_button_skip_positive">Přeskočit</string>
-    <string name="quick_start_button_skip_negative"> Zrušit</string>
-    <string name="quick_start_button_skip">Přeskočit vše</string>
     <string name="quick_start_button_negative_short">Zrušit</string>
     <string name="quick_start_button_negative">Né teď</string>
-    <string name="content_description_done">Hotovo</string>
+    <string name="content_description_more">Hotovo</string>
     <string name="install_jetpack">Instalovat Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -808,7 +794,6 @@ Language: cs_CZ
     <string name="draft_uploaded">Koncept byl nahrán</string>
     <string name="report_bug">Nahlásit chybu</string>
     <string name="video_quality">Kvalita videa</string>
-    <string name="permission_location">Poloha</string>
     <string name="permission_camera">Foťák</string>
     <string name="permission_storage">Úložiště</string>
     <string name="button_edit_permissions">Upravit oprávnění</string>
@@ -1379,7 +1364,6 @@ Language: cs_CZ
     <string name="stats_insights_most_popular_hour">Nejoblíbenější hodina</string>
     <string name="stats_insights_most_popular_day">Nejoblíbenější den</string>
     <string name="stats_insights_today">Dnešní statistika</string>
-    <string name="stats_insights_popular">Nejoblíbenější den a hodina</string>
     <string name="stats_insights_all_time">Všechny příspěvky, zobrazení a návštěvníci</string>
     <string name="stats_insights">Přehledy</string>
     <string name="stats_sign_in_jetpack_different_com_account">Chcete-li zobrazit statistiky, přihlaste se do účtu WordPress.com, který jste použili pro připojení Jetpack.</string>
