@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-05 09:54:09+0000
+Translation-Revision-Date: 2019-02-23 00:34:29+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="quick_start_sites_type_subtitle">%1$d/%2$d tamamlandı</string>
+    <string name="quick_start_sites_type_grow">Kitlenizi Genişletin</string>
+    <string name="quick_start_sites_type_customize">Sitenizi Özelleştirin</string>
+    <string name="quick_start_sites">Sonraki Adımlar</string>
+    <string name="quick_start_complete_tasks_header">Tamamlandı (%d)</string>
+    <string name="quick_start_dialog_view_site_message">Tamamlanmış ürününüzün tadını çıkarın!</string>
+    <string name="quick_start_dialog_upload_icon_title">Bir site simgesi yükleyin</string>
+    <string name="quick_start_dialog_upload_icon_message">Ziyaretçileriniz tarayıcılarında sizin simgenizi görecektir. Gösterişli ve profesyonel bir görünüm için özel bir simge ekleyin.</string>
+    <string name="quick_start_dialog_explore_plans_message_short">Mevcut paketi ve kullanılabilecek diğer paketleri görmek için %1$s Paket %2$s seçeneğine dokunun</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">Yeni bir sayfa oluşturmak için %1$s Sayfa Ekle %2$s simgesine dokunun.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Devam etmek için %1$s Site Sayfaları %2$s simgesine dokunun.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Sitenizin performansını görmek için %1$s İstatistikler %2$s simgesine dokunun.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">Yeni bir tane yüklemek için %1$s Site Simgeniz %2$s’e dokunun</string>
+    <string name="quick_start_dialog_publish_post_message">İlk gönderinizi taslak olarak yayınlayın.</string>
+    <string name="quick_start_dialog_need_help_message">Sitenizi oluşturma ve geliştirme konusundaki temel bilgiler hakkında size rehberlik edeceğiz.</string>
+    <string name="quick_start_dialog_migration_title">Kontrol listenizde bazı değişiklikler yaptık</string>
+    <string name="quick_start_dialog_migration_message">Kitlenizi geliştirmenize yardımcı olacak daha fazla görev ekledik.</string>
+    <string name="quick_start_dialog_explore_plans_title">Paketleri keşfedin</string>
+    <string name="quick_start_dialog_explore_plans_message">Ücretli paketlerimizdeki pazarlama ve SEO araçları hakkında bilgi edinin.</string>
+    <string name="quick_start_dialog_enable_sharing_title">Gönderi paylaşımına izin verin</string>
+    <string name="quick_start_dialog_enable_sharing_message">Yeni gönderileri sosyal medya hesaplarınızda otomatik olarak paylaşın.</string>
+    <string name="quick_start_dialog_customize_site_message">Yazı tiplerini ayarlayın, resim ekleyin ve daha fazlasını yapın.</string>
+    <string name="quick_start_dialog_create_page_title">Yeni bir sayfa oluşturun</string>
+    <string name="quick_start_dialog_create_page_message">Önemli içerikler için bir sayfa ekleyin. \"Hakkında\" sayfası oluşturmak harika bir başlangıç olabilir.</string>
+    <string name="quick_start_dialog_check_stats_title">Sitenizin istatistiklerini gözden geçirin</string>
+    <string name="quick_start_dialog_check_stats_message">Sitenizin performansıyla ilgili bilgilerinizi güncelleyin.</string>
+    <string name="quick_start_dialog_browse_themes_title">Temalara göz atın</string>
+    <string name="quick_start_dialog_browse_themes_message">Düzinelerce seçenek arasından isteklerinize en uyumlu olanı keşfedin.</string>
+    <string name="quick_start_dialog_remove_next_steps_message">Sonraki Adımları kaldırma seçeneği, bu sitedeki diğer tüm turları gizler. Bu eylem geri alınamaz.</string>
+    <string name="quick_start_dialog_remove_next_steps_title">Sonraki Adımları Kaldır</string>
+    <string name="quick_start_remove_next_steps_menu_title">Kaldır</string>
+    <string name="quick_start_complete_view_subtitle">Tebrikler, listenizi başarıyla tamamladınız. Başarılı bir iş çıkardınız..</string>
+    <string name="quick_start_complete_view_title">Tüm görevler tamamlandı!</string>
+    <string name="quick_start_task_skip_menu_title">Görevi geç</string>
+    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">daralt</string>
+    <string name="quick_start_completed_tasks_header_chevron_expand_desc">genişlet</string>
+    <string name="notification_channel_reminder_title">Hatırlatıcı</string>
+    <string name="stats_select_next_period_description">Gelecek dönemi seç</string>
+    <string name="stats_select_previous_period_description">Önceki dönemi seç</string>
+    <string name="stats_most_popular_percent_views">Görüntülemelere ait %1$d%%</string>
+    <string name="stats_insights_popular">En Popüler Zaman</string>
+    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Site önizlemesi gösteriliyor</string>
     <string name="new_site_creation_clear_all_content_description">Temizle</string>
     <string name="site_created_but_not_fetched_snackbar_message">Yavaş bir bağlantı kullanıyorsunuz gibi duruyor. Yeni sitenizi listede görmüyorsanız listeyi yenilemeyi deneyin.</string>
@@ -78,7 +121,6 @@ Language: tr
     <string name="stats_referrer_label">Yönlendiren</string>
     <string name="stats_referrers">Yönlendirenler</string>
     <string name="stats_posts_and_pages">Yazılar ve sayfalar</string>
-    <string name="stats_most_popular_percent_views">%1$d%%</string>
     <string name="stats_insights_path">Yol</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_google_plus">Google+</string>
@@ -93,8 +135,6 @@ Language: tr
     <string name="stats_insights_latest_post_empty">Henüz hiç yazı yayımnlamadınız. Yayımlamaya başladığınızda en son yazınızın özeti burada görünecektir:</string>
     <string name="stats_insights_tags_and_categories">Etiketler ve kategoriler</string>
     <string name="stats_insights_all_time_stats">Tüm zamanlar istatistiği</string>
-    <string name="stats_insights_most_popular_views_label">Görüntülemeler</string>
-    <string name="stats_insights_most_popular_day_and_hour_label">Gün/Saat</string>
     <string name="stats_insights_today_stats">Bugünün İstatistikleri</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Takipçiler</string>
@@ -201,25 +241,17 @@ Language: tr
     <string name="set_parent">Ebeveyn belirle</string>
     <string name="dismiss">atla</string>
     <string name="quick_start_focus_point_description">buraya dokunun</string>
-    <string name="quick_start_sites">Hızlı başlangıç</string>
     <string name="quick_start_list_create_site_title">Sitenizi oluşturun</string>
-    <string name="quick_start_list_create_site_subtitle">Sitenizi ayağa kaldırın ve yayınlayın</string>
-    <string name="quick_start_list_complete_title">Hızlı başlangıcı bitirdiğiniz için tebrikler</string>
-    <string name="quick_start_list_complete_subtitle">Bir şeyleri listeden silmek iyi değil mi?</string>
+    <string name="quick_start_list_create_site_subtitle">Sitenizi ayağa kaldırın ve yayınlayın.</string>
     <string name="quick_start_dialog_view_site_title">Sitenizi görüntüleyin</string>
     <string name="quick_start_dialog_view_site_message_short">Sitenizi önizlemek için %1$s Siteyi Görüntüle %2$s seçeneğine dokunun.</string>
-    <string name="quick_start_dialog_view_site_message">Ziyaretçilerinizin ne göreceğine bakmak için yeni sitenizi ön izleyin.</string>
-    <string name="quick_start_dialog_skip_title">Hızlı başlangıcı atla</string>
-    <string name="quick_start_dialog_skip_message">Hızlı tur, temel bir site oluşturmak için size rehberlik edecektir. Atlamak istediğinize emin misiniz?</string>
     <string name="quick_start_dialog_share_site_title">Siteni paylaş</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">Devam etmek için %1$s Paylaşım %2$s seçeneğine dokunun</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">Sosyal medya hesaplarınızı eklemek için %1$s Bağlantılar %2$s seçeneğine dokunun</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Devam etmek için %1$s Paylaşım %2$s seçeneğine dokunun</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">Sosyal medya hesaplarınızı eklemek için %1$s Bağlantılar %2$s seçeneğine dokunun</string>
     <string name="quick_start_dialog_share_site_message">Sosyal medya hesaplarınıza bağlanın - siteniz yeni yazıları otomatik olarak paylaşır.</string>
     <string name="quick_start_dialog_publish_post_title">Bir yazı yayınla</string>
     <string name="quick_start_dialog_publish_post_message_short">Yeni bir yazı oluşturmak için %1$s yazı oluştur %2$s seçeneğine dokunun</string>
-    <string name="quick_start_dialog_publish_post_message">Zamanı! İlk yazı taslağını oluşturun ve yayınlayın.</string>
     <string name="quick_start_dialog_need_help_title">Başlamak için ufak bir yardım ister misin?</string>
-    <string name="quick_start_dialog_need_help_message">Hızlı başlangıç kontrol listemiz size yeni bir web sitesi kurmanın temelleri hakkında bilgi verir.</string>
     <string name="quick_start_dialog_need_help_button_positive">Evet</string>
     <string name="quick_start_dialog_need_help_button_neutral">Asla</string>
     <string name="quick_start_dialog_need_help_button_negative">Hayır</string>
@@ -230,19 +262,13 @@ Language: tr
     <string name="quick_start_dialog_customize_site_title">Sitenizi özelleştirin</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Devam etmek için %1$s Temalar %2$s seçeneğine dokunun.</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">Sitenizi kişiselleştirmeye başlamak için %1$s Özelleştir %2$s seçeneğine dokunun</string>
-    <string name="quick_start_dialog_customize_site_message">Mükemmel bir kişiselleştirilmiş site için renkleri, yazı tiplerini ve görselleri değiştirin.</string>
-    <string name="quick_start_dialog_continue_setup_title">Site yapılandırması ile devam et</string>
-    <string name="quick_start_dialog_continue_setup_message">Sitenizi kurmayı bitirme zamanı! Kontrol listemiz bir sonraki adımlarda size yol gösterir.</string>
     <string name="quick_start_dialog_choose_theme_title">Bir tema seç</string>
-    <string name="quick_start_dialog_choose_theme_message_short">Yeni temalar keşfetmek için %1$s Temalar %2$s seçeneğine dokunun</string>
+    <string name="quick_start_dialog_browse_themes_message_short">Yeni temalar keşfetmek için %1$s Temalar %2$s seçeneğine dokunun</string>
     <string name="quick_start_dialog_choose_theme_message">Mükemmel uyumunuzu bulmak için tüm temalarımıza göz atın.</string>
-    <string name="quick_start_button_skip_positive">Atla</string>
-    <string name="quick_start_button_skip_negative">Vazgeç</string>
-    <string name="quick_start_button_skip">Tümünü geç</string>
     <string name="quick_start_button_positive">Git</string>
     <string name="quick_start_button_negative_short">Vazgeç</string>
     <string name="quick_start_button_negative">Şimdi değil</string>
-    <string name="content_description_done">Tamam</string>
+    <string name="content_description_more">Daha fazlası</string>
     <string name="my_site_create_new_site_title">Hiçbir siteniz yok</string>
     <string name="reader_empty_followed_tags_title">Takip edilen etiket yok</string>
     <string name="reader_empty_followed_tags_subtitle">Beğendiğiniz konularla ilgili yazıları bulmak için buraya etiket ekleyin</string>
@@ -973,7 +999,6 @@ Language: tr
     <string name="draft_uploaded">Taslak yüklendi</string>
     <string name="report_bug">Hata bildirin</string>
     <string name="video_quality">Video kalitesi</string>
-    <string name="permission_location">Konum</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_storage">Depolama</string>
     <string name="button_edit_permissions">İzinleri düzenle</string>
@@ -1479,9 +1504,9 @@ Language: tr
     <string name="notifications_no_search_results">\'%s\' hiçbir siteyle eşleşmedi</string>
     <string name="search_sites">Sitelerde ara</string>
     <string name="notifications_empty_view_reader">Okuyucuya git</string>
-    <string name="notifications_empty_action_followers_likes">Farkedin: okuduğunuz yazılara yorum yapın.</string>
+    <string name="notifications_empty_action_followers_likes">Farkedin: okuduğunuz yazılara yorum yapın</string>
     <string name="notifications_empty_action_comments">Konuşmalara katılın: takip ettiğiniz bloglarda yorum yapın.</string>
-    <string name="notifications_empty_action_unread">Tartışmaları alevlendirin: yeni bir yazı yazın.</string>
+    <string name="notifications_empty_action_unread">Tartışmaları alevlendirin: yeni bir yazı yazın</string>
     <string name="notifications_empty_action_all">Etkin olun! Takip ettiğiniz bloglarda yazılara yorum yapın.</string>
     <string name="notifications_empty_comments">Henüz yeni yorum yok.</string>
     <string name="notifications_empty_unread">Her şey güncel!</string>
@@ -1545,7 +1570,6 @@ Language: tr
     <string name="stats_insights_most_popular_hour">En popüler saat</string>
     <string name="stats_insights_most_popular_day">En popüler gün</string>
     <string name="stats_insights_today">Bugünün istatistikleri</string>
-    <string name="stats_insights_popular">En popüler gün ve saat</string>
     <string name="stats_insights_all_time">Tüm zamanlardaki yazılar, görüntülemeler ve ziyaretçiler</string>
     <string name="stats_insights">Tek bakışta</string>
     <string name="stats_sign_in_jetpack_different_com_account">İstatistiklerinizi görüntülemek için, Jetpack\'i bağladığınız WordPress.com hesabına giriş yapın.</string>

@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-05 14:54:08+0000
+Translation-Revision-Date: 2019-02-19 22:41:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="quick_start_sites">Passi successivi</string>
+    <string name="quick_start_dialog_view_site_message">Goditi il tuo prodotto finito.</string>
+    <string name="quick_start_dialog_upload_icon_title">Carica un\'icona del sito</string>
+    <string name="quick_start_dialog_upload_icon_message">I tuoi visitatori vedranno la tua icona nel loro browser. Aggiungi un\'icona personalizzata per un aspetto professionale e raffinato.</string>
+    <string name="quick_start_dialog_explore_plans_message_short">Tocca %1$s Piano %2$s per visualizzare il tuo piano attuale e altri piani disponibili</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">Tocca %1$s Aggiungi pagina %2$s per creare una nuova pagina.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Tocca %1$s Pagine del sito %2$s per continuare.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Tocca %1$s Statistiche %2$s per vedere il rendimento del tuo sito.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">Tocca %1$s l\'icona del tuo sito %2$s per caricarne una nuova</string>
+    <string name="quick_start_dialog_migration_title">Abbiamo apportato delle modifiche alla tua checklist</string>
+    <string name="quick_start_dialog_migration_message">Abbiamo aggiunto altre attività per aiutarti a far crescere il tuo pubblico.</string>
+    <string name="quick_start_dialog_explore_plans_title">Scopri i piani</string>
+    <string name="quick_start_dialog_explore_plans_message">Scopri gli strumenti SEO e di marketing nei nostri piani a pagamento.</string>
+    <string name="quick_start_dialog_enable_sharing_title">Abilita la condivisione dell\'articolo</string>
+    <string name="quick_start_dialog_create_page_message">Aggiungi una pagina per il contenuto principale: una pagina di \"informazioni\" è un ottimo punto di inizio.</string>
+    <string name="quick_start_dialog_remove_next_steps_message">Rimuovendo Passi successivi, tutti i tour saranno nascosti su questo sito. Questa azione non può essere annullata.</string>
+    <string name="quick_start_dialog_remove_next_steps_title">Rimuovi Passi successivi</string>
+    <string name="quick_start_complete_view_subtitle">Congratulazioni per aver completato il tuo elenco. Un lavoro ben fatto.</string>
+    <string name="quick_start_complete_view_title">Tutte le attività completate.</string>
+    <string name="quick_start_task_skip_menu_title">Salta attività</string>
+    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">riduci</string>
+    <string name="quick_start_completed_tasks_header_chevron_expand_desc">espandi</string>
+    <string name="notification_channel_reminder_title">Promemoria</string>
+    <string name="stats_select_next_period_description">Seleziona periodo successivo</string>
+    <string name="stats_select_previous_period_description">Seleziona periodo precedente</string>
+    <string name="stats_most_popular_percent_views">%1$d%% di visualizzazioni</string>
+    <string name="stats_insights_popular">Ora più popolare</string>
+    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Mostra anteprima del sito</string>
     <string name="new_site_creation_clear_all_content_description">Pulisci</string>
     <string name="site_created_but_not_fetched_snackbar_message">Sembra che tu sia collegato a una connessione lenta. Se il tuo nuovo sito non è presente nell\'elenco, prova ad aggiornare.</string>
@@ -76,7 +105,6 @@ Language: it
     <string name="stats_referrer_label">Referrer</string>
     <string name="stats_referrers">Referrer</string>
     <string name="stats_posts_and_pages">Articoli e pagine</string>
-    <string name="stats_most_popular_percent_views">%1$d%%</string>
     <string name="stats_insights_path">Percorso</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_google_plus">Google+</string>
@@ -88,8 +116,6 @@ Language: it
     <string name="stats_insights_create_post">Crea articolo</string>
     <string name="stats_insights_tags_and_categories">Tag e Categorie</string>
     <string name="stats_insights_all_time_stats">Tutte le statistiche</string>
-    <string name="stats_insights_most_popular_views_label">Visualizzazioni</string>
-    <string name="stats_insights_most_popular_day_and_hour_label">Giorno/Ora</string>
     <string name="stats_insights_today_stats">Statistiche odierne</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Follower</string>
@@ -195,48 +221,26 @@ Language: it
     <string name="set_parent">Imposta genitore</string>
     <string name="dismiss">ignora</string>
     <string name="quick_start_focus_point_description">tocca qui</string>
-    <string name="quick_start_sites">Avvio rapido</string>
     <string name="quick_start_list_create_site_title">Crea il tuo sito</string>
-    <string name="quick_start_list_create_site_subtitle">Configura il sito ed eseguilo</string>
-    <string name="quick_start_list_complete_title">Congratulazioni per aver completato l\'Avvio rapido</string>
-    <string name="quick_start_list_complete_subtitle">Non ti fa sentire bene eliminare i punti da un elenco?</string>
     <string name="quick_start_dialog_view_site_title">Visualizza il tuo sito</string>
     <string name="quick_start_dialog_view_site_message_short">Tocca %1$s Visualizza sito %2$s per visualizzare un\'anteprima del tuo sito</string>
-    <string name="quick_start_dialog_view_site_message">Visualizza un\'anteprima del tuo nuovo sito per scoprire cosa vedono i tuoi visitatori.</string>
-    <string name="quick_start_dialog_skip_title">Salta Avvio rapido</string>
-    <string name="quick_start_dialog_skip_message">Il tour rapido ti guiderà attraverso la costruzione di un sito di base. Sei sicuro di volerlo saltare?</string>
     <string name="quick_start_dialog_share_site_title">Condividi il tuo sito</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">Tocca %1$s Condivisione %2$s per continuare</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">Tocca %1$s Connessioni %2$s per aggiungere i tuoi account dei social media</string>
     <string name="quick_start_dialog_share_site_message">Collega gli account dei tuoi social media: il tuo sito condividerà automaticamente i nuovi articoli.</string>
     <string name="quick_start_dialog_publish_post_title">Pubblica un articolo</string>
     <string name="quick_start_dialog_publish_post_message_short">Tocca %1$s Crea un articolo %2$s per creare un nuovo articolo</string>
-    <string name="quick_start_dialog_publish_post_message">È ora! Fai una bozza e pubblica ogni nuovo articolo.</string>
     <string name="quick_start_dialog_need_help_title">Desideri un po\' di aiuto per iniziare?</string>
-    <string name="quick_start_dialog_need_help_message">La nostra checklist per l\'Avvio rapido ti guida attraverso le basi della creazione di un nuovo sito web.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Si</string>
     <string name="quick_start_dialog_need_help_button_neutral">Mai</string>
-    <string name="quick_start_dialog_need_help_button_negative">No</string>
     <string name="quick_start_dialog_follow_sites_title">Segui altri siti</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tocca %1$s Cerca %2$s per guardare altri siti con interessi simili</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tocca %1$s Reader %2$s per continuare</string>
-    <string name="quick_start_dialog_follow_sites_message">Trova i siti che ti dicono qualcosa e seguili per ottenere aggiornamenti sui contenuti che pubblicano.</string>
     <string name="quick_start_dialog_customize_site_title">Personalizza il tuo sito</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Tocca %1$s Temi %2$s per continuare</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">Tocca %1$s Personalizza %2$s per iniziare la personalizzazione del tuo sito</string>
-    <string name="quick_start_dialog_customize_site_message">Modifica colori, caratteri e immagini per un sito perfettamente personalizzato.</string>
-    <string name="quick_start_dialog_continue_setup_title">Continua con la configurazione del sito</string>
-    <string name="quick_start_dialog_continue_setup_message">È il momento di finire l\'impostazione del tuo sito! La nostra checklist ti guida attraverso i prossimi passaggi.</string>
     <string name="quick_start_dialog_choose_theme_title">Scegli un tema</string>
-    <string name="quick_start_dialog_choose_theme_message_short">Tocca %1$s Temi %2$s per scoprire nuovi temi</string>
     <string name="quick_start_dialog_choose_theme_message">Sfoglia tutti i nostri temi per trovare quello perfetto per te.</string>
-    <string name="quick_start_button_skip_positive">Salta</string>
-    <string name="quick_start_button_skip_negative">Annulla</string>
-    <string name="quick_start_button_skip">Salta tutto</string>
     <string name="quick_start_button_positive">Vai</string>
     <string name="quick_start_button_negative_short">Annulla</string>
     <string name="quick_start_button_negative">Non ora</string>
-    <string name="content_description_done">Fatto</string>
     <string name="my_site_create_new_site_title">Non sono presenti siti</string>
     <string name="reader_empty_followed_tags_title">Nessuna tag seguita</string>
     <string name="reader_empty_followed_tags_subtitle">Aggiungi qui le tag per trovare gli articoli con i tuoi argomenti preferiti</string>
@@ -833,8 +837,8 @@ Language: it
     <string name="notification_settings_master_off_title">Per ricevere le notifiche su questo dispositivo, attivare le impostazioni di notifica.</string>
     <string name="notification_settings_master_hint_off">Attiva notifiche</string>
     <string name="notification_settings_master_hint_on">Disabilita notifiche</string>
-    <string name="notification_settings_master_status_off">Disattivato</string>
-    <string name="notification_settings_master_status_on">Attivo</string>
+    <string name="notification_settings_master_status_off">Off</string>
+    <string name="notification_settings_master_status_on">On</string>
     <string name="max_video_resolution">Dimensione video massima</string>
     <string name="max_thumbnail_px_size">Dimensione immagine massima</string>
     <string name="error_upload_post_media_param">Si è verificato un errore durante il caricamento dell\'elemento multimediale in questo articolo: %s.</string>
@@ -967,7 +971,6 @@ Language: it
     <string name="draft_uploaded">Bozza caricata</string>
     <string name="report_bug">Segnala un bug</string>
     <string name="video_quality">Qualità del video</string>
-    <string name="permission_location">Posizione</string>
     <string name="permission_camera">Fotocamera</string>
     <string name="permission_storage">Archiviazione</string>
     <string name="button_edit_permissions">Modifica le autorizzazioni</string>
@@ -1322,7 +1325,7 @@ Language: it
     <string name="comments_empty_list_filtered_spam">Nessun commento spam</string>
     <string name="comment_status_all">Tutti</string>
     <string name="could_not_load_page">Impossibile caricare la pagina</string>
-    <string name="off">Disattivato</string>
+    <string name="off">Off</string>
     <string name="interface_language">Lingua dell\'interfaccia</string>
     <string name="about_the_app">Info sull\'app</string>
     <string name="error_post_account_settings">Impossibile salvare le impostazioni del tuo account</string>
@@ -1473,10 +1476,7 @@ Language: it
     <string name="notifications_no_search_results">Nessun sito corrisponde a \'%s\'</string>
     <string name="search_sites">Ricerca siti</string>
     <string name="notifications_empty_view_reader">Visualizza nel Reader</string>
-    <string name="notifications_empty_action_followers_likes">Ottieni notifiche: commenti ad articoli che hai letto.</string>
     <string name="notifications_empty_action_comments">Unisciti ad una conversazione: commenti su articoli di blog che segui.</string>
-    <string name="notifications_empty_action_unread">Ravviva la conversazione: scrivi un nuovo articolo.</string>
-    <string name="notifications_empty_action_all">Sii attivo! Commenta articoli dei blog che segui.</string>
     <string name="notifications_empty_comments">Nessun commento per ora</string>
     <string name="notifications_empty_unread">Tutto è completamente aggiornato!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Accedi alla Statistiche nella app e quindi successivamente prova ad aggiungere il widget</string>
@@ -1539,7 +1539,6 @@ Language: it
     <string name="stats_insights_most_popular_hour">Ora più popolare.</string>
     <string name="stats_insights_most_popular_day">Giorno più popolare.</string>
     <string name="stats_insights_today">Statistiche odierne</string>
-    <string name="stats_insights_popular">Giorno e ora più popolari.</string>
     <string name="stats_insights_all_time">Articoli, visualizzazioni e visitatori dall\'inizio</string>
     <string name="stats_insights">Approfondimenti</string>
     <string name="stats_sign_in_jetpack_different_com_account">Per vedere le tue statistiche, accedi con l\'account WordPress.com che hai usato per connettere Jetpack.</string>

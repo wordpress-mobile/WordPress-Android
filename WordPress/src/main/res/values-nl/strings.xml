@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-05 12:54:07+0000
+Translation-Revision-Date: 2019-02-19 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="quick_start_sites_type_subtitle">%1$d van %2$d voltooid</string>
+    <string name="quick_start_sites_type_grow">Verhoog je bezoekersaantallen</string>
+    <string name="quick_start_sites_type_customize">Je site aanpassen</string>
+    <string name="quick_start_sites">Volgende stappen</string>
+    <string name="quick_start_complete_tasks_header">Voltooi (%d)</string>
+    <string name="quick_start_dialog_view_site_message">Veel plezier met je voltooide product!</string>
+    <string name="quick_start_dialog_upload_icon_title">Upload een favicon</string>
+    <string name="quick_start_dialog_upload_icon_message">Je bezoekers zien je pictogram in hun browser. Voeg een aangepast pictogram toe voor een stijlvolle, professionele look.</string>
+    <string name="quick_start_dialog_explore_plans_message_short">Tik op %1$s Abonnement %2$s om je huidige abonnement en andere beschikbare abonnementen in te zien</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">Tik op %1$s Pagina toevoegen %2$s om een nieuwe pagina aan te maken.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Tik op %1$s Site-pagina\'s %2$s om verder te gaan.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Tik op %1$s Statistieken %2$s om te zien hoe je site presteert.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">Tik op %1$s Jouw favicon %2$s om een nieuwe te uploaden</string>
+    <string name="quick_start_dialog_publish_post_message">Stel je eerste bericht op en publiceer het.</string>
+    <string name="quick_start_dialog_need_help_message">Wij brengen je de basis bij voor het bouwen en laten groeien van je site.</string>
+    <string name="quick_start_dialog_migration_title">We hebben wat wijzigingen aangebracht aan je checklist</string>
+    <string name="quick_start_dialog_migration_message">We hebben wat taken toegevoegd om je te helpen je bezoekersaantallen te vergroten.</string>
+    <string name="quick_start_dialog_explore_plans_title">Abonnementen verkennen</string>
+    <string name="quick_start_dialog_explore_plans_message">Bekijk meer informatie over de marketing- en SEO-tools van onze betaalde abonnementen.</string>
+    <string name="quick_start_dialog_enable_sharing_title">Berichten delen inschakelen</string>
+    <string name="quick_start_dialog_enable_sharing_message">Deel nieuwe berichten automatisch op je socialmedia-accounts.</string>
+    <string name="quick_start_dialog_customize_site_message">Lettertypes afstemmen, afbeeldingen toevoegen en meer.</string>
+    <string name="quick_start_dialog_create_page_title">Een nieuwe pagina maken</string>
+    <string name="quick_start_dialog_create_page_message">Voeg een pagina voor belangrijke content toe; een pagina \'Over\' is een goed begin.</string>
+    <string name="quick_start_dialog_check_stats_title">Controleer je site-statistieken</string>
+    <string name="quick_start_dialog_check_stats_message">Houd de prestaties van je site bij.</string>
+    <string name="quick_start_dialog_browse_themes_title">Blader door thema’s</string>
+    <string name="quick_start_dialog_browse_themes_message">Verken tientallen opties voor de lay-out en vind jouw perfecte match.</string>
+    <string name="quick_start_dialog_remove_next_steps_message">Door \'Volgende stappen\' te verwijderen, worden alle rondleidingen op deze site verborgen. Deze actie kan niet ongedaan worden gemaakt.</string>
+    <string name="quick_start_dialog_remove_next_steps_title">Volgende stappen verwijderen</string>
+    <string name="quick_start_remove_next_steps_menu_title">Verwijder dit</string>
+    <string name="quick_start_complete_view_subtitle">Gefeliciteerd! Je hebt je lijst afgewerkt. Goed gedaan.</string>
+    <string name="quick_start_complete_view_title">Alle taken zijn voltooid!</string>
+    <string name="quick_start_task_skip_menu_title">Taak overslaan</string>
+    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">inklappen</string>
+    <string name="quick_start_completed_tasks_header_chevron_expand_desc">uitklappen</string>
+    <string name="notification_channel_reminder_title">Herinnering</string>
+    <string name="stats_select_next_period_description">Volgende periode selecteren</string>
+    <string name="stats_select_previous_period_description">Vorige periode selecteren</string>
+    <string name="stats_most_popular_percent_views">%1$d%% van de weergaven</string>
+    <string name="stats_insights_popular">Populairste tijd</string>
+    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_clear_all_content_description">Wissen</string>
     <string name="new_site_creation_button_skip">Overslaan</string>
     <string name="local_changes_discarding_no_connection">Er is een verbinding vereist om deze actie uit te voeren. Controleer je verbinding en probeer het nogmaals.</string>
@@ -26,7 +69,6 @@ Language: nl
     <string name="stats_clicks_link_label">Link</string>
     <string name="stats_clicks">Kliks</string>
     <string name="stats_posts_and_pages">Berichten en pagina\'s</string>
-    <string name="stats_most_popular_percent_views">%1$d%%</string>
     <string name="stats_insights_path">Path</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_google_plus">Google+</string>
@@ -34,7 +76,6 @@ Language: nl
     <string name="stats_insights_twitter">Twitter</string>
     <string name="stats_insights_facebook">Facebook</string>
     <string name="stats_insights_tags_and_categories">Tags en categorieën</string>
-    <string name="stats_insights_most_popular_day_and_hour_label">Dag/uur</string>
     <string name="stats_publicize_followers_label">Volgers</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_title_label">Titel</string>
@@ -133,48 +174,26 @@ Language: nl
     <string name="set_parent">Instellen als bovenliggend item</string>
     <string name="dismiss">negeren</string>
     <string name="quick_start_focus_point_description">tik hier</string>
-    <string name="quick_start_sites">Snelstart</string>
     <string name="quick_start_list_create_site_title">Je site maken</string>
-    <string name="quick_start_list_create_site_subtitle">Ga aan de slag met je site</string>
-    <string name="quick_start_list_complete_title">Gefeliciteerd, je hebt Snelstart afgerond</string>
-    <string name="quick_start_list_complete_subtitle">Voelt het niet goed om dingen af te strepen?</string>
     <string name="quick_start_dialog_view_site_title">Website bekijken</string>
     <string name="quick_start_dialog_view_site_message_short">Tik op %1$s Site bekijken %2$s om een voorbeeld te zien van je site</string>
-    <string name="quick_start_dialog_view_site_message">Bekijk een voorbeeld van je nieuwe site om te zien wat je bezoekers zien.</string>
-    <string name="quick_start_dialog_skip_title">Snelstart overslaan</string>
-    <string name="quick_start_dialog_skip_message">In de snelle rondleiding wordt getoond hoe je een basissite bouwt. Weet je zeker dat je wilt overslaan?</string>
     <string name="quick_start_dialog_share_site_title">Je site delen</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">Tik op %1$s Delen %2$s om door te gaan</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">Tik op %1$s Verbindingen %2$s om je social media-accounts toe te voegen</string>
     <string name="quick_start_dialog_share_site_message">Koppel je site aan je social media-accounts en je site zal nieuwe berichten automatisch delen.</string>
     <string name="quick_start_dialog_publish_post_title">Een bericht publiceren</string>
     <string name="quick_start_dialog_publish_post_message_short">Tik op %1$s Bericht aanmaken %2$s om een nieuw bericht aan te maken</string>
-    <string name="quick_start_dialog_publish_post_message">De tijd is aangebroken! Stel je allereerste bericht op en publiceer het.</string>
     <string name="quick_start_dialog_need_help_title">Heb je hulp nodig om aan de slag te kunnen gaan?</string>
-    <string name="quick_start_dialog_need_help_message">Onze Snelstart-checklist toont de basisbeginselen voor het bouwen van een nieuwe website.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Ja</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nooit</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nee</string>
     <string name="quick_start_dialog_follow_sites_title">Andere sites volgen</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tik op %1$s Zoeken %2$s om te zoeken naar sites met dezelfde interesses</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tik op %1$s Reader %2$s om door te gaan</string>
-    <string name="quick_start_dialog_follow_sites_message">Ontdek sites die je aanspreken en volg ze om updates te ontvangen wanneer nieuwe content wordt gepubliceerd.</string>
     <string name="quick_start_dialog_customize_site_title">Je site aanpassen</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Tik op %1$s Thema\'s %2$s om door te gaan</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">Tik op %1$s Aanpassen %2$s om je site te personaliseren</string>
-    <string name="quick_start_dialog_customize_site_message">Wijzig kleuren, lettertypen en afbeeldingen voor een perfect gepersonaliseerde site.</string>
-    <string name="quick_start_dialog_continue_setup_title">Ga verder met het configureren van je site</string>
-    <string name="quick_start_dialog_continue_setup_message">Tijd om je site af te ronden! Onze checklist leidt je door de volgende stappen.</string>
     <string name="quick_start_dialog_choose_theme_title">Kies een thema</string>
-    <string name="quick_start_dialog_choose_theme_message_short">Tik op %1$s Thema\'s %2$s om nieuwe thema\'s te ontdekken</string>
     <string name="quick_start_dialog_choose_theme_message">Blader door al onze thema\'s om het thema te vinden dat perfect bij je past.</string>
-    <string name="quick_start_button_skip_positive">Overslaan</string>
-    <string name="quick_start_button_skip_negative">Annuleren</string>
-    <string name="quick_start_button_skip">Alles overslaan</string>
     <string name="quick_start_button_positive">Starten</string>
     <string name="quick_start_button_negative_short">Annuleren</string>
     <string name="quick_start_button_negative">Niet nu</string>
-    <string name="content_description_done">Klaar</string>
     <string name="my_site_create_new_site_title">Je hebt geen sites</string>
     <string name="reader_empty_followed_tags_title">Geen gevolgde tags</string>
     <string name="reader_empty_followed_tags_subtitle">Voeg hier tags toe om berichten te vinden over je favoriete onderwerpen</string>
@@ -866,7 +885,6 @@ Language: nl
     <string name="draft_uploaded">Concept toegevoegd</string>
     <string name="report_bug">Bug rapporteren</string>
     <string name="video_quality">Videokwaliteit</string>
-    <string name="permission_location">Locatie</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_storage">Opslag</string>
     <string name="button_edit_permissions">Rechten bewerken</string>
@@ -1372,10 +1390,7 @@ Language: nl
     <string name="notifications_no_search_results">Geen sites overeengekomen met \'%s\'</string>
     <string name="search_sites">Zoek sites</string>
     <string name="notifications_empty_view_reader">Ga naar Reader</string>
-    <string name="notifications_empty_action_followers_likes">Trek de aandacht: reageer op berichten die je hebt gelezen</string>
     <string name="notifications_empty_action_comments">Deelnemen aan een gesprek: reageer op berichten uit blogs die je volgt</string>
-    <string name="notifications_empty_action_unread">Breng het gesprek weer op gang: schrijf een nieuw bericht</string>
-    <string name="notifications_empty_action_all">Ga aan de slag! Reageer op berichten uit blogs die je volgt.</string>
     <string name="notifications_empty_comments">Nog geen reacties</string>
     <string name="notifications_empty_unread">Je bent helemaal up-to-date!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Bekijk de statistieken in de app en probeer later de widget toe te voegen</string>
@@ -1436,7 +1451,6 @@ Language: nl
     <string name="stats_insights_most_popular_hour">De meest populaire tijd.</string>
     <string name="stats_insights_most_popular_day">De meest populaire dag.</string>
     <string name="stats_insights_today">De statistieken van vandaag.</string>
-    <string name="stats_insights_popular">Meest populaire dag en uur</string>
     <string name="stats_insights_all_time">Alle berichten, weergaven en bezoekers</string>
     <string name="stats_insights">Inzichten</string>
     <string name="stats_sign_in_jetpack_different_com_account">Om de statistieken te bekijken moet je je met je WordPress.com account aanmelden en deze verbinden met Jetpack.</string>

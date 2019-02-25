@@ -8,7 +8,6 @@ Language: gl_ES
 <resources>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
-    <string name="stats_most_popular_percent_views">%1$d%%</string>
     <string name="stats_insights_tumblr">Tumblr</string>
     <string name="stats_insights_twitter">Twitter</string>
     <string name="stats_insights_facebook">Facebook</string>
@@ -423,10 +422,7 @@ Language: gl_ES
     <string name="notifications_no_search_results">Non hai sitios que coincidan con \'%s\' </string>
     <string name="search_sites">Buscar sitios</string>
     <string name="notifications_empty_view_reader">Ver a Guía de Lectura</string>
-    <string name="notifications_empty_action_followers_likes">Faite ver: comenta nos artigos que liches.</string>
     <string name="notifications_empty_action_comments">Únete a unha conversa: comenta nos artigos dos blogues que segues.</string>
-    <string name="notifications_empty_action_unread">Reaviva a conversa: escribe un artigo novo.</string>
-    <string name="notifications_empty_action_all">Sé activo! comenta nos artigos dos blogues que segues.</string>
     <string name="notifications_empty_comments">Non hai comentarios novos … de momento</string>
     <string name="notifications_empty_unread">Xa estás ao día!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Por favor, accede ás estatísticas na aplicación e tenta engadir o widget máis tarde.</string>
@@ -488,7 +484,6 @@ Language: gl_ES
     <string name="stats_insights_best_ever">A mellor de todas</string>
     <string name="stats_insights_most_popular_hour">Hora máis popular</string>
     <string name="stats_insights_most_popular_day">Día máis popular</string>
-    <string name="stats_insights_popular">Día e hora máis populares</string>
     <string name="stats_insights_today">Estatísticas de hoxe</string>
     <string name="stats_insights_all_time">Entradas, visitas e lectores desde o comezo.</string>
     <string name="stats_insights">Información</string>
