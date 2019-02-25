@@ -17,7 +17,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_view_all_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
@@ -189,10 +188,6 @@ class StatsViewAllFragment : DaggerFragment() {
                     }
                     is UiModel.Error -> {
                         recyclerView.visibility = View.GONE
-                        actionable_error_view.visibility = View.VISIBLE
-                        actionable_error_view.button.setOnClickListener {
-                            viewModel.onRetryClick(site)
-                        }
                     }
                 }
             }
@@ -206,7 +201,6 @@ class StatsViewAllFragment : DaggerFragment() {
 
     private fun displayData(statsBlock: StatsBlock) {
         recyclerView.visibility = View.VISIBLE
-        actionable_error_view.visibility = View.GONE
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
             adapter = StatsBlockAdapter(imageManager)
