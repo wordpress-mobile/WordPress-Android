@@ -2,67 +2,53 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/link_wrapper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/first_block"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/first_activity"
+        layout="@layout/stats_block_single_activity"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@id/first_label"
-        app:layout_constraintEnd_toStartOf="@id/second_block"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/second_activity"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginEnd="16dp"/>
 
-    <TextView
-        android:id="@+id/first_label"
-        android:visibility="gone"
-        style="@style/StatsBlockPostingActivityLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/first_block"
-        app:layout_constraintStart_toStartOf="@id/first_block"
-        app:layout_constraintTop_toBottomOf="@id/first_block"
-        tools:text="Jan"
-        />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/second_block"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/second_activity"
+        layout="@layout/stats_block_single_activity"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/third_block"
-        app:layout_constraintStart_toEndOf="@id/first_block"
+        app:layout_constraintEnd_toStartOf="@id/third_activity"
+        app:layout_constraintStart_toEndOf="@id/first_activity"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginEnd="16dp"
         />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/third_block"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/third_activity"
+        layout="@layout/stats_block_single_activity"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/second_block"
+        app:layout_constraintStart_toEndOf="@id/second_activity"
         app:layout_constraintTop_toTopOf="parent"
         />
 
