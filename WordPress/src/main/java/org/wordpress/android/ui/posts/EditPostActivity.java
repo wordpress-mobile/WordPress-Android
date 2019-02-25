@@ -1814,10 +1814,11 @@ public class EditPostActivity extends AppCompatActivity implements
             mPostForUndo = mPost.clone();
             mPost.setTitle(mRevision.getPostTitle());
             mPost.setContent(mRevision.getPostContent());
-            mPost.setIsLocallyChanged(true);
             mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
             refreshEditorContent();
         }
+
+        mPost.setIsLocallyChanged(isRevisionSameAsPost);
 
         Snackbar.make(mViewPager, getString(R.string.history_loaded_revision),
                 AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, 4000))
