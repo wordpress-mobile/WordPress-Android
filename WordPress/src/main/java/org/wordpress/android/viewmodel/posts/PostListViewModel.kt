@@ -230,17 +230,17 @@ class PostListViewModel @Inject constructor(
             PUBLISHED -> PostListEmptyUiState.EmptyList(
                     UiStringRes(R.string.posts_published_empty),
                     UiStringRes(R.string.posts_empty_list_button),
-                    this@PostListViewModel::newPost
+                    this::newPost
             )
             DRAFTS -> PostListEmptyUiState.EmptyList(
                     UiStringRes(R.string.posts_draft_empty),
                     UiStringRes(R.string.posts_empty_list_button),
-                    this@PostListViewModel::newPost
+                    this::newPost
             )
             SCHEDULED -> PostListEmptyUiState.EmptyList(
                     UiStringRes(R.string.posts_scheduled_empty),
                     UiStringRes(R.string.posts_empty_list_button),
-                    this@PostListViewModel::newPost
+                    this::newPost
             )
             TRASHED -> PostListEmptyUiState.EmptyList(UiStringRes(R.string.posts_trashed_empty))
         }
