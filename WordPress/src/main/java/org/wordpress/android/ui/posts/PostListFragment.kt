@@ -266,13 +266,13 @@ class PostListFragment : Fragment() {
 
     private fun updateEmptyViewForState(state: PostListEmptyUiState) {
         actionableEmptyView?.let { emptyView ->
-            if (state.listVisible) {
-                emptyView.visibility = View.GONE
-            } else {
+            if (state.emptyViewVisible) {
                 emptyView.visibility = View.VISIBLE
                 setTextOrHide(emptyView.title, state.title)
                 setImageOrHide(emptyView.image, state.imgResId)
                 setupButtonOrHide(emptyView.button, state.buttonText, state.onButtonClick)
+            } else {
+                emptyView.visibility = View.GONE
             }
         }
     }

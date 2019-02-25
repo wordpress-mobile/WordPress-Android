@@ -185,9 +185,9 @@ class PostListViewModel @Inject constructor(
         val result = MediatorLiveData<PostListEmptyUiState>()
         val update = {
             createEmptyUiState(
-                    pagedListWrapper.isEmpty.value ?: false,
-                    pagedListWrapper.listError.value,
-                    pagedListWrapper.isFetchingFirstPage.value ?: false
+                    isListEmpty = pagedListWrapper.isEmpty.value ?: true,
+                    error = pagedListWrapper.listError.value,
+                    isFetchingFirstPage = pagedListWrapper.isFetchingFirstPage.value ?: false
             )
         }
         result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
@@ -197,19 +197,19 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun createEmptyUiState(
-        isEmpty: Boolean,
+        isListEmpty: Boolean,
         error: ListError?,
         isFetchingFirstPage: Boolean
     ): PostListEmptyUiState {
-        return if (isEmpty) {
-            PostListEmptyUiState.HiddenList
-        } else {
+        return if (isListEmpty) {
             val isLoadingFirstPage = isFetchingFirstPage
             when {
                 error != null -> createErrorListUiState(error)
                 isLoadingFirstPage -> PostListEmptyUiState.Loading
                 else -> createEmptyListUiState()
             }
+        } else {
+            PostListEmptyUiState.DataShown
         }
     }
 
@@ -251,34 +251,34 @@ class PostListViewModel @Inject constructor(
         @DrawableRes val imgResId: Int? = null,
         val buttonText: UiString? = null,
         val onButtonClick: (() -> Unit)? = null,
-        val listVisible: Boolean = true
+        val emptyViewVisible: Boolean = true
     ) {
         class EmptyList(
             title: UiString,
             buttonText: UiString? = null,
             onButtonClick: (() -> Unit)? = null
         ) : PostListEmptyUiState(
-                title,
-                R.drawable.img_illustration_posts_75dp,
-                buttonText,
-                onButtonClick
+                title = title,
+                imgResId = R.drawable.img_illustration_posts_75dp,
+                buttonText = buttonText,
+                onButtonClick = onButtonClick
         )
 
-        object HiddenList : PostListEmptyUiState(listVisible = false)
+        object DataShown : PostListEmptyUiState(emptyViewVisible = false)
 
         object Loading : PostListEmptyUiState(
-                UiStringRes(R.string.posts_fetching),
-                R.drawable.img_illustration_posts_75dp
+                title = UiStringRes(R.string.posts_fetching),
+                imgResId = R.drawable.img_illustration_posts_75dp
         )
 
         class RefreshError(title: UiString) : PostListEmptyUiState(
-                title,
-                R.drawable.img_illustration_posts_75dp
+                title = title,
+                imgResId = R.drawable.img_illustration_posts_75dp
         )
 
         object PermissionsError : PostListEmptyUiState(
-                UiStringRes(R.string.error_refresh_unauthorized_posts),
-                R.drawable.img_illustration_posts_75dp
+                title = UiStringRes(R.string.error_refresh_unauthorized_posts),
+                imgResId = R.drawable.img_illustration_posts_75dp
         )
     }
 
