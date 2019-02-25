@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.DrawableRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -13,7 +14,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
@@ -26,6 +30,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
@@ -36,13 +41,8 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.posts.PagedPostList
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.PERMISSION_ERROR
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.REFRESH_ERROR
 import org.wordpress.android.viewmodel.posts.PostListViewModel
+import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
@@ -264,27 +264,39 @@ class PostListFragment : Fragment() {
         scrollPosition?.let { recyclerView?.smoothScrollToPosition(it) }
     }
 
-    private fun updateEmptyViewForState(emptyViewState: PostListEmptyViewState) {
-        actionableEmptyView?.visibility = if (emptyViewState == HIDDEN_LIST) View.GONE else View.VISIBLE
-        val stringId = when (emptyViewState) {
-            HIDDEN_LIST -> return // nothing else to do!
-            EMPTY_LIST -> R.string.posts_empty_list
-            LOADING -> R.string.posts_fetching
-            REFRESH_ERROR -> if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-                R.string.error_refresh_posts
-            } else R.string.no_network_message
-            PERMISSION_ERROR -> R.string.error_refresh_unauthorized_posts
-        }
-        val isNewPostActionVisible = emptyViewState == EMPTY_LIST
-        actionableEmptyView?.let {
-            it.image.setImageResource(R.drawable.img_illustration_posts_75dp)
-            it.image.visibility = if (isNewPostActionVisible) View.VISIBLE else View.GONE
-            it.title.setText(stringId)
-            it.button.setText(R.string.posts_empty_list_button)
-            it.button.visibility = if (isNewPostActionVisible) View.VISIBLE else View.GONE
-            it.button.setOnClickListener {
-                viewModel.newPost()
+    private fun updateEmptyViewForState(state: PostListEmptyUiState) {
+        actionableEmptyView?.let { emptyView ->
+            if (state.emptyViewVisible) {
+                emptyView.visibility = View.VISIBLE
+                setTextOrHide(emptyView.title, state.title)
+                setImageOrHide(emptyView.image, state.imgResId)
+                setupButtonOrHide(emptyView.button, state.buttonText, state.onButtonClick)
+            } else {
+                emptyView.visibility = View.GONE
             }
+        }
+    }
+
+    private fun setupButtonOrHide(
+        buttonView: Button,
+        text: UiString?,
+        onButtonClick: (() -> Unit)?
+    ) {
+        setTextOrHide(buttonView, text)
+        buttonView.setOnClickListener { onButtonClick?.invoke() }
+    }
+
+    private fun setImageOrHide(imageView: ImageView, @DrawableRes resId: Int?) {
+        imageView.visibility = if (resId == null) View.GONE else View.VISIBLE
+        resId?.let {
+            imageView.setImageResource(resId)
+        }
+    }
+
+    private fun setTextOrHide(textView: TextView, text: UiString?) {
+        textView.visibility = if (text == null) View.GONE else View.VISIBLE
+        text?.let {
+            textView.text = uiHelpers.getTextOfUiString(nonNullActivity, text)
         }
     }
 
