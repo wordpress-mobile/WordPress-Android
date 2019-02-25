@@ -184,7 +184,11 @@ class PostListViewModel @Inject constructor(
     val emptyViewState: LiveData<PostListEmptyUiState> by lazy {
         val result = MediatorLiveData<PostListEmptyUiState>()
         val update = {
-            createEmptyUiState()
+            createEmptyUiState(
+                    pagedListWrapper.isEmpty.value ?: false,
+                    pagedListWrapper.listError.value,
+                    pagedListWrapper.isFetchingFirstPage.value ?: false
+            )
         }
         result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
         result.addSource(pagedListWrapper.isFetchingFirstPage) { result.value = update() }
@@ -192,17 +196,20 @@ class PostListViewModel @Inject constructor(
         result
     }
 
-    private fun createEmptyUiState(): PostListEmptyUiState {
-        return if (pagedListWrapper.isEmpty.value != false) {
-            val error = pagedListWrapper.listError.value
-            val isLoadingFirstPage = pagedListWrapper.isFetchingFirstPage.value == true
+    private fun createEmptyUiState(
+        isEmpty: Boolean,
+        error: ListError?,
+        isFetchingFirstPage: Boolean
+    ): PostListEmptyUiState {
+        return if (isEmpty) {
+            PostListEmptyUiState.HiddenList
+        } else {
+            val isLoadingFirstPage = isFetchingFirstPage
             when {
                 error != null -> createErrorListUiState(error)
                 isLoadingFirstPage -> PostListEmptyUiState.Loading
                 else -> createEmptyListUiState()
             }
-        } else {
-            PostListEmptyUiState.HiddenList
         }
     }
 
