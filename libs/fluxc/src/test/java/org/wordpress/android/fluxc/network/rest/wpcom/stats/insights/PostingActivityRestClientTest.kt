@@ -61,8 +61,8 @@ class PostingActivityRestClientTest {
                 userAgent,
                 statsUtils
         )
-        whenever(statsUtils.toFormattedDate(startDay)).thenReturn(formattedStartDate)
-        whenever(statsUtils.toFormattedDate(endDay)).thenReturn(formattedEndDate)
+        whenever(statsUtils.getFormattedDate(startDay)).thenReturn(formattedStartDate)
+        whenever(statsUtils.getFormattedDate(endDay)).thenReturn(formattedEndDate)
     }
 
     @Test

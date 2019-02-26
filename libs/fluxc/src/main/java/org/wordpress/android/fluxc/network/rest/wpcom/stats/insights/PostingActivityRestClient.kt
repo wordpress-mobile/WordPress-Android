@@ -41,8 +41,8 @@ class PostingActivityRestClient
     ): FetchStatsPayload<PostingActivityResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.streak.urlV1_1
         val params = mapOf(
-                "startDate" to statsUtils.toFormattedDate(startDay),
-                "endDate" to statsUtils.toFormattedDate(endDay),
+                "startDate" to statsUtils.getFormattedDate(startDay),
+                "endDate" to statsUtils.getFormattedDate(endDay),
                 "gmtOffset" to 0.toString(),
                 "max" to MAX_ITEMS.toString()
         )

@@ -60,26 +60,20 @@ val LATEST_POST = PostResponse(
         TITLE,
         DATE,
         URL,
-        LIKE_COUNT, Discussion(COMMENT_COUNT)
-)
+        LIKE_COUNT, Discussion(COMMENT_COUNT))
 
 val FIELDS = listOf("period", "views")
 const val FIRST_DAY = "2018-10-01"
 const val FIRST_DAY_VIEWS = 10
 const val SECOND_DAY = "2018-10-02"
 const val SECOND_DAY_VIEWS = 11
-val DATA = listOf(
-        listOf(FIRST_DAY, FIRST_DAY_VIEWS.toString()), listOf(
-        SECOND_DAY, SECOND_DAY_VIEWS.toString()
-)
-)
+val DATA = listOf(listOf(FIRST_DAY, FIRST_DAY_VIEWS.toString()), listOf(
+        SECOND_DAY, SECOND_DAY_VIEWS.toString()))
 
-val POST_STATS_RESPONSE = PostStatsResponse(
-        0, 0, 0,
+val POST_STATS_RESPONSE = PostStatsResponse(0, 0, 0,
         VIEWS, null,
         DATA,
-        FIELDS, listOf(), mapOf(), mapOf()
-)
+        FIELDS, listOf(), mapOf(), mapOf())
 
 const val REBLOG_COUNT = 13
 const val POST_COUNT = 17
@@ -147,15 +141,10 @@ val SECOND_TAG = TagResponse(
 )
 val TAGS_RESPONSE = TagsResponse(
         FIRST_DAY,
-        listOf(
-                TagsGroup(10, listOf(FIRST_TAG)), TagsGroup(
-                5, listOf(
+        listOf(TagsGroup(10, listOf(FIRST_TAG)), TagsGroup(5, listOf(
                 FIRST_TAG,
                 SECOND_TAG
-        )
-        )
-        )
-)
+        ))))
 val POSTING_ACTIVITY_RESPONSE = PostingActivityResponse(
         Streaks(
                 Streak("2018-01-01", "2018-02-01", 20),
