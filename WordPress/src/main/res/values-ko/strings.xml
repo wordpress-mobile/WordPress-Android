@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-08 07:54:08+0000
+Translation-Revision-Date: 2019-02-20 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="quick_start_sites_type_subtitle">%1$d/%2$d 완료</string>
+    <string name="quick_start_sites_type_grow">방문자 수를 늘리세요</string>
+    <string name="quick_start_sites_type_customize">사이트 사용자 정의</string>
+    <string name="quick_start_sites">다음 단계</string>
+    <string name="quick_start_complete_tasks_header">완료(%d)</string>
+    <string name="quick_start_dialog_view_site_message">완성된 제품을 즐기세요!</string>
+    <string name="quick_start_dialog_upload_icon_title">사이트 아이콘 업로드</string>
+    <string name="quick_start_dialog_upload_icon_message">방문자의 브라우저에 아이콘이 표시됩니다. 깔끔하고 전문적인 모양을 만들려면 사용자 정의 아이콘을 추가하세요.</string>
+    <string name="quick_start_dialog_explore_plans_message_short">현재 요금제 및 사용 가능한 다른 요금제를 보려면 %1$s요금제%2$s를 탭합니다.</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">새 페이지를 만들려면 %1$s페이지 추가%2$s를 탭합니다.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">계속하려면 %1$s사이트 페이지%2$s를 탭합니다.</string>
+    <string name="quick_start_dialog_check_stats_message_short">사이트 성능을 확인하려면 %1$s통계%2$s를 탭합니다.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">새로 업로드하려면 %1$s사이트 아이콘%2$s을 탭합니다.</string>
+    <string name="quick_start_dialog_publish_post_message">임시글을 작성하여 첫 번째 글을 게시하세요.</string>
+    <string name="quick_start_dialog_need_help_message">사이트 빌드 및 성장에 대한 기본 사항을 안내해 드립니다.</string>
+    <string name="quick_start_dialog_migration_title">회원님의 체크리스트에 몇 가지 변경 사항이 있습니다.</string>
+    <string name="quick_start_dialog_migration_message">방문자 수를 늘리는 데 도움이 되는 작업이 추가되었습니다.</string>
+    <string name="quick_start_dialog_explore_plans_title">요금제 둘러보기</string>
+    <string name="quick_start_dialog_explore_plans_message">유료 요금제의 마케팅 및 SEO 도구에 대해 알아보세요.</string>
+    <string name="quick_start_dialog_enable_sharing_title">글 공유 설정</string>
+    <string name="quick_start_dialog_enable_sharing_message">새 글을 소셜 미디어 계정에 자동으로 공유합니다.</string>
+    <string name="quick_start_dialog_customize_site_message">글꼴을 조정하고 이미지를 추가하는 등의 작업을 하세요.</string>
+    <string name="quick_start_dialog_create_page_title">새 페이지 생성</string>
+    <string name="quick_start_dialog_create_page_message">주요 콘텐츠용 페이지 추가 - “정보” 페이지에서 시작하는 것이 좋습니다.</string>
+    <string name="quick_start_dialog_check_stats_title">사이트 통계 확인</string>
+    <string name="quick_start_dialog_check_stats_message">사이트 성능을 최신 상태로 유지합니다.</string>
+    <string name="quick_start_dialog_browse_themes_title">테마 찾아보기</string>
+    <string name="quick_start_dialog_browse_themes_message">다양한 레이아웃 옵션을 살펴보고 가장 적합한 테마를 찾으세요.</string>
+    <string name="quick_start_dialog_remove_next_steps_message">다음 단계를 제거하면 이 사이트의 모든 둘러보기가 숨겨집니다. 이 작업은 되돌릴 수 없습니다.</string>
+    <string name="quick_start_dialog_remove_next_steps_title">다음 단계 제거</string>
+    <string name="quick_start_remove_next_steps_menu_title">제거</string>
+    <string name="quick_start_complete_view_subtitle">목록이 완성되었습니다. 잘하셨습니다.</string>
+    <string name="quick_start_complete_view_title">모든 작업 완료!</string>
+    <string name="quick_start_task_skip_menu_title">작업 건너뛰기</string>
+    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">축소</string>
+    <string name="quick_start_completed_tasks_header_chevron_expand_desc">확장</string>
+    <string name="notification_channel_reminder_title">알림</string>
+    <string name="stats_select_next_period_description">다음 기간 선택</string>
+    <string name="stats_select_previous_period_description">이전 기간 선택</string>
+    <string name="stats_most_popular_percent_views">조회수 %1$d%%</string>
+    <string name="stats_insights_popular">가장 인기 있는 시간</string>
+    <string name="stats_traffic_change">%1$s(%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s(%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">사이트 미리보기 표시</string>
     <string name="new_site_creation_clear_all_content_description">지우기</string>
     <string name="site_created_but_not_fetched_snackbar_message">사이트 연결이 느린 것 같습니다. 새 사이트가 목록에 없으면 새로 고침하세요.</string>
@@ -74,7 +117,6 @@ Language: ko_KR
     <string name="stats_referrer_label">참조자</string>
     <string name="stats_referrers">참조자</string>
     <string name="stats_posts_and_pages">게시글 및 페이지</string>
-    <string name="stats_most_popular_percent_views">%1$d%%</string>
     <string name="stats_insights_path">경로</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_google_plus">Google+</string>
@@ -86,8 +128,6 @@ Language: ko_KR
     <string name="stats_insights_create_post">게시글 작성</string>
     <string name="stats_insights_tags_and_categories">태그 및 카테고리</string>
     <string name="stats_insights_all_time_stats">전체 시간대 통계</string>
-    <string name="stats_insights_most_popular_views_label">조회수</string>
-    <string name="stats_insights_most_popular_day_and_hour_label">요일/시간</string>
     <string name="stats_insights_today_stats">오늘의 통계</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">팔로워</string>
@@ -193,48 +233,26 @@ Language: ko_KR
     <string name="set_parent">상위 항목 설정</string>
     <string name="dismiss">해제</string>
     <string name="quick_start_focus_point_description">여기를 탭하세요.</string>
-    <string name="quick_start_sites">퀵 스타트</string>
     <string name="quick_start_list_create_site_title">사이트 만들기</string>
-    <string name="quick_start_list_create_site_subtitle">사이트 가동 및 작동</string>
-    <string name="quick_start_list_complete_title">퀵 스타트 완료</string>
-    <string name="quick_start_list_complete_subtitle">목록에서 끝난 일을 지우는 건 항상 기분 좋은 일이죠.</string>
     <string name="quick_start_dialog_view_site_title">사이트 보기</string>
     <string name="quick_start_dialog_view_site_message_short">%1$s 사이트 보기 %2$s를 탭하여 사이트 미리보기</string>
-    <string name="quick_start_dialog_view_site_message">새 사이트를 미리 보고 방문자에게 어떤 것이 표시되는지 확인하세요.</string>
-    <string name="quick_start_dialog_skip_title">퀵 스타트 건너뛰기</string>
-    <string name="quick_start_dialog_skip_message">퀵 투어에서는 기본 사이트 구축에 대해 안내합니다. 건너뛰시겠습니까?</string>
     <string name="quick_start_dialog_share_site_title">사이트 공유</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">%1$s 공유 %2$s를 탭하여 계속하기</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">%1$s 연결 %2$s을 탭하여 소셜 미디어 계정 추가</string>
     <string name="quick_start_dialog_share_site_message">소셜 미디어 계정을 연결하세요. 그러면 사이트에서 새 글을 자동으로 공유합니다.</string>
     <string name="quick_start_dialog_publish_post_title">글 게시</string>
     <string name="quick_start_dialog_publish_post_message_short">%1$s 게시물 작성 %2$s을 탭하여 새 게시물 작성하기</string>
-    <string name="quick_start_dialog_publish_post_message">이제 시간이 되었습니다! 임시글을 작성하여 첫 번째 글을 게시하세요.</string>
     <string name="quick_start_dialog_need_help_title">시작하는 데 도움이 필요하십니까?</string>
-    <string name="quick_start_dialog_need_help_message">퀵 스타트 체크리스트는 새 웹사이트 설정을 위한 기본 사항을 안내합니다.</string>
-    <string name="quick_start_dialog_need_help_button_positive">예</string>
     <string name="quick_start_dialog_need_help_button_neutral">절대</string>
-    <string name="quick_start_dialog_need_help_button_negative">아니오</string>
     <string name="quick_start_dialog_follow_sites_title">다른 사이트 팔로우</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">%1$s 검색 %2$s을 탭하여 관심사가 비슷한 사이트 찾기</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">%1$s 리더 %2$s를 탭하여 계속하기</string>
-    <string name="quick_start_dialog_follow_sites_message">도움을 받은 사이트를 찾은 다음 업데이트가 게시될 때 받을 수 있도록 팔로우하세요.</string>
     <string name="quick_start_dialog_customize_site_title">사이트 사용자 정의</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">%1$s 테마 %2$s를 탭하여 계속하기</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">%1$s 사용자 정의 %2$s를 탭하여 사이트 개인화 시작</string>
-    <string name="quick_start_dialog_customize_site_message">완벽한 맞춤형 사이트의 색상, 글꼴 및 이미지를 변경합니다.</string>
-    <string name="quick_start_dialog_continue_setup_title">사이트 설정 진행</string>
-    <string name="quick_start_dialog_continue_setup_message">사이트 설정을 완료할 시간입니다! 체크리스트가 다음 단계를 안내합니다.</string>
     <string name="quick_start_dialog_choose_theme_title">테마 선택</string>
-    <string name="quick_start_dialog_choose_theme_message_short">%1$s 테마 %2$s를 탭하여 새 테마 검색하기</string>
     <string name="quick_start_dialog_choose_theme_message">모든 테마를 검색하여 어울리는 것을 찾으세요.</string>
-    <string name="quick_start_button_skip_positive">건너뛰기</string>
-    <string name="quick_start_button_skip_negative">취소</string>
-    <string name="quick_start_button_skip">모두 건너뛰기</string>
     <string name="quick_start_button_positive">이동</string>
     <string name="quick_start_button_negative_short">취소</string>
     <string name="quick_start_button_negative">지금 안 함</string>
-    <string name="content_description_done">완료</string>
     <string name="my_site_create_new_site_title">사이트가 없습니다</string>
     <string name="reader_empty_followed_tags_title">팔로우된 태그</string>
     <string name="reader_empty_followed_tags_subtitle">즐겨 찾는 주제에 대한 게시물을 찾으려면 여기에 태그를 추가하세요.</string>
@@ -965,7 +983,6 @@ Language: ko_KR
     <string name="draft_uploaded">임시글이 업로드됨</string>
     <string name="report_bug">버그 보고하기</string>
     <string name="video_quality">비디오 품질</string>
-    <string name="permission_location">위치</string>
     <string name="permission_camera">카메라</string>
     <string name="permission_storage">저장 공간</string>
     <string name="button_edit_permissions">권한 편집</string>
@@ -1471,10 +1488,7 @@ Language: ko_KR
     <string name="notifications_no_search_results">\'%s\'에 일치하는 사이트 없음</string>
     <string name="search_sites">사이트 검색</string>
     <string name="notifications_empty_view_reader">리더 보기</string>
-    <string name="notifications_empty_action_followers_likes">알림: 읽은 글에 댓글이 추가됐습니다.</string>
     <string name="notifications_empty_action_comments">대화 참여: 팔로우하는 블로그의 글에 댓글이 추가됐습니다.</string>
-    <string name="notifications_empty_action_unread">대화 다시 계속하기: 새 글을 작성하세요.</string>
-    <string name="notifications_empty_action_all">활발한 소통을 위해 팔로우하는 블로그의 글에 댓글을 달아보세요.</string>
     <string name="notifications_empty_comments">새로운 댓글이 아직 없습니다.</string>
     <string name="notifications_empty_unread">모두 확인하셨습니다!</string>
     <string name="stats_widget_error_jetpack_no_blogid">앱에서 통계를 확인하고 나중에 위젯 추가를 시도하세요.</string>
@@ -1537,7 +1551,6 @@ Language: ko_KR
     <string name="stats_insights_most_popular_hour">가장 인기 있는 시간대</string>
     <string name="stats_insights_most_popular_day">가장 인기 있는 요일</string>
     <string name="stats_insights_today">오늘의 통계</string>
-    <string name="stats_insights_popular">가장 인기 있는 요일 및 시간대</string>
     <string name="stats_insights_all_time">최고 게시글, 조회수 및 방문자</string>
     <string name="stats_insights">인사이트</string>
     <string name="stats_sign_in_jetpack_different_com_account">통계를 보려면 JetPack에 연결하기 위해 사용했던 WordPress.com 계정으로 로그인하십시요.</string>

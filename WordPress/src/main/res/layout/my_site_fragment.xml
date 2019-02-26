@@ -36,7 +36,7 @@
                 android:layout_marginStart="@dimen/content_margin"
                 android:layout_marginTop="@dimen/margin_medium"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
                 <RelativeLayout
@@ -150,7 +150,7 @@
                 android:layout_marginStart="@dimen/content_margin"
                 android:layout_width="match_parent"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
                 <RelativeLayout
@@ -166,6 +166,7 @@
                         android:minHeight="?attr/listPreferredItemHeightSmall" >
 
                         <org.wordpress.android.widgets.WPTextView
+                            android:textAlignment="viewStart"
                             android:id="@+id/quick_start_title"
                             android:ellipsize="end"
                             android:fontFamily="sans-serif-light"

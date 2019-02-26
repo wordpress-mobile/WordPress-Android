@@ -16,13 +16,11 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.ClicksStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -36,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -64,6 +63,12 @@ class ClicksUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 tracker
         )
+        whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
+                SelectedDate(
+                        0,
+                        listOf(selectedDate)
+                )
+        )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
     }
 
@@ -79,42 +84,40 @@ class ClicksUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val expandableItem = (result as BlockList).assertNonExpandedList()
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        val expandableItem = result.data!!.assertNonExpandedList()
 
         expandableItem.onExpandClicked(true)
 
         val updatedResult = loadData(true, forced)
 
-        (updatedResult as BlockList).assertExpandedList()
+        updatedResult.data!!.assertExpandedList()
     }
 
-    private fun BlockList.assertNonExpandedList(): ExpandableItem {
-        assertThat(this.items).hasSize(4)
-        assertTitle(this.items[0])
-        assertHeader(this.items[1])
+    private fun List<BlockListItem>.assertNonExpandedList(): ExpandableItem {
+        assertThat(this).hasSize(4)
+        assertTitle(this[0])
+        assertHeader(this[1])
         assertSingleItem(
-                this.items[2],
+                this[2],
                 singleClick.name!!,
-                singleClick.views,
-                singleClick.icon
+                singleClick.views
         )
-        return assertExpandableItem(this.items[3], group.name!!, group.views!!, group.icon)
+        return assertExpandableItem(this[3], group.name!!, group.views!!)
     }
 
-    private fun BlockList.assertExpandedList(): ExpandableItem {
-        assertThat(this.items).hasSize(6)
-        assertTitle(this.items[0])
-        assertHeader(this.items[1])
+    private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
+        assertThat(this).hasSize(6)
+        assertTitle(this[0])
+        assertHeader(this[1])
         assertSingleItem(
-                this.items[2],
+                this[2],
                 singleClick.name!!,
-                singleClick.views,
-                singleClick.icon
+                singleClick.views
         )
-        val expandableItem = assertExpandableItem(this.items[3], group.name!!, group.views!!, group.icon)
-        assertSingleItem(this.items[4], click.name, click.views, click.icon)
-        assertThat(this.items[5]).isEqualTo(Divider)
+        val expandableItem = assertExpandableItem(this[3], group.name!!, group.views!!)
+        assertSingleItem(this[4], click.name, click.views)
+        assertThat(this[5]).isEqualTo(Divider)
         return expandableItem
     }
 
@@ -131,18 +134,18 @@ class ClicksUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(4)
-            assertTitle(this.items[0])
-            assertHeader(this.items[1])
+        assertThat(result.type).isEqualTo(TimeStatsTypes.CLICKS)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertHeader(this[1])
             assertSingleItem(
-                    this.items[2],
+                    this[2],
                     singleClick.name!!,
-                    singleClick.views,
-                    singleClick.icon
+                    singleClick.views
             )
-            assertLink(this.items[3])
+            assertLink(this[3])
         }
     }
 
@@ -157,11 +160,11 @@ class ClicksUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
+            assertThat(this[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
         }
     }
 
@@ -179,10 +182,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -199,8 +199,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
     private fun assertSingleItem(
         item: BlockListItem,
         key: String,
-        views: Int?,
-        icon: String?
+        views: Int?
     ) {
         assertThat(item.type).isEqualTo(LIST_ITEM_WITH_ICON)
         assertThat((item as ListItemWithIcon).text).isEqualTo(key)
@@ -209,19 +208,18 @@ class ClicksUseCaseTest : BaseUnitTest() {
         } else {
             assertThat(item.value).isNull()
         }
-        assertThat(item.iconUrl).isEqualTo(icon)
+        assertThat(item.iconUrl).isNull()
     }
 
     private fun assertExpandableItem(
         item: BlockListItem,
         label: String,
-        views: Int,
-        icon: String?
+        views: Int
     ): ExpandableItem {
         assertThat(item.type).isEqualTo(EXPANDABLE_ITEM)
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
         assertThat(item.header.value).isEqualTo(views.toFormattedString())
-        assertThat(item.header.iconUrl).isEqualTo(icon)
+        assertThat(item.header.iconUrl).isNull()
         return item
     }
 
@@ -230,8 +228,8 @@ class ClicksUseCaseTest : BaseUnitTest() {
         assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

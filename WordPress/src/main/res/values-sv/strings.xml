@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-29 13:59:06+0000
+Translation-Revision-Date: 2019-02-14 12:18:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="quick_start_sites_type_subtitle">%1$d av %2$d klart</string>
+    <string name="quick_start_sites_type_grow">Vidga din läsekrets</string>
+    <string name="quick_start_sites_type_customize">Anpassa din webbplats</string>
+    <string name="quick_start_sites">Gå vidare</string>
+    <string name="quick_start_complete_tasks_header">Klart (%d)</string>
+    <string name="quick_start_dialog_view_site_message">Njut av din färdiga produkt!</string>
+    <string name="quick_start_dialog_upload_icon_title">Ladda upp en webbplats-ikon</string>
+    <string name="quick_start_dialog_upload_icon_message">Dina besökare kommer att se din ikon i sin webbläsare. Lägg till en anpassad ikon för att skapa ett finputsat och professionellt utseende. </string>
+    <string name="quick_start_dialog_explore_plans_message_short">Tryck på %1$spaket%2$s för att se ditt nuvarande paket och andra paket du kan välja</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">Tryck på %1$sskapa sida%2$s för att lägga till en ny sida.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Tryck på %1$swebbplatssidor%2$s för att fortsätta.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$sstatistik%2$s för att kolla hur det går för din webbplats.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">Tryck på %1$sdin webbplats-ikon%2$s för att ladda upp en ny</string>
+    <string name="quick_start_dialog_publish_post_message">Skriv och publicera ditt första inlägg.</string>
+    <string name="quick_start_dialog_need_help_message">Vi hjälper dig att gå igenom grunderna för hur du bygger din webbplats och får den att växa.</string>
+    <string name="quick_start_dialog_migration_title">Vi har gjort några ändringar i din checklista.</string>
+    <string name="quick_start_dialog_migration_message">Vi har lagt till nya åtgärder för att hjälpa dig vidga din läsekrets.</string>
+    <string name="quick_start_dialog_explore_plans_title">Undersök olika paket</string>
+    <string name="quick_start_dialog_explore_plans_message">Läs om verktygen för marknadsföring och sökoptimering i våra betalda paket.</string>
+    <string name="quick_start_dialog_enable_sharing_title">Aktivera delning av inlägg</string>
+    <string name="quick_start_dialog_enable_sharing_message">Dela automatiskt dina nya inlägg i dina olika konton i sociala media.</string>
+    <string name="quick_start_dialog_customize_site_message">Finjustera typsnitt, lägg till bilder m.m.</string>
+    <string name="quick_start_dialog_create_page_title">Skapa en ny sida</string>
+    <string name="quick_start_dialog_create_page_message">Lägg till en sida med viktig information – sidan ”Om oss”  är en utmärkt början.</string>
+    <string name="quick_start_dialog_check_stats_title">Kontrollera statistiken för din webbplats</string>
+    <string name="quick_start_dialog_check_stats_message">Håll dig informerad om hur det går för din webbplats.</string>
+    <string name="quick_start_dialog_browse_themes_title">Leta bland teman</string>
+    <string name="quick_start_dialog_browse_themes_message">Utforska dussintal layoutalternativ för att hitta det som passar dig perfekt.</string>
+    <string name="quick_start_dialog_remove_next_steps_message">Om du tar bort resten av stegen kommer detta att dölja alla informativa rundvandringar på denna webbplats. Denna åtgärd går inte att ångra.</string>
+    <string name="quick_start_dialog_remove_next_steps_title">Ta bort resten av stegen</string>
+    <string name="quick_start_remove_next_steps_menu_title">Ta bort detta</string>
+    <string name="quick_start_complete_view_subtitle">Grattis! Du har klarat av hela listan. Bra jobbat.</string>
+    <string name="quick_start_complete_view_title">Alla åtgärder har genomförts!</string>
+    <string name="quick_start_task_skip_menu_title">Hoppa över åtgärden</string>
+    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">minimera</string>
+    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expandera</string>
+    <string name="notification_channel_reminder_title">Påminnelse</string>
+    <string name="stats_select_next_period_description">Välj nästa period</string>
+    <string name="stats_select_previous_period_description">Välj föregående period</string>
+    <string name="stats_most_popular_percent_views">%1$d %% av visningarna</string>
+    <string name="stats_insights_popular">Populäraste klockslag</string>
+    <string name="stats_traffic_change">%1$s (%2$s %%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s %%)</string>
     <string name="new_site_creation_site_preview_content_description">Visar förhandsvisning av webbplatsen</string>
     <string name="new_site_creation_clear_all_content_description">Rensa</string>
     <string name="site_created_but_not_fetched_snackbar_message">Det verkar som om din uppkoppling är långsam. Om den nya webbplatsen inte syns i listan kan du prova att ladda om sidan.</string>
@@ -78,7 +121,6 @@ Language: sv_SE
     <string name="stats_referrer_label">Inlänkande webbplats</string>
     <string name="stats_referrers">Inlänkande webbplatser</string>
     <string name="stats_posts_and_pages">Inlägg och sidor</string>
-    <string name="stats_most_popular_percent_views">%1$d%%</string>
     <string name="stats_insights_path">Sökväg</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_google_plus">Google+</string>
@@ -93,8 +135,6 @@ Language: sv_SE
     <string name="stats_insights_latest_post_empty">Du har inte publicerat några inlägg än. När du börjar publicera kommer en sammanfattning för ditt senaste inlägg att visas här:</string>
     <string name="stats_insights_tags_and_categories">Etiketter och kategorier</string>
     <string name="stats_insights_all_time_stats">Total statistik</string>
-    <string name="stats_insights_most_popular_views_label">Visningar</string>
-    <string name="stats_insights_most_popular_day_and_hour_label">Dag/timme</string>
     <string name="stats_insights_today_stats">Dagens statistik</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Följare</string>
@@ -200,49 +240,35 @@ Language: sv_SE
     <string name="page_delete_error">Det gick inte att radera sidan</string>
     <string name="set_parent">Ange överordnad</string>
     <string name="dismiss">avfärda</string>
-    <string name="quick_start_focus_point_description">klicka här</string>
-    <string name="quick_start_sites">Snabbstart</string>
+    <string name="quick_start_focus_point_description">tryck här</string>
     <string name="quick_start_list_create_site_title">Skapa din webbplats</string>
-    <string name="quick_start_list_create_site_subtitle">Kom igång med din webbplats</string>
-    <string name="quick_start_list_complete_title">Grattis. Nu är du klar med snabbstarten</string>
-    <string name="quick_start_list_complete_subtitle">visst är det skönt att kunna bocka av en lista!</string>
+    <string name="quick_start_list_create_site_subtitle">Kom igång med din webbplats.</string>
     <string name="quick_start_dialog_view_site_title">Visa din webbplats</string>
-    <string name="quick_start_dialog_view_site_message_short">Klicka på %1$s Visa webbplats %2$s för att förhandsvisa din webbplats</string>
-    <string name="quick_start_dialog_view_site_message">Förhandsvisa din nya webbplats för att kontrollera vad besökarna kommer att se.</string>
-    <string name="quick_start_dialog_skip_title">Hoppa över snabbgenomgången</string>
-    <string name="quick_start_dialog_skip_message">Snabbgenomgången visar dig stegen för att skapa en enkel webbplats. Är du säker på att du vill hoppa över den?</string>
+    <string name="quick_start_dialog_view_site_message_short">Tryck på %1$s Visa webbplats %2$s för att förhandsvisa din webbplats</string>
     <string name="quick_start_dialog_share_site_title">Dela din webbplats</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">Klicka på %1$s delning %2$s för att fortsätta</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">Klicka på %1$s Kopplingar %2$s för att lägga till dina konton på sociala media</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tryck på %1$sdelning%2$s för att fortsätta</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">Tryck på %1$skopplingar%2$s för att lägga till dina konton i sociala media</string>
     <string name="quick_start_dialog_share_site_message">Anslut till dina konton på sociala medier – din webbplats kommer automatiskt att dela nya inlägg.</string>
     <string name="quick_start_dialog_publish_post_title">Publicera ett inlägg</string>
-    <string name="quick_start_dialog_publish_post_message_short">Klicka på %1$s Skapa ett inlägg %2$s för att skapa ett nytt inlägg</string>
-    <string name="quick_start_dialog_publish_post_message">Nu är det dag! Skriv och publicera ditt allra första inlägg.</string>
+    <string name="quick_start_dialog_publish_post_message_short">Tryck på %1$s Skapa ett inlägg %2$s för att skapa ett nytt inlägg</string>
     <string name="quick_start_dialog_need_help_title">Vill du ha lite hjälp att komma igång?</string>
-    <string name="quick_start_dialog_need_help_message">Vår snabbstartschecklista visar vägen genom grunderna för att skapa en ny webbplats.</string>
     <string name="quick_start_dialog_need_help_button_positive">Ja</string>
     <string name="quick_start_dialog_need_help_button_neutral">Aldrig</string>
     <string name="quick_start_dialog_need_help_button_negative">Nej</string>
     <string name="quick_start_dialog_follow_sites_title">Följ andra webbplatser</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tryck på %1$s Sök %2$s för att leta efter webbplatser med liknande intressen</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tryck på %1$s Läsaren %2$s för att fortsätta</string>
-    <string name="quick_start_dialog_follow_sites_message">Hitta webbplatser som tilltalar dig och följ dem för att få uppdateringar när de publicerar.</string>
+    <string name="quick_start_dialog_follow_sites_message">Hitta webbplatser som inspirerar dig och följ dem för att få uppdateringar när de publicerar.</string>
     <string name="quick_start_dialog_customize_site_title">Anpassa din webbplats</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Tryck på %1$s Teman %2$s för att fortsätta</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">Tryck på %1$s Anpassa %2$s för att börja anpassa din webbplats</string>
-    <string name="quick_start_dialog_customize_site_message">Ändra färger, teckensnitt och bilder för en perfekt personlig webbplats.</string>
-    <string name="quick_start_dialog_continue_setup_title">Fortsätt inställning av webbplats</string>
-    <string name="quick_start_dialog_continue_setup_message">Dags att slutföra konfigureringen av din webbplats! Vår checklista tar dig genom de nästa stegen.</string>
     <string name="quick_start_dialog_choose_theme_title">Välj ett tema</string>
-    <string name="quick_start_dialog_choose_theme_message_short">Tryck på %1$s Teman %2$s för att upptäcka nya teman</string>
+    <string name="quick_start_dialog_browse_themes_message_short">Tryck på %1$steman%2$s för att upptäcka nya teman</string>
     <string name="quick_start_dialog_choose_theme_message">Bläddra bland alla teman för att hitta det som passar dig perfekt.</string>
-    <string name="quick_start_button_skip_positive">Hoppa över</string>
-    <string name="quick_start_button_skip_negative">Avbryt</string>
-    <string name="quick_start_button_skip">Hoppa över allt</string>
     <string name="quick_start_button_positive">Kör</string>
     <string name="quick_start_button_negative_short">Avbryt</string>
     <string name="quick_start_button_negative">Inte nu</string>
-    <string name="content_description_done">Klart</string>
+    <string name="content_description_more">Mera</string>
     <string name="my_site_create_new_site_title">Du har inga webbplatser</string>
     <string name="reader_empty_followed_tags_title">Inga följda etiketter</string>
     <string name="reader_empty_followed_tags_subtitle">Lägg till etiketter här för att hitta inlägg om dina favoritämnen</string>
@@ -437,7 +463,7 @@ Language: sv_SE
     <string name="stats_plays_zero_desc">ingen spelning</string>
     <string name="stats_clicks_many_desc">%d klick</string>
     <string name="stats_clicks_one_desc">ett klick</string>
-    <string name="stats_clicks_zero_desc">inget klick</string>
+    <string name="stats_clicks_zero_desc">inga klick</string>
     <string name="stats_views_many_desc">%d visningar</string>
     <string name="stats_views_one_desc">en visning</string>
     <string name="stats_views_zero_desc">ingen visning</string>
@@ -637,7 +663,7 @@ Language: sv_SE
     <string name="signup_magic_link_error_button_negative">Stäng</string>
     <string name="signup_magic_link_error">Det gick inte att sända e-postmeddelandet. Du kan försöka igen nu eller stänga och göra ett nytt försök senare.</string>
     <string name="signup_epilogue_hint_username">Användarnamn</string>
-    <string name="signup_epilogue_hint_password_detail">Du kan alltid logga in med en magisk länk som den du just klickade på, men om du vill kan du också spara ett lösenord.</string>
+    <string name="signup_epilogue_hint_password_detail">Du kan alltid logga in med en magisk länk som den du just använde, men om du hellre vill det, kan du också spara ett lösenord.</string>
     <string name="signup_epilogue_hint_password">Lösenord (valfritt)</string>
     <string name="signup_epilogue_hint_display">Visningsnamn</string>
     <string name="signup_epilogue_heading">Nytt konto</string>
@@ -973,7 +999,6 @@ Language: sv_SE
     <string name="draft_uploaded">Utkastet uppladdat</string>
     <string name="report_bug">Rapportera ett fel</string>
     <string name="video_quality">Videokvalitet</string>
-    <string name="permission_location">Din plats</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_storage">Lagring</string>
     <string name="button_edit_permissions">Redigera behörigheter</string>
@@ -1481,7 +1506,7 @@ Language: sv_SE
     <string name="notifications_empty_view_reader">Visa läsare</string>
     <string name="notifications_empty_action_followers_likes">Se till att synas: kommentera inlägg som du läst</string>
     <string name="notifications_empty_action_comments">Gå med i en diskussion: kommentera inlägg från bloggar som du följer</string>
-    <string name="notifications_empty_action_unread">Få fart på diskussionen igen: skriv ett nytt inlägg.</string>
+    <string name="notifications_empty_action_unread">Få fart på diskussionen igen: skriv ett nytt inlägg</string>
     <string name="notifications_empty_action_all">Aktivera dig! Kommentera inlägg från bloggar som du följer.</string>
     <string name="notifications_empty_comments">Inga nya kommentarer … ännu</string>
     <string name="notifications_empty_unread">Du har läst allt!</string>
@@ -1545,7 +1570,6 @@ Language: sv_SE
     <string name="stats_insights_most_popular_hour">Mest populära timme</string>
     <string name="stats_insights_most_popular_day">Mest populära dag</string>
     <string name="stats_insights_today">Dagens statistik </string>
-    <string name="stats_insights_popular">Populäraste veckodag och tid på daten</string>
     <string name="stats_insights_all_time">Alla inlägg, visningar och besökare</string>
     <string name="stats_insights">Insikter</string>
     <string name="stats_sign_in_jetpack_different_com_account">Om du vill visa din statistik, logga in på det WordPress.com-användarkonto som du använde för att ansluta till Jetpack.</string>

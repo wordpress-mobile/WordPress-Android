@@ -423,7 +423,6 @@ Language: is
     <string name="reader_label_gap_marker">Sækja fleiri færslur</string>
     <string name="notifications_no_search_results">Engir vefir pössuðu við \'%s\'</string>
     <string name="search_sites">Leita að vef</string>
-    <string name="notifications_empty_action_all">Vertu virk(ur)! Skrifaðu athugasemdir við færslur á bloggum sem þú fylgist með.</string>
     <string name="stats_widget_error_jetpack_no_blogid">Þú getur nálgast tölfræði í forritinu með því að bæta síðuhlutnum við síðar</string>
     <string name="stats_widget_error_readd_widget">Vinsamlegast fjarlægðu síðuhlutinn og bættu honum aftur við</string>
     <string name="stats_widget_error_no_visible_blog">Tölfræði er ekki aðgengileg án þess að blogg sé opið</string>

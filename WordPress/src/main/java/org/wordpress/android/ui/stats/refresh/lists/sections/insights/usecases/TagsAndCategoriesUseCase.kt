@@ -21,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
@@ -43,21 +44,20 @@ class TagsAndCategoriesUseCase
         mainDispatcher,
         TagsAndCategoriesUiState(null)
 ) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<TagsModel> {
         val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> model.let { onModel(model) }
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.tags.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val model = insightsStore.getTags(site, PAGE_SIZE)
-        model?.let { onModel(model) }
+    override suspend fun loadCachedData(site: SiteModel): TagsModel? {
+        return insightsStore.getTags(site, PAGE_SIZE)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_tags_and_categories))
@@ -142,6 +142,7 @@ class TagsAndCategoriesUseCase
     private fun mapItem(item: TagModel.Item): ListItemWithIcon {
         return ListItemWithIcon(
                 icon = getIcon(item.type),
+                textStyle = LIGHT,
                 text = item.name,
                 showDivider = false,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick)

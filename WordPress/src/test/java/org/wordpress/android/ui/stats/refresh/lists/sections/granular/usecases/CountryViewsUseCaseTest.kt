@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,11 +17,8 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.CountryViewsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -35,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -59,6 +56,12 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
                 tracker
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
+        whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
+                SelectedDate(
+                        0,
+                        listOf(selectedDate)
+                )
+        )
     }
 
     @Test
@@ -73,14 +76,15 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        (result as BlockList).apply {
-            Assertions.assertThat(this.items).hasSize(4)
-            assertTitle(this.items[0])
-            val mapItem = (this.items[1] as MapItem)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            val mapItem = (this[1] as MapItem)
             assertThat(mapItem.mapData).isEqualTo("['CZ',500],")
             assertThat(mapItem.label).isEqualTo(R.string.stats_country_views_label)
-            assertLabel(this.items[2])
-            assertItem(this.items[3], country.fullName, country.views, country.flagIconUrl)
+            assertLabel(this[2])
+            assertItem(this[3], country.fullName, country.views, country.flagIconUrl)
         }
     }
 
@@ -97,10 +101,10 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            Assertions.assertThat(this.items).hasSize(5)
-            assertLink(this.items[4])
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(5)
+            assertLink(this[4])
         }
     }
 
@@ -115,11 +119,11 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            Assertions.assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            Assertions.assertThat(this.items[1]).isEqualTo(Empty(R.string.stats_no_data_for_period))
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
+            assertThat(this[1]).isEqualTo(Empty(R.string.stats_no_data_for_period))
         }
     }
 
@@ -137,21 +141,18 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            Assertions.assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(TITLE)
-        Assertions.assertThat((item as Title).textResource).isEqualTo(R.string.stats_countries)
+        assertThat(item.type).isEqualTo(TITLE)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_countries)
     }
 
     private fun assertLabel(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(HEADER)
-        Assertions.assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_country_label)
-        Assertions.assertThat(item.rightLabel).isEqualTo(R.string.stats_country_views_label)
+        assertThat(item.type).isEqualTo(HEADER)
+        assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_country_label)
+        assertThat(item.rightLabel).isEqualTo(R.string.stats_country_views_label)
     }
 
     private fun assertItem(
@@ -160,23 +161,23 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         views: Int?,
         icon: String?
     ) {
-        Assertions.assertThat(item.type).isEqualTo(LIST_ITEM_WITH_ICON)
-        Assertions.assertThat((item as ListItemWithIcon).text).isEqualTo(key)
+        assertThat(item.type).isEqualTo(LIST_ITEM_WITH_ICON)
+        assertThat((item as ListItemWithIcon).text).isEqualTo(key)
         if (views != null) {
-            Assertions.assertThat(item.value).isEqualTo(views.toString())
+            assertThat(item.value).isEqualTo(views.toString())
         } else {
-            Assertions.assertThat(item.value).isNull()
+            assertThat(item.value).isNull()
         }
-        Assertions.assertThat(item.iconUrl).isEqualTo(icon)
+        assertThat(item.iconUrl).isEqualTo(icon)
     }
 
     private fun assertLink(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(LINK)
-        Assertions.assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
+        assertThat(item.type).isEqualTo(LINK)
+        assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)
