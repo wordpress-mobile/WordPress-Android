@@ -12,6 +12,8 @@ import org.wordpress.android.fluxc.model.stats.CacheMode
 import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.modules.UI_THREAD
@@ -133,7 +135,7 @@ class FollowersUseCase
                 items.add(
                         Link(
                                 text = buttonText,
-                                navigateAction = NavigationAction.create(this::onLinkClick)
+                                navigateAction = NavigationAction.create(uiState, this::onLinkClick)
                         )
                 )
             }
@@ -175,7 +177,7 @@ class FollowersUseCase
         }
     }
 
-    private fun onLinkClick() {
+    private fun onLinkClick(uiState: Int) {
         if (useCaseMode == VIEW_ALL) {
             GlobalScope.launch {
                 val state = fetchData(lastSite, true, FetchMode.Paged(itemsToLoad, true))
@@ -183,7 +185,7 @@ class FollowersUseCase
             }
         } else {
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
-            navigateTo(ViewFollowersStats())
+            navigateTo(ViewFollowersStats(uiState))
         }
     }
 

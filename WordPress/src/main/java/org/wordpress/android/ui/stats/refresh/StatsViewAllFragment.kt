@@ -51,6 +51,8 @@ class StatsViewAllFragment : DaggerFragment() {
     private val listStateKey = "list_state"
 
     companion object {
+        const val SELECTED_TAB_KEY = "selected_tab_key"
+
         private const val typeKey = "type_key"
 
         fun newInstance(statsType: StatsViewType): StatsViewAllFragment {
@@ -222,9 +224,7 @@ class StatsViewAllFragment : DaggerFragment() {
         return if (tabs != null) {
             if (tabLayout.tabCount == 0) {
                 setupTabs(tabs)
-            }
-
-            if (tabLayout.selectedTabPosition != tabs.selectedTabPosition) {
+            } else if (tabLayout.selectedTabPosition != tabs.selectedTabPosition) {
                 tabLayout.getTabAt(tabs.selectedTabPosition)?.select()
             }
 
@@ -249,7 +249,6 @@ class StatsViewAllFragment : DaggerFragment() {
         item.tabs.forEach { tabItem ->
             tabLayout.addTab(tabLayout.newTab().setText(tabItem))
         }
-        tabLayout.getTabAt(item.selectedTabPosition)?.select()
 
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabReselected(tab: Tab) {
@@ -260,7 +259,11 @@ class StatsViewAllFragment : DaggerFragment() {
 
             override fun onTabSelected(tab: Tab) {
                 item.onTabSelected(tab.position)
+                activity?.intent?.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, tab.position)
             }
         })
+
+        val selectedTab  = activity?.intent?.getIntExtra(StatsViewAllFragment.SELECTED_TAB_KEY, 0) ?: 0
+        tabLayout.getTabAt(selectedTab)?.select()
     }
 }

@@ -73,7 +73,7 @@ class StatsNavigator
                 ActivityLauncher.viewStatsSinglePostDetails(activity, postModel)
             }
             is ViewFollowersStats -> {
-                ActivityLauncher.viewFollowersStats(activity, site)
+                ActivityLauncher.viewFollowersStats(activity, site, target.selectedTab)
             }
             is ViewCommentsStats -> {
                 ActivityLauncher.viewCommentsStats(activity, site)
