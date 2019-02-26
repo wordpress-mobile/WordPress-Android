@@ -1,9 +1,3 @@
-11.9
------
-* Introduced new site creation wizard
-* Make "<em>" the default markup for italic in the editor
-* Updated Plans with new design
-* Fixed an issue where posts show up as scheduled even after they are published
-
-* Add Visitors overlay to the Overview block in Stats
-* Change Stats design to flat on smaller devices
+* A new, smart site-creation process starts you off with a personalized, already-customized website
+* Markup lovers rejoice; <em> is now the default markup for italic in the editor.
+* Fixes! Sometimes the “My Site” screen didn’t look right in right-to-left languages, or posts showed up as scheduled even after they were published — no more.
