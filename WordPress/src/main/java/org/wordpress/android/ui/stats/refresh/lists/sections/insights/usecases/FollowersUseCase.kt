@@ -125,7 +125,7 @@ class FollowersUseCase
                 items.addAll(buildTab(emailModel, R.string.stats_followers_email))
             }
 
-            if (wpComModel.hasMore || emailModel.hasMore) {
+            if (wpComModel.hasMore && uiState == 0 || emailModel.hasMore && uiState == 1) {
                 val buttonText = if (useCaseMode == VIEW_ALL)
                         R.string.stats_insights_load_more
                     else
