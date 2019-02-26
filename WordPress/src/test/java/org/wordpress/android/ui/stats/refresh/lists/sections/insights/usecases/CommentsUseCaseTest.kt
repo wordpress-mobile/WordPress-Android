@@ -104,9 +104,19 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat(result.type).isEqualTo(InsightsTypes.COMMENTS)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(4)
+            assertThat(this).hasSize(3)
+            assertThat(this[1] is TabsItem).isTrue()
             assertTitle(this[0])
-            assertThat(this[3] is Link).isTrue()
+            assertThat(this[2] is Link).isFalse()
+        }
+
+        (result.data!![1] as TabsItem).onTabSelected(1)
+        val updatedResult = loadComments(true, forced)
+
+        updatedResult.data!!.apply {
+            assertThat(this).hasSize(5)
+            assertTitle(this[0])
+            assertThat(this[4] is Link).isTrue()
         }
     }
 
