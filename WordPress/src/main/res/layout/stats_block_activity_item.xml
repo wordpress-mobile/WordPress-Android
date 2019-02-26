@@ -60,13 +60,14 @@
         android:layout_height="@dimen/one_line_list_item_height"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:ellipsize="end"
         android:gravity="center_vertical"
         android:text="@string/stats_fewer_posts"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/very_low_box"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/first_activity"
+        app:layout_constraintTop_toBottomOf="@+id/third_activity"
         app:layout_constraintVertical_bias="0.0"/>
 
     <View
@@ -126,6 +127,7 @@
         android:layout_height="@dimen/one_line_list_item_height"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_medium"
+        android:ellipsize="end"
         android:gravity="center_vertical"
         android:text="@string/stats_more_posts"
         app:layout_constraintBottom_toBottomOf="parent"

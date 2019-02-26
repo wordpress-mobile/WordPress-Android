@@ -64,9 +64,9 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
         }
         val canFitThreeBlocks = widthInDp > 3 * BLOCK_WIDTH + 2 * GAP + SIZE_PADDING
         if (canFitThreeBlocks && item.blocks.size > 2) {
-            thirdBlock.visibility = View.VISIBLE
+            firstBlock.visibility = View.VISIBLE
         } else {
-            thirdBlock.visibility = View.GONE
+            firstBlock.visibility = View.GONE
         }
     }
 
