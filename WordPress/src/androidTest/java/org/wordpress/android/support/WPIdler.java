@@ -1,9 +1,9 @@
-package org.wordpress.android.ui.screenshots.support;
+package org.wordpress.android.support;
 
 import android.support.test.espresso.IdlingResource;
 import static junit.framework.Assert.fail;
 
-public abstract class WPScreenshotIdler implements IdlingResource {
+public abstract class WPIdler implements IdlingResource {
     protected ResourceCallback mResourceCallback;
     protected Boolean mConditionWasMet = false;
 
