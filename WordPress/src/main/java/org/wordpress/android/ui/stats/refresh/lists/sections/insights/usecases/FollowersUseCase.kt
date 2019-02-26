@@ -178,7 +178,8 @@ class FollowersUseCase
     private fun onLinkClick() {
         if (useCaseMode == VIEW_ALL) {
             GlobalScope.launch {
-                fetchData(lastSite, true, FetchMode.Paged(itemsToLoad, true))
+                val state = fetchData(lastSite, true, FetchMode.Paged(itemsToLoad, true))
+                evaluateState(state)
             }
         } else {
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
