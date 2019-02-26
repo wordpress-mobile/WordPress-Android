@@ -229,7 +229,7 @@ class StatsViewAllFragment : DaggerFragment() {
             }
 
             (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
-                    AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL.or( AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+                    AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL.or(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
             tabLayout.visibility = View.VISIBLE
 
             listOf(Success(statsBlock.statsTypes, statsBlock.data.filter { it !is TabsItem }))
