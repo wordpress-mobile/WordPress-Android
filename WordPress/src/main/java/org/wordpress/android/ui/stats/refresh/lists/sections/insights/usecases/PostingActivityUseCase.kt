@@ -27,25 +27,6 @@ class PostingActivityUseCase
         return store.getPostingActivity(site, getStartDate(), getEndDate())
     }
 
-    private fun getEndDate(): Day {
-        val endDate = Calendar.getInstance()
-        return Day(
-                endDate.get(Calendar.YEAR),
-                endDate.get(Calendar.MONTH),
-                endDate.getActualMaximum(Calendar.DAY_OF_MONTH)
-        )
-    }
-
-    private fun getStartDate(): Day {
-        val startDate = Calendar.getInstance()
-        startDate.add(Calendar.MONTH, -2)
-        return Day(
-                startDate.get(Calendar.YEAR),
-                startDate.get(Calendar.MONTH),
-                startDate.getActualMinimum(Calendar.DAY_OF_MONTH)
-        )
-    }
-
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<PostingActivityModel> {
         val response = store.fetchPostingActivity(site, getStartDate(), getEndDate(), forced)
         val model = response.model
@@ -66,5 +47,24 @@ class PostingActivityUseCase
         val activityItem = postingActivityMapper.buildActivityItem(domainModel.months, domainModel.max)
         items.add(activityItem)
         return items
+    }
+
+    private fun getEndDate(): Day {
+        val endDate = Calendar.getInstance()
+        return Day(
+                endDate.get(Calendar.YEAR),
+                endDate.get(Calendar.MONTH),
+                endDate.getActualMaximum(Calendar.DAY_OF_MONTH)
+        )
+    }
+
+    private fun getStartDate(): Day {
+        val startDate = Calendar.getInstance()
+        startDate.add(Calendar.MONTH, -2)
+        return Day(
+                startDate.get(Calendar.YEAR),
+                startDate.get(Calendar.MONTH),
+                startDate.getActualMinimum(Calendar.DAY_OF_MONTH)
+        )
     }
 }
