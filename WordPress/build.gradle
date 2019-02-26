@@ -36,7 +36,6 @@ android {
 
     dexOptions {
         jumboMode = true
-        javaMaxHeapSize = project.properties.getOrDefault("javaMaxHeapSize", "6g")
         dexInProcess = true
     }
 
@@ -45,8 +44,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "11.9-rc-1"
-        versionCode 686
+        versionName "alpha-154"
+        versionCode 687
         minSdkVersion 21
         targetSdkVersion 26
 
