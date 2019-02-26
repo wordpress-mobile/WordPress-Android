@@ -130,6 +130,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 
 public class ReaderPostListFragment extends Fragment
@@ -2017,7 +2018,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        AppRatingDialog.INSTANCE.incrementInteractions();
+        AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST);
 
         if (post.isBookmarked) {
             if (isBookmarksList()) {

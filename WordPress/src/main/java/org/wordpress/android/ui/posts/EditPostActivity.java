@@ -188,6 +188,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 public class EditPostActivity extends AppCompatActivity implements
@@ -1587,7 +1588,8 @@ public class EditPostActivity extends AppCompatActivity implements
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
                 publishPost();
-                AppRatingDialog.INSTANCE.incrementInteractions();
+                AppRatingDialog.INSTANCE
+                        .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
                 // Clear failed uploads

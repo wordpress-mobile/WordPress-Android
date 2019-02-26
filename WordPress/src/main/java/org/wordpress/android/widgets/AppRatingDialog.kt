@@ -82,10 +82,11 @@ object AppRatingDialog {
      * Called from various places in the app where the user has performed a non-trivial action, such as publishing post
      * or page. We use this to avoid showing the rating dialog to uninvolved users
      */
-    fun incrementInteractions() {
+    fun incrementInteractions(incrementInteractionTracker: AnalyticsTracker.Stat) {
         if (!optOut) {
             interactions++
             preferences.edit().putInt(KEY_INTERACTIONS, interactions)?.apply()
+            AnalyticsTracker.track(incrementInteractionTracker)
         }
     }
 

@@ -58,6 +58,7 @@ import de.greenrobot.event.EventBus;
 
 import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
         .IS_TAPPED_ON_NOTIFICATION;
@@ -292,7 +293,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 return;
             }
 
-            AppRatingDialog.INSTANCE.incrementInteractions();
+            AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION);
 
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated

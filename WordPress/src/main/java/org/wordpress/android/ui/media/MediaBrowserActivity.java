@@ -94,6 +94,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA;
+
 /**
  * The main activity in which the user can browse their media.
  */
@@ -1008,7 +1010,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         UploadService.uploadMedia(this, mediaModels);
-        AppRatingDialog.INSTANCE.incrementInteractions();
+        AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA);
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {
