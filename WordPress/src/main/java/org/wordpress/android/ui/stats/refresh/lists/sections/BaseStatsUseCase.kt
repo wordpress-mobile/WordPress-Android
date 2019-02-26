@@ -5,16 +5,20 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Error
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Loading
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase.NotUsedUiState
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.EMPTY
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
@@ -27,19 +31,27 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private val mainDispatcher: CoroutineDispatcher,
     private val defaultUiState: UI_STATE
 ) {
-    private val domainModel = MutableLiveData<State<DOMAIN_MODEL>>()
+    private val domainState = MutableLiveData<UseCaseState>()
+    private val domainModel = MutableLiveData<DOMAIN_MODEL>()
     protected val uiState = MediatorLiveData<UI_STATE>()
-    val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { data, uiState ->
+    val liveData: LiveData<UseCaseModel> = merge(domainModel, domainState, uiState) { data, domainState, uiState ->
+        val currentData = data?.let { buildUiModel(data, uiState ?: defaultUiState) }
         try {
-            when (data) {
-                is State.Loading -> Loading(type, buildLoadingItem())
-                is State.Error -> Error(type, data.error)
-                is Data -> BlockList(type, buildUiModel(data.model, uiState ?: defaultUiState))
-                is Empty, null -> null
+            when (domainState) {
+                LOADING -> {
+                    UseCaseModel(type, data = currentData, stateData = buildLoadingItem(), state = LOADING)
+                }
+                ERROR -> {
+                    UseCaseModel(type, data = currentData, stateData = buildErrorItem(), state = ERROR)
+                }
+                SUCCESS -> {
+                    UseCaseModel(type, data = currentData)
+                }
+                EMPTY, null -> UseCaseModel(type, state = EMPTY, stateData = buildEmptyItem())
             }
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, e)
-            Error(type, "An error occurred (${e.message ?: "Unknown"})")
+            UseCaseModel(type, state = ERROR, stateData = buildErrorItem())
         }
     }.distinct()
 
@@ -53,44 +65,40 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param forced is true when we want to get fresh data and skip the cache
      */
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
-        val emptyData = domainModel.value == null || domainModel.value !is Data
-        if (emptyData) {
+        val firstLoad = domainModel.value == null
+        var emptyDb = false
+        if (firstLoad) {
             withContext(mainDispatcher) {
-                this@BaseStatsUseCase.domainModel.value = State.Loading()
+                updateUseCaseState(LOADING)
             }
-            loadCachedData(site)
         }
-        if (refresh || emptyData) {
-            fetchRemoteData(site, forced)
+        if (firstLoad || domainState.value == LOADING) {
+            val cachedData = loadCachedData(site)
+            withContext(mainDispatcher) {
+                if (cachedData != null) {
+                    domainModel.value = cachedData
+                } else {
+                    emptyDb = true
+                }
+            }
         }
-    }
-
-    /**
-     * Trigger this method when there is a new (updated) model available.
-     * @param domainModel new data
-     */
-    suspend fun onModel(domainModel: DOMAIN_MODEL) {
-        withContext(mainDispatcher) {
-            this@BaseStatsUseCase.domainModel.value = Data(model = domainModel)
-        }
-    }
-
-    /**
-     * Trigger this method when there is no response from the API (the block is missing).
-     */
-    suspend fun onEmpty() {
-        withContext(mainDispatcher) {
-            this@BaseStatsUseCase.domainModel.value = Empty()
-        }
-    }
-
-    /**
-     * Trigger this method when you want to display an error on the UI
-     * @param message that should be displayed
-     */
-    suspend fun onError(message: String) {
-        withContext(mainDispatcher) {
-            this@BaseStatsUseCase.domainModel.value = State.Error(message)
+        if (firstLoad || refresh || domainState.value != SUCCESS || emptyDb) {
+            withContext(mainDispatcher) {
+                updateUseCaseState(LOADING)
+            }
+            val state = fetchRemoteData(site, forced)
+            withContext(mainDispatcher) {
+                val useCaseState = when (state) {
+                    is Error -> ERROR
+                    is Data -> {
+                        domainModel.value = state.model
+                        SUCCESS
+                    }
+                    is Empty -> EMPTY
+                    is Loading -> LOADING
+                }
+                updateUseCaseState(useCaseState)
+            }
         }
     }
 
@@ -114,11 +122,18 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         }
     }
 
+    private fun updateUseCaseState(newState: UseCaseState) {
+        if (domainState.value != newState) {
+            domainState.value = newState
+        }
+    }
+
     /**
      * Clears the LiveData value when we switch the current Site so we don't show the old data for a new site
      */
     fun clear() {
-        domainModel.postValue(State.Loading())
+        domainModel.postValue(null)
+        domainState.postValue(LOADING)
         uiState.postValue(null)
     }
 
@@ -133,30 +148,54 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * Loads data from a local cache. Returns a null value when the cache is empty.
      * @param site for which we load the data
      */
-    protected abstract suspend fun loadCachedData(site: SiteModel)
+    protected abstract suspend fun loadCachedData(site: SiteModel): DOMAIN_MODEL?
 
     /**
      * Fetches remote data from the endpoint.
      * @param site for which we fetch the data
      * @param forced is true when we want to get the fresh data
      */
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean)
+    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<DOMAIN_MODEL>
 
     /**
      * Transforms given domain model and ui state into the UI model
      * @param domainModel domain model coming from FluxC
      * @param uiState contains UI specific data
-     * @return a list of block list items
+     * @return a list of block list data
      */
     protected abstract fun buildUiModel(domainModel: DOMAIN_MODEL, uiState: UI_STATE): List<BlockListItem>
 
     protected abstract fun buildLoadingItem(): List<BlockListItem>
 
-    private sealed class State<DOMAIN_MODEL> {
+    protected open fun buildErrorItem(): List<BlockListItem> {
+        return buildLoadingItem() + listOf(
+                BlockListItem.Text(
+                        textResource = R.string.stats_loading_block_error,
+                        isLast = true
+                )
+        )
+    }
+
+    protected open fun buildEmptyItem(): List<BlockListItem> {
+        return buildLoadingItem() + listOf(BlockListItem.Empty(textResource = R.string.stats_no_data_yet))
+    }
+
+    sealed class State<DOMAIN_MODEL> {
         data class Error<DOMAIN_MODEL>(val error: String) : State<DOMAIN_MODEL>()
         data class Data<DOMAIN_MODEL>(val model: DOMAIN_MODEL) : State<DOMAIN_MODEL>()
         class Empty<DOMAIN_MODEL> : State<DOMAIN_MODEL>()
         class Loading<DOMAIN_MODEL> : State<DOMAIN_MODEL>()
+    }
+
+    data class UseCaseModel(
+        val type: StatsTypes,
+        val data: List<BlockListItem>? = null,
+        val stateData: List<BlockListItem>? = null,
+        val state: UseCaseState = SUCCESS
+    ) {
+        enum class UseCaseState {
+            SUCCESS, ERROR, LOADING, EMPTY
+        }
     }
 
     /**
@@ -177,7 +216,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
          * Transforms given domain model and ui state into the UI model
          * @param domainModel domain model coming from FluxC
          * @param uiState contains UI specific data
-         * @return a list of block list items
+         * @return a list of block list data
          */
         protected abstract fun buildStatefulUiModel(domainModel: DOMAIN_MODEL, uiState: UI_STATE): List<BlockListItem>
     }
@@ -193,7 +232,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         /**
          * Transforms given domain model into the UI model
          * @param domainModel domain model coming from FluxC
-         * @return a list of block list items
+         * @return a list of block list data
          */
         abstract fun buildUiModel(domainModel: DOMAIN_MODEL): List<BlockListItem>
 

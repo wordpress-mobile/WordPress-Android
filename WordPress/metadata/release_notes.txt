@@ -1,4 +1,3 @@
-* Improved Quick Start design and flows.
-* Added a date selector to switch time periods in Stats.
-* Small visual tweaks in the Stats pages.
-* Unused location permissions have been removed.
+* A new, smart site-creation process starts you off with a personalized, already-customized website
+* Markup lovers rejoice; <em> is now the default markup for italic in the editor.
+* Fixes! Sometimes the “My Site” screen didn’t look right in right-to-left languages, or posts showed up as scheduled even after they were published — no more.

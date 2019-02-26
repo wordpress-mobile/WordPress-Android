@@ -4,10 +4,10 @@
               android:id="@+id/link_wrapper"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/margin_extra_large"
+              android:layout_marginBottom="24dp"
               android:orientation="vertical"
               android:paddingEnd="@dimen/margin_extra_large"
-              android:paddingStart="@dimen/margin_extra_large">
+              android:paddingStart="@dimen/margin_key">
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
@@ -20,7 +20,7 @@
         android:layout_marginTop="-10dp"
         android:layoutDirection="ltr"
         android:paddingEnd="15dp"
-        android:paddingStart="25dp">
+        android:paddingStart="33dp">
 
         <TextView
             android:id="@+id/label_start"

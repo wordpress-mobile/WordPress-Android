@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-06 08:54:08+0000
+Translation-Revision-Date: 2019-02-20 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="quick_start_sites_type_subtitle">%1$d/%2$d が完了</string>
+    <string name="quick_start_sites_type_grow">訪問者を増やす</string>
+    <string name="quick_start_sites_type_customize">サイトをカスタマイズ</string>
+    <string name="quick_start_sites">次のステップ</string>
+    <string name="quick_start_complete_tasks_header">完了 (%d)</string>
+    <string name="quick_start_dialog_view_site_message">完成した部分をご覧ください。</string>
+    <string name="quick_start_dialog_upload_icon_title">サイトアイコンをアップロード</string>
+    <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
+    <string name="quick_start_dialog_explore_plans_message_short">現在のプランと、その他の利用可能なプランを表示するには %1$s プラン %2$s をタップします</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">新しいページを作成するには %1$s「ページを追加」%2$s をタップします。</string>
+    <string name="quick_start_dialog_create_new_page_message_short">続行するには %1$s「サイトのページ」%2$s をタップします。</string>
+    <string name="quick_start_dialog_check_stats_message_short">サイトのパフォーマンスを表示するには %1$s「統計情報」%2$s をタップします。</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">新しいアイコンをアップロードするには %1$s サイトアイコン %2$s をタップ</string>
+    <string name="quick_start_dialog_publish_post_message">最初の投稿の下書きを作成して公開してください。</string>
+    <string name="quick_start_dialog_need_help_message">サイトの構築と訪問者を増やす方法の基本について紹介します。</string>
+    <string name="quick_start_dialog_migration_title">チェックリストにいくつか変更を加えました</string>
+    <string name="quick_start_dialog_migration_message">訪問者を増やすためにタスクを追加しました。</string>
+    <string name="quick_start_dialog_explore_plans_title">プランの内容を見る</string>
+    <string name="quick_start_dialog_explore_plans_message">有料プランのマーケティングおよび SEO ツールについての詳細を読む</string>
+    <string name="quick_start_dialog_enable_sharing_title">投稿のシェアを有効化</string>
+    <string name="quick_start_dialog_enable_sharing_message">新しい投稿を自分のソーシャルメディアアカウントと自動的に共有しましょう。</string>
+    <string name="quick_start_dialog_customize_site_message">フォントのカスタマイズや画像の追加などを行いましょう。</string>
+    <string name="quick_start_dialog_create_page_title">新規ページを作成</string>
+    <string name="quick_start_dialog_create_page_message">キーコンテンツにページを追加しましょう — 「このサイトについて」ページは、格好の出発点です。</string>
+    <string name="quick_start_dialog_check_stats_title">サイト統計情報を確認</string>
+    <string name="quick_start_dialog_check_stats_message">サイトのパフォーマンスを把握しましょう。</string>
+    <string name="quick_start_dialog_browse_themes_title">テーマを見る</string>
+    <string name="quick_start_dialog_browse_themes_message">豊富に用意されたレイアウトオプションのなかからぴったりのものを見つけましょう。</string>
+    <string name="quick_start_dialog_remove_next_steps_message">「次のステップ」を削除すると、このサイトのすべてのツアーが非表示になります。この操作を元に戻すことはできません。</string>
+    <string name="quick_start_dialog_remove_next_steps_title">次のステップを削除</string>
+    <string name="quick_start_remove_next_steps_menu_title">これを削除</string>
+    <string name="quick_start_complete_view_subtitle">リストが完成しました。おめでとうございます 。</string>
+    <string name="quick_start_complete_view_title">すべてのタスクが完了しました。</string>
+    <string name="quick_start_task_skip_menu_title">タスクをスキップ</string>
+    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">折りたたむ</string>
+    <string name="quick_start_completed_tasks_header_chevron_expand_desc">展開</string>
+    <string name="notification_channel_reminder_title">リマインダー</string>
+    <string name="stats_select_next_period_description">次の期間を選択</string>
+    <string name="stats_select_previous_period_description">前の期間を選択</string>
+    <string name="stats_most_popular_percent_views">表示回数: %1$d%%</string>
+    <string name="stats_insights_popular">最も人気の時間</string>
+    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">サイトのプレビューの表示</string>
     <string name="new_site_creation_clear_all_content_description">クリア</string>
     <string name="site_created_but_not_fetched_snackbar_message">接続速度が遅いようです。リストに新しいサイトが表示されない場合は、再度更新してみてください。</string>
@@ -78,7 +121,6 @@ Language: ja_JP
     <string name="stats_referrer_label">リファラ</string>
     <string name="stats_referrers">リファラ</string>
     <string name="stats_posts_and_pages">投稿とページ</string>
-    <string name="stats_most_popular_percent_views">%1$d%%</string>
     <string name="stats_insights_path">パス</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_google_plus">Google+</string>
@@ -88,10 +130,11 @@ Language: ja_JP
     <string name="stats_insights_view_more">詳細を表示</string>
     <string name="stats_insights_share_post">投稿をシェア</string>
     <string name="stats_insights_create_post">投稿を作成</string>
+    <string name="stats_insights_latest_post_message">「%2$s」を公開してから%1$sが経過しました。投稿のこれまでのパフォーマンスは次のとおりです。</string>
+    <string name="stats_insights_latest_post_with_no_engagement">「%2$s」を公開してから%1$sが経過しました。投稿をシェアして閲覧数を増やしましょう。</string>
+    <string name="stats_insights_latest_post_empty">公開投稿はまだありません。公開すると、最新の投稿の概要がここに表示されます</string>
     <string name="stats_insights_tags_and_categories">タグとカテゴリー</string>
     <string name="stats_insights_all_time_stats">一般的な統計</string>
-    <string name="stats_insights_most_popular_views_label">表示回数</string>
-    <string name="stats_insights_most_popular_day_and_hour_label">日/時間</string>
     <string name="stats_insights_today_stats">本日の統計情報</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">フォロワー</string>
@@ -112,6 +155,7 @@ Language: ja_JP
     <string name="stats_followers_email">メール</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_button_manage_insights">インサイトを管理</string>
+    <string name="stats_empty_insights_description">インサイトをカスタマイズして、サイトのパフォーマンスを把握しましょう</string>
     <string name="stats_empty_insights_title">インサイトは追加されていません</string>
     <string name="stats_no_data_yet">データはまだありません</string>
     <string name="menu_debug">デバッグメニュー</string>
@@ -197,48 +241,32 @@ Language: ja_JP
     <string name="set_parent">親の設定</string>
     <string name="dismiss">非表示</string>
     <string name="quick_start_focus_point_description">ここをタップ</string>
-    <string name="quick_start_sites">クイックスタート</string>
     <string name="quick_start_list_create_site_title">サイトの作成</string>
-    <string name="quick_start_list_create_site_subtitle">サイトを稼働させる</string>
-    <string name="quick_start_list_complete_title">クイックスタートを完了しました</string>
-    <string name="quick_start_list_complete_subtitle">リストから消したいものがありますか ?</string>
+    <string name="quick_start_list_create_site_subtitle">サイトを立ち上げましょう。</string>
     <string name="quick_start_dialog_view_site_title">サイトを表示</string>
     <string name="quick_start_dialog_view_site_message_short">サイトをプレビューするには、%1$sサイトを表示%2$sをタップします。</string>
-    <string name="quick_start_dialog_view_site_message">新しいサイトをプレビューして訪問者に表示される内容を確認できます。</string>
-    <string name="quick_start_dialog_skip_title">クイックスタートをスキップ</string>
-    <string name="quick_start_dialog_skip_message">クイックツアーでは基本的なサイトの作成ステップを説明します。スキップしてもよいですか ?</string>
     <string name="quick_start_dialog_share_site_title">サイトを共有</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">%1$sシェアする%2$sをタップして続行してください</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">%1$s接続%2$sをタップして、ソーシャルメディアアカウントを追加します</string>
     <string name="quick_start_dialog_share_site_message">自分のソーシャルメディアアカウントと連携すると、サイトの新しい投稿が自動的に共有されるようになります。</string>
     <string name="quick_start_dialog_publish_post_title">投稿を公開</string>
     <string name="quick_start_dialog_publish_post_message_short">%1$s投稿の作成%2$sをタップして、新しい党呼応を作成します</string>
-    <string name="quick_start_dialog_publish_post_message">いよいよスタートです !最初の投稿の下書きを作成して公開してください。</string>
     <string name="quick_start_dialog_need_help_title">始めるためのサポートが必要ですか ?</string>
-    <string name="quick_start_dialog_need_help_message">クイックスタートチェックリストをご覧になると、新しいサイトを設定するための基本がわかります。</string>
     <string name="quick_start_dialog_need_help_button_positive">はい</string>
     <string name="quick_start_dialog_need_help_button_neutral">なし</string>
     <string name="quick_start_dialog_need_help_button_negative">いいえ</string>
     <string name="quick_start_dialog_follow_sites_title">他のサイトをフォロー</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">%1$s検索%2$sをタップして、興味が似たサイトを検索します</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">%1$sReader%2$sをタップして続行してください</string>
-    <string name="quick_start_dialog_follow_sites_message">興味のあるサイトを見つけて、そのサイトで更新が公開されたら取得できるようフォローしてください。</string>
+    <string name="quick_start_dialog_follow_sites_message">興味のあるサイトを見つけて、更新が公開されたらすぐ見られるようにフォローしてみましょう。</string>
     <string name="quick_start_dialog_customize_site_title">自分のサイトをカスタマイズ</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">%1$sテーマ%2$sをタップして続行してください</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">%1$sカスタマイズ%2$sをタップして、サイトをカスタマイズします</string>
-    <string name="quick_start_dialog_customize_site_message">色、フォント、画像を変更して、思いどおりのサイトにカスタマイズできます。</string>
-    <string name="quick_start_dialog_continue_setup_title">サイトの設定を続ける</string>
-    <string name="quick_start_dialog_continue_setup_message">サイトの設定の最終段階です。チェックリストで次のステップの詳細をご覧ください。</string>
     <string name="quick_start_dialog_choose_theme_title">テーマを選択</string>
-    <string name="quick_start_dialog_choose_theme_message_short">%1$sテーマ%2$sをタップして、新しいテーマを見つけます</string>
+    <string name="quick_start_dialog_browse_themes_message_short">新しいテーマを見つけるには%1$sテーマ%2$sをタップします</string>
     <string name="quick_start_dialog_choose_theme_message">すべてのテーマを参照して、ぴったりのテーマを見つけてください。</string>
-    <string name="quick_start_button_skip_positive">スキップ</string>
-    <string name="quick_start_button_skip_negative">キャンセル</string>
-    <string name="quick_start_button_skip">すべてスキップ</string>
     <string name="quick_start_button_positive">移動</string>
     <string name="quick_start_button_negative_short">キャンセル</string>
     <string name="quick_start_button_negative">後で</string>
-    <string name="content_description_done">終了</string>
+    <string name="content_description_more">もっと見る</string>
     <string name="my_site_create_new_site_title">サイトがありません</string>
     <string name="reader_empty_followed_tags_title">フォロー中のタグがありません</string>
     <string name="reader_empty_followed_tags_subtitle">ここでタグを追加して、お気に入りのトピックに関する投稿を検索します</string>
@@ -969,7 +997,6 @@ Language: ja_JP
     <string name="draft_uploaded">下書きをアップロードしました</string>
     <string name="report_bug">バグを報告</string>
     <string name="video_quality">動画の画質</string>
-    <string name="permission_location">位置</string>
     <string name="permission_camera">カメラ</string>
     <string name="permission_storage">容量</string>
     <string name="button_edit_permissions">権限を編集</string>
@@ -1303,6 +1330,7 @@ Language: ja_JP
     <string name="detail_approve_manual">すべてのコメントで手動の承認が必要です。</string>
     <string name="days_quantity_other">%d日</string>
     <string name="days_quantity_one">1日</string>
+    <string name="web_address">ウェブアドレス</string>
     <string name="primary_site">基本のサイト</string>
     <string name="pending_email_change_snackbar">%1$s へ送信されたメール内の認証リンクをクリックして、新しいアドレスを承認してください。</string>
     <string name="editor_toast_uploading_please_wait">メディアをアップロードしています。完了するまで、しばらくお待ちください。</string>
@@ -1476,7 +1504,7 @@ Language: ja_JP
     <string name="notifications_empty_view_reader">Reader へ移動</string>
     <string name="notifications_empty_action_followers_likes">読んだ投稿にコメントしてみましょう</string>
     <string name="notifications_empty_action_comments">フォローしているブログの投稿にコメントしてみませんか</string>
-    <string name="notifications_empty_action_unread">会話をまた活発にするため、新しい記事を書いてみましょう</string>
+    <string name="notifications_empty_action_unread">会話をまた活発にするため、新しい投稿を書いてみましょう</string>
     <string name="notifications_empty_action_all">フォローしているブログの投稿にコメントしてみましょう。</string>
     <string name="notifications_empty_comments">コメントはまだありません</string>
     <string name="notifications_empty_unread">すべて既読になっています。</string>

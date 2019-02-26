@@ -16,6 +16,5 @@ sealed class PostListAction {
 
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListAction()
-    class ShowGutenbergWarningDialog(val site: SiteModel, val post: PostModel) : PostListAction()
     class DismissPendingNotification(val pushId: Int) : PostListAction()
 }
