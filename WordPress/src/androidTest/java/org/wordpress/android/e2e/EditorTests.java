@@ -11,7 +11,7 @@ import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.wordpress.android.BuildConfig.E2E_DEFAULT_USER_SITE_ADDRESS;
+import static org.wordpress.android.BuildConfig.E2E_WP_COM_SITE_ADDRESS;
 
 public class EditorTests extends BaseTest {
     @Rule
@@ -29,7 +29,7 @@ public class EditorTests extends BaseTest {
         mb.clickBlogPosts();
 
         new MySitesPage()
-                .startNewPost(E2E_DEFAULT_USER_SITE_ADDRESS);
+                .startNewPost(E2E_WP_COM_SITE_ADDRESS);
 
         boolean isPublished = new EditorPage()
                 .enterTitle(title)

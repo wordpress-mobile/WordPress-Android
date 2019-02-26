@@ -3,8 +3,8 @@ package org.wordpress.android.e2e.flows;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MePage;
 
-import static org.wordpress.android.BuildConfig.E2E_DEFAULT_USER_EMAIL;
-import static org.wordpress.android.BuildConfig.E2E_DEFAULT_USER_PASSWORD;
+import static org.wordpress.android.BuildConfig.E2E_WP_COM_EMAIL;
+import static org.wordpress.android.BuildConfig.E2E_WP_COM_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
@@ -23,7 +23,7 @@ public class LoginFlow {
 
         // Email Address Screen – Fill it in and click "Next"
         // See LoginEmailFragment
-        populateTextField(R.id.input, E2E_DEFAULT_USER_EMAIL);
+        populateTextField(R.id.input, E2E_WP_COM_EMAIL);
         clickOn(R.id.primary_button);
 
         // Receive Magic Link or Enter Password Screen – Choose "Enter Password"
@@ -32,7 +32,7 @@ public class LoginFlow {
 
         // Password Screen – Fill it in and click "Next"
         // See LoginEmailPasswordFragment
-        populateTextField(R.id.input, E2E_DEFAULT_USER_PASSWORD);
+        populateTextField(R.id.input, E2E_WP_COM_PASSWORD);
         clickOn(R.id.primary_button);
 
         // Login Confirmation Screen – Click "Continue"
