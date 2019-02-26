@@ -12,12 +12,12 @@ const val DATE_FORMAT_DAY = "yyyy-MM-dd"
 
 class StatsUtils
 @Inject constructor(private val currentDateUtils: CurrentDateUtils) {
-    fun toFormattedDate(date: Date? = null): String {
+    fun getFormattedDate(date: Date? = null): String {
         val dateFormat = SimpleDateFormat(DATE_FORMAT_DAY, Locale.ROOT)
         return dateFormat.format(date ?: currentDateUtils.getCurrentDate())
     }
 
-    fun toFormattedDate(day: Day): String {
+    fun getFormattedDate(day: Day): String {
         val calendar = Calendar.getInstance()
         calendar.set(day.year, day.month, day.day)
         val dateFormat = SimpleDateFormat(DATE_FORMAT_DAY, Locale.ROOT)
