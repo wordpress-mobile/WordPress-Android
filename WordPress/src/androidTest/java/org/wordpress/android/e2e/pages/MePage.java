@@ -20,7 +20,6 @@ public class MePage {
 
     // Buttons
     private static ViewInteraction appSettings = onView(withId(R.id.row_app_settings));
-    private static ViewInteraction logoutConfirmationButton = onView(withId(android.R.id.button1));
 
     public MePage() {
     }
@@ -45,6 +44,6 @@ public class MePage {
 
     public void logout() {
         scrollToThenClickOn(R.id.row_logout);
-        logoutConfirmationButton.perform(click());
+        clickOn(android.R.id.button1);
     }
 }
