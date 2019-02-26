@@ -263,7 +263,7 @@ class StatsViewAllFragment : DaggerFragment() {
             }
         })
 
-        val selectedTab  = activity?.intent?.getIntExtra(StatsViewAllFragment.SELECTED_TAB_KEY, 0) ?: 0
+        val selectedTab = activity?.intent?.getIntExtra(StatsViewAllFragment.SELECTED_TAB_KEY, 0) ?: 0
         tabLayout.getTabAt(selectedTab)?.select()
     }
 }
