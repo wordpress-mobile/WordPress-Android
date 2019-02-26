@@ -12,8 +12,6 @@ import org.wordpress.android.fluxc.model.stats.CacheMode
 import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.modules.UI_THREAD
