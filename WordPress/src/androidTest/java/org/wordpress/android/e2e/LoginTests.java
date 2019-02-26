@@ -16,7 +16,6 @@ public class LoginTests extends BaseTest {
         wpLogin();
         sleep();
 
-        new MePage().go().verifyUsername(E2E_WP_COM_USER_USERNAME);
-        wpLogout();
+        new MePage().go().verifyUsername(E2E_WP_COM_USER_USERNAME).logout();
     }
 }
