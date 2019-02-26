@@ -76,7 +76,7 @@ class StatsNavigator
                 ActivityLauncher.viewFollowersStats(activity, site, target.selectedTab)
             }
             is ViewCommentsStats -> {
-                ActivityLauncher.viewCommentsStats(activity, site)
+                ActivityLauncher.viewCommentsStats(activity, site, target.selectedTab)
             }
             is ViewTagsAndCategoriesStats -> {
                 ActivityLauncher.viewTagsAndCategoriesStats(activity, site)

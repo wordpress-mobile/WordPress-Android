@@ -280,9 +280,10 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewCommentsStats(Context context, SiteModel site) {
+    public static void viewCommentsStats(Context context, SiteModel site, int selectedTab) {
         Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.COMMENTS);
+        intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }
