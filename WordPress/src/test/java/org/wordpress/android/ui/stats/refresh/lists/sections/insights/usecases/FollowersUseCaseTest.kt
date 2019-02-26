@@ -356,7 +356,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     }
 
     private fun List<BlockListItem>.assertEmptyTabSelectedViewAllMode(position: Int): TabsItem {
-        assertThat(this).hasSize(4)
+        assertThat(this).hasSize(3)
         assertTitle(this[0])
         val tabsItem = this[1] as TabsItem
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
