@@ -6,3 +6,4 @@
 
 * Add Visitors overlay to the Overview block in Stats
 * Change Stats design to flat on smaller devices
+* Add Posting activity block to the Stats/Insights
