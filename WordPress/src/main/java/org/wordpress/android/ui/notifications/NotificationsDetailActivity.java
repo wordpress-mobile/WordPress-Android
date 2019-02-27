@@ -385,7 +385,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         if (rangeType == FormattableRangeType.FOLLOW) {
-            ActivityLauncher.viewFollowersStats(this, site);
+            ActivityLauncher.viewFollowersStats(this, site, 0);
         } else {
             ActivityLauncher.viewBlogStats(this, site);
         }

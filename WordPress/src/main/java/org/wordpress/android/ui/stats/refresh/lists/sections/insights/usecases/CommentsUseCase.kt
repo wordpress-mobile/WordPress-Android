@@ -78,11 +78,11 @@ class CommentsUseCase
                 items.addAll(buildPostsTab(model.posts))
             }
 
-            if (model.hasMoreAuthors || model.hasMorePosts) {
+            if (model.hasMoreAuthors && uiState == 0 || model.hasMorePosts && uiState == 1) {
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,
-                                navigateAction = NavigationAction.create(this::onLinkClick)
+                                navigateAction = NavigationAction.create(uiState, this::onLinkClick)
                         )
                 )
             }
@@ -128,9 +128,9 @@ class CommentsUseCase
         return mutableItems
     }
 
-    private fun onLinkClick() {
+    private fun onLinkClick(selectedTab: Int) {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_COMMENTS_VIEW_MORE_TAPPED)
-        navigateTo(ViewCommentsStats())
+        navigateTo(ViewCommentsStats(selectedTab))
     }
 
     class CommentsUseCaseFactory

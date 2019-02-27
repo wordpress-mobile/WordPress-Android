@@ -125,7 +125,7 @@ class FollowersUseCase
                 items.addAll(buildTab(emailModel, R.string.stats_followers_email))
             }
 
-            if (wpComModel.hasMore || emailModel.hasMore) {
+            if (wpComModel.hasMore && uiState == 0 || emailModel.hasMore && uiState == 1) {
                 val buttonText = if (useCaseMode == VIEW_ALL)
                         R.string.stats_insights_load_more
                     else
@@ -133,7 +133,7 @@ class FollowersUseCase
                 items.add(
                         Link(
                                 text = buttonText,
-                                navigateAction = NavigationAction.create(this::onLinkClick)
+                                navigateAction = NavigationAction.create(uiState, this::onLinkClick)
                         )
                 )
             }
@@ -175,14 +175,15 @@ class FollowersUseCase
         }
     }
 
-    private fun onLinkClick() {
+    private fun onLinkClick(uiState: Int) {
         if (useCaseMode == VIEW_ALL) {
             GlobalScope.launch {
-                fetchData(lastSite, true, FetchMode.Paged(itemsToLoad, true))
+                val state = fetchData(lastSite, true, FetchMode.Paged(itemsToLoad, true))
+                evaluateState(state)
             }
         } else {
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
-            navigateTo(ViewFollowersStats())
+            navigateTo(ViewFollowersStats(uiState))
         }
     }
 

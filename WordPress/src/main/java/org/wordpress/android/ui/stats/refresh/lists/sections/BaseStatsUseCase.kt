@@ -87,18 +87,22 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
                 updateUseCaseState(LOADING)
             }
             val state = fetchRemoteData(site, forced)
-            withContext(mainDispatcher) {
-                val useCaseState = when (state) {
-                    is Error -> ERROR
-                    is Data -> {
-                        domainModel.value = state.model
-                        SUCCESS
-                    }
-                    is Empty -> EMPTY
-                    is Loading -> LOADING
+            evaluateState(state)
+        }
+    }
+
+    protected suspend fun evaluateState(state: State<DOMAIN_MODEL>) {
+        withContext(mainDispatcher) {
+            val useCaseState = when (state) {
+                is Error -> ERROR
+                is Data -> {
+                    domainModel.value = state.model
+                    SUCCESS
                 }
-                updateUseCaseState(useCaseState)
+                is Empty -> EMPTY
+                is Loading -> LOADING
             }
+            updateUseCaseState(useCaseState)
         }
     }
 

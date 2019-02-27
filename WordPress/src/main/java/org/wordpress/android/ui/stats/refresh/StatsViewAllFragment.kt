@@ -5,6 +5,11 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.AppBarLayout.LayoutParams
+import android.support.design.widget.Snackbar
+import android.support.design.widget.TabLayout.OnTabSelectedListener
+import android.support.design.widget.TabLayout.Tab
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView.LayoutManager
@@ -12,9 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_error_view.*
-import kotlinx.android.synthetic.main.stats_fragment.*
-import kotlinx.android.synthetic.main.stats_list_fragment.*
+import kotlinx.android.synthetic.main.stats_view_all_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
@@ -22,8 +25,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlockAdapter
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -45,6 +51,8 @@ class StatsViewAllFragment : DaggerFragment() {
     private val listStateKey = "list_state"
 
     companion object {
+        const val SELECTED_TAB_KEY = "selected_tab_key"
+
         private const val typeKey = "type_key"
 
         fun newInstance(statsType: StatsViewType): StatsViewAllFragment {
@@ -159,18 +167,29 @@ class StatsViewAllFragment : DaggerFragment() {
             }
         })
 
+        viewModel.showSnackbarMessage.observe(this, Observer { holder ->
+            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+            if (holder != null && parent != null) {
+                if (holder.buttonTitleRes == null) {
+                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                } else {
+                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
+                    snackbar.show()
+                }
+            }
+        })
+
         viewModel.uiModel.observe(this, Observer {
             if (it != null) {
                 when (it) {
                     is UiModel.Success -> {
-                        updateInsights(it.data)
+                        if (it.data.isNotEmpty()) {
+                            displayData(it.data.first())
+                        }
                     }
                     is UiModel.Error -> {
                         recyclerView.visibility = View.GONE
-                        actionable_error_view.visibility = View.VISIBLE
-                        actionable_error_view.button.setOnClickListener {
-                            viewModel.onRetryClick(site)
-                        }
                     }
                 }
             }
@@ -182,9 +201,8 @@ class StatsViewAllFragment : DaggerFragment() {
         }
     }
 
-    private fun updateInsights(statsState: List<StatsBlock>) {
+    private fun displayData(statsBlock: StatsBlock) {
         recyclerView.visibility = View.VISIBLE
-        actionable_error_view.visibility = View.GONE
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
             adapter = StatsBlockAdapter(imageManager)
@@ -194,7 +212,58 @@ class StatsViewAllFragment : DaggerFragment() {
         }
         val layoutManager = recyclerView?.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()
-        adapter.update(statsState)
+
+        val data = prepareLayout(statsBlock)
+
+        adapter.update(data)
         layoutManager?.onRestoreInstanceState(recyclerViewState)
+    }
+
+    private fun prepareLayout(statsBlock: StatsBlock): List<StatsBlock> {
+        val tabs = statsBlock.data.firstOrNull { it is TabsItem } as? TabsItem
+        return if (tabs != null) {
+            if (tabLayout.tabCount == 0) {
+                setupTabs(tabs)
+            } else if (tabLayout.selectedTabPosition != tabs.selectedTabPosition) {
+                tabLayout.getTabAt(tabs.selectedTabPosition)?.select()
+            }
+
+            (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
+                    AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL.or(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+            tabLayout.visibility = View.VISIBLE
+
+            listOf(Success(statsBlock.statsTypes, statsBlock.data.filter { it !is TabsItem }))
+        } else {
+            if (statsBlock.type != LOADING) {
+                (toolbar.layoutParams as LayoutParams).scrollFlags = 0
+                tabLayout.visibility = View.GONE
+            }
+
+            listOf(statsBlock)
+        }
+    }
+
+    private fun setupTabs(item: TabsItem) {
+        tabLayout.clearOnTabSelectedListeners()
+        tabLayout.removeAllTabs()
+        item.tabs.forEach { tabItem ->
+            tabLayout.addTab(tabLayout.newTab().setText(tabItem))
+        }
+
+        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabReselected(tab: Tab) {
+            }
+
+            override fun onTabUnselected(tab: Tab) {
+            }
+
+            override fun onTabSelected(tab: Tab) {
+                item.onTabSelected(tab.position)
+                activity?.intent?.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, tab.position)
+            }
+        })
+
+        val selectedTab = activity?.intent?.getIntExtra(StatsViewAllFragment.SELECTED_TAB_KEY, 0) ?: 0
+        tabLayout.getTabAt(selectedTab)?.select()
     }
 }
