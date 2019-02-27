@@ -8,7 +8,6 @@ import android.os.Parcelable
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView.LayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,8 +40,6 @@ class StatsViewAllFragment : DaggerFragment() {
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
-    private var layoutManager: LayoutManager? = null
-
     private val listStateKey = "list_state"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -50,7 +47,7 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        layoutManager?.let {
+        recyclerView.layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
 
@@ -73,14 +70,12 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
-            layoutManager.onRestoreInstanceState(it)
+            recyclerView.layoutManager.onRestoreInstanceState(it)
         }
 
-        this.layoutManager = layoutManager
-        recyclerView.layoutManager = this.layoutManager
         recyclerView.addItemDecoration(
                 StatsListItemDecoration(
                         resources.getDimensionPixelSize(dimen.margin_small),
@@ -191,9 +186,9 @@ class StatsViewAllFragment : DaggerFragment() {
         } else {
             adapter = recyclerView.adapter as StatsBlockAdapter
         }
-        val layoutManager = recyclerView?.layoutManager
-        val recyclerViewState = layoutManager?.onSaveInstanceState()
+
+        val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         adapter.update(statsState)
-        layoutManager?.onRestoreInstanceState(recyclerViewState)
+        recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }
