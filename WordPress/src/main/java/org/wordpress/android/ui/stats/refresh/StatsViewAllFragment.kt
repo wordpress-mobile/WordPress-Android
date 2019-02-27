@@ -45,18 +45,6 @@ class StatsViewAllFragment : DaggerFragment() {
 
     private val listStateKey = "list_state"
 
-    companion object {
-        private const val typeKey = "type_key"
-
-        fun newInstance(statsType: StatsViewType): StatsViewAllFragment {
-            val fragment = StatsViewAllFragment()
-            val bundle = Bundle()
-            bundle.putSerializable(typeKey, statsType)
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.stats_view_all_fragment, container, false)
     }
