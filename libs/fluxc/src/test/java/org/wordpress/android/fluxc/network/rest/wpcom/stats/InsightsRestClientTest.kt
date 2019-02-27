@@ -537,14 +537,14 @@ class InsightsRestClientTest {
         data: CommentsResponse? = null,
         error: WPComGsonNetworkError? = null
     ): Response<CommentsResponse> {
-        return initResponse(CommentsResponse::class.java, data ?: mock(), error)
+        return initResponse(CommentsResponse::class.java, data ?: mock(), error, cachingEnabled = false)
     }
 
     private suspend fun initTagsResponse(
         data: TagsResponse? = null,
         error: WPComGsonNetworkError? = null
     ): Response<TagsResponse> {
-        return initResponse(TagsResponse::class.java, data ?: mock(), error)
+        return initResponse(TagsResponse::class.java, data ?: mock(), error, cachingEnabled = false)
     }
 
     private suspend fun initPublicizeResponse(
