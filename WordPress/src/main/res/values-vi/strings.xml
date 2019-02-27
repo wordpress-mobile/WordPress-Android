@@ -350,10 +350,7 @@ Language: vi_VN
     <string name="reader_label_gap_marker">Tải nhiều bài viết hơn</string>
     <string name="notifications_no_search_results">Không có site nào khớp \'%s\'</string>
     <string name="search_sites">Tìm kiếm site</string>
-    <string name="notifications_empty_action_followers_likes">Nhận thông báo: bình luận trên các bài viết bạn đã đọc</string>
     <string name="notifications_empty_action_comments">Tham gia cuộc trò chuyện: bình luận trên bài viết từ các site bạn theo dõi.</string>
-    <string name="notifications_empty_action_unread">Khuấy động cuộc trò chuyện: viết một bài mới</string>
-    <string name="notifications_empty_action_all">Lấy kích hoạt! Bình luận về bài viết từ các blog bạn theo dõi.</string>
     <string name="notifications_empty_comments">Chưa có bình luận mới</string>
     <string name="notifications_empty_unread">Bạn đã cập nhật mới nhất!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Hãy truy cập vào Thống kê trong ứng dụng, và thử thêm các widget sau</string>

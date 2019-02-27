@@ -231,7 +231,6 @@ Language: ms
     <string name="report_bug">Laporkan pepijat</string>
     <string name="video_quality">Kualiti Video</string>
     <string name="permission_camera">Kamera</string>
-    <string name="permission_location">Lokasi</string>
     <string name="permission_storage">Storan</string>
     <string name="button_edit_permissions">Sunting kebenaran</string>
     <string name="photo_picker_soft_ask_label">%s perlukan keizinan untuk mencapai gambar-gambar anda</string>
@@ -725,7 +724,6 @@ Language: ms
     <string name="reader_label_gap_marker">Muatkan lebih banyak kiriman</string>
     <string name="notifications_no_search_results">Tiada laman sepadan dengan \'%s\'</string>
     <string name="search_sites">Cari laman</string>
-    <string name="notifications_empty_action_all">Jadilah aktif! Ulasan pada kiriman dari blog yang anda ikuti.</string>
     <string name="stats_widget_error_jetpack_no_blogid">Sila capai Statistik dalam aplikasi, dan cuba tambah widget kemudian</string>
     <string name="stats_widget_error_readd_widget">Sila buang widget dan menambahnya semula</string>
     <string name="stats_widget_error_no_visible_blog">Statistik tidak dapat dicapai tanpa blog yang kelihatan</string>
