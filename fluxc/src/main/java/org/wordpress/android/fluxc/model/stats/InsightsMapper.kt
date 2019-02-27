@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CacheMode.Top
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient.AllTimeResponse
@@ -132,7 +132,7 @@ class InsightsMapper
     fun mapAndMergeFollowersModels(
         followerResponses: List<FollowersResponse>,
         followerType: FollowerType,
-        cacheMode: CacheMode
+        cacheMode: LimitMode
     ): FollowersModel {
         return followerResponses.fold(FollowersModel(0, emptyList(), false)) { accumulator, next ->
                 val nextModel = map(next, followerType)
@@ -143,7 +143,7 @@ class InsightsMapper
                 )
             }
             .let {
-                if (cacheMode is CacheMode.Top) {
+                if (cacheMode is LimitMode.Top) {
                     return@let it.copy(followers = it.followers.take(cacheMode.limit))
                 } else {
                     return@let it
@@ -151,9 +151,9 @@ class InsightsMapper
             }
     }
 
-    fun map(response: CommentsResponse, cacheMode: CacheMode): CommentsModel {
+    fun map(response: CommentsResponse, cacheMode: LimitMode): CommentsModel {
         val authors = response.authors?.let {
-            if (cacheMode is CacheMode.Top) {
+            if (cacheMode is LimitMode.Top) {
                 return@let it.take(cacheMode.limit)
             } else {
                 return@let it
@@ -168,7 +168,7 @@ class InsightsMapper
             }
         }
         val posts = response.posts?.let {
-            if (cacheMode is CacheMode.Top) {
+            if (cacheMode is LimitMode.Top) {
                 return@let it.take(cacheMode.limit)
             } else {
                 return@let it
@@ -187,22 +187,22 @@ class InsightsMapper
         return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
 
-    fun map(response: TagsResponse, cacheMode: CacheMode): TagsModel {
+    fun map(response: TagsResponse, cacheMode: LimitMode): TagsModel {
         return TagsModel(response.tags.let {
-            if (cacheMode is CacheMode.Top) {
+            if (cacheMode is LimitMode.Top) {
                 return@let it.take(cacheMode.limit)
             } else {
                 return@let it
             }
         }.map { tag ->
             TagModel(tag.tags.mapNotNull { it.toItem() }.let {
-                if (cacheMode is CacheMode.Top) {
+                if (cacheMode is LimitMode.Top) {
                     return@let it.take(cacheMode.limit)
                 } else {
                     return@let it
                 }
             }, tag.views ?: 0)
-        }, cacheMode is CacheMode.Top && response.tags.size > cacheMode.limit)
+        }, cacheMode is LimitMode.Top && response.tags.size > cacheMode.limit)
     }
 
     private fun TagResponse.toItem(): TagModel.Item? {

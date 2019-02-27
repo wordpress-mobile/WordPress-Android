@@ -2,9 +2,8 @@ package org.wordpress.android.fluxc.store.stats.insights
 
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CacheMode
-import org.wordpress.android.fluxc.model.stats.CacheMode.Top
-import org.wordpress.android.fluxc.model.stats.FetchMode
+import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient
@@ -23,9 +22,9 @@ class TagsStore @Inject constructor(
     private val insightsMapper: InsightsMapper,
     private val coroutineContext: CoroutineContext
 ) {
-    suspend fun fetchTags(siteModel: SiteModel, fetchMode: FetchMode.Top, forced: Boolean = false) =
+    suspend fun fetchTags(siteModel: SiteModel, limitMode: Top, forced: Boolean = false) =
             withContext(coroutineContext) {
-                val response = restClient.fetchTags(siteModel, max = fetchMode.limit + 1, forced = forced)
+                val response = restClient.fetchTags(siteModel, max = limitMode.limit + 1, forced = forced)
                 return@withContext when {
                     response.isError -> {
                         OnStatsFetched(response.error)
@@ -33,14 +32,14 @@ class TagsStore @Inject constructor(
                     response.response != null -> {
                         sqlUtils.insert(siteModel, response.response)
                         OnStatsFetched(
-                                insightsMapper.map(response.response, Top(fetchMode.limit))
+                                insightsMapper.map(response.response, LimitMode.Top(limitMode.limit))
                         )
                     }
                     else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
                 }
             }
 
-    fun getTags(site: SiteModel, cacheMode: CacheMode): TagsModel? {
+    fun getTags(site: SiteModel, cacheMode: LimitMode): TagsModel? {
         return sqlUtils.selectTags(site)?.let { insightsMapper.map(it, cacheMode) }
     }
 }
