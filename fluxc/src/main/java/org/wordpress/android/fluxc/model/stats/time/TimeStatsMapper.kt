@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model.stats.time
 
 import com.google.gson.Gson
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Post
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
@@ -21,9 +22,15 @@ import javax.inject.Inject
 
 class TimeStatsMapper
 @Inject constructor(val gson: Gson) {
-    fun map(response: PostAndPageViewsResponse, pageSize: Int): PostAndPageViewsModel {
+    fun map(response: PostAndPageViewsResponse, cacheMode: LimitMode): PostAndPageViewsModel {
         val postViews = response.days.entries.firstOrNull()?.value?.postViews ?: listOf()
-        val stats = postViews.take(pageSize).mapNotNull { item ->
+        val stats = postViews.let {
+            if (cacheMode is LimitMode.Top) {
+                return@let it.take(cacheMode.limit)
+            } else {
+                return@let it
+            }
+        }.mapNotNull { item ->
             val type = when (item.type) {
                 "post" -> ViewsType.POST
                 "page" -> ViewsType.PAGE
@@ -40,7 +47,7 @@ class TimeStatsMapper
                 ViewsModel(item.id ?: 0, item.title ?: "", item.views ?: 0, type, item.href ?: "")
             }
         }
-        return PostAndPageViewsModel(stats, postViews.size > pageSize)
+        return PostAndPageViewsModel(stats, cacheMode is LimitMode.Top && postViews.size > cacheMode.limit)
     }
 
     fun map(response: ReferrersResponse, pageSize: Int): ReferrersModel {

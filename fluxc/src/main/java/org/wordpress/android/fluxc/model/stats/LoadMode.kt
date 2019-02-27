@@ -1,12 +1,8 @@
 package org.wordpress.android.fluxc.model.stats
 
-sealed class FetchMode {
-    data class Paged(val pageSize: Int, val loadMore: Boolean = false) : FetchMode()
-    data class Top(val limit: Int) : FetchMode()
-    object All : FetchMode()
+sealed class LimitMode {
+    data class Top(val limit: Int) : LimitMode()
+    object All : LimitMode()
 }
 
-sealed class CacheMode {
-    data class Top(val limit: Int) : CacheMode()
-    object All : CacheMode()
-}
+data class PagedMode(val pageSize: Int, val loadMore: Boolean = false)

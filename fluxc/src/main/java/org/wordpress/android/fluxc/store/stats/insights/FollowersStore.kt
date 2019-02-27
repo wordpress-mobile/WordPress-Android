@@ -2,11 +2,11 @@ package org.wordpress.android.fluxc.store.stats.insights
 
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CacheMode
-import org.wordpress.android.fluxc.model.stats.CacheMode.All
-import org.wordpress.android.fluxc.model.stats.FetchMode.Paged
+import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.LimitMode.All
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
+import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
@@ -28,7 +28,7 @@ class FollowersStore @Inject constructor(
 ) {
     suspend fun fetchWpComFollowers(
         siteModel: SiteModel,
-        fetchMode: Paged,
+        fetchMode: PagedMode,
         forced: Boolean = false
     ): OnStatsFetched<FollowersModel> {
         return fetchFollowers(siteModel, forced, WP_COM, fetchMode)
@@ -36,7 +36,7 @@ class FollowersStore @Inject constructor(
 
     suspend fun fetchEmailFollowers(
         siteModel: SiteModel,
-        fetchMode: Paged,
+        fetchMode: PagedMode,
         forced: Boolean = false
     ): OnStatsFetched<FollowersModel> {
         return fetchFollowers(siteModel, forced, EMAIL, fetchMode)
@@ -46,7 +46,7 @@ class FollowersStore @Inject constructor(
         siteModel: SiteModel,
         forced: Boolean = false,
         followerType: FollowerType,
-        fetchMode: Paged
+        fetchMode: PagedMode
     ) = withContext(coroutineContext) {
         val nextPage = if (fetchMode.loadMore) {
             val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
@@ -75,15 +75,15 @@ class FollowersStore @Inject constructor(
         }
     }
 
-    fun getWpComFollowers(site: SiteModel, cacheMode: CacheMode): FollowersModel? {
+    fun getWpComFollowers(site: SiteModel, cacheMode: LimitMode): FollowersModel? {
         return getFollowers(site, WP_COM, cacheMode)
     }
 
-    fun getEmailFollowers(site: SiteModel, cacheMode: CacheMode): FollowersModel? {
+    fun getEmailFollowers(site: SiteModel, cacheMode: LimitMode): FollowersModel? {
         return getFollowers(site, EMAIL, cacheMode)
     }
 
-    private fun getFollowers(site: SiteModel, followerType: FollowerType, cacheMode: CacheMode): FollowersModel? {
+    private fun getFollowers(site: SiteModel, followerType: FollowerType, cacheMode: LimitMode): FollowersModel? {
         val followerResponses = sqlUtils.selectAllFollowers(site, followerType)
         return insightsMapper.mapAndMergeFollowersModels(followerResponses, followerType, cacheMode)
     }
