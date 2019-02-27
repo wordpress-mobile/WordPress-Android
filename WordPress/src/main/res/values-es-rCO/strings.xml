@@ -195,7 +195,6 @@ Language: es_CO
     <string name="draft_uploaded">Borrador subido</string>
     <string name="report_bug">Informar de fallo</string>
     <string name="video_quality">Calidad del vídeo</string>
-    <string name="permission_location">Ubicación</string>
     <string name="permission_camera">Cámara</string>
     <string name="permission_storage">Almacenamiento</string>
     <string name="button_edit_permissions">Editar permisos</string>
@@ -689,7 +688,6 @@ Language: es_CO
     <string name="reader_label_gap_marker">Cargar más entradas</string>
     <string name="notifications_no_search_results">Ningún sitio coincide con \"%s\"</string>
     <string name="search_sites">Buscar sitios</string>
-    <string name="notifications_empty_action_all">¡Actívate! Comentario en entradas de blogs que sigues.</string>
     <string name="stats_widget_error_jetpack_no_blogid">Accede a las estadísticas de la aplicación e intenta agregar un widget más tarde</string>
     <string name="stats_widget_error_readd_widget">Elimina el widget y vuelve a agregarlo</string>
     <string name="stats_widget_error_no_visible_blog">No se pudo acceder a las estadísticas sin un blog visible</string>

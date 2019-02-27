@@ -152,7 +152,6 @@ Language: hi_IN
     <string name="reader_label_gap_marker">अधिक लेख लोड करे </string>
     <string name="notifications_no_search_results">\'%s\' से किसी साइट का मेल नहीं हुआ </string>
     <string name="search_sites">साइट्स खोजें</string>
-    <string name="notifications_empty_action_all">सक्रिय हों! जिन ब्लॉग का अनुगमन करते है उनके लेखों पर टिप्पणी करें </string>
     <string name="stats_widget_error_readd_widget">कृपया विजेट को निकाल कर दोबारा जोड़ें</string>
     <string name="stats_widget_error_no_visible_blog">आंकड़े देखने के लिए एक ब्लॉग प्रत्यक्ष होना चाहिए</string>
     <string name="stats_enable_rest_api_in_jetpack">अपने आँकड़ों को देखने के लिए, जेटपैक में JSON API को सक्षम करें। </string>

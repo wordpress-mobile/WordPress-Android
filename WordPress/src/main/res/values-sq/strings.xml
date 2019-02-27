@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-29 18:29:34+0000
+Translation-Revision-Date: 2019-02-15 09:12:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="quick_start_sites_type_subtitle">%1$d e %2$d e plotësuar</string>
+    <string name="quick_start_sites_type_grow">Shtoni Publikun Tuaj</string>
+    <string name="quick_start_sites_type_customize">Përshtatni Sajtin Tuaj</string>
+    <string name="quick_start_sites">Hapat Pasues</string>
+    <string name="quick_start_complete_tasks_header">Të plotësuar (%d)</string>
+    <string name="quick_start_dialog_view_site_message">Kënaquni me produktin tuaj të përfunduar!</string>
+    <string name="quick_start_dialog_upload_icon_title">Ngarkoni një ikonë sajti</string>
+    <string name="quick_start_dialog_upload_icon_message">Vizitorët tuaj do ta shohin në shfletuesin e tyre ikonën tuaj. Shtoni një ikonë vetjake, për një pamje të rafinuar, profesionale.</string>
+    <string name="quick_start_dialog_explore_plans_message_short">Prekni %1$s Plan %2$s që të shihni planin tuaj të tanishëm dhe të tjerë plane të mundshëm</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">Prekni %1$s Shtoni Faqe %2$s që të krijoni një faqe të re.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Prekni %1$s Faqe Sajti %2$s që të vazhdohet.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Prekni %1$s Statistika %2$s që të shihni se si po ecën sajti juaj.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">Prekni %1$s Ikona e Sajtit Tuaj %2$s që të ngarkoni një të re</string>
+    <string name="quick_start_dialog_publish_post_message">Hartoni dhe botoni postimin tuaj të parë fare.</string>
+    <string name="quick_start_dialog_need_help_message">Do t’ju udhëheqim përmes gjërave elementare të krijimit dhe fuqizimit të sajtit tuaj.</string>
+    <string name="quick_start_dialog_migration_title">Kemi bërë ca ndryshime te lista juaj e punëve</string>
+    <string name="quick_start_dialog_migration_message">Shtuam më tepër punë, për t’ju ndihmuar të shtoni publikun tuaj.</string>
+    <string name="quick_start_dialog_explore_plans_title">Eksploroni plane</string>
+    <string name="quick_start_dialog_explore_plans_message">Mësoni rreth mjetesh marketingu dhe SEO në planet tona me pagesë.</string>
+    <string name="quick_start_dialog_enable_sharing_title">Aktivizo ndarje postimesh me të tjerët</string>
+    <string name="quick_start_dialog_enable_sharing_message">Kryeni ndarje të vetvetishme me të tjerët në rrjetet tuaja shoqërore të postimeve të reja.</string>
+    <string name="quick_start_dialog_customize_site_message">Ujdisni shkronja, shtoni figura, etj.</string>
+    <string name="quick_start_dialog_create_page_title">Krijoni një faqe të re</string>
+    <string name="quick_start_dialog_create_page_message">Shtoni një faqe për gjëra kyçe — një faqe “Mbi” është një fillim i mirë.</string>
+    <string name="quick_start_dialog_check_stats_title">Ndiqni statistikat e sajtit tuaj</string>
+    <string name="quick_start_dialog_check_stats_message">Mbajeni të përditësuar funksionimin e sajtit tuaj.</string>
+    <string name="quick_start_dialog_browse_themes_title">Shfletoni tema</string>
+    <string name="quick_start_dialog_browse_themes_message">Eksploroni dhjetëra mundësi skemash dhe gjeni atë që ju shkon për shtat.</string>
+    <string name="quick_start_dialog_remove_next_steps_message">Heqja e Hapave Pasues do të fshehë krejt turet në këtë sajt. Ky veprim s’mund të zhbëhet.</string>
+    <string name="quick_start_dialog_remove_next_steps_title">Hiqi Hapat Pasues</string>
+    <string name="quick_start_remove_next_steps_menu_title">Hiqe këtë</string>
+    <string name="quick_start_complete_view_subtitle">Përgëzime për përfundimin e listës tuaj. Punë e paqme.</string>
+    <string name="quick_start_complete_view_title">Krejt punët të plotësuara!</string>
+    <string name="quick_start_task_skip_menu_title">Anashkaloje punën</string>
+    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">tkurre</string>
+    <string name="quick_start_completed_tasks_header_chevron_expand_desc">zgjeroje</string>
+    <string name="notification_channel_reminder_title">Kujtues</string>
+    <string name="stats_select_next_period_description">Përzgjidhni periudhën pasuese</string>
+    <string name="stats_select_previous_period_description">Përzgjidhni periudhën e mëparshme</string>
+    <string name="stats_most_popular_percent_views">%1$d%% e parjeve</string>
+    <string name="stats_insights_popular">Koha Më Popullore</string>
+    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Po shfaqet paraparje sajti</string>
     <string name="new_site_creation_clear_all_content_description">Pastroje</string>
     <string name="site_created_but_not_fetched_snackbar_message">Duket sikur gjendeni në një lidhje të ngadaltë. Nëse nuk e shihni sajtin e ri te lista, provoni rifreskimin.</string>
@@ -78,7 +121,6 @@ Language: sq_AL
     <string name="stats_referrer_label">Referues</string>
     <string name="stats_referrers">Referues</string>
     <string name="stats_posts_and_pages">Postime dhe Faqe</string>
-    <string name="stats_most_popular_percent_views">%1$d%%</string>
     <string name="stats_insights_path">Shteg</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_google_plus">Google+</string>
@@ -93,8 +135,6 @@ Language: sq_AL
     <string name="stats_insights_latest_post_empty">S’keni botuar ende ndonjë postim. Sapo të filloni të botoni, këtu do të shfaqet përmbledhja e postimit tuaj më të ri:</string>
     <string name="stats_insights_tags_and_categories">Etiketa dhe Kategori</string>
     <string name="stats_insights_all_time_stats">Statistika Për Krejt Kohën</string>
-    <string name="stats_insights_most_popular_views_label">Parje</string>
-    <string name="stats_insights_most_popular_day_and_hour_label">Ditë/Orë</string>
     <string name="stats_insights_today_stats">Statistikat Për Sot</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Ndjekës</string>
@@ -201,48 +241,34 @@ Language: sq_AL
     <string name="set_parent">Caktojeni Mëmë</string>
     <string name="dismiss">hidhe tej</string>
     <string name="quick_start_focus_point_description">prekeni këtu</string>
-    <string name="quick_start_sites">Nisje e Shpejtë</string>
     <string name="quick_start_list_create_site_title">Krijoni sajtin tuaj</string>
     <string name="quick_start_list_create_site_subtitle">Krijojeni dhe vëreni në punë sajtin tuaj</string>
-    <string name="quick_start_list_complete_title">Urime për përfundimin e Turit të Shpejtë</string>
-    <string name="quick_start_list_complete_subtitle">a nuk ju kënaq t’i hiqni vizë gjërave në një listë?</string>
     <string name="quick_start_dialog_view_site_title">Shihni sajtin tuaj</string>
     <string name="quick_start_dialog_view_site_message_short">Prekni %1$s Shihni Sajtin %2$s që të shihni si do të dukej sajti juaj</string>
-    <string name="quick_start_dialog_view_site_message">Bëni një paraparje të sajtit tuaj që të shihni ç’do të shohin vizitorët tuaj.</string>
-    <string name="quick_start_dialog_skip_title">Anashkalo Nisjen e Shpejtë</string>
-    <string name="quick_start_dialog_skip_message">Turi i shpejtë do t’ju udhëheqë përmes ndërtimit të një sajti të thjeshtë.  Jeni i sigurt se doni të anashkalohet?</string>
     <string name="quick_start_dialog_share_site_title">Ndajeni sajtin tuaj me të tjerë</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">Prekni %1$s Ndarje Me të Tjerë %2$s që të vazhdohet</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">Prekni %1$s Lidhje %2$s që të shtoni llogari tuaja nga media shoqërore</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Prekni %1$s Ndarje Me të Tjerë %2$s që të vazhdohet</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">Prekni %1$s Lidhje %2$s që të shtoni llogari tuajat nga media shoqërore</string>
     <string name="quick_start_dialog_share_site_message">Lidhni llogaritë tuaja nga media shoqërore — sajti juaj do të ndajë vetvetiu me të tjerët postimet e reja.</string>
     <string name="quick_start_dialog_publish_post_title">Botoni një postim</string>
     <string name="quick_start_dialog_publish_post_message_short">Prekni %1$s Krijo Postim %2$s që të krijohet një postim i ri</string>
-    <string name="quick_start_dialog_publish_post_message">Erdhi dita! Hartoni dhe botoni postimin tuaj të parë fare.</string>
     <string name="quick_start_dialog_need_help_title">Doni pakëz ndihmë për t’ia filluar?</string>
-    <string name="quick_start_dialog_need_help_message">Lista jonë e hapave Nisje e Shpejtë do t’ju udhëheqë përmes hapave bazë të krijimit të një sajti të ri.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Po</string>
+    <string name="quick_start_dialog_need_help_button_positive">Pranoj</string>
     <string name="quick_start_dialog_need_help_button_neutral">Kurrë</string>
-    <string name="quick_start_dialog_need_help_button_negative">Jo</string>
+    <string name="quick_start_dialog_need_help_button_negative">Jo, Faleminderit</string>
     <string name="quick_start_dialog_follow_sites_title">Ndiqni sajte të tjerë</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Prekni %1$s Kërkoni %2$s që të shihni për sajte me interesa të ngjashëm</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Prekni %1$s Lexues %2$s që të vazhdohet</string>
-    <string name="quick_start_dialog_follow_sites_message">Gjeni sajte që janë afër jush, dhe ndiqini ata që të merrni të rejat kur botojnë të tilla.</string>
+    <string name="quick_start_dialog_follow_sites_message">Gjeni sajte që ju frymëzojnë, dhe ndiqini që të merrni të rejat kur botojnë të tilla.</string>
     <string name="quick_start_dialog_customize_site_title">Përshtatni sajtin tuaj</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Prekni %1$s Tema %2$s që të vazhdohet</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">Prekni %1$s Përshtateni %2$s që të nisni personalizimin e sajtit tuaj</string>
-    <string name="quick_start_dialog_customize_site_message">Ndryshoni ngjyra, shkronja, dhe figura për një sajt të personalizuar në mënyrë të përkryer.</string>
-    <string name="quick_start_dialog_continue_setup_title">Vazhdo me rregullimin e sajtit</string>
-    <string name="quick_start_dialog_continue_setup_message">Erdhi koha të përfundohet rregullimi i sajtit tuaj!  Lista jonë e hapave ju udhëheq nëpër ata vijuesit.</string>
     <string name="quick_start_dialog_choose_theme_title">Zgjidhni një temë</string>
-    <string name="quick_start_dialog_choose_theme_message_short">Prekni %1$s Tema %2$s që të zbuloni tema të reja</string>
+    <string name="quick_start_dialog_browse_themes_message_short">Prekni %1$s Tema %2$s që të zbuloni tema të reja</string>
     <string name="quick_start_dialog_choose_theme_message">Shfletoni krejt temat tuaja që të gjeni përputhjen e përsosur.</string>
-    <string name="quick_start_button_skip_positive">Anashkaloje</string>
-    <string name="quick_start_button_skip_negative">Anuloje</string>
-    <string name="quick_start_button_skip">Anashkaloji krejt</string>
     <string name="quick_start_button_positive">Jepi</string>
     <string name="quick_start_button_negative_short">Anuloje</string>
     <string name="quick_start_button_negative">Jo tani</string>
-    <string name="content_description_done">U bë</string>
+    <string name="content_description_more">Më tepër</string>
     <string name="my_site_create_new_site_title">S’keni ende ndonjë sajt</string>
     <string name="reader_empty_followed_tags_title">Pa etiketa të ndjekura</string>
     <string name="reader_empty_followed_tags_subtitle">Shtoni këtu etiketa që të gjeni postime rreth temave tuaja të parapëlqyera</string>
@@ -973,7 +999,6 @@ Language: sq_AL
     <string name="draft_uploaded">Skica u ngarkua</string>
     <string name="report_bug">Njoftoni një të metë</string>
     <string name="video_quality">Cilësi Video</string>
-    <string name="permission_location">Vendndodhje</string>
     <string name="permission_camera">Kamerë</string>
     <string name="permission_storage">Hapësirë Depozitimi</string>
     <string name="button_edit_permissions">Përpunoni lejet</string>
@@ -1545,7 +1570,6 @@ Language: sq_AL
     <string name="stats_insights_most_popular_hour">Ora më popullore</string>
     <string name="stats_insights_most_popular_day">Dita më popullore</string>
     <string name="stats_insights_today">Statistikat e Sotme</string>
-    <string name="stats_insights_popular">Dita dhe Ora Më Popullore</string>
     <string name="stats_insights_all_time">Postimet, parjet dhe vizitorët gjatë gjithë kohës</string>
     <string name="stats_insights">Tendenca</string>
     <string name="stats_sign_in_jetpack_different_com_account">Që të shihni statistikat tuaja, bëni hyrjen te llogaria WordPress.com që përdorët për t’ia përshoqëruar Jetpack-ut.</string>
