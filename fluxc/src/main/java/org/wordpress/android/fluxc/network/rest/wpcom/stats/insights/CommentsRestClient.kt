@@ -39,7 +39,7 @@ constructor(
                 url,
                 emptyMap(),
                 CommentsResponse::class.java,
-                enableCaching = true,
+                enableCaching = false,
                 forced = forced
         )
         return when (response) {
