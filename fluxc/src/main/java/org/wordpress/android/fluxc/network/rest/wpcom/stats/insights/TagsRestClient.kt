@@ -43,7 +43,7 @@ constructor(
                 url,
                 params,
                 TagsResponse::class.java,
-                enableCaching = true,
+                enableCaching = false,
                 forced = forced
         )
         return when (response) {
