@@ -543,7 +543,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "TYPE TEXT NOT NULL,STATUS TEXT NOT NULL,FEATURED INTEGER,"
                                + "CATALOG_VISIBILITY TEXT NOT NULL,DESCRIPTION TEXT NOT NULL,"
                                + "SHORT_DESCRIPTION TEXT NOT NULL,SKU TEXT NOT NULL,"
-                               + "PRICE TEXT NOT NULL,REGULAR_PRICE TEXT NOT NULL, ALE_PRICE TEXT NOT NULL,"
+                               + "PRICE TEXT NOT NULL,REGULAR_PRICE TEXT NOT NULL, SALE_PRICE TEXT NOT NULL,"
                                + "ON_SALE INTEGER,TOTAL_SALES INTEGER,VIRTUAL INTEGER,DOWNLOADABLE INTEGER,"
                                + "TAX_STATUS TEXT NOT NULL,TAX_CLASS TEXT NOT NULL,"
                                + "MANAGE_STOCK INTEGER,STOCK_QUANTITY INTEGER,STOCK_STATUS TEXT NOT NULL,"
