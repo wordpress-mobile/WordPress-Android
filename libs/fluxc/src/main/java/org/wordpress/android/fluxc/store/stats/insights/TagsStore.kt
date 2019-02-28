@@ -32,7 +32,7 @@ class TagsStore @Inject constructor(
                     response.response != null -> {
                         sqlUtils.insert(siteModel, response.response)
                         OnStatsFetched(
-                                insightsMapper.map(response.response, LimitMode.Top(limitMode.limit))
+                                insightsMapper.map(response.response, limitMode)
                         )
                     }
                     else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
