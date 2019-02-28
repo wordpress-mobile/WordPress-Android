@@ -560,6 +560,8 @@ public class MySiteFragment extends Fragment implements
             if (countCustomizeUncompleted > 0) {
                 mQuickStartCustomizeIcon.setEnabled(true);
                 mQuickStartCustomizeTitle.setEnabled(true);
+                mQuickStartCustomizeTitle.setPaintFlags(
+                        mQuickStartCustomizeTitle.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
                 mQuickStartCustomizeIcon.setEnabled(false);
                 mQuickStartCustomizeTitle.setEnabled(false);
@@ -573,6 +575,8 @@ public class MySiteFragment extends Fragment implements
             if (countGrowUncompleted > 0) {
                 mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_pink_500_multiple_users_white_40dp);
                 mQuickStartGrowTitle.setEnabled(true);
+                mQuickStartGrowTitle.setPaintFlags(
+                        mQuickStartGrowTitle.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
                 mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_grey_multiple_users_white_40dp);
                 mQuickStartGrowTitle.setEnabled(false);
