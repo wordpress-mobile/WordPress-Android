@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 55;
+        return 56;
     }
 
     @Override
@@ -442,6 +442,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
+            case 55:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -529,6 +533,30 @@ public class WellSqlConfig extends DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCOrderStatsModel ADD ENDDATE TEXT");
                     db.execSQL("ALTER TABLE WCOrderStatsModel ADD STARTDATE TEXT");
                     db.execSQL("ALTER TABLE WCOrderStatsModel ADD QUANTITY TEXT");
+                    break;
+                case 55:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DROP TABLE IF EXISTS WCProductModel");
+                    db.execSQL("CREATE TABLE WCProductModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,REMOTE_PRODUCT_ID INTEGER,"
+                               + "NAME TEXT NOT NULL,SLUG TEXT NOT NULL,PERMALINK TEXT NOT NULL,"
+                               + "DATE_CREATED TEXT NOT NULL,DATE_MODIFIED TEXT NOT NULL,"
+                               + "TYPE TEXT NOT NULL,STATUS TEXT NOT NULL,FEATURED INTEGER,"
+                               + "CATALOG_VISIBILITY TEXT NOT NULL,DESCRIPTION TEXT NOT NULL,"
+                               + "SHORT_DESCRIPTION TEXT NOT NULL,SKU TEXT NOT NULL,"
+                               + "PRICE TEXT NOT NULL,REGULAR_PRICE TEXT NOT NULL, SALE_PRICE TEXT NOT NULL,"
+                               + "ON_SALE INTEGER,TOTAL_SALES INTEGER,VIRTUAL INTEGER,DOWNLOADABLE INTEGER,"
+                               + "TAX_STATUS TEXT NOT NULL,TAX_CLASS TEXT NOT NULL,"
+                               + "MANAGE_STOCK INTEGER,STOCK_QUANTITY INTEGER,STOCK_STATUS TEXT NOT NULL,"
+                               + "BACKORDERS TEXT NOT NULL,BACKORDERS_ALLOWED INTEGER,BACKORDERED INTEGER,"
+                               + "SOLD_INDIVIDUALLY INTEGER,WEIGHT TEXT NOT NULL,LENGTH TEXT NOT NULL,"
+                               + "WIDTH TEXT NOT NULL,HEIGHT TEXT NOT NULL,SHIPPING_REQUIRED INTEGER,"
+                               + "SHIPPING_TAXABLE INTEGER,SHIPPING_CLASS TEXT NOT NULL,"
+                               + "SHIPPING_CLASS_ID INTEGER,REVIEWS_ALLOWED INTEGER,AVERAGE_RATING TEXT NOT NULL,"
+                               + "RATING_COUNT INTEGER,PARENT_ID INTEGER,PURCHASE_NOTE TEXT NOT NULL,"
+                               + "CATEGORIES TEXT NOT NULL,TAGS TEXT NOT NULL,"
+                               + "IMAGES TEXT NOT NULL,ATTRIBUTES TEXT NOT NULL,"
+                               + "VARIATIONS TEXT NOT NULL)");
                     break;
             }
         }
