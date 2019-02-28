@@ -3,8 +3,6 @@ package org.wordpress.android.fluxc.store.stats.insights
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
-import org.wordpress.android.fluxc.model.stats.LimitMode.All
-import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient
