@@ -50,10 +50,16 @@ class TimeStatsMapper
         return PostAndPageViewsModel(stats, cacheMode is LimitMode.Top && postViews.size > cacheMode.limit)
     }
 
-    fun map(response: ReferrersResponse, pageSize: Int): ReferrersModel {
+    fun map(response: ReferrersResponse, cacheMode: LimitMode): ReferrersModel {
         val first = response.groups.values.firstOrNull()
         val groups = first?.let {
-            first.groups.take(pageSize).map { group ->
+            first.groups.let {
+                if (cacheMode is LimitMode.Top) {
+                    it.take(cacheMode.limit)
+                } else {
+                    it
+                }
+            }.map { group ->
                 val children = group.referrers?.mapNotNull { result ->
                     if (result.name != null && result.views != null) {
                         val firstChildUrl = result.children?.firstOrNull()?.url
