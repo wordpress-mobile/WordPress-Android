@@ -538,7 +538,8 @@ public class WellSqlConfig extends DefaultWellConfig {
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("DROP TABLE IF EXISTS WCProductModel");
                     db.execSQL("CREATE TABLE WCProductModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                               + "LOCAL_SITE_ID INTEGER,NAME TEXT NOT NULL,SLUG TEXT NOT NULL,PERMALINK TEXT NOT NULL,"
+                               + "LOCAL_SITE_ID INTEGER,REMOTE_PRODUCT_ID INTEGER,"
+                               + "NAME TEXT NOT NULL,SLUG TEXT NOT NULL,PERMALINK TEXT NOT NULL,"
                                + "DATE_CREATED TEXT NOT NULL,DATE_MODIFIED TEXT NOT NULL,"
                                + "TYPE TEXT NOT NULL,STATUS TEXT NOT NULL,FEATURED INTEGER,"
                                + "CATALOG_VISIBILITY TEXT NOT NULL,DESCRIPTION TEXT NOT NULL,"
