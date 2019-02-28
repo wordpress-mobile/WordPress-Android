@@ -32,11 +32,7 @@ class CommentsStore @Inject constructor(
                     }
                     responsePayload.response != null -> {
                         sqlUtils.insert(siteModel, responsePayload.response)
-                        val cacheMode = if (limitMode is Top)
-                            LimitMode.Top(limitMode.limit)
-                        else
-                            All
-                        OnStatsFetched(insightsMapper.map(responsePayload.response, cacheMode))
+                        OnStatsFetched(insightsMapper.map(responsePayload.response, limitMode))
                     }
                     else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
                 }
