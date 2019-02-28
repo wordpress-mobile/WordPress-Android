@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient
@@ -25,7 +26,7 @@ import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-private const val PAGE_SIZE = 8
+private const val ITEMS_TO_LOAD = 8
 private val DATE = Date(0)
 
 @RunWith(MockitoJUnitRunner::class)
@@ -51,13 +52,13 @@ class ReferrersStoreTest {
                 REFERRERS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchReferrers(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(restClient.fetchReferrers(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<ReferrersModel>()
-        whenever(mapper.map(REFERRERS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(REFERRERS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val responseModel = store.fetchReferrers(site, PAGE_SIZE, DAYS, DATE, forced)
+        val responseModel = store.fetchReferrers(site, DAYS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, REFERRERS_RESPONSE, DAYS, DATE)
@@ -69,9 +70,9 @@ class ReferrersStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<ReferrersResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchReferrers(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchReferrers(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchReferrers(site, PAGE_SIZE, DAYS, DATE, forced)
+        val responseModel = store.fetchReferrers(site, DAYS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -83,9 +84,9 @@ class ReferrersStoreTest {
     fun `returns referrers from db`() {
         whenever(sqlUtils.selectReferrers(site, DAYS, DATE)).thenReturn(REFERRERS_RESPONSE)
         val model = mock<ReferrersModel>()
-        whenever(mapper.map(REFERRERS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(REFERRERS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val result = store.getReferrers(site, DAYS, DATE, PAGE_SIZE)
+        val result = store.getReferrers(site, DAYS, DATE, LimitMode.Top(ITEMS_TO_LOAD))
 
         assertThat(result).isEqualTo(model)
     }
