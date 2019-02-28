@@ -24,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
@@ -51,21 +52,20 @@ class TagsAndCategoriesUseCase
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<TagsModel> {
         val response = tagsStore.fetchTags(site, LimitMode.Top(itemsToLoad), forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.tags.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val model = tagsStore.getTags(site, LimitMode.Top(itemsToLoad))
-        model?.let { onModel(model) }
+    override suspend fun loadCachedData(site: SiteModel): TagsModel? {
+        return tagsStore.getTags(site, LimitMode.Top(itemsToLoad))
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_tags_and_categories))
@@ -154,6 +154,7 @@ class TagsAndCategoriesUseCase
     private fun mapItem(item: TagModel.Item): ListItemWithIcon {
         return ListItemWithIcon(
                 icon = getIcon(item.type),
+                textStyle = LIGHT,
                 text = item.name,
                 showDivider = false,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick)

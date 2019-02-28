@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -15,21 +14,22 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.StatsViewType
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DateSelectorViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DateSelectorViewModel
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.mergeNotNull
 import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Named
 
 abstract class StatsViewAllViewModel(
     mainDispatcher: CoroutineDispatcher,
+    analyticsTracker: AnalyticsTrackerWrapper,
     protected val useCase: BaseListUseCase,
-    private val dateSelectorViewModel: DateSelectorViewModel,
     @StringRes val title: Int
-) : StatsListViewModel(mainDispatcher, useCase) {
+) : StatsListViewModel(mainDispatcher, useCase, analyticsTracker) {
     companion object {
         fun get(type: StatsViewType, granularity: StatsGranularity?): Class<out StatsViewAllViewModel> {
             return when (granularity) {
@@ -98,27 +98,27 @@ abstract class StatsViewAllViewModel(
         }
     }
 
-    val selectedDateChanged = dateSelectorViewModel.selectedDateChanged
-
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    val dateSelectorUiModel: LiveData<DateSelectorUiModel> = dateSelectorViewModel.uiModel
+    private val _showSnackbarMessage = mergeNotNull(
+            useCase.snackbarMessage,
+            distinct = true,
+            singleEvent = true
+    )
+    val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
     private lateinit var site: SiteModel
-    private var statsGranularity: StatsGranularity? = null
 
-    fun start(site: SiteModel, granularity: StatsGranularity?) {
+    override fun start(site: SiteModel) {
         this.site = site
-        this.statsGranularity = granularity
-
-        loadData {
-            dateSelectorViewModel.updateDateSelector(statsGranularity)
+        launch {
             useCase.loadData(site)
         }
     }
 
     fun onPullToRefresh() {
+        _showSnackbarMessage.value = null
         loadData {
             useCase.refreshData(site, true)
         }
@@ -131,78 +131,55 @@ abstract class StatsViewAllViewModel(
 
         _isRefreshing.value = false
     }
-
-    fun onSelectedDateChange() {
-        loadData {
-            dateSelectorViewModel.updateDateSelector(statsGranularity)
-            useCase.refreshData(site)
-        }
-    }
-
-    fun onNextDateSelected() {
-        launch(Dispatchers.Default) {
-            statsGranularity?.let { granularity ->
-                dateSelectorViewModel.onNextDateSelected(granularity)
-            }
-        }
-    }
-
-    fun onPreviousDateSelected() {
-        launch(Dispatchers.Default) {
-            statsGranularity?.let { granularity ->
-                dateSelectorViewModel.onPreviousDateSelected(granularity)
-            }
-        }
-    }
 }
 
 class StatsViewAllCommentsViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEW_ALL_COMMENTS_USE_CASE) useCase: BaseListUseCase,
-    dateSelectorViewModel: DateSelectorViewModel
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_comments)
+    analyticsTracker: AnalyticsTrackerWrapper
+) : StatsViewAllViewModel(mainDispatcher, analyticsTracker, useCase, R.string.stats_view_comments)
 
 class StatsViewAllFollowersViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEW_ALL_FOLLOWERS_USE_CASE) useCase: BaseListUseCase,
-    dateSelectorViewModel: DateSelectorViewModel
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_followers)
+    analyticsTracker: AnalyticsTrackerWrapper
+) : StatsViewAllViewModel(mainDispatcher, analyticsTracker, useCase, R.string.stats_view_followers)
 
 class StatsViewAllTagsAndCategoriesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE) useCase: BaseListUseCase,
-    dateSelectorViewModel: DateSelectorViewModel
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_tags_and_categories)
+    analyticsTracker: AnalyticsTrackerWrapper
+) : StatsViewAllViewModel(mainDispatcher, analyticsTracker, useCase, R.string.stats_view_tags_and_categories)
 
 // region ViewAllPostsAndPagesViewModels
 class DailyViewAllPostsAndPagesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(DAILY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
-    dateSelectorViewModel: DateSelectorViewModel
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_top_posts_and_pages)
+    analyticsTracker: AnalyticsTrackerWrapper
+) : StatsViewAllViewModel(mainDispatcher, analyticsTracker, useCase, R.string.stats_view_top_posts_and_pages)
 
 class WeeklyViewAllPostsAndPagesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(WEEKLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
-    dateSelectorViewModel: DateSelectorViewModel
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_top_posts_and_pages)
+    analyticsTracker: AnalyticsTrackerWrapper
+) : StatsViewAllViewModel(mainDispatcher, analyticsTracker, useCase, R.string.stats_view_top_posts_and_pages)
 
 class MonthlyViewAllPostsAndPagesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(MONTHLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
-    dateSelectorViewModel: DateSelectorViewModel
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_top_posts_and_pages)
+    analyticsTracker: AnalyticsTrackerWrapper
+) : StatsViewAllViewModel(mainDispatcher, analyticsTracker, useCase, R.string.stats_view_top_posts_and_pages)
 
 class YearlyViewAllPostsAndPagesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(YEARLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE) useCase: BaseListUseCase,
-    dateSelectorViewModel: DateSelectorViewModel
-) : StatsViewAllViewModel(mainDispatcher, useCase, dateSelectorViewModel, R.string.stats_view_top_posts_and_pages)
+    analyticsTracker: AnalyticsTrackerWrapper
+) : StatsViewAllViewModel(mainDispatcher, analyticsTracker, useCase, R.string.stats_view_top_posts_and_pages)
 // endregion

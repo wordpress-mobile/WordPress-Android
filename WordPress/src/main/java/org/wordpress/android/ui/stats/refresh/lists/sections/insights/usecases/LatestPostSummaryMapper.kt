@@ -47,8 +47,8 @@ class LatestPostSummaryMapper
             )
         }
         return Text(
-                message,
-                listOf(
+                text = message,
+                links = listOf(
                         Clickable(
                                 postTitle,
                                 navigationAction = NavigationAction.create(

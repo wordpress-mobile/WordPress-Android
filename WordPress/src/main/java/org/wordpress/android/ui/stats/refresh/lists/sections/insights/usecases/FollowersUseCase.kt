@@ -55,37 +55,46 @@ class FollowersUseCase
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_ITEM_COUNT
     private lateinit var lastSite: SiteModel
 
-    override suspend fun loadCachedData(site: SiteModel) {
+    override suspend fun loadCachedData(site: SiteModel): Pair<FollowersModel, FollowersModel>? {
         lastSite = site
         val wpComFollowers = followersStore.getWpComFollowers(site, LimitMode.Top(itemsToLoad))
         val emailFollowers = followersStore.getEmailFollowers(site, LimitMode.Top(itemsToLoad))
         if (wpComFollowers != null && emailFollowers != null) {
-            onModel(wpComFollowers to emailFollowers)
+            return wpComFollowers to emailFollowers
         }
+        return null
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        fetchData(site, forced, PagedMode(itemsToLoad, false))
+    override suspend fun fetchRemoteData(
+        site: SiteModel,
+        forced: Boolean
+    ): State<Pair<FollowersModel, FollowersModel>> {
+        return fetchData(site, forced, PagedMode(itemsToLoad, false))
     }
 
-    private suspend fun fetchData(site: SiteModel, forced: Boolean, pagedMode: PagedMode) {
+    private suspend fun fetchData(
+        site: SiteModel,
+        forced: Boolean,
+        fetchMode: PagedMode
+    ): State<Pair<FollowersModel, FollowersModel>> {
         lastSite = site
-        val deferredWpComResponse = GlobalScope.async {
-            followersStore.fetchWpComFollowers(site, pagedMode, forced)
-        }
-        val deferredEmailResponse = GlobalScope.async {
-            followersStore.fetchEmailFollowers(site, pagedMode, forced)
-        }
+
+        val deferredWpComResponse = GlobalScope.async { followersStore.fetchWpComFollowers(site, fetchMode, forced) }
+        val deferredEmailResponse = GlobalScope.async { followersStore.fetchEmailFollowers(site, fetchMode, forced) }
+
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
         val wpComModel = wpComResponse.model
         val emailModel = emailResponse.model
         val error = wpComResponse.error ?: emailResponse.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            wpComModel != null && emailModel != null -> onModel(wpComModel to emailModel)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            wpComModel != null && emailModel != null &&
+                    (wpComModel.followers.isNotEmpty() || emailModel.followers.isNotEmpty()) -> State.Data(
+                    wpComModel to emailModel
+            )
+            else -> State.Empty()
         }
     }
 
@@ -121,7 +130,7 @@ class FollowersUseCase
                 items.addAll(buildTab(emailModel, R.string.stats_followers_email))
             }
 
-            if (wpComModel.hasMore || emailModel.hasMore) {
+            if (wpComModel.hasMore && uiState == 0 || emailModel.hasMore && uiState == 1) {
                 val buttonText = if (useCaseMode == VIEW_ALL)
                         R.string.stats_insights_load_more
                     else
@@ -129,7 +138,7 @@ class FollowersUseCase
                 items.add(
                         Link(
                                 text = buttonText,
-                                navigateAction = NavigationAction.create(this::onLinkClick)
+                                navigateAction = NavigationAction.create(uiState, this::onLinkClick)
                         )
                 )
             }
@@ -171,14 +180,15 @@ class FollowersUseCase
         }
     }
 
-    private fun onLinkClick() {
+    private fun onLinkClick(uiState: Int) {
         if (useCaseMode == VIEW_ALL) {
             GlobalScope.launch {
-                fetchData(lastSite, true, PagedMode(itemsToLoad, true))
+                val state = fetchData(lastSite, true, PagedMode(itemsToLoad, true))
+                evaluateState(state)
             }
         } else {
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
-            navigateTo(ViewFollowersStats())
+            navigateTo(ViewFollowersStats(uiState))
         }
     }
 

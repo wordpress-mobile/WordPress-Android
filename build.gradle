@@ -16,7 +16,6 @@ buildscript {
 
 apply plugin: 'com.automattic.android.fetchstyle'
 
-project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
 
 allprojects {
@@ -62,13 +61,6 @@ allprojects {
 }
 
 subprojects {
-    project.plugins.whenPluginAdded { plugin ->
-        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        }
-    }
 
     configurations {
         ktlint

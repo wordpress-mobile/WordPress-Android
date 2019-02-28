@@ -40,17 +40,20 @@ constructor(
 ) : GranularStatelessUseCase<SearchTermsModel>(SEARCH_TERMS, mainDispatcher, selectedDateProvider, statsGranularity) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_search_terms))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = store.getSearchTerms(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): SearchTermsModel? {
+        return store.getSearchTerms(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
                 selectedDate
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(
+        selectedDate: Date,
+        site: SiteModel,
+        forced: Boolean
+    ): State<SearchTermsModel> {
         val response = store.fetchSearchTerms(
                 site,
                 PAGE_SIZE,
@@ -61,10 +64,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.searchTerms.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
@@ -111,7 +114,12 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_SEARCH_TERMS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewSearchTerms(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(
+                ViewSearchTerms(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+                )
+        )
     }
 
     class SearchTermsUseCaseFactory

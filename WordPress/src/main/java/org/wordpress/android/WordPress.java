@@ -48,6 +48,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.ListActionBuilder;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -572,6 +573,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
         // remove all lists
         mDispatcher.dispatch(ListActionBuilder.newRemoveAllListsAction());
+        // remove all posts
+        mDispatcher.dispatch(PostActionBuilder.newRemoveAllPostsAction());
 
         // reset all user prefs
         AppPrefs.reset();

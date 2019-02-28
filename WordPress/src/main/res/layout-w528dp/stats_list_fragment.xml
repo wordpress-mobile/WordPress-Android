@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/date_selection_toolbar"
+        layout="@layout/stats_date_selector"/>
+
+    <include
+        layout="@layout/stats_error_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <include
+        layout="@layout/stats_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="528dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
         android:scrollbars="vertical"/>
 
-</FrameLayout>
+</LinearLayout>

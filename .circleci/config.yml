@@ -1,11 +1,11 @@
 android_config: &android_config
   docker:
-    - image: circleci/android:api-27-alpha
+    - image: circleci/android:api-28-alpha
   environment:
     # kotlin.incremental=false and kotlin.compiler.execution.strategy=in-process are required due to an issue with the Kotlin compiler in
     # memory constrained environments: https://youtrack.jetbrains.com/issue/KT-15562
-    GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
-    GRADLEW: "./gradlew --stacktrace --no-parallel --build-cache --configure-on-demand -PdisablePreDex -PjavaMaxHeapSize=1536m"
+    GRADLE_OPTS: -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
+    GRADLEW: "./gradlew --stacktrace"
 
 copy_gradle_properties: &copy_gradle_properties
   run:
@@ -13,8 +13,8 @@ copy_gradle_properties: &copy_gradle_properties
     command: cp gradle.properties-example gradle.properties && cp libs/login/gradle.properties-example libs/login/gradle.properties
 
 orbs:
-  danger: wordpress-mobile/danger@0.0.19
   android: wordpress-mobile/android@0.0.19
+  bundle-install: toshimaru/bundle-install@0.1.1
 
 version: 2.1
 jobs:
@@ -25,9 +25,6 @@ jobs:
       - android/restore-gradle-cache:
           cache-prefix: test-cache
       - <<: *copy_gradle_properties
-      - run:
-          name: Validate login strings
-          command: ./tools/validate-login-strings.sh
       - run:
           name: Test
           command: $GRADLEW testVanillaRelease
@@ -55,11 +52,19 @@ jobs:
       - store_artifacts:
           path: WordPress/build/reports
           destination: reports
+  strings-check:
+    docker:
+      - image: circleci/ruby:2.3
+    steps:
+      - checkout
+      - bundle-install/bundle-install
+      - run:
+          name: Validate login strings
+          command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
 
 workflows:
   wordpress_android:
     jobs:
+      - strings-check
       - test
       - lint
-      - danger/danger-ruby:
-          name: danger

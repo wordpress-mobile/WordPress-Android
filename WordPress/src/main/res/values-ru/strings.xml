@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-29 15:11:18+0000
+Translation-Revision-Date: 2019-02-18 16:36:08+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="quick_start_sites_type_subtitle">Готово %1$d из %2$d</string>
+    <string name="quick_start_sites_type_grow">Привлекайте аудиторию</string>
+    <string name="quick_start_sites_type_customize">Настроить ваш сайт</string>
+    <string name="quick_start_sites">Следующие шаги</string>
+    <string name="quick_start_complete_tasks_header">Готово (%d)</string>
+    <string name="quick_start_dialog_view_site_message">Получайте удовольствие от завершенной работы!</string>
+    <string name="quick_start_dialog_upload_icon_title">Загрузить значок сайта</string>
+    <string name="quick_start_dialog_upload_icon_message">Ваши посетители увидят ваш значок в своем браузере. Добавьте пользовательский значок для стильного, профессионального вида.</string>
+    <string name="quick_start_dialog_explore_plans_message_short">Нажмите %1$s Тариф %2$s для просмотра вашего и других доступных тарифов</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">Нажмите %1$s Добавить страницу %2$s для создания новой страницы.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Нажмите %1$s Страницы сайта %2$s для продолжения.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Нажмите %1$s Статистика %2$s для просмотра как живет ваш сайт.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">Нажмите %1$s Значок вашего сайта %2$s для загрузки нового</string>
+    <string name="quick_start_dialog_publish_post_message">Создайте черновик и опубликуйте свою первую запись.</string>
+    <string name="quick_start_dialog_need_help_message">Мы проведем вас по основам создания и роста вашего сайта.</string>
+    <string name="quick_start_dialog_migration_title">Мы внесли некоторые изменения в ваш список проверки</string>
+    <string name="quick_start_dialog_migration_message">Мы добавили пару задач для того, чтобы помочь вам привлечь аудиторию.</string>
+    <string name="quick_start_dialog_explore_plans_title">Посмотреть тарифы</string>
+    <string name="quick_start_dialog_explore_plans_message">Узнайте больше о маркетинге и SEO инструментах на наших платных тарифах.</string>
+    <string name="quick_start_dialog_enable_sharing_title">Включить возможность делиться записями</string>
+    <string name="quick_start_dialog_enable_sharing_message">Автоматически делитесь вашими новыми записями в социальных сетях.</string>
+    <string name="quick_start_dialog_customize_site_message">Настройте шрифты, добавьте изображения и другое.</string>
+    <string name="quick_start_dialog_create_page_title">Создать новую страницу</string>
+    <string name="quick_start_dialog_create_page_message">Добавьте страницу для ключевого содержимого, \"О нас\" будет отличным началом!</string>
+    <string name="quick_start_dialog_check_stats_title">Посмотреть статистику сайта</string>
+    <string name="quick_start_dialog_check_stats_message">Будьте в курсе статистики вашего сайта.</string>
+    <string name="quick_start_dialog_browse_themes_title">Посмотреть темы</string>
+    <string name="quick_start_dialog_browse_themes_message">Посмотрите десятки возможностей макета и найдите идеальный вариант.</string>
+    <string name="quick_start_dialog_remove_next_steps_message">Пропуск следующих шагов отключит все гиды по этому сайту. Действие не может быть отменено.</string>
+    <string name="quick_start_dialog_remove_next_steps_title">Пропустить следующие шаги</string>
+    <string name="quick_start_remove_next_steps_menu_title">Убрать это</string>
+    <string name="quick_start_complete_view_subtitle">Поздравляем с завершением списка. Отличная работа!</string>
+    <string name="quick_start_complete_view_title">Все задачи завершены!</string>
+    <string name="quick_start_task_skip_menu_title">Пропустить задачу</string>
+    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">свернуть</string>
+    <string name="quick_start_completed_tasks_header_chevron_expand_desc">развернуть</string>
+    <string name="notification_channel_reminder_title">Напоминание</string>
+    <string name="stats_select_next_period_description">Выбор следующего периода</string>
+    <string name="stats_select_previous_period_description">Выбор предыдущего периода</string>
+    <string name="stats_most_popular_percent_views">%1$d%% просмотров</string>
+    <string name="stats_insights_popular">Самое популярное время</string>
+    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Показ предварительного просмотра сайта</string>
     <string name="new_site_creation_clear_all_content_description">Очистить</string>
     <string name="site_created_but_not_fetched_snackbar_message">Похоже, что ваше подключение слишком медленное. Если вы не видите ваш новый сайт в списке, попробуйте обновить.</string>
@@ -78,7 +121,6 @@ Language: ru
     <string name="stats_referrer_label">Ссылающийся сайт</string>
     <string name="stats_referrers">Ссылающиеся сайты</string>
     <string name="stats_posts_and_pages">Страницы и записи</string>
-    <string name="stats_most_popular_percent_views">%1$d%%</string>
     <string name="stats_insights_path">Путь</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_google_plus">Google+</string>
@@ -93,8 +135,6 @@ Language: ru
     <string name="stats_insights_latest_post_empty">Вы еще не опубликовали ни одной записи. Как только вы это сделаете, статистика по последней записи появится здесь:</string>
     <string name="stats_insights_tags_and_categories">Метки и рубрики</string>
     <string name="stats_insights_all_time_stats">Статистика за всё время</string>
-    <string name="stats_insights_most_popular_views_label">Просмотры</string>
-    <string name="stats_insights_most_popular_day_and_hour_label">День/час</string>
     <string name="stats_insights_today_stats">Статистика за сегодня</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Подписчики</string>
@@ -201,48 +241,34 @@ Language: ru
     <string name="set_parent">Установить родителя</string>
     <string name="dismiss">закрыть</string>
     <string name="quick_start_focus_point_description">нажмите здесь</string>
-    <string name="quick_start_sites">Быстрый старт</string>
     <string name="quick_start_list_create_site_title">Создайте ваш сайт</string>
     <string name="quick_start_list_create_site_subtitle">Запустите ваш сайт</string>
-    <string name="quick_start_list_complete_title">Вы прошли \"Быстрый старт\"! Поздравляем!</string>
-    <string name="quick_start_list_complete_subtitle">правда хорошо просто выбирать из списка?</string>
     <string name="quick_start_dialog_view_site_title">Посмотреть ваш сайт</string>
     <string name="quick_start_dialog_view_site_message_short">Нажмите %1$s Посмотреть сайт %2$s для просмотра вашего сайта</string>
-    <string name="quick_start_dialog_view_site_message">Посмотрите ваш новый сайт, чтобы увидеть его как он предстанет посетителям.</string>
-    <string name="quick_start_dialog_skip_title">Пропустить быстрый старт</string>
-    <string name="quick_start_dialog_skip_message">Этот быстрый тур поможет создать базовый сайт. Вы точно хотите пропустить его?</string>
     <string name="quick_start_dialog_share_site_title">Делитесь содержимым сайта</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">Нажмите %1$s Поделиться %2$s для продолжения</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">Нажмите %1$s Подключения %2$s для добавления учетных записей в соцсетях</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Нажмите %1$s Поделиться %2$s для продолжения</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">Нажмите %1$s Подключения %2$s для добавления учетных записей в соцсетях</string>
     <string name="quick_start_dialog_share_site_message">Подключите ваши учетные записи в соцсетях и ваш сайт автоматически будет делиться новыми записями.</string>
     <string name="quick_start_dialog_publish_post_title">Опубликовать запись</string>
     <string name="quick_start_dialog_publish_post_message_short">Нажмите %1$s Создать запись %2$s для создания новой записи</string>
-    <string name="quick_start_dialog_publish_post_message">Самое время! Сохраните в черновики и опубликуйте вашу первую запись.</string>
     <string name="quick_start_dialog_need_help_title">Нужна помощь с тем, как начать?</string>
-    <string name="quick_start_dialog_need_help_message">Наш Быстрый старт проведет вас по списку основных шагов по созданию нового сайта.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Да</string>
+    <string name="quick_start_dialog_need_help_button_positive">Принять</string>
     <string name="quick_start_dialog_need_help_button_neutral">Никогда</string>
-    <string name="quick_start_dialog_need_help_button_negative">Нет</string>
+    <string name="quick_start_dialog_need_help_button_negative">Нет, спасибо</string>
     <string name="quick_start_dialog_follow_sites_title">Подписка на другие сайты</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Нажмите %1$s Поиск %2$s, чтобы найти сайты с похожими интересами</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Нажмите %1$s Читалка %2$s для продолжения</string>
-    <string name="quick_start_dialog_follow_sites_message">Найдите сайты взаимодействующие с вами и подпишитесь на них для получения новых публикаций с них.</string>
+    <string name="quick_start_dialog_follow_sites_message">Найдите сайты вдохновляющие вас и подпишитесь на них для получения новых публикаций с них.</string>
     <string name="quick_start_dialog_customize_site_title">Настройте ваш сайт</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Нажмите %1$s Темы %2$s для продолжения</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">Нажмите %1$s Настроить %2$s для начала персонализации вашего сайта</string>
-    <string name="quick_start_dialog_customize_site_message">Смените цвета, шрифты и изображения для отлично настроенного под ваши вкусы сайта.</string>
-    <string name="quick_start_dialog_continue_setup_title">Продолжить настройку сайта</string>
-    <string name="quick_start_dialog_continue_setup_message">Пора завершить настройку вашего сайта! Наш список проведет вас по следующим шагам.</string>
     <string name="quick_start_dialog_choose_theme_title">Выберите тему</string>
-    <string name="quick_start_dialog_choose_theme_message_short">Нажмите %1$s Темы %2$s для поиска новых тем</string>
+    <string name="quick_start_dialog_browse_themes_message_short">Нажмите %1$s Темы %2$s для поиска новых тем</string>
     <string name="quick_start_dialog_choose_theme_message">Посмотреть все наши темы, чтобы найти наиболее подходящую.</string>
-    <string name="quick_start_button_skip_positive">Пропустить</string>
-    <string name="quick_start_button_skip_negative">Отмена</string>
-    <string name="quick_start_button_skip">Пропустить все</string>
     <string name="quick_start_button_positive">Вперед</string>
     <string name="quick_start_button_negative_short">Отмена</string>
     <string name="quick_start_button_negative">Не сейчас</string>
-    <string name="content_description_done">Готово</string>
+    <string name="content_description_more">Больше</string>
     <string name="my_site_create_new_site_title">У вас нет сайтов</string>
     <string name="reader_empty_followed_tags_title">Нет подписок на метки</string>
     <string name="reader_empty_followed_tags_subtitle">Добавьте метки здесь, чтобы найти записи по вашим любимым темам</string>
@@ -973,7 +999,6 @@ Language: ru
     <string name="draft_uploaded">Черновик загружен</string>
     <string name="report_bug">Сообщить об ошибке</string>
     <string name="video_quality">Качество видео</string>
-    <string name="permission_location">Местоположение</string>
     <string name="permission_camera">Камера</string>
     <string name="permission_storage">Хранилище</string>
     <string name="button_edit_permissions">Изменить разрешения</string>
@@ -1545,7 +1570,6 @@ Language: ru
     <string name="stats_insights_most_popular_hour">Самое популярное время</string>
     <string name="stats_insights_most_popular_day">Самый популярный день</string>
     <string name="stats_insights_today">Cтатистические данные на сегодня</string>
-    <string name="stats_insights_popular">Самый популярный день и час</string>
     <string name="stats_insights_all_time">Записи, просмотры и посетители за все время</string>
     <string name="stats_insights">Тенденции</string>
     <string name="stats_sign_in_jetpack_different_com_account">Чтобы просмотреть статистику, войдите в учетную запись WordPress.com, которую вы использовали для подключения Jetpack.</string>

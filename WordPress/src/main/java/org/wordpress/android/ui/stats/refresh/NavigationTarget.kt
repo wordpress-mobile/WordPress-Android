@@ -18,8 +18,8 @@ sealed class NavigationTarget : Event() {
         val postType: String = StatsConstants.ITEM_TYPE_POST
     ) : NavigationTarget()
 
-    class ViewFollowersStats : NavigationTarget()
-    class ViewCommentsStats : NavigationTarget()
+    data class ViewFollowersStats(val selectedTab: Int) : NavigationTarget()
+    class ViewCommentsStats(val selectedTab: Int) : NavigationTarget()
     class ViewTagsAndCategoriesStats : NavigationTarget()
     class ViewPublicizeStats : NavigationTarget()
     data class ViewTag(val link: String) : NavigationTarget()

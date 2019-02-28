@@ -5,14 +5,12 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
@@ -23,13 +21,11 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -105,18 +101,19 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val tabsItem = (result as BlockList).assertSelectedFollowers(position = 0)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        val tabsItem = result.data!!.assertSelectedFollowers(position = 0)
 
         tabsItem.onTabSelected(1)
 
         val updatedResult = loadFollowers(refresh)
 
-        (updatedResult as BlockList).assertEmptyTabSelected(1)
+        updatedResult.data!!.assertEmptyTabSelected(1)
     }
 
     @Test
     fun `maps email followers to UI model`() = test {
+        val forced = false
         val refresh = true
         whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
@@ -139,12 +136,12 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val tabsItem = (result as BlockList).assertEmptyTabSelected(0)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        val tabsItem = result.data!!.assertEmptyTabSelected(0)
 
         tabsItem.onTabSelected(1)
-        val updatedResult = loadFollowers(refresh)
-        (updatedResult as BlockList).assertSelectedFollowers(position = 1)
+        val updatedResult = loadFollowers(refresh, forced)
+        updatedResult.data!!.assertSelectedFollowers(position = 1)
     }
 
     @Test
@@ -171,8 +168,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).assertEmpty()
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
     }
 
     @Test
@@ -196,10 +192,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh)
 
-        assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     @Test
@@ -223,10 +216,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh)
 
-        assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     @Test
@@ -281,21 +271,21 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val tabsItem = (result as BlockList).assertEmptyTabSelectedViewAllMode(0)
+        assertThat(result.state).isEqualTo(SUCCESS)
+        val tabsItem = result.data!!.assertEmptyTabSelectedViewAllMode(0)
 
         tabsItem.onTabSelected(1)
         var updatedResult = loadFollowers(refresh)
-        val button = (updatedResult as BlockList).assertViewAllFollowersFirstLoad(position = 1)
+        val button = updatedResult.data!!.assertViewAllFollowersFirstLoad(position = 1)
 
         button.navigateAction.click()
         delay(1000)
-        updatedResult = useCase.liveData.value!! as BlockList
-        updatedResult.assertViewAllFollowersSecondLoad()
+        updatedResult = useCase.liveData.value!!
+        updatedResult.data!!.assertViewAllFollowersSecondLoad()
     }
 
-    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean = false): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean = false): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)
@@ -306,57 +296,57 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_followers)
     }
 
-    private fun BlockList.assertViewAllFollowersFirstLoad(position: Int): Link {
-        assertThat(this.items).hasSize(15)
-        assertTitle(this.items[0])
-        val tabsItem = this.items[1] as TabsItem
-        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_followers_wordpress_com)
-        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_followers_email)
+    private fun List<BlockListItem>.assertViewAllFollowersFirstLoad(position: Int): Link {
+        assertThat(this).hasSize(15)
+        assertTitle(this[0])
+        val tabsItem = this[1] as TabsItem
+        assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_followers_wordpress_com)
+        assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_followers_email)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
-        assertThat(this.items[2]).isEqualTo(Information("Total followers count is 50"))
-        assertThat(this.items[3]).isEqualTo(
+        assertThat(this[2]).isEqualTo(Information("Total followers count is 50"))
+        assertThat(this[3]).isEqualTo(
                 Header(
-                        string.stats_follower_label,
-                        string.stats_follower_since_label
+                        R.string.stats_follower_label,
+                        R.string.stats_follower_since_label
                 )
         )
-        val follower = this.items[4] as ListItemWithIcon
+        val follower = this[4] as ListItemWithIcon
         assertThat(follower.iconUrl).isEqualTo(avatar)
         assertThat(follower.iconStyle).isEqualTo(AVATAR)
         assertThat(follower.text).isEqualTo(user)
         assertThat(follower.value).isEqualTo(sinceLabel)
         assertThat(follower.showDivider).isEqualTo(true)
 
-        assertThat(this.items[13] is ListItemWithIcon).isTrue()
+        assertThat(this[13] is ListItemWithIcon).isTrue()
 
-        val button = this.items[14] as Link
+        val button = this[14] as Link
         assertThat(button.text).isEqualTo(R.string.stats_insights_load_more)
 
         return button
     }
 
-    private fun BlockList.assertViewAllFollowersSecondLoad() {
-        assertThat(this.items).hasSize(15)
+    private fun List<BlockListItem>.assertViewAllFollowersSecondLoad() {
+        assertThat(this).hasSize(15)
 
-        val follower = this.items[14] as ListItemWithIcon
+        val follower = this[14] as ListItemWithIcon
         assertThat(follower.showDivider).isEqualTo(false)
     }
 
-    private fun BlockList.assertSelectedFollowers(position: Int): TabsItem {
-        assertThat(this.items).hasSize(5)
-        assertTitle(this.items[0])
-        val tabsItem = this.items[1] as TabsItem
-        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_followers_wordpress_com)
-        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_followers_email)
+    private fun List<BlockListItem>.assertSelectedFollowers(position: Int): TabsItem {
+        assertThat(this).hasSize(5)
+        assertTitle(this[0])
+        val tabsItem = this[1] as TabsItem
+        assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_followers_wordpress_com)
+        assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_followers_email)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
-        assertThat(this.items[2]).isEqualTo(Information("Total followers count is 50"))
-        assertThat(this.items[3]).isEqualTo(
+        assertThat(this[2]).isEqualTo(Information("Total followers count is 50"))
+        assertThat(this[3]).isEqualTo(
                 Header(
-                        string.stats_follower_label,
-                        string.stats_follower_since_label
+                        R.string.stats_follower_label,
+                        R.string.stats_follower_since_label
                 )
         )
-        val follower = this.items[4] as ListItemWithIcon
+        val follower = this[4] as ListItemWithIcon
         assertThat(follower.iconUrl).isEqualTo(avatar)
         assertThat(follower.iconStyle).isEqualTo(AVATAR)
         assertThat(follower.text).isEqualTo(user)
@@ -365,31 +355,32 @@ class FollowersUseCaseTest : BaseUnitTest() {
         return tabsItem
     }
 
-    private fun BlockList.assertEmptyTabSelectedViewAllMode(position: Int): TabsItem {
-        assertThat(this.items).hasSize(4)
-        assertTitle(this.items[0])
-        val tabsItem = this.items[1] as TabsItem
+    private fun List<BlockListItem>.assertEmptyTabSelectedViewAllMode(position: Int): TabsItem {
+        assertThat(this).hasSize(3)
+        assertTitle(this[0])
+        val tabsItem = this[1] as TabsItem
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
-        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_followers_wordpress_com)
-        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_followers_email)
-        assertThat(this.items[2]).isEqualTo(Empty())
+        assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_followers_wordpress_com)
+        assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_followers_email)
+        assertThat(this[2]).isEqualTo(Empty())
         return tabsItem
     }
 
-    private fun BlockList.assertEmptyTabSelected(position: Int): TabsItem {
-        assertThat(this.items).hasSize(3)
-        assertTitle(this.items[0])
-        val tabsItem = this.items[1] as TabsItem
+    private fun List<BlockListItem>.assertEmptyTabSelected(position: Int): TabsItem {
+        assertThat(this).hasSize(3)
+        assertTitle(this[0])
+        val tabsItem = this[1] as TabsItem
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
-        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_followers_wordpress_com)
-        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_followers_email)
-        assertThat(this.items[2]).isEqualTo(Empty())
+        assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_followers_wordpress_com)
+        assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_followers_email)
+        assertThat(this[2]).isEqualTo(Empty())
         return tabsItem
     }
 
-    private fun BlockList.assertEmpty() {
-        assertThat(this.items).hasSize(2)
-        assertTitle(this.items[0])
-        assertThat(this.items[1]).isEqualTo(Empty())
+    private fun UseCaseModel.assertEmpty() {
+        val nonNullData = this.data!!
+        assertThat(nonNullData).hasSize(2)
+        assertTitle(nonNullData[0])
+        assertThat(nonNullData[1]).isEqualTo(Empty())
     }
 }

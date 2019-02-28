@@ -123,7 +123,6 @@ Language: th
     <string name="reader_label_gap_marker">โหลดเรื่องเพิ่มเติม</string>
     <string name="notifications_no_search_results">ไม่มีเว็บใดตรงกับ \'%s\'</string>
     <string name="search_sites">ค้นหาเว็บ</string>
-    <string name="notifications_empty_action_all">ได้การเตือนเสมอ ความเห็นบนเรื่องจากบล็อกที่คุณติดตาม</string>
     <string name="stats_widget_error_jetpack_no_blogid">โปรดเข้าดูสถิติในแอพ และลองเพิ่มวิดเจ็ตภายหลัง</string>
     <string name="stats_widget_error_readd_widget">โปรดลบวิดเจ๊ตออกและลองเพิ่มใหม่อีกครั้ง</string>
     <string name="stats_widget_error_no_visible_blog">สถิติไม่สามารถทำงานโดยไม่มีบล็อกที่มองเห็นได้</string>
