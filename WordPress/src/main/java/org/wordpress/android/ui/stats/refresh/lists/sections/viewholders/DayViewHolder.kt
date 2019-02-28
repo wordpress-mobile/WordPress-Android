@@ -22,7 +22,7 @@ class DayViewHolder(parent: ViewGroup) : ViewHolder(
         )
 ) {
     fun bind(box: Box) {
-        val color = when(box) {
+        val color = when (box) {
             INVISIBLE -> R.color.transparent
             VERY_LOW -> R.color.grey_lighten_20
             LOW -> R.color.stats_low_activity

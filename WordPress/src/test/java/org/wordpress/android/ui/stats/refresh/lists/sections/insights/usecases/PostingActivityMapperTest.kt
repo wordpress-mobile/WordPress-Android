@@ -12,7 +12,7 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import java.util.Locale
 
-class PostingActivityMapperTest: BaseUnitTest() {
+class PostingActivityMapperTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var mapper: PostingActivityMapper
     @Before
@@ -52,7 +52,7 @@ class PostingActivityMapperTest: BaseUnitTest() {
         val days = mutableMapOf<Int, Int>()
         val startDate = Calendar.getInstance()
         startDate.set(2019, Calendar.JANUARY, 1)
-        while(startDate.get(Calendar.MONTH) == Calendar.JANUARY) {
+        while (startDate.get(Calendar.MONTH) == Calendar.JANUARY) {
             val day = startDate.get(Calendar.DAY_OF_MONTH)
             days[day] = 0
             startDate.add(Calendar.DAY_OF_MONTH, 1)

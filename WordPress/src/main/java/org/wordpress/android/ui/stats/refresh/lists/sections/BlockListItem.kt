@@ -172,7 +172,7 @@ sealed class BlockListItem(val type: Type) {
         }
 
         override val itemId: Int
-            get() = blocks.fold(0) {acc, block -> acc + block.label.hashCode() }
+            get() = blocks.fold(0) { acc, block -> acc + block.label.hashCode() }
     }
 
     interface NavigationAction {
