@@ -526,8 +526,8 @@ public class WellSqlConfig extends DefaultWellConfig {
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("ALTER TABLE WCOrderStatsModel ADD IS_CUSTOM_FIELD INTEGER");
                     db.execSQL("ALTER TABLE WCOrderStatsModel ADD DATE TEXT");
-                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD END_DATE TEXT");
-                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD START_DATE TEXT");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD ENDDATE TEXT");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD STARTDATE TEXT");
                     db.execSQL("ALTER TABLE WCOrderStatsModel ADD QUANTITY TEXT");
                     break;
             }
