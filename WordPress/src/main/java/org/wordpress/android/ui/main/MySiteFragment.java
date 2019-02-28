@@ -49,6 +49,7 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
+import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
@@ -108,7 +109,7 @@ public class MySiteFragment extends Fragment implements
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface, MainToolbarFragment,
-        OnConfirmListener {
+        OnConfirmListener, OnDismissListener {
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
@@ -614,6 +615,7 @@ public class MySiteFragment extends Fragment implements
                 new FullScreenDialogFragment.Builder(requireContext())
                         .setTitle(R.string.quick_start_sites_type_customize)
                         .setOnConfirmListener(this)
+                        .setOnDismissListener(this)
                         .setContent(QuickStartFullScreenDialogFragment.class, bundle)
                         .build()
                         .show(requireActivity().getSupportFragmentManager(), FullScreenDialogFragment.TAG);
@@ -622,6 +624,7 @@ public class MySiteFragment extends Fragment implements
                 new FullScreenDialogFragment.Builder(requireContext())
                         .setTitle(R.string.quick_start_sites_type_grow)
                         .setOnConfirmListener(this)
+                        .setOnDismissListener(this)
                         .setContent(QuickStartFullScreenDialogFragment.class, bundle)
                         .build()
                         .show(requireActivity().getSupportFragmentManager(), FullScreenDialogFragment.TAG);
@@ -780,6 +783,11 @@ public class MySiteFragment extends Fragment implements
             mActiveTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(task);
             showActiveQuickStartTutorial();
         }
+    }
+
+    @Override
+    public void onDismiss() {
+        updateQuickStartContainer();
     }
 
     private void startSiteIconUpload(final String filePath) {
