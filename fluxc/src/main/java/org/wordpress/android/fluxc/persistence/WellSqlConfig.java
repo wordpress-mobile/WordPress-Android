@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 55;
+        return 56;
     }
 
     @Override
@@ -442,6 +442,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
+            case 55:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -529,6 +533,21 @@ public class WellSqlConfig extends DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCOrderStatsModel ADD ENDDATE TEXT");
                     db.execSQL("ALTER TABLE WCOrderStatsModel ADD STARTDATE TEXT");
                     db.execSQL("ALTER TABLE WCOrderStatsModel ADD QUANTITY TEXT");
+                    break;
+                case 55:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DROP TABLE IF EXISTS WCOrderStatsModel");
+                    db.execSQL("CREATE TABLE WCOrderStatsModel(\n"
+                               + "  LOCAL_SITE_ID INTEGER,\n"
+                               + "  UNIT TEXT NOT NULL,\n"
+                               + "  DATE TEXT NOT NULL,\n"
+                               + "  START_DATE TEXT NOT NULL,\n"
+                               + "  END_DATE TEXT NOT NULL,\n"
+                               + "  QUANTITY TEXT NOT NULL,\n"
+                               + "  IS_CUSTOM_FIELD INTEGER,\n"
+                               + "  FIELDS TEXT NOT NULL,\n"
+                               + "  DATA TEXT NOT NULL,\n"
+                               + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
             }
         }
