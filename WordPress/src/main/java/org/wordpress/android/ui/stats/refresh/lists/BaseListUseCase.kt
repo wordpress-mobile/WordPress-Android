@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
@@ -32,13 +33,13 @@ class BaseListUseCase(
     private val statsDateFormatter: StatsDateFormatter,
     private val useCases: List<BaseStatsUseCase<*, *>>,
     private val getStatsTypes: suspend () -> List<StatsTypes>,
-    private val mapUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel<List<StatsBlock>>
+    private val mapUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel
 ) {
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
     private val statsTypes = DistinctMutableLiveData<List<StatsTypes>>(listOf())
-    val data: MediatorLiveData<UiModel<List<StatsBlock>>> = mergeNotNull(statsTypes, blockListData) { insights, map ->
+    val data: MediatorLiveData<UiModel> = mergeNotNull(statsTypes, blockListData) { insights, map ->
         insights.mapNotNull {
             if (map.containsKey(it)) {
                 map[it]

@@ -1,16 +1,16 @@
-//package org.wordpress.android.ui.stats.refresh.lists.sections.granular
+// package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 //
-//import android.arch.lifecycle.LiveData
-//import android.arch.lifecycle.MutableLiveData
-//import org.wordpress.android.fluxc.network.utils.StatsGranularity
-//import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-//import javax.inject.Inject
+// import android.arch.lifecycle.LiveData
+// import android.arch.lifecycle.MutableLiveData
+// import org.wordpress.android.fluxc.network.utils.StatsGranularity
+// import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+// import javax.inject.Inject
 //
-//class DateSelectorViewModel
-//@Inject constructor(
-//    private val selectedDateProvider: SelectedDateProvider,
-//    private val dateFormatter: StatsDateFormatter
-//) {
+// class DateSelectorViewModel
+// @Inject constructor(
+//     private val selectedDateProvider: SelectedDateProvider,
+//     private val dateFormatter: StatsDateFormatter
+// ) {
 //    val selectedDateChanged = selectedDateProvider.selectedDateChanged
 //
 //    private val _uiModel = MutableLiveData<DateSelectorUiModel>()
@@ -70,4 +70,4 @@
 //                granularity
 //        )
 //    }
-//}
+// }

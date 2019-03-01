@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 class UiModelMapper
 @Inject constructor(private val networkUtilsWrapper: NetworkUtilsWrapper) {
-    fun mapInsights(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel<List<StatsBlock>> {
+    fun mapInsights(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
         val allFailing = useCaseModels.isNotEmpty() && useCaseModels.fold(true) { acc, useCaseModel ->
             acc && useCaseModel.state == ERROR
         }
@@ -40,7 +41,7 @@ class UiModelMapper
             })
         } else if (!allFailingWithoutData) {
             showError(getErrorMessage())
-            UiModel.Success<List<StatsBlock>>(useCaseModels.map { useCaseModel ->
+            UiModel.Success(useCaseModels.map { useCaseModel ->
                 Error(
                         useCaseModel.type,
                         useCaseModel.data ?: useCaseModel.stateData ?: listOf()
@@ -51,7 +52,7 @@ class UiModelMapper
         }
     }
 
-    fun mapTimeStats(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel<List<StatsBlock>> {
+    fun mapTimeStats(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
         val allFailing = useCaseModels.isNotEmpty() && useCaseModels
                 .fold(true) { acc, useCaseModel ->
                     acc && useCaseModel.state == ERROR
