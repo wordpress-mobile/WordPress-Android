@@ -23,7 +23,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel

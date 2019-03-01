@@ -37,7 +37,7 @@ abstract class StatsListViewModel(
 
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
 
-    val uiModel: LiveData<UiModel> = statsUseCase.data.throttle(this, distinct = true)
+    val uiModel: LiveData<UiModel<List<StatsBlock>>> = statsUseCase.data.throttle(this, distinct = true)
 
     val showDateSelector: LiveData<DateSelectorUiModel> = statsUseCase.showDateSelector.mapNullable {
         it ?: DateSelectorUiModel(false)
@@ -84,8 +84,4 @@ abstract class StatsListViewModel(
         }
     }
 
-    sealed class UiModel {
-        data class Success(val data: List<StatsBlock>) : UiModel()
-        class Error(val message: Int = R.string.stats_loading_error) : UiModel()
-    }
 }
