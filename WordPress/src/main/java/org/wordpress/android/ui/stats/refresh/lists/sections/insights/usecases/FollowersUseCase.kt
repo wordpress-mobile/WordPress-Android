@@ -8,16 +8,17 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CacheMode
-import org.wordpress.android.fluxc.model.stats.FetchMode
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -56,8 +57,8 @@ class FollowersUseCase
 
     override suspend fun loadCachedData(site: SiteModel): Pair<FollowersModel, FollowersModel>? {
         lastSite = site
-        val wpComFollowers = followersStore.getWpComFollowers(site, CacheMode.Top(itemsToLoad))
-        val emailFollowers = followersStore.getEmailFollowers(site, CacheMode.Top(itemsToLoad))
+        val wpComFollowers = followersStore.getWpComFollowers(site, LimitMode.Top(itemsToLoad))
+        val emailFollowers = followersStore.getEmailFollowers(site, LimitMode.Top(itemsToLoad))
         if (wpComFollowers != null && emailFollowers != null) {
             return wpComFollowers to emailFollowers
         }
@@ -68,13 +69,13 @@ class FollowersUseCase
         site: SiteModel,
         forced: Boolean
     ): State<Pair<FollowersModel, FollowersModel>> {
-        return fetchData(site, forced, FetchMode.Paged(itemsToLoad, false))
+        return fetchData(site, forced, PagedMode(itemsToLoad, false))
     }
 
     private suspend fun fetchData(
         site: SiteModel,
         forced: Boolean,
-        fetchMode: FetchMode.Paged
+        fetchMode: PagedMode
     ): State<Pair<FollowersModel, FollowersModel>> {
         lastSite = site
 
@@ -106,7 +107,11 @@ class FollowersUseCase
         val wpComModel = domainModel.first
         val emailModel = domainModel.second
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(string.stats_view_followers))
+
+        if (useCaseMode == BLOCK) {
+            items.add(Title(string.stats_view_followers))
+        }
+
         if (domainModel.first.followers.isNotEmpty() || domainModel.second.followers.isNotEmpty()) {
             items.add(
                     TabsItem(
@@ -178,7 +183,7 @@ class FollowersUseCase
     private fun onLinkClick(uiState: Int) {
         if (useCaseMode == VIEW_ALL) {
             GlobalScope.launch {
-                val state = fetchData(lastSite, true, FetchMode.Paged(itemsToLoad, true))
+                val state = fetchData(lastSite, true, PagedMode(itemsToLoad, true))
                 evaluateState(state)
             }
         } else {

@@ -160,7 +160,7 @@ constructor(
         private val visitsAndViewsStore: VisitsAndViewsStore,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
-        override fun build(granularity: StatsGranularity) =
+        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 OverviewUseCase(
                         granularity,
                         visitsAndViewsStore,

@@ -125,7 +125,7 @@ constructor(
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
-        override fun build(granularity: StatsGranularity) =
+        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 CountryViewsUseCase(
                         granularity,
                         mainDispatcher,

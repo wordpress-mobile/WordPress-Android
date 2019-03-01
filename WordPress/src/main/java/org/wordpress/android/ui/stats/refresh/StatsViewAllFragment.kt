@@ -11,8 +11,8 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.design.widget.TabLayout.Tab
 import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView.LayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +22,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
@@ -46,22 +47,10 @@ class StatsViewAllFragment : DaggerFragment() {
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
-    private var layoutManager: LayoutManager? = null
-
     private val listStateKey = "list_state"
 
     companion object {
         const val SELECTED_TAB_KEY = "selected_tab_key"
-
-        private const val typeKey = "type_key"
-
-        fun newInstance(statsType: StatsViewType): StatsViewAllFragment {
-            val fragment = StatsViewAllFragment()
-            val bundle = Bundle()
-            bundle.putSerializable(typeKey, statsType)
-            fragment.arguments = bundle
-            return fragment
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -69,7 +58,7 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        layoutManager?.let {
+        recyclerView.layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
 
@@ -78,9 +67,13 @@ class StatsViewAllFragment : DaggerFragment() {
             if (intent.hasExtra(WordPress.SITE)) {
                 outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
             }
-            if (intent.hasExtra(WordPress.SITE)) {
+            if (intent.hasExtra(StatsAbstractFragment.ARGS_VIEW_TYPE)) {
                 outState.putSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE,
                         intent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE))
+            }
+            if (intent.hasExtra(StatsAbstractFragment.ARGS_TIMEFRAME)) {
+                outState.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME,
+                        intent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME))
             }
         }
 
@@ -94,8 +87,7 @@ class StatsViewAllFragment : DaggerFragment() {
             layoutManager.onRestoreInstanceState(it)
         }
 
-        this.layoutManager = layoutManager
-        recyclerView.layoutManager = this.layoutManager
+        recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(
                 StatsListItemDecoration(
                         resources.getDimensionPixelSize(dimen.stats_list_card_horizontal_spacing),
@@ -121,6 +113,12 @@ class StatsViewAllFragment : DaggerFragment() {
         initializeViewModels(nonNullActivity, savedInstanceState)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        (activity as AppCompatActivity).supportActionBar?.title = getString(viewModel.title)
+    }
+
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
@@ -136,26 +134,15 @@ class StatsViewAllFragment : DaggerFragment() {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
         }
 
-        val clazz = when (type) {
-            StatsViewType.FOLLOWERS -> StatsViewAllFollowersViewModel::class.java
-            StatsViewType.COMMENTS -> StatsViewAllCommentsViewModel::class.java
-            StatsViewType.TAGS_AND_CATEGORIES -> StatsViewAllTagsAndCategoriesViewModel::class.java
-            StatsViewType.INSIGHTS_ALL_TIME -> TODO()
-            StatsViewType.INSIGHTS_LATEST_POST_SUMMARY -> TODO()
-            StatsViewType.INSIGHTS_MOST_POPULAR -> TODO()
-            StatsViewType.INSIGHTS_TODAY -> TODO()
-            StatsViewType.PUBLICIZE -> TODO()
-            StatsViewType.TOP_POSTS_AND_PAGES -> TODO()
-            StatsViewType.REFERRERS -> TODO()
-            StatsViewType.CLICKS -> TODO()
-            StatsViewType.AUTHORS -> TODO()
-            StatsViewType.GEOVIEWS -> TODO()
-            StatsViewType.SEARCH_TERMS -> TODO()
-            StatsViewType.VIDEO_PLAYS -> TODO()
-            else -> throw IllegalStateException("View all screen: Unsupported use case type: ${type.name}")
+        val granularity = if (savedInstanceState == null) {
+            val nonNullIntent = checkNotNull(activity.intent)
+            nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
+        } else {
+            savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         }
 
-        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(clazz)
+        val viewModelType = StatsViewAllViewModel.get(type, granularity)
+        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(viewModelType)
         setupObservers(site, activity)
         viewModel.start(site)
     }
