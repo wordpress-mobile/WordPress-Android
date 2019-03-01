@@ -11,12 +11,15 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.M
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse.Discussion
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse.Service
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse.Service
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse.Streak
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse.Streaks
 import java.util.Date
 
 val DATE = Date(10)
@@ -142,3 +145,9 @@ val TAGS_RESPONSE = TagsResponse(
                 FIRST_TAG,
                 SECOND_TAG
         ))))
+val POSTING_ACTIVITY_RESPONSE = PostingActivityResponse(
+        Streaks(
+                Streak("2018-01-01", "2018-02-01", 20),
+                Streak("2018-02-01", "2018-04-01", 100)
+        ), mapOf(100L to 1, 200L to 1)
+)
