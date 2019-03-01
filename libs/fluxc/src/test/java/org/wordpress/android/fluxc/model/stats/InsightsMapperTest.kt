@@ -8,7 +8,12 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse.Streak
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse.Streaks
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.store.stats.ALL_TIME_RESPONSE
 import org.wordpress.android.fluxc.store.stats.COMMENT_COUNT
 import org.wordpress.android.fluxc.store.stats.FIRST_DAY
@@ -24,15 +29,18 @@ import org.wordpress.android.fluxc.store.stats.SECOND_DAY_VIEWS
 import org.wordpress.android.fluxc.store.stats.VIEWS
 import org.wordpress.android.fluxc.store.stats.VISITS_DATE
 import org.wordpress.android.fluxc.store.stats.VISITS_RESPONSE
+import java.util.Calendar
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class InsightsMapperTest {
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var mapper: InsightsMapper
     private val siteId = 3L
     @Before
     fun setUp() {
-        mapper = InsightsMapper()
+        mapper = InsightsMapper(statsUtils)
         whenever(site.siteId).thenReturn(siteId)
     }
 
@@ -64,7 +72,8 @@ class InsightsMapperTest {
     fun `maps latest posts response`() {
         val model = mapper.map(
                 LATEST_POST,
-                POST_STATS_RESPONSE, site)
+                POST_STATS_RESPONSE, site
+        )
 
         assertThat(model.siteId).isEqualTo(siteId)
         assertThat(model.postTitle).isEqualTo(LATEST_POST.title)
@@ -96,5 +105,45 @@ class InsightsMapperTest {
 
         assertThat(model.views).isEqualTo(10)
         assertThat(model.comments).isEqualTo(0)
+    }
+
+    @Test
+    fun `maps posting activity and crops by start and end date`() {
+        val startDay = Day(2019, 1, 20)
+        val endDay = Day(2019, 2, 5)
+        val dayBeforeStart = Calendar.getInstance()
+        dayBeforeStart.set(2019, 1, 19)
+        val dateOnStart = Calendar.getInstance()
+        dateOnStart.set(2019, 1, 20)
+        val dateOnEnd = Calendar.getInstance()
+        dateOnEnd.set(2019, 2, 5)
+        val dayAfterEnd = Calendar.getInstance()
+        dayAfterEnd.set(2019, 2, 6)
+        val postCount = 2
+        val date = "2010-10-11"
+        val formattedDate = Date(123)
+        whenever(statsUtils.fromFormattedDate(date)).thenReturn(formattedDate)
+        val longStreak = Streak(date, date, 150)
+        val currentStreak = Streak(date, date, 150)
+        val response = PostingActivityResponse(
+                Streaks(longStreak, currentStreak),
+                mapOf(
+                        dayBeforeStart.timeInMillis / 1000 to 1,
+                        dateOnStart.timeInMillis / 1000 to postCount,
+                        dateOnEnd.timeInMillis / 1000 to postCount,
+                        dayAfterEnd.timeInMillis / 1000 to 3
+                )
+        )
+        val model = mapper.map(response, startDay, endDay)
+
+        assertThat(model.months).hasSize(2)
+        assertThat(model.months[0].days[20]).isEqualTo(postCount)
+        assertThat(model.months[1].days[5]).isEqualTo(postCount)
+        assertThat(model.streak.longestStreakStart).isEqualTo(formattedDate)
+        assertThat(model.streak.longestStreakEnd).isEqualTo(formattedDate)
+        assertThat(model.streak.longestStreakLength).isEqualTo(longStreak.length)
+        assertThat(model.streak.currentStreakStart).isEqualTo(formattedDate)
+        assertThat(model.streak.currentStreakEnd).isEqualTo(formattedDate)
+        assertThat(model.streak.currentStreakLength).isEqualTo(currentStreak.length)
     }
 }
