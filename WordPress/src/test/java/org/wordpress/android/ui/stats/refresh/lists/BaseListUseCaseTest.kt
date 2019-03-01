@@ -14,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import java.util.Date
 
@@ -21,6 +22,7 @@ class BaseListUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsSectionManager: SelectedSectionManager
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock lateinit var siteModelProvider: SiteModelProvider
     private val selectedDate = Date(0)
     private val selectedDateLabel = "Jan 1"
     private lateinit var useCase: BaseListUseCase
@@ -32,6 +34,7 @@ class BaseListUseCaseTest : BaseUnitTest() {
                 statsSectionManager,
                 selectedDateProvider,
                 statsDateFormatter,
+                siteModelProvider,
                 listOf(),
                 { listOf() },
                 { _, _ -> UiModel.Error() }

@@ -81,7 +81,7 @@ class BaseListUseCase(
                 if (PackageUtils.isDebugBuild() && useCases.distinctBy { it.type }.size < useCases.size) {
                     throw RuntimeException("Duplicate stats type in a use case")
                 }
-                useCases.forEach { block -> launch { block.fetch(siteModelProvider.siteModel, refresh, forced) } }
+                useCases.forEach { block -> launch { block.fetch(refresh, forced) } }
                 val items = getStatsTypes()
                 withContext(mainDispatcher) {
                     statsTypes.value = items
@@ -98,6 +98,11 @@ class BaseListUseCase(
         blockListData.value = null
         useCases.forEach { it.clear() }
         data.value = null
+    }
+
+    suspend fun onDateChanged(statsGranularity: StatsGranularity?) {
+        updateDateSelector(statsGranularity)
+        refreshData()
     }
 
     fun updateDateSelector(statsGranularity: StatsGranularity?) {

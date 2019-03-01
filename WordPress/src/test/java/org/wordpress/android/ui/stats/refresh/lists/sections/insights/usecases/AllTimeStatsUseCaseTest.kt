@@ -23,11 +23,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 
 class AllTimeStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock lateinit var siteModelProvider: SiteModelProvider
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: AllTimeStatsUseCase
     private val bestDay = "2018-11-25"
@@ -37,8 +39,10 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         useCase = AllTimeStatsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
+                siteModelProvider,
                 statsDateFormatter
         )
+        whenever(siteModelProvider.siteModel).thenReturn(site)
     }
 
     @Test
@@ -223,7 +227,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
     private suspend fun loadAllTimeInsights(refresh: Boolean, forced: Boolean): UseCaseModel {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
@@ -12,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -21,16 +21,17 @@ class AllTimeStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
+    private val siteModelProvider: SiteModelProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_all_time_stats))
 
-    override suspend fun loadCachedData(site: SiteModel): InsightsAllTimeModel? {
-        return insightsStore.getAllTimeInsights(site)
+    override suspend fun loadCachedData(): InsightsAllTimeModel? {
+        return insightsStore.getAllTimeInsights(siteModelProvider.siteModel)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<InsightsAllTimeModel> {
-        val response = insightsStore.fetchAllTimeInsights(site, forced)
+    override suspend fun fetchRemoteData(forced: Boolean): State<InsightsAllTimeModel> {
+        val response = insightsStore.fetchAllTimeInsights(siteModelProvider.siteModel, forced)
         val model = response.model
         val error = response.error
 

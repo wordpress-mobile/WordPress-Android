@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
@@ -21,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -34,10 +34,11 @@ class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
+    private val siteModelProvider: SiteModelProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<CommentsModel> {
-        val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
+    override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
+        val response = insightsStore.fetchComments(siteModelProvider.siteModel, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
@@ -48,8 +49,8 @@ class CommentsUseCase
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel): CommentsModel? {
-        return insightsStore.getComments(site, PAGE_SIZE)
+    override suspend fun loadCachedData(): CommentsModel? {
+        return insightsStore.getComments(siteModelProvider.siteModel, PAGE_SIZE)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_comments))
@@ -123,6 +124,6 @@ class CommentsUseCase
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_COMMENTS_VIEW_MORE_TAPPED)
-        navigateTo(ViewCommentsStats())
+        navigateTo(ViewCommentsStats(siteModelProvider.siteModel))
     }
 }

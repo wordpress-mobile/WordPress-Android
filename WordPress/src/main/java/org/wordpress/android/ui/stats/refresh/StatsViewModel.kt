@@ -108,12 +108,8 @@ class StatsViewModel
         _showSnackbarMessage.value = null
         siteModelProvider.clear()
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            if (siteModelProvider.hasLoadedSite()) {
-                loadData {
-                    listUseCases[statsSectionManager.getSelectedSection()]?.refreshData(true)
-                }
-            } else {
-                _showSnackbarMessage.value = SnackbarMessageHolder(R.string.stats_site_not_loaded_yet)
+            loadData {
+                listUseCases[statsSectionManager.getSelectedSection()]?.refreshData(true)
             }
         } else {
             _isRefreshing.value = false
@@ -123,10 +119,7 @@ class StatsViewModel
 
     fun onSelectedDateChange(statsGranularity: StatsGranularity) {
         launch {
-            listUseCases[statsGranularity.toStatsSection()]?.let {
-                it.updateDateSelector(statsGranularity)
-                it.refreshData()
-            }
+            listUseCases[statsGranularity.toStatsSection()]?.onDateChanged(statsGranularity)
         }
     }
 

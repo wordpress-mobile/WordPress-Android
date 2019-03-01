@@ -28,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularSt
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.SelectedGroup
+import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -42,11 +43,13 @@ constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val referrersStore: ReferrersStore,
+    siteModelProvider: SiteModelProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
         REFERRERS,
         mainDispatcher,
+        siteModelProvider,
         selectedDateProvider,
         statsGranularity,
         SelectedGroup()
@@ -162,7 +165,8 @@ constructor(
         navigateTo(
                 ViewReferrers(
                         statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date(),
+                        siteModelProvider.siteModel
                 )
         )
     }
@@ -178,6 +182,7 @@ constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val referrersStore: ReferrersStore,
+        private val siteModelProvider: SiteModelProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
@@ -186,6 +191,7 @@ constructor(
                         granularity,
                         mainDispatcher,
                         referrersStore,
+                        siteModelProvider,
                         selectedDateProvider,
                         analyticsTracker
                 )

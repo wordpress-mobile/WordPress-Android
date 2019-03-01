@@ -52,7 +52,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     fun `on fetch loads data from DB when current value is null`() = test {
         assertThat(result).isEmpty()
 
-        block.fetch(site, false, false)
+        block.fetch(false, false)
 
         assertData(1, localData)
     }
@@ -62,7 +62,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         assertThat(result).isEmpty()
         whenever(localDataProvider.get()).thenReturn(null)
 
-        block.fetch(site, false, false)
+        block.fetch(false, false)
 
         assertThat(result).startsWith(loadingBlock)
     }
@@ -71,7 +71,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     fun `on refresh calls loads data from DB and later from API`() = test {
         assertThat(result).isEmpty()
 
-        block.fetch(site, true, false)
+        block.fetch(true, false)
 
         assertThat(result.size).isEqualTo(4)
         assertThat(result[0]?.state).isEqualTo(UseCaseState.LOADING)
@@ -82,7 +82,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `live data value is cleared`() = test {
-        block.fetch(site, false, false)
+        block.fetch(false, false)
 
         assertData(1, localData)
 
@@ -119,11 +119,11 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
             return listOf(Text(domainModel))
         }
 
-        override suspend fun loadCachedData(site: SiteModel): String? {
+        override suspend fun loadCachedData(): String? {
             return localDataProvider.get()
         }
 
-        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<String> {
+        override suspend fun fetchRemoteData(forced: Boolean): State<String> {
             val domainModel = remoteDataProvider.get()
             return if (domainModel != null) {
                 State.Data(domainModel)

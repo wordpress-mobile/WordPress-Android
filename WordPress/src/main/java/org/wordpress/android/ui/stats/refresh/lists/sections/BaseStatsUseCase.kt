@@ -6,7 +6,6 @@ import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
@@ -64,7 +63,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param refresh is true when we want to get the remote data
      * @param forced is true when we want to get fresh data and skip the cache
      */
-    suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
+    suspend fun fetch(refresh: Boolean, forced: Boolean) {
         val firstLoad = domainModel.value == null
         var emptyDb = false
         if (firstLoad) {
@@ -73,7 +72,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             }
         }
         if (firstLoad || domainState.value == LOADING) {
-            val cachedData = loadCachedData(site)
+            val cachedData = loadCachedData()
             withContext(mainDispatcher) {
                 if (cachedData != null) {
                     domainModel.value = cachedData
@@ -86,7 +85,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             withContext(mainDispatcher) {
                 updateUseCaseState(LOADING)
             }
-            val state = fetchRemoteData(site, forced)
+            val state = fetchRemoteData(forced)
             withContext(mainDispatcher) {
                 val useCaseState = when (state) {
                     is Error -> ERROR
@@ -148,14 +147,14 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * Loads data from a local cache. Returns a null value when the cache is empty.
      * @param site for which we load the data
      */
-    protected abstract suspend fun loadCachedData(site: SiteModel): DOMAIN_MODEL?
+    protected abstract suspend fun loadCachedData(): DOMAIN_MODEL?
 
     /**
      * Fetches remote data from the endpoint.
      * @param site for which we fetch the data
      * @param forced is true when we want to get the fresh data
      */
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<DOMAIN_MODEL>
+    protected abstract suspend fun fetchRemoteData(forced: Boolean): State<DOMAIN_MODEL>
 
     /**
      * Transforms given domain model and ui state into the UI model
