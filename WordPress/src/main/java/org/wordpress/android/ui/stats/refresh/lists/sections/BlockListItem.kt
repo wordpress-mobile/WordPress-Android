@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
@@ -45,6 +46,7 @@ sealed class BlockListItem(val type: Type) {
         MAP,
         EXPANDABLE_ITEM,
         DIVIDER,
+        LOADING_ITEM,
         ACTIVITY_ITEM
     }
 
@@ -164,6 +166,8 @@ sealed class BlockListItem(val type: Type) {
     data class MapItem(val mapData: String, @StringRes val label: Int) : BlockListItem(MAP)
 
     object Divider : BlockListItem(DIVIDER)
+
+    data class LoadingItem(val loadMore: () -> Unit, var isLoading: Boolean = false) : BlockListItem(LOADING_ITEM)
 
     data class ActivityItem(val blocks: List<Block>) : BlockListItem(ACTIVITY_ITEM) {
         data class Block(val label: String, val boxes: List<Box>)
