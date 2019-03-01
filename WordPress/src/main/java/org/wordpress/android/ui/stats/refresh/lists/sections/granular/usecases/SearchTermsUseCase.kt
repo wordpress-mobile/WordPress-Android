@@ -39,7 +39,13 @@ constructor(
     selectedDateProvider: SelectedDateProvider,
     siteModelProvider: SiteModelProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
-) : GranularStatelessUseCase<SearchTermsModel>(SEARCH_TERMS, mainDispatcher, selectedDateProvider, siteModelProvider, statsGranularity) {
+) : GranularStatelessUseCase<SearchTermsModel>(
+        SEARCH_TERMS,
+        mainDispatcher,
+        selectedDateProvider,
+        siteModelProvider,
+        statsGranularity
+) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_search_terms))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): SearchTermsModel? {

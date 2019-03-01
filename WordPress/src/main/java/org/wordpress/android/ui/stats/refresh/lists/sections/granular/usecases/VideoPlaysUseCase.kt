@@ -40,7 +40,13 @@ constructor(
     selectedDateProvider: SelectedDateProvider,
     siteModelProvider: SiteModelProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
-) : GranularStatelessUseCase<VideoPlaysModel>(VIDEOS, mainDispatcher, selectedDateProvider, siteModelProvider, statsGranularity) {
+) : GranularStatelessUseCase<VideoPlaysModel>(
+        VIDEOS,
+        mainDispatcher,
+        selectedDateProvider,
+        siteModelProvider,
+        statsGranularity
+) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(string.stats_videos))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): VideoPlaysModel? {
