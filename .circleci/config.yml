@@ -43,10 +43,14 @@ jobs:
           command: $GRADLEW checkstyle
       - run:
           name: ktlint
-          command: $GRADLEW ktlint
+          command: $GRADLEW ciktlint
       - run:
           name: Lint
           command: $GRADLEW lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+      - run:
+          name: Violations
+          when: on_fail
+          command: $GRADLEW violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$DANGER_GITHUB_API_TOKEN
       - android/save-gradle-cache:
           cache-prefix: lint-cache
       - store_artifacts:

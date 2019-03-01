@@ -78,7 +78,7 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun emitNullOnInitialTagChanged() {
-        viewModel.start(otherTag)
+        viewModel.start( otherTag    )
         // propagates the item since the card hasn't been shown yet
         liveData.postValue(item)
         viewModel.onTagChanged(initialTag)

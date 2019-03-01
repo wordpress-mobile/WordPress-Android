@@ -2,11 +2,13 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'io.fabric.tools:gradle:1.27.0'
         classpath 'com.google.gms:google-services:3.2.0'
+        classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.51'
     }
 }
 
@@ -24,6 +26,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
+apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
@@ -309,6 +312,34 @@ android.buildTypes.all { buildType ->
         println("WARNING: You're using the example google-services.json file. Google login will fail.")
     }
 }
+
+task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
+   repositoryOwner = "wordpress-mobile";
+   repositoryName = "WordPress-Android"
+   pullRequestId = System.properties['GITHUB_PULLREQUESTID']
+   username = System.properties['GITHUB_USERNAME']
+   password = System.properties['GITHUB_PASSWORD']
+   oAuth2Token = System.properties['GITHUB_OAUTH2TOKEN']
+   gitHubUrl = "https://api.github.com/"
+   createCommentWithAllSingleFileComments = false
+   createSingleFileComments = true
+   commentOnlyChangedContent = true
+   minSeverity = se.bjurr.violations.lib.model.SEVERITY.INFO //ERROR, INFO, WARN
+   commentTemplate = """
+**Reporter**: {{violation.reporter}}{{#violation.rule}}
+
+**Rule**: {{violation.rule}}{{/violation.rule}}
+**Severity**: {{violation.severity}}
+**File**: {{violation.file}} L{{violation.startLine}}{{#violation.source}}
+
+**Source**: {{violation.source}}{{/violation.source}}
+
+{{violation.message}}
+"""
+   violations = [
+    ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
+   ]
+  }
 
 def checkGradlePropertiesFile() {
     def inputFile = file("${rootDir}/gradle.properties")
