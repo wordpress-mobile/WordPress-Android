@@ -64,6 +64,11 @@ public class WPSupportUtils {
         onView(withId(elementID)).perform(click());
     }
 
+    public static void clickOn(ViewInteraction element) {
+        waitForElementToBeDisplayed(element);
+        element.perform(click());
+    }
+
     public static void clickOnChildAtIndex(int index, int parentElementID, int childElementID) {
         final ViewInteraction childElement = onView(
                 allOf(
@@ -91,6 +96,12 @@ public class WPSupportUtils {
         onView(withId(elementID))
                 .perform(replaceText(text))
                 .perform(closeSoftKeyboard());
+    }
+
+    public static void populateTextField(ViewInteraction element, String text) {
+        waitForElementToBeDisplayed(element);
+        element.perform(replaceText(text))
+               .perform(closeSoftKeyboard());
     }
 
     public static void focusEditPostTitle() {

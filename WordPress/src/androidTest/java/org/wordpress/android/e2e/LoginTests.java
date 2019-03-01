@@ -26,4 +26,11 @@ public class LoginTests extends BaseTest {
 
         new LoginFlow().loginMagicLink();
     }
+
+    @Test
+    public void loginWithSelfHostedAccount() {
+        logoutIfNecessary();
+
+        new LoginFlow().loginSiteAddress();
+    }
 }

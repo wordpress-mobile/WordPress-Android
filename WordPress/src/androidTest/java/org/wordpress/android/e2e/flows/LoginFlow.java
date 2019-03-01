@@ -1,12 +1,22 @@
 package org.wordpress.android.e2e.flows;
 
+import android.support.test.espresso.ViewInteraction;
+import android.view.View;
+
+import org.hamcrest.Matcher;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MePage;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.Matchers.allOf;
+import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_PASSWORD;
+import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_USERNAME;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
-import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
+import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
@@ -41,6 +51,11 @@ public class LoginFlow {
     }
 
     private void confirmLogin() {
+        // TODO: Click continue if necessary
+        if (isElementDisplayed(R.id.primary_button)) {
+            clickOn(R.id.primary_button);
+        }
+
         waitForElementToBeDisplayed(R.id.nav_me);
     }
 
@@ -55,6 +70,19 @@ public class LoginFlow {
         // TODO: Continue flow after mocking complete
     }
 
+    private void enterUsernameAndPassword() {
+        clickOn(R.id.input);
+        populateTextField(R.id.input, E2E_SELF_HOSTED_USER_USERNAME + "\n");
+        populateTextField(R.id.input, E2E_SELF_HOSTED_USER_PASSWORD + "\n");
+        clickOn(R.id.primary_button);
+    }
+
+    private void chooseAndEnterSiteAddress() {
+        clickOn(onView(withText(R.string.enter_site_address_instead)));
+        populateTextField(R.id.input, E2E_SELF_HOSTED_USER_SITE_ADDRESS);
+        clickOn(R.id.primary_button);
+    }
+
     public void loginEmailPassword() {
         chooseLogin();
         enterEmailAddress();
@@ -66,5 +94,12 @@ public class LoginFlow {
         chooseLogin();
         enterEmailAddress();
         chooseMagicLink();
+    }
+
+    public void loginSiteAddress() {
+        chooseLogin();
+        chooseAndEnterSiteAddress();
+        enterUsernameAndPassword();
+        confirmLogin();
     }
 }
