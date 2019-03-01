@@ -297,38 +297,37 @@ class FollowersUseCaseTest : BaseUnitTest() {
     }
 
     private fun List<BlockListItem>.assertViewAllFollowersFirstLoad(position: Int): Link {
-        assertThat(this).hasSize(15)
-        assertTitle(this[0])
-        val tabsItem = this[1] as TabsItem
+        assertThat(this).hasSize(14)
+        val tabsItem = this[0] as TabsItem
         assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_followers_wordpress_com)
         assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_followers_email)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
-        assertThat(this[2]).isEqualTo(Information("Total followers count is 50"))
-        assertThat(this[3]).isEqualTo(
+        assertThat(this[1]).isEqualTo(Information("Total followers count is 50"))
+        assertThat(this[2]).isEqualTo(
                 Header(
                         R.string.stats_follower_label,
                         R.string.stats_follower_since_label
                 )
         )
-        val follower = this[4] as ListItemWithIcon
+        val follower = this[3] as ListItemWithIcon
         assertThat(follower.iconUrl).isEqualTo(avatar)
         assertThat(follower.iconStyle).isEqualTo(AVATAR)
         assertThat(follower.text).isEqualTo(user)
         assertThat(follower.value).isEqualTo(sinceLabel)
         assertThat(follower.showDivider).isEqualTo(true)
 
-        assertThat(this[13] is ListItemWithIcon).isTrue()
+        assertThat(this[12] is ListItemWithIcon).isTrue()
 
-        val button = this[14] as Link
+        val button = this[13] as Link
         assertThat(button.text).isEqualTo(R.string.stats_insights_load_more)
 
         return button
     }
 
     private fun List<BlockListItem>.assertViewAllFollowersSecondLoad() {
-        assertThat(this).hasSize(15)
+        assertThat(this).hasSize(14)
 
-        val follower = this[14] as ListItemWithIcon
+        val follower = this[13] as ListItemWithIcon
         assertThat(follower.showDivider).isEqualTo(false)
     }
 
@@ -356,13 +355,12 @@ class FollowersUseCaseTest : BaseUnitTest() {
     }
 
     private fun List<BlockListItem>.assertEmptyTabSelectedViewAllMode(position: Int): TabsItem {
-        assertThat(this).hasSize(3)
-        assertTitle(this[0])
-        val tabsItem = this[1] as TabsItem
+        assertThat(this).hasSize(2)
+        val tabsItem = this[0] as TabsItem
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
         assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_followers_wordpress_com)
         assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_followers_email)
-        assertThat(this[2]).isEqualTo(Empty())
+        assertThat(this[1]).isEqualTo(Empty())
         return tabsItem
     }
 
@@ -375,12 +373,5 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_followers_email)
         assertThat(this[2]).isEqualTo(Empty())
         return tabsItem
-    }
-
-    private fun UseCaseModel.assertEmpty() {
-        val nonNullData = this.data!!
-        assertThat(nonNullData).hasSize(2)
-        assertTitle(nonNullData[0])
-        assertThat(nonNullData[1]).isEqualTo(Empty())
     }
 }

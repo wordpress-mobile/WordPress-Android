@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
@@ -23,6 +24,7 @@ import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -55,7 +57,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 store,
                 selectedDateProvider,
-                tracker
+                tracker,
+                BLOCK
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
@@ -74,8 +77,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(pageSize),
                         selectedDate,
                         forced
                 )
@@ -95,8 +98,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(pageSize),
                         selectedDate,
                         forced
                 )
@@ -122,8 +125,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(pageSize),
                         selectedDate,
                         forced
                 )
@@ -156,8 +159,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(pageSize),
                         selectedDate,
                         forced
                 )
@@ -190,8 +193,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(pageSize),
                         selectedDate,
                         forced
                 )
@@ -223,8 +226,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(pageSize),
                         selectedDate,
                         forced
                 )
@@ -255,8 +258,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(pageSize),
                         selectedDate,
                         forced
                 )
