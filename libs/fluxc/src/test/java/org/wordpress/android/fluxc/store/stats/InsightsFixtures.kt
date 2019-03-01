@@ -155,3 +155,9 @@ val TAGS_RESPONSE = TagsResponse(
                 FIRST_TAG,
                 SECOND_TAG
         ))))
+val POSTING_ACTIVITY_RESPONSE = PostingActivityResponse(
+        Streaks(
+                Streak("2018-01-01", "2018-02-01", 20),
+                Streak("2018-02-01", "2018-04-01", 100)
+        ), mapOf(100L to 1, 200L to 1)
+)
