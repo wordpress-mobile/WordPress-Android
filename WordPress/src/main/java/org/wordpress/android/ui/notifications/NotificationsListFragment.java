@@ -127,11 +127,16 @@ public class NotificationsListFragment extends Fragment implements
         mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
         mConnectJetpackView = view.findViewById(R.id.connect_jetpack);
         mTabLayout = view.findViewById(R.id.tab_layout);
-        mTabLayout.addTab(mTabLayout.newTab().setText(FILTERS.FILTER_ALL.toString()), TAB_POSITION_ALL);
-        mTabLayout.addTab(mTabLayout.newTab().setText(FILTERS.FILTER_UNREAD.toString()), TAB_POSITION_UNREAD);
-        mTabLayout.addTab(mTabLayout.newTab().setText(FILTERS.FILTER_COMMENT.toString()), TAB_POSITION_COMMENT);
-        mTabLayout.addTab(mTabLayout.newTab().setText(FILTERS.FILTER_FOLLOW.toString()), TAB_POSITION_FOLLOW);
-        mTabLayout.addTab(mTabLayout.newTab().setText(FILTERS.FILTER_LIKE.toString()), TAB_POSITION_LIKE);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.notifications_tab_title_all)),
+                TAB_POSITION_ALL);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.notifications_tab_title_unread)),
+                TAB_POSITION_UNREAD);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.notifications_tab_title_comments)),
+                TAB_POSITION_COMMENT);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.notifications_tab_title_follows)),
+                TAB_POSITION_FOLLOW);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.notifications_tab_title_likes)),
+                TAB_POSITION_LIKE);
         mTabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
             @Override
             public void onTabSelected(Tab tab) {
