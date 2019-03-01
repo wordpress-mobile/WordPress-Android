@@ -183,4 +183,10 @@
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:drawableStart">@drawable/shape_rectangle_blue_dark</item>
     </style>
+
+    <style name="StatsList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
 </resources>

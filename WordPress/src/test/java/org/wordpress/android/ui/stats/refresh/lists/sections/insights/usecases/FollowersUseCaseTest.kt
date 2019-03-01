@@ -374,11 +374,4 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(this[2]).isEqualTo(Empty())
         return tabsItem
     }
-
-    private fun UseCaseModel.assertEmpty() {
-        val nonNullData = this.data!!
-        assertThat(nonNullData).hasSize(2)
-        assertTitle(nonNullData[0])
-        assertThat(nonNullData[1]).isEqualTo(Empty())
-    }
 }
