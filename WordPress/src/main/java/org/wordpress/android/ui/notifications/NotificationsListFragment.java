@@ -114,7 +114,7 @@ public class NotificationsListFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
         mShouldRefreshNotifications = true;
     }
 
@@ -328,7 +328,7 @@ public class NotificationsListFragment extends Fragment implements
 
     private NotesAdapter getNotesAdapter() {
         if (mNotesAdapter == null) {
-            mNotesAdapter = new NotesAdapter(getActivity(), this, null);
+            mNotesAdapter = new NotesAdapter(requireActivity(), this, null);
             mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
         }
 
