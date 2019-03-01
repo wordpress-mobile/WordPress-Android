@@ -28,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase.CommentsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -189,7 +190,7 @@ class StatsViewAllTagsAndCategoriesViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
-    useCaseFactory: FollowersUseCaseFactory
+    useCaseFactory: TagsAndCategoriesUseCaseFactory
 ) : StatsViewAllViewModel(
         mainDispatcher,
         bgDispatcher,
