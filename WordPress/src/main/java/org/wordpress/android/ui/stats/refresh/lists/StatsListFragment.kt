@@ -173,11 +173,11 @@ class StatsListFragment : DaggerFragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
-        setupObservers(activity, site)
-        viewModel.start(site)
+        setupObservers(activity)
+        viewModel.start()
     }
 
-    private fun setupObservers(activity: FragmentActivity, site: SiteModel) {
+    private fun setupObservers(activity: FragmentActivity) {
         viewModel.uiModel.observe(this, Observer {
             if (it != null) {
                 when (it) {
@@ -188,7 +188,7 @@ class StatsListFragment : DaggerFragment() {
                         recyclerView.visibility = View.GONE
                         actionable_error_view.visibility = View.VISIBLE
                         actionable_error_view.button.setOnClickListener {
-                            viewModel.onRetryClick(site)
+                            viewModel.onRetryClick()
                         }
                     }
                 }

@@ -6,7 +6,7 @@ import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -16,6 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.DistinctMutableLiveData
 import org.wordpress.android.util.PackageUtils
@@ -30,6 +31,7 @@ class BaseListUseCase(
     private val statsSectionManager: SelectedSectionManager,
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
+    private val siteModelProvider: SiteModelProvider,
     private val useCases: List<BaseStatsUseCase<*, *>>,
     private val getStatsTypes: suspend () -> List<StatsTypes>,
     private val mapUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel
@@ -65,24 +67,28 @@ class BaseListUseCase(
         SnackbarMessageHolder(it)
     }
 
-    suspend fun loadData(site: SiteModel) {
-        loadData(site, refresh = false, forced = false)
+    suspend fun loadData() {
+        loadData(refresh = false, forced = false)
     }
 
-    suspend fun refreshData(site: SiteModel, forced: Boolean = false) {
-        loadData(site, true, forced)
+    suspend fun refreshData(forced: Boolean = false) {
+        loadData(true, forced)
     }
 
-    private suspend fun loadData(site: SiteModel, refresh: Boolean, forced: Boolean) {
-        withContext(bgDispatcher) {
-            if (PackageUtils.isDebugBuild() && useCases.distinctBy { it.type }.size < useCases.size) {
-                throw RuntimeException("Duplicate stats type in a use case")
+    private suspend fun loadData(refresh: Boolean, forced: Boolean) {
+        if (siteModelProvider.hasLoadedSite()) {
+            withContext(bgDispatcher) {
+                if (PackageUtils.isDebugBuild() && useCases.distinctBy { it.type }.size < useCases.size) {
+                    throw RuntimeException("Duplicate stats type in a use case")
+                }
+                useCases.forEach { block -> launch { block.fetch(siteModelProvider.siteModel, refresh, forced) } }
+                val items = getStatsTypes()
+                withContext(mainDispatcher) {
+                    statsTypes.value = items
+                }
             }
-            useCases.forEach { block -> launch { block.fetch(site, refresh, forced) } }
-            val items = getStatsTypes()
-            withContext(mainDispatcher) {
-                statsTypes.value = items
-            }
+        } else {
+            mutableSnackbarMessage.value = R.string.stats_site_not_loaded_yet
         }
     }
 
