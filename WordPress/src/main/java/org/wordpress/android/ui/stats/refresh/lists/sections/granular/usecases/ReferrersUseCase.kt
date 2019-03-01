@@ -137,7 +137,6 @@ constructor(
                         items.add(Divider)
                     }
                 }
-                null
             }
 
             if (domainModel.hasMore) {
