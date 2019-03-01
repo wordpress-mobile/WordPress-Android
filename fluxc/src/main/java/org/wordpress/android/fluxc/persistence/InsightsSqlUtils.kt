@@ -10,9 +10,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.F
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.ALL_TIME_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COMMENTS_INSIGHTS
@@ -20,8 +21,9 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAIL_FOL
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_STATS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TAGS_AND_CATEGORIES_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TAGS_AND_CATEGORIES_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TODAYS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.WP_COM_FOLLOWERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.INSIGHTS
@@ -67,6 +69,10 @@ class InsightsSqlUtils
         insert(site, PUBLICIZE_INSIGHTS, data)
     }
 
+    fun insert(site: SiteModel, data: PostingActivityResponse) {
+        insert(site, POSTING_ACTIVITY, data)
+    }
+
     fun selectAllTimeInsights(site: SiteModel): AllTimeResponse? {
         return select(site, ALL_TIME_INSIGHTS, AllTimeResponse::class.java)
     }
@@ -93,6 +99,10 @@ class InsightsSqlUtils
 
     fun selectPublicizeInsights(site: SiteModel): PublicizeResponse? {
         return select(site, PUBLICIZE_INSIGHTS, PublicizeResponse::class.java)
+    }
+
+    fun selectPostingActivity(site: SiteModel): PostingActivityResponse? {
+        return select(site, POSTING_ACTIVITY, PostingActivityResponse::class.java)
     }
 
     private fun FollowerType.toDbKey(): StatsSqlUtils.BlockType {
