@@ -203,6 +203,10 @@ public class WPLoginInputRow extends RelativeLayout {
         mEditText.setText(text);
     }
 
+    public final void setContentDescription(CharSequence text) {
+        mEditText.setContentDescription(text);
+    }
+
     public void setError(@Nullable final CharSequence error) {
         mTextInputLayout.setError(error);
         if (error == null) {

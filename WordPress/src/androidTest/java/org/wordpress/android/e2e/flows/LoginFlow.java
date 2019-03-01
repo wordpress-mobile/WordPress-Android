@@ -3,20 +3,18 @@ package org.wordpress.android.e2e.flows;
 import android.support.test.espresso.ViewInteraction;
 import android.view.View;
 
-import org.hamcrest.Matcher;
 import org.wordpress.android.R;
-import org.wordpress.android.e2e.pages.MePage;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.allOf;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_PASSWORD;
+import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_USERNAME;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
-import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
@@ -71,9 +69,12 @@ public class LoginFlow {
     }
 
     private void enterUsernameAndPassword() {
-        clickOn(R.id.input);
-        populateTextField(R.id.input, E2E_SELF_HOSTED_USER_USERNAME + "\n");
-        populateTextField(R.id.input, E2E_SELF_HOSTED_USER_PASSWORD + "\n");
+        ViewInteraction usernameElement =
+                onView(withContentDescription(getCurrentActivity().getString(R.string.username)));
+        ViewInteraction passwordElement =
+                onView(withContentDescription(getCurrentActivity().getString(R.string.password)));
+        populateTextField(usernameElement, E2E_SELF_HOSTED_USER_USERNAME + "\n");
+        populateTextField(passwordElement, E2E_SELF_HOSTED_USER_PASSWORD + "\n");
         clickOn(R.id.primary_button);
     }
 
