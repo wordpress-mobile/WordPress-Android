@@ -3,8 +3,6 @@ package org.wordpress.android.fluxc.store.stats.insights
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
-import org.wordpress.android.fluxc.model.stats.LimitMode.All
-import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient
@@ -32,11 +30,7 @@ class CommentsStore @Inject constructor(
                     }
                     responsePayload.response != null -> {
                         sqlUtils.insert(siteModel, responsePayload.response)
-                        val cacheMode = if (limitMode is Top)
-                            LimitMode.Top(limitMode.limit)
-                        else
-                            All
-                        OnStatsFetched(insightsMapper.map(responsePayload.response, cacheMode))
+                        OnStatsFetched(insightsMapper.map(responsePayload.response, limitMode))
                     }
                     else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
                 }
