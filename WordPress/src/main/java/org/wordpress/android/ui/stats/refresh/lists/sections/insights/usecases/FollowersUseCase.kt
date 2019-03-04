@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -157,7 +158,9 @@ class FollowersUseCase
         updateUiState { it.copy(isLoading = true) }
         GlobalScope.launch(bgDispatcher) {
             val state = fetchData(lastSite, true, PagedMode(itemsToLoad, true))
-            updateUiState { it.copy(isLoading = false) }
+            withContext(mainDispatcher) {
+                updateUiState { it.copy(isLoading = false) }
+            }
             evaluateState(state)
         }
     }
