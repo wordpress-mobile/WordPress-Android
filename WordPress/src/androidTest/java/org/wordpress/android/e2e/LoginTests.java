@@ -33,6 +33,4 @@ public class LoginTests extends BaseTest {
 
         new LoginFlow().loginSiteAddress();
     }
-
-
 }
