@@ -95,6 +95,24 @@ class OverviewMapperTest : BaseUnitTest() {
     }
 
     @Test
+    fun `builds title with max negative difference`() {
+        val newLikes: Long = 0
+        val newItem = selectedItem.copy(likes = newLikes)
+        val selectedPosition = 2
+        val uiState = UiState(selectedPosition)
+        val negativeLabel = "-20 (-100%)"
+        whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-20"), eq("-100")))
+                .thenReturn(negativeLabel)
+
+        val title = mapper.buildTitle(newItem, selectedItem, uiState.selectedPosition)
+
+        assertThat(title.value).isEqualTo(newLikes.toString())
+        assertThat(title.unit).isEqualTo(R.string.stats_likes)
+        assertThat(title.change).isEqualTo(negativeLabel)
+        assertThat(title.positive).isFalse()
+    }
+
+    @Test
     fun `builds title with zero difference`() {
         val previousLikes: Long = 20
         val previousItem = selectedItem.copy(likes = previousLikes)
