@@ -11,10 +11,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAGES
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -38,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.C
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PostingActivityUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
@@ -52,13 +49,6 @@ const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
 const val YEAR_STATS_USE_CASE = "YearStatsUseCase"
 const val LIST_STATS_USE_CASES = "ListStatsUseCases"
-const val VIEW_ALL_FOLLOWERS_USE_CASE = "ViewAllFollowersUseCase"
-const val VIEW_ALL_COMMENTS_USE_CASE = "ViewAllCommentsUseCase"
-const val VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE = "ViewAllTagsAndCategoriesUseCase"
-const val DAILY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE = "DailyViewAllPostsAndPagesUseCase"
-const val WEEKLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE = "WeeklyViewAllPostsAndPagesUseCase"
-const val MONTHLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE = "MonthlyViewAllPostsAndPagesUseCase"
-const val YEARLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE = "YearlyViewAllPostsAndPagesUseCase"
 
 // These are injected only internally
 private const val INSIGHTS_USE_CASES = "InsightsUseCases"
@@ -84,7 +74,8 @@ class StatsModule {
         commentsUseCaseFactory: CommentsUseCaseFactory,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
-        publicizeUseCase: PublicizeUseCase
+        publicizeUseCase: PublicizeUseCase,
+        postingActivityUseCase: PostingActivityUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -94,7 +85,8 @@ class StatsModule {
                 commentsUseCaseFactory.build(UseCaseMode.BLOCK),
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCaseFactory.build(UseCaseMode.BLOCK),
-                publicizeUseCase
+                publicizeUseCase,
+                postingActivityUseCase
         )
     }
 
@@ -157,90 +149,6 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton FollowersUseCase for the Followers View all screen
-     * @param followersUseCaseFactory builds the use cases for the Followers
-     */
-    @Provides
-    @Singleton
-    @Named(VIEW_ALL_FOLLOWERS_USE_CASE)
-    fun provideViewAllFollowersUseCase(
-        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
-        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
-        statsDateFormatter: StatsDateFormatter,
-        followersUseCaseFactory: FollowersUseCaseFactory,
-        uiModelMapper: UiModelMapper
-    ): BaseListUseCase {
-        return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
-                listOf(followersUseCaseFactory.build(UseCaseMode.VIEW_ALL)),
-                { listOf(FOLLOWERS) },
-                uiModelMapper::mapInsights
-        )
-    }
-
-    /**
-     * Provides a singleton CommentsUseCase for the Comments View all screen
-     * @param commentsUseCaseFactory build the use cases for the comments
-     */
-    @Provides
-    @Singleton
-    @Named(VIEW_ALL_COMMENTS_USE_CASE)
-    fun provideViewAllCommentsUseCase(
-        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
-        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
-        statsDateFormatter: StatsDateFormatter,
-        commentsUseCaseFactory: CommentsUseCaseFactory,
-        uiModelMapper: UiModelMapper
-    ): BaseListUseCase {
-        return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
-                listOf(commentsUseCaseFactory.build(UseCaseMode.VIEW_ALL)),
-                { listOf(COMMENTS) },
-                uiModelMapper::mapInsights
-        )
-    }
-
-    /**
-     * Provides a singleton TagsAndCategoriesUseCase for the Tags and categories View all screen
-     * @param tagsAndCategoriesUseCaseFactory build the use cases for the tags and categories
-     */
-    @Provides
-    @Singleton
-    @Named(VIEW_ALL_TAGS_AND_CATEGORIES_USE_CASE)
-    fun provideViewAllTagsAndCategoriesUseCase(
-        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
-        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
-        statsDateFormatter: StatsDateFormatter,
-        tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
-        uiModelMapper: UiModelMapper
-    ): BaseListUseCase {
-        return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
-                listOf(tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL)),
-                { listOf(TAGS_AND_CATEGORIES) },
-                uiModelMapper::mapInsights
-        )
-    }
-
-    /**
      * Provides a singleton usecase that represents the Day stats screen.
      * @param useCasesFactories build the use cases for the DAYS granularity
      */
@@ -265,118 +173,6 @@ class StatsModule {
                 statsDateFormatter,
                 useCasesFactories.map { it.build(DAYS, BLOCK) },
                 { statsStore.getTimeStatsTypes() },
-                uiModelMapper::mapTimeStats
-        )
-    }
-
-    /**
-     * Provides a singleton PostsAndPagesUseCase for the Posts and Pages View all screen
-     * @param postsAndPagesUseCaseFactory build the use cases for the posts and pages (daily granularity)
-     */
-    @Provides
-    @Singleton
-    @Named(DAILY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE)
-    fun provideDailyViewAllPostsAndPagesUseCase(
-        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
-        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
-        statsDateFormatter: StatsDateFormatter,
-        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
-        uiModelMapper: UiModelMapper
-    ): BaseListUseCase {
-        return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
-                listOf(postsAndPagesUseCaseFactory.build(DAYS, UseCaseMode.VIEW_ALL)),
-                { listOf(POSTS_AND_PAGES) },
-                uiModelMapper::mapTimeStats
-        )
-    }
-
-    /**
-     * Provides a singleton PostsAndPagesUseCase for the Posts and Pages View all screen
-     * @param postsAndPagesUseCaseFactory build the use cases for the posts and pages (weekly granularity)
-     */
-    @Provides
-    @Singleton
-    @Named(WEEKLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE)
-    fun provideWeeklyViewAllPostsAndPagesUseCase(
-        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
-        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
-        statsDateFormatter: StatsDateFormatter,
-        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
-        uiModelMapper: UiModelMapper
-    ): BaseListUseCase {
-        return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
-                listOf(postsAndPagesUseCaseFactory.build(WEEKS, UseCaseMode.VIEW_ALL)),
-                { listOf(POSTS_AND_PAGES) },
-                uiModelMapper::mapTimeStats
-        )
-    }
-
-    /**
-     * Provides a singleton PostsAndPagesUseCase for the Posts and Pages View all screen
-     * @param postsAndPagesUseCaseFactory build the use cases for the posts and pages (monthly granularity)
-     */
-    @Provides
-    @Singleton
-    @Named(MONTHLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE)
-    fun provideMonthlyViewAllPostsAndPagesUseCase(
-        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
-        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
-        statsDateFormatter: StatsDateFormatter,
-        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
-        uiModelMapper: UiModelMapper
-    ): BaseListUseCase {
-        return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
-                listOf(postsAndPagesUseCaseFactory.build(MONTHS, UseCaseMode.VIEW_ALL)),
-                { listOf(POSTS_AND_PAGES) },
-                uiModelMapper::mapTimeStats
-        )
-    }
-
-    /**
-     * Provides a singleton PostsAndPagesUseCase for the Posts and Pages View all screen
-     * @param postsAndPagesUseCaseFactory build the use cases for the posts and pages (yearly granularity)
-     */
-    @Provides
-    @Singleton
-    @Named(YEARLY_VIEW_ALL_POSTS_AND_PAGES_USE_CASE)
-    fun provideYearlyViewAllPostsAndPagesUseCase(
-        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
-        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
-        statsDateFormatter: StatsDateFormatter,
-        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
-        uiModelMapper: UiModelMapper
-    ): BaseListUseCase {
-        return BaseListUseCase(
-                bgDispatcher,
-                mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
-                listOf(postsAndPagesUseCaseFactory.build(YEARS, UseCaseMode.VIEW_ALL)),
-                { listOf(POSTS_AND_PAGES) },
                 uiModelMapper::mapTimeStats
         )
     }
@@ -427,7 +223,8 @@ class StatsModule {
         @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher,
+        return BaseListUseCase(
+                bgDispatcher, mainDispatcher,
                 statsSectionManager,
                 selectedDateProvider,
                 statsDateFormatter,
