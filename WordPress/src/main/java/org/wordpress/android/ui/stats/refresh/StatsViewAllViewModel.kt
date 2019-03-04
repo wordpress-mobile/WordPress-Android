@@ -26,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase.CommentsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
@@ -48,7 +49,7 @@ abstract class StatsViewAllViewModel(
                 DAYS -> {
                     when (type) {
                         StatsViewType.TOP_POSTS_AND_PAGES -> DailyViewAllPostsAndPagesViewModel::class.java
-                        StatsViewType.REFERRERS -> TODO()
+                        StatsViewType.REFERRERS -> DailyViewAllReferrersViewModel::class.java
                         StatsViewType.CLICKS -> TODO()
                         StatsViewType.AUTHORS -> TODO()
                         StatsViewType.GEOVIEWS -> TODO()
@@ -60,7 +61,7 @@ abstract class StatsViewAllViewModel(
                 WEEKS -> {
                     when (type) {
                         StatsViewType.TOP_POSTS_AND_PAGES -> WeeklyViewAllPostsAndPagesViewModel::class.java
-                        StatsViewType.REFERRERS -> TODO()
+                        StatsViewType.REFERRERS -> WeeklyViewAllReferrersViewModel::class.java
                         StatsViewType.CLICKS -> TODO()
                         StatsViewType.AUTHORS -> TODO()
                         StatsViewType.GEOVIEWS -> TODO()
@@ -72,7 +73,7 @@ abstract class StatsViewAllViewModel(
                 MONTHS -> {
                     when (type) {
                         StatsViewType.TOP_POSTS_AND_PAGES -> MonthlyViewAllPostsAndPagesViewModel::class.java
-                        StatsViewType.REFERRERS -> TODO()
+                        StatsViewType.REFERRERS -> MonthlyViewAllReferrersViewModel::class.java
                         StatsViewType.CLICKS -> TODO()
                         StatsViewType.AUTHORS -> TODO()
                         StatsViewType.GEOVIEWS -> TODO()
@@ -84,7 +85,7 @@ abstract class StatsViewAllViewModel(
                 YEARS -> {
                     when (type) {
                         StatsViewType.TOP_POSTS_AND_PAGES -> YearlyViewAllPostsAndPagesViewModel::class.java
-                        StatsViewType.REFERRERS -> TODO()
+                        StatsViewType.REFERRERS -> YearlyViewAllReferrersViewModel::class.java
                         StatsViewType.CLICKS -> TODO()
                         StatsViewType.AUTHORS -> TODO()
                         StatsViewType.GEOVIEWS -> TODO()
@@ -245,5 +246,55 @@ class YearlyViewAllPostsAndPagesViewModel
         bgDispatcher,
         useCaseFactory.build(YEARS, VIEW_ALL),
         R.string.stats_view_top_posts_and_pages
+)
+// endregion
+
+// region ViewAllReferrersViewModel
+class DailyViewAllReferrersViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+    useCaseFactory: ReferrersUseCaseFactory
+) : StatsViewAllViewModel(
+        mainDispatcher,
+        bgDispatcher,
+        useCaseFactory.build(DAYS, VIEW_ALL),
+        R.string.stats_view_referrers
+)
+
+class WeeklyViewAllReferrersViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+    useCaseFactory: ReferrersUseCaseFactory
+) : StatsViewAllViewModel(
+        mainDispatcher,
+        bgDispatcher,
+        useCaseFactory.build(WEEKS, VIEW_ALL),
+        R.string.stats_view_referrers
+)
+
+class MonthlyViewAllReferrersViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+    useCaseFactory: ReferrersUseCaseFactory
+) : StatsViewAllViewModel(
+        mainDispatcher,
+        bgDispatcher,
+        useCaseFactory.build(MONTHS, VIEW_ALL),
+        R.string.stats_view_referrers
+)
+
+class YearlyViewAllReferrersViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+    useCaseFactory: ReferrersUseCaseFactory
+) : StatsViewAllViewModel(
+        mainDispatcher,
+        bgDispatcher,
+        useCaseFactory.build(YEARS, VIEW_ALL),
+        R.string.stats_view_referrers
 )
 // endregion
