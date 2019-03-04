@@ -122,7 +122,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         val previousState = uiState.value ?: defaultUiState
         val updatedState = update(previousState)
         if (previousState != updatedState) {
-            uiState.value = updatedState
+            uiState.postValue(updatedState)
         }
     }
 

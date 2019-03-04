@@ -143,8 +143,8 @@ class FollowersUseCase
                                     navigateAction = NavigationAction.create(uiState.selectedTab, this::onLinkClick)
                             )
                     )
-                } else if (!uiState.isLoading) {
-                    items.add(LoadingItem(this::loadMore))
+                } else {
+                    items.add(LoadingItem(this::loadMore, isLoading = uiState.isLoading))
                 }
             }
         } else {
@@ -154,8 +154,10 @@ class FollowersUseCase
     }
 
     private fun loadMore() {
+        updateUiState { it.copy(isLoading = true) }
         GlobalScope.launch(bgDispatcher) {
             val state = fetchData(lastSite, true, PagedMode(itemsToLoad, true))
+            updateUiState { it.copy(isLoading = false) }
             evaluateState(state)
         }
     }

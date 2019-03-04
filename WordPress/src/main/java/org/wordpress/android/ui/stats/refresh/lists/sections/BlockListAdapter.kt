@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback
@@ -146,32 +144,11 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is MapViewHolder -> holder.bind(item as MapItem)
             is EmptyViewHolder -> holder.bind(item as Empty)
             is ActivityViewHolder -> holder.bind(item as ActivityItem)
+            is LoadingItemViewHolder -> holder.bind(item as LoadingItem)
         }
     }
 
     override fun onBindViewHolder(holder: BlockListItemViewHolder, position: Int) {
         onBindViewHolder(holder, position, listOf())
-    }
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager
-                if (dy > 0 && layoutManager != null) {
-                    val visibleItemCount = layoutManager.childCount
-                    val totalItemCount = layoutManager.itemCount
-                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-                    if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                        for (item in items) {
-                            if (item is LoadingItem && !item.isLoading) {
-                                item.isLoading = true
-                                item.loadMore()
-                            }
-                        }
-                    }
-                }
-            }
-        })
     }
 }

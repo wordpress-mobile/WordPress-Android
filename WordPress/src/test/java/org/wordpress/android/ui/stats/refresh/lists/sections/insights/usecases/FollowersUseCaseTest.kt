@@ -279,8 +279,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
         var updatedResult = loadFollowers(refresh)
         val button = updatedResult.data!!.assertViewAllFollowersFirstLoad(position = 1)
 
+        useCase.liveData.observeForever { if (it != null) updatedResult = it }
         button.loadMore()
-        updatedResult = useCase.liveData.value!!
         updatedResult.data!!.assertViewAllFollowersSecondLoad()
     }
 
