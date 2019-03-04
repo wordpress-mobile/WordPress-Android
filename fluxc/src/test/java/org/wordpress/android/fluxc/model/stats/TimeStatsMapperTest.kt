@@ -30,7 +30,7 @@ class TimeStatsMapperTest {
     fun `parses empty referrers`() {
         val response = ReferrersResponse("DAYS", emptyMap())
 
-        val result = timeStatsMapper.map(response, 5)
+        val result = timeStatsMapper.map(response, LimitMode.Top(5))
 
         assertThat(result.groups).isEmpty()
         assertThat(result.hasMore).isFalse()
