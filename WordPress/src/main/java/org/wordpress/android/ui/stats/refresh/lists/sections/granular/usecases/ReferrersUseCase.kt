@@ -5,6 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.REFERRERS
@@ -12,6 +13,7 @@ import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReferrers
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -35,7 +37,8 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_ITEM_COUNT = 6
+private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class ReferrersUseCase
 constructor(
@@ -43,7 +46,8 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val referrersStore: ReferrersStore,
     selectedDateProvider: SelectedDateProvider,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
         REFERRERS,
         mainDispatcher,
@@ -51,6 +55,8 @@ constructor(
         statsGranularity,
         SelectedGroup()
 ) {
+    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
+
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_referrers))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): ReferrersModel? {
@@ -58,15 +64,15 @@ constructor(
                 site,
                 statsGranularity,
                 selectedDate,
-                PAGE_SIZE
+                LimitMode.Top(itemsToLoad)
         )
     }
 
     override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<ReferrersModel> {
         val response = referrersStore.fetchReferrers(
                 site,
-                PAGE_SIZE,
                 statsGranularity,
+                LimitMode.Top(itemsToLoad),
                 selectedDate,
                 forced
         )
@@ -187,7 +193,8 @@ constructor(
                         mainDispatcher,
                         referrersStore,
                         selectedDateProvider,
-                        analyticsTracker
+                        analyticsTracker,
+                        useCaseMode
                 )
     }
 }
