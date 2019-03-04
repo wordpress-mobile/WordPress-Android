@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
@@ -67,6 +68,16 @@ public class WPSupportUtils {
     public static void clickOn(ViewInteraction element) {
         waitForElementToBeDisplayed(element);
         element.perform(click());
+    }
+
+    public static void longClickOn(Integer elementID) {
+        waitForElementToBeDisplayed(elementID);
+        onView(withId(elementID)).perform(longClick());
+    }
+
+    public static void longClickOn(ViewInteraction element) {
+        waitForElementToBeDisplayed(element);
+        element.perform(longClick());
     }
 
     public static void clickOnChildAtIndex(int index, int parentElementID, int childElementID) {

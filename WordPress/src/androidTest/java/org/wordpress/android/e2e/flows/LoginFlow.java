@@ -1,7 +1,6 @@
 package org.wordpress.android.e2e.flows;
 
 import android.support.test.espresso.ViewInteraction;
-import android.view.View;
 
 import org.wordpress.android.R;
 
@@ -49,9 +48,9 @@ public class LoginFlow {
     }
 
     private void confirmLogin() {
-        // TODO: Click continue if necessary
-        if (isElementDisplayed(R.id.primary_button)) {
-            clickOn(R.id.primary_button);
+        ViewInteraction continueButton = onView(withText(getCurrentActivity().getString(R.string.login_continue)));
+        if (isElementDisplayed(continueButton)) { // click continue
+            clickOn(continueButton);
         }
 
         waitForElementToBeDisplayed(R.id.nav_me);
@@ -85,8 +84,8 @@ public class LoginFlow {
     }
 
     public void loginEmailPassword() {
-        chooseLogin();
         enterEmailAddress();
+        chooseLogin();
         enterPassword();
         confirmLogin();
     }
