@@ -15,7 +15,6 @@ repositories {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 
 android {
     compileSdkVersion 28
@@ -33,19 +32,4 @@ dependencies {
     implementation 'com.automattic:rest:1.0.7'
 
     lintChecks 'org.wordpress:lint:1.0.1'
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            def repo_url = ""
-            if (project.hasProperty("repository")) {
-                repo_url = project.repository
-            }
-            repository(url: repo_url)
-            pom.version = android.defaultConfig.versionName
-            pom.groupId = "org.wordpress"
-            pom.artifactId = "wordpress-networking"
-        }
-    }
 }

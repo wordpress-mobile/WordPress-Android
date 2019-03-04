@@ -5,12 +5,10 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 
 repositories {
     google()
@@ -38,34 +36,4 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
     }
-}
-
-android.libraryVariants.all { variant ->
-    task("generate${variant.name}Javadoc", type: Javadoc) {
-        description "Generates Javadoc for $variant.name."
-        source = variant.javaCompile.source
-
-        options {
-            links "http://docs.oracle.com/javase/7/docs/api/"
-        }
-        exclude '**/R.java'
-        doFirst {
-            classpath =
-                    files(variant.javaCompile.classpath.files,
-                            project.android.getBootClasspath())
-        }
-    }
-}
-
-publish {
-    artifactId = 'utils'
-    userOrg = 'wordpress-mobile'
-    groupId = 'org.wordpress'
-    uploadName = 'utils'
-    desc = 'Utils library for Android'
-    publishVersion = android.defaultConfig.versionName
-    licences = ['MIT', 'GPL']
-    website = 'https://github.com/wordpress-mobile/WordPress-Utils-Android/'
-    dryRun = 'false'
-    autoPublish = 'true'
 }

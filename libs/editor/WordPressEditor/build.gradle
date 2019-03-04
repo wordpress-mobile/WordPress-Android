@@ -14,8 +14,6 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
-apply plugin: 'signing'
 
 repositories {
     google()
@@ -91,60 +89,4 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
 
     lintChecks 'org.wordpress:lint:1.0.1'
-}
-
-signing {
-    required {
-        project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")
-    }
-    sign configurations.archives
-}
-
-version android.defaultConfig.versionName
-group = "org.wordpress"
-archivesBaseName = "editor"
-
-// http://central.sonatype.org/pages/gradle.html
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
-            }
-
-            pom.project {
-                name 'WordPress-Android-Editor'
-                packaging 'aar'
-                description 'A reusable Android rich text editor component'
-                url 'https://github.com/wordpress-mobile/WordPress-Android-Editor'
-                scm {
-                    connection 'scm:git:https://github.com/wordpress-mobile/WordPress-Android-Editor.git'
-                    developerConnection 'scm:git:https://github.com/wordpress-mobile/WordPress-Android-Editor.git'
-                    url 'https://github.com/wordpress-mobile/WordPress-Android-Editor'
-                }
-
-                licenses {
-                    license {
-                        name 'The MIT License (MIT)'
-                        url 'http://opensource.org/licenses/MIT'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'maxme'
-                        name 'Maxime Biais'
-                        email 'maxime@automattic.com'
-                    }
-                }
-            }
-        }
-    }
 }
