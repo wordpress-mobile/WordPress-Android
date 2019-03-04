@@ -45,17 +45,12 @@ platform :android do
     screenshot_devices = [
       {
         screenshot_type: 'phone',
-        device_name: 'fastlane_screenshots_phone',
+        device_name: 'Pixel_2_XL_API_28',
         device_serial: options[:phone_serial],
       },
       {
-        screenshot_type: 'sevenInch',
-        device_name: 'fastlane_screenshots_seven_inch',
-        device_serial: options[:sevenInch_serial],
-      },
-      {
         screenshot_type: 'tenInch',
-        device_name: 'fastlane_screenshots_ten_inch',
+        device_name: 'Nexus_9_API_28',
         device_serial: options[:tenInch_serial],
       }
     ]
@@ -147,13 +142,9 @@ platform :android do
   # -----------------------------------------------------------------------------------
   # This lane rebuilds all of the emulators used for generating screenshots. Beware – running
   # this action will overwrite the following emulators:
-  #     - fastlane_screenshots_phone
-  #     - fastlane_screenshots_seven_inch
-  #     - fastlane_screenshots_ten_inch
+  #     - Nexus 9 API 28
+  #     - Pixel 2 XL API 28
   # It will not overwrite any other devices.
-  #
-  # It will also create hardware profiles that match the screenshot sizes used.  Running
-  # this script will overwrite those hardware profiles if they already exist.
   # -----------------------------------------------------------------------------------
   # Usage:
   # fastlane rebuild_screenshot_devices
@@ -164,21 +155,10 @@ platform :android do
   desc "Rebuild screenshot devices"
   lane :rebuild_screenshot_devices do |options|
 
-    devices = [
-        Dir.pwd + "/devices/phone.xml",
-        Dir.pwd + "/devices/tablet-7.xml",
-        Dir.pwd + "/devices/tablet-10.xml",
-    ]
-
     emulators = [
-        Dir.pwd + "/emulators/fastlane_screenshots_phone.ini",
-        Dir.pwd + "/emulators/fastlane_screenshots_seven_inch.ini",
-        Dir.pwd + "/emulators/fastlane_screenshots_ten_inch.ini",
+        Dir.pwd + "/emulators/Nexus_9_API_28.ini",
+        Dir.pwd + "/emulators/Pixel_2_XL_API_28.ini",
     ]
-
-    devices.each do |device_configuration|
-        sh("helpers/register-hardware-profile.sh '#{device_configuration}'")
-    end
 
     emulators.each do |emulator_configuration|
         sh("helpers/copy-device.sh '#{emulator_configuration}'")
