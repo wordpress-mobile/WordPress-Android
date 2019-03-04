@@ -16,6 +16,7 @@ import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
+import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class LoginFlow {
@@ -49,6 +50,9 @@ public class LoginFlow {
 
     private void confirmLogin() {
         ViewInteraction continueButton = onView(withText(getCurrentActivity().getString(R.string.login_continue)));
+
+        // TODO: Needs to wait a little for button to be clickable, should try and find a better way
+        sleep();
         if (isElementDisplayed(continueButton)) { // click continue
             clickOn(continueButton);
         }

@@ -17,16 +17,20 @@ public class BaseTest {
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
+    protected void logout() {
+        if (isElementDisplayed(R.id.switch_site)) { // Logged in from self hosted connected site
+            new SitesPage().go().removeSite(E2E_SELF_HOSTED_USER_SITE_ADDRESS);
+        } else {
+            wpLogout();
+        }
+    }
+
     protected void logoutIfNecessary() {
         if (isElementDisplayed(R.id.login_button)) {
             return;
         }
 
-        if (isElementDisplayed(R.id.switch_site)) { // Logged in from self hosted connected site
-            new SitesPage().go().removeSite(E2E_SELF_HOSTED_USER_SITE_ADDRESS);
-        } else {
-            new MePage().go().verifyUsername(E2E_WP_COM_USER_USERNAME).logout();
-        }
+        logout();
     }
     protected void wpLogin() {
         logoutIfNecessary();
@@ -34,23 +38,6 @@ public class BaseTest {
     }
 
     protected void wpLogout() {
-        new MePage()
-                .go()
-                .logout();
-    }
-
-    protected void sleep(int timeout) {
-        // TODO: The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        // https://developer.android.com/training/testing/espresso/idling-resource
-        try {
-            Thread.sleep(timeout);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected void sleep() {
-        sleep(2000);
+        new MePage().go().verifyUsername(E2E_WP_COM_USER_USERNAME).logout();
     }
 }

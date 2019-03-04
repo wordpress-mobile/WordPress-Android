@@ -32,6 +32,7 @@ import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemAtIndexInSpinner;
+import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementOfTypeToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForConditionToBeTrue;

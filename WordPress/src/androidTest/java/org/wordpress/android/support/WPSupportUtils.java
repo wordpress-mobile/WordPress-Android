@@ -254,6 +254,21 @@ public class WPSupportUtils {
         }
     }
 
+    public static void sleep(int timeout) {
+        // TODO: The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        // https://developer.android.com/training/testing/espresso/idling-resource
+        try {
+            Thread.sleep(timeout);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sleep() {
+        sleep(2000);
+    }
+
     // MATCHERS
 
     /**
