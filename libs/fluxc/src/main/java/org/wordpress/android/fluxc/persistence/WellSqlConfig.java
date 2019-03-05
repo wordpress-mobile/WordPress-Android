@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 57;
+        return 58;
     }
 
     @Override
@@ -450,6 +450,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
+            case 57:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -576,6 +580,33 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "CATEGORIES TEXT NOT NULL,TAGS TEXT NOT NULL,"
                                + "IMAGES TEXT NOT NULL,ATTRIBUTES TEXT NOT NULL,"
                                + "VARIATIONS TEXT NOT NULL)");
+                    break;
+                case 57:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DROP TABLE IF EXISTS WCProductVarationModel");
+                    db.execSQL("CREATE TABLE WCProductVarationModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "REMOTE_PRODUCT_ID INTEGER,"
+                               + "REMOTE_VARIATION_ID INTEGER,"
+                               + "DESCRIPTION TEXT NOT NULL,"
+                               + "PERMALINK TEXT NOT NULL,"
+                               + "SKU TEXT NOT NULL,"
+                               + "STATUS TEXT NOT NULL,"
+                               + "PRICE TEXT NOT NULL,"
+                               + "REGULAR_PRICE TEXT NOT NULL,"
+                               + "SALE_PRICE TEXT NOT NULL,"
+                               + "ON_SALE INTEGER,"
+                               + "PURCHASABLE INTEGER,"
+                               + "VIRTUAL INTEGER,"
+                               + "DOWNLOADABLE INTEGER,"
+                               + "MANAGE_STOCK INTEGER,"
+                               + "STOCK_QUANTITY INTEGER,"
+                               + "STOCK_STATUS TEXT NOT NULL,"
+                               + "IMAGE_URL TEXT NOT NULL,"
+                               + "WEIGHT TEXT NOT NULL,"
+                               + "LENGTH TEXT NOT NULL,"
+                               + "WIDTH TEXT NOT NULL,"
+                               + "HEIGHT TEXT NOT NULL)");
                     break;
             }
         }
