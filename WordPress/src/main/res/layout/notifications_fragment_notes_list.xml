@@ -69,8 +69,6 @@
         android:elevation="@dimen/appbar_elevation"
         android:layout_alignParentTop="true"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/notifications_content_margin"
-        android:layout_marginStart="@dimen/notifications_content_margin"
         android:layout_width="match_parent">
 
         <android.support.v7.widget.Toolbar
