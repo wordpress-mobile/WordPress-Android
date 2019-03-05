@@ -81,6 +81,12 @@ subprojects {
         classpath = configurations.ktlint
         args "-F", "src/**/*.kt"
     }
+
+    task ciktlint(type: JavaExec) {
+        main = "com.github.shyiko.ktlint.Main"
+        classpath = configurations.ktlint
+        args "src/**/*.kt", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
+    }
 }
 
 ext {
