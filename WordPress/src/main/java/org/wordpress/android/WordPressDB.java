@@ -199,7 +199,8 @@ public class WordPressDB {
     }
 
     /*
-     * used during development to copy database to an SD card so access via Dalvik Debug Monitor Service (DDMS) can be done
+     * used during development to copy database to an SD card
+     * so access via Dalvik Debug Monitor Service (DDMS) can be done
      */
     protected void copyDatabase() {
         String copyFrom = mDb.getPath();

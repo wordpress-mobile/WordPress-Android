@@ -395,8 +395,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     /**
-     * Application.onCreate is called before any activity, service, or receiver. Application.onCreate can be called while the app
-     * is in background by a sticky service or a receiver, so Application.onCreate should not be making network request
+     * Application.onCreate is called before any activity, service, or receiver. Application.onCreate
+     * can be called while the app is in background by a sticky service or a receiver,
+     * so Application.onCreate should not be making network request
      * or other heavy tasks.
      * <p>
      * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
