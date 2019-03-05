@@ -53,7 +53,7 @@ class TransactionsStore @Inject constructor(
     }
 
     private suspend fun fetchSupportedCountries(): OnSupportedCountriesFetched {
-        val supportedCountriesPayload = planOffersRestClient.fetchSupportedCountrues()
+        val supportedCountriesPayload = planOffersRestClient.fetchSupportedCountries()
 
         return if (!supportedCountriesPayload.isError) {
             OnSupportedCountriesFetched(supportedCountriesPayload.countries)

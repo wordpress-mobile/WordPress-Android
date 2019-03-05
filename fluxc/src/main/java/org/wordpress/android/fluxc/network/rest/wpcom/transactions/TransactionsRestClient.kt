@@ -34,7 +34,7 @@ constructor(
         const val freeDomainPaymentMethod = "WPCOM_Billing_WPCOM"
     }
 
-    suspend fun fetchSupportedCountrues(): FetchedSupportedCountriesPayload {
+    suspend fun fetchSupportedCountries(): FetchedSupportedCountriesPayload {
         val url = WPCOMREST.me.transactions.supported_countries.urlV1_1
 
         val response = wpComGsonRequestBuilder.syncGetRequest(
@@ -64,7 +64,7 @@ constructor(
     ): CreatedShoppingCartPayload {
         val url = WPCOMREST.me.shopping_cart.site(site.siteId).urlV1_1
 
-//          val params = HashMap<String, Any>()
+//        val params = HashMap<String, Any>()
 //
 //        val products = JsonArray()
 //
