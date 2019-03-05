@@ -46,6 +46,7 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -531,6 +532,8 @@ public class NotificationsListFragment extends Fragment implements
             default:
                 showEmptyView(R.string.notifications_empty_list);
         }
+
+        mActionableEmptyView.image.setVisibility(DisplayUtils.isLandscape(requireContext()) ? View.GONE : View.VISIBLE);
     }
 
     private void performActionForActiveFilter() {
