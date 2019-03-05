@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
@@ -43,7 +44,8 @@ sealed class BlockListItem(val type: Type) {
         HEADER,
         MAP,
         EXPANDABLE_ITEM,
-        DIVIDER
+        DIVIDER,
+        ACTIVITY_ITEM
     }
 
     data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
@@ -162,6 +164,16 @@ sealed class BlockListItem(val type: Type) {
     data class MapItem(val mapData: String, @StringRes val label: Int) : BlockListItem(MAP)
 
     object Divider : BlockListItem(DIVIDER)
+
+    data class ActivityItem(val blocks: List<Block>) : BlockListItem(ACTIVITY_ITEM) {
+        data class Block(val label: String, val boxes: List<Box>)
+        enum class Box {
+            INVISIBLE, VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
+        }
+
+        override val itemId: Int
+            get() = blocks.fold(0) { acc, block -> acc + block.label.hashCode() }
+    }
 
     interface NavigationAction {
         fun click()

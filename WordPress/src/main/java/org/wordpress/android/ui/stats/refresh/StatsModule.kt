@@ -32,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.C
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PostingActivityUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
@@ -70,7 +71,8 @@ class StatsModule {
         commentsUseCase: CommentsUseCase,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCase: TagsAndCategoriesUseCase,
-        publicizeUseCase: PublicizeUseCase
+        publicizeUseCase: PublicizeUseCase,
+        postingActivityUseCase: PostingActivityUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -80,7 +82,8 @@ class StatsModule {
                 commentsUseCase,
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCase,
-                publicizeUseCase
+                publicizeUseCase,
+                postingActivityUseCase
         )
     }
 
@@ -217,7 +220,8 @@ class StatsModule {
         @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher,
+        return BaseListUseCase(
+                bgDispatcher, mainDispatcher,
                 statsSectionManager,
                 selectedDateProvider,
                 statsDateFormatter,

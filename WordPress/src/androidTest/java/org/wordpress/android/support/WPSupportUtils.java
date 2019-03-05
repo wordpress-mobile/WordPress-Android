@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.screenshots.support;
+package org.wordpress.android.support;
 
 import android.app.Activity;
 import android.support.test.InstrumentationRegistry;
@@ -36,7 +36,7 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 
 
-public class WPScreenshotSupport {
+public class WPSupportUtils {
     // HIGH-LEVEL METHODS
 
     public static boolean isElementDisplayed(Integer elementID) {

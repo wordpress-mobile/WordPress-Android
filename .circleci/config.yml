@@ -4,8 +4,8 @@ android_config: &android_config
   environment:
     # kotlin.incremental=false and kotlin.compiler.execution.strategy=in-process are required due to an issue with the Kotlin compiler in
     # memory constrained environments: https://youtrack.jetbrains.com/issue/KT-15562
-    GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
-    GRADLEW: "./gradlew --stacktrace --no-parallel --build-cache --configure-on-demand -PdisablePreDex -PjavaMaxHeapSize=1536m"
+    GRADLE_OPTS: -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
+    GRADLEW: "./gradlew --stacktrace"
 
 copy_gradle_properties: &copy_gradle_properties
   run:
