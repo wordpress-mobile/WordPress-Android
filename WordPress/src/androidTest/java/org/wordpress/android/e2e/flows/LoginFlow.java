@@ -48,9 +48,9 @@ public class LoginFlow {
     private void confirmLogin() {
         ViewInteraction continueButton = onView(withText(getCurrentActivity().getString(R.string.login_continue)));
 
-        // TODO: Needs to wait a little for button to be clickable, should try and find a better way
+        // TODO: Needs to wait a little for button to be clickable and for load after, should try and find a better way
         // On poor WiFi this needed to be increased to pass
-        sleep(5000);
+        sleep();
         if (isElementDisplayed(continueButton)) { // click continue
             clickOn(continueButton);
             sleep();
