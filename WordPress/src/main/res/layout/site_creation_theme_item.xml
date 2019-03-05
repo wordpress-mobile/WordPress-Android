@@ -16,7 +16,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/cardview_default_radius">
+        android:layout_margin="@dimen/default_cardview_radius">
 
         <ImageView
             android:id="@+id/theme_grid_item_image"

@@ -25,22 +25,26 @@ class AllTimeStatsUseCase
 ) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_all_time_stats))
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getAllTimeInsights(site)
-        dbModel?.let { onModel(it) }
+    override suspend fun loadCachedData(site: SiteModel): InsightsAllTimeModel? {
+        return insightsStore.getAllTimeInsights(site)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<InsightsAllTimeModel> {
         val response = insightsStore.fetchAllTimeInsights(site, forced)
         val model = response.model
         val error = response.error
 
         return when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.hasData() -> State.Data(
+                    model
+            )
+            else -> State.Empty()
         }
     }
+
+    private fun InsightsAllTimeModel.hasData() =
+            this.posts > 0 || this.views > 0 || this.visitors > 0 || this.viewsBestDayTotal > 0
 
     override fun buildUiModel(domainModel: InsightsAllTimeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
@@ -56,7 +60,7 @@ class AllTimeStatsUseCase
             if (hasPosts) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_posts_grey_dark_24dp,
+                                R.drawable.ic_posts_white_24dp,
                                 textResource = R.string.posts,
                                 value = domainModel.posts.toFormattedString(),
                                 showDivider = hasViews || hasVisitors || hasViewsBestDayTotal
@@ -66,7 +70,7 @@ class AllTimeStatsUseCase
             if (hasViews) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_visible_on_grey_dark_24dp,
+                                R.drawable.ic_visible_on_white_24dp,
                                 textResource = R.string.stats_views,
                                 value = domainModel.views.toFormattedString(),
                                 showDivider = hasVisitors || hasViewsBestDayTotal
@@ -76,7 +80,7 @@ class AllTimeStatsUseCase
             if (hasVisitors) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_user_grey_dark_24dp,
+                                R.drawable.ic_user_white_24dp,
                                 textResource = R.string.stats_visitors,
                                 value = domainModel.visitors.toFormattedString(),
                                 showDivider = hasViewsBestDayTotal
@@ -86,7 +90,7 @@ class AllTimeStatsUseCase
             if (hasViewsBestDayTotal) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_trophy_grey_dark_24dp,
+                                R.drawable.ic_trophy_white_24dp,
                                 textResource = R.string.stats_insights_best_ever,
                                 subText = statsDateFormatter.printDate(domainModel.viewsBestDay),
                                 value = domainModel.viewsBestDayTotal.toFormattedString(),

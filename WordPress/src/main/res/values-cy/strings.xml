@@ -388,7 +388,6 @@ Language: cy_GB
     <string name="reader_label_gap_marker">Llwytho rhagor o gofnodion</string>
     <string name="notifications_no_search_results">Dim gwefannau\'n cydweddu â \'%s\'</string>
     <string name="search_sites">Chwilio gwefannau</string>
-    <string name="notifications_empty_action_all">Byddwch egniol! Rhowch sylwadau ar flogiau rydych yn eu dilyn.</string>
     <string name="stats_widget_error_jetpack_no_blogid">Ewch i\'r Ystadegau yn yr ap a cheisio ychwanegu\'r teclyn yn hwyrach</string>
     <string name="stats_widget_error_readd_widget">Tynnwch y teclyn a\'i ychwanegu eto</string>
     <string name="stats_widget_error_no_visible_blog">Nid oes modd mynd i\'r Ystadegau heb flog gweladwy</string>

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.FormatUtils;
 
 import java.util.Locale;
@@ -162,7 +163,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         Spannable descriptionTextToSpan = new SpannableString(trendLabelFormatted);
         descriptionTextToSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.stats_link_text_color)),
                                       startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        TextView trendLabelTextField = (TextView) ll.findViewById(R.id.stats_post_trend_label);
+        TextView trendLabelTextField = ll.findViewById(R.id.stats_post_trend_label);
         trendLabelTextField.setText(descriptionTextToSpan);
         trendLabelTextField.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +176,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             }
         });
 
-        LinearLayout tabs = (LinearLayout) ll.findViewById(R.id.stats_latest_post_tabs);
+        LinearLayout tabs = ll.findViewById(R.id.stats_latest_post_tabs);
 
         for (int i = 0; i < tabs.getChildCount(); i++) {
             LinearLayout currentTab = (LinearLayout) tabs.getChildAt(i);
@@ -212,9 +213,9 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             currentTab.setClickable(false);
         }
 
-        label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
+        label = currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
         label.setText(itemType.getLabel());
-        value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
+        value = currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
             value.setTextColor(getResources().getColor(R.color.grey_text_min));
@@ -228,8 +229,8 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
                 value.setTextColor(getResources().getColor(R.color.grey_darken_30));
             }
         }
-        icon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
-        icon.setImageDrawable(getTabIcon(itemType));
+        icon = currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
+        ColorUtils.INSTANCE.setImageResourceWithTint(icon, getTabIcon(itemType), R.color.grey_dark);
 
         if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS) {
             currentTab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_white);
@@ -261,17 +262,17 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         }
     };
 
-    private Drawable getTabIcon(final StatsVisitorsAndViewsFragment.OverviewLabel labelItem) {
+    private @DrawableRes int getTabIcon(final StatsVisitorsAndViewsFragment.OverviewLabel labelItem) {
         switch (labelItem) {
             case VISITORS:
-                return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
+                return R.drawable.ic_user_white_24dp;
             case COMMENTS:
-                return getResources().getDrawable(R.drawable.ic_comment_grey_dark_12dp);
+                return R.drawable.ic_comment_white_24dp;
             case LIKES:
-                return getResources().getDrawable(R.drawable.ic_star_grey_dark_12dp);
+                return R.drawable.ic_star_white_24dp;
             default:
                 // Views and when no prev match
-                return getResources().getDrawable(R.drawable.ic_visible_on_grey_dark_12dp);
+                return R.drawable.ic_visible_on_white_24dp;
         }
     }
 

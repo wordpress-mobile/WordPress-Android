@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -38,7 +36,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.news.NewsViewHolder;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
-import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -60,13 +57,15 @@ import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
 import java.util.HashSet;
@@ -419,9 +418,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPost post = getItem(position);
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
-        Drawable drawable = context.getResources().getDrawable(R.drawable.ic_undo_24dp);
-        DrawableCompat.setTint(drawable, context.getResources().getColor(R.color.blue_medium));
-        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
+        Drawable drawable =
+                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp, R.color.blue_medium);
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -945,12 +943,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             bookmarkButton.setVisibility(View.GONE);
         }
-        mImageManager.load(bookmarkButton, post.isBookmarked
-                ? R.drawable.ic_bookmark_blue_medium_18dp
-                : R.drawable.ic_bookmark_grey_min_18dp);
+
         if (post.isBookmarked) {
+            bookmarkButton.setSelected(true);
             bookmarkButton.setContentDescription(context.getString(R.string.reader_remove_bookmark));
         } else {
+            bookmarkButton.setSelected(false);
             bookmarkButton.setContentDescription(context.getString(R.string.reader_add_bookmark));
         }
     }

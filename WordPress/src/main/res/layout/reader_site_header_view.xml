@@ -23,7 +23,7 @@
             android:id="@+id/image_blavatar"
             style="@style/ReaderImageView.Avatar"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+            android:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"
             android:layout_marginEnd="@dimen/margin_large"
             android:contentDescription="@null"/>
 

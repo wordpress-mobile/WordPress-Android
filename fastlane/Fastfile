@@ -56,28 +56,27 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
   desc "Creates a new release branch from the current develop"
   lane :code_freeze do | options |
     old_version = android_codefreeze(options)
-    
-    setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{options[:codefreeze_version]}")
+   
+    localize_libs()
     setfrozentag(repository:GHHELPER_REPO, milestone: options[:codefreeze_version])
 
     get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
   end
 
-
 #####################################################################################
-# update_ps_strings 
+# update_appstore_strings 
 # -----------------------------------------------------------------------------------
 # This lane gets the data from the txt files in the WordPress/metadata/ folder
 # and updates the .po file that is then picked by GlotPress for translations.
 # -----------------------------------------------------------------------------------
 # Usage:
-# fastlane update_ps_strings version:<version>
+# fastlane update_appstore_strings version:<version>
 #
 # Example:
-# fastlane update_ps_strings version:10.3
+# fastlane update_appstore_strings version:10.3
 #####################################################################################
   desc "Updates the PlayStoreStrings.po file"
-  lane :update_ps_strings do |options| 
+  lane :update_appstore_strings do |options| 
     prj_folder = Dir.pwd + "/.."
 
     files = {
@@ -90,6 +89,13 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
       play_store_screenshot_3: prj_folder + "/WordPress/metadata/screenshot_3.txt",
       play_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.txt",
       play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
+
+      enhanced_app_store_screenshot_1: prj_folder + "/WordPress/metadata/screenshot_1.html",
+      enhanced_app_store_screenshot_2: prj_folder + "/WordPress/metadata/screenshot_2.html",
+      enhanced_app_store_screenshot_3: prj_folder + "/WordPress/metadata/screenshot_3.html",
+      enhanced_app_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.html",
+      enhanced_app_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.html",
+      enhanced_app_store_screenshot_6: prj_folder + "/WordPress/metadata/screenshot_6.html",
     }
 
     android_update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 
@@ -156,6 +162,34 @@ desc "Run release preflight checks"
  end
 
 ########################################################################
+# Dependencies handling lanes
+######################################################################## 
+  main_strings_path = "./WordPress/src/main/res/values/strings.xml"
+  libraries_strings_path = [
+    {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]}
+  ]
+
+  desc "Merge libraries strings files into the main app one"
+  lane :localize_libs do | options |
+    if (an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)) then
+      UI.important("Your #{main_strings_path} has changed.")
+      UI.input("Please, review the changes, commit them and press return to continue.")
+    end
+  end
+
+  lane :validate_login_strings do | options |
+    pr_number = options[:pr_number]
+    pr_number = options[:pr_url].split('/').last unless options[:pr_url].nil?
+
+    diff_url = nil
+    if (pr_number.nil? == false)
+      diff_url = "https://patch-diff.githubusercontent.com/raw/wordpress-mobile/WordPress-Android/pull/#{pr_number}.diff"
+    end
+
+    an_validate_lib_strings(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path, diff_url: diff_url) 
+  end 
+
+########################################################################
 # Helper Lanes
 ########################################################################  
   desc "Get a list of pull request from `start_tag` to the current state"
@@ -163,6 +197,7 @@ desc "Run release preflight checks"
     get_prs_list(repository:GHHELPER_REPO, start_tag:"#{options[:start_tag]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
   end
 
+  
 #####################################################################################
 # Private lanes
 #####################################################################################

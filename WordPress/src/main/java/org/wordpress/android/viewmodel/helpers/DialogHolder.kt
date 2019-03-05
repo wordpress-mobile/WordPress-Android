@@ -8,7 +8,7 @@ import org.wordpress.android.ui.utils.UiString
 
 class DialogHolder(
     private val tag: String,
-    private val title: UiString,
+    private val title: UiString?,
     private val message: UiString,
     private val positiveButton: UiString,
     private val negativeButton: UiString
@@ -17,7 +17,7 @@ class DialogHolder(
         val dialog = BasicFragmentDialog()
         dialog.initialize(
                 tag = tag,
-                title = uiHelpers.getTextOfUiString(context, title),
+                title = title?.let { uiHelpers.getTextOfUiString(context, title) },
                 message = uiHelpers.getTextOfUiString(context, message),
                 positiveButtonLabel = uiHelpers.getTextOfUiString(context, positiveButton),
                 negativeButtonLabel = uiHelpers.getTextOfUiString(context, negativeButton),

@@ -15,8 +15,8 @@
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:importantForAccessibility="no"
-        android:tint="@color/login_input_icon_color"
-        app:srcCompat="@drawable/ic_user_grey_24dp"/>
+        tools:srcCompat="@drawable/ic_user_grey_24dp"
+        tools:tint="@color/login_input_icon_color"/>
 
     <org.wordpress.android.util.widgets.WPTextInputLayout
         android:layout_centerVertical="true"

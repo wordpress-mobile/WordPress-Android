@@ -2,8 +2,8 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,14 +25,15 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.widgets.AutoResizeTextView;
 
 import java.text.ParseException;
@@ -113,17 +114,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
 
-        mDateTextView = (TextView) view.findViewById(R.id.stats_summary_date);
-        mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
-        mModuleButtonsContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
-        mNoActivtyThisPeriodContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_no_activity);
+        mDateTextView = view.findViewById(R.id.stats_summary_date);
+        mGraphContainer = view.findViewById(R.id.stats_bar_chart_fragment_container);
+        mModuleButtonsContainer = view.findViewById(R.id.stats_pager_tabs);
+        mNoActivtyThisPeriodContainer = view.findViewById(R.id.stats_bar_chart_no_activity);
 
-        mLegendContainer = (LinearLayout) view.findViewById(R.id.stats_legend_container);
-        mLegendLabel = (CheckedTextView) view.findViewById(R.id.stats_legend_label);
+        mLegendContainer = view.findViewById(R.id.stats_legend_container);
+        mLegendLabel = view.findViewById(R.id.stats_legend_label);
         mLegendLabel.setCheckMarkDrawable(
                 null); // Make sure to set a null drawable here. Otherwise the touching area is the same of a TextView
-        mVisitorsCheckboxContainer = (LinearLayout) view.findViewById(R.id.stats_checkbox_visitors_container);
-        mVisitorsCheckbox = (CheckBox) view.findViewById(R.id.stats_checkbox_visitors);
+        mVisitorsCheckboxContainer = view.findViewById(R.id.stats_checkbox_visitors_container);
+        mVisitorsCheckbox = view.findViewById(R.id.stats_checkbox_visitors);
         mVisitorsCheckbox.setOnClickListener(mOnCheckboxClicked);
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
@@ -155,29 +156,29 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         TabViewHolder(LinearLayout currentTab, OverviewLabel labelItem, boolean checked, boolean isLastItem) {
             mTab = currentTab;
-            mInnerContainer = (LinearLayout) currentTab.findViewById(R.id.stats_visitors_and_views_tab_inner_container);
-            mLabel = (AutoResizeTextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
+            mInnerContainer = currentTab.findViewById(R.id.stats_visitors_and_views_tab_inner_container);
+            mLabel = currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
             mLabel.setMinTextSize(getResources().getDimensionPixelSize(R.dimen.stats_label_min_text_size));
             mLabel.setText(labelItem.getLabel());
-            mValue = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
-            mIcon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
+            mValue = currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
+            mIcon = currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
             mLabelItem = labelItem;
             mIsChecked = checked;
             mIsLastItem = isLastItem;
             updateBackGroundAndIcon(0);
         }
 
-        private Drawable getTabIcon() {
+        private @DrawableRes int getTabIcon() {
             switch (mLabelItem) {
                 case VISITORS:
-                    return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
+                    return R.drawable.ic_user_white_24dp;
                 case COMMENTS:
-                    return getResources().getDrawable(R.drawable.ic_comment_grey_dark_12dp);
+                    return R.drawable.ic_comment_white_24dp;
                 case LIKES:
-                    return getResources().getDrawable(R.drawable.ic_star_grey_dark_12dp);
+                    return R.drawable.ic_star_white_24dp;
                 default:
                     // Views and when no prev match
-                    return getResources().getDrawable(R.drawable.ic_visible_on_grey_dark_12dp);
+                    return R.drawable.ic_visible_on_white_24dp;
             }
         }
 
@@ -192,7 +193,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 }
             }
 
-            mIcon.setImageDrawable(getTabIcon());
+            ColorUtils.INSTANCE.setImageResourceWithTint(mIcon, getTabIcon(), R.color.grey_dark);
 
             if (mIsLastItem) {
                 if (mIsChecked) {
@@ -728,7 +729,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
 
-            final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
+            final TextView emptyLabel = emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
             emptyLabel.setText("");
             if (!isLoading) {
                 mNoActivtyThisPeriodContainer.setVisibility(View.VISIBLE);

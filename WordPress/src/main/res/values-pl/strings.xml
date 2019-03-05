@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-01-19 06:54:23+0000
+Translation-Revision-Date: 2019-02-08 08:02:12+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="new_site_creation_site_preview_content_description">Prezentacja podglądu witryny</string>
+    <string name="new_site_creation_clear_all_content_description">Wyczyść</string>
+    <string name="site_created_but_not_fetched_snackbar_message">Wygląda na to że masz powolne połączenie. Jeśli nie widzisz nowej witryny na liście, spróbuj odświeżyć stronę.</string>
+    <string name="cancel_new_site_wizard_content_description">Anuluj kreatora tworzenia nowej witryny</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">Tworzymy nową witrynę</string>
+    <string name="notification_new_site_creation_failed">Wystąpił problem</string>
+    <string name="notification_new_site_creation_title">Tworzenie nowej witryny</string>
+    <string name="new_site_creation_create_site_button">Tworzenie nowej witryny</string>
+    <string name="new_site_creation_search_domain_input_hint">Przeszukaj domeny</string>
+    <string name="new_site_creation_domain_header_subtitle">To tu ludzie odnajdą ciebie w internecie.</string>
+    <string name="new_site_creation_domain_header_title">Wybierz nazwę domeny dla swojej witryny</string>
+    <string name="new_site_creation_empty_domain_list_message">Brak dostępnych adresów zgodnych z twoimi kryteriami wyszukiwania</string>
+    <string name="site_creation_error_generic_subtitle">Błąd komunikacji z serwerem, spróbuj ponownie</string>
+    <string name="site_creation_error_generic_title">Wystąpił problem</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Własna kategoria</string>
+    <string name="new_site_creation_button_skip">Pomiń</string>
+    <string name="new_site_creation_tag_line_description">Opis witryny to krótka linijka tekstu pokazana zaraz pod tytułem.</string>
+    <string name="new_site_creation_tag_line_hint">Opis witryny</string>
+    <string name="new_site_creation_site_title_hint">Tytuł witryny</string>
+    <string name="new_site_creation_site_info_header_subtitle">Powiedz nam więcej o witrynie którą tworzysz.</string>
+    <string name="new_site_creation_site_info_header_title">Informacje podstawowe</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Wystąpił problem</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Brak połączenia</string>
+    <string name="site_creation_segments_subtitle">To pomaga nam w przekazywaniu rekomendacji. Ale nie ograniczasz się - wszystkie witryny ewoluują!</string>
+    <string name="site_creation_segments_title">Powiedz nam jaki rodzaj witryny chcesz utworzyć</string>
+    <string name="new_site_creation_preview_title">Twoja witryna został utworzona!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
+    <string name="new_site_creation_screen_title_general">Tworzenie witryny</string>
+    <string name="suggestions_updated_content_description">Sugestie zaktualizowano</string>
+    <string name="site_picker_failed_selecting_added_site">Nie można było wybrać nowo dodanej witryny z własnym hostingiem.</string>
+    <string name="local_post_is_conflicted">Konflikt wersji</string>
+    <string name="preference_crash_reports_summary">Zezwól na automatyczne raportowanie błędów aby pomóc nam w poprawie wydajności aplikacji.</string>
+    <string name="preference_crash_reports">Raporty błędów</string>
+    <string name="snackbar_conflict_undo">Cofnij</string>
+    <string name="snackbar_conflict_web_version_discarded">Wersja na internecie została odrzucona</string>
+    <string name="snackbar_conflict_local_version_discarded">Wersja lokalna została odrzucona</string>
+    <string name="toast_conflict_updating_post">Aktualizacja wpisu</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Odrzuć wersję na internecie</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">Odrzuć wersję lokalną</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Lokalna\nZapisano %s\n\nW internecie\nZapisano %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">Ten wpis ma dwie konfliktujące ze sobą wersje. Wybierz wersję którą chciał(a)byś odrzucić.\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">Rozwiąż problem synchronizacji</string>
     <string name="local_changes_discarding_no_connection">Wymagane jest połączenie aby wykonać tą akcję. Proszę sprawdź swoje połączenie i spróbuj ponownie. </string>
     <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
     <string name="preference_strip_image_location">Usuń lokalizację z plików mediów</string>
@@ -36,7 +78,6 @@ Language: pl
     <string name="stats_referrer_label">Odsyłający</string>
     <string name="stats_referrers">Odsyłający</string>
     <string name="stats_posts_and_pages">Wpisy i Strony</string>
-    <string name="stats_most_popular_percent_views">%1$d%%</string>
     <string name="stats_insights_path">Ścieżka</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_google_plus">Google+</string>
@@ -46,13 +87,11 @@ Language: pl
     <string name="stats_insights_view_more">Zobacz więcej</string>
     <string name="stats_insights_share_post">Udostępnij wpis</string>
     <string name="stats_insights_create_post">Stwórz wpis</string>
-    <string name="stats_insights_latest_post_message">Minęło %1$s od kiedy wpis %2$s został opublikowany. Oto jak wpis radził sobie jak dotychczas.</string>
-    <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis</string>
-    <string name="stats_insights_latest_post_empty">Nie opublikowałeś jeszcze żadnych wpisów. Kiedy zaczniesz publikować, pojawi się tu podsumowanie twojego ostatniego wpisu</string>
+    <string name="stats_insights_latest_post_message">Minęło %1$s od kiedy wpis %2$s został opublikowany. Oto jak wpis radził sobie jak dotychczas:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis:</string>
+    <string name="stats_insights_latest_post_empty">Nie opublikowałeś jeszcze żadnych wpisów. Kiedy zaczniesz publikować, podsumowanie twojego ostatniego wpisu pojawi się tu:</string>
     <string name="stats_insights_tags_and_categories">Tagi i kategorie</string>
     <string name="stats_insights_all_time_stats">Statystyki od początku</string>
-    <string name="stats_insights_most_popular_views_label">Wyświetleń</string>
-    <string name="stats_insights_most_popular_day_and_hour_label">Dzień/Godzina</string>
     <string name="stats_insights_today_stats">Dzisiejsze statystyki</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Obserwujący</string>
@@ -159,48 +198,26 @@ Language: pl
     <string name="set_parent">Ustaw jako nadrzędną</string>
     <string name="dismiss">odrzuć</string>
     <string name="quick_start_focus_point_description">stuknij tutaj</string>
-    <string name="quick_start_sites">Szybki start</string>
     <string name="quick_start_list_create_site_title">Utwórz swoją witrynę</string>
-    <string name="quick_start_list_create_site_subtitle">Uruchom swoją witrynę</string>
-    <string name="quick_start_list_complete_title">Gratulacje, ukończyłeś Szybki Start</string>
-    <string name="quick_start_list_complete_subtitle">czy to nie fajne uczucie wykreślać kolejne elementy z listy? </string>
     <string name="quick_start_dialog_view_site_title">Zobacz swoją witrynę</string>
     <string name="quick_start_dialog_view_site_message_short">Stuknij na %1$s Zobacz Witrynę %2$s aby ją podejrzeć</string>
-    <string name="quick_start_dialog_view_site_message">Podejrzej witrynę aby sprawdzić wygląd witryny, który zobaczą odwiedzający. </string>
-    <string name="quick_start_dialog_skip_title">Pomiń Szybki Start</string>
-    <string name="quick_start_dialog_skip_message">Przewodnik Szybki Start poprowadzi cię przez proces budowania prostej witryny. Czy na pewno chcesz pominąć ten krok? </string>
     <string name="quick_start_dialog_share_site_title">Udostępnij swoją witrynę</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">Stuknij %1$s Udostępnianie %2$s aby kontynuować</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">Stuknij %1$s Połączenia %2$s aby dodać konta mediów społecznościowych</string>
     <string name="quick_start_dialog_share_site_message">Połącz się ze swoimi kontami mediów społecznościowych - twoja witryna automatycznie udostępni nowe wpisy. </string>
     <string name="quick_start_dialog_publish_post_title">Opublikuj wpis</string>
     <string name="quick_start_dialog_publish_post_message_short">Stuknij %1$s Utwórz wpis %2$s  aby utworzyć nowy wpis.</string>
-    <string name="quick_start_dialog_publish_post_message">Już czas napisać szkic pierwszego wpisu i opublikować go.</string>
     <string name="quick_start_dialog_need_help_title">Potrzebujesz pomocy?</string>
-    <string name="quick_start_dialog_need_help_message">Dzięki naszej liście kontrolnej w ramach Szybkiego Startu przejdziesz przez podstawowe ustawienia dla nowej witryny. </string>
-    <string name="quick_start_dialog_need_help_button_positive">Tak</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nigdy</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nie</string>
     <string name="quick_start_dialog_follow_sites_title">Obserwuj inne witryny</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Stuknij %1$s Szukanie %2$s aby znaleźć witryny z podobnymi zainteresowaniami</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Stuknij %1$s Czytnik %2$s aby kontynuować</string>
-    <string name="quick_start_dialog_follow_sites_message">Znajdź witryny które do ciebie przemawiają i obserwuj je aby otrzymywać aktualizacje kiedy one coś opublikują.</string>
     <string name="quick_start_dialog_customize_site_title">Spersonalizuj swoją witrynę</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Stuknij %1$s Motywy %2$s aby kontynuować</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">Stuknij %1$s Personalizuj %2$s aby rozpocząć personalizację swojej witryny</string>
-    <string name="quick_start_dialog_customize_site_message">Zmieniaj kolory,  czcionki i zdjęcia aby dopasować wygląd witryny do swoich potrzeb. </string>
-    <string name="quick_start_dialog_continue_setup_title">Kontynuuj konfigurację witryny</string>
-    <string name="quick_start_dialog_continue_setup_message">Czas na zakończenie konfiguracji witryny! Dzięki liście kontrolnej przejdziemy przez wszystkie kroki. </string>
     <string name="quick_start_dialog_choose_theme_title">Wybierz szablon</string>
-    <string name="quick_start_dialog_choose_theme_message_short">Stuknij %1$s Motywy %2$s aby odkryć nowe motywy</string>
     <string name="quick_start_dialog_choose_theme_message">Przeglądaj wszystkie motywy i znajdź najlepiej dopasowany do swoich potrzeb. </string>
-    <string name="quick_start_button_skip_positive">Pomiń</string>
-    <string name="quick_start_button_skip_negative">Anuluj</string>
-    <string name="quick_start_button_skip">Pomiń wszystko</string>
     <string name="quick_start_button_positive">Dalej</string>
     <string name="quick_start_button_negative_short">Anuluj</string>
     <string name="quick_start_button_negative">Nie teraz</string>
-    <string name="content_description_done">Zrobione</string>
     <string name="my_site_create_new_site_title">Nie msz żadnych witryn</string>
     <string name="reader_empty_followed_tags_title">Nie obserwujesz żadnych tagów</string>
     <string name="reader_empty_followed_tags_subtitle">Dodaj tagi aby odnaleźć wpisy o swoich ulubionych tematach </string>
@@ -931,7 +948,6 @@ Language: pl
     <string name="draft_uploaded">Szkic przesłany</string>
     <string name="report_bug">Raportuj błąd</string>
     <string name="video_quality">Jakość filmu</string>
-    <string name="permission_location">Lokalizacja</string>
     <string name="permission_camera">Aparat</string>
     <string name="permission_storage">Pamięć</string>
     <string name="button_edit_permissions">Edytuj uprawnienia</string>
@@ -1437,10 +1453,7 @@ Language: pl
     <string name="notifications_no_search_results">\'%s\' nie pasuje do żadnej witryny</string>
     <string name="search_sites">Szukaj witryn</string>
     <string name="notifications_empty_view_reader">Przejdź do Czytnika</string>
-    <string name="notifications_empty_action_followers_likes">Zostań zauważony: komentuj wpisy, które przeczytałeś.</string>
     <string name="notifications_empty_action_comments">Dołącz do konwersacji: komentuj wpisy z blogów, które obserwujesz</string>
-    <string name="notifications_empty_action_unread">Ożyw dyskusję: dodaj nowy wpis.</string>
-    <string name="notifications_empty_action_all">Bądź aktywny! Skomentuj wpisy z blogów, które obserwujesz. </string>
     <string name="notifications_empty_comments">Brak komentarzy, jeszcze.</string>
     <string name="notifications_empty_unread">Jesteś na bieżąco!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Proszę wejdź w statystki w aplikacji i spróbuj dodać widget później</string>
@@ -1503,7 +1516,6 @@ Language: pl
     <string name="stats_insights_most_popular_hour">Najbardziej popularna godzina</string>
     <string name="stats_insights_most_popular_day">Najpopularniejszy dzień</string>
     <string name="stats_insights_today">Dzisiejsze statystyki</string>
-    <string name="stats_insights_popular">Najbardziej popularny dzień i godzina</string>
     <string name="stats_insights_all_time">Wszystkie wpisy, odsłony i odwiedzający</string>
     <string name="stats_insights">Trendy</string>
     <string name="stats_sign_in_jetpack_different_com_account">Aby podejrzeć statystyki, zaloguj się na konto WordPress.com, do którego podłączyłeś Jetpacka.</string>

@@ -1,50 +1,42 @@
 android_config: &android_config
   docker:
-    - image: circleci/android:api-27-alpha
+    - image: circleci/android:api-28-alpha
   environment:
     # kotlin.incremental=false and kotlin.compiler.execution.strategy=in-process are required due to an issue with the Kotlin compiler in
     # memory constrained environments: https://youtrack.jetbrains.com/issue/KT-15562
-    GRADLE_OPTS: -Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
-    GRADLEW: "./gradlew --stacktrace --no-parallel --build-cache --configure-on-demand -PdisablePreDex -PjavaMaxHeapSize=1536m"
+    GRADLE_OPTS: -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
+    GRADLEW: "./gradlew --stacktrace"
 
 copy_gradle_properties: &copy_gradle_properties
   run:
     name: Setup gradle.properties
     command: cp gradle.properties-example gradle.properties && cp libs/login/gradle.properties-example libs/login/gradle.properties
 
-version: 2.0
+orbs:
+  android: wordpress-mobile/android@0.0.19
+  bundle-install: toshimaru/bundle-install@0.1.1
+
+version: 2.1
 jobs:
   test:
     <<: *android_config
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
-            - wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-
-            - wordpress-android-gradle-build-cache-
+      - android/restore-gradle-cache:
+          cache-prefix: test-cache
       - <<: *copy_gradle_properties
-      - run:
-          name: Validate login strings
-          command: ./tools/validate-login-strings.sh
       - run:
           name: Test
           command: $GRADLEW testVanillaRelease
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
-      - store_test_results:
-          path: WordPress/build/test-results/testVanillaReleaseUnitTest
+      - android/save-gradle-cache:
+          cache-prefix: test-cache
+      - android/save-test-results
   lint:
     <<: *android_config
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
-            - wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-
-            - wordpress-android-gradle-lint-cache-
+      - android/restore-gradle-cache:
+          cache-prefix: lint-cache
       - <<: *copy_gradle_properties
       - run:
           name: Checkstyle
@@ -55,37 +47,24 @@ jobs:
       - run:
           name: Lint
           command: $GRADLEW lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+      - android/save-gradle-cache:
+          cache-prefix: lint-cache
       - store_artifacts:
           path: WordPress/build/reports
           destination: reports
-  danger:
+  strings-check:
     docker:
-      - image: circleci/ruby:2.3-browsers
+      - image: circleci/ruby:2.3
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - wordpress-android-gems-{{ checksum "Gemfile.lock" }}
-            - wordpress-android-gems-
+      - bundle-install/bundle-install
       - run:
-          name: Bundle install
-          command: bundle install --path=vendor/bundle
-      - save_cache:
-          paths:
-            - vendor/bundle
-          key: wordpress-android-gems-{{ checksum "Gemfile.lock" }}
-      - run:
-          name: Danger
-          command: if [ -n "$DANGER_GITHUB_API_TOKEN" ]; then bundle exec danger --fail-on-errors=true; else echo "Not running danger because $DANGER_GITHUB_API_TOKEN is not found"; fi
+          name: Validate login strings
+          command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
 
 workflows:
-  version: 2
   wordpress_android:
     jobs:
+      - strings-check
       - test
       - lint
-      - danger

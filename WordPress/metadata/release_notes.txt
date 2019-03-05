@@ -1,5 +1,3 @@
-* Lots of small improvements to the Stats section, including visual tweaks and fixing a crash.
-* Added a dialog to help you to fix a post with different web and local changes.
-* Refreshed Pages list layout that includes a timestamp and a featured image thumbnail.
-* Fixed a bug that caused some old saved posts to disappear.
-* Fixed a crash that occurred when opening the Media section.
+* A new, smart site-creation process starts you off with a personalized, already-customized website
+* Markup lovers rejoice; <em> is now the default markup for italic in the editor.
+* Fixes! Sometimes the “My Site” screen didn’t look right in right-to-left languages, or posts showed up as scheduled even after they were published — no more.

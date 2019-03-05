@@ -25,13 +25,14 @@
 
         <ImageView
             android:id="@+android:id/icon"
-            tools:src="@drawable/ic_info_grey_800_32dp"
-            tools:visibility="visible"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="32dp"
             android:contentDescription="@null"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:src="@drawable/ic_info_white_24dp"
+            tools:tint="@color/grey_800"
+            tools:visibility="visible"/>
 
         <LinearLayout
             android:layout_width="wrap_content"

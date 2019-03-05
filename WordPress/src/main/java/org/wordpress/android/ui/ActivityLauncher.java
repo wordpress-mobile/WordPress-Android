@@ -62,7 +62,6 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
-import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
@@ -222,6 +221,17 @@ public class ActivityLauncher {
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
+        if (site == null) {
+            AppLog.e(T.STATS, "SiteModel is null when opening the stats from the deeplink.");
+            AnalyticsTracker.track(
+                    STATS_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Stats from the deeplink because of the null SiteModel"
+                                  );
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
@@ -253,12 +263,6 @@ public class ActivityLauncher {
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
-    }
-
-    public static void viewQuickStartForResult(Activity activity) {
-        Intent intent = new Intent(activity, QuickStartActivity.class);
-        activity.startActivityForResult(intent, RequestCodes.QUICK_START);
-        AnalyticsTracker.track(Stat.QUICK_START_LIST_VIEWED);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
@@ -326,7 +330,7 @@ public class ActivityLauncher {
         intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
         intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
 
-        String title = context.getResources().getString(R.string.stats_view_tags_and_categories);
+        String title = context.getResources().getString(R.string.stats_view_top_posts_and_pages);
         intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
         context.startActivity(intent);
     }
@@ -429,6 +433,17 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
+        if (site == null) {
+            AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
+            AnalyticsTracker.track(
+                    STATS_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Stats because of the null SiteModel"
+                                  );
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(LOGGED_INTO_JETPACK, true);
@@ -600,11 +615,14 @@ public class ActivityLauncher {
     }
 
     public static void addNewPostForResult(Activity activity, SiteModel site, boolean isPromo) {
+        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo);
+    }
+
+    public static void addNewPostForResult(Intent intent, Activity activity, SiteModel site, boolean isPromo) {
         if (site == null) {
             return;
         }
 
-        Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
@@ -612,23 +630,31 @@ public class ActivityLauncher {
     }
 
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
+        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId());
+    }
+
+    public static void editPostOrPageForResult(Intent intent, Activity activity, SiteModel site, int postLocalId) {
         if (site == null) {
             return;
         }
 
-        Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         // PostModel objects can be quite large, since content field is not size restricted,
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
         // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, postLocalId);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void editPageForResult(@NonNull Fragment fragment, @NonNull PageModel page) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, page.getSite());
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
+        editPageForResult(intent, fragment, page.getSite(), page.getPageId());
+    }
+
+    public static void editPageForResult(Intent intent, @NonNull Fragment fragment, @NonNull SiteModel site,
+                                         int pageLocalId) {
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, pageLocalId);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
