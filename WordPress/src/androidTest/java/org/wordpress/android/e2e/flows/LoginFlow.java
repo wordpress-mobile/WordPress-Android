@@ -42,8 +42,6 @@ public class LoginFlow {
     private void confirmLogin() {
         ViewInteraction continueButton = onView(withText(getCurrentActivity().getString(R.string.login_continue)));
 
-        // TODO: Needs to wait a little for button to be clickable and for load after, should try and find a better way
-        // On poor WiFi this needed to be increased to pass
         waitForElementToBeDisplayed(continueButton);
         clickOn(continueButton);
 
@@ -66,7 +64,7 @@ public class LoginFlow {
                 onView(withContentDescription(getCurrentActivity().getString(R.string.username)));
         ViewInteraction passwordElement =
                 onView(withContentDescription(getCurrentActivity().getString(R.string.password)));
-        populateTextField(usernameElement, username + "\n");
+        populateTextField(R.id.login_username_row, username + "\n");
         populateTextField(passwordElement, password + "\n");
         clickOn(R.id.primary_button);
     }
