@@ -16,7 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.DistinctMutableLiveData
 import org.wordpress.android.util.PackageUtils
@@ -31,7 +31,7 @@ class BaseListUseCase(
     private val statsSectionManager: SelectedSectionManager,
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
-    private val siteModelProvider: SiteModelProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val useCases: List<BaseStatsUseCase<*, *>>,
     private val getStatsTypes: suspend () -> List<StatsTypes>,
     private val mapUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel
@@ -76,7 +76,7 @@ class BaseListUseCase(
     }
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean) {
-        if (siteModelProvider.hasLoadedSite()) {
+        if (statsSiteProvider.hasLoadedSite()) {
             withContext(bgDispatcher) {
                 if (PackageUtils.isDebugBuild() && useCases.distinctBy { it.type }.size < useCases.size) {
                     throw RuntimeException("Duplicate stats type in a use case")

@@ -29,14 +29,14 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
-    @Mock lateinit var siteModelProvider: SiteModelProvider
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: LatestPostSummaryUseCase
@@ -45,11 +45,11 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         useCase = LatestPostSummaryUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                siteModelProvider,
+                statsSiteProvider,
                 latestPostSummaryMapper,
                 tracker
         )
-        whenever(siteModelProvider.siteModel).thenReturn(site)
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
         useCase.navigationTarget.observeForever {}
     }
 

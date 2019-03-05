@@ -32,13 +32,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
-    @Mock lateinit var siteModelProvider: SiteModelProvider
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
@@ -54,11 +54,11 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         useCase = TagsAndCategoriesUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                siteModelProvider,
+                statsSiteProvider,
                 resourceProvider,
                 tracker
         )
-        whenever(siteModelProvider.siteModel).thenReturn(site)
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
 
     @Test

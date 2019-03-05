@@ -22,7 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -38,13 +38,13 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: VideoPlaysStore,
     selectedDateProvider: SelectedDateProvider,
-    siteModelProvider: SiteModelProvider,
+    statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatelessUseCase<VideoPlaysModel>(
         VIDEOS,
         mainDispatcher,
         selectedDateProvider,
-        siteModelProvider,
+        statsSiteProvider,
         statsGranularity
 ) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(string.stats_videos))
@@ -111,7 +111,7 @@ constructor(
                 ViewVideoPlays(
                         statsGranularity,
                         selectedDateProvider.getSelectedDate(statsGranularity) ?: Date(),
-                        siteModelProvider.siteModel
+                        statsSiteProvider.siteModel
                 )
         )
     }
@@ -126,7 +126,7 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: VideoPlaysStore,
         private val selectedDateProvider: SelectedDateProvider,
-        private val siteModelProvider: SiteModelProvider,
+        private val statsSiteProvider: StatsSiteProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
@@ -135,7 +135,7 @@ constructor(
                         mainDispatcher,
                         store,
                         selectedDateProvider,
-                        siteModelProvider,
+                        statsSiteProvider,
                         analyticsTracker
                 )
     }

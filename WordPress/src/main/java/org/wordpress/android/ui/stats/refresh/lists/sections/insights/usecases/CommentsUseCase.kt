@@ -20,7 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -34,11 +34,11 @@ class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
-    private val siteModelProvider: SiteModelProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
-        val response = insightsStore.fetchComments(siteModelProvider.siteModel, PAGE_SIZE, forced)
+        val response = insightsStore.fetchComments(statsSiteProvider.siteModel, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
@@ -50,7 +50,7 @@ class CommentsUseCase
     }
 
     override suspend fun loadCachedData(): CommentsModel? {
-        return insightsStore.getComments(siteModelProvider.siteModel, PAGE_SIZE)
+        return insightsStore.getComments(statsSiteProvider.siteModel, PAGE_SIZE)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_comments))
@@ -124,6 +124,6 @@ class CommentsUseCase
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_COMMENTS_VIEW_MORE_TAPPED)
-        navigateTo(ViewCommentsStats(siteModelProvider.siteModel))
+        navigateTo(ViewCommentsStats(statsSiteProvider.siteModel))
     }
 }

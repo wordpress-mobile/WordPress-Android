@@ -23,7 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.utils.HUNDRED_THOUSAND
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -33,16 +33,16 @@ class LatestPostSummaryUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
-    private val siteModelProvider: SiteModelProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val latestPostSummaryMapper: LatestPostSummaryMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher) {
     override suspend fun loadCachedData(): InsightsLatestPostModel? {
-        return insightsStore.getLatestPostInsights(siteModelProvider.siteModel)
+        return insightsStore.getLatestPostInsights(statsSiteProvider.siteModel)
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<InsightsLatestPostModel> {
-        val response = insightsStore.fetchLatestPostInsights(siteModelProvider.siteModel, forced)
+        val response = insightsStore.fetchLatestPostInsights(statsSiteProvider.siteModel, forced)
         val model = response.model
         val error = response.error
 
@@ -130,7 +130,7 @@ class LatestPostSummaryUseCase
 
     private fun onAddNewPostClick() {
         analyticsTracker.track(STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED)
-        navigateTo(AddNewPost(siteModelProvider.siteModel))
+        navigateTo(AddNewPost(statsSiteProvider.siteModel))
     }
 
     private fun onViewMore(params: ViewMoreParams) {
@@ -140,7 +140,7 @@ class LatestPostSummaryUseCase
                         params.postId.toString(),
                         params.postTitle,
                         params.postUrl,
-                        siteId = siteModelProvider.siteModel.siteId
+                        siteId = statsSiteProvider.siteModel.siteId
                 )
         )
     }
@@ -152,7 +152,7 @@ class LatestPostSummaryUseCase
 
     private fun onLinkClicked(params: LinkClickParams) {
         analyticsTracker.track(STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED)
-        navigateTo(ViewPost(params.postId, params.postUrl, siteId = siteModelProvider.siteModel.siteId))
+        navigateTo(ViewPost(params.postId, params.postUrl, siteId = statsSiteProvider.siteModel.siteId))
     }
 
     data class LinkClickParams(val postId: Long, val postUrl: String)

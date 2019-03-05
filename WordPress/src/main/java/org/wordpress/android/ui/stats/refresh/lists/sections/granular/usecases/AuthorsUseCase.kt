@@ -30,7 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularSt
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -45,13 +45,13 @@ constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val authorsStore: AuthorsStore,
-    siteModelProvider: SiteModelProvider,
+    statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatefulUseCase<AuthorsModel, SelectedAuthor>(
         AUTHORS,
         mainDispatcher,
-        siteModelProvider,
+        statsSiteProvider,
         selectedDateProvider,
         statsGranularity,
         SelectedAuthor()
@@ -145,7 +145,7 @@ constructor(
                 ViewAuthors(
                         statsGranularity,
                         selectedDateProvider.getSelectedDate(statsGranularity) ?: Date(),
-                        siteModelProvider.siteModel
+                        statsSiteProvider.siteModel
                 )
         )
     }
@@ -158,7 +158,7 @@ constructor(
                         postTitle = params.postTitle,
                         postUrl = params.postUrl,
                         postType = StatsConstants.ITEM_TYPE_POST,
-                        siteId = siteModelProvider.siteModel.siteId
+                        siteId = statsSiteProvider.siteModel.siteId
                 )
         )
     }
@@ -175,7 +175,7 @@ constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val authorsStore: AuthorsStore,
-        private val siteModelProvider: SiteModelProvider,
+        private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
@@ -184,7 +184,7 @@ constructor(
                         granularity,
                         mainDispatcher,
                         authorsStore,
-                        siteModelProvider,
+                        statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker
                 )

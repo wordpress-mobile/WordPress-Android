@@ -59,7 +59,6 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 
     /**
      * Fetches data either from a local cache or from remote API
-     * @param site for which we're fetching the data
      * @param refresh is true when we want to get the remote data
      * @param forced is true when we want to get fresh data and skip the cache
      */
@@ -145,13 +144,11 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 
     /**
      * Loads data from a local cache. Returns a null value when the cache is empty.
-     * @param site for which we load the data
      */
     protected abstract suspend fun loadCachedData(): DOMAIN_MODEL?
 
     /**
      * Fetches remote data from the endpoint.
-     * @param site for which we fetch the data
      * @param forced is true when we want to get the fresh data
      */
     protected abstract suspend fun fetchRemoteData(forced: Boolean): State<DOMAIN_MODEL>

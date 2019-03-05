@@ -27,7 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularSt
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.SelectedClicksGroup
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -42,13 +42,13 @@ constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: ClicksStore,
-    siteModelProvider: SiteModelProvider,
+    statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatefulUseCase<ClicksModel, SelectedClicksGroup>(
         CLICKS,
         mainDispatcher,
-        siteModelProvider,
+        statsSiteProvider,
         selectedDateProvider,
         statsGranularity,
         SelectedClicksGroup()
@@ -137,7 +137,7 @@ constructor(
                 ViewClicks(
                         statsGranularity,
                         selectedDateProvider.getSelectedDate(statsGranularity) ?: Date(),
-                        siteModelProvider.siteModel
+                        statsSiteProvider.siteModel
                 )
         )
     }
@@ -153,7 +153,7 @@ constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: ClicksStore,
-        private val siteModelProvider: SiteModelProvider,
+        private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
@@ -162,7 +162,7 @@ constructor(
                         granularity,
                         mainDispatcher,
                         store,
-                        siteModelProvider,
+                        statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker
                 )

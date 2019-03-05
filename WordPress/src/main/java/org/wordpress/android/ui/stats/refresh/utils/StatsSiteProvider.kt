@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SiteModelProvider
+class StatsSiteProvider
 @Inject constructor(private val siteStore: SiteStore, private val dispatcher: Dispatcher) {
     lateinit var siteModel: SiteModel
     private val mutableSiteChanged = SingleLiveEvent<OnSiteChanged>()

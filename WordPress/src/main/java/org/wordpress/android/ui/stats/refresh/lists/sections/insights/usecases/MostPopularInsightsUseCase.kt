@@ -11,7 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -21,16 +21,16 @@ class MostPopularInsightsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
-    private val siteModelProvider: SiteModelProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider
 ) : StatelessUseCase<InsightsMostPopularModel>(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
     override suspend fun loadCachedData(): InsightsMostPopularModel? {
-        return insightsStore.getMostPopularInsights(siteModelProvider.siteModel)
+        return insightsStore.getMostPopularInsights(statsSiteProvider.siteModel)
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<InsightsMostPopularModel> {
-        val response = insightsStore.fetchMostPopularInsights(siteModelProvider.siteModel, forced)
+        val response = insightsStore.fetchMostPopularInsights(statsSiteProvider.siteModel, forced)
         val model = response.model
         val error = response.error
 

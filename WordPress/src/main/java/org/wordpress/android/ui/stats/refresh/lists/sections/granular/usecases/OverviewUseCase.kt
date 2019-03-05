@@ -14,7 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -31,7 +31,7 @@ constructor(
     private val statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val selectedDateProvider: SelectedDateProvider,
-    private val siteModelProvider: SiteModelProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -53,7 +53,7 @@ constructor(
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
         return visitsAndViewsStore.getVisits(
-                siteModelProvider.siteModel,
+                statsSiteProvider.siteModel,
                 selectedDateProvider.getCurrentDate(),
                 statsGranularity
         )
@@ -61,7 +61,7 @@ constructor(
 
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
-                siteModelProvider.siteModel,
+                statsSiteProvider.siteModel,
                 PAGE_SIZE,
                 selectedDateProvider.getCurrentDate(),
                 statsGranularity,
@@ -155,7 +155,7 @@ constructor(
     class OverviewUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-        private val siteModelProvider: SiteModelProvider,
+        private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter,
         private val overviewMapper: OverviewMapper,
@@ -167,7 +167,7 @@ constructor(
                         granularity,
                         visitsAndViewsStore,
                         selectedDateProvider,
-                        siteModelProvider,
+                        statsSiteProvider,
                         statsDateFormatter,
                         overviewMapper,
                         mainDispatcher,

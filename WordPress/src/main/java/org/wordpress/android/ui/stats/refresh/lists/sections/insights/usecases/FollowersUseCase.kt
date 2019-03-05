@@ -24,7 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -36,7 +36,7 @@ class FollowersUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
-    private val siteModelProvider: SiteModelProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
@@ -46,8 +46,8 @@ class FollowersUseCase
         0
 ) {
     override suspend fun loadCachedData(): Pair<FollowersModel, FollowersModel>? {
-        val wpComFollowers = insightsStore.getWpComFollowers(siteModelProvider.siteModel, PAGE_SIZE)
-        val emailFollowers = insightsStore.getEmailFollowers(siteModelProvider.siteModel, PAGE_SIZE)
+        val wpComFollowers = insightsStore.getWpComFollowers(statsSiteProvider.siteModel, PAGE_SIZE)
+        val emailFollowers = insightsStore.getEmailFollowers(statsSiteProvider.siteModel, PAGE_SIZE)
         if (wpComFollowers != null && emailFollowers != null) {
             return wpComFollowers to emailFollowers
         }
@@ -59,14 +59,14 @@ class FollowersUseCase
     ): State<Pair<FollowersModel, FollowersModel>> {
         val deferredWpComResponse = GlobalScope.async {
             insightsStore.fetchWpComFollowers(
-                    siteModelProvider.siteModel,
+                    statsSiteProvider.siteModel,
                     PAGE_SIZE,
                     forced
             )
         }
         val deferredEmailResponse = GlobalScope.async {
             insightsStore.fetchEmailFollowers(
-                    siteModelProvider.siteModel,
+                    statsSiteProvider.siteModel,
                     PAGE_SIZE,
                     forced
             )
@@ -163,6 +163,6 @@ class FollowersUseCase
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
-        navigateTo(ViewFollowersStats(siteModelProvider.siteModel))
+        navigateTo(ViewFollowersStats(statsSiteProvider.siteModel))
     }
 }

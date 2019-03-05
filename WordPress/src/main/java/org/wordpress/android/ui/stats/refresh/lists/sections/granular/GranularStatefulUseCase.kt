@@ -7,13 +7,13 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.util.Date
 
 abstract class GranularStatefulUseCase<DOMAIN_MODEL, UI_STATE>(
     type: StatsTypes,
     mainDispatcher: CoroutineDispatcher,
-    val siteModelProvider: SiteModelProvider,
+    val statsSiteProvider: StatsSiteProvider,
     val selectedDateProvider: SelectedDateProvider,
     val statsGranularity: StatsGranularity,
     defaultUiState: UI_STATE
@@ -22,7 +22,7 @@ abstract class GranularStatefulUseCase<DOMAIN_MODEL, UI_STATE>(
 
     final override suspend fun loadCachedData(): DOMAIN_MODEL? {
         val selectedDate = selectedDateProvider.getSelectedDate(statsGranularity)
-        return selectedDate?.let { loadCachedData(it, siteModelProvider.siteModel) }
+        return selectedDate?.let { loadCachedData(it, statsSiteProvider.siteModel) }
     }
 
     abstract suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<DOMAIN_MODEL>
@@ -31,7 +31,7 @@ abstract class GranularStatefulUseCase<DOMAIN_MODEL, UI_STATE>(
         return selectedDateProvider.getSelectedDateState(statsGranularity).let { date ->
             when {
                 date.error -> State.Error("Missing date")
-                date.hasData() -> fetchRemoteData(date.getDate(), siteModelProvider.siteModel, forced)
+                date.hasData() -> fetchRemoteData(date.getDate(), statsSiteProvider.siteModel, forced)
                 date.loading -> State.Loading()
                 else -> State.Loading()
             }

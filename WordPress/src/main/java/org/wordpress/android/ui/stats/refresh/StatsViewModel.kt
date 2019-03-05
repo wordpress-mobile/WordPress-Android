@@ -23,7 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -43,7 +43,7 @@ class StatsViewModel
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val siteModelProvider: SiteModelProvider
+    private val statsSiteProvider: StatsSiteProvider
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -59,7 +59,7 @@ class StatsViewModel
 
     val selectedDateChanged = selectedDateProvider.selectedDateChanged
 
-    val siteChanged = siteModelProvider.siteChanged
+    val siteChanged = statsSiteProvider.siteChanged
 
     private val _toolbarHasShadow = MutableLiveData<Boolean>()
     val toolbarHasShadow: LiveData<Int> = _toolbarHasShadow.mapNullable {
@@ -69,7 +69,7 @@ class StatsViewModel
     fun start(site: SiteModel, launchedFromWidget: Boolean, initialSection: StatsSection?) {
         // Check if VM is not already initialized
         if (!isInitialized) {
-            siteModelProvider.start(site)
+            statsSiteProvider.start(site)
             isInitialized = true
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
@@ -106,7 +106,7 @@ class StatsViewModel
 
     fun onPullToRefresh() {
         _showSnackbarMessage.value = null
-        siteModelProvider.clear()
+        statsSiteProvider.clear()
         if (networkUtilsWrapper.isNetworkAvailable()) {
             loadData {
                 listUseCases[statsSectionManager.getSelectedSection()]?.refreshData(true)
@@ -142,7 +142,7 @@ class StatsViewModel
         super.onCleared()
         _showSnackbarMessage.value = null
         selectedDateProvider.clear()
-        siteModelProvider.stop()
+        statsSiteProvider.stop()
     }
 
     data class DateSelectorUiModel(

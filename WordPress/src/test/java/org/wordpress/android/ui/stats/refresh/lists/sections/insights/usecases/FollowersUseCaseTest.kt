@@ -31,7 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -40,7 +40,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var siteModelProvider: SiteModelProvider
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: FollowersUseCase
@@ -58,7 +58,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         useCase = FollowersUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                siteModelProvider,
+                statsSiteProvider,
                 statsUtilsWrapper,
                 resourceProvider,
                 tracker
@@ -68,7 +68,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(
                 message
         )
-        whenever(siteModelProvider.siteModel).thenReturn(site)
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
 
     @Test

@@ -28,12 +28,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 class PublicizeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
-    @Mock lateinit var siteModelProvider: SiteModelProvider
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var serviceMapper: ServiceMapper
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
@@ -44,11 +44,11 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         useCase = PublicizeUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                siteModelProvider,
+                statsSiteProvider,
                 serviceMapper,
                 tracker
         )
-        whenever(siteModelProvider.siteModel).thenReturn(site)
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
 
     @Test

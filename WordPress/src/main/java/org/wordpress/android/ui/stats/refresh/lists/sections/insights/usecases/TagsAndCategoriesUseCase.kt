@@ -24,7 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
-import org.wordpress.android.ui.stats.refresh.utils.SiteModelProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -37,7 +37,7 @@ class TagsAndCategoriesUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
-    private val siteModelProvider: SiteModelProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<TagsModel, TagsAndCategoriesUiState>(
@@ -46,7 +46,7 @@ class TagsAndCategoriesUseCase
         TagsAndCategoriesUiState(null)
 ) {
     override suspend fun fetchRemoteData(forced: Boolean): State<TagsModel> {
-        val response = insightsStore.fetchTags(siteModelProvider.siteModel, PAGE_SIZE, forced)
+        val response = insightsStore.fetchTags(statsSiteProvider.siteModel, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
@@ -58,7 +58,7 @@ class TagsAndCategoriesUseCase
     }
 
     override suspend fun loadCachedData(): TagsModel? {
-        return insightsStore.getTags(siteModelProvider.siteModel, PAGE_SIZE)
+        return insightsStore.getTags(statsSiteProvider.siteModel, PAGE_SIZE)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_tags_and_categories))
@@ -155,7 +155,7 @@ class TagsAndCategoriesUseCase
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED)
-        navigateTo(ViewTagsAndCategoriesStats(siteModelProvider.siteModel))
+        navigateTo(ViewTagsAndCategoriesStats(statsSiteProvider.siteModel))
     }
 
     private fun onTagClick(link: String) {
