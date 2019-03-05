@@ -158,7 +158,7 @@ class PostsListActivity : AppCompatActivity(),
             it?.let { uiString ->
                 Snackbar.make(
                         findViewById(R.id.coordinator),
-                        uiHelpers.getTextOfUiString(this, uiString),
+                        getString(it.messageRes),
                         Snackbar.LENGTH_LONG
                 ).show()
             }

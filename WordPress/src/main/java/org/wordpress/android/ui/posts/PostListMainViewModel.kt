@@ -15,12 +15,11 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
-import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -53,8 +52,8 @@ class PostListMainViewModel @Inject constructor(
     private val _scrollToLocalPostId = SingleLiveEvent<Int>()
     val scrollToLocalPostId = _scrollToLocalPostId as LiveData<Int>
 
-    private val _snackBarMessage = SingleLiveEvent<UiString>()
-    val snackBarMessage = _snackBarMessage as LiveData<UiString>
+    private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
+    val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
 
     fun start(site: SiteModel) {
         this.site = site
@@ -77,7 +76,7 @@ class PostListMainViewModel @Inject constructor(
     fun showTargetPost(targetPostId: Int) {
         val postModel = postStore.getPostByLocalPostId(targetPostId)
         if (postModel == null) {
-            _snackBarMessage.value = UiStringRes(string.error_post_does_not_exist)
+            _snackBarMessage.value = SnackbarMessageHolder(string.error_post_does_not_exist)
         } else {
             launch(mainDispatcher) {
                 val targetTab = PostListType.fromPostStatus(PostStatus.fromPost(postModel))
@@ -91,6 +90,4 @@ class PostListMainViewModel @Inject constructor(
             }
         }
     }
-
-    data class NavigationTarget(val localPostId: Int, val targetTabPosition: Int)
 }
