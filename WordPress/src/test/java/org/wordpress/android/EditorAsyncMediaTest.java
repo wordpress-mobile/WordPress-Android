@@ -17,7 +17,7 @@ public class EditorAsyncMediaTest {
                                                       + " class=\"wp-image-%s alignnone size-full\" width=\"%d\""
                                                       + " height=\"%d\"></a>",
                                            mediaFile.getFileURL(), mediaFile.getFileURL(),
-                                           mediaFile.getMediaId(), mediaFile.getWidth(), mediaFile.getHeight() );
+                                           mediaFile.getMediaId(), mediaFile.getWidth(), mediaFile.getHeight());
 
         String uploadingImageHtml = "<span id=\"img_container_54\" class=\"img_container\">"
                                     + "<progress id=\"progress_54\" value=\"0.1\" class=\"wp_media_indicator\">"
