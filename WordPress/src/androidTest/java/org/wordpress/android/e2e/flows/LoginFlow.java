@@ -7,9 +7,6 @@ import org.wordpress.android.R;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_PASSWORD;
-import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
-import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_USERNAME;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
@@ -52,7 +49,8 @@ public class LoginFlow {
         ViewInteraction continueButton = onView(withText(getCurrentActivity().getString(R.string.login_continue)));
 
         // TODO: Needs to wait a little for button to be clickable, should try and find a better way
-        sleep();
+        // On poor WiFi this needed to be increased to pass
+        sleep(2000);
         if (isElementDisplayed(continueButton)) { // click continue
             clickOn(continueButton);
         }
@@ -71,25 +69,25 @@ public class LoginFlow {
         // TODO: Continue flow after mocking complete
     }
 
-    private void enterUsernameAndPassword() {
+    private void enterUsernameAndPassword(String username, String password) {
         ViewInteraction usernameElement =
                 onView(withContentDescription(getCurrentActivity().getString(R.string.username)));
         ViewInteraction passwordElement =
                 onView(withContentDescription(getCurrentActivity().getString(R.string.password)));
-        populateTextField(usernameElement, E2E_SELF_HOSTED_USER_USERNAME + "\n");
-        populateTextField(passwordElement, E2E_SELF_HOSTED_USER_PASSWORD + "\n");
+        populateTextField(usernameElement, username + "\n");
+        populateTextField(passwordElement, password + "\n");
         clickOn(R.id.primary_button);
     }
 
-    private void chooseAndEnterSiteAddress() {
+    private void chooseAndEnterSiteAddress(String siteAddress) {
         clickOn(onView(withText(R.string.enter_site_address_instead)));
-        populateTextField(R.id.input, E2E_SELF_HOSTED_USER_SITE_ADDRESS);
+        populateTextField(R.id.input, siteAddress);
         clickOn(R.id.primary_button);
     }
 
     public void loginEmailPassword() {
-        enterEmailAddress();
         chooseLogin();
+        enterEmailAddress();
         enterPassword();
         confirmLogin();
     }
@@ -100,10 +98,10 @@ public class LoginFlow {
         chooseMagicLink();
     }
 
-    public void loginSiteAddress() {
+    public void loginSiteAddress(String siteAddress, String username, String password) {
         chooseLogin();
-        chooseAndEnterSiteAddress();
-        enterUsernameAndPassword();
+        chooseAndEnterSiteAddress(siteAddress);
+        enterUsernameAndPassword(username, password);
         confirmLogin();
     }
 }

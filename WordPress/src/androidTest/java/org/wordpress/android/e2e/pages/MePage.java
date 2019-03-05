@@ -11,6 +11,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 
 public class MePage {
@@ -26,7 +27,9 @@ public class MePage {
 
     public MePage go() {
         clickOn(R.id.nav_me);
-        displayName.check(matches(isDisplayed()));
+        if (!isSelfHosted()) {
+            displayName.check(matches(isDisplayed()));
+        }
 
         return this;
     }
@@ -36,6 +39,10 @@ public class MePage {
         usernameLabel.check(matches(withText(atUsername)));
 
         return this;
+    }
+
+    public boolean isSelfHosted() {
+        return isElementDisplayed(onView(withText(R.string.sign_in_wpcom)));
     }
 
     public void openAppSettings() {

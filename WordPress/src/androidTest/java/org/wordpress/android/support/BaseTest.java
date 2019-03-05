@@ -6,7 +6,7 @@ import org.junit.Rule;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.e2e.pages.MePage;
-import org.wordpress.android.e2e.pages.SitesPage;
+import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.ui.WPLaunchActivity;
 
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
@@ -17,9 +17,10 @@ public class BaseTest {
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
-    protected void logout() {
-        if (isElementDisplayed(R.id.switch_site)) { // Logged in from self hosted connected site
-            new SitesPage().go().removeSite(E2E_SELF_HOSTED_USER_SITE_ADDRESS);
+    private void logout() {
+        boolean isSelfHosted = new MePage().go().isSelfHosted();
+        if (isSelfHosted) { // Logged in from self hosted connected
+            new MySitesPage().go().removeSite(E2E_SELF_HOSTED_USER_SITE_ADDRESS);
         } else {
             wpLogout();
         }
