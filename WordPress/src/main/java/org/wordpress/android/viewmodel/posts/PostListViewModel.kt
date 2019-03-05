@@ -158,7 +158,6 @@ class PostListViewModel @Inject constructor(
 
     val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
     val isLoadingMore: LiveData<Boolean> by lazy { pagedListWrapper.isLoadingMore }
-    // Since we can only scroll to a post when the data is loaded, we are keeping the information together
     val pagedListData: LiveData<PagedPostList> by lazy { pagedListWrapper.data }
     val emptyViewState: LiveData<PostListEmptyUiState> by lazy {
         val result = MediatorLiveData<PostListEmptyUiState>()
