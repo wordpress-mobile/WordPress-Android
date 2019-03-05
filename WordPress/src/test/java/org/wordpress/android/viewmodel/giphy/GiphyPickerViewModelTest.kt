@@ -141,7 +141,7 @@ class GiphyPickerViewModelTest {
         }
 
         // Assert
-        assertThat(viewModel.emptyDisplayMode.value).isEqualTo(EmptyDisplayMode.HIDDEN)
+        assertThat(viewModel.emptyDisplayMode.value).isEqualTo(EmptyDisplayMode.HIDDEN )
     }
 
     @Test
