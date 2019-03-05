@@ -813,10 +813,7 @@ class PostListViewModel @Inject constructor(
     fun scrollToPost(localPostId: Int) {
         val data = pagedListData.value
         if (data != null) {
-            _scrollToPosition.value = findItemListPosition(data, localPostId) ?: run {
-                AppLog.e(AppLog.T.POSTS, "ScrollToPost failed - the post not found.")
-                null
-            }
+            updateScrollPosition(data, localPostId)
         } else {
             // store the target post id and scroll there when the data is loaded
             scrollToLocalPostId = localPostId
@@ -827,11 +824,15 @@ class PostListViewModel @Inject constructor(
         val localPostId = scrollToLocalPostId
         if (localPostId != null) {
             scrollToLocalPostId = null
-            _scrollToPosition.value = findItemListPosition(data, localPostId) ?: run {
-                AppLog.e(AppLog.T.POSTS, "ScrollToPost failed - the post not found.")
-                null
-            }
+            updateScrollPosition(data, localPostId)
         }
+    }
+
+    private fun updateScrollPosition(data: PagedPostList, localPostId: Int) {
+        val position = findItemListPosition(data, localPostId)
+        position?.let {
+            _scrollToPosition.value = it
+        } ?: AppLog.e(AppLog.T.POSTS, "ScrollToPost failed - the post not found.")
     }
 
     private fun findItemListPosition(data: PagedPostList, localPostId: Int): Int? {
