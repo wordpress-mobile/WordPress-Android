@@ -5,7 +5,6 @@ import android.support.test.espresso.ViewInteraction;
 import org.wordpress.android.R;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;

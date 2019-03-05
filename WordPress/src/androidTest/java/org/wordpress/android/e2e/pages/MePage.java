@@ -1,7 +1,6 @@
 package org.wordpress.android.e2e.pages;
 
 import android.support.test.espresso.ViewInteraction;
-import android.view.View;
 
 import org.wordpress.android.R;
 
