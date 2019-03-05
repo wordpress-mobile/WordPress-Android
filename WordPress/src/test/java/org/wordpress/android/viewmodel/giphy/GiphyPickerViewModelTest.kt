@@ -211,7 +211,7 @@ class GiphyPickerViewModelTest {
         }
 
         // Assert
-        assertThat(viewModel.state.value).isEqualTo(State.FINISHED )
+        assertThat(viewModel.state.value).isEqualTo(State.FINISHED)
 
         with(checkNotNull(viewModel.downloadResult.value)) {
             assertThat(mediaModels).hasSize(expectedResult.size)
