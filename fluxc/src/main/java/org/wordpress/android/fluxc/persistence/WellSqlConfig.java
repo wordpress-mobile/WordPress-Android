@@ -588,6 +588,8 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "LOCAL_SITE_ID INTEGER,"
                                + "REMOTE_PRODUCT_ID INTEGER,"
                                + "REMOTE_VARIATION_ID INTEGER,"
+                               + "DATE_CREATED TEXT NOT NULL,"
+                               + "DATE_MODIFIED TEXT NOT NULL,"
                                + "DESCRIPTION TEXT NOT NULL,"
                                + "PERMALINK TEXT NOT NULL,"
                                + "SKU TEXT NOT NULL,"
