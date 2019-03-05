@@ -60,6 +60,12 @@ public class WPSupportUtils {
                 .perform(click());
     }
 
+    public static void scrollToThenClickOn(ViewInteraction element) {
+        waitForElementToBeDisplayed(element);
+        element.perform(scrollTo())
+                .perform(click());
+    }
+
     public static void clickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
         onView(withId(elementID)).perform(click());

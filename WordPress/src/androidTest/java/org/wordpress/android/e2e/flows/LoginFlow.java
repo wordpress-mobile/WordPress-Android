@@ -11,9 +11,7 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
-import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
-import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class LoginFlow {
@@ -39,10 +37,6 @@ public class LoginFlow {
         // See LoginEmailPasswordFragment
         populateTextField(R.id.input, E2E_WP_COM_USER_PASSWORD);
         clickOn(R.id.primary_button);
-
-        // Login Confirmation Screen – Click "Continue"
-        // See LoginEpilogueFragment
-        clickOn(R.id.primary_button);
     }
 
     private void confirmLogin() {
@@ -50,11 +44,8 @@ public class LoginFlow {
 
         // TODO: Needs to wait a little for button to be clickable and for load after, should try and find a better way
         // On poor WiFi this needed to be increased to pass
-        sleep();
-        if (isElementDisplayed(continueButton)) { // click continue
-            clickOn(continueButton);
-            sleep();
-        }
+        waitForElementToBeDisplayed(continueButton);
+        clickOn(continueButton);
 
         waitForElementToBeDisplayed(R.id.nav_me);
     }

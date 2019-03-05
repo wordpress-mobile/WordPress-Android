@@ -34,7 +34,6 @@ public class BaseTest {
         logout();
     }
     protected void wpLogin() {
-        logoutIfNecessary();
         new LoginFlow().loginEmailPassword();
     }
 
