@@ -147,36 +147,31 @@ public class NotificationsListFragment extends Fragment implements
                 switch (tab.getPosition()) {
                     case TAB_POSITION_ALL:
                         properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_ALL.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
                         mNotesAdapter.setFilter(FILTERS.FILTER_ALL);
                         break;
                     case TAB_POSITION_COMMENT:
                         properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_COMMENT.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
                         mNotesAdapter.setFilter(FILTERS.FILTER_COMMENT);
                         break;
                     case TAB_POSITION_FOLLOW:
                         properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_FOLLOW.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
                         mNotesAdapter.setFilter(FILTERS.FILTER_FOLLOW);
                         break;
                     case TAB_POSITION_LIKE:
                         properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_LIKE.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
                         mNotesAdapter.setFilter(FILTERS.FILTER_LIKE);
                         break;
                     case TAB_POSITION_UNREAD:
                         properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_UNREAD.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
                         mNotesAdapter.setFilter(FILTERS.FILTER_UNREAD);
                         break;
                     default:
                         properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_ALL.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
                         mNotesAdapter.setFilter(FILTERS.FILTER_ALL);
                         break;
                 }
 
+                AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
                 mLastTabPosition = tab.getPosition();
             }
 
