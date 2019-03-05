@@ -86,7 +86,7 @@
             android:id="@+id/tab_layout"
             android:background="@color/color_primary"
             android:layout_gravity="start"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/tab_height"
             android:layout_width="match_parent"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/white"
