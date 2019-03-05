@@ -169,7 +169,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     };
 
     /**
-     * Update site infos in a background task.
+     * Update site information in a background task.
      */
     public RateLimitedTask mUpdateSelectedSite = new RateLimitedTask(SECONDS_BETWEEN_SITE_UPDATE) {
         protected boolean run() {
@@ -183,11 +183,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     };
 
     /**
-     * Delete stats cache that is already expired
+     * Delete expired stats cache
      */
     public static RateLimitedTask sDeleteExpiredStats = new RateLimitedTask(SECONDS_BETWEEN_DELETE_STATS) {
         protected boolean run() {
-            // Offload to a separate thread. We don't want to slown down the app on startup/resume.
+            // Offload to a separate thread. We don't want to slow down the app on startup/resume.
             new Thread(new Runnable() {
                 public void run() {
                     // subtracts to the current time the cache TTL
@@ -221,15 +221,15 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
-        // Init WellSql
+        // Initialize WellSql
         WellSql.init(new WellSqlConfig(getApplicationContext()));
 
-        // Init Dagger
+        // Initialize Dagger
         initDaggerComponent();
         component().inject(this);
         mDispatcher.register(this);
 
-        // Init static fields from dagger injected singletons, for legacy Actions/Utils
+        // Initialize static fields from dagger injected singletons, for legacy Actions and Utilities
         sRequestQueue = mRequestQueue;
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
@@ -282,8 +282,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         createNotificationChannelsOnSdk26();
 
         // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
-        // with memory usage and the use of Configuration). More informations: http://bit.ly/2H1KTQo
-        // Note: if removed, this will cause crashes on Android < 21
+        // with memory usage and the use of Configuration). More information: http://bit.ly/2H1KTQo
+        // Note: Android < 21 will crash if removed
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // verify media is sanitized
@@ -292,7 +292,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // remove expired lists
         mDispatcher.dispatch(ListActionBuilder.newRemoveExpiredListsAction(new RemoveExpiredListsPayload()));
 
-        // setup the Credentials Client so we can clean it up on wpcom logout
+        // setup the Credentials Client so it can be cleaned on wpcom logout
         mCredentialsClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
@@ -334,18 +334,18 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             NotificationChannel normalChannel = new NotificationChannel(
                     getString(R.string.notification_channel_normal_id),
                     getString(R.string.notification_channel_general_title), NotificationManager.IMPORTANCE_DEFAULT);
-            // Register the channel with the system; you can't change the importance
+            // Register the channel with the system; Do not change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = (NotificationManager) getSystemService(
                     NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(normalChannel);
 
 
-            // Create the IMPORTANT channel (used for 2fa auth, for example)
+            // Create the IMPORTANT channel (used for 2fa auth)
             NotificationChannel importantChannel = new NotificationChannel(
                     getString(R.string.notification_channel_important_id),
                     getString(R.string.notification_channel_important_title), NotificationManager.IMPORTANCE_HIGH);
-            // Register the channel with the system; you can't change the importance
+            // Register the channel with the system; Do not change the importance
             // or other notification behaviors after this
             notificationManager.createNotificationChannel(importantChannel);
 
@@ -353,7 +353,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             NotificationChannel reminderChannel = new NotificationChannel(
                     getString(R.string.notification_channel_reminder_id),
                     getString(R.string.notification_channel_reminder_title), NotificationManager.IMPORTANCE_LOW);
-            // Register the channel with the system; you can't change the importance
+            // Register the channel with the system; Do not change the importance
             // or other notification behaviors after this
             notificationManager.createNotificationChannel(reminderChannel);
 
@@ -365,7 +365,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             transientChannel.setSound(null, null);
             transientChannel.enableVibration(false);
             transientChannel.enableLights(false);
-            // Register the channel with the system; you can't change the importance
+            // Register the channel with the system; Do not change the importance
             // or other notification behaviors after this
             notificationManager.createNotificationChannel(transientChannel);
         }
@@ -395,12 +395,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     /**
-     * Application.onCreate is called before any activity, service, or receiver - it can be called while the app
-     * is in background by a sticky service or a receiver, so we don't want Application.onCreate to make network request
+     * Application.onCreate is called before any activity, service, or receiver. Application.onCreate can be called while the app
+     * is in background by a sticky service or a receiver, so Application.onCreate should not be making network request
      * or other heavy tasks.
      * <p>
      * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
-     * screen for the first time. This allows us to have heavy calls on first activity startup instead of app startup.
+     * screen for the first time. Heavy calls will be on first activity startup instead of app startup.
      */
     public void deferredInit() {
         AppLog.i(T.UTILS, "Deferred Initialisation");
@@ -512,8 +512,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         }
 
         if (!event.isError() && mAccountStore.hasAccessToken()) {
-            // previously we reset the reader database on logout but this meant losing saved posts
-            // so now we only reset it when the user id changes
+            // previously the reader database resets on logout but this meant losing saved posts
+            // now the reader database only resets when the user id changes
             if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
                 long thisUserId = mAccountStore.getAccount().getUserId();
                 long lastUserId = AppPrefs.getLastUsedUserId();
@@ -614,7 +614,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 // Catch IllegalArgumentException that could be raised by WebSettings.getDefaultUserAgent()
                 // See https://github.com/wordpress-mobile/WordPress-Android/issues/9015
 
-                // init with the empty string, it's a rare issue
+                // initialize with the empty string, it's a rare issue
                 mDefaultUserAgent = "";
             }
         }
@@ -754,7 +754,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         }
 
         /**
-         * Check if user has valid credentials, and that at least 2 minutes are passed
+         * Check if user has valid credentials, and at least 2 minutes have passed
          * since the last ping, then try to update the PN token.
          */
         private void updatePushNotificationTokenIfNotLimited() {
@@ -783,8 +783,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             }
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
             AnalyticsTracker.endSession(false);
-            // Methods onAppComesFromBackground / onAppGoesToBackground are only workarounds to track when the
-            // app goes to or comes from background, but they are not 100% reliable, we should avoid unregistering
+            // Methods onAppComesFromBackground and onAppGoesToBackground are only workarounds to track when the
+            // app goes to or comes from background. They are not 100% reliable, so avoid unregistering
             // the receiver twice.
             if (mConnectionReceiverRegistered) {
                 mConnectionReceiverRegistered = false;
@@ -837,7 +837,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 // Rate limited WPCom blog list update
                 mUpdateSiteList.runIfNotLimited();
 
-                // Rate limited Site informations and options update
+                // Rate limited Site information and options update
                 mUpdateSelectedSite.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
