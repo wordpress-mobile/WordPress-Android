@@ -16,6 +16,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_notes"
+            android:clipToPadding="false"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:paddingEnd="@dimen/notifications_content_margin"
