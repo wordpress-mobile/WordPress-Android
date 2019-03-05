@@ -334,8 +334,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             NotificationChannel normalChannel = new NotificationChannel(
                     getString(R.string.notification_channel_normal_id),
                     getString(R.string.notification_channel_general_title), NotificationManager.IMPORTANCE_DEFAULT);
-            // Register the channel with the system; Do not change the importance
-            // or other notification behaviors after this
+            // Register the channel with the system
+            // Do not change the importance or other notification behaviors after this
             NotificationManager notificationManager = (NotificationManager) getSystemService(
                     NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(normalChannel);
@@ -345,16 +345,16 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             NotificationChannel importantChannel = new NotificationChannel(
                     getString(R.string.notification_channel_important_id),
                     getString(R.string.notification_channel_important_title), NotificationManager.IMPORTANCE_HIGH);
-            // Register the channel with the system; Do not change the importance
-            // or other notification behaviors after this
+            // Register the channel with the system
+            // Do not change the importance or other notification behaviors after this
             notificationManager.createNotificationChannel(importantChannel);
 
             // Create the REMINDER channel (used for various reminders, like Quick Start, etc.)
             NotificationChannel reminderChannel = new NotificationChannel(
                     getString(R.string.notification_channel_reminder_id),
                     getString(R.string.notification_channel_reminder_title), NotificationManager.IMPORTANCE_LOW);
-            // Register the channel with the system; Do not change the importance
-            // or other notification behaviors after this
+            // Register the channel with the system
+            // Do not change the importance or other notification behaviors after this
             notificationManager.createNotificationChannel(reminderChannel);
 
             // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
@@ -365,8 +365,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             transientChannel.setSound(null, null);
             transientChannel.enableVibration(false);
             transientChannel.enableLights(false);
-            // Register the channel with the system; Do not change the importance
-            // or other notification behaviors after this
+            // Register the channel with the system
+            // Do not change the importance or other notification behaviors after this
             notificationManager.createNotificationChannel(transientChannel);
         }
     }
@@ -395,8 +395,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     /**
-     * Application.onCreate is called before any activity, service, or receiver. Application.onCreate
-     * can be called while the app is in background by a sticky service or a receiver,
+     * Application.onCreate is called before any activity, service, or receiver.
+     * Application.onCreate can be called while the app is in background by a sticky service or a receiver,
      * so Application.onCreate should not be making network request
      * or other heavy tasks.
      * <p>
