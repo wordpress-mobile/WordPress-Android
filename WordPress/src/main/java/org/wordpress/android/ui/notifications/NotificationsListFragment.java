@@ -75,6 +75,7 @@ public class NotificationsListFragment extends Fragment implements
     public static final String NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter";
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
+    private static final String KEY_LAST_TAB_POSITION = "tabPosition";
     private static final int TAB_POSITION_ALL = 0;
     private static final int TAB_POSITION_UNREAD = 1;
     private static final int TAB_POSITION_COMMENT = 2;
@@ -89,6 +90,7 @@ public class NotificationsListFragment extends Fragment implements
     private ViewGroup mConnectJetpackView;
     private TabLayout mTabLayout;
     private View mNewNotificationsBar;
+    private int mLastTabPosition;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -174,6 +176,8 @@ public class NotificationsListFragment extends Fragment implements
                         mNotesAdapter.setFilter(FILTERS.FILTER_ALL);
                         break;
                 }
+
+                mLastTabPosition = tab.getPosition();
             }
 
             @Override
@@ -264,6 +268,7 @@ public class NotificationsListFragment extends Fragment implements
 
         if (savedInstanceState != null) {
             setRestoredFirstVisibleItemID(savedInstanceState.getLong(KEY_LIST_SCROLL_POSITION, 0));
+            setSelectedTab(savedInstanceState.getInt(KEY_LAST_TAB_POSITION, 0));
         }
     }
 
@@ -311,6 +316,8 @@ public class NotificationsListFragment extends Fragment implements
                 fetchNotesFromRemote();
             }
         }
+
+        setSelectedTab(mLastTabPosition);
     }
 
     @Override
@@ -571,6 +578,7 @@ public class NotificationsListFragment extends Fragment implements
 
         // Save list view scroll position
         outState.putLong(KEY_LIST_SCROLL_POSITION, getFirstVisibleItemID());
+        outState.putInt(KEY_LAST_TAB_POSITION, mLastTabPosition);
 
         super.onSaveInstanceState(outState);
     }
@@ -755,5 +763,17 @@ public class NotificationsListFragment extends Fragment implements
             }
         };
         AniUtils.startAnimation(mNewNotificationsBar, R.anim.notifications_bottom_bar_out, listener);
+    }
+
+    private void setSelectedTab(int position) {
+        mLastTabPosition = position;
+
+        if (mTabLayout != null) {
+            TabLayout.Tab tab = mTabLayout.getTabAt(mLastTabPosition);
+
+            if (tab != null) {
+                tab.select();
+            }
+        }
     }
 }
