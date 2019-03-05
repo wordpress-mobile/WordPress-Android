@@ -6,6 +6,7 @@ import org.wordpress.android.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
@@ -61,10 +62,10 @@ public class LoginFlow {
 
     private void enterUsernameAndPassword(String username, String password) {
         ViewInteraction usernameElement =
-                onView(withContentDescription(getCurrentActivity().getString(R.string.username)));
+                onView(withHint(getCurrentActivity().getString(R.string.username)));
         ViewInteraction passwordElement =
-                onView(withContentDescription(getCurrentActivity().getString(R.string.password)));
-        populateTextField(R.id.login_username_row, username + "\n");
+                onView(withHint(getCurrentActivity().getString(R.string.password)));
+        populateTextField(usernameElement, username + "\n");
         populateTextField(passwordElement, password + "\n");
         clickOn(R.id.primary_button);
     }
