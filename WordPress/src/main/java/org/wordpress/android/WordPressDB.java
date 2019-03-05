@@ -126,7 +126,7 @@ public class WordPressDB {
             case 48:
                 PeopleTable.createViewersTable(mDb);
             case 49:
-                // Delete simperium DB since we're removing Simperium from the app.
+                // Delete simperium DB since Simperium is being removed from the app.
                 ctx.deleteDatabase("simperium-store");
             case 50:
                 // fix #5373 - no op
@@ -199,7 +199,7 @@ public class WordPressDB {
     }
 
     /*
-     * used during development to copy database to SD card so we can access it via DDMS
+     * used during development to copy database to an SD card so access via Dalvik Debug Monitor Service (DDMS) can be done
      */
     protected void copyDatabase() {
         String copyFrom = mDb.getPath();

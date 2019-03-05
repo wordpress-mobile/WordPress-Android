@@ -784,7 +784,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
             AnalyticsTracker.endSession(false);
             // Methods onAppComesFromBackground and onAppGoesToBackground are only workarounds to track when the
-            // app goes to or comes from background. They are not 100% reliable, so avoid unregistering
+            // app goes to or comes from background. The workarounds are not 100% reliable, so avoid unregistering
             // the receiver twice.
             if (mConnectionReceiverRegistered) {
                 mConnectionReceiverRegistered = false;
@@ -811,9 +811,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             sAppIsInTheBackground = false;
 
             // https://developer.android.com/reference/android/net/ConnectivityManager.html
-            // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they
-            // declare the broadcast receiver in their manifest. Apps will still receive broadcasts if they
-            // register their BroadcastReceiver with Context.registerReceiver() and that context is still valid.
+            // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if
+            // the broadcast receiver is declared in their manifest. Apps will still receive broadcasts if
+            // BroadcastReceiver is registered with Context.registerReceiver() and that context is still valid.
             if (!mConnectionReceiverRegistered) {
                 mConnectionReceiverRegistered = true;
                 registerReceiver(ConnectionChangeReceiver.getInstance(),
