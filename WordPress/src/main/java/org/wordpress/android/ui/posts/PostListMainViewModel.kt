@@ -60,8 +60,8 @@ class PostListMainViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         scrollToTargetPostJob.cancel() // cancels all coroutines with the default coroutineContext
+        super.onCleared()
     }
 
     fun newPost() {
