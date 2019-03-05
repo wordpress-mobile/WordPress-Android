@@ -606,7 +606,8 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "WEIGHT TEXT NOT NULL,"
                                + "LENGTH TEXT NOT NULL,"
                                + "WIDTH TEXT NOT NULL,"
-                               + "HEIGHT TEXT NOT NULL)");
+                               + "HEIGHT TEXT NOT NULL,"
+                               + "ATTRIBUTES TEXT NOT NULL");
                     break;
             }
         }
