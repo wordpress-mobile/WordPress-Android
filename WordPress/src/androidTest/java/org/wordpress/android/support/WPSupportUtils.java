@@ -86,6 +86,7 @@ public class WPSupportUtils {
     public static void clickOn(ViewInteraction viewInteraction) {
         waitForElementToBeDisplayed(viewInteraction);
         viewInteraction.perform(click());
+        idleFor(500);   // allow for transitions
     }
 
     public static void longClickOn(Integer elementID) {
@@ -226,10 +227,18 @@ public class WPSupportUtils {
     }
 
     public static void waitForConditionToBeTrue(Supplier<Boolean> supplier) {
+        if (supplier.get()) {
+            return;
+        }
+
         new SupplierIdler(supplier).idleUntilReady();
     }
 
     public static void waitForConditionToBeTrueWithoutFailure(Supplier<Boolean> supplier) {
+        if (supplier.get()) {
+            return;
+        }
+
         new SupplierIdler(supplier).idleUntilReady(false);
     }
 
@@ -291,8 +300,12 @@ public class WPSupportUtils {
     // a different thread than the UI, the UI sometimes reports completion of an operation before repainting the
     // screen to reflect the change. Delaying by one frame ensures we're not taking a screenshot of a stale UI.
     public static void waitOneFrame() {
+    idleFor(17);
+    }
+
+    public static void idleFor(int milliseconds) {
         try {
-            Thread.sleep(17);
+            Thread.sleep(milliseconds);
         } catch (Exception ex) {
             // do nothing
         }
