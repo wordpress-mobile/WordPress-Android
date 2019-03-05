@@ -27,7 +27,7 @@ public class BaseTest {
     }
 
     protected void logoutIfNecessary() {
-        if (isElementDisplayed(R.id.login_button)) {
+        if (isElementDisplayed(R.id.login_button) || isElementDisplayed(R.id.login_open_email_client)) {
             return;
         }
 

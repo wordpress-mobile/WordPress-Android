@@ -50,9 +50,10 @@ public class LoginFlow {
 
         // TODO: Needs to wait a little for button to be clickable, should try and find a better way
         // On poor WiFi this needed to be increased to pass
-        sleep(2000);
+        sleep(5000);
         if (isElementDisplayed(continueButton)) { // click continue
             clickOn(continueButton);
+            sleep();
         }
 
         waitForElementToBeDisplayed(R.id.nav_me);
