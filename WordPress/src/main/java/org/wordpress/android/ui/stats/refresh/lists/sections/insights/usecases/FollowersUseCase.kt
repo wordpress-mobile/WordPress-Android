@@ -155,8 +155,10 @@ class FollowersUseCase
     }
 
     private fun loadMore() {
-        updateUiState { it.copy(isLoading = true) }
         GlobalScope.launch(bgDispatcher) {
+            withContext(mainDispatcher) {
+                updateUiState { it.copy(isLoading = true) }
+            }
             val state = fetchData(lastSite, true, PagedMode(itemsToLoad, true))
             withContext(mainDispatcher) {
                 updateUiState { it.copy(isLoading = false) }
