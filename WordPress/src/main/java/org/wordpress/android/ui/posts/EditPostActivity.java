@@ -852,15 +852,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else {
                     return getString(R.string.update_verb);
                 }
-            case PRIVATE:
-            case PENDING:
-            case TRASHED:
             case DRAFT:
                 if (isNewPost() && mPost.isLocalDraft()) {
                     return getString(R.string.post_status_publish_post);
                 } else {
                     return handleDefaultForSaveButtonText();
                 }
+            case PRIVATE:
+            case PENDING:
+            case TRASHED:
             default:
                 return handleDefaultForSaveButtonText();
         }
