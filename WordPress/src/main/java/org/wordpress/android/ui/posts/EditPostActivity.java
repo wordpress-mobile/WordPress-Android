@@ -856,14 +856,21 @@ public class EditPostActivity extends AppCompatActivity implements
             case PENDING:
             case TRASHED:
             case DRAFT:
-            default:
                 if (isNewPost() && mPost.isLocalDraft()) {
                     return getString(R.string.post_status_publish_post);
-                } else if (mPost.isLocalDraft()) {
-                    return getString(R.string.save);
                 } else {
-                    return getString(R.string.update_verb);
+                    return handleDefaultForSaveButtonText();
                 }
+            default:
+                return handleDefaultForSaveButtonText();
+        }
+    }
+
+    private String handleDefaultForSaveButtonText() {
+        if (mPost.isLocalDraft()) {
+            return getString(R.string.save);
+        } else {
+            return getString(R.string.update_verb);
         }
     }
 
