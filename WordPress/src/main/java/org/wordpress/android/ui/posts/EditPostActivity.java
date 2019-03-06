@@ -344,10 +344,6 @@ public class EditPostActivity extends AppCompatActivity implements
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
-    // 1-deep cache of parsed html string for optimizing the repeated attempts to parse the same content again and again
-    private Spanned mCachedSpannedContent = new SpannableStringBuilder("");
-    private int mCachedSpannedContentHashCode = 0;
-
     private boolean isModernEditor() {
         return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
     }
@@ -610,28 +606,14 @@ public class EditPostActivity extends AppCompatActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
-    private @NonNull Spanned parsePostContent(Context context) {
-        final String content = mPost.getContent();
-        final int hashCode = content.hashCode();
-
-        if (hashCode == mCachedSpannedContentHashCode) {
-            return mCachedSpannedContent;
-        }
-
-        mCachedSpannedContent = AztecEditorFragment.parseContent(context, content);
-        mCachedSpannedContentHashCode = hashCode;
-
-        return mCachedSpannedContent;
-    }
-
     private void initializePostObject() {
         if (mPost != null) {
             mOriginalPost = mPost.clone();
             mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
             updatePostVar(UploadService.updatePostWithCurrentlyCompletedUploads(mPost));
             if (mShowAztecEditor) {
-                mMediaMarkedUploadingOnStartIds =
-                        AztecEditorFragment.getMediaMarkedUploadingInPostContent(parsePostContent(this));
+                mMediaMarkedUploadingOnStartIds = AztecEditorFragment.getMediaMarkedUploadingInPostContent(
+                        AztecEditorFragment.parseContent(this, mPost.getContent()));
                 Collections.sort(mMediaMarkedUploadingOnStartIds);
             }
             mIsPage = mPost.isPage();
@@ -1815,8 +1797,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (mShowAztecEditor) {
             // update the list of uploading ids
-            mMediaMarkedUploadingOnStartIds =
-                    AztecEditorFragment.getMediaMarkedUploadingInPostContent(parsePostContent(this));
+            mMediaMarkedUploadingOnStartIds = AztecEditorFragment.getMediaMarkedUploadingInPostContent(
+                    AztecEditorFragment.parseContent(this, mPost.getContent()));
         }
     }
 
