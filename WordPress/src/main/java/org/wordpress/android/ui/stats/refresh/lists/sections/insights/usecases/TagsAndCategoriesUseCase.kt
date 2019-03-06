@@ -5,7 +5,6 @@ import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.store.InsightsStore
@@ -25,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -37,6 +37,7 @@ class TagsAndCategoriesUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
+    private val statsSiteProvider: StatsSiteProvider,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<TagsModel, TagsAndCategoriesUiState>(
@@ -44,8 +45,8 @@ class TagsAndCategoriesUseCase
         mainDispatcher,
         TagsAndCategoriesUiState(null)
 ) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<TagsModel> {
-        val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
+    override suspend fun fetchRemoteData(forced: Boolean): State<TagsModel> {
+        val response = insightsStore.fetchTags(statsSiteProvider.siteModel, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
@@ -56,8 +57,8 @@ class TagsAndCategoriesUseCase
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel): TagsModel? {
-        return insightsStore.getTags(site, PAGE_SIZE)
+    override suspend fun loadCachedData(): TagsModel? {
+        return insightsStore.getTags(statsSiteProvider.siteModel, PAGE_SIZE)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_tags_and_categories))
@@ -154,7 +155,7 @@ class TagsAndCategoriesUseCase
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED)
-        navigateTo(ViewTagsAndCategoriesStats())
+        navigateTo(ViewTagsAndCategoriesStats(statsSiteProvider.siteModel))
     }
 
     private fun onTagClick(link: String) {
