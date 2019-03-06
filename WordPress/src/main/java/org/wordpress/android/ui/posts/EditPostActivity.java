@@ -2634,8 +2634,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!mShowAztecEditor) {
             return false;
         }
-        List<String> currentUploadingMedia =
-                AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, newContent);
+        List<String> currentUploadingMedia = AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, newContent);
         Collections.sort(currentUploadingMedia);
         return !mMediaMarkedUploadingOnStartIds.equals(currentUploadingMedia);
     }
