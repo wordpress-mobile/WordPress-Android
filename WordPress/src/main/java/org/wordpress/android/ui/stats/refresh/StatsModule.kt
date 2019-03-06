@@ -49,10 +49,9 @@ const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
 const val YEAR_STATS_USE_CASE = "YearStatsUseCase"
 const val LIST_STATS_USE_CASES = "ListStatsUseCases"
-
-// These are injected only internally
-private const val INSIGHTS_USE_CASES = "InsightsUseCases"
-private const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
+const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
+const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
+const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
 
 /**
  * Module that provides use cases for Stats.
@@ -65,8 +64,8 @@ class StatsModule {
      */
     @Provides
     @Singleton
-    @Named(INSIGHTS_USE_CASES)
-    fun provideInsightsUseCases(
+    @Named(BLOCK_INSIGHTS_USE_CASES)
+    fun provideBlockInsightsUseCases(
         allTimeStatsUseCase: AllTimeStatsUseCase,
         latestPostSummaryUseCase: LatestPostSummaryUseCase,
         todayStatsUseCase: TodayStatsUseCase,
@@ -85,6 +84,37 @@ class StatsModule {
                 commentsUseCaseFactory.build(UseCaseMode.BLOCK),
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCaseFactory.build(UseCaseMode.BLOCK),
+                publicizeUseCase,
+                postingActivityUseCase
+        )
+    }
+
+    /**
+     * Provides a list of use cases for the View all screen in Stats. Modify this method when you want to add more
+     * blocks to the Insights screen.
+     */
+    @Provides
+    @Singleton
+    @Named(VIEW_ALL_INSIGHTS_USE_CASES)
+    fun provideViewAllInsightsUseCases(
+        allTimeStatsUseCase: AllTimeStatsUseCase,
+        latestPostSummaryUseCase: LatestPostSummaryUseCase,
+        todayStatsUseCase: TodayStatsUseCase,
+        followersUseCaseFactory: FollowersUseCaseFactory,
+        commentsUseCaseFactory: CommentsUseCaseFactory,
+        mostPopularInsightsUseCase: MostPopularInsightsUseCase,
+        tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
+        publicizeUseCase: PublicizeUseCase,
+        postingActivityUseCase: PostingActivityUseCase
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+        return listOf(
+                allTimeStatsUseCase,
+                latestPostSummaryUseCase,
+                todayStatsUseCase,
+                followersUseCaseFactory.build(UseCaseMode.VIEW_ALL),
+                commentsUseCaseFactory.build(UseCaseMode.VIEW_ALL),
+                mostPopularInsightsUseCase,
+                tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL),
                 publicizeUseCase,
                 postingActivityUseCase
         )
@@ -133,7 +163,7 @@ class StatsModule {
         statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
         statsDateFormatter: StatsDateFormatter,
-        @Named(INSIGHTS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        @Named(BLOCK_INSIGHTS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(

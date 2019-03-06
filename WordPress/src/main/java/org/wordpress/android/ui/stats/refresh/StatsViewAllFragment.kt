@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
@@ -42,7 +41,7 @@ import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
 
 class StatsViewAllFragment : DaggerFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
     @Inject lateinit var navigator: StatsNavigator
@@ -139,8 +138,8 @@ class StatsViewAllFragment : DaggerFragment() {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         }
 
-        val viewModelType = StatsViewAllViewModel.get(type, granularity)
-        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(viewModelType)
+        val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
+        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
         setupObservers(site, activity)
         viewModel.start(site)
     }
