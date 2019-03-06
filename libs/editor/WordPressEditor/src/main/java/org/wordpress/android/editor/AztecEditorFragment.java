@@ -154,6 +154,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static boolean mIsToolbarExpanded = false;
 
+    // 1-deep cache of html parsed to spans, as a speed optimization instead of parsing the same content again and again
+    private static int sPostContentHash;
+    private static Spanned sParsedContentCached;
+
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
 
@@ -2144,9 +2148,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
         return mediaMarkedUploading;
     }
-
-    private static int sPostContentHash;
-    private static Spanned sParsedContentCached;
 
     public static Spanned parseContent(Context context, @NonNull String postContent) {
         // parsing is an expensive operation (especially if the content is big) so, return previous result if matching.
