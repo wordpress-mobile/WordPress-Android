@@ -344,6 +344,10 @@ public class EditPostActivity extends AppCompatActivity implements
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
+    // 1-deep cache of parsed html string for optimizing the repeated attempts to parse the same content again and again
+    private Spanned mCachedSpannedContent = new SpannableStringBuilder("");
+    private int mCachedSpannedContentHashCode = 0;
+
     private boolean isModernEditor() {
         return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
     }
@@ -605,16 +609,16 @@ public class EditPostActivity extends AppCompatActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
-    private Spanned mCachedSpannedContent = new SpannableStringBuilder("");
-    private int mCachedSpannedContentPostHashCode = 0;
-
     private @NonNull Spanned parsePostContent(Context context) {
-        if (mPost.hashCode() == mCachedSpannedContentPostHashCode) {
+        final String content = mPost.getContent();
+        final int hashCode = content.hashCode();
+
+        if (hashCode == mCachedSpannedContentHashCode) {
             return mCachedSpannedContent;
         }
 
-        mCachedSpannedContent = AztecEditorFragment.parseContent(context, mPost.getContent());
-        mCachedSpannedContentPostHashCode = mPost.hashCode();
+        mCachedSpannedContent = AztecEditorFragment.parseContent(context, content);
+        mCachedSpannedContentHashCode = hashCode;
 
         return mCachedSpannedContent;
     }
