@@ -294,9 +294,7 @@ public class EditPostActivity extends AppCompatActivity implements
      */
     WPViewPager mViewPager;
 
-    // don't set this directly. Use updatePostVar() to set it.
     private PostModel mPost;
-
     private PostModel mPostForUndo;
     private PostModel mOriginalPost;
     private boolean mOriginalPostHadLocalChangesOnOpen;
@@ -452,7 +450,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
                 newPostSetup();
             } else if (extras != null) {
-                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
+                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID)); // Load post from extras
 
                 if (mPost != null) {
                     initializePostObject();
