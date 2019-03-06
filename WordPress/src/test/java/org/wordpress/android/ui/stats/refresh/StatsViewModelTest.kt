@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.MutableLiveData
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
@@ -109,8 +108,6 @@ class StatsViewModelTest : BaseUnitTest() {
     @Test
     fun `updates date selector on date change`() {
         val statsSection = StatsSection.DAYS
-
-        whenever(statsSectionManager.getSelectedSection()).thenReturn(statsSection)
 
         viewModel.onSectionSelected(DAYS)
 
