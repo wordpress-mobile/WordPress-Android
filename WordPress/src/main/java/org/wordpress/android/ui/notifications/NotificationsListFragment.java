@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.design.widget.TabLayout.OnTabSelectedListener;
+import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.RadioGroup;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -44,6 +46,7 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -60,12 +63,13 @@ import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
-import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
-        .IS_TAPPED_ON_NOTIFICATION;
+import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
-public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
-        RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener, MainToolbarFragment {
+public class NotificationsListFragment extends Fragment implements
+        WPMainActivity.OnScrollToTopListener,
+        NotesAdapter.DataLoadedListener,
+        MainToolbarFragment {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
@@ -74,6 +78,12 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     public static final String NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter";
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
+    private static final String KEY_LAST_TAB_POSITION = "tabPosition";
+    private static final int TAB_POSITION_ALL = 0;
+    private static final int TAB_POSITION_UNREAD = 1;
+    private static final int TAB_POSITION_COMMENT = 2;
+    private static final int TAB_POSITION_FOLLOW = 3;
+    private static final int TAB_POSITION_LIKE = 4;
 
     private NotesAdapter mNotesAdapter;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -81,10 +91,9 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private RecyclerView mRecyclerView;
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mConnectJetpackView;
-    private View mFilterView;
-    private RadioGroup mFilterRadioGroup;
-    private View mFilterContainer;
+    private TabLayout mTabLayout;
     private View mNewNotificationsBar;
+    private int mLastTabPosition;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -110,7 +119,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
         mShouldRefreshNotifications = true;
     }
 
@@ -120,12 +129,63 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         mRecyclerView = view.findViewById(R.id.recycler_view_notes);
 
-        mFilterRadioGroup = view.findViewById(R.id.notifications_radio_group);
-        mFilterRadioGroup.setOnCheckedChangeListener(this);
-        mFilterContainer = view.findViewById(R.id.notifications_filter_container);
         mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
         mConnectJetpackView = view.findViewById(R.id.connect_jetpack);
-        mFilterView = view.findViewById(R.id.notifications_filter);
+        mTabLayout = view.findViewById(R.id.tab_layout);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.notifications_tab_title_all)),
+                TAB_POSITION_ALL);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.notifications_tab_title_unread)),
+                TAB_POSITION_UNREAD);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.notifications_tab_title_comments)),
+                TAB_POSITION_COMMENT);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.notifications_tab_title_follows)),
+                TAB_POSITION_FOLLOW);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.notifications_tab_title_likes)),
+                TAB_POSITION_LIKE);
+        mTabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(Tab tab) {
+                Map<String, String> properties = new HashMap<>(1);
+
+                switch (tab.getPosition()) {
+                    case TAB_POSITION_ALL:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_ALL.toString());
+                        mNotesAdapter.setFilter(FILTERS.FILTER_ALL);
+                        break;
+                    case TAB_POSITION_COMMENT:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_COMMENT.toString());
+                        mNotesAdapter.setFilter(FILTERS.FILTER_COMMENT);
+                        break;
+                    case TAB_POSITION_FOLLOW:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_FOLLOW.toString());
+                        mNotesAdapter.setFilter(FILTERS.FILTER_FOLLOW);
+                        break;
+                    case TAB_POSITION_LIKE:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_LIKE.toString());
+                        mNotesAdapter.setFilter(FILTERS.FILTER_LIKE);
+                        break;
+                    case TAB_POSITION_UNREAD:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_UNREAD.toString());
+                        mNotesAdapter.setFilter(FILTERS.FILTER_UNREAD);
+                        break;
+                    default:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_ALL.toString());
+                        mNotesAdapter.setFilter(FILTERS.FILTER_ALL);
+                        break;
+                }
+
+                AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
+                mLastTabPosition = tab.getPosition();
+            }
+
+            @Override
+            public void onTabUnselected(Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(Tab tab) {
+            }
+        });
 
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -163,7 +223,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
      */
     private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             mRecyclerView.removeOnScrollListener(this); // remove the listener now
             clearPendingNotificationsItemsOnUI();
@@ -206,6 +266,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         if (savedInstanceState != null) {
             setRestoredFirstVisibleItemID(savedInstanceState.getLong(KEY_LIST_SCROLL_POSITION, 0));
+            setSelectedTab(savedInstanceState.getInt(KEY_LAST_TAB_POSITION, 0));
         }
     }
 
@@ -246,13 +307,15 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         if (!mAccountStore.hasAccessToken()) {
             showConnectJetpackView();
-            mFilterRadioGroup.setVisibility(View.GONE);
+            mTabLayout.setVisibility(View.GONE);
         } else {
             getNotesAdapter().reloadNotesFromDBAsync();
             if (mShouldRefreshNotifications) {
                 fetchNotesFromRemote();
             }
         }
+
+        setSelectedTab(mLastTabPosition);
     }
 
     @Override
@@ -275,7 +338,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     private NotesAdapter getNotesAdapter() {
         if (mNotesAdapter == null) {
-            mNotesAdapter = new NotesAdapter(getActivity(), this, null);
+            mNotesAdapter = new NotesAdapter(requireActivity(), this, null);
             mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
         }
 
@@ -351,7 +414,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             mActionableEmptyView.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
-            setFilterViewScrollable(false);
             mActionableEmptyView.title.setText(titleResId);
 
             if (descriptionResId != 0) {
@@ -381,9 +443,9 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         if (isAdded() && mConnectJetpackView != null) {
             mConnectJetpackView.setVisibility(View.VISIBLE);
             mActionableEmptyView.setVisibility(View.GONE);
-            mFilterContainer.setVisibility(View.GONE);
+            mTabLayout.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
-            setFilterViewScrollable(false);
+            clearToolbarScrollFlags();
 
             Button setupButton = mConnectJetpackView.findViewById(R.id.jetpack_setup);
             setupButton.setOnClickListener(new View.OnClickListener() {
@@ -397,23 +459,15 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         }
     }
 
-    private void setFilterViewScrollable(boolean isScrollable) {
-        if (mFilterView != null && mFilterView.getLayoutParams() instanceof AppBarLayout.LayoutParams) {
-            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mFilterView.getLayoutParams();
-            if (isScrollable) {
-                params.setScrollFlags(
-                        AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                        | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-                );
-            } else {
-                params.setScrollFlags(0);
-            }
+    private void clearToolbarScrollFlags() {
+        if (mToolbar != null && mToolbar.getLayoutParams() instanceof AppBarLayout.LayoutParams) {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
+            params.setScrollFlags(0);
         }
     }
 
     private void hideEmptyView() {
         if (isAdded() && mActionableEmptyView != null) {
-            setFilterViewScrollable(true);
             mActionableEmptyView.setVisibility(View.GONE);
             mConnectJetpackView.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
@@ -439,48 +493,55 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             return;
         }
 
-        int i = mFilterRadioGroup.getCheckedRadioButtonId();
-        if (i == R.id.notifications_filter_all) {
-            showEmptyView(
-                    R.string.notifications_empty_all,
-                    R.string.notifications_empty_action_all,
-                    R.string.notifications_empty_view_reader
-                         );
-        } else if (i == R.id.notifications_filter_unread) { // User might not have a blog, if so just show the title
-            if (getSelectedSite() == null) {
-                showEmptyView(R.string.notifications_empty_unread);
-            } else {
+        switch (mTabLayout.getSelectedTabPosition()) {
+            case TAB_POSITION_ALL:
                 showEmptyView(
-                        R.string.notifications_empty_unread,
-                        R.string.notifications_empty_action_unread,
-                        R.string.posts_empty_list_button
-                             );
-            }
-        } else if (i == R.id.notifications_filter_comments) {
-            showEmptyView(
-                    R.string.notifications_empty_comments,
-                    R.string.notifications_empty_action_comments,
-                    R.string.notifications_empty_view_reader
-                         );
-        } else if (i == R.id.notifications_filter_follows) {
-            showEmptyView(
-                    R.string.notifications_empty_followers,
-                    R.string.notifications_empty_action_followers_likes,
-                    R.string.notifications_empty_view_reader
-                         );
-        } else if (i == R.id.notifications_filter_likes) {
-            showEmptyView(
-                    R.string.notifications_empty_likes,
-                    R.string.notifications_empty_action_followers_likes,
-                    R.string.notifications_empty_view_reader
-                         );
-        } else {
-            showEmptyView(R.string.notifications_empty_list);
+                        R.string.notifications_empty_all,
+                        R.string.notifications_empty_action_all,
+                        R.string.notifications_empty_view_reader
+                );
+                break;
+            case TAB_POSITION_COMMENT:
+                showEmptyView(
+                        R.string.notifications_empty_comments,
+                        R.string.notifications_empty_action_comments,
+                        R.string.notifications_empty_view_reader
+                );
+                break;
+            case TAB_POSITION_FOLLOW:
+                showEmptyView(
+                        R.string.notifications_empty_followers,
+                        R.string.notifications_empty_action_followers_likes,
+                        R.string.notifications_empty_view_reader
+                );
+                break;
+            case TAB_POSITION_LIKE:
+                showEmptyView(
+                        R.string.notifications_empty_likes,
+                        R.string.notifications_empty_action_followers_likes,
+                        R.string.notifications_empty_view_reader
+                );
+                break;
+            case TAB_POSITION_UNREAD:
+                if (getSelectedSite() == null) {
+                    showEmptyView(R.string.notifications_empty_unread);
+                } else {
+                    showEmptyView(
+                            R.string.notifications_empty_unread,
+                            R.string.notifications_empty_action_unread,
+                            R.string.posts_empty_list_button
+                    );
+                }
+                break;
+            default:
+                showEmptyView(R.string.notifications_empty_list);
         }
+
+        mActionableEmptyView.image.setVisibility(DisplayUtils.isLandscape(requireContext()) ? View.GONE : View.VISIBLE);
     }
 
     private void performActionForActiveFilter() {
-        if (mFilterRadioGroup == null || !isAdded()) {
+        if (mTabLayout == null || !isAdded()) {
             return;
         }
 
@@ -489,10 +550,9 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             return;
         }
 
-        int i = mFilterRadioGroup.getCheckedRadioButtonId();
-        if (i == R.id.notifications_filter_unread) { // Create a new post
+        if (mTabLayout.getSelectedTabPosition() == TAB_POSITION_UNREAD) {
             ActivityLauncher.addNewPostForResult(getActivity(), getSelectedSite(), false);
-        } else { // Switch to Reader tab
+        } else {
             if (getActivity() instanceof WPMainActivity) {
                 ((WPMainActivity) getActivity()).setReaderPageActive();
             }
@@ -520,6 +580,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         // Save list view scroll position
         outState.putLong(KEY_LIST_SCROLL_POSITION, getFirstVisibleItemID());
+        outState.putInt(KEY_LAST_TAB_POSITION, mLastTabPosition);
 
         super.onSaveInstanceState(outState);
     }
@@ -535,53 +596,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     private void setRestoredFirstVisibleItemID(long noteID) {
         mRestoredScrollNoteID = noteID;
-    }
-
-    // Notification filter methods
-    @Override
-    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Filter the list according to the RadioGroup selection
-                Map<String, String> properties = new HashMap<>(1);
-
-                switch (mFilterRadioGroup.getCheckedRadioButtonId()) {
-                    case R.id.notifications_filter_all:
-                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_ALL.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
-                        mNotesAdapter.setFilter(FILTERS.FILTER_ALL);
-                        break;
-                    case R.id.notifications_filter_comments:
-                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_COMMENT.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
-                        mNotesAdapter.setFilter(FILTERS.FILTER_COMMENT);
-                        break;
-                    case R.id.notifications_filter_follows:
-                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_FOLLOW.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
-                        mNotesAdapter.setFilter(FILTERS.FILTER_FOLLOW);
-                        break;
-                    case R.id.notifications_filter_likes:
-                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_LIKE.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
-                        mNotesAdapter.setFilter(FILTERS.FILTER_LIKE);
-                        break;
-                    case R.id.notifications_filter_unread:
-                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_UNREAD.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
-                        mNotesAdapter.setFilter(FILTERS.FILTER_UNREAD);
-                        break;
-                    default:
-                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_ALL.toString());
-                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
-                        mNotesAdapter.setFilter(FILTERS.FILTER_ALL);
-                        break;
-                }
-
-                restoreListScrollPosition();
-            }
-        });
     }
 
     @Override
@@ -751,5 +765,17 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             }
         };
         AniUtils.startAnimation(mNewNotificationsBar, R.anim.notifications_bottom_bar_out, listener);
+    }
+
+    private void setSelectedTab(int position) {
+        mLastTabPosition = position;
+
+        if (mTabLayout != null) {
+            TabLayout.Tab tab = mTabLayout.getTabAt(mLastTabPosition);
+
+            if (tab != null) {
+                tab.select();
+            }
+        }
     }
 }
