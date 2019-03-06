@@ -2144,10 +2144,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return mediaMarkedUploading;
     }
 
+    private static int sPostContentHash;
+    private static Spanned sParsedContentCached;
+
     public static Spanned parseContent(Context context, @NonNull String postContent) {
+        // parsing is an expensive operation (especially if the content is big) so, return previous result if matching.
+        if (sParsedContentCached != null && postContent.hashCode() == sPostContentHash) {
+            return new SpannableString(sParsedContentCached);
+        }
+
+        // cache the post's content hash to compare next time
+        sPostContentHash = postContent.hashCode();
+
         // fill in Aztec with the post's content
         AztecParser parser = getAztecParserWithPlugins();
-        return parser.parseHtmlForInspection(postContent, context);
+        sParsedContentCached = parser.parseHtmlForInspection(postContent, context);
+        return sParsedContentCached;
     }
 
     public void setMediaToFailed(@NonNull String mediaId) {
