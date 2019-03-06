@@ -1,5 +1,6 @@
 12.0
 -----
+Faster opening of large posts
 
 11.9
 -----
