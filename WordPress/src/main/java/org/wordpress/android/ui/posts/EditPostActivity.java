@@ -348,12 +348,6 @@ public class EditPostActivity extends AppCompatActivity implements
         return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
     }
 
-    private void updatePostVar(PostModel postModel) {
-        mPost = postModel;
-
-        mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost);
-    }
-
     private Runnable mFetchMediaRunnable = new Runnable() {
         @Override
         public void run() {
@@ -458,7 +452,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
                 newPostSetup();
             } else if (extras != null) {
-                updatePostVar(mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID)));
+                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
 
                 if (mPost != null) {
                     initializePostObject();
@@ -485,11 +479,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
             if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {
-                updatePostVar(
-                        mPostStore.getPostByRemotePostId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID), mSite));
+                mPost = mPostStore.getPostByRemotePostId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID), mSite);
                 initializePostObject();
             } else if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
-                updatePostVar(mPostStore.getPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID)));
+                mPost = mPostStore.getPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID));
                 initializePostObject();
             }
 
@@ -610,7 +603,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mPost != null) {
             mOriginalPost = mPost.clone();
             mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
-            updatePostVar(UploadService.updatePostWithCurrentlyCompletedUploads(mPost));
+            mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
             if (mShowAztecEditor) {
                 mMediaMarkedUploadingOnStartIds = AztecEditorFragment.getMediaMarkedUploadingInPostContent(
                         AztecEditorFragment.parseContent(this, mPost.getContent()));
@@ -1832,7 +1825,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
                         RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                        updatePostVar(mPostForUndo.clone());
+                        mPost = mPostForUndo.clone();
                         refreshEditorContent();
                     }
                 })
@@ -3849,7 +3842,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (mIsUpdatingPost) {
                     mIsUpdatingPost = false;
-                    updatePostVar(mPostStore.getPostByLocalPostId(mPost.getId()));
+                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
                     refreshEditorContent();
 
                     if (mViewPager != null) {
@@ -3860,7 +3853,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                         AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
                                         RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
                                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                                        updatePostVar(mPostForUndo.clone());
+                                        mPost = mPostForUndo.clone();
                                         refreshEditorContent();
                                     }
                                 })
@@ -3872,7 +3865,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (mIsDiscardingChanges) {
                     mIsDiscardingChanges = false;
-                    updatePostVar(mPostStore.getPostByLocalPostId(mPost.getId()));
+                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
                     mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
                     mIsUpdatingPost = true;
                 }
@@ -3900,7 +3893,7 @@ public class EditPostActivity extends AppCompatActivity implements
             UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
                     event.isError() ? event.error.message : null, getSite(), mDispatcher);
             if (!event.isError()) {
-                updatePostVar(post);
+                mPost = post;
                 mIsNewPost = false;
                 invalidateOptionsMenu();
             }
