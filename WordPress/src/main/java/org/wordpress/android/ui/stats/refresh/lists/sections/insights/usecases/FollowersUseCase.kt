@@ -55,7 +55,7 @@ class FollowersUseCase
 ) : StatefulUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
         FOLLOWERS,
         mainDispatcher,
-        FollowersUiState()
+        FollowersUiState(isLoading = true)
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_ITEM_COUNT
     private lateinit var lastSite: SiteModel
@@ -83,7 +83,9 @@ class FollowersUseCase
         fetchMode: PagedMode
     ): State<Pair<FollowersModel, FollowersModel>> {
         lastSite = site
-
+        withContext(mainDispatcher) {
+            updateUiState { it.copy(isLoading = true) }
+        }
         val deferredWpComResponse = GlobalScope.async { followersStore.fetchWpComFollowers(site, fetchMode, forced) }
         val deferredEmailResponse = GlobalScope.async { followersStore.fetchEmailFollowers(site, fetchMode, forced) }
 
@@ -92,7 +94,9 @@ class FollowersUseCase
         val wpComModel = wpComResponse.model
         val emailModel = emailResponse.model
         val error = wpComResponse.error ?: emailResponse.error
-
+        withContext(mainDispatcher) {
+            updateUiState { it.copy(isLoading = false) }
+        }
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
             wpComModel != null && emailModel != null &&
