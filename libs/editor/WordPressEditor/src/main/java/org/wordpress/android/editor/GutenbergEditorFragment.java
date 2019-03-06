@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -240,6 +241,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override
                     public void onEditorDidMount(boolean hasUnsupportedBlocks) {
                         mEditorFragmentListener.onEditorFragmentContentReady(hasUnsupportedBlocks);
+
+                        // Hide the progress bar when editor is ready
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isAdded() && getView() != null) {
+                                    getView().findViewById(R.id.editor_progress).setVisibility(View.GONE);
+                                }
+                            }
+                        });
                     }
                 }
             );
