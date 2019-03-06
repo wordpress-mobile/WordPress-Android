@@ -3,10 +3,12 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.util.filter
 import java.util.Date
 import javax.inject.Inject
@@ -22,93 +24,111 @@ class SelectedDateProvider
             YEARS to SelectedDate(loading = true)
     )
 
-    private val mutableSelectedDateChanged = MutableLiveData<StatsGranularity>()
-    val selectedDateChanged: LiveData<StatsGranularity> = mutableSelectedDateChanged
+    private val mutableSelectedDateChanged = MutableLiveData<StatsSection>()
+    val selectedDateChanged: LiveData<StatsSection> = mutableSelectedDateChanged
 
-    fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<StatsGranularity> {
-        return selectedDateChanged.filter { it == statsGranularity }
+    fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<StatsSection> {
+        return selectedDateChanged.filter { it == statsGranularity.toStatsSection() }
     }
 
-    fun selectDate(date: Date, statsGranularity: StatsGranularity) {
-        val selectedDate = getSelectedDateState(statsGranularity)
+    fun selectDate(date: Date, statsSection: StatsSection) {
+        val selectedDate = getSelectedDateState(statsSection)
         val selectedDateIndex = selectedDate.availableDates.indexOf(date)
         if (selectedDate.getDate() != date && selectedDateIndex > -1) {
-            updateSelectedDate(selectedDate.copy(index = selectedDateIndex), statsGranularity)
+            updateSelectedDate(selectedDate.copy(index = selectedDateIndex), statsSection)
         }
     }
 
-    fun selectDate(updatedIndex: Int, availableDates: List<Date>, statsGranularity: StatsGranularity) {
-        val selectedDate = getSelectedDateState(statsGranularity)
+    fun selectDate(date: Date, statsGranularity: StatsGranularity) {
+        selectDate(date, statsGranularity.toStatsSection())
+    }
+
+    fun selectDate(updatedIndex: Int, availableDates: List<Date>, statsSection: StatsSection) {
+        val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.index != updatedIndex || selectedDate.availableDates != availableDates) {
             updateSelectedDate(
                     selectedDate.copy(index = updatedIndex, availableDates = availableDates),
-                    statsGranularity
+                    statsSection
             )
         }
     }
 
-    private fun updateSelectedDate(selectedDate: SelectedDate, statsGranularity: StatsGranularity) {
-        if (mutableDates[statsGranularity] != selectedDate) {
-            mutableDates[statsGranularity] = selectedDate
-            mutableSelectedDateChanged.postValue(statsGranularity)
+    fun selectDate(updatedIndex: Int, availableDates: List<Date>, statsGranularity: StatsGranularity) {
+        selectDate(updatedIndex, availableDates, statsGranularity.toStatsSection())
+    }
+
+    private fun updateSelectedDate(selectedDate: SelectedDate, statsSection: StatsSection) {
+        if (mutableDates[statsSection] != selectedDate) {
+            mutableDates[statsSection] = selectedDate
+            mutableSelectedDateChanged.postValue(statsSection)
         }
     }
 
     fun getSelectedDate(statsGranularity: StatsGranularity): Date? {
-        return getSelectedDateState(statsGranularity).let { selectedDate ->
+        return getSelectedDate(statsGranularity.toStatsSection())
+    }
+
+    fun getSelectedDate(statsSection: StatsSection): Date? {
+        return getSelectedDateState(statsSection).let { selectedDate ->
             selectedDate.index?.let { selectedDate.availableDates.getOrNull(selectedDate.index) }
         }
     }
 
     fun getSelectedDateState(statsGranularity: StatsGranularity): SelectedDate {
-        return mutableDates[statsGranularity] ?: SelectedDate(loading = true)
+        return getSelectedDateState(statsGranularity.toStatsSection())
     }
 
-    fun hasPreviousDate(statsGranularity: StatsGranularity): Boolean {
-        val selectedDate = getSelectedDateState(statsGranularity)
+    fun getSelectedDateState(statsSection: StatsSection): SelectedDate {
+        return mutableDates[statsSection] ?: SelectedDate(loading = true)
+    }
+
+    fun hasPreviousDate(statsSection: StatsSection): Boolean {
+        val selectedDate = getSelectedDateState(statsSection)
         return selectedDate.index != null && selectedDate.hasData() && selectedDate.index > 0
     }
 
-    fun hasNextData(statsGranularity: StatsGranularity): Boolean {
-        val selectedDate = getSelectedDateState(statsGranularity)
+    fun hasNextData(statsSection: StatsSection): Boolean {
+        val selectedDate = getSelectedDateState(statsSection)
         return selectedDate.hasData() &&
                 selectedDate.index != null &&
                 selectedDate.index < selectedDate.availableDates.size - 1
     }
 
-    fun selectPreviousDate(statsGranularity: StatsGranularity) {
-        getSelectedDateState(statsGranularity).let { selectedDate ->
+    fun selectPreviousDate(statsSection: StatsSection) {
+        getSelectedDateState(statsSection).let { selectedDate ->
             val selectedDateIndex = selectedDate.index
             if (selectedDateIndex != null && selectedDateIndex > 0) {
-                updateSelectedDate(selectedDate.copy(index = selectedDate.index - 1), statsGranularity)
+                updateSelectedDate(selectedDate.copy(index = selectedDate.index - 1), statsSection)
             }
         }
     }
 
-    fun selectNextDate(statsGranularity: StatsGranularity) {
-        getSelectedDateState(statsGranularity).let { selectedDate ->
+    fun selectNextDate(statsSection: StatsSection) {
+        getSelectedDateState(statsSection).let { selectedDate ->
             val selectedDateIndex = selectedDate.index
             if (selectedDateIndex != null && selectedDateIndex < selectedDate.availableDates.size - 1) {
-                updateSelectedDate(selectedDate.copy(index = selectedDate.index + 1), statsGranularity)
+                updateSelectedDate(selectedDate.copy(index = selectedDate.index + 1), statsSection)
             }
         }
     }
 
     fun dateLoadingFailed(statsGranularity: StatsGranularity) {
-        val selectedDate = getSelectedDateState(statsGranularity)
+        val statsSection = statsGranularity.toStatsSection()
+        val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.index != null && !selectedDate.error) {
-            updateSelectedDate(selectedDate.copy(error = true), statsGranularity)
+            updateSelectedDate(selectedDate.copy(error = true), statsSection)
         } else if (selectedDate.index == null) {
-            updateSelectedDate(SelectedDate(error = true), statsGranularity)
+            updateSelectedDate(SelectedDate(error = true), statsSection)
         }
     }
 
     fun dateLoadingSucceeded(statsGranularity: StatsGranularity) {
-        val selectedDate = getSelectedDateState(statsGranularity)
+        val statsSection = statsGranularity.toStatsSection()
+        val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.index != null && selectedDate.error) {
-            updateSelectedDate(selectedDate.copy(error = false), statsGranularity)
+            updateSelectedDate(selectedDate.copy(error = false), statsSection)
         } else if (selectedDate.index == null) {
-            updateSelectedDate(SelectedDate(error = false), statsGranularity)
+            updateSelectedDate(SelectedDate(error = false), statsSection)
         }
     }
 

@@ -13,14 +13,18 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -82,7 +86,7 @@ class StatsViewModel
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
             }
         }
-        listUseCases.values.forEach { it.updateDateSelector(statsSectionManager.getSelectedStatsGranularity()) }
+        listUseCases.values.forEach { it.updateDateSelector(statsSectionManager.getSelectedSection()) }
     }
 
     private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
@@ -117,9 +121,9 @@ class StatsViewModel
         }
     }
 
-    fun onSelectedDateChange(statsGranularity: StatsGranularity) {
+    fun onSelectedDateChange(statsSection: StatsSection) {
         launch {
-            listUseCases[statsGranularity.toStatsSection()]?.onDateChanged(statsGranularity)
+            listUseCases[statsSection]?.onDateChanged(statsSection)
         }
     }
 
@@ -127,14 +131,16 @@ class StatsViewModel
 
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
-        listUseCases[statsSection]?.updateDateSelector(statsSectionManager.getSelectedStatsGranularity())
+        listUseCases[statsSection]?.updateDateSelector(statsSection)
         _toolbarHasShadow.value = statsSection == INSIGHTS
         when (statsSection) {
-            StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
-            StatsSection.DAYS -> analyticsTracker.track(STATS_PERIOD_DAYS_ACCESSED)
-            StatsSection.WEEKS -> analyticsTracker.track(STATS_PERIOD_WEEKS_ACCESSED)
-            StatsSection.MONTHS -> analyticsTracker.track(STATS_PERIOD_MONTHS_ACCESSED)
-            StatsSection.YEARS -> analyticsTracker.track(STATS_PERIOD_YEARS_ACCESSED)
+            INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
+            DAYS -> analyticsTracker.track(STATS_PERIOD_DAYS_ACCESSED)
+            WEEKS -> analyticsTracker.track(STATS_PERIOD_WEEKS_ACCESSED)
+            MONTHS -> analyticsTracker.track(STATS_PERIOD_MONTHS_ACCESSED)
+            YEARS -> analyticsTracker.track(STATS_PERIOD_YEARS_ACCESSED)
+            DETAIL -> {
+            }
         }
     }
 

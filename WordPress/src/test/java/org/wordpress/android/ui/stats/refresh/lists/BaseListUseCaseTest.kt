@@ -9,8 +9,10 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
@@ -39,7 +41,7 @@ class BaseListUseCaseTest : BaseUnitTest() {
                 { listOf() },
                 { _, _ -> UiModel.Error() }
         )
-        whenever(selectedDateProvider.getSelectedDate(any())).thenReturn(selectedDate)
+        whenever(selectedDateProvider.getSelectedDate(any<StatsSection>())).thenReturn(selectedDate)
         whenever(statsDateFormatter.printGranularDate(eq(selectedDate), any())).thenReturn(selectedDateLabel)
     }
 
@@ -48,7 +50,7 @@ class BaseListUseCaseTest : BaseUnitTest() {
         var model: DateSelectorUiModel? = null
         useCase.showDateSelector.observeForever { model = it }
 
-        useCase.updateDateSelector(null)
+        useCase.updateDateSelector(INSIGHTS)
 
         Assertions.assertThat(model).isNotNull
         Assertions.assertThat(model?.isVisible).isFalse()
@@ -59,28 +61,28 @@ class BaseListUseCaseTest : BaseUnitTest() {
         val models = mutableListOf<DateSelectorUiModel>()
         useCase.showDateSelector.observeForever { model -> model?.let { models.add(it) } }
 
-        useCase.updateDateSelector(null)
+        useCase.updateDateSelector(INSIGHTS)
 
         Assertions.assertThat(models).hasSize(1)
 
-        useCase.updateDateSelector(null)
+        useCase.updateDateSelector(INSIGHTS)
 
         Assertions.assertThat(models).hasSize(1)
     }
 
     @Test
     fun `shows date selector on days screen`() {
-        val statsGranularity = StatsGranularity.DAYS
+        val statsSection = StatsSection.DAYS
         val selectedDate = Date(0)
         val label = "Jan 1"
-        whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(selectedDate)
-        whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(label)
-        whenever(selectedDateProvider.hasPreviousDate(statsGranularity)).thenReturn(true)
-        whenever(selectedDateProvider.hasNextData(statsGranularity)).thenReturn(true)
+        whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(selectedDate)
+        whenever(statsDateFormatter.printGranularDate(selectedDate, DAYS)).thenReturn(label)
+        whenever(selectedDateProvider.hasPreviousDate(statsSection)).thenReturn(true)
+        whenever(selectedDateProvider.hasNextData(statsSection)).thenReturn(true)
         var model: DateSelectorUiModel? = null
         useCase.showDateSelector.observeForever { model = it }
 
-        useCase.updateDateSelector(StatsGranularity.DAYS)
+        useCase.updateDateSelector(statsSection)
 
         Assertions.assertThat(model).isNotNull
         Assertions.assertThat(model?.isVisible).isTrue()
@@ -91,22 +93,22 @@ class BaseListUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `updates date selector on date change`() {
-        val statsGranularity = StatsGranularity.DAYS
+        val statsSection = StatsSection.DAYS
         val updatedDate = Date(10)
         val updatedLabel = "Jan 2"
-        whenever(statsDateFormatter.printGranularDate(updatedDate, statsGranularity)).thenReturn(updatedLabel)
-        whenever(selectedDateProvider.hasPreviousDate(statsGranularity)).thenReturn(true)
-        whenever(selectedDateProvider.hasNextData(statsGranularity)).thenReturn(true)
+        whenever(statsDateFormatter.printGranularDate(updatedDate, DAYS)).thenReturn(updatedLabel)
+        whenever(selectedDateProvider.hasPreviousDate(statsSection)).thenReturn(true)
+        whenever(selectedDateProvider.hasNextData(statsSection)).thenReturn(true)
         var model: DateSelectorUiModel? = null
         useCase.showDateSelector.observeForever { model = it }
 
-        useCase.updateDateSelector(statsGranularity)
+        useCase.updateDateSelector(statsSection)
 
         Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
 
-        whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(updatedDate)
+        whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(updatedDate)
 
-        useCase.updateDateSelector(statsGranularity)
+        useCase.updateDateSelector(statsSection)
 
         Assertions.assertThat(model?.date).isEqualTo(updatedLabel)
     }

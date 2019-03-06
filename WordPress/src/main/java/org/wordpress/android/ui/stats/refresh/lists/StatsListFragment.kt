@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
+import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel
@@ -126,6 +127,7 @@ class StatsListFragment : DaggerFragment() {
         val statsSection = arguments?.getSerializable(typeKey) as StatsSection
 
         val viewModelClass = when (statsSection) {
+            StatsSection.DETAIL -> DetailListViewModel::class.java
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
             StatsSection.WEEKS -> WeeksListViewModel::class.java

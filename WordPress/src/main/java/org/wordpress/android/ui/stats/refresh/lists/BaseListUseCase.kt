@@ -12,6 +12,13 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
@@ -101,24 +108,24 @@ class BaseListUseCase(
         data.value = null
     }
 
-    suspend fun onDateChanged(statsGranularity: StatsGranularity?) {
-        updateDateSelector(statsGranularity)
+    suspend fun onDateChanged(statsSection: StatsSection) {
+        updateDateSelector(statsSection)
         refreshData()
     }
 
-    fun updateDateSelector(statsGranularity: StatsGranularity?) {
-        val shouldShowDateSelection = statsGranularity != null
+    fun updateDateSelector(statsSection: StatsSection) {
+        val shouldShowDateSelection = statsSection != INSIGHTS
 
-        val updatedDate = getDateLabelForSection(statsGranularity)
+        val updatedDate = getDateLabelForSection(statsSection)
         val currentState = showDateSelector.value
-        if ((!shouldShowDateSelection && currentState?.isVisible != false) || statsGranularity == null) {
+        if (!shouldShowDateSelection && currentState?.isVisible != false) {
             emitValue(currentState, DateSelectorUiModel(false))
         } else {
             val updatedState = DateSelectorUiModel(
                     shouldShowDateSelection,
                     updatedDate,
-                    enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsGranularity),
-                    enableSelectNext = selectedDateProvider.hasNextData(statsGranularity)
+                    enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsSection),
+                    enableSelectNext = selectedDateProvider.hasNextData(statsSection)
             )
             emitValue(currentState, updatedState)
         }
@@ -137,24 +144,27 @@ class BaseListUseCase(
         }
     }
 
-    private fun getDateLabelForSection(statsGranularity: StatsGranularity?): String? {
+    private fun getDateLabelForSection(statsSection: StatsSection): String? {
+        val statsGranularity = when (statsSection) {
+            INSIGHTS -> null
+            DETAIL, DAYS -> StatsGranularity.DAYS
+            WEEKS -> StatsGranularity.WEEKS
+            MONTHS -> StatsGranularity.MONTHS
+            YEARS -> StatsGranularity.YEARS
+        }
         return statsGranularity?.let {
             statsDateFormatter.printGranularDate(
-                    selectedDateProvider.getSelectedDate(statsGranularity) ?: selectedDateProvider.getCurrentDate(),
+                    selectedDateProvider.getSelectedDate(statsSection) ?: selectedDateProvider.getCurrentDate(),
                     statsGranularity
             )
         }
     }
 
     fun onNextDateSelected() {
-        statsSectionManager.getSelectedStatsGranularity()?.let { statsGranularity ->
-            selectedDateProvider.selectNextDate(statsGranularity)
-        }
+        selectedDateProvider.selectNextDate(statsSectionManager.getSelectedSection())
     }
 
     fun onPreviousDateSelected() {
-        statsSectionManager.getSelectedStatsGranularity()?.let { statsGranularity ->
-            selectedDateProvider.selectPreviousDate(statsGranularity)
-        }
+        selectedDateProvider.selectPreviousDate(statsSectionManager.getSelectedSection())
     }
 }
