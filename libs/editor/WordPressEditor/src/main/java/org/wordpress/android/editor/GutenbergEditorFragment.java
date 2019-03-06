@@ -56,6 +56,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
+    private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
 
@@ -77,6 +78,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private Set<String> mFailedMediaIds = new HashSet<>();
 
     private boolean mIsNewPost;
+
+    private boolean mEditorDidMount;
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
@@ -194,6 +197,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         if (savedInstanceState != null) {
             mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED);
+            mEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT);
         }
     }
 
@@ -240,15 +244,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnEditorMountListener() {
                     @Override
                     public void onEditorDidMount(boolean hasUnsupportedBlocks) {
+                        mEditorDidMount = true;
                         mEditorFragmentListener.onEditorFragmentContentReady(hasUnsupportedBlocks);
 
                         // Hide the progress bar when editor is ready
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                if (isAdded() && getView() != null) {
-                                    getView().findViewById(R.id.editor_progress).setVisibility(View.GONE);
-                                }
+                                setEditorProgressBarVisibility(!mEditorDidMount);
                             }
                         });
                     }
@@ -284,11 +287,23 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return view;
     }
 
+    @Override public void onResume() {
+        super.onResume();
+
+        setEditorProgressBarVisibility(!mEditorDidMount);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
             checkAndRequestCameraAndStoragePermissions();
+        }
+    }
+
+    private void setEditorProgressBarVisibility(boolean shown) {
+        if (isAdded() && getView() != null) {
+            getView().findViewById(R.id.editor_progress).setVisibility(shown ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -413,6 +428,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
+        outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
     }
 
     @Override
