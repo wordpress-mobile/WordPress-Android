@@ -2036,6 +2036,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostLocallyAndFinishAsync(true);
                     }
                 } else {
+                    // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
+                    // original post's status as we could not proceed with the action
+                    mPost.setStatus(mOriginalPost.getStatus());
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
