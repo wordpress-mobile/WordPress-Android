@@ -12,18 +12,7 @@ import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewM
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel;
-import org.wordpress.android.ui.stats.refresh.DailyViewAllPostsAndPagesViewModel;
-import org.wordpress.android.ui.stats.refresh.DailyViewAllReferrersViewModel;
-import org.wordpress.android.ui.stats.refresh.MonthlyViewAllPostsAndPagesViewModel;
-import org.wordpress.android.ui.stats.refresh.MonthlyViewAllReferrersViewModel;
-import org.wordpress.android.ui.stats.refresh.StatsViewAllCommentsViewModel;
-import org.wordpress.android.ui.stats.refresh.StatsViewAllFollowersViewModel;
-import org.wordpress.android.ui.stats.refresh.StatsViewAllTagsAndCategoriesViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
-import org.wordpress.android.ui.stats.refresh.WeeklyViewAllPostsAndPagesViewModel;
-import org.wordpress.android.ui.stats.refresh.WeeklyViewAllReferrersViewModel;
-import org.wordpress.android.ui.stats.refresh.YearlyViewAllPostsAndPagesViewModel;
-import org.wordpress.android.ui.stats.refresh.YearlyViewAllReferrersViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel;
@@ -128,61 +117,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StatsViewModel.class)
     abstract ViewModel statsViewModel(StatsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(StatsViewAllFollowersViewModel.class)
-    abstract ViewModel viewAllFollowersViewModel(StatsViewAllFollowersViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(StatsViewAllCommentsViewModel.class)
-    abstract ViewModel viewAllCommentsViewModel(StatsViewAllCommentsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(StatsViewAllTagsAndCategoriesViewModel.class)
-    abstract ViewModel viewAllTagsAndCategoriesViewModel(StatsViewAllTagsAndCategoriesViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(DailyViewAllPostsAndPagesViewModel.class)
-    abstract ViewModel dailyViewAllPostsAndPagesViewModel(DailyViewAllPostsAndPagesViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(WeeklyViewAllPostsAndPagesViewModel.class)
-    abstract ViewModel weeklyViewAllPostsAndPagesViewModel(WeeklyViewAllPostsAndPagesViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(MonthlyViewAllPostsAndPagesViewModel.class)
-    abstract ViewModel monthlyViewAllPostsAndPagesViewModel(MonthlyViewAllPostsAndPagesViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(YearlyViewAllPostsAndPagesViewModel.class)
-    abstract ViewModel yearlyViewAllPostsAndPagesViewModel(YearlyViewAllPostsAndPagesViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(DailyViewAllReferrersViewModel.class)
-    abstract ViewModel dailyViewAllReferrersViewModel(DailyViewAllReferrersViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(WeeklyViewAllReferrersViewModel.class)
-    abstract ViewModel weeklyViewAllReferrersViewModel(WeeklyViewAllReferrersViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(MonthlyViewAllReferrersViewModel.class)
-    abstract ViewModel monthlyViewAllReferrersViewModel(MonthlyViewAllReferrersViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(YearlyViewAllReferrersViewModel.class)
-    abstract ViewModel yearlyViewAllReferrersViewModel(YearlyViewAllReferrersViewModel viewModel);
 
     @Binds
     @IntoMap
