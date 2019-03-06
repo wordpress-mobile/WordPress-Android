@@ -716,8 +716,7 @@ public class UploadService extends Service {
         // the editor, and such media failed _before_ exiting the eidtor, thus the registration never happened.
         // We're recovering the information here so we make sure to rebuild the status only when the user taps
         // on Retry.
-        List<String> mediaIds = AztecEditorFragment.getMediaMarkedFailedInPostContent(
-                AztecEditorFragment.parseContent(this, post.getContent()));
+        List<String> mediaIds = AztecEditorFragment.getMediaMarkedFailedInPostContent(this, post.getContent());
 
         if (mediaIds != null && !mediaIds.isEmpty()) {
             ArrayList<MediaModel> mediaList = new ArrayList<>();
