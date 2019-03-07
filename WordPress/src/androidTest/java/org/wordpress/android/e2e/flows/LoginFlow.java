@@ -1,12 +1,20 @@
 package org.wordpress.android.e2e.flows;
 
 import android.support.test.espresso.ViewInteraction;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 
+import org.hamcrest.Matchers;
 import org.wordpress.android.R;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
@@ -60,10 +68,10 @@ public class LoginFlow {
     }
 
     private void enterUsernameAndPassword(String username, String password) {
-        ViewInteraction usernameElement =
-                onView(withHint(getCurrentActivity().getString(R.string.username)));
-        ViewInteraction passwordElement =
-                onView(withHint(getCurrentActivity().getString(R.string.password)));
+        ViewInteraction usernameElement = onView(allOf(isDescendantOfA(withId(R.id.login_username_row)),
+                Matchers.<View>instanceOf(EditText.class)));
+        ViewInteraction passwordElement = onView(allOf(isDescendantOfA(withId(R.id.login_password_row)),
+                Matchers.<View>instanceOf(EditText.class)));
         populateTextField(usernameElement, username + "\n");
         populateTextField(passwordElement, password + "\n");
         clickOn(R.id.primary_button);

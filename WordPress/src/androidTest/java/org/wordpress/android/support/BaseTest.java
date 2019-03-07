@@ -31,7 +31,9 @@ public class BaseTest {
             return;
         }
 
-        logout();
+        if (isElementDisplayed(R.id.nav_me)) {
+            logout();
+        }
     }
     protected void wpLogin() {
         new LoginFlow().loginEmailPassword();

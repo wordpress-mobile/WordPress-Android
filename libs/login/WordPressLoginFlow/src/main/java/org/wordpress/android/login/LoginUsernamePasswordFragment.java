@@ -147,7 +147,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
         mUsernameInput = rootView.findViewById(R.id.login_username_row);
         mUsernameInput.setText(mInputUsername);
-        mUsernameInput.setHint(getString(R.string.username));
         if (BuildConfig.DEBUG) {
             mUsernameInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_USERNAME);
         }
@@ -162,7 +161,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
         mPasswordInput = rootView.findViewById(R.id.login_password_row);
         mPasswordInput.setText(mInputPassword);
-        mPasswordInput.setHint(getString(R.string.password));
         if (BuildConfig.DEBUG) {
             mPasswordInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_PASSWORD);
         }

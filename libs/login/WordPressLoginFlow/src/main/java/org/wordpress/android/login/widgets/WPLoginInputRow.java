@@ -203,12 +203,6 @@ public class WPLoginInputRow extends RelativeLayout {
         mEditText.setText(text);
     }
 
-    public final void setHint(CharSequence text) {
-        mEditText.setHint(text);
-        // Makes the hint transparent, so the TalkBack can read it, when the field is prefilled
-        mEditText.setHintTextColor(getResources().getColor(android.R.color.transparent));
-    }
-
     public void setError(@Nullable final CharSequence error) {
         mTextInputLayout.setError(error);
         if (error == null) {
