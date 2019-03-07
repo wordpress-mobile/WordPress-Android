@@ -3,16 +3,13 @@ package org.wordpress.android.e2e.flows;
 import android.support.test.espresso.ViewInteraction;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 
 import org.hamcrest.Matchers;
 import org.wordpress.android.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
