@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Group
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.ClicksStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -39,7 +41,8 @@ import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
-private const val pageSize = 6
+private const val itemsToLoad = 6
+private val limitMode = LimitMode.Top(itemsToLoad)
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 
@@ -61,7 +64,8 @@ class ClicksUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 store,
                 selectedDateProvider,
-                tracker
+                tracker,
+                BLOCK
         )
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
                 SelectedDate(
@@ -76,7 +80,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
     fun `maps clicks to UI model`() = test {
         val forced = false
         val model = ClicksModel(10, 15, listOf(singleClick, group), false)
-        whenever(store.fetchClicks(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
+        whenever(store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -126,7 +130,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = ClicksModel(10, 15, listOf(singleClick), true)
         whenever(
-                store.fetchClicks(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         model
@@ -153,7 +157,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
     fun `maps empty clicks to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchClicks(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(ClicksModel(0, 0, listOf(), false))
         )
@@ -173,7 +177,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchClicks(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
