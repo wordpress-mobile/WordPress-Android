@@ -144,7 +144,6 @@ constructor(
                         items.add(Divider)
                     }
                 }
-                null
             }
 
             if (useCaseMode == BLOCK && domainModel.hasMore) {
