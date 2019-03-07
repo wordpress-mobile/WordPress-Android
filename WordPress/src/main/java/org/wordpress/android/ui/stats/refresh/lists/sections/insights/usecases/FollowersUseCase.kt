@@ -86,8 +86,20 @@ class FollowersUseCase
         runBlocking(mainDispatcher) {
             updateUiState { it.copy(isLoading = true) }
         }
-        val deferredWpComResponse = GlobalScope.async { followersStore.fetchWpComFollowers(site, fetchMode, forced) }
-        val deferredEmailResponse = GlobalScope.async { followersStore.fetchEmailFollowers(site, fetchMode, forced) }
+        val deferredWpComResponse = GlobalScope.async(bgDispatcher) {
+            followersStore.fetchWpComFollowers(
+                    site,
+                    fetchMode,
+                    forced
+            )
+        }
+        val deferredEmailResponse = GlobalScope.async(bgDispatcher) {
+            followersStore.fetchEmailFollowers(
+                    site,
+                    fetchMode,
+                    forced
+            )
+        }
 
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
