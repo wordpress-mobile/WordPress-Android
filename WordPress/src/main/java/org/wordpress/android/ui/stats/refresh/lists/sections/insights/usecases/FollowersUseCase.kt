@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -83,7 +83,7 @@ class FollowersUseCase
         fetchMode: PagedMode
     ): State<Pair<FollowersModel, FollowersModel>> {
         lastSite = site
-        withContext(mainDispatcher) {
+        runBlocking(mainDispatcher) {
             updateUiState { it.copy(isLoading = true) }
         }
         val deferredWpComResponse = GlobalScope.async { followersStore.fetchWpComFollowers(site, fetchMode, forced) }
@@ -94,7 +94,7 @@ class FollowersUseCase
         val wpComModel = wpComResponse.model
         val emailModel = emailResponse.model
         val error = wpComResponse.error ?: emailResponse.error
-        withContext(mainDispatcher) {
+        runBlocking(mainDispatcher) {
             updateUiState { it.copy(isLoading = false) }
         }
         return when {
@@ -148,7 +148,8 @@ class FollowersUseCase
                                     navigateAction = NavigationAction.create(uiState.selectedTab, this::onLinkClick)
                             )
                     )
-                } else {
+                } else if (wpComModel.followers.size >= VIEW_ALL_PAGE_SIZE && uiState.selectedTab == 0 ||
+                        emailModel.followers.size >= VIEW_ALL_PAGE_SIZE && uiState.selectedTab == 1) {
                     items.add(LoadingItem(this::loadMore, isLoading = uiState.isLoading))
                 }
             }
@@ -160,13 +161,7 @@ class FollowersUseCase
 
     private fun loadMore() {
         GlobalScope.launch(bgDispatcher) {
-            withContext(mainDispatcher) {
-                updateUiState { it.copy(isLoading = true) }
-            }
             val state = fetchData(lastSite, true, PagedMode(itemsToLoad, true))
-            withContext(mainDispatcher) {
-                updateUiState { it.copy(isLoading = false) }
-            }
             evaluateState(state)
         }
     }
