@@ -15,6 +15,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.UiModelMapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
@@ -38,9 +40,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
-import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
-import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -53,6 +54,9 @@ const val LIST_STATS_USE_CASES = "ListStatsUseCases"
 const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
 const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
 const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
+const val DETAIL_USE_CASE = "DetailUseCase"
+// These are injected only internally
+private const val DETAIL_USE_CASES = "DetailUseCases"
 
 /**
  * Module that provides use cases for Stats.
@@ -149,6 +153,16 @@ class StatsModule {
                 overviewUseCaseFactory
         )
     }
+    /**
+     * Provides a list of use cases for the Post detail screen in Stats. Modify this method when you want to add more
+     * blocks to the post detail screen.
+     */
+    @Provides
+    @Singleton
+    @Named(DETAIL_USE_CASES)
+    fun provideDetailUseCases(): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+        return listOf()
+    }
 
     /**
      * Provides a singleton usecase that represents the Insights screen. It consists of list of use cases that build
@@ -161,7 +175,6 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
         statsDateFormatter: StatsDateFormatter,
         statsSiteProvider: StatsSiteProvider,
@@ -171,7 +184,7 @@ class StatsModule {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
-                statsSectionManager,
+                INSIGHTS,
                 selectedDateProvider,
                 statsDateFormatter,
                 statsSiteProvider,
@@ -192,7 +205,6 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
         statsDateFormatter: StatsDateFormatter,
         statsSiteProvider: StatsSiteProvider,
@@ -202,7 +214,7 @@ class StatsModule {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
-                statsSectionManager,
+                StatsSection.DAYS,
                 selectedDateProvider,
                 statsDateFormatter,
                 statsSiteProvider,
@@ -223,7 +235,6 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
         statsDateFormatter: StatsDateFormatter,
         statsSiteProvider: StatsSiteProvider,
@@ -233,7 +244,7 @@ class StatsModule {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
-                statsSectionManager,
+                StatsSection.WEEKS,
                 selectedDateProvider,
                 statsDateFormatter,
                 statsSiteProvider,
@@ -254,7 +265,6 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
         statsSiteProvider: StatsSiteProvider,
         statsDateFormatter: StatsDateFormatter,
@@ -263,7 +273,7 @@ class StatsModule {
     ): BaseListUseCase {
         return BaseListUseCase(
                 bgDispatcher, mainDispatcher,
-                statsSectionManager,
+                StatsSection.MONTHS,
                 selectedDateProvider,
                 statsDateFormatter,
                 statsSiteProvider,
@@ -284,7 +294,6 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
         statsSiteProvider: StatsSiteProvider,
         statsDateFormatter: StatsDateFormatter,
@@ -294,7 +303,7 @@ class StatsModule {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
-                statsSectionManager,
+                StatsSection.YEARS,
                 selectedDateProvider,
                 statsDateFormatter,
                 statsSiteProvider,
@@ -323,6 +332,36 @@ class StatsModule {
                 StatsSection.WEEKS to weekStatsUseCase,
                 StatsSection.MONTHS to monthStatsUseCase,
                 StatsSection.YEARS to yearStatsUseCase
+        )
+    }
+
+    /**
+     * Provides a singleton usecase that represents the Year stats screen.
+     * @param useCases build the use cases for the YEARS granularity
+     */
+    @Provides
+    @Singleton
+    @Named(DETAIL_USE_CASE)
+    fun provideDetailStatsUseCase(
+        statsStore: StatsStore,
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        selectedDateProvider: SelectedDateProvider,
+        statsDateFormatter: StatsDateFormatter,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(DETAIL_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                DETAIL,
+                selectedDateProvider,
+                statsDateFormatter,
+                statsSiteProvider,
+                useCases,
+                { statsStore.getInsights() },
+                uiModelMapper::mapInsights
         )
     }
 

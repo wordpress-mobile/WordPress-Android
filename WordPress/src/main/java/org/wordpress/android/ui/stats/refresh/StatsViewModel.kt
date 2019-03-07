@@ -28,7 +28,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
@@ -86,7 +85,7 @@ class StatsViewModel
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
             }
         }
-        listUseCases.values.forEach { it.updateDateSelector(statsSectionManager.getSelectedSection()) }
+        listUseCases.values.forEach { it.updateDateSelector() }
     }
 
     private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
@@ -123,7 +122,7 @@ class StatsViewModel
 
     fun onSelectedDateChange(statsSection: StatsSection) {
         launch {
-            listUseCases[statsSection]?.onDateChanged(statsSection)
+            listUseCases[statsSection]?.onDateChanged()
         }
     }
 
@@ -131,7 +130,7 @@ class StatsViewModel
 
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
-        listUseCases[statsSection]?.updateDateSelector(statsSection)
+        listUseCases[statsSection]?.updateDateSelector()
         _toolbarHasShadow.value = statsSection == INSIGHTS
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)

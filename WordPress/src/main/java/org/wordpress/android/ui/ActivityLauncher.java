@@ -76,6 +76,7 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
@@ -762,7 +763,6 @@ public class ActivityLauncher {
         if (post == null) {
             return;
         }
-
         Intent statsPostViewIntent = new Intent(context, StatsSingleItemDetailsActivity.class);
         statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_BLOG_ID, post.getBlogID());
         statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_ID, post.getItemID());

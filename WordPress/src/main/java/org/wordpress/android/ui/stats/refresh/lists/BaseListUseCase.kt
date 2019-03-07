@@ -23,7 +23,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.DistinctMutableLiveData
@@ -36,7 +35,7 @@ import org.wordpress.android.util.mergeNotNull
 class BaseListUseCase(
     private val bgDispatcher: CoroutineDispatcher,
     private val mainDispatcher: CoroutineDispatcher,
-    private val statsSectionManager: SelectedSectionManager,
+    private val statsSection: StatsSection,
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val statsSiteProvider: StatsSiteProvider,
@@ -108,12 +107,12 @@ class BaseListUseCase(
         data.value = null
     }
 
-    suspend fun onDateChanged(statsSection: StatsSection) {
-        updateDateSelector(statsSection)
+    suspend fun onDateChanged() {
+        updateDateSelector()
         refreshData()
     }
 
-    fun updateDateSelector(statsSection: StatsSection) {
+    fun updateDateSelector() {
         val shouldShowDateSelection = statsSection != INSIGHTS
 
         val updatedDate = getDateLabelForSection(statsSection)
@@ -161,10 +160,10 @@ class BaseListUseCase(
     }
 
     fun onNextDateSelected() {
-        selectedDateProvider.selectNextDate(statsSectionManager.getSelectedSection())
+        selectedDateProvider.selectNextDate(statsSection)
     }
 
     fun onPreviousDateSelected() {
-        selectedDateProvider.selectPreviousDate(statsSectionManager.getSelectedSection())
+        selectedDateProvider.selectPreviousDate(statsSection)
     }
 }

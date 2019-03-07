@@ -17,7 +17,6 @@ import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
 import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
 import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
-import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
@@ -36,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -67,14 +67,13 @@ class StatsNavigator
                 }
             }
             is ViewPostDetailStats -> {
-                val postModel = StatsPostModel(
-                        siteProvider.siteModel.siteId,
+                StatsDetailActivity.start(
+                        activity,
+                        siteProvider.siteModel,
                         target.postId,
                         target.postTitle,
-                        target.postUrl,
-                        target.postType
-                )
-                ActivityLauncher.viewStatsSinglePostDetails(activity, postModel)
+                        target.postType,
+                        target.postUrl)
             }
             is ViewFollowersStats -> {
                 ActivityLauncher.viewAllTabbedInsightsStats(
