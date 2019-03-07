@@ -67,7 +67,7 @@ class PostListFragment : Fragment() {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
         PostViewHolderConfig(
-                // endlist indicator height is hard-coded here so that its horizontal line is in the middle of the fab
+                // endList indicator height is hard-coded here so that its horizontal line is in the middle of the fab
                 endlistIndicatorHeight = DisplayUtils.dpToPx(context, 74),
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
@@ -134,8 +134,8 @@ class PostListFragment : Fragment() {
         viewModel.toastMessage.observe(this, Observer {
             it?.show(nonNullActivity)
         })
-        viewModel.snackbarAction.observe(this, Observer {
-            it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
+        viewModel.snackBarAction.observe(this, Observer {
+            it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
         })
         viewModel.dialogAction.observe(this, Observer {
             val fragmentManager = requireNotNull(fragmentManager) { "FragmentManager can't be null at this point" }
@@ -148,23 +148,23 @@ class PostListFragment : Fragment() {
         })
     }
 
-    private fun showSnackbar(holder: SnackbarMessageHolder) {
+    private fun showSnackBar(holder: SnackbarMessageHolder) {
         nonNullActivity.findViewById<View>(R.id.root_view)?.let { parent ->
             val message = getString(holder.messageRes)
             val duration = AccessibilityUtils.getSnackbarDuration(nonNullActivity)
-            val snackbar = Snackbar.make(parent, message, duration)
+            val snackBar = Snackbar.make(parent, message, duration)
             if (holder.buttonTitleRes != null) {
-                snackbar.setAction(getString(holder.buttonTitleRes)) {
+                snackBar.setAction(getString(holder.buttonTitleRes)) {
                     holder.buttonAction()
                 }
             }
-            snackbar.addCallback(object : Snackbar.Callback() {
+            snackBar.addCallback(object : Snackbar.Callback() {
                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                     holder.onDismissAction()
                     super.onDismissed(transientBottomBar, event)
                 }
             })
-            snackbar.show()
+            snackBar.show()
         }
     }
 

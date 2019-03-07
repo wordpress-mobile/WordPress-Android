@@ -114,7 +114,7 @@ class PostListViewModel @Inject constructor(
     private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
     private val featuredImageMap = HashMap<Long, String>()
 
-    // Keep a reference to the currently being trashed post, so we can hide it during Undo Snackbar
+    // Keep a reference to the currently being trashed post, so we can hide it during Undo SnackBar
     private var postIdToTrash: Pair<Int, Long>? = null
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForPublishDialog: Int? = null
@@ -136,8 +136,8 @@ class PostListViewModel @Inject constructor(
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogAction: LiveData<DialogHolder> = _dialogAction
 
-    private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
-    val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
+    private val _snackBarAction = SingleLiveEvent<SnackbarMessageHolder>()
+    val snackBarAction: LiveData<SnackbarMessageHolder> = _snackBarAction
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
@@ -455,8 +455,8 @@ class PostListViewModel @Inject constructor(
             }
         }
         val messageRes = if (post.isLocalDraft) R.string.post_deleted else R.string.post_trashed
-        val snackbarHolder = SnackbarMessageHolder(messageRes, R.string.undo, undoAction, onDismissAction)
-        _snackbarAction.postValue(snackbarHolder)
+        val snackBarHolder = SnackbarMessageHolder(messageRes, R.string.undo, undoAction, onDismissAction)
+        _snackBarAction.postValue(snackBarHolder)
     }
 
     // FluxC Events
@@ -765,11 +765,11 @@ class PostListViewModel @Inject constructor(
         val onDismissAction = {
             originalPostCopyForConflictUndo = null
         }
-        val snackbarHolder = SnackbarMessageHolder(
+        val snackBarHolder = SnackbarMessageHolder(
                 R.string.snackbar_conflict_local_version_discarded,
                 R.string.snackbar_conflict_undo, undoAction, onDismissAction
         )
-        _snackbarAction.postValue(snackbarHolder)
+        _snackBarAction.postValue(snackBarHolder)
     }
 
     private fun updateConflictedPostWithItsLocalVersion(localPostId: Int) {
@@ -779,13 +779,13 @@ class PostListViewModel @Inject constructor(
         }
 
         // Keep a reference to which post is being updated with the local version so we can avoid showing the conflicted
-        // label during the undo snackbar.
+        // label during the undo snackBar.
         localPostIdForFetchingRemoteVersionOfConflictedPost = localPostId
         pagedListWrapper.invalidateData()
 
         val post = postStore.getPostByLocalPostId(localPostId) ?: return
 
-        // and now show a snackbar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
+        // and now show a snackBar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
         var isUndoed = false
         val undoAction = {
             isUndoed = true
@@ -802,11 +802,11 @@ class PostListViewModel @Inject constructor(
                 dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
             }
         }
-        val snackbarHolder = SnackbarMessageHolder(
+        val snackBarHolder = SnackbarMessageHolder(
                 R.string.snackbar_conflict_web_version_discarded,
                 R.string.snackbar_conflict_undo, undoAction, onDismissAction
         )
-        _snackbarAction.postValue(snackbarHolder)
+        _snackBarAction.postValue(snackBarHolder)
     }
 
     fun scrollToPost(localPostId: Int) {
