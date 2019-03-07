@@ -13,6 +13,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
+import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
@@ -109,11 +110,11 @@ class StatsNavigator
                 )
             }
             is ViewClicks -> {
-                ActivityLauncher.viewClicksStats(
+                ActivityLauncher.viewAllGranularStats(
                         activity,
                         site,
-                        target.statsGranularity.toStatsTimeFrame(),
-                        statsDateFormatter.printStatsDate(target.selectedDate)
+                        target.statsGranularity,
+                        CLICKS
                 )
             }
             is ViewCountries -> {

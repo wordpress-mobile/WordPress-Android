@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
@@ -75,7 +76,8 @@ class StatsViewAllViewModelFactory(
                     Pair(granularFactories.first { it is PostsAndPagesUseCaseFactory }.build(granularity, VIEW_ALL),
                             R.string.stats_view_referrers)
                 }
-                StatsViewType.CLICKS -> TODO()
+                StatsViewType.CLICKS -> Pair(granularFactories.first { it is ClicksUseCaseFactory }
+                        .build(granularity, VIEW_ALL), R.string.stats_view_referrers)
                 StatsViewType.AUTHORS -> TODO()
                 StatsViewType.GEOVIEWS -> TODO()
                 StatsViewType.SEARCH_TERMS -> TODO()
