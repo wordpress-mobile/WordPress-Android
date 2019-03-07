@@ -23,10 +23,10 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 
 @Module
-public class DebugOkHttpClientModule {
+public abstract class DebugOkHttpClientModule {
     @Provides
     @Named("regular")
-    public OkHttpClient.Builder provideOkHttpClientBuilder(
+    public static OkHttpClient.Builder provideOkHttpClientBuilder(
             @Named("interceptors") Set<Interceptor> interceptors,
             @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -41,7 +41,7 @@ public class DebugOkHttpClientModule {
 
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(
+    public static OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(
             MemorizingTrustManager memorizingTrustManager,
             @Named("interceptors") Set<Interceptor> interceptors,
             @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
@@ -66,7 +66,8 @@ public class DebugOkHttpClientModule {
     @Singleton
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient provideMediaOkHttpClientInstanceCustomSSL(@Named("custom-ssl") OkHttpClient.Builder builder) {
+    public static OkHttpClient provideMediaOkHttpClientInstanceCustomSSL(
+            @Named("custom-ssl") OkHttpClient.Builder builder) {
         return builder
                 .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
                 .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
@@ -77,7 +78,8 @@ public class DebugOkHttpClientModule {
     @Singleton
     @Provides
     @Named("regular")
-    public OkHttpClient provideMediaOkHttpClientInstance(@Named("regular") OkHttpClient.Builder builder) {
+    public static OkHttpClient provideMediaOkHttpClientInstance(
+            @Named("regular") OkHttpClient.Builder builder) {
         return builder
                 .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
                 .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
