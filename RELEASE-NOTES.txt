@@ -1,5 +1,6 @@
 12.0
 -----
+* Updated Notifications with tabs
 
 11.9
 -----

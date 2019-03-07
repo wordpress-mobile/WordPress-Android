@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -36,6 +37,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     private lateinit var viewModel: StatsViewModel
     @ExperimentalCoroutinesApi
@@ -49,10 +51,11 @@ class StatsViewModelTest : BaseUnitTest() {
                 statsSectionManager,
                 analyticsTracker,
                 networkUtilsWrapper,
-                resourceProvider
+                resourceProvider,
+                statsSiteProvider
         )
-
         whenever(statsSectionManager.getSelectedSection()).thenReturn(INSIGHTS)
+
         viewModel.start(site, false, null)
     }
 
@@ -106,6 +109,8 @@ class StatsViewModelTest : BaseUnitTest() {
     @Test
     fun `updates date selector on date change`() {
         val statsGranularity = StatsGranularity.DAYS
+
+        whenever(statsSectionManager.getSelectedStatsGranularity()).thenReturn(statsGranularity)
 
         viewModel.onSectionSelected(DAYS)
 

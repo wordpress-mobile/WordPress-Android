@@ -30,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -45,6 +46,7 @@ constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore,
+    statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val useCaseMode: UseCaseMode
@@ -52,6 +54,7 @@ constructor(
         POSTS_AND_PAGES,
         mainDispatcher,
         selectedDateProvider,
+        statsSiteProvider,
         statsGranularity
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
@@ -166,6 +169,7 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val postsAndPageViewsStore: PostAndPageViewsStore,
         private val selectedDateProvider: SelectedDateProvider,
+        private val statsSiteProvider: StatsSiteProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
@@ -173,6 +177,7 @@ constructor(
                         granularity,
                         mainDispatcher,
                         postsAndPageViewsStore,
+                        statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
                         useCaseMode

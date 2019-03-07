@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -130,19 +129,16 @@ abstract class StatsViewAllViewModel(
         SnackbarMessageHolder(it)
     }
 
-    private lateinit var site: SiteModel
-
-    fun start(site: SiteModel) {
-        this.site = site
+    fun start() {
         launch {
-            loadData(site, refresh = false, forced = false)
+            loadData(refresh = false, forced = false)
         }
     }
 
     fun onPullToRefresh() {
         mutableSnackbarMessage.value = null
         loadData {
-            loadData(site, refresh = true, forced = true)
+            loadData(refresh = true, forced = true)
         }
     }
 
@@ -154,9 +150,9 @@ abstract class StatsViewAllViewModel(
         _isRefreshing.value = false
     }
 
-    private suspend fun loadData(site: SiteModel, refresh: Boolean, forced: Boolean) {
+    private suspend fun loadData(refresh: Boolean, forced: Boolean) {
         withContext(bgDispatcher) {
-            useCase.fetch(site, refresh, forced)
+            useCase.fetch(refresh, forced)
         }
     }
 
@@ -165,9 +161,9 @@ abstract class StatsViewAllViewModel(
         useCase.clear()
     }
 
-    fun onRetryClick(site: SiteModel) {
+    fun onRetryClick() {
         loadData {
-            loadData(site, refresh = true, forced = true)
+            loadData(refresh = true, forced = true)
         }
     }
 }

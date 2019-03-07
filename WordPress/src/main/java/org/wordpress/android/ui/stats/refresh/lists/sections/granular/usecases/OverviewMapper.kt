@@ -34,10 +34,9 @@ class OverviewMapper
         val positive = value >= (previousValue ?: 0)
         val change = previousValue?.let {
             val difference = value - previousValue
-            val percentage = when {
-                previousValue == value -> "0"
-                previousValue == 0L -> "∞"
-                value == 0L -> "-∞"
+            val percentage = when (previousValue) {
+                value -> "0"
+                0L -> "∞"
                 else -> (difference * 100 / previousValue).toFormattedString()
             }
             if (positive) {

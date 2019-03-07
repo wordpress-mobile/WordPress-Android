@@ -32,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -41,6 +42,7 @@ private val selectedDate = Date(0)
 
 class SearchTermsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: SearchTermsStore
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
@@ -52,9 +54,11 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 statsGranularity,
                 Dispatchers.Unconfined,
                 store,
+                statsSiteProvider,
                 selectedDateProvider,
                 tracker
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
                 SelectedDate(
@@ -214,7 +218,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }

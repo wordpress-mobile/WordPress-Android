@@ -143,11 +143,11 @@ class StatsListFragment : DaggerFragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
-        setupObservers(site, activity)
-        viewModel.start(site)
+        setupObservers(activity)
+        viewModel.start()
     }
 
-    private fun setupObservers(site: SiteModel, activity: FragmentActivity) {
+    private fun setupObservers(activity: FragmentActivity) {
         viewModel.uiModel.observe(this, Observer {
             if (it != null) {
                 when (it) {
@@ -158,7 +158,7 @@ class StatsListFragment : DaggerFragment() {
                         recyclerView.visibility = View.GONE
                         actionable_error_view.visibility = View.VISIBLE
                         actionable_error_view.button.setOnClickListener {
-                            viewModel.onRetryClick(site)
+                            viewModel.onRetryClick()
                         }
                     }
                 }
@@ -182,7 +182,7 @@ class StatsListFragment : DaggerFragment() {
         })
 
         viewModel.navigationTarget.observeEvent(this) { target ->
-            navigator.navigate(site, activity, target)
+            navigator.navigate(activity, target)
             return@observeEvent true
         }
     }

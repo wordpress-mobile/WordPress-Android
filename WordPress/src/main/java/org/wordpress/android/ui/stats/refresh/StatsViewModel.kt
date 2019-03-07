@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -41,10 +42,9 @@ class StatsViewModel
     private val statsSectionManager: SelectedSectionManager,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val statsSiteProvider: StatsSiteProvider
 ) : ScopedViewModel(mainDispatcher) {
-    private lateinit var site: SiteModel
-
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
@@ -59,6 +59,8 @@ class StatsViewModel
 
     val selectedDateChanged = selectedDateProvider.selectedDateChanged
 
+    val siteChanged = statsSiteProvider.siteChanged
+
     private val _toolbarHasShadow = MutableLiveData<Boolean>()
     val toolbarHasShadow: LiveData<Int> = _toolbarHasShadow.mapNullable {
         if (it == true) resourceProvider.getDimensionPixelSize(R.dimen.appbar_elevation) else 0
@@ -67,9 +69,8 @@ class StatsViewModel
     fun start(site: SiteModel, launchedFromWidget: Boolean, initialSection: StatsSection?) {
         // Check if VM is not already initialized
         if (!isInitialized) {
+            statsSiteProvider.start(site)
             isInitialized = true
-
-            this.site = site
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
 
@@ -105,9 +106,10 @@ class StatsViewModel
 
     fun onPullToRefresh() {
         _showSnackbarMessage.value = null
+        statsSiteProvider.clear()
         if (networkUtilsWrapper.isNetworkAvailable()) {
             loadData {
-                listUseCases[statsSectionManager.getSelectedSection()]?.refreshData(site, true)
+                listUseCases[statsSectionManager.getSelectedSection()]?.refreshData(true)
             }
         } else {
             _isRefreshing.value = false
@@ -117,10 +119,7 @@ class StatsViewModel
 
     fun onSelectedDateChange(statsGranularity: StatsGranularity) {
         launch {
-            listUseCases[statsGranularity.toStatsSection()]?.let {
-                it.updateDateSelector(statsGranularity)
-                it.refreshData(site)
-            }
+            listUseCases[statsGranularity.toStatsSection()]?.onDateChanged(statsGranularity)
         }
     }
 
@@ -143,6 +142,7 @@ class StatsViewModel
         super.onCleared()
         _showSnackbarMessage.value = null
         selectedDateProvider.clear()
+        statsSiteProvider.stop()
     }
 
     data class DateSelectorUiModel(

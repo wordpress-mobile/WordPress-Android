@@ -114,6 +114,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
@@ -129,6 +130,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 
 public class ReaderPostListFragment extends Fragment
@@ -2015,6 +2017,8 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded() || post == null) {
             return;
         }
+
+        AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST);
 
         if (post.isBookmarked) {
             if (isBookmarksList()) {

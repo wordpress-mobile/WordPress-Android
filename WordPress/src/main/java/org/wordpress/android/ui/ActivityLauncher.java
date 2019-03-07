@@ -223,6 +223,17 @@ public class ActivityLauncher {
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
+        if (site == null) {
+            AppLog.e(T.STATS, "SiteModel is null when opening the stats from the deeplink.");
+            AnalyticsTracker.track(
+                    STATS_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Stats from the deeplink because of the null SiteModel"
+                                  );
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
@@ -402,6 +413,17 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
+        if (site == null) {
+            AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
+            AnalyticsTracker.track(
+                    STATS_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Stats because of the null SiteModel"
+                                  );
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(LOGGED_INTO_JETPACK, true);
