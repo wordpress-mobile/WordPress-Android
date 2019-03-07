@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.graphics.drawable.Drawable
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.View
@@ -20,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -229,8 +229,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
 
             var drawable: Drawable? = if (statusIconResId != 0) resources.getDrawable(statusIconResId) else null
             if (drawable != null) {
-                drawable = DrawableCompat.wrap(drawable)
-                DrawableCompat.setTint(drawable, resources.getColor(statusColorResId))
+                drawable = ColorUtils.applyTintToDrawable(context, statusIconResId, statusColorResId)
                 statusImage.visibility = View.VISIBLE
                 config.imageManager.load(statusImage, drawable)
             } else {

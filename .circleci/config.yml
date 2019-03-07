@@ -43,10 +43,19 @@ jobs:
           command: $GRADLEW checkstyle
       - run:
           name: ktlint
-          command: $GRADLEW ktlint
+          command: $GRADLEW ciktlint
       - run:
           name: Lint
           command: $GRADLEW lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+      - run:
+          name: Violations
+          when: on_fail
+          command: |
+            if [ -n "$GITHUB_API_TOKEN" ]; then
+              $GRADLEW violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GITHUB_API_TOKEN
+            else
+              echo "Not posting lint errors to Github because \$GITHUB_API_TOKEN is not found"
+            fi 
       - android/save-gradle-cache:
           cache-prefix: lint-cache
       - store_artifacts:

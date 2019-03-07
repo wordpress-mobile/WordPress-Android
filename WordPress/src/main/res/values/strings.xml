@@ -814,6 +814,7 @@
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
+    <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Site not loaded yet</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
@@ -2517,6 +2518,13 @@
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
     <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
+
+    <!-- App rating dialog -->
+    <string name="app_rating_title">Enjoying WordPress?</string>
+    <string name="app_rating_message">Nice to see you again! If you’re digging the app, we\’d love a rating on the Google Play Store.</string>
+    <string name="app_rating_rate_now">Rate now</string>
+    <string name="app_rating_rate_later">Later</string>
+    <string name="app_rating_rate_never">No thanks</string>
 
     <!-- Gutenberg mobile strings -->
     <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link inserted</string>

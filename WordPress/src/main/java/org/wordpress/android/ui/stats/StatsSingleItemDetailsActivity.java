@@ -2,11 +2,9 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
@@ -36,6 +34,7 @@ import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -597,9 +596,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             // show the trophy indicator if the value is the maximum reached
             if (currentDay.getCount() == maxReachedValue && maxReachedValue > 0) {
                 holder.imgMore.setVisibility(View.VISIBLE);
-                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_trophy_white_24dp));
-                holder.imgMore.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(
-                        holder.imgMore.getContext(), R.color.alert_yellow)));
+                ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
+                        R.color.alert_yellow);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -691,9 +689,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                             total));
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);
-                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_trophy_white_24dp));
-                holder.imgMore.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(
-                        holder.imgMore.getContext(), R.color.alert_yellow)));
+                ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
+                        R.color.alert_yellow);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -784,9 +781,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             // show the trophy indicator if the value is the maximum reached
             if (currentMonth.getCount() == maxReachedValue && maxReachedValue > 0) {
                 holder.imgMore.setVisibility(View.VISIBLE);
-                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_trophy_white_24dp));
-                holder.imgMore.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(
-                        holder.imgMore.getContext(), R.color.alert_yellow)));
+                ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
+                        R.color.alert_yellow);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -854,9 +850,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);
-                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_trophy_white_24dp));
-                holder.imgMore.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(
-                        holder.imgMore.getContext(), R.color.alert_yellow)));
+                ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
+                        R.color.alert_yellow);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);

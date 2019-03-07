@@ -35,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Loadi
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -43,6 +44,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: FollowersStore
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: FollowersUseCase
@@ -65,6 +67,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined,
                 insightsStore,
+                statsSiteProvider,
                 statsUtilsWrapper,
                 resourceProvider,
                 tracker,
@@ -75,6 +78,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(
                 message
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
 
     @Test
@@ -225,6 +229,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined,
                 insightsStore,
+                statsSiteProvider,
                 statsUtilsWrapper,
                 resourceProvider,
                 tracker,
@@ -287,7 +292,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private suspend fun loadFollowers(refresh: Boolean, forced: Boolean = false): UseCaseModel {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 

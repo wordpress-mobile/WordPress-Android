@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.utils
 import android.content.Intent
 import android.support.v4.app.FragmentActivity
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -38,14 +37,14 @@ import javax.inject.Singleton
 
 @Singleton
 class StatsNavigator
-@Inject constructor(private val statsDateFormatter: StatsDateFormatter) {
-    fun navigate(site: SiteModel, activity: FragmentActivity, target: NavigationTarget) {
+@Inject constructor(private val statsDateFormatter: StatsDateFormatter, private val siteProvider: StatsSiteProvider) {
+    fun navigate(activity: FragmentActivity, target: NavigationTarget) {
         when (target) {
-            is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, site, false)
+            is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false)
             is ViewPost -> {
                 StatsUtils.openPostInReaderOrInAppWebview(
                         activity,
-                        site.siteId,
+                        siteProvider.siteModel.siteId,
                         target.postId.toString(),
                         target.postType,
                         target.postUrl
@@ -64,7 +63,7 @@ class StatsNavigator
             }
             is ViewPostDetailStats -> {
                 val postModel = StatsPostModel(
-                        site.siteId,
+                        siteProvider.siteModel.siteId,
                         target.postId,
                         target.postTitle,
                         target.postUrl,
@@ -73,31 +72,31 @@ class StatsNavigator
                 ActivityLauncher.viewStatsSinglePostDetails(activity, postModel)
             }
             is ViewFollowersStats -> {
-                ActivityLauncher.viewFollowersStats(activity, site, target.selectedTab)
+                ActivityLauncher.viewFollowersStats(activity, siteProvider.siteModel, target.selectedTab)
             }
             is ViewCommentsStats -> {
-                ActivityLauncher.viewCommentsStats(activity, site, target.selectedTab)
+                ActivityLauncher.viewCommentsStats(activity, siteProvider.siteModel, target.selectedTab)
             }
             is ViewTagsAndCategoriesStats -> {
-                ActivityLauncher.viewTagsAndCategoriesStats(activity, site)
+                ActivityLauncher.viewTagsAndCategoriesStats(activity, siteProvider.siteModel)
             }
             is ViewTag -> {
                 ActivityLauncher.openStatsUrl(activity, target.link)
             }
             is ViewPublicizeStats -> {
-                ActivityLauncher.viewPublicizeStats(activity, site)
+                ActivityLauncher.viewPublicizeStats(activity, siteProvider.siteModel)
             }
             is ViewPostsAndPages -> {
                 ActivityLauncher.viewPostsAndPagesStats(
                         activity,
-                        site,
+                        siteProvider.siteModel,
                         target.statsGranularity
                 )
             }
             is ViewReferrers -> {
                 ActivityLauncher.viewReferrersStats(
                         activity,
-                        site,
+                        siteProvider.siteModel,
                         target.statsGranularity.toStatsTimeFrame(),
                         statsDateFormatter.printStatsDate(target.selectedDate)
                 )
@@ -105,7 +104,7 @@ class StatsNavigator
             is ViewClicks -> {
                 ActivityLauncher.viewClicksStats(
                         activity,
-                        site,
+                        siteProvider.siteModel,
                         target.statsGranularity.toStatsTimeFrame(),
                         statsDateFormatter.printStatsDate(target.selectedDate)
                 )
@@ -113,7 +112,7 @@ class StatsNavigator
             is ViewCountries -> {
                 ActivityLauncher.viewCountriesStats(
                         activity,
-                        site,
+                        siteProvider.siteModel,
                         target.statsGranularity.toStatsTimeFrame(),
                         statsDateFormatter.printStatsDate(target.selectedDate)
                 )
@@ -121,7 +120,7 @@ class StatsNavigator
             is ViewVideoPlays -> {
                 ActivityLauncher.viewVideoPlays(
                         activity,
-                        site,
+                        siteProvider.siteModel,
                         target.statsGranularity.toStatsTimeFrame(),
                         statsDateFormatter.printStatsDate(target.selectedDate)
                 )
@@ -129,7 +128,7 @@ class StatsNavigator
             is ViewSearchTerms -> {
                 ActivityLauncher.viewSearchTerms(
                         activity,
-                        site,
+                        siteProvider.siteModel,
                         target.statsGranularity.toStatsTimeFrame(),
                         statsDateFormatter.printStatsDate(target.selectedDate)
                 )
@@ -137,7 +136,7 @@ class StatsNavigator
             is ViewAuthors -> {
                 ActivityLauncher.viewAuthorsStats(
                         activity,
-                        site,
+                        siteProvider.siteModel,
                         target.statsGranularity.toStatsTimeFrame(),
                         statsDateFormatter.printStatsDate(target.selectedDate)
                 )

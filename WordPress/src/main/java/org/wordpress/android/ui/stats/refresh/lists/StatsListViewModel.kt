@@ -9,7 +9,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -69,17 +68,17 @@ abstract class StatsListViewModel(
         }
     }
 
-    fun onRetryClick(site: SiteModel) {
+    fun onRetryClick() {
         launch {
-            statsUseCase.refreshData(site, true)
+            statsUseCase.refreshData(true)
         }
     }
 
-    open fun start(site: SiteModel) {
+    fun start() {
         if (!isInitialized) {
             isInitialized = true
             launch {
-                statsUseCase.loadData(site)
+                statsUseCase.loadData()
             }
         }
     }
