@@ -19,11 +19,16 @@ import javax.net.ssl.TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.Multibinds;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 
 @Module
 public abstract class DebugOkHttpClientModule {
+    // These allow a library client to use this module without contributing any interceptors
+    @Multibinds abstract @Named("interceptors") Set<Interceptor> interceptorSet();
+    @Multibinds abstract @Named("network-interceptors") Set<Interceptor> networkInterceptorSet();
+
     @Provides
     @Named("regular")
     public static OkHttpClient.Builder provideOkHttpClientBuilder(
