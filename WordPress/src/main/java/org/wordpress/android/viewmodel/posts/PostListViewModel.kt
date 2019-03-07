@@ -158,7 +158,17 @@ class PostListViewModel @Inject constructor(
 
     val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
     val isLoadingMore: LiveData<Boolean> by lazy { pagedListWrapper.isLoadingMore }
-    val pagedListData: LiveData<PagedPostList> by lazy { pagedListWrapper.data }
+    val pagedListData: LiveData<PagedPostList> by lazy {
+        val result = MediatorLiveData<PagedPostList>()
+        result.addSource(pagedListWrapper.data) { pagedPostList ->
+            pagedPostList?.let {
+                onDataUpdated(it)
+                result.value = it
+            }
+        }
+        result
+    }
+
     val emptyViewState: LiveData<PostListEmptyUiState> by lazy {
         val result = MediatorLiveData<PostListEmptyUiState>()
         val update = {
@@ -819,7 +829,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    fun onDataUpdated(data: PagedPostList) {
+    private fun onDataUpdated(data: PagedPostList) {
         val localPostId = scrollToLocalPostId
         if (localPostId != null) {
             scrollToLocalPostId = null

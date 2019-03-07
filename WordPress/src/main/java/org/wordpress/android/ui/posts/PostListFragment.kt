@@ -262,7 +262,6 @@ class PostListFragment : Fragment() {
 
     private fun updatePagedListData(pagedListData: PagedPostList) {
         postListAdapter.submitList(pagedListData)
-        viewModel.onDataUpdated(pagedListData)
     }
 
     private fun updateEmptyViewForState(state: PostListEmptyUiState) {
