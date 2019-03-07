@@ -23,11 +23,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.math.roundToInt
 
 class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: MostPopularInsightsStore
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dateUtils: DateUtils
     @Mock lateinit var resourceProvider: ResourceProvider
@@ -43,9 +45,11 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         useCase = MostPopularInsightsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
+                statsSiteProvider,
                 dateUtils,
                 resourceProvider
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(dateUtils.getWeekDay(day)).thenReturn(dayString)
 
         whenever(dateUtils.getHour(hour)).thenReturn(hourString)
@@ -128,7 +132,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): UseCaseModel {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }

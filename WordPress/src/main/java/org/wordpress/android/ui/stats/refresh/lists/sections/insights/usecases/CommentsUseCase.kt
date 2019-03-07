@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
@@ -25,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -38,12 +38,13 @@ class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
+    private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<CommentsModel> {
+    override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
         val fetchMode = if (useCaseMode == VIEW_ALL) LimitMode.All else LimitMode.Top(BLOCK_ITEM_COUNT)
-        val response = commentsStore.fetchComments(site, fetchMode, forced)
+        val response = commentsStore.fetchComments(statsSiteProvider.siteModel, fetchMode, forced)
         val model = response.model
         val error = response.error
 
@@ -54,9 +55,9 @@ class CommentsUseCase
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel): CommentsModel? {
+    override suspend fun loadCachedData(): CommentsModel? {
         val cacheMode = if (useCaseMode == VIEW_ALL) LimitMode.All else LimitMode.Top(BLOCK_ITEM_COUNT)
-        return commentsStore.getComments(site, cacheMode)
+        return commentsStore.getComments(statsSiteProvider.siteModel, cacheMode)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_comments))
@@ -141,12 +142,14 @@ class CommentsUseCase
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val commentsStore: CommentsStore,
+        private val statsSiteProvider: StatsSiteProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 CommentsUseCase(
                         mainDispatcher,
                         commentsStore,
+                        statsSiteProvider,
                         analyticsTracker,
                         useCaseMode
                 )

@@ -26,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -35,6 +36,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var overviewMapper: OverviewMapper
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var columns: Columns
     @Mock lateinit var title: ValueItem
@@ -54,11 +56,13 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 statsGranularity,
                 store,
                 selectedDateProvider,
+                statsSiteProvider,
                 statsDateFormatter,
                 overviewMapper,
                 Dispatchers.Unconfined,
                 analyticsTrackerWrapper
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
         whenever(overviewMapper.buildTitle(any(), isNull(), any())).thenReturn(title)
         whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(listOf(barChartItem))
@@ -104,7 +108,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }
