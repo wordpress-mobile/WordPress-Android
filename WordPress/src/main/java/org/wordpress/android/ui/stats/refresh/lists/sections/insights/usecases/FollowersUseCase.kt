@@ -7,7 +7,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -31,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -43,6 +43,7 @@ class FollowersUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val followersStore: FollowersStore,
+    private val statsSiteProvider: StatsSiteProvider,
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -53,12 +54,10 @@ class FollowersUseCase
         0
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_ITEM_COUNT
-    private lateinit var lastSite: SiteModel
 
-    override suspend fun loadCachedData(site: SiteModel): Pair<FollowersModel, FollowersModel>? {
-        lastSite = site
-        val wpComFollowers = followersStore.getWpComFollowers(site, LimitMode.Top(itemsToLoad))
-        val emailFollowers = followersStore.getEmailFollowers(site, LimitMode.Top(itemsToLoad))
+    override suspend fun loadCachedData(): Pair<FollowersModel, FollowersModel>? {
+        val wpComFollowers = followersStore.getWpComFollowers(statsSiteProvider.siteModel, LimitMode.Top(itemsToLoad))
+        val emailFollowers = followersStore.getEmailFollowers(statsSiteProvider.siteModel, LimitMode.Top(itemsToLoad))
         if (wpComFollowers != null && emailFollowers != null) {
             return wpComFollowers to emailFollowers
         }
@@ -66,21 +65,21 @@ class FollowersUseCase
     }
 
     override suspend fun fetchRemoteData(
-        site: SiteModel,
         forced: Boolean
     ): State<Pair<FollowersModel, FollowersModel>> {
-        return fetchData(site, forced, PagedMode(itemsToLoad, false))
+        return fetchData(forced, PagedMode(itemsToLoad, false))
     }
 
     private suspend fun fetchData(
-        site: SiteModel,
         forced: Boolean,
         fetchMode: PagedMode
     ): State<Pair<FollowersModel, FollowersModel>> {
-        lastSite = site
-
-        val deferredWpComResponse = GlobalScope.async { followersStore.fetchWpComFollowers(site, fetchMode, forced) }
-        val deferredEmailResponse = GlobalScope.async { followersStore.fetchEmailFollowers(site, fetchMode, forced) }
+        val deferredWpComResponse = GlobalScope.async {
+            followersStore.fetchWpComFollowers(statsSiteProvider.siteModel, fetchMode, forced)
+        }
+        val deferredEmailResponse = GlobalScope.async {
+            followersStore.fetchEmailFollowers(statsSiteProvider.siteModel, fetchMode, forced)
+        }
 
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
@@ -183,7 +182,10 @@ class FollowersUseCase
     private fun onLinkClick(uiState: Int) {
         if (useCaseMode == VIEW_ALL) {
             GlobalScope.launch {
-                val state = fetchData(lastSite, true, PagedMode(itemsToLoad, true))
+                val state = fetchData(
+                        true,
+                        PagedMode(itemsToLoad, true)
+                )
                 evaluateState(state)
             }
         } else {
@@ -196,6 +198,7 @@ class FollowersUseCase
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val followersStore: FollowersStore,
+        private val statsSiteProvider: StatsSiteProvider,
         private val statsUtilsWrapper: StatsUtilsWrapper,
         private val resourceProvider: ResourceProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
@@ -204,6 +207,7 @@ class FollowersUseCase
                 FollowersUseCase(
                         mainDispatcher,
                         followersStore,
+                        statsSiteProvider,
                         statsUtilsWrapper,
                         resourceProvider,
                         analyticsTracker,

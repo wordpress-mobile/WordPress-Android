@@ -23,9 +23,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 
 class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: TodayInsightsStore
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: TodayStatsUseCase
     private val views = 10
@@ -36,8 +38,10 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = TodayStatsUseCase(
                 Dispatchers.Unconfined,
-                insightsStore
+                insightsStore,
+                statsSiteProvider
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
 
     @Test
@@ -166,7 +170,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     private suspend fun loadTodayStats(refresh: Boolean, forced: Boolean): UseCaseModel {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }

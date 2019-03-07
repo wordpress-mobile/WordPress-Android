@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
@@ -15,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -31,6 +31,7 @@ constructor(
     private val statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val selectedDateProvider: SelectedDateProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -50,17 +51,17 @@ constructor(
                     ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views, isFirst = true)
             )
 
-    override suspend fun loadCachedData(site: SiteModel): VisitsAndViewsModel? {
+    override suspend fun loadCachedData(): VisitsAndViewsModel? {
         return visitsAndViewsStore.getVisits(
-                site,
+                statsSiteProvider.siteModel,
                 selectedDateProvider.getCurrentDate(),
                 statsGranularity
         )
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<VisitsAndViewsModel> {
+    override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
-                site,
+                statsSiteProvider.siteModel,
                 PAGE_SIZE,
                 selectedDateProvider.getCurrentDate(),
                 statsGranularity,
@@ -154,6 +155,7 @@ constructor(
     class OverviewUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter,
         private val overviewMapper: OverviewMapper,
@@ -165,6 +167,7 @@ constructor(
                         granularity,
                         visitsAndViewsStore,
                         selectedDateProvider,
+                        statsSiteProvider,
                         statsDateFormatter,
                         overviewMapper,
                         mainDispatcher,

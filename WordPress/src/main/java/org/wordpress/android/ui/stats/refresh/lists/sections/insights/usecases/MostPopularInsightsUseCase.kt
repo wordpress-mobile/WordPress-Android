@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
@@ -12,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -21,15 +21,16 @@ class MostPopularInsightsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val mostPopularStore: MostPopularInsightsStore,
+    private val statsSiteProvider: StatsSiteProvider,
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider
 ) : StatelessUseCase<InsightsMostPopularModel>(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): InsightsMostPopularModel? {
-        return mostPopularStore.getMostPopularInsights(site)
+    override suspend fun loadCachedData(): InsightsMostPopularModel? {
+        return mostPopularStore.getMostPopularInsights(statsSiteProvider.siteModel)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<InsightsMostPopularModel> {
-        val response = mostPopularStore.fetchMostPopularInsights(site, forced)
+    override suspend fun fetchRemoteData(forced: Boolean): State<InsightsMostPopularModel> {
+        val response = mostPopularStore.fetchMostPopularInsights(statsSiteProvider.siteModel, forced)
         val model = response.model
         val error = response.error
 

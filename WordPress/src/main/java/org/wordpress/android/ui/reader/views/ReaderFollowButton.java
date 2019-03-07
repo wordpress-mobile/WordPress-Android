@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
@@ -16,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.ColorUtils;
 
 /**
  * Follow button used in reader detail
@@ -82,8 +82,7 @@ public class ReaderFollowButton extends LinearLayout {
             drawableId = R.drawable.ic_reader_follow_white_24dp;
             colorId = R.color.blue_medium;
         }
-        mImageFollow.setImageResource(drawableId);
-        mImageFollow.setImageTintList(ColorStateList.valueOf(getContext().getResources().getColor(colorId)));
+        ColorUtils.INSTANCE.setImageResourceWithTint(mImageFollow, drawableId, colorId);
     }
 
     @Override

@@ -140,11 +140,11 @@ class StatsViewAllFragment : DaggerFragment() {
 
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
-        setupObservers(site, activity)
-        viewModel.start(site)
+        setupObservers(activity)
+        viewModel.start()
     }
 
-    private fun setupObservers(site: SiteModel, activity: FragmentActivity) {
+    private fun setupObservers(activity: FragmentActivity) {
         viewModel.isRefreshing.observe(this, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
@@ -179,7 +179,7 @@ class StatsViewAllFragment : DaggerFragment() {
                     }
                     is StatsBlock.Error -> {
                         actionable_error_view.button.setOnClickListener {
-                            viewModel.onRetryClick(site)
+                            viewModel.onRetryClick()
                         }
                     }
                 }
@@ -187,7 +187,7 @@ class StatsViewAllFragment : DaggerFragment() {
         })
 
         viewModel.navigationTarget.observeEvent(this) { target ->
-            navigator.navigate(site, activity, target)
+            navigator.navigate(activity, target)
             return@observeEvent true
         }
     }
