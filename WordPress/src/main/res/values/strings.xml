@@ -1193,6 +1193,7 @@
     <string name="editor_draft_saved_locally">Draft saved on device</string>
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
     <string name="editor_uploading_post">Your post is uploading</string>
+    <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was

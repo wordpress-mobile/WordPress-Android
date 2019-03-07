@@ -1351,6 +1351,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         // if user pressed `Save as draft` on a new, Scheduled Post, re-convert it to draft.
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
+                            ToastUtils.showToast(EditPostActivity.this,
+                                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
                         }
                     }
                     UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
