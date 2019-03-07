@@ -8,6 +8,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
@@ -25,14 +26,25 @@ import okhttp3.OkHttpClient;
 public class DebugOkHttpClientModule {
     @Provides
     @Named("regular")
-    public OkHttpClient.Builder provideOkHttpClientBuilder(Interceptor interceptor) {
-        return new OkHttpClient.Builder().addNetworkInterceptor(interceptor);
+    public OkHttpClient.Builder provideOkHttpClientBuilder(
+            @Named("interceptors") Set<Interceptor> interceptors,
+            @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        for (Interceptor interceptor : interceptors) {
+            builder.addInterceptor(interceptor);
+        }
+        for (Interceptor networkInterceptor : networkInterceptors) {
+            builder.addNetworkInterceptor(networkInterceptor);
+        }
+        return builder;
     }
 
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(MemorizingTrustManager memorizingTrustManager,
-                                                                    Interceptor interceptor) {
+    public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(
+            MemorizingTrustManager memorizingTrustManager,
+            @Named("interceptors") Set<Interceptor> interceptors,
+            @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
@@ -42,7 +54,12 @@ public class DebugOkHttpClientModule {
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             AppLog.e(T.API, e);
         }
-        builder.addNetworkInterceptor(interceptor);
+        for (Interceptor interceptor : interceptors) {
+            builder.addInterceptor(interceptor);
+        }
+        for (Interceptor networkInterceptor : networkInterceptors) {
+            builder.addNetworkInterceptor(networkInterceptor);
+        }
         return builder;
     }
 
