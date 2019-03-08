@@ -49,7 +49,6 @@ class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-    private lateinit var actionMenuItem: MenuItem
 
     private var restorePreviousSearch = false
 

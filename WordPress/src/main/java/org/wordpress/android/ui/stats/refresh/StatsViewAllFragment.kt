@@ -88,8 +88,7 @@ class StatsViewAllFragment : DaggerFragment() {
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
-        // TODO remove this once we add the date selector
-        date_selection_toolbar.visibility = View.GONE
+
         recyclerView.layoutManager = layoutManager
         loadingRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 

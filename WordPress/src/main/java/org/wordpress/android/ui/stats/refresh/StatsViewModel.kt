@@ -15,8 +15,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -91,17 +89,6 @@ class StatsViewModel
         executeLoading()
 
         _isRefreshing.value = false
-    }
-
-    // TODO: To be implemented in the future
-    fun onMenuAction(action: Action, page: Page): Boolean {
-        return when (action) {
-            else -> true
-        }
-    }
-
-    // TODO: To be implemented in the future
-    fun onItemTapped(pageItem: Page) {
     }
 
     fun onPullToRefresh() {
