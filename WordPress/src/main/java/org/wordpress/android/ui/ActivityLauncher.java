@@ -284,48 +284,28 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewFollowersStats(Context context, SiteModel site, int selectedTab) {
+    public static void viewAllTabbedInsightsStats(Context context, SiteModel site, StatsViewType statsType,
+                                                  int selectedTab) {
         Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
         intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }
 
-    public static void viewCommentsStats(Context context, SiteModel site, int selectedTab) {
+    public static void viewAllInsightsStats(Context context, SiteModel site, StatsViewType statsType) {
         Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.COMMENTS);
-        intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }
 
-    public static void viewTagsAndCategoriesStats(Context context, SiteModel site) {
+    public static void viewAllGranularStats(Context context, SiteModel site, StatsGranularity granularity,
+                                            StatsViewType statsType) {
         Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.TAGS_AND_CATEGORIES);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
-    }
-
-    public static void viewPostsAndPagesStats(Context context, SiteModel site, StatsGranularity granularity) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.TOP_POSTS_AND_PAGES);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity);
-        context.startActivity(intent);
-    }
-
-    public static void viewReferrersStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
-                                          String selectedDate) {
-        Intent intent = new Intent(context, StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.REFERRERS);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
-        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
-        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
-
-        String title = context.getResources().getString(R.string.stats_view_referrers);
-        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
         context.startActivity(intent);
     }
 

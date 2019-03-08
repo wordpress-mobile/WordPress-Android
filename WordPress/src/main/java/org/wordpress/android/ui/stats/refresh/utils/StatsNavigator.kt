@@ -12,6 +12,11 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
+import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
+import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
+import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
+import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
+import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
@@ -72,13 +77,23 @@ class StatsNavigator
                 ActivityLauncher.viewStatsSinglePostDetails(activity, postModel)
             }
             is ViewFollowersStats -> {
-                ActivityLauncher.viewFollowersStats(activity, siteProvider.siteModel, target.selectedTab)
+                ActivityLauncher.viewAllTabbedInsightsStats(
+                        activity,
+                        siteProvider.siteModel,
+                        FOLLOWERS,
+                        target.selectedTab
+                )
             }
             is ViewCommentsStats -> {
-                ActivityLauncher.viewCommentsStats(activity, siteProvider.siteModel, target.selectedTab)
+                ActivityLauncher.viewAllTabbedInsightsStats(
+                        activity,
+                        siteProvider.siteModel,
+                        COMMENTS,
+                        target.selectedTab
+                )
             }
             is ViewTagsAndCategoriesStats -> {
-                ActivityLauncher.viewTagsAndCategoriesStats(activity, siteProvider.siteModel)
+                ActivityLauncher.viewAllInsightsStats(activity, siteProvider.siteModel, TAGS_AND_CATEGORIES)
             }
             is ViewTag -> {
                 ActivityLauncher.openStatsUrl(activity, target.link)
@@ -87,18 +102,19 @@ class StatsNavigator
                 ActivityLauncher.viewPublicizeStats(activity, siteProvider.siteModel)
             }
             is ViewPostsAndPages -> {
-                ActivityLauncher.viewPostsAndPagesStats(
+                ActivityLauncher.viewAllGranularStats(
                         activity,
                         siteProvider.siteModel,
-                        target.statsGranularity
+                        target.statsGranularity,
+                        TOP_POSTS_AND_PAGES
                 )
             }
             is ViewReferrers -> {
-                ActivityLauncher.viewReferrersStats(
+                ActivityLauncher.viewAllGranularStats(
                         activity,
                         siteProvider.siteModel,
-                        target.statsGranularity.toStatsTimeFrame(),
-                        statsDateFormatter.printStatsDate(target.selectedDate)
+                        target.statsGranularity,
+                        REFERRERS
                 )
             }
             is ViewClicks -> {
