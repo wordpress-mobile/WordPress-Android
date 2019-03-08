@@ -32,7 +32,7 @@ import javax.inject.Singleton
 
 @Singleton
 class InsightsSqlUtils
-@Inject constructor(private val statsSqlUtils: StatsSqlUtils) {
+@Inject constructor(private val statsSqlUtils: StatsSqlUtils, private val statsRequestSqlUtils: StatsRequestSqlUtils) {
     fun insert(site: SiteModel, data: AllTimeResponse) {
         insert(site, ALL_TIME_INSIGHTS, data)
     }
@@ -109,13 +109,6 @@ class InsightsSqlUtils
         return select(site, POSTING_ACTIVITY, PostingActivityResponse::class.java)
     }
 
-    private fun FollowerType.toDbKey(): StatsSqlUtils.BlockType {
-        return when (this) {
-            WP_COM -> WP_COM_FOLLOWERS
-            EMAIL -> EMAIL_FOLLOWERS
-        }
-    }
-
     fun selectCommentInsights(site: SiteModel): CommentsResponse? {
         return select(site, COMMENTS_INSIGHTS, CommentsResponse::class.java)
     }
@@ -134,5 +127,20 @@ class InsightsSqlUtils
 
     private fun <T> selectAll(site: SiteModel, blockType: BlockType, classOfT: Class<T>): List<T> {
         return statsSqlUtils.selectAll(site, blockType, INSIGHTS, classOfT)
+    }
+
+    fun hasFreshRequest(site: SiteModel, blockType: BlockType, requestedItems: Int): Boolean {
+        return statsRequestSqlUtils.hasFreshRequest(site, blockType, INSIGHTS, requestedItems)
+    }
+
+    fun insertRequest(site: SiteModel, blockType: BlockType, requestedItems: Int) {
+        statsRequestSqlUtils.insert(site, blockType, INSIGHTS, requestedItems)
+    }
+}
+
+fun FollowerType.toDbKey(): StatsSqlUtils.BlockType {
+    return when (this) {
+        WP_COM -> WP_COM_FOLLOWERS
+        EMAIL -> EMAIL_FOLLOWERS
     }
 }

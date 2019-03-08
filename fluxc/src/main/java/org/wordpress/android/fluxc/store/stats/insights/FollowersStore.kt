@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRe
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
+import org.wordpress.android.fluxc.persistence.toDbKey
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -48,6 +49,19 @@ class FollowersStore @Inject constructor(
         followerType: FollowerType,
         fetchMode: PagedMode
     ) = withContext(coroutineContext) {
+        if (!forced && !fetchMode.loadMore && !sqlUtils.hasFreshRequest(
+                        siteModel,
+                        followerType.toDbKey(),
+                        fetchMode.pageSize
+                )) {
+            return@withContext OnStatsFetched(
+                    getFollowers(
+                            siteModel,
+                            followerType,
+                            cacheMode = CacheMode.Top(fetchMode.pageSize)
+                    )
+            )
+        }
         val nextPage = if (fetchMode.loadMore) {
             val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
             savedFollowers / fetchMode.pageSize + 1
@@ -63,6 +77,7 @@ class FollowersStore @Inject constructor(
             responsePayload.response != null -> {
                 val replace = !fetchMode.loadMore
                 sqlUtils.insert(siteModel, responsePayload.response, followerType, replaceExistingData = replace)
+                sqlUtils.insertRequest(siteModel, followerType.toDbKey(), fetchMode.pageSize)
                 val followerResponses = sqlUtils.selectAllFollowers(siteModel, followerType)
                 val allFollowers = insightsMapper.mapAndMergeFollowersModels(
                         followerResponses,
