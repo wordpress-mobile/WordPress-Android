@@ -76,8 +76,7 @@ class FollowersStore @Inject constructor(
             }
             responsePayload.response != null -> {
                 val replace = !fetchMode.loadMore
-                sqlUtils.insert(siteModel, responsePayload.response, followerType, replaceExistingData = replace)
-                sqlUtils.insertRequest(siteModel, followerType.toDbKey(), fetchMode.pageSize)
+                sqlUtils.insert(siteModel, responsePayload.response, followerType, replaceExistingData = replace, requestedItems = fetchMode.pageSize)
                 val followerResponses = sqlUtils.selectAllFollowers(siteModel, followerType)
                 val allFollowers = insightsMapper.mapAndMergeFollowersModels(
                         followerResponses,
