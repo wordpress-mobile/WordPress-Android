@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -13,6 +14,7 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
@@ -26,10 +28,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Infor
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LoadingItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -42,16 +46,17 @@ private const val VIEW_ALL_PAGE_SIZE = 10
 class FollowersUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val followersStore: FollowersStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val useCaseMode: UseCaseMode
-) : StatefulUseCase<Pair<FollowersModel, FollowersModel>, Int>(
+) : StatefulUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
         FOLLOWERS,
         mainDispatcher,
-        0
+        FollowersUiState(isLoading = true)
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_ITEM_COUNT
 
@@ -74,11 +79,22 @@ class FollowersUseCase
         forced: Boolean,
         fetchMode: PagedMode
     ): State<Pair<FollowersModel, FollowersModel>> {
-        val deferredWpComResponse = GlobalScope.async {
-            followersStore.fetchWpComFollowers(statsSiteProvider.siteModel, fetchMode, forced)
+        runBlocking(mainDispatcher) {
+            updateUiState { it.copy(isLoading = true) }
         }
-        val deferredEmailResponse = GlobalScope.async {
-            followersStore.fetchEmailFollowers(statsSiteProvider.siteModel, fetchMode, forced)
+        val deferredWpComResponse = GlobalScope.async(bgDispatcher) {
+            followersStore.fetchWpComFollowers(
+                    statsSiteProvider.siteModel,
+                    fetchMode,
+                    forced
+            )
+        }
+        val deferredEmailResponse = GlobalScope.async(bgDispatcher) {
+            followersStore.fetchEmailFollowers(
+                    statsSiteProvider.siteModel,
+                    fetchMode,
+                    forced
+            )
         }
 
         val wpComResponse = deferredWpComResponse.await()
@@ -86,7 +102,9 @@ class FollowersUseCase
         val wpComModel = wpComResponse.model
         val emailModel = emailResponse.model
         val error = wpComResponse.error ?: emailResponse.error
-
+        runBlocking(mainDispatcher) {
+            updateUiState { it.copy(isLoading = false) }
+        }
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
             wpComModel != null && emailModel != null &&
@@ -101,7 +119,7 @@ class FollowersUseCase
 
     override fun buildStatefulUiModel(
         domainModel: Pair<FollowersModel, FollowersModel>,
-        uiState: Int
+        uiState: FollowersUiState
     ): List<BlockListItem> {
         val wpComModel = domainModel.first
         val emailModel = domainModel.second
@@ -118,33 +136,42 @@ class FollowersUseCase
                                     R.string.stats_followers_wordpress_com,
                                     R.string.stats_followers_email
                             ),
-                            uiState
-                    ) {
-                        onUiState(it)
+                            uiState.selectedTab
+                    ) { selectedTab ->
+                        updateUiState { it.copy(selectedTab = selectedTab) }
                     }
             )
-            if (uiState == 0) {
+            if (uiState.selectedTab == 0) {
                 items.addAll(buildTab(wpComModel, R.string.stats_followers_wordpress_com))
             } else {
                 items.addAll(buildTab(emailModel, R.string.stats_followers_email))
             }
 
-            if (wpComModel.hasMore && uiState == 0 || emailModel.hasMore && uiState == 1) {
-                val buttonText = if (useCaseMode == VIEW_ALL)
-                        R.string.stats_insights_load_more
-                    else
-                        R.string.stats_insights_view_more
-                items.add(
-                        Link(
-                                text = buttonText,
-                                navigateAction = NavigationAction.create(uiState, this::onLinkClick)
-                        )
-                )
+            if (wpComModel.hasMore && uiState.selectedTab == 0 || emailModel.hasMore && uiState.selectedTab == 1) {
+                if (useCaseMode == BLOCK) {
+                    val buttonText = R.string.stats_insights_view_more
+                    items.add(
+                            Link(
+                                    text = buttonText,
+                                    navigateAction = NavigationAction.create(uiState.selectedTab, this::onLinkClick)
+                            )
+                    )
+                } else if (wpComModel.followers.size >= VIEW_ALL_PAGE_SIZE && uiState.selectedTab == 0 ||
+                        emailModel.followers.size >= VIEW_ALL_PAGE_SIZE && uiState.selectedTab == 1) {
+                    items.add(LoadingItem(this::loadMore, isLoading = uiState.isLoading))
+                }
             }
         } else {
             items.add(Empty())
         }
         return items
+    }
+
+    private fun loadMore() {
+        GlobalScope.launch(bgDispatcher) {
+            val state = fetchData(true, PagedMode(itemsToLoad, true))
+            evaluateState(state)
+        }
     }
 
     private fun buildTab(model: FollowersModel, label: Int): List<BlockListItem> {
@@ -179,24 +206,17 @@ class FollowersUseCase
         }
     }
 
-    private fun onLinkClick(uiState: Int) {
-        if (useCaseMode == VIEW_ALL) {
-            GlobalScope.launch {
-                val state = fetchData(
-                        true,
-                        PagedMode(itemsToLoad, true)
-                )
-                evaluateState(state)
-            }
-        } else {
-            analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
-            navigateTo(ViewFollowersStats(uiState))
-        }
+    private fun onLinkClick(selectedTab: Int) {
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
+        navigateTo(ViewFollowersStats(selectedTab))
     }
+
+    data class FollowersUiState(val selectedTab: Int = 0, val isLoading: Boolean = false)
 
     class FollowersUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
         private val followersStore: FollowersStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val statsUtilsWrapper: StatsUtilsWrapper,
@@ -206,6 +226,7 @@ class FollowersUseCase
         override fun build(useCaseMode: UseCaseMode) =
                 FollowersUseCase(
                         mainDispatcher,
+                        bgDispatcher,
                         followersStore,
                         statsSiteProvider,
                         statsUtilsWrapper,
