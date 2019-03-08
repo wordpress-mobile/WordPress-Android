@@ -2,10 +2,10 @@ package org.wordpress.android.fluxc.store.stats.insights
 
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode
-import org.wordpress.android.fluxc.model.stats.LimitMode.All
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
+import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.LimitMode.All
 import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
@@ -58,7 +58,7 @@ class FollowersStore @Inject constructor(
                     getFollowers(
                             siteModel,
                             followerType,
-                            cacheMode = CacheMode.Top(fetchMode.pageSize)
+                            cacheMode = LimitMode.Top(fetchMode.pageSize)
                     )
             )
         }
