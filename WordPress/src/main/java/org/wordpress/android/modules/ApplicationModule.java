@@ -41,9 +41,6 @@ public abstract class ApplicationModule {
     @ContributesAndroidInjector
     abstract StatsFragment contributeStatsFragment();
 
-    @ContributesAndroidInjector
-    abstract StatsDetailActivity contributeStatsDetailActivity();
-
     @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(NewSiteCreationStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
