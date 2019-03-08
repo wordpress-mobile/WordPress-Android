@@ -54,7 +54,7 @@ class FollowersStore @Inject constructor(
                 "followers_log",
                 "Fetching followers: forced - $forced, type - $followerType, fetchedItems: ${fetchMode.pageSize}, loadMore: ${fetchMode.loadMore}"
         )
-        if (!forced && !fetchMode.loadMore && !sqlUtils.hasFreshRequest(
+        if (!forced && !fetchMode.loadMore && sqlUtils.hasFreshRequest(
                         siteModel,
                         followerType.toDbKey(),
                         fetchMode.pageSize
