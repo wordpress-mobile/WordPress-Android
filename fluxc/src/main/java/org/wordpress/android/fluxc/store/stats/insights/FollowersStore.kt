@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store.stats.insights
 
+import android.util.Log
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
@@ -49,11 +50,16 @@ class FollowersStore @Inject constructor(
         followerType: FollowerType,
         fetchMode: PagedMode
     ) = withContext(coroutineContext) {
+        Log.d(
+                "followers_log",
+                "Fetching followers: forced - $forced, type - $followerType, fetchedItems: ${fetchMode.pageSize}, loadMore: ${fetchMode.loadMore}"
+        )
         if (!forced && !fetchMode.loadMore && !sqlUtils.hasFreshRequest(
                         siteModel,
                         followerType.toDbKey(),
                         fetchMode.pageSize
                 )) {
+            Log.d("followers_log", "Returns fresh data from DB instead")
             return@withContext OnStatsFetched(
                     getFollowers(
                             siteModel,
@@ -76,7 +82,14 @@ class FollowersStore @Inject constructor(
             }
             responsePayload.response != null -> {
                 val replace = !fetchMode.loadMore
-                sqlUtils.insert(siteModel, responsePayload.response, followerType, replaceExistingData = replace, requestedItems = fetchMode.pageSize)
+                Log.d("followers_log", "Successfully fetched data")
+                sqlUtils.insert(
+                        siteModel,
+                        responsePayload.response,
+                        followerType,
+                        replaceExistingData = replace,
+                        requestedItems = fetchMode.pageSize
+                )
                 val followerResponses = sqlUtils.selectAllFollowers(siteModel, followerType)
                 val allFollowers = insightsMapper.mapAndMergeFollowersModels(
                         followerResponses,
@@ -99,6 +112,10 @@ class FollowersStore @Inject constructor(
 
     private fun getFollowers(site: SiteModel, followerType: FollowerType, cacheMode: LimitMode): FollowersModel? {
         val followerResponses = sqlUtils.selectAllFollowers(site, followerType)
+        Log.d("followers_log",
+                "Loading data from the db: followerType - $followerType, limit: ${(cacheMode as? LimitMode.Top)?.limit
+                        ?: -1}"
+        )
         return insightsMapper.mapAndMergeFollowersModels(followerResponses, followerType, cacheMode)
     }
 }
