@@ -65,7 +65,8 @@ class FollowersStore @Inject constructor(
                             siteModel,
                             followerType,
                             cacheMode = LimitMode.Top(fetchMode.pageSize)
-                    )
+                    ),
+                    cached = true
             )
         }
         val nextPage = if (fetchMode.loadMore) {
