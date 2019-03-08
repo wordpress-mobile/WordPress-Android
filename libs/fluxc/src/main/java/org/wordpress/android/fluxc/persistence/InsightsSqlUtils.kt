@@ -53,8 +53,17 @@ class InsightsSqlUtils
         insert(site, TODAYS_INSIGHTS, data)
     }
 
-    fun insert(site: SiteModel, data: FollowersResponse, followerType: FollowerType, replaceExistingData: Boolean) {
+    fun insert(
+        site: SiteModel,
+        data: FollowersResponse,
+        followerType: FollowerType,
+        replaceExistingData: Boolean,
+        requestedItems: Int
+    ) {
         insert(site, followerType.toDbKey(), data, replaceExistingData)
+        if (replaceExistingData){
+            insertRequest(site, followerType.toDbKey(), requestedItems)
+        }
     }
 
     fun insert(site: SiteModel, data: CommentsResponse) {
@@ -133,7 +142,7 @@ class InsightsSqlUtils
         return statsRequestSqlUtils.hasFreshRequest(site, blockType, INSIGHTS, requestedItems)
     }
 
-    fun insertRequest(site: SiteModel, blockType: BlockType, requestedItems: Int) {
+    private fun insertRequest(site: SiteModel, blockType: BlockType, requestedItems: Int) {
         statsRequestSqlUtils.insert(site, blockType, INSIGHTS, requestedItems)
     }
 }
