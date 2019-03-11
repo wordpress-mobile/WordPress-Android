@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store.stats.insights
 
-import android.util.Log
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
@@ -12,8 +11,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRe
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.WP_COM
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowersResponse
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
-import org.wordpress.android.fluxc.persistence.toDbKey
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.EmailFollowersSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.WpComFollowersSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -24,7 +25,8 @@ import kotlin.coroutines.CoroutineContext
 @Singleton
 class FollowersStore @Inject constructor(
     private val restClient: FollowersRestClient,
-    private val sqlUtils: InsightsSqlUtils,
+    private val wpComFollowersSqlUtils: WpComFollowersSqlUtils,
+    private val emailFollowersSqlUtils: EmailFollowersSqlUtils,
     private val insightsMapper: InsightsMapper,
     private val coroutineContext: CoroutineContext
 ) {
@@ -33,7 +35,7 @@ class FollowersStore @Inject constructor(
         fetchMode: PagedMode,
         forced: Boolean = false
     ): OnStatsFetched<FollowersModel> {
-        return fetchFollowers(siteModel, forced, WP_COM, fetchMode)
+        return fetchFollowers(siteModel, forced, WP_COM, fetchMode, wpComFollowersSqlUtils)
     }
 
     suspend fun fetchEmailFollowers(
@@ -41,36 +43,32 @@ class FollowersStore @Inject constructor(
         fetchMode: PagedMode,
         forced: Boolean = false
     ): OnStatsFetched<FollowersModel> {
-        return fetchFollowers(siteModel, forced, EMAIL, fetchMode)
+        return fetchFollowers(siteModel, forced, EMAIL, fetchMode, emailFollowersSqlUtils)
     }
 
     private suspend fun fetchFollowers(
         siteModel: SiteModel,
         forced: Boolean = false,
         followerType: FollowerType,
-        fetchMode: PagedMode
+        fetchMode: PagedMode,
+        sqlUtils: InsightsSqlUtils<FollowersResponse>
     ) = withContext(coroutineContext) {
-        Log.d(
-                "followers_log",
-                "Fetching followers: forced - $forced, type - $followerType, fetchedItems: ${fetchMode.pageSize}, loadMore: ${fetchMode.loadMore}"
-        )
         if (!forced && !fetchMode.loadMore && sqlUtils.hasFreshRequest(
                         siteModel,
-                        followerType.toDbKey(),
                         fetchMode.pageSize
                 )) {
-            Log.d("followers_log", "Returns fresh data from DB instead")
             return@withContext OnStatsFetched(
                     getFollowers(
                             siteModel,
                             followerType,
-                            cacheMode = LimitMode.Top(fetchMode.pageSize)
+                            cacheMode = LimitMode.Top(fetchMode.pageSize),
+                            sqlUtils = sqlUtils
                     ),
                     cached = true
             )
         }
         val nextPage = if (fetchMode.loadMore) {
-            val savedFollowers = sqlUtils.selectAllFollowers(siteModel, followerType).sumBy { it.subscribers.size }
+            val savedFollowers = sqlUtils.selectAll(siteModel).sumBy { it.subscribers.size }
             savedFollowers / fetchMode.pageSize + 1
         } else {
             1
@@ -83,15 +81,13 @@ class FollowersStore @Inject constructor(
             }
             responsePayload.response != null -> {
                 val replace = !fetchMode.loadMore
-                Log.d("followers_log", "Successfully fetched data")
                 sqlUtils.insert(
                         siteModel,
                         responsePayload.response,
-                        followerType,
                         replaceExistingData = replace,
                         requestedItems = fetchMode.pageSize
                 )
-                val followerResponses = sqlUtils.selectAllFollowers(siteModel, followerType)
+                val followerResponses = sqlUtils.selectAll(siteModel)
                 val allFollowers = insightsMapper.mapAndMergeFollowersModels(
                         followerResponses,
                         followerType,
@@ -104,19 +100,20 @@ class FollowersStore @Inject constructor(
     }
 
     fun getWpComFollowers(site: SiteModel, cacheMode: LimitMode): FollowersModel? {
-        return getFollowers(site, WP_COM, cacheMode)
+        return getFollowers(site, WP_COM, cacheMode, wpComFollowersSqlUtils)
     }
 
     fun getEmailFollowers(site: SiteModel, cacheMode: LimitMode): FollowersModel? {
-        return getFollowers(site, EMAIL, cacheMode)
+        return getFollowers(site, EMAIL, cacheMode, emailFollowersSqlUtils)
     }
 
-    private fun getFollowers(site: SiteModel, followerType: FollowerType, cacheMode: LimitMode): FollowersModel? {
-        val followerResponses = sqlUtils.selectAllFollowers(site, followerType)
-        Log.d("followers_log",
-                "Loading data from the db: followerType - $followerType, limit: ${(cacheMode as? LimitMode.Top)?.limit
-                        ?: -1}"
-        )
+    private fun getFollowers(
+        site: SiteModel,
+        followerType: FollowerType,
+        cacheMode: LimitMode,
+        sqlUtils: InsightsSqlUtils<FollowersResponse>
+    ): FollowersModel? {
+        val followerResponses = sqlUtils.selectAll(site)
         return insightsMapper.mapAndMergeFollowersModels(followerResponses, followerType, cacheMode)
     }
 }
