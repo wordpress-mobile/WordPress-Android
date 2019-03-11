@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -69,7 +70,7 @@ class SelectedDateProvider
         return selectedDate.index != null && selectedDate.hasData() && selectedDate.index > 0
     }
 
-    fun hasNextData(statsGranularity: StatsGranularity): Boolean {
+    fun hasNextDate(statsGranularity: StatsGranularity): Boolean {
         val selectedDate = getSelectedDateState(statsGranularity)
         return selectedDate.hasData() &&
                 selectedDate.index != null &&
