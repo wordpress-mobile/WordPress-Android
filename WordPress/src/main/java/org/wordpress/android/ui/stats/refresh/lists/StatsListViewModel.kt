@@ -9,7 +9,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
@@ -151,5 +150,3 @@ class DaysListViewModel @Inject constructor(
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelector: StatsDateSelector
 ) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelector)
-
-
