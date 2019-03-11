@@ -23,6 +23,9 @@ class PublicizeStore
 ) {
     suspend fun fetchPublicizeData(siteModel: SiteModel, pageSize: Int, forced: Boolean = false) =
             withContext(coroutineContext) {
+                if (!forced && sqlUtils.hasFreshRequest(siteModel)) {
+                    return@withContext OnStatsFetched(getPublicizeData(siteModel, pageSize), cached = true)
+                }
                 val response = restClient.fetchPublicizeData(siteModel, pageSize = pageSize + 1, forced = forced)
                 return@withContext when {
                     response.isError -> {
