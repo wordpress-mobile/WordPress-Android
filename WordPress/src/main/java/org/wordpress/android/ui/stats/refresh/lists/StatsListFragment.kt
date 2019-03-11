@@ -136,6 +136,7 @@ class StatsListFragment : DaggerFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(statsSection.name, viewModelClass)
 
+        // TODO: Remove
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
             nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
@@ -165,7 +166,7 @@ class StatsListFragment : DaggerFragment() {
             }
         })
 
-        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
+        viewModel.dateSelectorData.observe(this, Observer { dateSelectorUiModel ->
             val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
             if (date_selection_toolbar.visibility != dateSelectorVisibility) {
                 date_selection_toolbar.visibility = dateSelectorVisibility
@@ -185,6 +186,14 @@ class StatsListFragment : DaggerFragment() {
             navigator.navigate(activity, target)
             return@observeEvent true
         }
+
+        viewModel.selectedDateChanged.observe(this, Observer { granularity ->
+            viewModel.onDateChanged(granularity)
+        })
+
+        viewModel.listSelected.observe(this, Observer {
+            viewModel.onListSelected()
+        })
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {

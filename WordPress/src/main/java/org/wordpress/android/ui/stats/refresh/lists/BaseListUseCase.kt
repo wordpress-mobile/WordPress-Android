@@ -7,31 +7,24 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.DistinctMutableLiveData
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mergeNotNull
+import org.wordpress.android.viewmodel.SingleLiveEvent
 
 class BaseListUseCase(
     private val bgDispatcher: CoroutineDispatcher,
     private val mainDispatcher: CoroutineDispatcher,
-    private val statsSectionManager: SelectedSectionManager,
-    private val selectedDateProvider: SelectedDateProvider,
-    private val statsDateFormatter: StatsDateFormatter,
     private val statsSiteProvider: StatsSiteProvider,
     private val useCases: List<BaseStatsUseCase<*, *>>,
     private val getStatsTypes: suspend () -> List<StatsTypes>,
@@ -60,13 +53,13 @@ class BaseListUseCase(
             distinct = false
     )
 
-    private val mutableShowDateSelector = MutableLiveData<DateSelectorUiModel>()
-    val showDateSelector: LiveData<DateSelectorUiModel> = mutableShowDateSelector
-
     private val mutableSnackbarMessage = MutableLiveData<Int>()
     val snackbarMessage: LiveData<SnackbarMessageHolder> = mutableSnackbarMessage.map {
         SnackbarMessageHolder(it)
     }
+
+    private val mutableListSelected = SingleLiveEvent<Unit>()
+    val listSelected: LiveData<Unit> = mutableListSelected
 
     suspend fun loadData() {
         loadData(refresh = false, forced = false)
@@ -101,60 +94,11 @@ class BaseListUseCase(
         data.value = null
     }
 
-    suspend fun onDateChanged(statsGranularity: StatsGranularity?) {
-        updateDateSelector(statsGranularity)
+    suspend fun onDateChanged() {
         refreshData()
     }
 
-    fun updateDateSelector(statsGranularity: StatsGranularity?) {
-        val shouldShowDateSelection = statsGranularity != null
-
-        val updatedDate = getDateLabelForSection(statsGranularity)
-        val currentState = showDateSelector.value
-        if ((!shouldShowDateSelection && currentState?.isVisible != false) || statsGranularity == null) {
-            emitValue(currentState, DateSelectorUiModel(false))
-        } else {
-            val updatedState = DateSelectorUiModel(
-                    shouldShowDateSelection,
-                    updatedDate,
-                    enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsGranularity),
-                    enableSelectNext = selectedDateProvider.hasNextData(statsGranularity)
-            )
-            emitValue(currentState, updatedState)
-        }
-    }
-
-    private fun emitValue(
-        currentState: DateSelectorUiModel?,
-        updatedState: DateSelectorUiModel
-    ) {
-        if (currentState == null ||
-                currentState.isVisible != updatedState.isVisible ||
-                currentState.date != updatedState.date ||
-                currentState.enableSelectNext != updatedState.enableSelectNext ||
-                currentState.enableSelectPrevious != updatedState.enableSelectPrevious) {
-            mutableShowDateSelector.value = updatedState
-        }
-    }
-
-    private fun getDateLabelForSection(statsGranularity: StatsGranularity?): String? {
-        return statsGranularity?.let {
-            statsDateFormatter.printGranularDate(
-                    selectedDateProvider.getSelectedDate(statsGranularity) ?: selectedDateProvider.getCurrentDate(),
-                    statsGranularity
-            )
-        }
-    }
-
-    fun onNextDateSelected() {
-        statsSectionManager.getSelectedStatsGranularity()?.let { statsGranularity ->
-            selectedDateProvider.selectNextDate(statsGranularity)
-        }
-    }
-
-    fun onPreviousDateSelected() {
-        statsSectionManager.getSelectedStatsGranularity()?.let { statsGranularity ->
-            selectedDateProvider.selectPreviousDate(statsGranularity)
-        }
+    fun onListSelected() {
+        mutableListSelected.call()
     }
 }

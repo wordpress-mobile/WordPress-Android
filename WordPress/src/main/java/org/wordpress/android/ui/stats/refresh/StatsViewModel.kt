@@ -103,6 +103,9 @@ class StatsViewModel
 
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
+
+        listUseCases[statsSection]?.onListSelected()
+
         _toolbarHasShadow.value = statsSection == INSIGHTS
         when (statsSection) {
             StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)

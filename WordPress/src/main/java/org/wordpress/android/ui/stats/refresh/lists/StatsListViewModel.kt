@@ -9,9 +9,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
+import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.filter
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -21,7 +25,9 @@ const val SCROLL_EVENT_DELAY = 2000L
 abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val dateSelector: StatsDateSelector,
+    private val statsSection: StatsSection
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
     private var isInitialized = false
@@ -34,11 +40,15 @@ abstract class StatsListViewModel(
         YEARS(R.string.stats_timeframe_years);
     }
 
+    val selectedDateChanged = dateSelector.selectedDateChanged.filter { it == statsSection.toStatsGranularity() }
+
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
+
+    val listSelected = statsUseCase.listSelected
 
     val uiModel: LiveData<UiModel> = statsUseCase.data.throttle(this, distinct = true)
 
-    val showDateSelector: LiveData<DateSelectorUiModel> = statsUseCase.showDateSelector.mapNullable {
+    val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {
         it ?: DateSelectorUiModel(false)
     }
 
@@ -58,13 +68,17 @@ abstract class StatsListViewModel(
 
     fun onNextDateSelected() {
         launch(Dispatchers.Default) {
-            statsUseCase.onNextDateSelected()
+            statsSection.toStatsGranularity()?.let { granularity ->
+                dateSelector.onNextDateSelected(granularity)
+            }
         }
     }
 
     fun onPreviousDateSelected() {
         launch(Dispatchers.Default) {
-            statsUseCase.onPreviousDateSelected()
+            statsSection.toStatsGranularity()?.let { granularity ->
+                dateSelector.onPreviousDateSelected(granularity)
+            }
         }
     }
 
@@ -74,13 +88,26 @@ abstract class StatsListViewModel(
         }
     }
 
+    fun onDateChanged(granularity: StatsGranularity?) {
+        launch {
+//            dateSelector.updateDateSelector(granularity)
+            statsUseCase.onDateChanged()
+        }
+    }
+
+    fun onListSelected() {
+        dateSelector.updateDateSelector(statsSection.toStatsGranularity())
+    }
+
     fun start() {
         if (!isInitialized) {
             isInitialized = true
             launch {
                 statsUseCase.loadData()
+//                dateSelector.updateDateSelector(statsSection.toStatsGranularity())
             }
         }
+        dateSelector.updateDateSelector(statsSection.toStatsGranularity())
     }
 
     sealed class UiModel {
