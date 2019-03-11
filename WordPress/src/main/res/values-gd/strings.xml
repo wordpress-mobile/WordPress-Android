@@ -7,7 +7,6 @@ Language: gd_GB
 -->
 <resources>
     <string name="error_fetch_users_list">Cha b’ urrainn dhuinn cleachdaichean na làraich fhaighinn</string>
-    <string name="plans_manage">Stiùirich am plana agad aig\nWordPress.com/plans</string>
     <string name="title_follower">Neach-leantainn</string>
     <string name="title_email_follower">Neach-leantainn puist-d</string>
     <string name="people_dropdown_item_email_followers">Luchd-leantainn puist-d</string>
