@@ -187,7 +187,7 @@ class StatsListFragment : DaggerFragment() {
             return@observeEvent true
         }
 
-        viewModel.selectedDateChanged.observe(this, Observer { granularity ->
+        viewModel.selectedDate.observe(this, Observer { granularity ->
             viewModel.onDateChanged(granularity)
         })
 

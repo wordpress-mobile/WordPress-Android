@@ -15,7 +15,6 @@ import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.filter
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -40,7 +39,7 @@ abstract class StatsListViewModel(
         YEARS(R.string.stats_timeframe_years);
     }
 
-    val selectedDateChanged = dateSelector.selectedDateChanged.filter { it == statsSection.toStatsGranularity() }
+    val selectedDate = dateSelector.selectedDate
 
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
 
@@ -90,7 +89,6 @@ abstract class StatsListViewModel(
 
     fun onDateChanged(granularity: StatsGranularity?) {
         launch {
-//            dateSelector.updateDateSelector(granularity)
             statsUseCase.onDateChanged()
         }
     }
@@ -104,7 +102,7 @@ abstract class StatsListViewModel(
             isInitialized = true
             launch {
                 statsUseCase.loadData()
-//                dateSelector.updateDateSelector(statsSection.toStatsGranularity())
+                dateSelector.updateDateSelector(statsSection.toStatsGranularity())
             }
         }
         dateSelector.updateDateSelector(statsSection.toStatsGranularity())
