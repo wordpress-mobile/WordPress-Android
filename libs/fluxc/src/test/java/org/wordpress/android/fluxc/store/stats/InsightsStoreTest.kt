@@ -400,7 +400,12 @@ class InsightsStoreTest {
         val responseModel = followersStore.fetchWpComFollowers(site, LOAD_MODE_INITIAL, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(wpComFollowersSqlUtils).insert(site, FOLLOWERS_RESPONSE, requestedItems = PAGE_SIZE, replaceExistingData = true)
+        verify(wpComFollowersSqlUtils).insert(
+                site,
+                FOLLOWERS_RESPONSE,
+                requestedItems = PAGE_SIZE,
+                replaceExistingData = true
+        )
     }
 
     @Test
@@ -419,7 +424,12 @@ class InsightsStoreTest {
         val responseModel = followersStore.fetchEmailFollowers(site, LOAD_MODE_INITIAL, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(emailFollowersSqlUtils).insert(site, FOLLOWERS_RESPONSE, requestedItems = PAGE_SIZE, replaceExistingData = true)
+        verify(emailFollowersSqlUtils).insert(
+                site,
+                FOLLOWERS_RESPONSE,
+                requestedItems = PAGE_SIZE,
+                replaceExistingData = true
+        )
     }
 
     @Test
