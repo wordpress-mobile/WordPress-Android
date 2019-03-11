@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
-import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.throttle
@@ -25,8 +24,7 @@ abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val dateSelector: StatsDateSelector,
-    private val statsSection: StatsSection
+    private val dateSelector: StatsDateSelector
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
     private var isInitialized = false
@@ -67,17 +65,13 @@ abstract class StatsListViewModel(
 
     fun onNextDateSelected() {
         launch(Dispatchers.Default) {
-            statsSection.toStatsGranularity()?.let { granularity ->
-                dateSelector.onNextDateSelected(granularity)
-            }
+            dateSelector.onNextDateSelected()
         }
     }
 
     fun onPreviousDateSelected() {
         launch(Dispatchers.Default) {
-            statsSection.toStatsGranularity()?.let { granularity ->
-                dateSelector.onPreviousDateSelected(granularity)
-            }
+            dateSelector.onPreviousDateSelected()
         }
     }
 
@@ -94,7 +88,7 @@ abstract class StatsListViewModel(
     }
 
     fun onListSelected() {
-        dateSelector.updateDateSelector(statsSection.toStatsGranularity())
+        dateSelector.updateDateSelector()
     }
 
     fun start() {
@@ -102,10 +96,10 @@ abstract class StatsListViewModel(
             isInitialized = true
             launch {
                 statsUseCase.loadData()
-                dateSelector.updateDateSelector(statsSection.toStatsGranularity())
+                dateSelector.updateDateSelector()
             }
         }
-        dateSelector.updateDateSelector(statsSection.toStatsGranularity())
+        dateSelector.updateDateSelector()
     }
 
     sealed class UiModel {

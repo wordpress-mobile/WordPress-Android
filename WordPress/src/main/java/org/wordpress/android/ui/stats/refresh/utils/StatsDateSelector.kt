@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.util.filter
@@ -17,14 +16,18 @@ class StatsDateSelector @Inject constructor(
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
     val dateSelectorData: LiveData<DateSelectorUiModel> = _dateSelectorUiModel
 
-    val selectedDate = selectedDateProvider.selectedDateChanged
-            .filter { granularity -> granularity == statsSectionManager.getSelectedStatsGranularity() }
-            .apply { granularity -> updateDateSelector(granularity) }
+    private val granularity
+        get() = statsSectionManager.getSelectedStatsGranularity()
 
-    fun updateDateSelector(statsGranularity: StatsGranularity?) {
+    val selectedDate = selectedDateProvider.selectedDateChanged
+            .filter { statsGranularity -> statsGranularity == granularity }
+            .apply { updateDateSelector() }
+
+    fun updateDateSelector() {
+        val statsGranularity = granularity
         val shouldShowDateSelection = statsGranularity != null
 
-        val updatedDate = getDateLabelForSection(statsGranularity)
+        val updatedDate = getDateLabelForSection()
         val currentState = dateSelectorData.value
         if ((!shouldShowDateSelection && currentState?.isVisible != false) || statsGranularity == null) {
             emitValue(currentState, DateSelectorUiModel(false))
@@ -52,20 +55,24 @@ class StatsDateSelector @Inject constructor(
         }
     }
 
-    private fun getDateLabelForSection(statsGranularity: StatsGranularity?): String? {
-        return statsGranularity?.let {
+    private fun getDateLabelForSection(): String? {
+        return granularity?.let {
             statsDateFormatter.printGranularDate(
-                    selectedDateProvider.getSelectedDate(statsGranularity) ?: selectedDateProvider.getCurrentDate(),
-                    statsGranularity
+                    selectedDateProvider.getSelectedDate(it) ?: selectedDateProvider.getCurrentDate(),
+                    it
             )
         }
     }
 
-    fun onNextDateSelected(granularity: StatsGranularity) {
-        selectedDateProvider.selectNextDate(granularity)
+    fun onNextDateSelected() {
+        granularity?.let {
+            selectedDateProvider.selectNextDate(it)
+        }
     }
 
-    fun onPreviousDateSelected(granularity: StatsGranularity) {
-        selectedDateProvider.selectPreviousDate(granularity)
+    fun onPreviousDateSelected() {
+        granularity?.let {
+            selectedDateProvider.selectPreviousDate(it)
+        }
     }
 }

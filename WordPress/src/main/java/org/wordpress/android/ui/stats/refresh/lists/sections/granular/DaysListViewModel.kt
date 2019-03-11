@@ -5,7 +5,6 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -16,4 +15,4 @@ class DaysListViewModel @Inject constructor(
     @Named(DAY_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelector: StatsDateSelector
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelector, DAYS)
+) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelector)
