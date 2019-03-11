@@ -1,2 +1,5 @@
-* Faster opening of large posts
-* Updated Notifications with tabs
+* The editor now opens more quickly for large posts.
+* New posts are now created as drafts to make sure they won't be published accidentally.
+* We have made some small improvements to stats, including adding a new section to show your site's posting activity.
+* When a heading was inserted in the block editor it would show with no formatting. We have now fixed this.
+* Small update to the design of the notifications screen.
