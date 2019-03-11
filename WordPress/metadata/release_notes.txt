@@ -1,3 +1,5 @@
-* A new, smart site-creation process starts you off with a personalized, already-customized website
-* Markup lovers rejoice; <em> is now the default markup for italic in the editor.
-* Fixes! Sometimes the “My Site” screen didn’t look right in right-to-left languages, or posts showed up as scheduled even after they were published — no more.
+* The editor now opens more quickly for large posts.
+* New posts are now created as drafts to make sure they won't be published accidentally.
+* We have made some small improvements to stats, including adding a new section to show your site's posting activity.
+* When a heading was inserted in the block editor it would show with no formatting. We have now fixed this.
+* Small update to the design of the notifications screen.
