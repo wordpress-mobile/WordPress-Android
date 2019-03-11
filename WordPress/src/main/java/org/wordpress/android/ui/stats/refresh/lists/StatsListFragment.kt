@@ -19,8 +19,6 @@ import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
-import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
@@ -60,11 +58,6 @@ class StatsListFragment : DaggerFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
-        }
-
-        val intent = activity?.intent
-        if (intent != null && intent.hasExtra(WordPress.SITE)) {
-            outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
         }
 
         super.onSaveInstanceState(outState)
@@ -133,14 +126,6 @@ class StatsListFragment : DaggerFragment() {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(statsSection.name, viewModelClass)
-
-        // TODO: Remove
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
 
         setupObservers(activity)
         viewModel.start()

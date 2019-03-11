@@ -105,7 +105,6 @@ class StatsFragment : DaggerFragment() {
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(activity)
 
-        // TODO: Replace site with SiteProvider
         viewModel.start(nonNullSite, launchedFromWidget, initialTimeFrame)
 
         if (!isFirstStart) {
