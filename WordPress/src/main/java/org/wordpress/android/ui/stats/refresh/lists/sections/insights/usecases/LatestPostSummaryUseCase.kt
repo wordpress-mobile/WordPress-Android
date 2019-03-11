@@ -36,32 +36,39 @@ class LatestPostSummaryUseCase
     private val latestPostSummaryMapper: LatestPostSummaryMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getLatestPostInsights(site)
-        dbModel?.let { onModel(it) }
+    override suspend fun loadCachedData(site: SiteModel): InsightsLatestPostModel? {
+        return insightsStore.getLatestPostInsights(site)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<InsightsLatestPostModel> {
         val response = insightsStore.fetchLatestPostInsights(site, forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(
+        return when {
+            error != null -> State.Error(
                     error.message ?: error.type.name
             )
-            model != null -> onModel(model)
-            else -> onEmpty()
+            model != null -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_latest_post_summary))
 
+    override fun buildEmptyItem(): List<BlockListItem> {
+        return buildNullableUiModel(null)
+    }
+
     override fun buildUiModel(domainModel: InsightsLatestPostModel): List<BlockListItem> {
+        return buildNullableUiModel(domainModel)
+    }
+
+    private fun buildNullableUiModel(domainModel: InsightsLatestPostModel?): MutableList<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
         items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
-        if (domainModel.hasData()) {
+        if (domainModel != null && domainModel.hasData()) {
             items.add(
                     ValueItem(
                             domainModel.postViewsCount.toFormattedString(startValue = HUNDRED_THOUSAND),
@@ -98,7 +105,7 @@ class LatestPostSummaryUseCase
     private fun buildLink(model: InsightsLatestPostModel?): Link {
         return when {
             model == null -> Link(
-                    R.drawable.ic_create_blue_medium_24dp,
+                    R.drawable.ic_create_white_24dp,
                     R.string.stats_insights_create_post,
                     navigateAction = NavigationAction.create(this::onAddNewPostClick)
             )
@@ -110,7 +117,7 @@ class LatestPostSummaryUseCase
                     )
             )
             else -> Link(
-                    R.drawable.ic_share_blue_medium_24dp,
+                    R.drawable.ic_share_white_24dp,
                     R.string.stats_insights_share_post,
                     navigateAction = NavigationAction.create(
                             SharePostParams(model.postURL, model.postTitle),

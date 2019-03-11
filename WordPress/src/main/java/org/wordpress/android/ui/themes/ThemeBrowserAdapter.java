@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.themes;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -157,17 +159,19 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private void configureCardView(ThemeViewHolder themeViewHolder, boolean isCurrent) {
         Resources resources = mContext.getResources();
         if (isCurrent) {
+            ColorStateList color = ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.white));
             themeViewHolder.mDetailsView.setBackgroundColor(resources.getColor(R.color.blue_wordpress));
-            themeViewHolder.mNameView.setTextColor(resources.getColor(R.color.white));
+            themeViewHolder.mNameView.setTextColor(color);
             themeViewHolder.mActiveView.setVisibility(View.VISIBLE);
             themeViewHolder.mCardView.setCardBackgroundColor(resources.getColor(R.color.blue_wordpress));
+            themeViewHolder.mImageButton.setImageTintList(color);
         } else {
-            themeViewHolder.mDetailsView.setBackgroundColor(resources.getColor(
-                    android.support.v7.cardview.R.color.cardview_light_background));
-            themeViewHolder.mNameView.setTextColor(resources.getColor(R.color.black));
+            ColorStateList color = ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.black));
+            themeViewHolder.mDetailsView.setBackgroundColor(resources.getColor(R.color.white));
+            themeViewHolder.mNameView.setTextColor(color);
             themeViewHolder.mActiveView.setVisibility(View.GONE);
-            themeViewHolder.mCardView.setCardBackgroundColor(resources.getColor(
-                    android.support.v7.cardview.R.color.cardview_light_background));
+            themeViewHolder.mCardView.setCardBackgroundColor(resources.getColor(R.color.white));
+            themeViewHolder.mImageButton.setImageTintList(color);
         }
     }
 

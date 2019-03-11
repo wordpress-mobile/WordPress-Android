@@ -24,20 +24,19 @@ class MostPopularInsightsUseCase
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider
 ) : StatelessUseCase<InsightsMostPopularModel>(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getMostPopularInsights(site)
-        dbModel?.let { onModel(dbModel) }
+    override suspend fun loadCachedData(site: SiteModel): InsightsMostPopularModel? {
+        return insightsStore.getMostPopularInsights(site)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<InsightsMostPopularModel> {
         val response = insightsStore.fetchMostPopularInsights(site, forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
@@ -48,7 +47,7 @@ class MostPopularInsightsUseCase
         items.add(Title(R.string.stats_insights_popular))
         items.add(
                 ListItemWithIcon(
-                        icon = R.drawable.ic_calendar_grey_dark_24dp,
+                        icon = R.drawable.ic_calendar_white_24dp,
                         text = dateUtils.getWeekDay(domainModel.highestDayOfWeek),
                         value = resourceProvider.getString(
                                 R.string.stats_most_popular_percent_views,
@@ -59,7 +58,7 @@ class MostPopularInsightsUseCase
         )
         items.add(
                 ListItemWithIcon(
-                        icon = R.drawable.ic_time_grey_dark_24dp,
+                        icon = R.drawable.ic_time_white_24dp,
                         text = dateUtils.getHour(domainModel.highestHour),
                         value = resourceProvider.getString(
                                 R.string.stats_most_popular_percent_views,
