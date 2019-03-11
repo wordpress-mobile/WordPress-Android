@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
@@ -102,7 +103,7 @@ class StatsViewModelTest : BaseUnitTest() {
     fun `updates date selector on insights screen`() {
         viewModel.onSectionSelected(INSIGHTS)
 
-        verify(baseListUseCase).updateDateSelector(INSIGHTS)
+        verify(baseListUseCase).updateDateSelector()
     }
 
     @Test
@@ -113,6 +114,6 @@ class StatsViewModelTest : BaseUnitTest() {
 
         viewModel.onSelectedDateChange(statsSection)
 
-        verify(baseListUseCase).updateDateSelector(statsSection)
+        verify(baseListUseCase, times(2)).updateDateSelector()
     }
 }

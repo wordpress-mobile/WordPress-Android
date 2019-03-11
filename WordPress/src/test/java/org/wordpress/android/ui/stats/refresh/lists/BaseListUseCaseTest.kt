@@ -12,16 +12,13 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
-import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.util.Date
 
 class BaseListUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var statsSectionManager: SelectedSectionManager
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
@@ -33,7 +30,7 @@ class BaseListUseCaseTest : BaseUnitTest() {
         useCase = BaseListUseCase(
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined,
-                statsSectionManager,
+                StatsSection.DAYS,
                 selectedDateProvider,
                 statsDateFormatter,
                 statsSiteProvider,
@@ -47,10 +44,21 @@ class BaseListUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `hides date selector on insights screen`() {
+        useCase = BaseListUseCase(
+                Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
+                StatsSection.INSIGHTS,
+                selectedDateProvider,
+                statsDateFormatter,
+                statsSiteProvider,
+                listOf(),
+                { listOf() },
+                { _, _ -> UiModel.Error() }
+        )
         var model: DateSelectorUiModel? = null
         useCase.showDateSelector.observeForever { model = it }
 
-        useCase.updateDateSelector(INSIGHTS)
+        useCase.updateDateSelector()
 
         Assertions.assertThat(model).isNotNull
         Assertions.assertThat(model?.isVisible).isFalse()
@@ -61,11 +69,11 @@ class BaseListUseCaseTest : BaseUnitTest() {
         val models = mutableListOf<DateSelectorUiModel>()
         useCase.showDateSelector.observeForever { model -> model?.let { models.add(it) } }
 
-        useCase.updateDateSelector(INSIGHTS)
+        useCase.updateDateSelector()
 
         Assertions.assertThat(models).hasSize(1)
 
-        useCase.updateDateSelector(INSIGHTS)
+        useCase.updateDateSelector()
 
         Assertions.assertThat(models).hasSize(1)
     }
@@ -82,7 +90,7 @@ class BaseListUseCaseTest : BaseUnitTest() {
         var model: DateSelectorUiModel? = null
         useCase.showDateSelector.observeForever { model = it }
 
-        useCase.updateDateSelector(statsSection)
+        useCase.updateDateSelector()
 
         Assertions.assertThat(model).isNotNull
         Assertions.assertThat(model?.isVisible).isTrue()
@@ -102,13 +110,13 @@ class BaseListUseCaseTest : BaseUnitTest() {
         var model: DateSelectorUiModel? = null
         useCase.showDateSelector.observeForever { model = it }
 
-        useCase.updateDateSelector(statsSection)
+        useCase.updateDateSelector()
 
         Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
 
         whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(updatedDate)
 
-        useCase.updateDateSelector(statsSection)
+        useCase.updateDateSelector()
 
         Assertions.assertThat(model?.date).isEqualTo(updatedLabel)
     }
