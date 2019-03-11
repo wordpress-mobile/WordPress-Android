@@ -43,7 +43,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -68,6 +67,7 @@ import org.wordpress.android.ui.media.MediaPreviewActivity.MediaPreviewSwiped;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -363,11 +363,10 @@ public class MediaSettingsActivity extends AppCompatActivity
         if (isAudio() || isDocument()) {
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
             @DrawableRes int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
-            if (imageRes == 0) {
-                imageRes = R.drawable.ic_gridicons_page;
-            }
+            ColorUtils.INSTANCE.setImageResourceWithTint(mImageView,
+                    imageRes != 0 ? imageRes : R.drawable.ic_pages_white_24dp, R.color.grey);
             mImageView.setPadding(padding, padding * 2, padding, padding);
-            mImageManager.load(mImageView, getResources().getDrawable(imageRes), ScaleType.FIT_CENTER);
+            mImageView.setImageResource(imageRes);
         } else {
             loadImage();
         }

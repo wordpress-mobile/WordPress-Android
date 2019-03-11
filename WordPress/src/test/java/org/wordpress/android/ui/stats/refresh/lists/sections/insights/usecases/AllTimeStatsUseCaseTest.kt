@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -12,22 +13,23 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 
 class AllTimeStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: AllTimeStatsUseCase
     private val bestDay = "2018-11-25"
@@ -37,8 +39,10 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         useCase = AllTimeStatsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
+                statsSiteProvider,
                 statsDateFormatter
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
 
     @Test
@@ -55,9 +59,8 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is Error)
-        assertEquals(result.type, Type.ERROR)
-        assertEquals((result as Error).errorMessage, message)
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
+        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
     }
 
     @Test
@@ -74,9 +77,9 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        val items = result.stateData!!
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
@@ -98,15 +101,15 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        val items = result.data!!
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is ListItemWithIcon)
         val item = items[1] as ListItemWithIcon
-        assertEquals(item.icon, R.drawable.ic_posts_grey_dark_24dp)
+        assertEquals(item.icon, R.drawable.ic_posts_white_24dp)
         assertEquals(item.textResource, R.string.posts)
         assertEquals(item.value, posts.toString())
     }
@@ -126,9 +129,9 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        val items = result.data!!
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
@@ -154,9 +157,9 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        val items = result.data!!
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
@@ -183,15 +186,15 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        val items = result.data!!
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is ListItemWithIcon)
         val item = items[1] as ListItemWithIcon
-        assertEquals(item.icon, R.drawable.ic_trophy_grey_dark_24dp)
+        assertEquals(item.icon, R.drawable.ic_trophy_white_24dp)
         assertEquals(item.textResource, R.string.stats_insights_best_ever)
         assertEquals(item.value, bestDayTotal.toString())
         assertEquals(item.subText, bestDayTransformed)
@@ -211,9 +214,9 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is BlockList)
-        assertEquals(result.type, Type.BLOCK_LIST)
-        val items = (result as BlockList).items
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        val items = result.data!!
         assertEquals(items.size, 3)
         assertTrue(items[1] is ListItemWithIcon)
         assertTrue(items[2] is ListItemWithIcon)
@@ -221,10 +224,10 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         assertEquals((items[2] as ListItemWithIcon).showDivider, false)
     }
 
-    private suspend fun loadAllTimeInsights(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadAllTimeInsights(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }

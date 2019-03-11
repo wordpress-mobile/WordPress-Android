@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
@@ -21,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -34,23 +34,23 @@ class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
+    private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
+    override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
+        val response = insightsStore.fetchComments(statsSiteProvider.siteModel, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && (model.authors.isNotEmpty() || model.posts.isNotEmpty()) -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getComments(site, PAGE_SIZE)
-        dbModel?.let { onModel(dbModel) }
+    override suspend fun loadCachedData(): CommentsModel? {
+        return insightsStore.getComments(statsSiteProvider.siteModel, PAGE_SIZE)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_comments))
@@ -124,6 +124,6 @@ class CommentsUseCase
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_COMMENTS_VIEW_MORE_TAPPED)
-        navigateTo(ViewCommentsStats())
+        navigateTo(ViewCommentsStats(statsSiteProvider.siteModel))
     }
 }

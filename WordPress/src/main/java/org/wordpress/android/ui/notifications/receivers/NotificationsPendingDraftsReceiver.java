@@ -190,7 +190,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                                      .makePendingDraftNotificationId(postId),
                              openDraftIntent,
                              PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.ic_pencil_white, context.getText(R.string.edit),
+        builder.addAction(R.drawable.ic_pencil_white_24dp, context.getText(R.string.edit),
                           pendingIntent);
     }
 

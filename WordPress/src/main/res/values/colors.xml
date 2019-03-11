@@ -64,6 +64,7 @@
     <color name="orange_jazzy">#f0821e</color>
     <color name="orange_fire">#d54e21</color>
     <color name="orange_active">#f58335</color>
+    <color name="orange_dark_active">#c55b12</color>
 
     <!-- Alerts -->
     <color name="alert_yellow">#f0b849</color>
@@ -134,6 +135,9 @@
     <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
     <color name="stats_empty_placeholder_color">@color/grey_lighten_30_translucent_50</color>
     <color name="stats_bar_chart_gradient_start_color">#260087be</color>
+    <color name="stats_low_activity">#91e2fb</color>
+    <color name="stats_medium_activity">#00bef6</color>
+    <color name="stats_high_activity">#0083a9</color>
 
     <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>

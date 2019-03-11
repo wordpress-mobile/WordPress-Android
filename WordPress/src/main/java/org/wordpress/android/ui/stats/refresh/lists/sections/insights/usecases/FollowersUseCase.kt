@@ -6,7 +6,6 @@ import kotlinx.coroutines.async
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.store.InsightsStore
@@ -25,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -36,6 +36,7 @@ class FollowersUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
+    private val statsSiteProvider: StatsSiteProvider,
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
@@ -44,27 +45,45 @@ class FollowersUseCase
         mainDispatcher,
         0
 ) {
-    override suspend fun loadCachedData(site: SiteModel) {
-        val wpComFollowers = insightsStore.getWpComFollowers(site, PAGE_SIZE)
-        val emailFollowers = insightsStore.getEmailFollowers(site, PAGE_SIZE)
+    override suspend fun loadCachedData(): Pair<FollowersModel, FollowersModel>? {
+        val wpComFollowers = insightsStore.getWpComFollowers(statsSiteProvider.siteModel, PAGE_SIZE)
+        val emailFollowers = insightsStore.getEmailFollowers(statsSiteProvider.siteModel, PAGE_SIZE)
         if (wpComFollowers != null && emailFollowers != null) {
-            onModel(wpComFollowers to emailFollowers)
+            return wpComFollowers to emailFollowers
         }
+        return null
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, PAGE_SIZE, forced) }
-        val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, PAGE_SIZE, forced) }
+    override suspend fun fetchRemoteData(
+        forced: Boolean
+    ): State<Pair<FollowersModel, FollowersModel>> {
+        val deferredWpComResponse = GlobalScope.async {
+            insightsStore.fetchWpComFollowers(
+                    statsSiteProvider.siteModel,
+                    PAGE_SIZE,
+                    forced
+            )
+        }
+        val deferredEmailResponse = GlobalScope.async {
+            insightsStore.fetchEmailFollowers(
+                    statsSiteProvider.siteModel,
+                    PAGE_SIZE,
+                    forced
+            )
+        }
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
         val wpComModel = wpComResponse.model
         val emailModel = emailResponse.model
         val error = wpComResponse.error ?: emailResponse.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            wpComModel != null && emailModel != null -> onModel(wpComModel to emailModel)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            wpComModel != null && emailModel != null &&
+                    (wpComModel.followers.isNotEmpty() || emailModel.followers.isNotEmpty()) -> State.Data(
+                    wpComModel to emailModel
+            )
+            else -> State.Empty()
         }
     }
 
@@ -144,6 +163,6 @@ class FollowersUseCase
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
-        navigateTo(ViewFollowersStats())
+        navigateTo(ViewFollowersStats(statsSiteProvider.siteModel))
     }
 }

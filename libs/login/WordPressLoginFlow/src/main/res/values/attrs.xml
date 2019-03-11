@@ -6,6 +6,7 @@
     -->
     <declare-styleable name="wpLoginInputRow">
         <attr name="wpIconDrawable" format="reference"/>
+        <attr name="wpIconDrawableTint" format="color"/>
         <attr name="android:inputType" />
         <attr name="android:hint" />
         <attr name="android:imeOptions" />

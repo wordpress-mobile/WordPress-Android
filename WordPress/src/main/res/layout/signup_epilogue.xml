@@ -40,7 +40,7 @@
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="match_parent"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation"
                 app:cardUseCompatPadding="true" >
 
@@ -121,7 +121,8 @@
                 android:layout_width="match_parent"
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
-                app:wpIconDrawable="@drawable/ic_user_grey_24dp" >
+                app:wpIconDrawable="@drawable/ic_user_white_24dp"
+                app:wpIconDrawableTint="@color/grey" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>
 
             <org.wordpress.android.login.widgets.WPLoginInputRow
@@ -133,7 +134,8 @@
                 android:layout_width="match_parent"
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
-                app:wpIconDrawable="@drawable/ic_mention_grey_24dp" >
+                app:wpIconDrawable="@drawable/ic_mention_white_24dp"
+                app:wpIconDrawableTint="@color/grey" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>
 
             <org.wordpress.android.login.widgets.WPLoginInputRow
@@ -148,7 +150,8 @@
                 android:visibility="gone"
                 app:passwordToggleEnabled="true"
                 app:passwordToggleTint="@color/grey"
-                app:wpIconDrawable="@drawable/ic_lock_grey_24dp"
+                app:wpIconDrawable="@drawable/ic_lock_white_24dp"
+                app:wpIconDrawableTint="@color/grey"
                 tools:visibility="visible" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>
 

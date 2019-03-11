@@ -27,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -42,26 +43,31 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore,
     selectedDateProvider: SelectedDateProvider,
+    statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatelessUseCase<PostAndPageViewsModel>(
         POSTS_AND_PAGES,
         mainDispatcher,
         selectedDateProvider,
+        statsSiteProvider,
         statsGranularity
 ) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_posts_and_pages))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = postsAndPageViewsStore.getPostAndPageViews(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): PostAndPageViewsModel? {
+        return postsAndPageViewsStore.getPostAndPageViews(
                 site,
                 statsGranularity,
                 selectedDate,
                 PAGE_SIZE
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(
+        selectedDate: Date,
+        site: SiteModel,
+        forced: Boolean
+    ): State<PostAndPageViewsModel> {
         val response = postsAndPageViewsStore.fetchPostAndPageViews(
                 site,
                 PAGE_SIZE,
@@ -72,10 +78,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.views.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
@@ -89,8 +95,8 @@ constructor(
             items.add(Header(R.string.stats_posts_and_pages_title_label, R.string.stats_posts_and_pages_views_label))
             items.addAll(domainModel.views.mapIndexed { index, viewsModel ->
                 val icon = when (viewsModel.type) {
-                    POST -> R.drawable.ic_posts_grey_dark_24dp
-                    HOMEPAGE, PAGE -> R.drawable.ic_pages_grey_dark_24dp
+                    POST -> R.drawable.ic_posts_white_24dp
+                    HOMEPAGE, PAGE -> R.drawable.ic_pages_white_24dp
                 }
                 ListItemWithIcon(
                         icon = icon,
@@ -120,7 +126,8 @@ constructor(
         navigateTo(
                 ViewPostsAndPages(
                         statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date(),
+                        statsSiteProvider.siteModel
                 )
         )
     }
@@ -136,7 +143,8 @@ constructor(
                         postId = params.postId.toString(),
                         postTitle = params.postTitle,
                         postUrl = params.postUrl,
-                        postType = type
+                        postType = type,
+                        siteId = statsSiteProvider.siteModel.siteId
                 )
         )
     }
@@ -153,6 +161,7 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val postsAndPageViewsStore: PostAndPageViewsStore,
         private val selectedDateProvider: SelectedDateProvider,
+        private val statsSiteProvider: StatsSiteProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
@@ -161,6 +170,7 @@ constructor(
                         mainDispatcher,
                         postsAndPageViewsStore,
                         selectedDateProvider,
+                        statsSiteProvider,
                         analyticsTracker
                 )
     }

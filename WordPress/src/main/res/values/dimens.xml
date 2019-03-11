@@ -39,6 +39,9 @@
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
 
+    <dimen name="default_cardview_radius">2dp</dimen>
+    <dimen name="default_cardview_elevation">2dp</dimen>
+
     <!-- featured image in post list -->
     <dimen name="postlist_featured_image_height_normal">128dp</dimen>
     <dimen name="postlist_featured_image_height_tablet">220dp</dimen>
@@ -200,6 +203,8 @@
     <dimen name="stats_barchart_legend_item">12dp</dimen>
     <dimen name="stats_legent_text_size">9sp</dimen>
     <dimen name="stats_label_min_text_size">6sp</dimen>
+    <dimen name="stats_activity_box_size">12dp</dimen>
+    <dimen name="stats_activity_box_end_margin">4dp</dimen>
 
     <!-- stats widget-->
     <dimen name="stats_widget_icon_size">18dp</dimen>
@@ -254,7 +259,6 @@
     <dimen name="theme_browser_header_button_height">50dp</dimen>
     <dimen name="theme_browser_header_button_width">100dp</dimen>
     <dimen name="theme_browser_more_button_padding">8dp</dimen>
-    <dimen name="theme_browser_preview_image_height">280dp</dimen>
     <dimen name="drake_themes_width">400dp</dimen>
     <dimen name="start_over_url_margin">22dp</dimen>
     <dimen name="start_over_preference_margin_large">15dp</dimen>
@@ -345,6 +349,7 @@
     <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
     <dimen name="jetpack_text_width">290dp</dimen>
     <dimen name="jetpack_remote_install_container_padding">30dp</dimen>
+    <dimen name="jetpack_remote_install_icon_size">88dp</dimen>
 
     <!-- pages -->
     <dimen name="page_item_horizontal_padding">16dp</dimen>
@@ -390,7 +395,16 @@
     <dimen name="stats_header_height">32dp</dimen>
     <dimen name="stats_bar_chart_height">180dp</dimen>
     <dimen name="stats_block_icon_size">24dp</dimen>
+    <dimen name="stats_list_card_horizontal_spacing">0dp</dimen>
+    <dimen name="stats_list_card_top_spacing">0dp</dimen>
+    <dimen name="stats_list_card_bottom_spacing">16dp</dimen>
+    <dimen name="stats_list_card_first_spacing">0dp</dimen>
+    <dimen name="stats_list_card_last_spacing">16dp</dimen>
+    <dimen name="stats_list_item_left_margin">56dp</dimen>
+    <dimen name="stats_activity_spacing">1dp</dimen>
 
     <dimen name="settings_icon_size">24dp</dimen>
+
+    <dimen name="icon_size_075">18dp</dimen>
 
 </resources>

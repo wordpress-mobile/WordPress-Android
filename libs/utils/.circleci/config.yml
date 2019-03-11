@@ -1,0 +1,35 @@
+version: 2.1
+
+orbs:
+  android: wordpress-mobile/android@0.0.22
+
+jobs:
+  Lint:
+    executor: 
+      name: android/default
+      api-version: "27"
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - run:
+          name: Lint & Checkstyle
+          command: ./gradlew --stacktrace lint checkstyle
+      - android/save-gradle-cache
+      - android/save-lint-results
+  Build:
+    executor: 
+      name: android/default
+      api-version: "27"
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - run:
+          name: Build
+          command: ./gradlew --stacktrace assembleDebug assembleRelease
+      - android/save-gradle-cache
+
+workflows:
+  WordPress-Utils-Android:
+    jobs:
+      - Lint
+      - Build

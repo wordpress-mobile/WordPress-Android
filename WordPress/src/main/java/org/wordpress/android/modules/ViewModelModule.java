@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
+import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel;
@@ -161,6 +162,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(GiphyPickerViewModel.class)
     abstract ViewModel giphyPickerViewModel(GiphyPickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PlansViewModel.class)
+    abstract ViewModel plansViewModel(PlansViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

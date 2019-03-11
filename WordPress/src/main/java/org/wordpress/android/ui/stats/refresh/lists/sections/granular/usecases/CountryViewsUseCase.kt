@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -37,21 +38,31 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: CountryViewsStore,
     selectedDateProvider: SelectedDateProvider,
+    statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
-) : GranularStatelessUseCase<CountryViewsModel>(COUNTRIES, mainDispatcher, selectedDateProvider, statsGranularity) {
+) : GranularStatelessUseCase<CountryViewsModel>(
+        COUNTRIES,
+        mainDispatcher,
+        selectedDateProvider,
+        statsSiteProvider,
+        statsGranularity
+) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_countries))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = store.getCountryViews(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): CountryViewsModel? {
+        return store.getCountryViews(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
                 selectedDate
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(
+        selectedDate: Date,
+        site: SiteModel,
+        forced: Boolean
+    ): State<CountryViewsModel> {
         val response = store.fetchCountryViews(
                 site,
                 PAGE_SIZE,
@@ -62,10 +73,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.countries.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
@@ -107,13 +118,20 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_COUNTRIES_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewCountries(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(
+                ViewCountries(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date(),
+                        statsSiteProvider.siteModel
+                )
+        )
     }
 
     class CountryViewsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: CountryViewsStore,
+        private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
@@ -123,6 +141,7 @@ constructor(
                         mainDispatcher,
                         store,
                         selectedDateProvider,
+                        statsSiteProvider,
                         analyticsTracker
                 )
     }

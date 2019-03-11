@@ -21,12 +21,16 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.EMPTY_SPACE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -41,28 +45,29 @@ constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val authorsStore: AuthorsStore,
+    statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatefulUseCase<AuthorsModel, SelectedAuthor>(
         AUTHORS,
         mainDispatcher,
+        statsSiteProvider,
         selectedDateProvider,
         statsGranularity,
         SelectedAuthor()
 ) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_authors))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = authorsStore.getAuthors(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): AuthorsModel? {
+        return authorsStore.getAuthors(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
                 selectedDate
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<AuthorsModel> {
         val response = authorsStore.fetchAuthors(
                 site,
                 PAGE_SIZE,
@@ -73,10 +78,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.authors.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
@@ -108,6 +113,8 @@ constructor(
                             ListItemWithIcon(
                                     text = post.title,
                                     value = post.views.toFormattedString(),
+                                    iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
+                                    textStyle = LIGHT,
                                     showDivider = false,
                                     navigationAction = create(
                                             PostClickParams(post.id, post.url, post.title),
@@ -134,7 +141,13 @@ constructor(
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewAuthors(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(
+                ViewAuthors(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date(),
+                        statsSiteProvider.siteModel
+                )
+        )
     }
 
     private fun onPostClicked(params: PostClickParams) {
@@ -144,7 +157,8 @@ constructor(
                         postId = params.postId,
                         postTitle = params.postTitle,
                         postUrl = params.postUrl,
-                        postType = StatsConstants.ITEM_TYPE_POST
+                        postType = StatsConstants.ITEM_TYPE_POST,
+                        siteId = statsSiteProvider.siteModel.siteId
                 )
         )
     }
@@ -161,6 +175,7 @@ constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val authorsStore: AuthorsStore,
+        private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
@@ -169,6 +184,7 @@ constructor(
                         granularity,
                         mainDispatcher,
                         authorsStore,
+                        statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker
                 )

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
@@ -12,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -21,26 +21,31 @@ class AllTimeStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
+    private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_all_time_stats))
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getAllTimeInsights(site)
-        dbModel?.let { onModel(it) }
+    override suspend fun loadCachedData(): InsightsAllTimeModel? {
+        return insightsStore.getAllTimeInsights(statsSiteProvider.siteModel)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchAllTimeInsights(site, forced)
+    override suspend fun fetchRemoteData(forced: Boolean): State<InsightsAllTimeModel> {
+        val response = insightsStore.fetchAllTimeInsights(statsSiteProvider.siteModel, forced)
         val model = response.model
         val error = response.error
 
         return when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.hasData() -> State.Data(
+                    model
+            )
+            else -> State.Empty()
         }
     }
+
+    private fun InsightsAllTimeModel.hasData() =
+            this.posts > 0 || this.views > 0 || this.visitors > 0 || this.viewsBestDayTotal > 0
 
     override fun buildUiModel(domainModel: InsightsAllTimeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
@@ -56,7 +61,7 @@ class AllTimeStatsUseCase
             if (hasPosts) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_posts_grey_dark_24dp,
+                                R.drawable.ic_posts_white_24dp,
                                 textResource = R.string.posts,
                                 value = domainModel.posts.toFormattedString(),
                                 showDivider = hasViews || hasVisitors || hasViewsBestDayTotal
@@ -86,7 +91,7 @@ class AllTimeStatsUseCase
             if (hasViewsBestDayTotal) {
                 items.add(
                         ListItemWithIcon(
-                                R.drawable.ic_trophy_grey_dark_24dp,
+                                R.drawable.ic_trophy_white_24dp,
                                 textResource = R.string.stats_insights_best_ever,
                                 subText = statsDateFormatter.printDate(domainModel.viewsBestDay),
                                 value = domainModel.viewsBestDayTotal.toFormattedString(),

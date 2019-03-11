@@ -21,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -36,21 +37,31 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: SearchTermsStore,
     selectedDateProvider: SelectedDateProvider,
+    statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
-) : GranularStatelessUseCase<SearchTermsModel>(SEARCH_TERMS, mainDispatcher, selectedDateProvider, statsGranularity) {
+) : GranularStatelessUseCase<SearchTermsModel>(
+        SEARCH_TERMS,
+        mainDispatcher,
+        selectedDateProvider,
+        statsSiteProvider,
+        statsGranularity
+) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_search_terms))
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
-        val dbModel = store.getSearchTerms(
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): SearchTermsModel? {
+        return store.getSearchTerms(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
                 selectedDate
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(
+        selectedDate: Date,
+        site: SiteModel,
+        forced: Boolean
+    ): State<SearchTermsModel> {
         val response = store.fetchSearchTerms(
                 site,
                 PAGE_SIZE,
@@ -61,10 +72,10 @@ constructor(
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.searchTerms.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
@@ -111,7 +122,13 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_SEARCH_TERMS_VIEW_MORE_TAPPED, statsGranularity)
-        navigateTo(ViewSearchTerms(statsGranularity, selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()))
+        navigateTo(
+                ViewSearchTerms(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date(),
+                        statsSiteProvider.siteModel
+                )
+        )
     }
 
     class SearchTermsUseCaseFactory
@@ -119,6 +136,7 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: SearchTermsStore,
         private val selectedDateProvider: SelectedDateProvider,
+        private val statsSiteProvider: StatsSiteProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
@@ -127,6 +145,7 @@ constructor(
                         mainDispatcher,
                         store,
                         selectedDateProvider,
+                        statsSiteProvider,
                         analyticsTracker
                 )
     }

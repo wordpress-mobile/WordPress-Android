@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -21,11 +20,8 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -35,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -43,6 +40,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: FollowersUseCase
@@ -60,6 +58,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         useCase = FollowersUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
+                statsSiteProvider,
                 statsUtilsWrapper,
                 resourceProvider,
                 tracker
@@ -69,6 +68,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(
                 message
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
 
     @Test
@@ -96,14 +96,14 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val tabsItem = (result as BlockList).assertSelectedFollowers(position = 0)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        val tabsItem = result.data!!.assertSelectedFollowers(position = 0)
 
         tabsItem.onTabSelected(1)
 
         val updatedResult = loadFollowers(refresh, forced)
 
-        (updatedResult as BlockList).assertEmptyTabSelected(1)
+        updatedResult.data!!.assertEmptyTabSelected(1)
     }
 
     @Test
@@ -131,12 +131,12 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val tabsItem = (result as BlockList).assertEmptyTabSelected(0)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        val tabsItem = result.data!!.assertEmptyTabSelected(0)
 
         tabsItem.onTabSelected(1)
         val updatedResult = loadFollowers(refresh, forced)
-        (updatedResult as BlockList).assertSelectedFollowers(position = 1)
+        updatedResult.data!!.assertSelectedFollowers(position = 1)
     }
 
     @Test
@@ -164,8 +164,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).assertEmpty()
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
     }
 
     @Test
@@ -190,10 +189,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     @Test
@@ -218,16 +214,13 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
-    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 
@@ -236,21 +229,21 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_followers)
     }
 
-    private fun BlockList.assertSelectedFollowers(position: Int): TabsItem {
-        assertThat(this.items).hasSize(5)
-        assertTitle(this.items[0])
-        val tabsItem = this.items[1] as TabsItem
-        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_followers_wordpress_com)
-        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_followers_email)
+    private fun List<BlockListItem>.assertSelectedFollowers(position: Int): TabsItem {
+        assertThat(this).hasSize(5)
+        assertTitle(this[0])
+        val tabsItem = this[1] as TabsItem
+        assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_followers_wordpress_com)
+        assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_followers_email)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
-        assertThat(this.items[2]).isEqualTo(Information("Total followers count is 50"))
-        assertThat(this.items[3]).isEqualTo(
+        assertThat(this[2]).isEqualTo(Information("Total followers count is 50"))
+        assertThat(this[3]).isEqualTo(
                 Header(
                         string.stats_follower_label,
                         string.stats_follower_since_label
                 )
         )
-        val follower = this.items[4] as ListItemWithIcon
+        val follower = this[4] as ListItemWithIcon
         assertThat(follower.iconUrl).isEqualTo(avatar)
         assertThat(follower.iconStyle).isEqualTo(AVATAR)
         assertThat(follower.text).isEqualTo(user)
@@ -259,20 +252,21 @@ class FollowersUseCaseTest : BaseUnitTest() {
         return tabsItem
     }
 
-    private fun BlockList.assertEmptyTabSelected(position: Int): TabsItem {
-        assertThat(this.items).hasSize(3)
-        assertTitle(this.items[0])
-        val tabsItem = this.items[1] as TabsItem
+    private fun List<BlockListItem>.assertEmptyTabSelected(position: Int): TabsItem {
+        assertThat(this).hasSize(3)
+        assertTitle(this[0])
+        val tabsItem = this[1] as TabsItem
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
-        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_followers_wordpress_com)
-        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_followers_email)
-        assertThat(this.items[2]).isEqualTo(Empty())
+        assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_followers_wordpress_com)
+        assertThat(tabsItem.tabs[1]).isEqualTo(R.string.stats_followers_email)
+        assertThat(this[2]).isEqualTo(Empty())
         return tabsItem
     }
 
-    private fun BlockList.assertEmpty() {
-        assertThat(this.items).hasSize(2)
-        assertTitle(this.items[0])
-        assertThat(this.items[1]).isEqualTo(Empty())
+    private fun UseCaseModel.assertEmpty() {
+        val nonNullData = this.data!!
+        assertThat(nonNullData).hasSize(2)
+        assertTitle(nonNullData[0])
+        assertThat(nonNullData[1]).isEqualTo(Empty())
     }
 }

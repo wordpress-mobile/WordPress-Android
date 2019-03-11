@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
-        android:layout_marginBottom="@dimen/cardview_default_radius"
-        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        android:layout_marginBottom="@dimen/default_cardview_radius"
+        card_view:cardCornerRadius="@dimen/default_cardview_radius"
         card_view:cardElevation="@dimen/card_elevation"
         android:layout_marginEnd="@dimen/theme_browser_cardview_margin_large"
         android:layout_marginStart="@dimen/theme_browser_cardview_margin_large">
@@ -65,12 +65,13 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/icon_size_075"
+                        android:layout_height="@dimen/icon_size_075"
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_customize_grey_dark_18dp" />
+                        android:src="@drawable/ic_customize_white_24dp"
+                        android:tint="@color/grey_dark" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
@@ -96,12 +97,13 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/icon_size_075"
+                        android:layout_height="@dimen/icon_size_075"
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_info_outline_grey_dark_18dp" />
+                        android:src="@drawable/ic_info_outline_white_24dp"
+                        android:tint="@color/grey_dark" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
@@ -127,12 +129,13 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/icon_size_075"
+                        android:layout_height="@dimen/icon_size_075"
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_help_outline_grey_dark_18dp" />
+                        android:src="@drawable/ic_help_outline_white_24dp"
+                        android:tint="@color/grey_dark" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"

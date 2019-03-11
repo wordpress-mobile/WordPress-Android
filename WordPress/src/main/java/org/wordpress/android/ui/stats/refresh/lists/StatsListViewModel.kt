@@ -3,12 +3,15 @@ package org.wordpress.android.ui.stats.refresh.lists
 import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.ScopedViewModel
 
@@ -20,6 +23,7 @@ abstract class StatsListViewModel(
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
+    private var isInitialized = false
 
     enum class StatsSection(@StringRes val titleRes: Int) {
         INSIGHTS(R.string.stats_insights),
@@ -31,7 +35,11 @@ abstract class StatsListViewModel(
 
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
 
-    val data: LiveData<List<StatsBlock>> by lazy { statsUseCase.data.throttle(this) }
+    val uiModel: LiveData<UiModel> = statsUseCase.data.throttle(this, distinct = true)
+
+    val showDateSelector: LiveData<DateSelectorUiModel> = statsUseCase.showDateSelector.mapNullable {
+        it ?: DateSelectorUiModel(false)
+    }
 
     override fun onCleared() {
         statsUseCase.onCleared()
@@ -45,5 +53,37 @@ abstract class StatsListViewModel(
                 delay(SCROLL_EVENT_DELAY)
             }
         }
+    }
+
+    fun onNextDateSelected() {
+        launch(Dispatchers.Default) {
+            statsUseCase.onNextDateSelected()
+        }
+    }
+
+    fun onPreviousDateSelected() {
+        launch(Dispatchers.Default) {
+            statsUseCase.onPreviousDateSelected()
+        }
+    }
+
+    fun onRetryClick() {
+        launch {
+            statsUseCase.refreshData(true)
+        }
+    }
+
+    fun start() {
+        if (!isInitialized) {
+            isInitialized = true
+            launch {
+                statsUseCase.loadData()
+            }
+        }
+    }
+
+    sealed class UiModel {
+        data class Success(val data: List<StatsBlock>) : UiModel()
+        class Error(val message: Int = R.string.stats_loading_error) : UiModel()
     }
 }

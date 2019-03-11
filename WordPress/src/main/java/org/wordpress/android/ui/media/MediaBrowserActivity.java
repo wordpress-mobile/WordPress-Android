@@ -83,6 +83,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA;
 
 /**
  * The main activity in which the user can browse their media.
@@ -282,13 +285,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             int selectedColor = ContextCompat.getColor(this, R.color.white);
             mTabLayout.setTabTextColors(normalColor, selectedColor);
 
+            mTabLayout.removeAllTabs();
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_all)); // FILTER_ALL
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_images)); // FILTER_IMAGES
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_documents)); // FILTER_DOCUMENTS
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_videos)); // FILTER_VIDEOS
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_audio)); // FILTER_AUDIO
 
-            mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            mTabLayout.clearOnTabSelectedListeners();
+            mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     setFilter(getFilterForPosition(tab.getPosition()));
@@ -1005,6 +1010,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         UploadService.uploadMedia(this, mediaModels);
+        AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA);
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {

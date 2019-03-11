@@ -3,7 +3,7 @@ package org.wordpress.android.ui.screenshots;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.CardView;
-import android.test.suitebuilder.annotation.LargeTest;
+import android.support.test.filters.LargeTest;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -13,6 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -23,30 +24,27 @@ import java.util.function.Supplier;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
-import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
-import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINUSERNAME;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOn;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOnChildAtIndex;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.focusEditPostTitle;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.getCurrentActivity;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.isElementDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.populateTextField;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.pressBackUntilElementIsDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.scrollToThenClickOn;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.selectItemAtIndexInSpinner;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementOfTypeToBeDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementWithIdToBeDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForConditionToBeTrue;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToBeDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToBeDisplayedWithoutFailure;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToNotBeDisplayed;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForImagesOfTypeWithPlaceholder;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForRecyclerViewToStopReloading;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForSwipeRefreshLayoutToStopReloading;
+import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.clickOnChildAtIndex;
+import static org.wordpress.android.support.WPSupportUtils.focusEditPostTitle;
+import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
+import static org.wordpress.android.support.WPSupportUtils.selectItemAtIndexInSpinner;
+import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementOfTypeToBeDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.waitForConditionToBeTrue;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToNotBeDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
+import static org.wordpress.android.support.WPSupportUtils.waitForRecyclerViewToStopReloading;
+import static org.wordpress.android.support.WPSupportUtils.waitForSwipeRefreshLayoutToStopReloading;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class WPScreenshotTest {
+public class WPScreenshotTest extends BaseTest {
     @ClassRule
     public static final WPLocaleTestRule LOCALE_TEST_RULE = new WPLocaleTestRule();
 
@@ -60,50 +58,13 @@ public class WPScreenshotTest {
         mActivityTestRule.launchActivity(null);
         Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
-        wPLogin();
+        wpLogin();
+        sleep();
         editBlogPost();
         navigateReader();
         navigateNotifications();
         navigateStats();
-        wPLogout();
-    }
-
-    private void wPLogin() {
-        // If we're already logged in, log out before starting
-        if (!isElementDisplayed(R.id.login_button)) {
-            wPLogout();
-        }
-
-        // Login Prologue – We want to log in, not sign up
-        // See LoginPrologueFragment
-        clickOn(R.id.login_button);
-
-        // Email Address Screen – Fill it in and click "Next"
-        // See LoginEmailFragment
-        populateTextField(R.id.input, SCREENSHOT_LOGINUSERNAME);
-        clickOn(R.id.primary_button);
-
-        // Receive Magic Link or Enter Password Screen – Choose "Enter Password"
-        // See LoginMagicLinkRequestFragment
-        clickOn(R.id.login_enter_password);
-
-        // Password Screen – Fill it in and click "Next"
-        // See LoginEmailPasswordFragment
-        populateTextField(R.id.input, SCREENSHOT_LOGINPASSWORD);
-        clickOn(R.id.primary_button);
-
-        // Login Confirmation Screen – Click "Continue"
-        // See LoginEpilogueFragment
-        clickOn(R.id.primary_button);
-    }
-
-    private void wPLogout() {
-        // Click on the "Me" tab in the nav, then choose "Log Out"
-        clickOn(R.id.nav_me);
-        scrollToThenClickOn(R.id.row_logout);
-
-        // Confirm that we want to log out
-        clickOn(android.R.id.button1);
+        wpLogout();
     }
 
     private void navigateReader() {
