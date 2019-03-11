@@ -46,7 +46,7 @@ class BaseListUseCaseTest : BaseUnitTest() {
     @Test
     fun `hides date selector on insights screen`() {
         var model: DateSelectorUiModel? = null
-        useCase.showDateSelector.observeForever { model = it }
+        useCase.dateSelectorData.observeForever { model = it }
 
         useCase.updateDateSelector(null)
 
@@ -57,7 +57,7 @@ class BaseListUseCaseTest : BaseUnitTest() {
     @Test
     fun `does not reemit hidden date selector`() {
         val models = mutableListOf<DateSelectorUiModel>()
-        useCase.showDateSelector.observeForever { model -> model?.let { models.add(it) } }
+        useCase.dateSelectorData.observeForever { model -> model?.let { models.add(it) } }
 
         useCase.updateDateSelector(null)
 
@@ -76,9 +76,9 @@ class BaseListUseCaseTest : BaseUnitTest() {
         whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(selectedDate)
         whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(label)
         whenever(selectedDateProvider.hasPreviousDate(statsGranularity)).thenReturn(true)
-        whenever(selectedDateProvider.hasNextData(statsGranularity)).thenReturn(true)
+        whenever(selectedDateProvider.hasNextDate(statsGranularity)).thenReturn(true)
         var model: DateSelectorUiModel? = null
-        useCase.showDateSelector.observeForever { model = it }
+        useCase.dateSelectorData.observeForever { model = it }
 
         useCase.updateDateSelector(StatsGranularity.DAYS)
 
@@ -96,9 +96,9 @@ class BaseListUseCaseTest : BaseUnitTest() {
         val updatedLabel = "Jan 2"
         whenever(statsDateFormatter.printGranularDate(updatedDate, statsGranularity)).thenReturn(updatedLabel)
         whenever(selectedDateProvider.hasPreviousDate(statsGranularity)).thenReturn(true)
-        whenever(selectedDateProvider.hasNextData(statsGranularity)).thenReturn(true)
+        whenever(selectedDateProvider.hasNextDate(statsGranularity)).thenReturn(true)
         var model: DateSelectorUiModel? = null
-        useCase.showDateSelector.observeForever { model = it }
+        useCase.dateSelectorData.observeForever { model = it }
 
         useCase.updateDateSelector(statsGranularity)
 
