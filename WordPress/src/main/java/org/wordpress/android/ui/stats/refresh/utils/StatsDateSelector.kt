@@ -2,22 +2,25 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.util.map
 import javax.inject.Inject
 
 class StatsDateSelector @Inject constructor(
     private val selectedDateProvider: SelectedDateProvider,
-    private val statsDateFormatter: StatsDateFormatter
+    private val statsDateFormatter: StatsDateFormatter,
+    private val statsSectionManager: SelectedSectionManager
 ) {
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
     val dateSelectorData: LiveData<DateSelectorUiModel> = _dateSelectorUiModel
 
-    val selectedDateChanged = Transformations.map(selectedDateProvider.selectedDateChanged) {
-        updateDateSelector(it)
-        it
+    val selectedDateChanged: LiveData<StatsGranularity> = selectedDateProvider.selectedDateChanged.map { granularity ->
+        if (granularity == statsSectionManager.getSelectedStatsGranularity()) {
+            updateDateSelector(granularity)
+        }
+        return@map granularity
     }
 
     fun updateDateSelector(statsGranularity: StatsGranularity?) {
