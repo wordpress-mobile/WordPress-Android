@@ -153,15 +153,13 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.toolbarHasShadow.observe(this, Observer { toolbarElevation ->
-            app_bar_layout.postDelayed(
-                    { ViewCompat.setElevation(app_bar_layout, toolbarElevation?.toFloat() ?: 0.0f) },
-                    100
-            )
+        viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
+            val elevation = if (hasShadow == true) resources.getDimension(R.dimen.appbar_elevation) else 0f
+            app_bar_layout.postDelayed({ ViewCompat.setElevation(app_bar_layout, elevation) }, 100)
         })
 
         viewModel.siteChanged.observe(this, Observer {
-            viewModel.onPullToRefresh()
+            viewModel.refreshData()
         })
     }
 }

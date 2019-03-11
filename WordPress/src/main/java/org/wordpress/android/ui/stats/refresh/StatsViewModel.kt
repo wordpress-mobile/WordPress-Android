@@ -23,9 +23,7 @@ import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -38,7 +36,6 @@ class StatsViewModel
     private val statsSectionManager: SelectedSectionManager,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val resourceProvider: ResourceProvider,
     private val statsSiteProvider: StatsSiteProvider
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
@@ -56,9 +53,7 @@ class StatsViewModel
     val siteChanged = statsSiteProvider.siteChanged
 
     private val _toolbarHasShadow = MutableLiveData<Boolean>()
-    val toolbarHasShadow: LiveData<Int> = _toolbarHasShadow.mapNullable {
-        if (it == true) resourceProvider.getDimensionPixelSize(R.dimen.appbar_elevation) else 0
-    }
+    val toolbarHasShadow: LiveData<Boolean> = _toolbarHasShadow
 
     fun start(site: SiteModel, launchedFromWidget: Boolean, initialSection: StatsSection?) {
         // Check if VM is not already initialized
@@ -87,6 +82,10 @@ class StatsViewModel
     }
 
     fun onPullToRefresh() {
+        refreshData()
+    }
+
+    fun refreshData() {
         _showSnackbarMessage.value = null
         statsSiteProvider.clear()
         if (networkUtilsWrapper.isNetworkAvailable()) {

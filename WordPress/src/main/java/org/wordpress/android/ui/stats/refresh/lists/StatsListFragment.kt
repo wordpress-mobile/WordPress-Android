@@ -93,6 +93,7 @@ class StatsListFragment : DaggerFragment() {
                         columns
                 )
         )
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1) && dy != 0) {
@@ -100,9 +101,11 @@ class StatsListFragment : DaggerFragment() {
                 }
             }
         })
+
         select_next_date.setOnClickListener {
             viewModel.onNextDateSelected()
         }
+
         select_previous_date.setOnClickListener {
             viewModel.onPreviousDateSelected()
         }
