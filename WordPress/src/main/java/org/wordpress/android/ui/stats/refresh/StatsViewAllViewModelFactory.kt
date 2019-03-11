@@ -25,6 +25,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.M
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,12 +35,21 @@ class StatsViewAllViewModelFactory(
     private val mainDispatcher: CoroutineDispatcher,
     private val bgDispatcher: CoroutineDispatcher,
     private val useCase: BaseStatsUseCase<*, *>,
+    private val statsSiteProvider: StatsSiteProvider,
+    private val dateSelector: StatsDateSelector,
     @StringRes private val titleResource: Int
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StatsViewAllViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return StatsViewAllViewModel(mainDispatcher, bgDispatcher, useCase, titleResource) as T
+            return StatsViewAllViewModel(
+                    mainDispatcher,
+                    bgDispatcher,
+                    useCase,
+                    statsSiteProvider,
+                    dateSelector,
+                    titleResource
+            ) as T
         } else {
             throw IllegalArgumentException("ViewModel Not Found")
         }
@@ -50,7 +61,9 @@ class StatsViewAllViewModelFactory(
         @Named(GRANULAR_USE_CASE_FACTORIES)
             private val granularFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         @Named(VIEW_ALL_INSIGHTS_USE_CASES)
-            private val insightsUseCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>
+            private val insightsUseCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        private val statsSiteProvider: StatsSiteProvider,
+        private val dateSelector: StatsDateSelector
     ) {
         fun build(type: StatsViewType, granularity: StatsGranularity?): StatsViewAllViewModelFactory {
             return if (granularity == null) {
@@ -62,12 +75,26 @@ class StatsViewAllViewModelFactory(
 
         private fun buildFactory(type: StatsViewType, granularity: StatsGranularity): StatsViewAllViewModelFactory {
             val (useCase, title) = getGranularUseCase(type, granularity, granularFactories)
-            return StatsViewAllViewModelFactory(mainDispatcher, bgDispatcher, useCase, title)
+            return StatsViewAllViewModelFactory(
+                    mainDispatcher,
+                    bgDispatcher,
+                    useCase,
+                    statsSiteProvider,
+                    dateSelector,
+                    title
+            )
         }
 
         private fun buildFactory(type: StatsViewType): StatsViewAllViewModelFactory {
             val (useCase, title) = getInsightsUseCase(type, insightsUseCases)
-            return StatsViewAllViewModelFactory(mainDispatcher, bgDispatcher, useCase, title)
+            return StatsViewAllViewModelFactory(
+                    mainDispatcher,
+                    bgDispatcher,
+                    useCase,
+                    statsSiteProvider,
+                    dateSelector,
+                    title
+            )
         }
 
         private fun getGranularUseCase(
