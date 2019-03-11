@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -37,8 +38,15 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: CountryViewsStore,
     selectedDateProvider: SelectedDateProvider,
+    statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
-) : GranularStatelessUseCase<CountryViewsModel>(COUNTRIES, mainDispatcher, selectedDateProvider, statsGranularity) {
+) : GranularStatelessUseCase<CountryViewsModel>(
+        COUNTRIES,
+        mainDispatcher,
+        selectedDateProvider,
+        statsSiteProvider,
+        statsGranularity
+) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_countries))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): CountryViewsModel? {
@@ -113,7 +121,8 @@ constructor(
         navigateTo(
                 ViewCountries(
                         statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date(),
+                        statsSiteProvider.siteModel
                 )
         )
     }
@@ -122,6 +131,7 @@ constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: CountryViewsStore,
+        private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
@@ -131,6 +141,7 @@ constructor(
                         mainDispatcher,
                         store,
                         selectedDateProvider,
+                        statsSiteProvider,
                         analyticsTracker
                 )
     }

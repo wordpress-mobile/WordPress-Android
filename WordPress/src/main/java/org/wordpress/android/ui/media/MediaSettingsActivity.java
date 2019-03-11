@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -30,7 +29,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -69,6 +67,7 @@ import org.wordpress.android.ui.media.MediaPreviewActivity.MediaPreviewSwiped;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -364,11 +363,8 @@ public class MediaSettingsActivity extends AppCompatActivity
         if (isAudio() || isDocument()) {
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
             @DrawableRes int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
-            if (imageRes == 0) {
-                imageRes = R.drawable.ic_pages_white_24dp;
-            }
-            mImageView.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(MediaSettingsActivity.this,
-                    R.color.grey)));
+            ColorUtils.INSTANCE.setImageResourceWithTint(mImageView,
+                    imageRes != 0 ? imageRes : R.drawable.ic_pages_white_24dp, R.color.grey);
             mImageView.setPadding(padding, padding * 2, padding, padding);
             mImageView.setImageResource(imageRes);
         } else {
