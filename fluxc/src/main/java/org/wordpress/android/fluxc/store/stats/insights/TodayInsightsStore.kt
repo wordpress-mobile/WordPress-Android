@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.TodayInsightsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -18,7 +18,7 @@ import kotlin.coroutines.CoroutineContext
 @Singleton
 class TodayInsightsStore @Inject constructor(
     private val restClient: TodayInsightsRestClient,
-    private val sqlUtils: InsightsSqlUtils,
+    private val sqlUtils: TodayInsightsSqlUtils,
     private val insightsMapper: InsightsMapper,
     private val timeProvider: CurrentTimeProvider,
     private val coroutineContext: CoroutineContext
@@ -38,6 +38,6 @@ class TodayInsightsStore @Inject constructor(
     }
 
     fun getTodayInsights(site: SiteModel): VisitsModel? {
-        return sqlUtils.selectTodayInsights(site)?.let { insightsMapper.map(it) }
+        return sqlUtils.select(site)?.let { insightsMapper.map(it) }
     }
 }
