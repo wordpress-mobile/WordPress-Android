@@ -81,7 +81,7 @@ abstract class StatsListViewModel(
         }
     }
 
-    fun onDateChanged(granularity: StatsGranularity?) {
+    fun onDateChanged() {
         launch {
             statsUseCase.onDateChanged()
         }

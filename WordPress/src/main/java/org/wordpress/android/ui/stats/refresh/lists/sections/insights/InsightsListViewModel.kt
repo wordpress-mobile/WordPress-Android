@@ -17,4 +17,4 @@ class InsightsListViewModel
     @Named(INSIGHTS_USE_CASE) private val insightsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelector: StatsDateSelector
-) : StatsListViewModel(mainDispatcher, insightsUseCase, analyticsTracker, dateSelector, INSIGHTS)
+) : StatsListViewModel(mainDispatcher, insightsUseCase, analyticsTracker, dateSelector)
