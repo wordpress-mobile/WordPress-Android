@@ -24,6 +24,9 @@ class TodayInsightsStore @Inject constructor(
     private val coroutineContext: CoroutineContext
 ) {
     suspend fun fetchTodayInsights(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
+        if (!forced && sqlUtils.hasFreshRequest(siteModel)) {
+            return@withContext OnStatsFetched(getTodayInsights(siteModel), cached = true)
+        }
         val response = restClient.fetchTimePeriodStats(siteModel, DAYS, timeProvider.currentDate, forced)
         return@withContext when {
             response.isError -> {

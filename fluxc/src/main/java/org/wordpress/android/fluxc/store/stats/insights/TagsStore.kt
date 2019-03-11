@@ -24,13 +24,16 @@ class TagsStore @Inject constructor(
 ) {
     suspend fun fetchTags(siteModel: SiteModel, limitMode: Top, forced: Boolean = false) =
             withContext(coroutineContext) {
+                if (!forced && sqlUtils.hasFreshRequest(siteModel, limitMode.limit)) {
+                    return@withContext OnStatsFetched(getTags(siteModel, limitMode), cached = true)
+                }
                 val response = restClient.fetchTags(siteModel, max = limitMode.limit + 1, forced = forced)
                 return@withContext when {
                     response.isError -> {
                         OnStatsFetched(response.error)
                     }
                     response.response != null -> {
-                        sqlUtils.insert(siteModel, response.response)
+                        sqlUtils.insert(siteModel, response.response, requestedItems = limitMode.limit)
                         OnStatsFetched(
                                 insightsMapper.map(response.response, limitMode)
                         )
