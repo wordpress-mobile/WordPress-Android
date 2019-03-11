@@ -13,7 +13,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -22,7 +21,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
@@ -55,8 +53,6 @@ class StatsViewModel
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    val selectedDateChanged = selectedDateProvider.selectedDateChanged
-
     val siteChanged = statsSiteProvider.siteChanged
 
     private val _toolbarHasShadow = MutableLiveData<Boolean>()
@@ -80,7 +76,6 @@ class StatsViewModel
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
             }
         }
-        listUseCases.values.forEach { it.updateDateSelector(statsSectionManager.getSelectedStatsGranularity()) }
     }
 
     private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
@@ -104,17 +99,10 @@ class StatsViewModel
         }
     }
 
-    fun onSelectedDateChange(statsGranularity: StatsGranularity) {
-        launch {
-            listUseCases[statsGranularity.toStatsSection()]?.onDateChanged(statsGranularity)
-        }
-    }
-
     fun getSelectedSection() = statsSectionManager.getSelectedSection()
 
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
-        listUseCases[statsSection]?.updateDateSelector(statsSectionManager.getSelectedStatsGranularity())
         _toolbarHasShadow.value = statsSection == INSIGHTS
         when (statsSection) {
             StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)

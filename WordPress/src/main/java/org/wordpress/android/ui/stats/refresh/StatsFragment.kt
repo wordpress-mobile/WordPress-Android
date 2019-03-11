@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -106,6 +105,7 @@ class StatsFragment : DaggerFragment() {
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(activity)
 
+        // TODO: Replace site with SiteProvider
         viewModel.start(nonNullSite, launchedFromWidget, initialTimeFrame)
 
         if (!isFirstStart) {
@@ -150,12 +150,6 @@ class StatsFragment : DaggerFragment() {
                     snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
                     snackbar.show()
                 }
-            }
-        })
-
-        viewModel.selectedDateChanged.observe(this, Observer { statsGranularity ->
-            statsGranularity?.let {
-                viewModel.onSelectedDateChange(statsGranularity)
             }
         })
 
