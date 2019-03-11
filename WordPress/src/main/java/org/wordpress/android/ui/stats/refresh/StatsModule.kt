@@ -32,10 +32,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.C
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PostingActivityUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import javax.inject.Named
 import javax.inject.Singleton
@@ -70,7 +72,8 @@ class StatsModule {
         commentsUseCase: CommentsUseCase,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCase: TagsAndCategoriesUseCase,
-        publicizeUseCase: PublicizeUseCase
+        publicizeUseCase: PublicizeUseCase,
+        postingActivityUseCase: PostingActivityUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -80,7 +83,8 @@ class StatsModule {
                 commentsUseCase,
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCase,
-                publicizeUseCase
+                publicizeUseCase,
+                postingActivityUseCase
         )
     }
 
@@ -127,6 +131,7 @@ class StatsModule {
         statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
         statsDateFormatter: StatsDateFormatter,
+        statsSiteProvider: StatsSiteProvider,
         @Named(INSIGHTS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
@@ -136,6 +141,7 @@ class StatsModule {
                 statsSectionManager,
                 selectedDateProvider,
                 statsDateFormatter,
+                statsSiteProvider,
                 useCases,
                 { statsStore.getInsights() },
                 uiModelMapper::mapInsights
@@ -156,6 +162,7 @@ class StatsModule {
         statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
         statsDateFormatter: StatsDateFormatter,
+        statsSiteProvider: StatsSiteProvider,
         @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
@@ -165,6 +172,7 @@ class StatsModule {
                 statsSectionManager,
                 selectedDateProvider,
                 statsDateFormatter,
+                statsSiteProvider,
                 useCasesFactories.map { it.build(DAYS) },
                 { statsStore.getTimeStatsTypes() },
                 uiModelMapper::mapTimeStats
@@ -185,6 +193,7 @@ class StatsModule {
         statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
         statsDateFormatter: StatsDateFormatter,
+        statsSiteProvider: StatsSiteProvider,
         @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
@@ -194,6 +203,7 @@ class StatsModule {
                 statsSectionManager,
                 selectedDateProvider,
                 statsDateFormatter,
+                statsSiteProvider,
                 useCasesFactories.map { it.build(WEEKS) },
                 { statsStore.getTimeStatsTypes() },
                 uiModelMapper::mapTimeStats
@@ -213,14 +223,17 @@ class StatsModule {
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
+        statsSiteProvider: StatsSiteProvider,
         statsDateFormatter: StatsDateFormatter,
         @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
-        return BaseListUseCase(bgDispatcher, mainDispatcher,
+        return BaseListUseCase(
+                bgDispatcher, mainDispatcher,
                 statsSectionManager,
                 selectedDateProvider,
                 statsDateFormatter,
+                statsSiteProvider,
                 useCasesFactories.map { it.build(MONTHS) },
                 { statsStore.getTimeStatsTypes() },
                 uiModelMapper::mapTimeStats
@@ -240,6 +253,7 @@ class StatsModule {
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSectionManager: SelectedSectionManager,
         selectedDateProvider: SelectedDateProvider,
+        statsSiteProvider: StatsSiteProvider,
         statsDateFormatter: StatsDateFormatter,
         @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
         uiModelMapper: UiModelMapper
@@ -250,6 +264,7 @@ class StatsModule {
                 statsSectionManager,
                 selectedDateProvider,
                 statsDateFormatter,
+                statsSiteProvider,
                 useCasesFactories.map { it.build(YEARS) },
                 { statsStore.getTimeStatsTypes() },
                 uiModelMapper::mapTimeStats
