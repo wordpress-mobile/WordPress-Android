@@ -538,7 +538,7 @@ class InsightsStoreTest {
         val responseModel = tagsStore.fetchTags(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(tagsSqlUtils).insert(site, TAGS_RESPONSE)
+        verify(tagsSqlUtils).insert(site, TAGS_RESPONSE, requestedItems = PAGE_SIZE)
     }
 
     @Test
