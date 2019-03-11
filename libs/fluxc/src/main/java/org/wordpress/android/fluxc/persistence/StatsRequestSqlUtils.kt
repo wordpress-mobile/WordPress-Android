@@ -21,7 +21,7 @@ class StatsRequestSqlUtils
         site: SiteModel,
         blockType: BlockType,
         statsType: StatsType,
-        requestedItems: Int,
+        requestedItems: Int? = null,
         date: String? = null
     ) {
         var deleteStatement = WellSql.delete(StatsRequestBuilder::class.java)
@@ -42,15 +42,14 @@ class StatsRequestSqlUtils
                         timeStamp = System.currentTimeMillis(),
                         requestedItems = requestedItems
                 )
-        )
-                .execute()
+        ).execute()
     }
 
     fun hasFreshRequest(
         site: SiteModel,
         blockType: BlockType,
         statsType: StatsType,
-        requestedItems: Int,
+        requestedItems: Int? = null,
         after: Long = System.currentTimeMillis() - STALE_PERIOD,
         date: String? = null
     ): Boolean {
@@ -70,7 +69,7 @@ class StatsRequestSqlUtils
         statsType: StatsType,
         date: String?,
         after: Long,
-        requestedItems: Int
+        requestedItems: Int? = null
     ): SelectQuery<StatsRequestBuilder> {
         var select = WellSql.select(StatsRequestBuilder::class.java)
                 .where()
@@ -78,7 +77,9 @@ class StatsRequestSqlUtils
                 .equals(StatsRequestTable.BLOCK_TYPE, blockType.name)
                 .equals(StatsRequestTable.STATS_TYPE, statsType.name)
                 .greaterThen(StatsRequestTable.TIME_STAMP, after)
-                .greaterThenOrEqual(StatsRequestTable.REQUESTED_ITEMS, requestedItems)
+        if (requestedItems != null) {
+            select = select.greaterThenOrEqual(StatsRequestTable.REQUESTED_ITEMS, requestedItems)
+        }
         if (date != null) {
             select = select.equals(StatsRequestTable.DATE, date)
         }
@@ -93,9 +94,9 @@ class StatsRequestSqlUtils
         @Column var statsType: String,
         @Column var date: String?,
         @Column var timeStamp: Long,
-        @Column var requestedItems: Int
+        @Column var requestedItems: Int?
     ) : Identifiable {
-        constructor() : this(-1, -1, "", "", null, 0, 0)
+        constructor() : this(-1, -1, "", "", null, 0, null)
 
         override fun setId(id: Int) {
             this.mId = id
