@@ -17,9 +17,6 @@ Language: gl_ES
     <string name="stats_comments_author_label">Autor</string>
     <string name="stats_comments_authors">Autores</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="preference_experimental">*EXPERIMENTAL*</string>
-    <string name="site_settings_enable_gutenberg_summary">Esta é unha versión experimental de Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">Activa Gutenberg</string>
     <string name="change_password_dialog_message">Cambiando contrasinal…</string>
     <string name="support_identity_input_dialog_name_label">Nome</string>
     <string name="history_no_title">(sen titulo)</string>
@@ -91,7 +88,6 @@ Language: gl_ES
     <string name="alignment_right">Dereita</string>
     <string name="site_settings_list_editor_action_mode_title">Seleccionado %1$d</string>
     <string name="error_fetch_users_list">Non foi posible obter os usuarios do sitio</string>
-    <string name="plans_manage">Xestiona o teu plan en\nWordPress.com/plans</string>
     <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Á procura dos usuarios…</string>
     <string name="title_email_follower">Seguidor por correo-e</string>
@@ -180,7 +176,6 @@ Language: gl_ES
     <string name="export_your_content_message">Os teus artigos, páxinas e configuración enviaránseche a %s.</string>
     <string name="plan">Plan</string>
     <string name="plans">Plans</string>
-    <string name="plans_loading_error">Non foi posible cargar os plans</string>
     <string name="export_your_content">Exportar os contidos</string>
     <string name="exporting_content_progress">Exportando os contidos…</string>
     <string name="export_email_sent">Mensaxe de exportación enviada</string>

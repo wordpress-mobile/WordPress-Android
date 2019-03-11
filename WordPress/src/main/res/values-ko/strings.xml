@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-20 09:54:09+0000
+Translation-Revision-Date: 2019-03-06 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">콘텐츠 제거</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">블록을 아래로 이동</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">블록을 위로 이동</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">블록을 여기에 추가</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">지원되지 않음</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">지원되지 않는 블록 유형입니다.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">지원되지 않는 블록</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL 붙여 넣기</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">이미지 선택</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">미디어를 삽입하지 못했습니다.\n옵션을 보려면 누르세요.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">모든 설정 지우기</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">대체 텍스트</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">워드프레스 미디어 라이브러리</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">사진 촬영</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">기기에서 선택</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">글쓰기 시작…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">링크 제거</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">링크 텍스트 추가</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">링크 텍스트</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">URL 추가</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">링크 삽입됨</string>
+    <string name="new_site_creation_preview_back_pressed_warning">진행 상황을 놓칠 수 있습니다. 종료하시겠습니까?</string>
+    <string name="plans_loading_error_with_cache_button">그래도 요금제 보기</string>
+    <string name="plans_loading_error_with_cache_subtitle">요금제를 보려면 인터넷에 연결되어야 합니다. 세부 사항이 오래되었을 수 있습니다.</string>
+    <string name="plans_loading_error_no_cache_subtitle">요금제를 보려면 인터넷에 연결되어야 합니다.</string>
+    <string name="plans_loading_error_no_plans_subtitle">현재는 요금제를 로드할 수 없습니다. 나중에 다시 시도하세요.</string>
+    <string name="plans_loading_error_no_plans_title">요금제를 로드할 수 없음</string>
+    <string name="plans_loading_error_network_title">연결 없음</string>
+    <string name="menu_switch_to_gutenberg_editor">블록 편집기로 전환</string>
+    <string name="menu_switch_to_aztec_editor">구 버전 편집기로 전환</string>
+    <string name="stats_loading_block_error">데이터 로드 중에 문제가 발생했습니다. 페이지를 새로 고치고 다시 시도하세요.</string>
+    <string name="stats_loading_error">데이터가 로드되지 않음</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">블록 편집기로 새 글과 페이지 편집</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">블록 편집기 사용</string>
+    <string name="dialog_gutenberg_informative_description_page">이 페이지는 원래 블록 편집기에서 작성된 것이므로,이 페이지에서도 활성화되었습니다.\n 상단 표시줄에서   ⋮  을 탭하여 언제든지 클래식으로 다시 전환하세요.</string>
+    <string name="dialog_gutenberg_informative_description_post">이 글은 원래 블록 편집기에서 작성된 것이므로,이 페이지에서도 활성화되었습니다.\n 상단 표시줄에서   ⋮  을 탭하여 언제든지 클래식으로 다시 전환하세요.</string>
+    <string name="dialog_gutenberg_informative_title">블록 편집기가 활성화됨</string>
+    <string name="exit">종료</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d 완료</string>
     <string name="quick_start_sites_type_grow">방문자 수를 늘리세요</string>
     <string name="quick_start_sites_type_customize">사이트 사용자 정의</string>
@@ -151,9 +189,6 @@ Language: ko_KR
     <string name="stats_empty_insights_title">아직 추가된 인사이트가 없음</string>
     <string name="stats_no_data_yet">아직 데이터 없음</string>
     <string name="menu_debug">디버그 메뉴</string>
-    <string name="preference_experimental">*실험 버전*</string>
-    <string name="site_settings_enable_gutenberg_summary">아직은 Gutenberg의 실험 버전입니다.</string>
-    <string name="site_settings_enable_gutenberg">Gutenberg 활성화</string>
     <string name="change_password_dialog_message">비밀번호 변경 중…</string>
     <string name="change_password_dialog_hint">비밀번호는 6자 이상이어야 합니다. 더 강력한 비밀번호를 만들려면 대소문자, 숫자, ! \" ? $ % ^ &amp; ) 등의 기호를 사용하세요.</string>
     <string name="change_password_confirmation">비밀번호가 성공적으로 변경되었습니다.</string>
@@ -165,14 +200,6 @@ Language: ko_KR
     <string name="history_detail_title">리비전</string>
     <string name="history_detail_button_previous">이전</string>
     <string name="history_detail_button_next">다음</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">더 알아보기</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">다시 보지 않음</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">뒤로 가기</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">페이지 편집</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">글 편집</string>
-    <string name="dialog_gutenberg_compatibility_message_page">워드프레스는 완전히 새로운 워드프레스 편집기를 개발하기 위해 노력하고 있습니다. 이 페이지를 계속 편집할 수 있으나 공개하기 전에 페이지를 미리 보는 것이 좋습니다.</string>
-    <string name="dialog_gutenberg_compatibility_message">워드프레스는 완전히 새로운 워드프레스 편집기를 개발하기 위해 노력하고 있습니다. 이 글을 계속 편집할 수 있으나 공개하기 전에 글을 미리 보는 것이 좋습니다.</string>
-    <string name="dialog_gutenberg_compatibility_title">계속하기 전에</string>
     <string name="media_space_used">%1$s 사용</string>
     <string name="enter_wpcom_or_jetpack_site">워드프레스닷컴 또는 젯팩에 연결된 독립 호스트 워드프레스 사이트를 입력하세요.</string>
     <string name="history_loading_revision">리비전 로드하는 중</string>
@@ -1104,9 +1131,6 @@ Language: ko_KR
     <string name="xmlrpc_post_blocked_error">연결할 수 없습니다. 호스트가 POST 요청을 차단하고 있으므로, 사이트와 통신하려면 이 앱에\n 필요합니다. 호스트에 문의하여 이 문제를 해결하세요.</string>
     <string name="reader_hint_search_followed_sites">팔로우된 사이트 검색</string>
     <string name="visual_editor_disabled">비주얼 편집기 사용 안 함</string>
-    <string name="preference_editor_visual">비주얼</string>
-    <string name="preference_editor_legacy">레거시</string>
-    <string name="preference_editor_type">편집기 타입 설정</string>
     <string name="pending_draft_one_generic">중단된 상태로 두지 마세요! \'%1$s\'이(가) 발행될 때까지 기다리는 중입니다.</string>
     <string name="pending_draft_one_month">중단된 상태로 두지 마세요! \'%1$s\'이(가) 발행될 때까지 기다리는 중입니다.</string>
     <string name="pending_draft_one_week_2">\'%1$s\'이(가) 임시글로 남아 있습니다. 발행하는 것을 잊지 마세요!</string>
@@ -1157,7 +1181,6 @@ Language: ko_KR
     <string name="alignment_right">오른쪽</string>
     <string name="site_settings_list_editor_action_mode_title">%1$d 선택</string>
     <string name="error_fetch_users_list">사이트 사용자를 가져올 수 없습니다.</string>
-    <string name="plans_manage">요금제 관리:\n워드프레스닷컴/요금제</string>
     <string name="people_fetching">사용자를 가져오는 중…</string>
     <string name="title_follower">팔로워</string>
     <string name="title_email_follower">이메일 팔로워</string>
@@ -1246,7 +1269,6 @@ Language: ko_KR
     <string name="export_your_content_message">글, 페이지, 설정을 %s로 발송할 것입니다.</string>
     <string name="plan">계획</string>
     <string name="plans">계획</string>
-    <string name="plans_loading_error">요금제를 로드할 수 없음</string>
     <string name="export_your_content">콘텐츠 내보내기</string>
     <string name="exporting_content_progress">콘텐츠를 내보내는 중…</string>
     <string name="export_email_sent">전송된 이메일을 내보내세요!</string>

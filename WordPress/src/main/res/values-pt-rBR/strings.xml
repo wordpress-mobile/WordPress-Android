@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-22 15:59:10+0000
+Translation-Revision-Date: 2019-02-28 14:22:50+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Remover conteúdo</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Mover o bloco para baixo</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Mover o bloco para cima</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">ADICIONAR BLOCO AQUI</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Não suportado</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Tipo de bloco não suportado.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Bloco não suportado</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Colar URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ESCOLHER A IMAGEM</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Falha ao inserir a mídia.\nClique para ver as opções.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Limpar todas as configurações</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Texto alternativo</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Biblioteca de mídia do WordPress</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Tirar uma foto</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Escolher no dispositivo</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Comece a escrever…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Remover link</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Adicionar texto do link</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Texto do link</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Adicionar URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link inserido</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Você pode perder seu progresso. Tem certeza de que deseja sair?</string>
+    <string name="plans_loading_error_with_cache_button">Ver os planos assim mesmo</string>
+    <string name="plans_loading_error_with_cache_subtitle">É necessário ter uma conexão com a internet para ver os planos. Então as informações podem estar desatualizadas.</string>
+    <string name="plans_loading_error_no_cache_subtitle">É necessária uma conexão com a internet para visualizar os planos.</string>
+    <string name="plans_loading_error_no_plans_subtitle">Não conseguimos carregar os planos no momento. Tente novamente mais tarde.</string>
+    <string name="plans_loading_error_no_plans_title">Não foi possível carregar os planos</string>
+    <string name="plans_loading_error_network_title">Sem conexão</string>
+    <string name="menu_switch_to_gutenberg_editor">Mudar para o editor de blocos</string>
+    <string name="menu_switch_to_aztec_editor">Mudar para o editor clássico</string>
+    <string name="stats_loading_block_error">Ocorreu um problema ao carregar seus dados. Atualize sua página para tentar novamente.</string>
+    <string name="stats_loading_error">Dados não carregados</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Editar novos posts e páginas com o editor de blocos.</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">Usar o editor de blocos</string>
+    <string name="dialog_gutenberg_informative_description_page">Como essa página foi criada originalmente no editor de blocos, ativamos esse editor nessa página.\nMude para o editor clássico a qualquer momento clicando em ⋮ na barra superior.</string>
+    <string name="dialog_gutenberg_informative_description_post">Como esse post foi criado originalmente no editor de blocos, ativamos esse editor nesse post.\nMude para o editor clássico a qualquer momento clicando em ⋮ na barra superior.</string>
+    <string name="dialog_gutenberg_informative_title">Editor de blocos ativado</string>
+    <string name="exit">sair</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d concluído</string>
     <string name="quick_start_sites_type_grow">Aumente sua audiência</string>
     <string name="quick_start_sites_type_customize">Personalize seu site</string>
@@ -159,9 +197,6 @@ Language: pt_BR
     <string name="stats_empty_insights_title">Nenhuma informação adicionada ainda</string>
     <string name="stats_no_data_yet">Nenhum dado ainda</string>
     <string name="menu_debug">Menu de depuração</string>
-    <string name="preference_experimental">*EXPERIMENTAL*</string>
-    <string name="site_settings_enable_gutenberg_summary">Essa é uma versão experimental do Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">Ativar o Gutenberg</string>
     <string name="change_password_dialog_message">Trocando de senha…</string>
     <string name="change_password_dialog_hint">Sua senha deve ter pelo menos seis caracteres. Para que ela seja forte, use letras maiúsculas e minúsculas, números e sinais como  ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Senha alterada com sucesso</string>
@@ -173,14 +208,6 @@ Language: pt_BR
     <string name="history_detail_title">Revisão</string>
     <string name="history_detail_button_previous">Anterior</string>
     <string name="history_detail_button_next">Próximo</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Saiba mais</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Não mostrar mais</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Voltar</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Editar página</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Editar post</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Estamos trabalhando no novo editor do WordPress. Você já pode usá-lo para editar essa página mas recomendamos que visualize-a antes de publicá-la.</string>
-    <string name="dialog_gutenberg_compatibility_message">Estamos trabalhando no novo editor do WordPress. Você já pode usá-lo para editar esse post mas recomendamos que visualize-o antes de publicá-lo.</string>
-    <string name="dialog_gutenberg_compatibility_title">Antes de continuar</string>
     <string name="media_space_used">%1$s usados</string>
     <string name="enter_wpcom_or_jetpack_site">Informe um site feito no WordPress.com ou do feito com o WordPress.org e conectado ao Jetpack.</string>
     <string name="history_loading_revision">Carregando revisão</string>
@@ -1120,9 +1147,6 @@ Language: pt_BR
     <string name="xmlrpc_post_blocked_error">Não foi possível conectar. Seu servidor está bloqueando solicitações POST e\n       o aplicativo precisa delas para se comunicar com o seu site. Entre em contato com seu servidor para resolver este problema.</string>
     <string name="reader_hint_search_followed_sites">Buscar sites seguidos</string>
     <string name="visual_editor_disabled">Editor visual desativado</string>
-    <string name="preference_editor_visual">Visual</string>
-    <string name="preference_editor_legacy">Antigo</string>
-    <string name="preference_editor_type">Configurar tipo de editor</string>
     <string name="pending_draft_one_generic">Não o deixe de lado! \"%1$s\" está esperando ser publicado.</string>
     <string name="pending_draft_one_month">Não o deixe de lado! \"%1$s\" está esperando ser publicado.</string>
     <string name="pending_draft_one_week_2">\"%1$s\" ainda é um rascunho. Lembre-se de publicá-lo!</string>
@@ -1173,7 +1197,6 @@ Language: pt_BR
     <string name="alignment_none">Nenhum</string>
     <string name="site_settings_list_editor_action_mode_title">Selecionado %1$d</string>
     <string name="error_fetch_users_list">Não foi possível recuperar os usuários do site</string>
-    <string name="plans_manage">Gerenciar o seu plano em\nWordPress.com/plans</string>
     <string name="title_email_follower">Seguidor por e-mail</string>
     <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Buscando usuários…</string>
@@ -1259,7 +1282,6 @@ Language: pt_BR
     <string name="new_editor_reflection_error">O editor visual não é compatível com seu dispositivo. Ele foi\n        desativado automaticamente.</string>
     <string name="stats_insights_latest_post_no_title">(sem título)</string>
     <string name="capture_or_pick_photo">Tirar or selecionar uma foto</string>
-    <string name="plans_loading_error">Não foi possível carregar os planos</string>
     <string name="plans">Planos</string>
     <string name="plan">Plano</string>
     <string name="export_your_content_message">Seus posts, páginas e configurações serão enviados para você em %s</string>
