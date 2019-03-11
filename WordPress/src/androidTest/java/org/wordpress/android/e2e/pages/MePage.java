@@ -29,7 +29,11 @@ public class MePage {
     }
 
     public MePage go() {
-        clickOn(R.id.nav_me);
+        // Using the settings button as a marker for successfully navigating to the page
+        while (!isElementDisplayed(appSettings)) {
+            clickOn(R.id.nav_me);
+        }
+
         if (!isSelfHosted()) {
             displayName.check(matches(isDisplayed()));
         }
