@@ -35,6 +35,12 @@ class DayViewsUseCase
         mainDispatcher,
         UiState()
 ) {
+    init {
+        uiState.addSource(selectedDateProvider.granularSelectedDateChanged(DETAIL)) {
+            onUiState()
+        }
+    }
+
     override suspend fun loadCachedData(): PostDetailStatsModel? {
         return statsPostProvider.postId?.let { postId ->
             postDetailStore.getPostingActivity(
@@ -62,6 +68,10 @@ class DayViewsUseCase
 
     override fun buildUiModel(domainModel: PostDetailStatsModel, uiState: UiState): List<BlockListItem> {
         val periodFromProvider = selectedDateProvider.getSelectedDate(DETAIL)
+        if (periodFromProvider == null) {
+            val dates = domainModel.dayViews.map { statsDateFormatter.parseStatsDate(DAYS, it.period) }
+            selectedDateProvider.selectDate(dates.lastIndex, dates, DETAIL)
+        }
         val selectedPeriod = periodFromProvider?.let { statsDateFormatter.printStatsDate(periodFromProvider) }
                 ?: domainModel.dayViews.last().period
         var previousDay: Day? = null
@@ -107,5 +117,5 @@ class DayViewsUseCase
         updateUiState { it.copy(visibleBarCount = visibleBarCount) }
     }
 
-    data class UiState(val selectedPosition: Int = 0, val visibleBarCount: Int? = null)
+    data class UiState(val visibleBarCount: Int? = null)
 }

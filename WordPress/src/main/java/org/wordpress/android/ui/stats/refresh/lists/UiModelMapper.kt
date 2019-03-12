@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
+import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
@@ -53,14 +55,26 @@ class UiModelMapper
     }
 
     fun mapTimeStats(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
+        return mapStatsWithOverview(TimeStatsTypes.OVERVIEW, useCaseModels, showError)
+    }
+
+    fun mapDetailStats(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
+        return mapStatsWithOverview(PostDetailTypes.POST_OVERVIEW, useCaseModels, showError)
+    }
+
+    private fun mapStatsWithOverview(
+        overViewType: StatsTypes,
+        useCaseModels: List<UseCaseModel>,
+        showError: (Int) -> Unit
+    ): UiModel {
         val allFailing = useCaseModels.isNotEmpty() && useCaseModels
                 .fold(true) { acc, useCaseModel ->
                     acc && useCaseModel.state == ERROR
                 }
-        val overviewHasData = useCaseModels.any { it.type == TimeStatsTypes.OVERVIEW && it.data != null }
+        val overviewHasData = useCaseModels.any { it.type == overViewType && it.data != null }
         return if (!allFailing) {
             UiModel.Success(useCaseModels.mapNotNull { useCaseModel ->
-                if ((useCaseModel.type == TimeStatsTypes.OVERVIEW) && useCaseModel.data != null) {
+                if ((useCaseModel.type == overViewType) && useCaseModel.data != null) {
                     StatsBlock.Success(useCaseModel.type, useCaseModel.data)
                 } else {
                     when (useCaseModel.state) {
@@ -89,7 +103,7 @@ class UiModelMapper
         } else if (overviewHasData) {
             showError(getErrorMessage())
             UiModel.Success(useCaseModels.mapNotNull { useCaseModel ->
-                if ((useCaseModel.type == TimeStatsTypes.OVERVIEW) && useCaseModel.data != null) {
+                if ((useCaseModel.type == overViewType) && useCaseModel.data != null) {
                     StatsBlock.Success(useCaseModel.type, useCaseModel.data)
                 } else {
                     useCaseModel.stateData?.let {

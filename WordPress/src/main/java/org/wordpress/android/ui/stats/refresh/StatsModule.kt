@@ -18,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.UiModelMapper
+import org.wordpress.android.ui.stats.refresh.lists.detail.DayViewsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -160,8 +161,8 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(DETAIL_USE_CASES)
-    fun provideDetailUseCases(): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
-        return listOf()
+    fun provideDetailUseCases(dayViewsUseCase: DayViewsUseCase): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+        return listOf(dayViewsUseCase)
     }
 
     /**
@@ -360,8 +361,8 @@ class StatsModule {
                 statsDateFormatter,
                 statsSiteProvider,
                 useCases,
-                { statsStore.getInsights() },
-                uiModelMapper::mapInsights
+                { statsStore.getPostDetailTypes() },
+                uiModelMapper::mapDetailStats
         )
     }
 

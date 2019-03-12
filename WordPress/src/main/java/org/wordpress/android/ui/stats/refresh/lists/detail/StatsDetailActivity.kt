@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -7,6 +8,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
+import kotlinx.android.synthetic.main.stats_date_selector.*
+import kotlinx.android.synthetic.main.stats_list_fragment.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -16,7 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import javax.inject.Inject
 
 private const val POST_ID = "POST_ID"
-private const val POST_TYPE = "POST_ID"
+private const val POST_TYPE = "POST_TYPE"
 private const val POST_TITLE = "POST_TITLE"
 private const val POST_URL = "POST_URL"
 
@@ -34,7 +38,7 @@ class StatsDetailActivity : AppCompatActivity() {
         }
 
         val site = intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-        val postId = intent?.getSerializableExtra(POST_ID) as String?
+        val postId = intent?.getLongExtra(POST_ID, 0L)
         val postType = intent?.getSerializableExtra(POST_TYPE) as String?
         val postTitle = intent?.getSerializableExtra(POST_TITLE) as String?
         val postUrl = intent?.getSerializableExtra(POST_URL) as String?
@@ -48,6 +52,28 @@ class StatsDetailActivity : AppCompatActivity() {
                 checkNotNull(postTitle),
                 postUrl
         )
+
+        viewModel.selectedDateChanged.observe(this, Observer { statsGranularity ->
+            statsGranularity?.let {
+                viewModel.onDateChanged()
+            }
+        })
+
+        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
+            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
+            if (date_selection_toolbar.visibility != dateSelectorVisibility) {
+                date_selection_toolbar.visibility = dateSelectorVisibility
+            }
+            selected_date.text = dateSelectorUiModel?.date ?: ""
+            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
+            if (select_previous_date.isEnabled != enablePreviousButton) {
+                select_previous_date.isEnabled = enablePreviousButton
+            }
+            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
+            if (select_next_date.isEnabled != enableNextButton) {
+                select_next_date.isEnabled = enableNextButton
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -62,7 +88,7 @@ class StatsDetailActivity : AppCompatActivity() {
         fun start(
             context: Context,
             site: SiteModel,
-            postId: String,
+            postId: Long,
             postType: String,
             postTitle: String,
             postUrl: String?

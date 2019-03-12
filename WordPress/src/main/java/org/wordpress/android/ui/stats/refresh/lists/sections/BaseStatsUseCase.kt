@@ -33,7 +33,11 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private val domainState = MutableLiveData<UseCaseState>()
     private val domainModel = MutableLiveData<DOMAIN_MODEL>()
     protected val uiState = MediatorLiveData<UI_STATE>()
-    val liveData: LiveData<UseCaseModel> = merge(domainModel, domainState, uiState) { data, domainState, uiState ->
+    val liveData: LiveData<UseCaseModel> = merge(
+            domainModel.distinct(),
+            domainState,
+            uiState
+    ) { data, domainState, uiState ->
         val currentData = data?.let { buildUiModel(data, uiState ?: defaultUiState) }
         try {
             when (domainState) {

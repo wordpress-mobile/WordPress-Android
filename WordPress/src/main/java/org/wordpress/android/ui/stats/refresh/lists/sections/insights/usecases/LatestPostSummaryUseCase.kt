@@ -137,7 +137,7 @@ class LatestPostSummaryUseCase
         analyticsTracker.track(STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED)
         navigateTo(
                 ViewPostDetailStats(
-                        params.postId.toString(),
+                        params.postId,
                         params.postTitle,
                         params.postUrl
                 )

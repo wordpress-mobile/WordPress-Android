@@ -31,6 +31,10 @@ class SelectedDateProvider
         return selectedDateChanged.filter { it == statsGranularity.toStatsSection() }
     }
 
+    fun granularSelectedDateChanged(statsSection: StatsSection): LiveData<StatsSection> {
+        return selectedDateChanged.filter { it == statsSection }
+    }
+
     fun selectDate(date: Date, statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
         val selectedDateIndex = selectedDate.availableDates.indexOf(date)
