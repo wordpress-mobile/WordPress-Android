@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store.stats.insights
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
@@ -21,22 +22,22 @@ class PublicizeStore
     private val insightsMapper: InsightsMapper,
     private val coroutineContext: CoroutineContext
 ) {
-    suspend fun fetchPublicizeData(siteModel: SiteModel, pageSize: Int, forced: Boolean = false) =
+    suspend fun fetchPublicizeData(siteModel: SiteModel, limitMode: LimitMode, forced: Boolean = false) =
             withContext(coroutineContext) {
-                val response = restClient.fetchPublicizeData(siteModel, pageSize = pageSize + 1, forced = forced)
+                val response = restClient.fetchPublicizeData(siteModel, forced = forced)
                 return@withContext when {
                     response.isError -> {
                         OnStatsFetched(response.error)
                     }
                     response.response != null -> {
                         sqlUtils.insert(siteModel, response.response)
-                        OnStatsFetched(insightsMapper.map(response.response, pageSize))
+                        OnStatsFetched(insightsMapper.map(response.response, limitMode))
                     }
                     else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
                 }
             }
 
-    fun getPublicizeData(site: SiteModel, pageSize: Int): PublicizeModel? {
-        return sqlUtils.selectPublicizeInsights(site)?.let { insightsMapper.map(it, pageSize) }
+    fun getPublicizeData(site: SiteModel, limitMode: LimitMode): PublicizeModel? {
+        return sqlUtils.selectPublicizeInsights(site)?.let { insightsMapper.map(it, limitMode) }
     }
 }
