@@ -29,7 +29,7 @@ class LatestPostInsightsStore @Inject constructor(
             when {
                 postStats.response != null -> {
                     sqlUtils.insert(site, latestPost)
-                    sqlUtils.insert(site, postStats.response)
+                    sqlUtils.insert(site, latestPost.id, postStats.response)
                     OnStatsFetched(insightsMapper.map(latestPost, postStats.response, site))
                 }
                 postStats.isError -> OnStatsFetched(postStats.error)
@@ -43,12 +43,10 @@ class LatestPostInsightsStore @Inject constructor(
     }
 
     fun getLatestPostInsights(site: SiteModel): InsightsLatestPostModel? {
-        val latestPostDetailResponse = sqlUtils.selectLatestPostDetail(site)
-        val latestPostViewsResponse = sqlUtils.selectLatestPostStats(site)
-        return if (latestPostDetailResponse != null && latestPostViewsResponse != null) {
-            insightsMapper.map(latestPostDetailResponse, latestPostViewsResponse, site)
-        } else {
-            null
+        return sqlUtils.selectLatestPostDetail(site)?.let { latestPostDetailResponse ->
+            sqlUtils.selectLatestPostStats(site, latestPostDetailResponse.id)?.let { latestPostViewsResponse ->
+                insightsMapper.map(latestPostDetailResponse, latestPostViewsResponse, site)
+            }
         }
     }
 }

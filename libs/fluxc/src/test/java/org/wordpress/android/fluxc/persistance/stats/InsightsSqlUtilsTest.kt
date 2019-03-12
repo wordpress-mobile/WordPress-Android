@@ -28,18 +28,18 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAIL_FOL
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_STATS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TAGS_AND_CATEGORIES_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.WP_COM_FOLLOWERS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.INSIGHTS
 import org.wordpress.android.fluxc.store.stats.ALL_TIME_RESPONSE
 import org.wordpress.android.fluxc.store.stats.FOLLOWERS_RESPONSE
 import org.wordpress.android.fluxc.store.stats.LATEST_POST
 import org.wordpress.android.fluxc.store.stats.MOST_POPULAR_RESPONSE
 import org.wordpress.android.fluxc.store.stats.POST_STATS_RESPONSE
-import org.wordpress.android.fluxc.store.stats.TOP_COMMENTS_RESPONSE
 import org.wordpress.android.fluxc.store.stats.PUBLICIZE_RESPONSE
 import org.wordpress.android.fluxc.store.stats.TAGS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.TOP_COMMENTS_RESPONSE
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -111,27 +111,37 @@ class InsightsSqlUtilsTest {
 
     @Test
     fun `returns latest post views response from stats utils`() {
+        val postId = 1L
         whenever(
                 statsSqlUtils.select(
                         site,
                         LATEST_POST_STATS_INSIGHTS,
                         INSIGHTS,
-                        PostStatsResponse::class.java
+                        PostStatsResponse::class.java,
+                        postId = postId
                 )
         ).thenReturn(
                 POST_STATS_RESPONSE
         )
 
-        val result = insightsSqlUtils.selectLatestPostStats(site)
+        val result = insightsSqlUtils.selectLatestPostStats(site, postId)
 
         assertEquals(result, POST_STATS_RESPONSE)
     }
 
     @Test
     fun `inserts latest post views response to stats utils`() {
-        insightsSqlUtils.insert(site, POST_STATS_RESPONSE)
+        val postId = 1L
+        insightsSqlUtils.insert(site, postId, POST_STATS_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, LATEST_POST_STATS_INSIGHTS, INSIGHTS, POST_STATS_RESPONSE, true)
+        verify(statsSqlUtils).insert(
+                site,
+                LATEST_POST_STATS_INSIGHTS,
+                INSIGHTS,
+                POST_STATS_RESPONSE,
+                true,
+                postId = postId
+        )
     }
 
     @Test
