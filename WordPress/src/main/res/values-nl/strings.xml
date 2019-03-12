@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-19 15:54:07+0000
+Translation-Revision-Date: 2019-03-05 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Content verwijderen</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Blok omlaag verplaatsen</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Blok omhoog verplaatsen</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">BLOK HIER TOEVOEGEN</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Niet-ondersteund</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Niet-ondersteund bloktype.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Niet-ondersteund blok</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL plakken</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">AFBEELDING KIEZEN</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Invoegen van media mislukt.\nTik voor opties.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Alle instellingen wijzigen</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alt. tekst</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress-mediabibliotheek</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Maak een foto</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Kiezen op device</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Begin met schrijven …</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Link verwijderen</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Voeg linktekst toe</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Linktekst</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">URL toevoegen</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link ingevoerd</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Je kan je voortgang verliezen. Weet je zeker dat je wilt afsluiten?</string>
+    <string name="plans_loading_error_with_cache_button">Abonnementen toch weergeven</string>
+    <string name="plans_loading_error_with_cache_subtitle">Je hebt een internetverbinding nodig om abonnementen te bekijken, dus kunnen de gegevens verouderd zijn.</string>
+    <string name="plans_loading_error_no_cache_subtitle">Je hebt een internetverbinding nodig om abonnementen te bekijken.</string>
+    <string name="plans_loading_error_no_plans_subtitle">We kunnen abonnementen momenteel niet laden. Probeer het later opnieuw.</string>
+    <string name="plans_loading_error_no_plans_title">Abonnementen kunnen niet worden geladen</string>
+    <string name="plans_loading_error_network_title">Geen verbinding</string>
+    <string name="menu_switch_to_gutenberg_editor">Overschakelen op de blok-editor</string>
+    <string name="menu_switch_to_aztec_editor">Overschakelen op de klassieke editor</string>
+    <string name="stats_loading_block_error">Er is een probleem opgetreden bij het laden van je gegevens. Vernieuw je pagina om het opnieuw te proberen.</string>
+    <string name="stats_loading_error">Gegevens niet geladen</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Bewerk nieuwe berichten en pagina\'s met de blok-editor</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">Blok-editor gebruiken</string>
+    <string name="dialog_gutenberg_informative_description_page">Deze pagina is oorspronkelijk in de blok-editor aangemaakt, dus hebben we deze ook ingeschakeld op deze pagina.\n Je kunt op elk moment overschakelen op de klassieke editor door op  ⋮  te tikken in de bovenbalk.</string>
+    <string name="dialog_gutenberg_informative_description_post">Dit bericht is oorspronkelijk in de blok-editor aangemaakt, dus hebben we deze ook ingeschakeld in dit bericht.\n Je kunt op elk moment overschakelen op de klassieke editor door op  ⋮  te tikken in de bovenbalk.</string>
+    <string name="dialog_gutenberg_informative_title">Blok-editor ingeschakeld</string>
+    <string name="exit">afsluiten</string>
     <string name="quick_start_sites_type_subtitle">%1$d van %2$d voltooid</string>
     <string name="quick_start_sites_type_grow">Verhoog je bezoekersaantallen</string>
     <string name="quick_start_sites_type_customize">Je site aanpassen</string>
@@ -92,9 +130,6 @@ Language: nl
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_no_data_yet">Nog geen gegevens</string>
     <string name="menu_debug">Debug-menu</string>
-    <string name="preference_experimental">*EXPERIMENTEEL*</string>
-    <string name="site_settings_enable_gutenberg_summary">Dit is nog een experimentele versie van Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">Gutenberg inschakelen</string>
     <string name="change_password_dialog_message">Wachtwoord wordt gewijzigd …</string>
     <string name="change_password_dialog_hint">Je wachtwoord moet tenminste zes tekens bevatten. Als je het wachtwoord sterker wilt maken, gebruik dan hoofdletters en kleine letters, cijfers en symbolen zoals ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Wachtwoord gewijzigd</string>
@@ -106,14 +141,6 @@ Language: nl
     <string name="history_detail_title">Herziening</string>
     <string name="history_detail_button_previous">Vorige</string>
     <string name="history_detail_button_next">Volgende</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Meer informatie</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Niet meer tonen</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Terugkeren</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Pagina bewerken</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Bericht bewerken</string>
-    <string name="dialog_gutenberg_compatibility_message_page">We werken aan een gloednieuwe WordPress-editor. Je kunt deze pagina nog steeds bewerken, maar we raden je aan een voorbeeld te bekijken voordat je deze publiceert.</string>
-    <string name="dialog_gutenberg_compatibility_message">We werken aan een gloednieuwe WordPress-editor. Je kunt dit bericht nog steeds bewerken, maar we raden je aan een voorbeeld te bekijken voordat je het publiceert.</string>
-    <string name="dialog_gutenberg_compatibility_title">Voordat je doorgaat</string>
     <string name="media_space_used">%1$s gebruikt</string>
     <string name="enter_wpcom_or_jetpack_site">Voer een WordPress.com-site of een aan Jetpack gekoppelde zelf-gehoste WordPress-site in</string>
     <string name="history_loading_revision">Bezig met laden revisie</string>
@@ -1006,9 +1033,6 @@ Language: nl
     <string name="xmlrpc_post_blocked_error">Kan geen verbinding maken. Je host blokkeert POST-aanvragen en de app heeft\n dat nodig om met je site te communiceren. Neem contact op met je host om dit probleem op te lossen.</string>
     <string name="reader_hint_search_followed_sites">Zoek gevolgde sites</string>
     <string name="visual_editor_disabled">Visuele editor uitgeschakeld</string>
-    <string name="preference_editor_visual">Visueel</string>
-    <string name="preference_editor_legacy">Ouderwets</string>
-    <string name="preference_editor_type">Editor type instellen</string>
     <string name="pending_draft_one_generic">Niet weggaan! \'%1$s\' moet nog gepubliceerd worden.</string>
     <string name="pending_draft_one_month">Niet weggaan! \'%1$s\' moet nog gepubliceerd worden.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' blijft een concept. Vergeet niet deze te publiceren!</string>
@@ -1059,7 +1083,6 @@ Language: nl
     <string name="alignment_none">Geen</string>
     <string name="site_settings_list_editor_action_mode_title">Geselecteerd %1$d</string>
     <string name="error_fetch_users_list">Site-gebruikers ophalen mislukt</string>
-    <string name="plans_manage">Beheer je abonnement op\nWordPress.com/plans</string>
     <string name="title_email_follower">E-mailvolger</string>
     <string name="title_follower">Volger</string>
     <string name="people_fetching">Gebruikers ophalen…</string>
@@ -1145,7 +1168,6 @@ Language: nl
     <string name="new_editor_reflection_error">Visual Editor is niet compatibel met uw apparaat. Het is\n automatisch uitgeschakeld.</string>
     <string name="stats_insights_latest_post_no_title">(geen titel)</string>
     <string name="capture_or_pick_photo">Neem of selecteer foto</string>
-    <string name="plans_loading_error">Kan abonnementen niet laden.</string>
     <string name="plans">Plans</string>
     <string name="plan">Abonnement</string>
     <string name="export_your_content_message">Je berichten, pagina\'s en instellingen worden naar je e-mailadres, %s, verzonden.</string>
