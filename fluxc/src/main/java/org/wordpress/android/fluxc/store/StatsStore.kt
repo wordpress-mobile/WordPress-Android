@@ -112,6 +112,7 @@ class StatsStore
     }
 
     enum class PostDetailTypes : StatsTypes {
+        POST_HEADER,
         POST_OVERVIEW,
         MONTHS_AND_YEARS,
         AVERAGE_VIEWS_PER_DAY,
