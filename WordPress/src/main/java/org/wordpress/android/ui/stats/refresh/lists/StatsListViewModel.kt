@@ -31,7 +31,8 @@ abstract class StatsListViewModel(
         DAYS(R.string.stats_timeframe_days),
         WEEKS(R.string.stats_timeframe_weeks),
         MONTHS(R.string.stats_timeframe_months),
-        YEARS(R.string.stats_timeframe_years);
+        YEARS(R.string.stats_timeframe_years),
+        DETAIL(R.string.stats);
     }
 
     val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
