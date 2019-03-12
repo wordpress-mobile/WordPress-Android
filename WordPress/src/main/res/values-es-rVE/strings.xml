@@ -48,7 +48,6 @@ Language: es_VE
     <string name="alignment_right">Derecha</string>
     <string name="site_settings_list_editor_action_mode_title">Seleccionado %1$d</string>
     <string name="error_fetch_users_list">No se pudieron recuperar los usuarios del sitio</string>
-    <string name="plans_manage">Gestiona tu plan en\nWordPress.com/plans</string>
     <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Recuperando usuarios…</string>
     <string name="title_email_follower">Correo electrónico del seguidor</string>
@@ -130,7 +129,6 @@ Language: es_VE
     <string name="export_your_content_message">Tus entradas, páginas y ajustes te serán enviadas por correo electrónico a %s.</string>
     <string name="plans">Planes</string>
     <string name="plan">Plan</string>
-    <string name="plans_loading_error">No se pueden cargar los planes</string>
     <string name="export_your_content">Exportar tu contenido</string>
     <string name="exporting_content_progress">Exportando contenido…</string>
     <string name="export_email_sent">¡Correo electrónico de exportación enviado!</string>

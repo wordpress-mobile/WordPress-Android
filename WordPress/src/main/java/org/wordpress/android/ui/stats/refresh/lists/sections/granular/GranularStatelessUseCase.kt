@@ -7,28 +7,30 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.util.Date
 
 abstract class GranularStatelessUseCase<DOMAIN_MODEL>(
     type: StatsTypes,
     mainDispatcher: CoroutineDispatcher,
     val selectedDateProvider: SelectedDateProvider,
+    val statsSiteProvider: StatsSiteProvider,
     val statsGranularity: StatsGranularity
 ) : StatelessUseCase<DOMAIN_MODEL>(type, mainDispatcher) {
     abstract suspend fun loadCachedData(selectedDate: Date, site: SiteModel): DOMAIN_MODEL?
 
-    final override suspend fun loadCachedData(site: SiteModel): DOMAIN_MODEL? {
+    final override suspend fun loadCachedData(): DOMAIN_MODEL? {
         val selectedDate = selectedDateProvider.getSelectedDate(statsGranularity)
-        return selectedDate?.let { loadCachedData(selectedDate, site) }
+        return selectedDate?.let { loadCachedData(selectedDate, statsSiteProvider.siteModel) }
     }
 
     abstract suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<DOMAIN_MODEL>
 
-    final override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): State<DOMAIN_MODEL> {
+    final override suspend fun fetchRemoteData(forced: Boolean): State<DOMAIN_MODEL> {
         return selectedDateProvider.getSelectedDateState(statsGranularity).let { date ->
             when {
                 date.error -> State.Error("Missing date")
-                date.hasData() -> fetchRemoteData(date.getDate(), site, forced)
+                date.hasData() -> fetchRemoteData(date.getDate(), statsSiteProvider.siteModel, forced)
                 date.loading -> State.Loading()
                 else -> State.Loading()
             }

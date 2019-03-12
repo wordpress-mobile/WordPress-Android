@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-20 07:54:07+0000
+Translation-Revision-Date: 2019-03-05 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Hapus konten</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Turunkan blok</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Naikkan blok</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">TAMBAHKAN BLOK DI SINI</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Tidak didukung</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Jenis blok tidak didukung.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Blok Tidak Didukung</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Tempel URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">PILIH GAMBAR</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Gagal memasukkan media.\nKetuk untuk melihat pilihan.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Hapus Semua Pengaturan</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Teks Alt</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Pustaka Media WordPress</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Ambil Foto</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Pilih dari perangkat</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Mulai menulis…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Buang Tautan</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Tambahkan Teks Tautan</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Teks Tautan</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Tambahkan URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Tautan disisipkan</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Kemajuan proses Anda mungkin akan hilang. Anda yakin ingin keluar?</string>
+    <string name="plans_loading_error_with_cache_button">Lihat Paket</string>
+    <string name="plans_loading_error_with_cache_subtitle">Perlu sambungan internet untuk melihat Paket, beberapa detail mungkin usang.</string>
+    <string name="plans_loading_error_no_cache_subtitle">Perlu sambungan internet untuk melihat Paket.</string>
+    <string name="plans_loading_error_no_plans_subtitle">Saat ini kami tidak dapat memuat Paket. Silakan coba lagi nanti.</string>
+    <string name="plans_loading_error_no_plans_title">Tidak dapat memuat Paket</string>
+    <string name="plans_loading_error_network_title">Tidak ada koneksi</string>
+    <string name="menu_switch_to_gutenberg_editor">Beralih ke Penyunting Blok</string>
+    <string name="menu_switch_to_aztec_editor">Beralih ke Penyunting Klasik</string>
+    <string name="stats_loading_block_error">Terjadi masalah saat memuat data Anda, segarkan halaman untuk mencoba lagi.</string>
+    <string name="stats_loading_error">Data tidak dimuat</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Sunting pos dan halaman baru dengan penyunting blok</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">Gunakan Penyunting Blok</string>
+    <string name="dialog_gutenberg_informative_description_page">Pos ini awalnya dibuat di Penyunting Blok, jadi kami juga telah menyediakannya di Halaman ini.\n Kembali ke versi Klasik kapan pun dengan mengetuk  ⋮  di bilah atas.</string>
+    <string name="dialog_gutenberg_informative_description_post">Pos ini awalnya dibuat di Penyunting Blok, jadi kami juga telah menyediakannya di Pos ini.\n Kembali ke versi Klasik kapan pun dengan mengetuk  ⋮  di bilah atas.</string>
+    <string name="dialog_gutenberg_informative_title">Penyunting Blok Diaktifkan</string>
+    <string name="exit">keluar</string>
     <string name="quick_start_sites_type_subtitle">%1$d dari %2$d selesai</string>
     <string name="quick_start_sites_type_grow">Tumbuhkan Audiens Anda</string>
     <string name="quick_start_sites_type_customize">Sesuaikan Situs Anda</string>
@@ -155,9 +193,6 @@ Language: id
     <string name="stats_empty_insights_title">Belum ada informasi yang ditambahkan</string>
     <string name="stats_no_data_yet">Belum ada data</string>
     <string name="menu_debug">Menu Debug</string>
-    <string name="preference_experimental">*PERCOBAAN*</string>
-    <string name="site_settings_enable_gutenberg_summary">Ini masih versi percobaan dari Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">Aktifkan Gutenberg</string>
     <string name="change_password_dialog_message">Mengganti kata sandi…</string>
     <string name="change_password_dialog_hint">Kata sandi Anda setidaknya harus berisi enam karakter. Agar lebih kuat, gunakan huruf besar dan kecil, angka, dan simbol seperti ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Penggantian kata sandi berhasil</string>
@@ -169,14 +204,6 @@ Language: id
     <string name="history_detail_title">Revisi</string>
     <string name="history_detail_button_previous">Sebelumnya</string>
     <string name="history_detail_button_next">Selanjutnya</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Pelajari selengkapnya</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Jangan tampilkan lagi</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Kembali</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Sunting Halaman</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Sunting Pos</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Kami sedang menggarap penyunting WordPress baru. Anda masih dapat menyunting halaman ini, namun sebaiknya pratinjau sebelum memublikasikan.</string>
-    <string name="dialog_gutenberg_compatibility_message">Kami sedang menggarap penyunting WordPress baru. Anda masih dapat menyunting pos ini, namun sebaiknya pratinjau sebelum memublikasikan.</string>
-    <string name="dialog_gutenberg_compatibility_title">Sebelum Anda melanjutkan</string>
     <string name="media_space_used">%1$s digunakan</string>
     <string name="enter_wpcom_or_jetpack_site">Masukkan situs WordPress dihosting sendiri yang terhubung ke Jetpack atau WordPress.com</string>
     <string name="history_loading_revision">Memuat revisi</string>
@@ -1075,9 +1102,6 @@ Language: id
     <string name="xmlrpc_post_blocked_error">Tidak dapat terhubung. Host Anda memblokir permintaan POST yang dibutuhkan aplikasi\n agar dapat berkomunikasi dengan situs Anda. Hubungi host Anda untuk mengatasi masalah ini.</string>
     <string name="reader_hint_search_followed_sites">Cari di situs yang diikuti</string>
     <string name="visual_editor_disabled">Editor Visual nonaktif</string>
-    <string name="preference_editor_visual">Visual</string>
-    <string name="preference_editor_legacy">Lawas</string>
-    <string name="preference_editor_type">Atur jenis editor</string>
     <string name="pending_draft_one_generic">Jangan biarkan menggantung! \'%1$s\' menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_month">Jangan biarkan menggantung! \'%1$s\' menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' masih berupa konsep. Ingatlah untuk menerbitkannya!</string>
@@ -1128,7 +1152,6 @@ Language: id
     <string name="alignment_none">Tak ada</string>
     <string name="site_settings_list_editor_action_mode_title">Memilih %1$d</string>
     <string name="error_fetch_users_list">Gagal menampilkan pengguna situs</string>
-    <string name="plans_manage">Kelola paket Anda di \nWordPress.com/plans</string>
     <string name="title_email_follower">Pengikut Email</string>
     <string name="title_follower">Pengikut</string>
     <string name="people_fetching">Mengambil pengguna…</string>
@@ -1214,7 +1237,6 @@ Language: id
     <string name="new_editor_reflection_error">Visual editor tidak kompatibel dengan perangkat Anda. Ini\n dinonaktifkan secara otomatis.</string>
     <string name="stats_insights_latest_post_no_title">(tanpa judul)</string>
     <string name="capture_or_pick_photo">Ambil atau pilih foto</string>
-    <string name="plans_loading_error">Tidak dapat memuat paket</string>
     <string name="plans">Paket</string>
     <string name="plan">Paket</string>
     <string name="export_your_content_message">Pos, halaman, dan pengaturan Anda akan dikirimkan melalui email kepada Anda pada %s.</string>

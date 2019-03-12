@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-15 14:59:09+0000
+Translation-Revision-Date: 2019-03-08 10:07:14+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
-    <string name="site_settings_enable_gutenberg">Povolit Gutenberg</string>
     <string name="change_password_dialog_hint">Heslo musí mít alespoň 6 znaků. Pro zvýšení bezpečnosti použijte kombinaci malých a velkých písmen a speciálních znaků ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password">Změnit heslo</string>
     <string name="support_identity_input_dialog_name_label">Jméno</string>
@@ -15,12 +14,6 @@ Language: cs_CZ
     <string name="history_detail_title">Revize</string>
     <string name="history_detail_button_previous">Zpět</string>
     <string name="history_detail_button_next">Další</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Zjistit více</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Příště již nezobrazovat</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Upravit stránku</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Upravit příspěvek</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Pracujeme na úplně novém WordPress editoru. Stále můžete stránku upravovat, ale doporučujeme ji před zveřejněním zkontrolovat v náhledu.</string>
-    <string name="dialog_gutenberg_compatibility_message">Pracujeme na úplně novém WordPress editoru. Stále můžete příspěvek upravovat, ale doporučujeme ho před zveřejněním zkontrolovat v náhledu.</string>
     <string name="media_space_used">Použito %1$s</string>
     <string name="enter_wpcom_or_jetpack_site">Zadejte adresu WordPress.com stránky nebo stránky s Jetpack pluginem</string>
     <string name="history_loading_revision">Načítám revizi</string>
@@ -462,7 +455,7 @@ Language: cs_CZ
     <string name="signup_epilogue_hint_username">Uživatelské jméno</string>
     <string name="signup_epilogue_hint_password_detail">Vždy se můžete přihlásit pomocí magického odkazu, jako je ten, který jste právě používali, ale pokud chcete, můžete také nastavit heslo.</string>
     <string name="signup_epilogue_hint_password">Heslo (volitelné)</string>
-    <string name="signup_epilogue_hint_display">Zobrazit jméno</string>
+    <string name="signup_epilogue_hint_display">Zobrazované jméno</string>
     <string name="signup_epilogue_heading">Nový účet</string>
     <string name="signup_epilogue_error_button_positive">Opakovat</string>
     <string name="signup_epilogue_error_button_negative">Zpět</string>
@@ -914,9 +907,6 @@ Language: cs_CZ
     <string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
     <string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
     <string name="visual_editor_disabled">Vizuální editor zakázán</string>
-    <string name="preference_editor_visual">Vizuální</string>
-    <string name="preference_editor_legacy">Odkaz</string>
-    <string name="preference_editor_type">Nastavit typ editoru</string>
     <string name="pending_draft_one_generic">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_month">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' zůstává konceptem. Nezapomeňte ho publikovat!</string>
@@ -967,7 +957,6 @@ Language: cs_CZ
     <string name="alignment_none">Žádné</string>
     <string name="site_settings_list_editor_action_mode_title">Vybraný %1$d</string>
     <string name="error_fetch_users_list">Nelze načíst uživatele webu</string>
-    <string name="plans_manage">Spravuj svůj plán na\nWordPress.com/plans</string>
     <string name="title_email_follower">Email fanouška</string>
     <string name="title_follower">Fanoušek</string>
     <string name="people_fetching">Načítání uživatelů…</string>
@@ -1053,7 +1042,6 @@ Language: cs_CZ
     <string name="new_editor_reflection_error">Vizuální editor není kompatibilní s vaším zařízením.\n        Proto byl automaticky zakázán.</string>
     <string name="stats_insights_latest_post_no_title">(žádný nadpis)</string>
     <string name="capture_or_pick_photo">Vyfoťte nebo vyberte fotku</string>
-    <string name="plans_loading_error">Plány se nepodařilo načíst</string>
     <string name="plans">Plány</string>
     <string name="plan">Plán</string>
     <string name="export_your_content_message">Vaše příspěvky, stránky a nastavení budou zaslány na %s.</string>

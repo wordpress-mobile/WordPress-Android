@@ -110,7 +110,6 @@ Language: vi_VN
     <string name="new_editor_reflection_error">Trình biên tập trực quan không tương thích với thiết bị của bạn. \nNó bị vô hiệu tự động.</string>
     <string name="stats_insights_latest_post_no_title">(không tiêu đề)</string>
     <string name="capture_or_pick_photo">Chụp ảnh hoặc chọn hình ảnh</string>
-    <string name="plans_loading_error">Không thể nạp các sơ đồ</string>
     <string name="plan">Gói dịch vụ</string>
     <string name="plans">Các gói dịch vụ</string>
     <string name="export_your_content_message">Các bài viết, trang và thiết lập sẽ được email tới bạn bởi %s.</string>
