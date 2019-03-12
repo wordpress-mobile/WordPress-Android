@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-20 10:54:08+0000
+Translation-Revision-Date: 2019-03-06 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">コンテンツを削除</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">ブロックを下へ移動</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">ブロックを上へ移動</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">ここにブロックを追加</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">サポート対象外</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">サポートされていないブロックタイプです。</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">サポート対象外のブロック</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL を貼り付け</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">画像を選択</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">メディアを挿入できませんでした。\nタップすると、オプションが表示されます。</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">すべての設定を解除</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">代替テキスト</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress メディアライブラリ</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">写真を撮影する</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">デバイスから選択</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">執筆を開始…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">リンクを削除</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">リンク文字列を追加</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">リンク文字列</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">URL を追加</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">リンクを挿入しました</string>
+    <string name="new_site_creation_preview_back_pressed_warning">作業内容が失われる可能性があります。終了してもよいですか ?</string>
+    <string name="plans_loading_error_with_cache_button">プランを表示</string>
+    <string name="plans_loading_error_with_cache_subtitle">プランを表示するにはインターネット接続が必須となるため、詳細情報が古い可能性があります。</string>
+    <string name="plans_loading_error_no_cache_subtitle">プランを表示するにはインターネット接続が必須です。</string>
+    <string name="plans_loading_error_no_plans_subtitle">現在、一時的にプランの読み込みができません。後ほど、もう一度お試しください。</string>
+    <string name="plans_loading_error_no_plans_title">プランの読み込みができません</string>
+    <string name="plans_loading_error_network_title">接続がありません</string>
+    <string name="menu_switch_to_gutenberg_editor">ブロックエディターに切り替える</string>
+    <string name="menu_switch_to_aztec_editor">旧エディターに切り替える</string>
+    <string name="stats_loading_block_error">データの読み込み中に問題が発生しました。ページを更新してもう一度お試しください。</string>
+    <string name="stats_loading_error">データは読み込まれていません</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">ブロックエディターで新しい投稿やページを編集</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">ブロックエディターを使用</string>
+    <string name="dialog_gutenberg_informative_description_page">このページはもともとブロックエディターで作成されたため、このページでも有効になっています。\nトップバーの「⋮」をタップすると、いつでも元の状態に戻ることができます。</string>
+    <string name="dialog_gutenberg_informative_description_post">この投稿はもともとブロックエディターで作成されたため、この投稿でも有効になっています。\nトップバーの「⋮」をタップすると、いつでも元の状態に戻ることができます。</string>
+    <string name="dialog_gutenberg_informative_title">ブロックエディター有効</string>
+    <string name="exit">終了</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d が完了</string>
     <string name="quick_start_sites_type_grow">訪問者を増やす</string>
     <string name="quick_start_sites_type_customize">サイトをカスタマイズ</string>
@@ -159,9 +197,6 @@ Language: ja_JP
     <string name="stats_empty_insights_title">インサイトは追加されていません</string>
     <string name="stats_no_data_yet">データはまだありません</string>
     <string name="menu_debug">デバッグメニュー</string>
-    <string name="preference_experimental">* 試験用 *</string>
-    <string name="site_settings_enable_gutenberg_summary">この Gutenberg はまだ試験用です</string>
-    <string name="site_settings_enable_gutenberg">Gutenberg を有効にする</string>
     <string name="change_password_dialog_message">パスワードを変更しています…</string>
     <string name="change_password_dialog_hint">パスワードは6文字以上にする必要があります。さらに強力なパスワードを作成するには、大文字小文字、数字、! \" ? $ % ^ &amp; ) などの記号を使用してください。</string>
     <string name="change_password_confirmation">パスワードを変更しました</string>
@@ -173,14 +208,6 @@ Language: ja_JP
     <string name="history_detail_title">投稿リビジョン</string>
     <string name="history_detail_button_previous">前へ</string>
     <string name="history_detail_button_next">次へ</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">さらに詳しく</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">今後表示しない</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">戻る</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">固定ページを編集</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">投稿を編集</string>
-    <string name="dialog_gutenberg_compatibility_message_page">現在、新しい WordPress エディターを準備中です。このページは引き続き編集できますが、公開する前にプレビューすることをお勧めします。</string>
-    <string name="dialog_gutenberg_compatibility_message">現在、新しい WordPress エディターを準備中です。この投稿は引き続き編集できますが、公開する前にプレビューすることをお勧めします。</string>
-    <string name="dialog_gutenberg_compatibility_title">続行する前に</string>
     <string name="media_space_used">%1$s を使用</string>
     <string name="enter_wpcom_or_jetpack_site">WordPress.com または Jetpack と連携したインストール型 WordPress サイトを入力してください</string>
     <string name="history_loading_revision">変更履歴を読み込んでいます</string>
@@ -246,6 +273,8 @@ Language: ja_JP
     <string name="quick_start_dialog_view_site_title">サイトを表示</string>
     <string name="quick_start_dialog_view_site_message_short">サイトをプレビューするには、%1$sサイトを表示%2$sをタップします。</string>
     <string name="quick_start_dialog_share_site_title">サイトを共有</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">%1$sシェアする%2$sをタップして続行</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">%1$s連携%2$sをタップして、SNS アカウントを追加</string>
     <string name="quick_start_dialog_share_site_message">自分のソーシャルメディアアカウントと連携すると、サイトの新しい投稿が自動的に共有されるようになります。</string>
     <string name="quick_start_dialog_publish_post_title">投稿を公開</string>
     <string name="quick_start_dialog_publish_post_message_short">%1$s投稿の作成%2$sをタップして、新しい党呼応を作成します</string>
@@ -809,9 +838,9 @@ Language: ja_JP
     <string name="enter_site_address_share_intent">コンテンツを共有する WordPress サイトのアドレスを入力します。</string>
     <string name="jetpack_disconnect_error_toast">サイトの接続解除中のエラー</string>
     <string name="jetpack_disconnect_success_toast">サイトが接続解除されました</string>
-    <string name="jetpack_disconnect_confirm">連係解除</string>
+    <string name="jetpack_disconnect_confirm">連携解除</string>
     <string name="jetpack_disconnect_confirmation_message">このサイトから Jetpack の接続を解除してもよいですか ?</string>
-    <string name="jetpack_disconnect_pref_title">「WordPress.com との接続を解除」</string>
+    <string name="jetpack_disconnect_pref_title">「WordPress.com との連携を解除」</string>
     <string name="site_settings_jetpack_whitelist_description">1つの IP アドレスまたは一連の IP アドレスをホワイトリストに追加すると、それらの IP アドレスが Jetpack によりブロックされなくなります。IPv4と IPv6を使用できます。範囲を指定するには、下限値と上限値をダッシュで区切って入力します。例:12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">二段階認証が必要</string>
     <string name="jetpack_match_wpcom_via_email_title">メールを使用してアカウントを照合する</string>
@@ -1118,9 +1147,6 @@ Language: ja_JP
     <string name="xmlrpc_post_blocked_error">接続できませんでした。ご使用のホストは POST リクエストをブロックしていますが、サイトと通信するためにアプリはこのリクエストを必要とします。ホストに連絡して、この問題を解決してください。</string>
     <string name="reader_hint_search_followed_sites">フォローしているサイトの検索</string>
     <string name="visual_editor_disabled">ビジュアルエディターが無効になっています</string>
-    <string name="preference_editor_visual">ビジュアル</string>
-    <string name="preference_editor_legacy">レガシー</string>
-    <string name="preference_editor_type">エディタータイプの設定</string>
     <string name="pending_draft_one_generic">途中でやめないでください。「%1$s」は公開待ち中です。</string>
     <string name="pending_draft_one_month">途中でやめないでください。「%1$s」は公開待ち中です。</string>
     <string name="pending_draft_one_week_2">「%1$s」は下書きのままになります。忘れずに公開してください。</string>
@@ -1171,7 +1197,6 @@ Language: ja_JP
     <string name="alignment_none">なし</string>
     <string name="site_settings_list_editor_action_mode_title">%1$d が選択されています</string>
     <string name="error_fetch_users_list">サイトのユーザーを取得できませんでした</string>
-    <string name="plans_manage">プランの管理は次で行います\nWordPress.com/plans</string>
     <string name="title_email_follower">メールフォロワー</string>
     <string name="title_follower">フォロワー</string>
     <string name="people_fetching">ユーザーを取得中…</string>
@@ -1257,7 +1282,6 @@ Language: ja_JP
     <string name="new_editor_reflection_error">ビジュアルエディターはお使いの端末との互換性がありません。自動で無効化されました。</string>
     <string name="stats_insights_latest_post_no_title">(タイトルなし)</string>
     <string name="capture_or_pick_photo">写真を撮影または選択</string>
-    <string name="plans_loading_error">プランを読み込めません</string>
     <string name="plans">プラン</string>
     <string name="plan">プラン</string>
     <string name="export_your_content_message">投稿、ページ、設定については、%s 宛てにメールで送信されます。</string>

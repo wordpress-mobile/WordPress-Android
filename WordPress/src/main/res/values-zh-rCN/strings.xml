@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-20 09:54:08+0000
+Translation-Revision-Date: 2019-03-06 12:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">删除内容</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">向下移动区块</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">向上移动区块</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">在此处添加区块</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">不受支持</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">区块类型不受支持。</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">区块不受支持</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">粘贴 URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">选择图像</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">无法插入媒体。\n请轻点以查看选项。</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">清除所有设置</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">替代文本</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress 媒体库</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">拍照</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">从设备中选择</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">开始撰写…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">删除链接</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">添加链接文本</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">链接文本</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">添加 URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">已插入链接</string>
+    <string name="new_site_creation_preview_back_pressed_warning">如果退出，可能会前功尽弃。是否确定要退出？</string>
+    <string name="plans_loading_error_with_cache_button">仍然查看套餐</string>
+    <string name="plans_loading_error_with_cache_subtitle">必须连接互联网才能查看套餐，因此详细信息可能已过时。</string>
+    <string name="plans_loading_error_no_cache_subtitle">必须连接互联网才能查看套餐。</string>
+    <string name="plans_loading_error_no_plans_subtitle">我们暂时无法加载套餐。请稍后重试。</string>
+    <string name="plans_loading_error_no_plans_title">无法加载套餐</string>
+    <string name="plans_loading_error_network_title">无连接</string>
+    <string name="menu_switch_to_gutenberg_editor">切换到区块编辑器</string>
+    <string name="menu_switch_to_aztec_editor">切换到经典编辑器</string>
+    <string name="stats_loading_block_error">加载数据时出现问题，请刷新页面以重试。</string>
+    <string name="stats_loading_error">无法加载数据</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">使用区块编辑器编辑新的文章和页面</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">使用区块编辑器</string>
+    <string name="dialog_gutenberg_informative_description_page">此页面最初是在区块编辑器中创建的，因此我们也在此页面中启用了它。\n轻点顶栏中的  ⋮  可随时切换回经典编辑器。</string>
+    <string name="dialog_gutenberg_informative_description_post">此文章最初是在区块编辑器中创建的，因此我们也在此文章中启用了它。\n轻点顶栏中的  ⋮  可随时切换回经典编辑器。</string>
+    <string name="dialog_gutenberg_informative_title">已启用区块编辑器</string>
+    <string name="exit">退出</string>
     <string name="quick_start_sites_type_subtitle">已完成 %1$d 个（共 %2$d 个）</string>
     <string name="quick_start_sites_type_grow">增加您的受众</string>
     <string name="quick_start_sites_type_customize">定制您的站点</string>
@@ -123,14 +161,6 @@ Language: zh_CN
     <string name="history_detail_title">修订版本</string>
     <string name="history_detail_button_previous">上一个</string>
     <string name="history_detail_button_next">下一个</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">了解详情</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">不再显示</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">返回</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">编辑页面</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">编辑文章</string>
-    <string name="dialog_gutenberg_compatibility_message_page">我们正全力研发全新的 WordPress 编辑器。您仍然可以编辑此页面，但我们建议在发布前预览此页面。</string>
-    <string name="dialog_gutenberg_compatibility_message">我们正全力研发全新的 WordPress 编辑器。您仍然可以编辑此文章，但我们建议在发布前预览此文章。</string>
-    <string name="dialog_gutenberg_compatibility_title">在继续操作之前</string>
     <string name="media_space_used">已使用 %1$s</string>
     <string name="enter_wpcom_or_jetpack_site">请输入 WordPress.com 或连接到 Jetpack 的自托管 WordPress 站点</string>
     <string name="history_loading_revision">正在加载修订内容</string>
@@ -261,7 +291,7 @@ Language: zh_CN
     <string name="reader_gallery_images_desc">图库</string>
     <string name="blavatar_desc">站点图标</string>
     <string name="theme_image_desc">主题图片</string>
-    <string name="featured_image_desc">推荐图片</string>
+    <string name="featured_image_desc">特色图片</string>
     <string name="local_changes_discarding_error">放弃您的本地更改时出现错误。请联系支持人员，获取更多帮助。</string>
     <string name="local_changes_discarding">正在放弃本地更改</string>
     <string name="local_changes_discarded">本地更改已放弃</string>
@@ -1056,9 +1086,6 @@ Language: zh_CN
     <string name="xmlrpc_post_blocked_error">无法连接。您的主机阻止 POST 请求，app 需要\n该接口方可与您的站点通信。请联系您的托管服务提供商解决此问题。</string>
     <string name="reader_hint_search_followed_sites">在已关注的站点中搜索</string>
     <string name="visual_editor_disabled">已禁用可视化编辑器</string>
-    <string name="preference_editor_visual">可视化</string>
-    <string name="preference_editor_legacy">旧版</string>
-    <string name="preference_editor_type">设置编辑器类型</string>
     <string name="pending_draft_one_generic">请不要离开！「%1$s」正在等待发布。</string>
     <string name="pending_draft_one_month">请不要离开！「%1$s」正在等待发布。</string>
     <string name="pending_draft_one_week_2">「%1$s」仍是草稿。记得发布哦！</string>
@@ -1109,7 +1136,6 @@ Language: zh_CN
     <string name="alignment_right">右</string>
     <string name="site_settings_list_editor_action_mode_title">已选择 %1$d</string>
     <string name="error_fetch_users_list">无法检索站点用户</string>
-    <string name="plans_manage">在 WordPress.com/plans 上\n管理您的套餐</string>
     <string name="people_fetching">正在获取用户…</string>
     <string name="title_follower">粉丝</string>
     <string name="title_email_follower">电子邮件粉丝</string>
@@ -1198,7 +1224,6 @@ Language: zh_CN
     <string name="export_your_content_message">系统会将您的文章、页面和设置发送到以下电子邮件地址：%s。</string>
     <string name="plan">套餐</string>
     <string name="plans">套餐</string>
-    <string name="plans_loading_error">无法加载套餐</string>
     <string name="export_your_content">导出您的内容</string>
     <string name="exporting_content_progress">正在导出内容…</string>
     <string name="export_email_sent">导出已发送的电子邮件！</string>

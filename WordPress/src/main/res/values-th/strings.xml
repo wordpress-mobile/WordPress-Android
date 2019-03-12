@@ -15,7 +15,6 @@ Language: th
     <string name="alignment_right">ขวา</string>
     <string name="site_settings_list_editor_action_mode_title">เลือก %1$d แล้ว</string>
     <string name="error_fetch_users_list">ไม่สามารถดึงข้อมูลผู้ใช้งานเว็บไซต์</string>
-    <string name="plans_manage">จัดการแพลนของคุณที่\nWordPress.com/plans</string>
     <string name="title_email_follower">อีเมลผู้ติดตาม</string>
     <string name="title_follower">ผู้ติดตาม</string>
     <string name="people_dropdown_item_viewers">ผู้ชม</string>
