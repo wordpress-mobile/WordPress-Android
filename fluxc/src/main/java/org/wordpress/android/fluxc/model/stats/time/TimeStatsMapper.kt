@@ -181,10 +181,16 @@ class TimeStatsMapper
         )
     }
 
-    fun map(response: AuthorsResponse, pageSize: Int): AuthorsModel {
+    fun map(response: AuthorsResponse, cacheMode: LimitMode): AuthorsModel {
         val first = response.groups.values.firstOrNull()
         val authors = first?.let {
-            first.authors.take(pageSize).map { author ->
+            first.authors.let {
+                if (cacheMode is LimitMode.Top) {
+                    it.take(cacheMode.limit)
+                } else {
+                    it
+                }
+            }.map { author ->
                 val posts = author.mappedPosts?.mapNotNull { result ->
                     if (result.postId != null && result.title != null) {
                         Post(result.postId, result.title, result.views ?: 0, result.url)
