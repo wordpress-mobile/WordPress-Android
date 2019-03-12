@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.util.filter
-import org.wordpress.android.util.apply
+import org.wordpress.android.util.perform
 import javax.inject.Inject
 
 class StatsDateSelector @Inject constructor(
@@ -21,7 +21,7 @@ class StatsDateSelector @Inject constructor(
 
     val selectedDate = selectedDateProvider.selectedDateChanged
             .filter { statsGranularity -> statsGranularity == granularity }
-            .apply { updateDateSelector() }
+            .perform { updateDateSelector() }
 
     fun updateDateSelector() {
         val statsGranularity = granularity
