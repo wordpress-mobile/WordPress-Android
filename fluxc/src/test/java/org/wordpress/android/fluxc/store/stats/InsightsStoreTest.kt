@@ -554,13 +554,13 @@ class InsightsStoreTest {
                 PUBLICIZE_RESPONSE
         )
         val forced = true
-        whenever(publicizeRestClient.fetchPublicizeData(site, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(publicizeRestClient.fetchPublicizeData(site, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<PublicizeModel>()
-        whenever(mapper.map(PUBLICIZE_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(PUBLICIZE_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val responseModel = publicizeStore.fetchPublicizeData(site, PAGE_SIZE, forced)
+        val responseModel = publicizeStore.fetchPublicizeData(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, PUBLICIZE_RESPONSE)
@@ -570,9 +570,9 @@ class InsightsStoreTest {
     fun `returns publicize data from db`() {
         whenever(sqlUtils.selectPublicizeInsights(site)).thenReturn(PUBLICIZE_RESPONSE)
         val model = mock<PublicizeModel>()
-        whenever(mapper.map(PUBLICIZE_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(PUBLICIZE_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val result = publicizeStore.getPublicizeData(site, PAGE_SIZE)
+        val result = publicizeStore.getPublicizeData(site, LimitMode.Top(PAGE_SIZE))
 
         assertThat(result).isEqualTo(model)
     }
@@ -583,9 +583,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<PublicizeResponse>(StatsError(type, message))
         val forced = true
-        whenever(publicizeRestClient.fetchPublicizeData(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(publicizeRestClient.fetchPublicizeData(site, forced)).thenReturn(errorPayload)
 
-        val responseModel = publicizeStore.fetchPublicizeData(site, PAGE_SIZE, forced)
+        val responseModel = publicizeStore.fetchPublicizeData(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
