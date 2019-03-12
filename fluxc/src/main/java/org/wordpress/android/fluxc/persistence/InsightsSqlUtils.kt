@@ -45,8 +45,8 @@ class InsightsSqlUtils
         insert(site, LATEST_POST_DETAIL_INSIGHTS, data)
     }
 
-    fun insert(site: SiteModel, data: PostStatsResponse) {
-        insert(site, LATEST_POST_STATS_INSIGHTS, data)
+    fun insert(site: SiteModel, postId: Long, data: PostStatsResponse) {
+        insert(site, LATEST_POST_STATS_INSIGHTS, data, postId = postId)
     }
 
     fun insert(site: SiteModel, data: VisitResponse) {
@@ -85,8 +85,8 @@ class InsightsSqlUtils
         return select(site, LATEST_POST_DETAIL_INSIGHTS, PostResponse::class.java)
     }
 
-    fun selectLatestPostStats(site: SiteModel): PostStatsResponse? {
-        return select(site, LATEST_POST_STATS_INSIGHTS, PostStatsResponse::class.java)
+    fun selectLatestPostStats(site: SiteModel, postId: Long): PostStatsResponse? {
+        return select(site, LATEST_POST_STATS_INSIGHTS, PostStatsResponse::class.java, postId)
     }
 
     fun selectTodayInsights(site: SiteModel): VisitResponse? {
@@ -124,12 +124,18 @@ class InsightsSqlUtils
         return select(site, TAGS_AND_CATEGORIES_INSIGHTS, TagsResponse::class.java)
     }
 
-    private fun <T> insert(site: SiteModel, blockType: BlockType, data: T, replaceExistingData: Boolean = true) {
-        statsSqlUtils.insert(site, blockType, INSIGHTS, data, replaceExistingData)
+    private fun <T> insert(
+        site: SiteModel,
+        blockType: BlockType,
+        data: T,
+        replaceExistingData: Boolean = true,
+        postId: Long? = null
+    ) {
+        statsSqlUtils.insert(site, blockType, INSIGHTS, data, replaceExistingData, postId = postId)
     }
 
-    private fun <T> select(site: SiteModel, blockType: BlockType, classOfT: Class<T>): T? {
-        return statsSqlUtils.select(site, blockType, INSIGHTS, classOfT)
+    private fun <T> select(site: SiteModel, blockType: BlockType, classOfT: Class<T>, postId: Long? = null): T? {
+        return statsSqlUtils.select(site, blockType, INSIGHTS, classOfT, postId = postId)
     }
 
     private fun <T> selectAll(site: SiteModel, blockType: BlockType, classOfT: Class<T>): List<T> {
