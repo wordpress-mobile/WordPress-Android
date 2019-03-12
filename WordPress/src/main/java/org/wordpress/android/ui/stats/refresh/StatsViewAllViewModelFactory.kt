@@ -12,10 +12,19 @@ import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.CountryViewsUseCase.CountryViewsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,19 +76,20 @@ class StatsViewAllViewModelFactory(
             granularFactories: List<GranularUseCaseFactory>
         ): Pair<BaseStatsUseCase<*, *>, Int> {
             return when (type) {
-                StatsViewType.TOP_POSTS_AND_PAGES -> {
-                    Pair(granularFactories.first { it is PostsAndPagesUseCaseFactory }.build(granularity, VIEW_ALL),
-                            R.string.stats_view_top_posts_and_pages)
-                }
-                StatsViewType.REFERRERS -> {
-                    Pair(granularFactories.first { it is PostsAndPagesUseCaseFactory }.build(granularity, VIEW_ALL),
-                            R.string.stats_view_referrers)
-                }
-                StatsViewType.CLICKS -> TODO()
-                StatsViewType.AUTHORS -> TODO()
-                StatsViewType.GEOVIEWS -> TODO()
-                StatsViewType.SEARCH_TERMS -> TODO()
-                StatsViewType.VIDEO_PLAYS -> TODO()
+                StatsViewType.TOP_POSTS_AND_PAGES -> Pair(granularFactories.first { it is PostsAndPagesUseCaseFactory }
+                        .build(granularity, VIEW_ALL), R.string.stats_view_top_posts_and_pages)
+                StatsViewType.REFERRERS -> Pair(granularFactories.first { it is PostsAndPagesUseCaseFactory }
+                        .build(granularity, VIEW_ALL), R.string.stats_view_referrers)
+                StatsViewType.CLICKS -> Pair(granularFactories.first { it is ClicksUseCaseFactory }
+                        .build(granularity, VIEW_ALL), R.string.stats_view_clicks)
+                StatsViewType.AUTHORS -> Pair(granularFactories.first { it is AuthorsUseCaseFactory }
+                        .build(granularity, VIEW_ALL), R.string.stats_view_authors)
+                StatsViewType.GEOVIEWS -> Pair(granularFactories.first { it is CountryViewsUseCaseFactory }
+                        .build(granularity, VIEW_ALL), R.string.stats_view_countries)
+                StatsViewType.SEARCH_TERMS -> Pair(granularFactories.first { it is SearchTermsUseCaseFactory }
+                        .build(granularity, VIEW_ALL), R.string.stats_view_search_terms)
+                StatsViewType.VIDEO_PLAYS -> Pair(granularFactories.first { it is CountryViewsUseCaseFactory }
+                        .build(granularity, VIEW_ALL), R.string.stats_view_videos)
                 else -> throw InvalidParameterException("Invalid granular stats type: ${type.name}")
             }
         }
@@ -94,12 +104,17 @@ class StatsViewAllViewModelFactory(
                 StatsViewType.COMMENTS -> Pair(insightsUseCases.first { it is CommentsUseCase },
                         R.string.stats_view_comments)
                 StatsViewType.TAGS_AND_CATEGORIES -> Pair(insightsUseCases.first { it is TagsAndCategoriesUseCase },
-                        R.string.stats_view_comments)
-                StatsViewType.INSIGHTS_ALL_TIME -> TODO()
-                StatsViewType.INSIGHTS_LATEST_POST_SUMMARY -> TODO()
-                StatsViewType.INSIGHTS_MOST_POPULAR -> TODO()
-                StatsViewType.INSIGHTS_TODAY -> TODO()
-                StatsViewType.PUBLICIZE -> TODO()
+                        R.string.stats_view_tags_and_categories)
+                StatsViewType.INSIGHTS_ALL_TIME -> Pair(insightsUseCases.first { it is AllTimeStatsUseCase },
+                        R.string.stats_insights_all_time_stats)
+                StatsViewType.INSIGHTS_LATEST_POST_SUMMARY -> Pair(insightsUseCases
+                        .first { it is LatestPostSummaryUseCase }, R.string.stats_insights_latest_post_summary)
+                StatsViewType.INSIGHTS_MOST_POPULAR -> Pair(insightsUseCases.first { it is MostPopularInsightsUseCase },
+                        R.string.stats_insights_popular)
+                StatsViewType.INSIGHTS_TODAY -> Pair(insightsUseCases.first { it is TodayStatsUseCase },
+                        R.string.stats_insights_today)
+                StatsViewType.PUBLICIZE -> Pair(insightsUseCases.first { it is PublicizeUseCase },
+                        R.string.stats_view_publicize)
                 else -> throw InvalidParameterException("Invalid insights stats type: ${type.name}")
             }
         }

@@ -5,6 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.CLICKS
@@ -12,6 +13,8 @@ import org.wordpress.android.fluxc.store.stats.time.ClicksStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -35,7 +38,8 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_ITEM_COUNT = 6
+private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class ClicksUseCase
 constructor(
@@ -44,7 +48,8 @@ constructor(
     private val store: ClicksStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<ClicksModel, SelectedClicksGroup>(
         CLICKS,
         mainDispatcher,
@@ -53,22 +58,24 @@ constructor(
         statsGranularity,
         SelectedClicksGroup()
 ) {
+    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
+
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_clicks))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): ClicksModel? {
         return store.getClicks(
                 site,
                 statsGranularity,
-                PAGE_SIZE,
-                selectedDate
+                selectedDate,
+                LimitMode.Top(itemsToLoad)
         )
     }
 
     override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<ClicksModel> {
         val response = store.fetchClicks(
                 site,
-                PAGE_SIZE,
                 statsGranularity,
+                LimitMode.Top(itemsToLoad),
                 selectedDate,
                 forced
         )
@@ -84,7 +91,10 @@ constructor(
 
     override fun buildStatefulUiModel(domainModel: ClicksModel, uiState: SelectedClicksGroup): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_clicks))
+
+        if (useCaseMode == BLOCK) {
+            items.add(Title(R.string.stats_clicks))
+        }
 
         if (domainModel.groups.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
@@ -119,7 +129,7 @@ constructor(
                 }
             }
 
-            if (domainModel.hasMore) {
+            if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,
@@ -163,7 +173,8 @@ constructor(
                         store,
                         statsSiteProvider,
                         selectedDateProvider,
-                        analyticsTracker
+                        analyticsTracker,
+                        useCaseMode
                 )
     }
 }
