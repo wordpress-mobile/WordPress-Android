@@ -255,13 +255,13 @@ class InsightsStoreTest {
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, LATEST_POST)
-        verify(sqlUtils).insert(site, viewsResponse)
+        verify(sqlUtils).insert(site, LATEST_POST.id, viewsResponse)
     }
 
     @Test
     fun `returns latest post insights from db`() {
         whenever(sqlUtils.selectLatestPostDetail(site)).thenReturn(LATEST_POST)
-        whenever(sqlUtils.selectLatestPostStats(site)).thenReturn(POST_STATS_RESPONSE)
+        whenever(sqlUtils.selectLatestPostStats(site, LATEST_POST.id)).thenReturn(POST_STATS_RESPONSE)
         val model = mock<InsightsLatestPostModel>()
         whenever(mapper.map(
                 LATEST_POST,
