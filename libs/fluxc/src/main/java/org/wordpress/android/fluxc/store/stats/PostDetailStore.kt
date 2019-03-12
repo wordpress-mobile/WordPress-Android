@@ -37,7 +37,7 @@ class PostDetailStore
         }
     }
 
-    fun getPostingActivity(site: SiteModel, postId: Long): PostDetailStatsModel? {
+    fun getPostDetail(site: SiteModel, postId: Long): PostDetailStatsModel? {
         return sqlUtils.selectLatestPostStats(site, postId)?.let { mapper.map(it) }
     }
 }
