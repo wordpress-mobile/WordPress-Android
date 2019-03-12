@@ -1,0 +1,29 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/is-available/email/",
+        "queryParameters": {
+            "q": {
+                "matches": "^(?!new@example.com).*$"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "error": "taken",
+            "message": "Choose a different email address. This one is not available.",
+            "status": "error"
+        },
+        "headers": {
+            "Server": "nginx",
+            "Date": "Tue, 05 Mar 2019 15:43:37 GMT",
+            "Content-Type": "text/javascript;charset=utf-8",
+            "Connection": "keep-alive",
+            "Vary": "Accept-Encoding",
+            "X-hacker": "If you're reading this, you should visit automattic.com/jobs and apply to join the fun, mention this header.",
+            "X-ac": "2.lhr _dfw",
+            "Strict-Transport-Security": "max-age=15552000"
+        }
+    }
+}
