@@ -1,0 +1,37 @@
+{
+    "request": {
+        "method": "POST",
+        "urlPath": "/oauth2/token",
+        "bodyPatterns": [
+            {
+                "matches": ".*username=[^&]+.*"
+            },
+            {
+                "matches": ".*password=[^&]+.*"
+            },
+            {
+                "matches": ".*client_secret=[^&]+.*"
+            }
+        ]
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "access_token": "valid_token",
+            "token_type": "bearer",
+            "blog_id": "0",
+            "blog_url": null,
+            "scope": "global"
+        },
+        "headers": {
+            "Server": "nginx",
+            "Date": "Tue, 05 Mar 2019 15:43:40 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Vary": "Accept-Encoding",
+            "X-hacker": "If you're reading this, you should visit automattic.com/jobs and apply to join the fun, mention this header.",
+            "X-ac": "2.lhr _dfw",
+            "Strict-Transport-Security": "max-age=15552000"
+        }
+    }
+}
