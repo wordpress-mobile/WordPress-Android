@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.arch.lifecycle.MutableLiveData
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -11,6 +8,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
@@ -26,12 +24,17 @@ class StatsDateSelectorTest : BaseUnitTest() {
     private val selectedDate = Date(0)
     private val selectedDateLabel = "Jan 1"
     private val statsGranularity = StatsGranularity.DAYS
+    private val updatedDate = Date(10)
+    private val updatedLabel = "Jan 2"
+
+    private val dateProviderSelectedDate = MutableLiveData<StatsGranularity>()
+
     private lateinit var dateSelector: StatsDateSelector
+
     @Before
     fun setUp() {
-        val liveData = MutableLiveData<StatsGranularity>()
-        liveData.value = statsGranularity
-        whenever(selectedDateProvider.selectedDateChanged).thenReturn(liveData)
+        dateProviderSelectedDate.value = statsGranularity
+        whenever(selectedDateProvider.selectedDateChanged).thenReturn(dateProviderSelectedDate)
 
         dateSelector = StatsDateSelector(
                 selectedDateProvider,
@@ -40,7 +43,8 @@ class StatsDateSelectorTest : BaseUnitTest() {
         )
         whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(selectedDate)
         whenever(statsSectionManager.getSelectedStatsGranularity()).thenReturn(statsGranularity)
-        whenever(selectedDateProvider.getCurrentDate()).thenReturn(selectedDate)
+        whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(selectedDateLabel)
+        whenever(statsDateFormatter.printGranularDate(updatedDate, statsGranularity)).thenReturn(updatedLabel)
     }
 
     @Test
@@ -60,12 +64,9 @@ class StatsDateSelectorTest : BaseUnitTest() {
     @Test
     fun `shows date selector on days screen`() {
         whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(selectedDate)
-        whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(selectedDateLabel)
         whenever(selectedDateProvider.hasPreviousDate(statsGranularity)).thenReturn(true)
         whenever(selectedDateProvider.hasNextDate(statsGranularity)).thenReturn(true)
         var model: DateSelectorUiModel? = null
-
-        selectedDateProvider.selectDate(selectedDate, statsGranularity)
 
         dateSelector.dateSelectorData.observeForever { model = it }
 
@@ -80,10 +81,6 @@ class StatsDateSelectorTest : BaseUnitTest() {
 
     @Test
     fun `updates date selector on date change`() {
-        val statsGranularity = StatsGranularity.DAYS
-        val updatedDate = Date(10)
-        val updatedLabel = "Jan 2"
-        whenever(statsDateFormatter.printGranularDate(updatedDate, statsGranularity)).thenReturn(updatedLabel)
         whenever(selectedDateProvider.hasPreviousDate(statsGranularity)).thenReturn(true)
         whenever(selectedDateProvider.hasNextDate(statsGranularity)).thenReturn(true)
         var model: DateSelectorUiModel? = null
@@ -114,8 +111,6 @@ class StatsDateSelectorTest : BaseUnitTest() {
 
     @Test
     fun `does not update date selector on unrelated granularity date change`() {
-        val updatedLabel = "Jan 10"
-        val updatedDate = Date(10)
         whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(selectedDateLabel)
         whenever(statsDateFormatter.printGranularDate(updatedDate, statsGranularity)).thenReturn(updatedLabel)
 
@@ -126,16 +121,19 @@ class StatsDateSelectorTest : BaseUnitTest() {
 
         Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
 
-        whenever(selectedDateProvider.getSelectedDate(WEEKS)).thenReturn(updatedDate)
+        var selectedGranularity: StatsGranularity? = null
+        dateSelector.selectedDate.observeForever { selectedGranularity = it }
 
-        dateSelector.updateDateSelector()
+        dateProviderSelectedDate.value = WEEKS
 
         Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
+        Assertions.assertThat(selectedGranularity).isEqualTo(statsGranularity)
 
         whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(updatedDate)
 
-        dateSelector.updateDateSelector()
+        dateProviderSelectedDate.value = DAYS
 
+        Assertions.assertThat(selectedGranularity).isEqualTo(statsGranularity)
         Assertions.assertThat(model?.date).isEqualTo(updatedLabel)
     }
 }
