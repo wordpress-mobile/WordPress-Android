@@ -26,7 +26,7 @@ import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class TransactionsStore @Inject constructor(
-    private val planOffersRestClient: TransactionsRestClient,
+    private val transactionsRestClient: TransactionsRestClient,
     private val coroutineContext: CoroutineContext,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
@@ -53,7 +53,7 @@ class TransactionsStore @Inject constructor(
     }
 
     private suspend fun fetchSupportedCountries(): OnSupportedCountriesFetched {
-        val supportedCountriesPayload = planOffersRestClient.fetchSupportedCountries()
+        val supportedCountriesPayload = transactionsRestClient.fetchSupportedCountries()
 
         return if (!supportedCountriesPayload.isError) {
             OnSupportedCountriesFetched(supportedCountriesPayload.countries)
@@ -68,7 +68,7 @@ class TransactionsStore @Inject constructor(
     }
 
     private suspend fun createShoppingCard(payload: CreateShoppingCartPayload): OnShoppingCartCreated {
-        val createdShoppingCartPayload = planOffersRestClient.createShoppingCart(
+        val createdShoppingCartPayload = transactionsRestClient.createShoppingCart(
                 payload.site,
                 payload.domainSuggestionResponse,
                 payload.isPrivacyEnabled
@@ -84,7 +84,7 @@ class TransactionsStore @Inject constructor(
     }
 
     private suspend fun redeemCardUsingCredits(payload: RedeemShoppingCartPayload): OnCartRedeemed {
-        val cartRedeemedPayload = planOffersRestClient.redeemCartUsingCredits(
+        val cartRedeemedPayload = transactionsRestClient.redeemCartUsingCredits(
                 payload.cartDetails,
                 payload.domainContactModel
         )
