@@ -11,7 +11,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -26,12 +26,13 @@ class StatsDetailViewModel
     @Named(DETAIL_USE_CASE) private val detailUseCase: BaseListUseCase,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
-    private val selectedDateProvider: SelectedDateProvider,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    dateSelectorFactory: StatsDateSelector.Factory
 ) : ScopedViewModel(mainDispatcher) {
+    private val dateSelector = dateSelectorFactory.build(DETAIL)
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
-    val selectedDateChanged = selectedDateProvider.granularSelectedDateChanged(DETAIL)
+    val selectedDateChanged = dateSelector.selectedDate
 
     private val _showSnackbarMessage = mergeNotNull(
             detailUseCase.snackbarMessage,
@@ -39,7 +40,7 @@ class StatsDetailViewModel
             singleEvent = true
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
-    val showDateSelector = detailUseCase.showDateSelector
+    val showDateSelector = dateSelector.dateSelectorData
 
     fun init(
         site: SiteModel,
@@ -67,7 +68,7 @@ class StatsDetailViewModel
 
     override fun onCleared() {
         super.onCleared()
-        selectedDateProvider.clear(DETAIL)
+        dateSelector.clear()
         detailUseCase.onCleared()
     }
 
