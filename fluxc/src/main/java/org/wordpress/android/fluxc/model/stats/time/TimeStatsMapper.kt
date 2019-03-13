@@ -113,7 +113,7 @@ class TimeStatsMapper
         )
     }
 
-    fun map(response: VisitsAndViewsResponse): VisitsAndViewsModel {
+    fun map(response: VisitsAndViewsResponse, cacheMode: LimitMode): VisitsAndViewsModel {
         val periodIndex = response.fields?.indexOf("period")
         val viewsIndex = response.fields?.indexOf("views")
         val visitorsIndex = response.fields?.indexOf("visitors")
@@ -137,6 +137,12 @@ class TimeStatsMapper
                 } else {
                     null
                 }
+            }
+        }?.let {
+            if (cacheMode is LimitMode.Top) {
+                it.take(cacheMode.limit)
+            } else {
+                it
             }
         }
         if (response.data == null || response.date == null || dataPerPeriod == null) {
