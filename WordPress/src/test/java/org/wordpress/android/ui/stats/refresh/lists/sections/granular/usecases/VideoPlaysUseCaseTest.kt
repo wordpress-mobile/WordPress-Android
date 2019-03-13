@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -40,6 +41,7 @@ private val selectedDate = Date(0)
 
 class VideoPlaysUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: VideoPlaysStore
+    @Mock lateinit var siteModelProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
@@ -52,8 +54,10 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 store,
                 selectedDateProvider,
+                siteModelProvider,
                 tracker
         )
+        whenever(siteModelProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
                 SelectedDate(
@@ -178,7 +182,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }

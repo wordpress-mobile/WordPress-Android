@@ -653,7 +653,7 @@ public class EditPostSettingsFragment extends Fragment {
         updateCategoriesTextView();
     }
 
-    private void updatePostStatus(String postStatus) {
+    public void updatePostStatus(String postStatus) {
         getPost().setStatus(postStatus);
         updatePostStatusRelatedViews();
         updateSaveButton();
@@ -709,6 +709,11 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updatePublishDate(Calendar calendar) {
         getPost().setDateCreated(DateTimeUtils.iso8601FromDate(calendar.getTime()));
+        // Posts that are scheduled have a `future` date for REST but their status should be set to `published` as
+        // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
+        if (!PostUtils.shouldPublishImmediately(getPost())) {
+            updatePostStatus(PostStatus.PUBLISHED.toString());
+        }
         updatePublishDateTextView();
         updateSaveButton();
     }

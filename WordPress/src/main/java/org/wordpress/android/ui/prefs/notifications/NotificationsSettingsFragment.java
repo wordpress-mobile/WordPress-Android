@@ -4,8 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -56,6 +53,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -712,11 +710,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 mOnSettingsChangedListener
         );
 
-        Drawable drawableBell = context.getResources().getDrawable(R.drawable.ic_bell_white_24dp);
-        DrawableCompat.setTint(drawableBell, context.getResources().getColor(R.color.grey_darken_30));
-        DrawableCompat.setTintMode(drawableBell, PorterDuff.Mode.SRC_IN);
-
-        timelinePreference.setIcon(drawableBell);
+        timelinePreference.setIcon(ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_bell_white_24dp,
+                R.color.grey_darken_30));
         timelinePreference.setTitle(R.string.notifications_tab);
         timelinePreference.setDialogTitle(R.string.notifications_tab);
         timelinePreference.setSummary(R.string.notifications_tab_summary);
@@ -727,11 +722,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 mOnSettingsChangedListener
         );
 
-        Drawable drawableMail = context.getResources().getDrawable(R.drawable.ic_mail_white_24dp);
-        DrawableCompat.setTint(drawableMail, context.getResources().getColor(R.color.grey_darken_30));
-        DrawableCompat.setTintMode(drawableMail, PorterDuff.Mode.SRC_IN);
-
-        emailPreference.setIcon(drawableMail);
+        emailPreference.setIcon(ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_mail_white_24dp,
+                R.color.grey_darken_30));
         emailPreference.setTitle(R.string.email);
         emailPreference.setDialogTitle(R.string.email);
         emailPreference.setSummary(R.string.notifications_email_summary);
@@ -745,11 +737,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                     mOnSettingsChangedListener
             );
 
-            Drawable drawablePhone = context.getResources().getDrawable(R.drawable.ic_phone_white_24dp);
-            DrawableCompat.setTint(drawablePhone, context.getResources().getColor(R.color.grey_darken_30));
-            DrawableCompat.setTintMode(drawablePhone, PorterDuff.Mode.SRC_IN);
-
-            devicePreference.setIcon(drawablePhone);
+            devicePreference.setIcon(ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_phone_white_24dp,
+                    R.color.grey_darken_30));
             devicePreference.setTitle(R.string.app_notifications);
             devicePreference.setDialogTitle(R.string.app_notifications);
             devicePreference.setSummary(R.string.notifications_push_summary);

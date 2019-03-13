@@ -166,6 +166,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.util.AztecLog;
@@ -189,6 +190,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 public class EditPostActivity extends AppCompatActivity implements
@@ -380,7 +382,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // Create a new post
         mPost = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
-        mPost.setStatus(PostStatus.PUBLISHED.toString());
+        mPost.setStatus(PostStatus.DRAFT.toString());
         EventBus.getDefault().postSticky(
                 new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
@@ -853,16 +855,25 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else {
                     return getString(R.string.update_verb);
                 }
+            case DRAFT:
+                if (isNewPost() && mPost.isLocalDraft()) {
+                    return getString(R.string.post_status_publish_post);
+                } else {
+                    return handleDefaultForSaveButtonText();
+                }
             case PRIVATE:
             case PENDING:
             case TRASHED:
-            case DRAFT:
             default:
-                if (mPost.isLocalDraft()) {
-                    return getString(R.string.save);
-                } else {
-                    return getString(R.string.update_verb);
-                }
+                return handleDefaultForSaveButtonText();
+        }
+    }
+
+    private String handleDefaultForSaveButtonText() {
+        if (mPost.isLocalDraft()) {
+            return getString(R.string.save);
+        } else {
+            return getString(R.string.update_verb);
         }
     }
 
@@ -1323,7 +1334,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // we update the mPost object first, so we can pre-check Post publishability and inform the user
                 updatePostObject();
                 PostStatus status = PostStatus.fromPost(mPost);
-                if (status == PostStatus.DRAFT || status == PostStatus.PENDING) {
+                if (!isNewPost() && (status == PostStatus.DRAFT || status == PostStatus.PENDING)) {
                     if (isDiscardable()) {
                         String message = getString(
                                 mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
@@ -1332,15 +1343,22 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     showPublishConfirmationDialog();
                 } else {
+                    // this is a new post, save as draft
                     if (isDiscardable()) {
                         ToastUtils.showToast(EditPostActivity.this,
                                 getString(R.string.error_save_empty_draft), Duration.SHORT);
                         return false;
                     }
-                    UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
-                    if (isNewPost()) {
-                        mPost.setStatus(PostStatus.DRAFT.toString());
+
+                    if (status == PostStatus.SCHEDULED && isNewPost()) {
+                        // if user pressed `Save as draft` on a new, Scheduled Post, re-convert it to draft.
+                        if (mEditPostSettingsFragment != null) {
+                            mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
+                            ToastUtils.showToast(EditPostActivity.this,
+                                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
+                        }
                     }
+                    UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                     savePostAndOptionallyFinish(false);
                 }
@@ -1462,7 +1480,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // if post is a draft, first make sure to confirm the PUBLISH action, in case
         // the user tapped on it accidentally
         PostStatus status = PostStatus.fromPost(mPost);
-        if (userCanPublishPosts() && (status == PostStatus.PUBLISHED || status == PostStatus.UNKNOWN)
+        if (userCanPublishPosts() && (status == PostStatus.DRAFT || status == PostStatus.UNKNOWN)
             && mPost.isLocalDraft()) {
             showPublishConfirmationDialog();
         } else {
@@ -1719,6 +1737,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
                 mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                 publishPost();
+                AppRatingDialog.INSTANCE
+                        .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
                 // Clear failed uploads
@@ -2023,6 +2043,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostLocallyAndFinishAsync(true);
                     }
                 } else {
+                    // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
+                    // original post's status as we could not proceed with the action
+                    mPost.setStatus(mOriginalPost.getStatus());
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -2080,21 +2103,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 definitelyDeleteBackspaceDeletedMediaItems();
 
                 if (shouldSave) {
-                    if (isNewPost() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
-                        // new post - user just left the editor without publishing, they probably want
-                        // to keep the post as a draft (unless they explicitly changed the status)
-                        mPost.setStatus(PostStatus.DRAFT.toString());
-                        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                        if (mEditPostSettingsFragment != null) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mEditPostSettingsFragment.updatePostStatusRelatedViews();
-                                }
-                            });
-                        }
-                    }
-
                     PostStatus status = PostStatus.fromPost(mPost);
                     boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
                     if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
@@ -2140,7 +2148,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean isFirstTimePublish() {
-        return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.PUBLISHED)
+        return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.DRAFT)
                && (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT
                    || PostStatus.fromPost(mOriginalPost) == PostStatus.PENDING);
     }

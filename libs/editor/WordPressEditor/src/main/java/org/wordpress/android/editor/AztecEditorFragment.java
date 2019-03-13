@@ -154,6 +154,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static boolean mIsToolbarExpanded = false;
 
+    // 1-deep cache of html parsed to spans, as a speed optimization instead of parsing the same content again and again
+    private static int sPostContentHash;
+    private static Spanned sParsedContentCached;
+
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
 
@@ -1987,7 +1991,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                                                             AztecParser parser) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         String cleanSource = Format.removeSourceEditorFormatting(postContent, true);
-        builder.append(parser.fromHtml(cleanSource, context));
+        builder.append(parser.parseHtmlForInspection(cleanSource, context));
         Format.preProcessSpannedText(builder, true);
         return builder;
     }
@@ -2102,7 +2106,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static boolean hasMediaItemsMarkedWithTag(Context context, @NonNull String postContent, String tag) {
         // fill in Aztec with the post's content
         AztecParser parser = getAztecParserWithPlugins();
-        Spanned content = parser.fromHtml(postContent, context);
+        Spanned content = parseContent(context, parser, postContent);
 
         // get all items with the class in the "tag" param
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(tag);
@@ -2141,7 +2145,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         ArrayList<String> mediaMarkedUploading = new ArrayList<>();
         // fill in Aztec with the post's content
         AztecParser parser = getAztecParserWithPlugins();
-        Spanned content = parser.fromHtml(postContent, context);
+        Spanned content = parseContent(context, parser, postContent);
         AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass(classToUse);
         for (Attributes attrs : getAllElementAttributes(content, uploadingPredicate)) {
             String itemId = attrs.getValue(ATTR_ID_WP);
@@ -2150,6 +2154,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         }
         return mediaMarkedUploading;
+    }
+
+    public static Spanned parseContent(Context context, AztecParser parser, @NonNull String postContent) {
+        // parsing is an expensive operation (especially if the content is big) so, return previous result if matching.
+        if (sParsedContentCached != null && postContent.hashCode() == sPostContentHash) {
+            return new SpannableString(sParsedContentCached);
+        }
+
+        // cache the post's content hash to compare next time
+        sPostContentHash = postContent.hashCode();
+
+        // fill in Aztec with the post's content
+        sParsedContentCached = parser.parseHtmlForInspection(postContent, context);
+        return sParsedContentCached;
     }
 
     public void setMediaToFailed(@NonNull String mediaId) {

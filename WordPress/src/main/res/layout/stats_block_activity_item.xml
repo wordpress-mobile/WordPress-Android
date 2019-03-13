@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/link_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true">
+
+    <include
+        android:id="@+id/first_activity"
+        layout="@layout/stats_block_single_activity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintBottom_toTopOf="@+id/fewer_posts_label"
+        app:layout_constraintEnd_toStartOf="@+id/second_activity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginEnd="@dimen/margin_extra_large"/>
+
+    <include
+        android:id="@+id/second_activity"
+        layout="@layout/stats_block_single_activity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintBottom_toTopOf="@+id/fewer_posts_label"
+        app:layout_constraintEnd_toStartOf="@+id/third_activity"
+        app:layout_constraintStart_toEndOf="@+id/first_activity"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginEnd="@dimen/margin_extra_large"
+        />
+
+    <include
+        android:id="@+id/third_activity"
+        layout="@layout/stats_block_single_activity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintBottom_toTopOf="@+id/fewer_posts_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/second_activity"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/fewer_posts_label"
+        style="@style/StatsBlockPostingActivityLegend"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/one_line_list_item_height"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:text="@string/stats_fewer_posts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/very_low_box"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/third_activity"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <View
+        android:id="@+id/very_low_box"
+        style="@style/StatsActivityBox"
+        android:background="@color/grey_lighten_20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/low_box"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fewer_posts_label"
+        app:layout_constraintTop_toTopOf="@+id/fewer_posts_label"/>
+
+    <View
+        android:id="@+id/low_box"
+        style="@style/StatsActivityBox"
+        android:background="@color/stats_low_activity"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/medium_box"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/very_low_box"
+        app:layout_constraintTop_toTopOf="@+id/fewer_posts_label"/>
+
+    <View
+        android:id="@+id/medium_box"
+        style="@style/StatsActivityBox"
+        android:background="@color/stats_medium_activity"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/high_box"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/low_box"
+        app:layout_constraintTop_toTopOf="@+id/fewer_posts_label"/>
+
+    <View
+        android:id="@+id/high_box"
+        style="@style/StatsActivityBox"
+        android:background="@color/stats_high_activity"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/very_high_box"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/medium_box"
+        app:layout_constraintTop_toTopOf="@+id/fewer_posts_label"/>
+
+    <View
+        android:id="@+id/very_high_box"
+        style="@style/StatsActivityBox"
+        android:background="@color/grey_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/more_posts_label"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/high_box"
+        app:layout_constraintTop_toTopOf="@+id/fewer_posts_label"/>
+
+    <TextView
+        android:id="@+id/more_posts_label"
+        style="@style/StatsBlockPostingActivityLegend"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/one_line_list_item_height"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:text="@string/stats_more_posts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/very_high_box"
+        app:layout_constraintTop_toTopOf="@+id/fewer_posts_label"
+        app:layout_constraintVertical_bias="0.0"/>
+
+</android.support.constraint.ConstraintLayout>

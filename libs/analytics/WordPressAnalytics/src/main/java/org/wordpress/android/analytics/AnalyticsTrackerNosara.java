@@ -414,6 +414,18 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED:
                 predefinedEventProperties.put("type", "neutral");
                 break;
+            case APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA:
+                predefinedEventProperties.put("source", "media_upload");
+                break;
+            case APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION:
+                predefinedEventProperties.put("source", "notification_details");
+                break;
+            case APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE:
+                predefinedEventProperties.put("source", "publishing_post_or_page");
+                break;
+            case APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST:
+                predefinedEventProperties.put("source", "opening_reader_post");
+                break;
         }
 
         final String user;
@@ -1563,6 +1575,21 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "gutenberg_warning_confirm_dialog_dont_show_again_unchecked";
             case GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED:
                 return "gutenberg_warning_confirm_dialog_learn_more_tapped";
+            case APP_REVIEWS_SAW_PROMPT:
+                return "app_reviews_saw_prompt";
+            case APP_REVIEWS_CANCELLED_PROMPT:
+                return "app_reviews_cancelled_prompt";
+            case APP_REVIEWS_RATED_APP:
+                return "app_reviews_rated_app";
+            case APP_REVIEWS_DECLINED_TO_RATE_APP:
+                return "app_reviews_declined_to_rate_apt";
+            case APP_REVIEWS_DECIDED_TO_RATE_LATER:
+                return "app_reviews_decided_to_rate_later";
+            case APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA:
+            case APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION:
+            case APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE:
+            case APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST:
+                return "app_reviews_significant_event_incremented";
         }
         return null;
     }
