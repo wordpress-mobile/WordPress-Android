@@ -42,7 +42,7 @@ class ClicksStore
         }
     }
 
-    fun getClicks(site: SiteModel, period: StatsGranularity, date: Date, limitMode: Top): ClicksModel? {
+    fun getClicks(site: SiteModel, period: StatsGranularity, limitMode: Top, date: Date): ClicksModel? {
         return sqlUtils.selectClicks(site, period, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
