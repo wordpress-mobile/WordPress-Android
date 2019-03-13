@@ -243,10 +243,16 @@ class TimeStatsMapper
         )
     }
 
-    fun map(response: VideoPlaysResponse, pageSize: Int): VideoPlaysModel {
+    fun map(response: VideoPlaysResponse, cacheMode: LimitMode): VideoPlaysModel {
         val first = response.days.values.firstOrNull()
         val groups = first?.let {
-            first.plays.take(pageSize).mapNotNull { result ->
+            first.plays.let {
+                if (cacheMode is LimitMode.Top) {
+                    it.take(cacheMode.limit)
+                } else {
+                    it
+                }
+            }.mapNotNull { result ->
                 if (result.postId != null && result.title != null) {
                     VideoPlaysModel.VideoPlays(result.postId, result.title, result.url, result.plays ?: 0)
                 } else {
