@@ -8,13 +8,12 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.TransactionAction
 import org.wordpress.android.fluxc.action.TransactionAction.CREATE_SHOPPING_CART
-import org.wordpress.android.fluxc.action.TransactionAction.GET_SUPPORTED_COUNTRIES
+import org.wordpress.android.fluxc.action.TransactionAction.FETCH_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.action.TransactionAction.REDEEM_CART_WITH_CREDITS
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.DomainContactModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.Country
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CartResponse
@@ -34,7 +33,7 @@ class TransactionsStore @Inject constructor(
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? TransactionAction ?: return
         when (actionType) {
-            GET_SUPPORTED_COUNTRIES -> {
+            FETCH_SUPPORTED_COUNTRIES -> {
                 GlobalScope.launch(coroutineContext) {
                     emitChange(fetchSupportedCountries())
                 }
