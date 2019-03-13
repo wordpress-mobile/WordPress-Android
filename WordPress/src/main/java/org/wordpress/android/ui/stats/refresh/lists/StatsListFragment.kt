@@ -19,16 +19,9 @@ import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
-import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.YearsListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.util.image.ImageManager
@@ -67,11 +60,6 @@ class StatsListFragment : DaggerFragment() {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
 
-        val intent = activity?.intent
-        if (intent != null && intent.hasExtra(WordPress.SITE)) {
-            outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
-        }
-
         super.onSaveInstanceState(outState)
     }
 
@@ -98,6 +86,7 @@ class StatsListFragment : DaggerFragment() {
                         columns
                 )
         )
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1) && dy != 0) {
@@ -105,9 +94,11 @@ class StatsListFragment : DaggerFragment() {
                 }
             }
         })
+
         select_next_date.setOnClickListener {
             viewModel.onNextDateSelected()
         }
+
         select_previous_date.setOnClickListener {
             viewModel.onPreviousDateSelected()
         }
@@ -136,13 +127,6 @@ class StatsListFragment : DaggerFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(statsSection.name, viewModelClass)
 
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
-
         setupObservers(activity)
         viewModel.start()
     }
@@ -165,7 +149,7 @@ class StatsListFragment : DaggerFragment() {
             }
         })
 
-        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
+        viewModel.dateSelectorData.observe(this, Observer { dateSelectorUiModel ->
             val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
             if (date_selection_toolbar.visibility != dateSelectorVisibility) {
                 date_selection_toolbar.visibility = dateSelectorVisibility
@@ -185,6 +169,14 @@ class StatsListFragment : DaggerFragment() {
             navigator.navigate(activity, target)
             return@observeEvent true
         }
+
+        viewModel.selectedDate.observe(this, Observer {
+            viewModel.onDateChanged()
+        })
+
+        viewModel.listSelected.observe(this, Observer {
+            viewModel.onListSelected()
+        })
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {

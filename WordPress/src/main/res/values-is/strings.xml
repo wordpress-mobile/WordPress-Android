@@ -57,9 +57,6 @@ Language: is
     <string name="xmlrpc_post_blocked_error">Gat ekki tengst. Vefþjónninn þinn lokar á POST fyrirspurnir og forritið þarfnast þeirra\n        til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess að leysa úr þessu vandamáli.</string>
     <string name="reader_hint_search_followed_sites">Leita í vefjum sem þú fylgir</string>
     <string name="visual_editor_disabled">Slökkt er á sjónrænum ritli</string>
-    <string name="preference_editor_visual">Ritþór</string>
-    <string name="preference_editor_type">Skilgreina tegund ritils</string>
-    <string name="preference_editor_legacy">Eldri</string>
     <string name="pending_draft_one_generic">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
     <string name="pending_draft_one_month">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
     <string name="pending_draft_one_week_2">‘%1$s’ er enn í drögum. Mundu eftir að birta hana!</string>
@@ -110,7 +107,6 @@ Language: is
     <string name="alignment_right">Hægri</string>
     <string name="site_settings_list_editor_action_mode_title">Valdi %1$d</string>
     <string name="error_fetch_users_list">Gat ekki sótt notendur vefs</string>
-    <string name="plans_manage">Sýslaðu með áskriftarleiðina\ná WordPress.com/plans</string>
     <string name="title_follower">Fylgjandi</string>
     <string name="people_fetching">Sæki notendur…</string>
     <string name="title_email_follower">Fylgjandi í tölvupósti</string>
@@ -191,7 +187,6 @@ Language: is
     <string name="capture_or_pick_photo">Taka eða velja mynd</string>
     <string name="plan">Plön</string>
     <string name="plans">Áskriftarleiðir</string>
-    <string name="plans_loading_error">Gat ekki hlaðið inn áskriftarleiðum</string>
     <string name="export_your_content_message">Færslurnar þínar, síður og stillingar verða sendar til þín á netfangið %s.</string>
     <string name="export_your_content">Flyttu út efnið þitt</string>
     <string name="export_email_sent">Tölvupóstur með útflutningi sendur!</string>

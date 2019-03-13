@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.design.widget.TabLayout.Tab
 import android.support.v4.app.FragmentActivity
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -17,13 +18,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_empty_view.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import kotlinx.android.synthetic.main.stats_view_all_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
@@ -32,7 +32,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -43,7 +42,6 @@ import javax.inject.Inject
 class StatsViewAllFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
     @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var statsDateFormatter: StatsDateFormatter
     @Inject lateinit var navigator: StatsNavigator
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
@@ -65,9 +63,6 @@ class StatsViewAllFragment : DaggerFragment() {
 
         val intent = activity?.intent
         if (intent != null) {
-            if (intent.hasExtra(WordPress.SITE)) {
-                outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
-            }
             if (intent.hasExtra(StatsAbstractFragment.ARGS_VIEW_TYPE)) {
                 outState.putSerializable(
                         StatsAbstractFragment.ARGS_VIEW_TYPE,
@@ -91,13 +86,19 @@ class StatsViewAllFragment : DaggerFragment() {
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
-        // TODO remove this once we add the date selector
-        date_selection_toolbar.visibility = View.GONE
+
         recyclerView.layoutManager = layoutManager
         loadingRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
+        }
+
+        select_next_date.setOnClickListener {
+            viewModel.onNextDateSelected()
+        }
+        select_previous_date.setOnClickListener {
+            viewModel.onPreviousDateSelected()
         }
     }
 
@@ -117,13 +118,6 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
-
         val type = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
             nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
@@ -190,6 +184,36 @@ class StatsViewAllFragment : DaggerFragment() {
             navigator.navigate(activity, target)
             return@observeEvent true
         }
+
+        viewModel.dateSelectorData.observe(this, Observer { dateSelectorUiModel ->
+            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
+            if (date_selection_toolbar.visibility != dateSelectorVisibility) {
+                date_selection_toolbar.visibility = dateSelectorVisibility
+            }
+            selected_date.text = dateSelectorUiModel?.date ?: ""
+            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
+            if (select_previous_date.isEnabled != enablePreviousButton) {
+                select_previous_date.isEnabled = enablePreviousButton
+            }
+            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
+            if (select_next_date.isEnabled != enableNextButton) {
+                select_next_date.isEnabled = enableNextButton
+            }
+        })
+
+        viewModel.navigationTarget.observeEvent(this) { target ->
+            navigator.navigate(activity, target)
+            return@observeEvent true
+        }
+
+        viewModel.selectedDate.observe(this, Observer {
+            viewModel.onDateChanged()
+        })
+
+        viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
+            val elevation = if (hasShadow == true) resources.getDimension(R.dimen.appbar_elevation) else 0f
+            app_bar_layout.postDelayed({ ViewCompat.setElevation(app_bar_layout, elevation) }, 100)
+        })
     }
 
     private fun loadData(recyclerView: RecyclerView, data: List<BlockListItem>) {
