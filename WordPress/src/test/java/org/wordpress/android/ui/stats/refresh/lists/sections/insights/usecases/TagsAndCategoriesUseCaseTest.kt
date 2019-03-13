@@ -75,9 +75,11 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 listOf(firstTag, secondTag),
                 categoryViews
         )
+        val model = TagsModel(listOf(singleTag, category), hasMore = false)
+        whenever(insightsStore.getTags(site, LimitMode.Top(blockItemCount))).thenReturn(model)
         whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
-                        TagsModel(listOf(singleTag, category), hasMore = false)
+                        model
                 )
         )
 
@@ -123,9 +125,11 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         val singleTagViews: Long = 10
         val tagItem = TagModel.Item("tag1", "tag", "url.com")
         val tag = TagModel(listOf(tagItem), singleTagViews)
+        val model = TagsModel(listOf(tag), hasMore = true)
+        whenever(insightsStore.getTags(site, LimitMode.Top(blockItemCount))).thenReturn(model)
         whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
-                        TagsModel(listOf(tag), hasMore = true)
+                        model
                 )
         )
 

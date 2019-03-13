@@ -83,6 +83,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     fun `maps referrers to UI model`() = test {
         val forced = false
         val model = ReferrersModel(10, 15, listOf(singleReferrer, group), false)
+        whenever(store.getReferrers(site, statsGranularity, selectedDate, LimitMode.Top(itemsToLoad))).thenReturn(model)
         whenever(store.fetchReferrers(site,
                 statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)).thenReturn(
                 OnStatsFetched(
@@ -135,6 +136,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = ReferrersModel(10, 15, listOf(singleReferrer), true)
+        whenever(store.getReferrers(site, statsGranularity, selectedDate, LimitMode.Top(itemsToLoad))).thenReturn(model)
         whenever(store.fetchReferrers(site,
                 statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)).thenReturn(
                 OnStatsFetched(

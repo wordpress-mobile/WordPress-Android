@@ -48,9 +48,11 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     fun `maps full stats item to UI model`() = test {
         val forced = false
         val refresh = true
+        val model = VisitsModel("2018-10-02", views, visitors, likes, 0, comments, 0)
+        whenever(insightsStore.getTodayInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnStatsFetched(
-                        VisitsModel("2018-10-02", views, visitors, likes, 0, comments, 0)
+                        model
                 )
         )
 
@@ -72,9 +74,11 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     fun `maps partial stats item to UI model`() = test {
         val forced = false
         val refresh = true
+        val model = VisitsModel("2018-10-02", 0, visitors, likes, 0, 0, 0)
+        whenever(insightsStore.getTodayInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnStatsFetched(
-                        VisitsModel("2018-10-02", 0, visitors, likes, 0, 0, 0)
+                        model
                 )
         )
 

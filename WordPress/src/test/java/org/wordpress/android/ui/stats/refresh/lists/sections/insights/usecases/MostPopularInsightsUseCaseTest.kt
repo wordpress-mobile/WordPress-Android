@@ -73,9 +73,11 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     fun `maps full most popular insights to UI model`() = test {
         val forced = false
         val refresh = true
+        val model = InsightsMostPopularModel(0, day, hour, highestDayPercent, highestHourPercent)
+        whenever(insightsStore.getMostPopularInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchMostPopularInsights(site, forced)).thenReturn(
                 OnStatsFetched(
-                        InsightsMostPopularModel(0, day, hour, highestDayPercent, highestHourPercent)
+                        model
                 )
         )
 

@@ -71,6 +71,14 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     fun `maps video plays to UI model`() = test {
         val forced = false
         val model = VideoPlaysModel(10, 15, listOf(videoPlay), false)
+        whenever(
+                store.getVideoPlays(
+                        site,
+                        statsGranularity,
+                        pageSize,
+                        selectedDate
+                )
+        ).thenReturn(model)
         whenever(store.fetchVideoPlays(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
@@ -92,6 +100,14 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = VideoPlaysModel(10, 15, listOf(videoPlay), true)
+        whenever(
+                store.getVideoPlays(
+                        site,
+                        statsGranularity,
+                        pageSize,
+                        selectedDate
+                )
+        ).thenReturn(model)
         whenever(
                 store.fetchVideoPlays(site, pageSize, statsGranularity, selectedDate, forced)
         ).thenReturn(

@@ -13,6 +13,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -84,22 +85,26 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps followers from selected tab to UI model and select empty tab`() = test {
         val refresh = true
+        val wpComModel = FollowersModel(
+                totalCount,
+                listOf(FollowerModel(avatar, user, url, dateSubscribed)),
+                hasMore = false
+        )
+        whenever(insightsStore.getWpComFollowers(site, LimitMode.Top(blockPageSize))).thenReturn(wpComModel)
         whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
-                        FollowersModel(
-                                totalCount,
-                                listOf(FollowerModel(avatar, user, url, dateSubscribed)),
-                                hasMore = false
-                        )
+                        wpComModel
                 )
         )
+        val emailModel = FollowersModel(
+                0,
+                listOf(),
+                hasMore = false
+        )
+        whenever(insightsStore.getEmailFollowers(site, LimitMode.Top(blockPageSize))).thenReturn(emailModel)
         whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
-                        model = FollowersModel(
-                                0,
-                                listOf(),
-                                hasMore = false
-                        )
+                        model = emailModel
                 )
         )
 
@@ -119,22 +124,26 @@ class FollowersUseCaseTest : BaseUnitTest() {
     fun `maps email followers to UI model`() = test {
         val forced = false
         val refresh = true
+        val wpComModel = FollowersModel(
+                0,
+                listOf(),
+                hasMore = false
+        )
+        whenever(insightsStore.getWpComFollowers(site, LimitMode.Top(blockPageSize))).thenReturn(wpComModel)
         whenever(insightsStore.fetchWpComFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
-                        model = FollowersModel(
-                                0,
-                                listOf(),
-                                hasMore = false
-                        )
+                        model = wpComModel
                 )
         )
+        val emailModel = FollowersModel(
+                totalCount,
+                listOf(FollowerModel(avatar, user, url, dateSubscribed)),
+                hasMore = false
+        )
+        whenever(insightsStore.getEmailFollowers(site, LimitMode.Top(blockPageSize))).thenReturn(emailModel)
         whenever(insightsStore.fetchEmailFollowers(site, blockInitialMode)).thenReturn(
                 OnStatsFetched(
-                        FollowersModel(
-                                totalCount,
-                                listOf(FollowerModel(avatar, user, url, dateSubscribed)),
-                                hasMore = false
-                        )
+                        emailModel
                 )
         )
 
@@ -237,41 +246,42 @@ class FollowersUseCaseTest : BaseUnitTest() {
         )
 
         val refresh = true
+        val wpComModel = FollowersModel(
+                0,
+                listOf(),
+                hasMore = false
+        )
+        whenever(insightsStore.getWpComFollowers(site, LimitMode.All)).thenReturn(wpComModel)
         whenever(insightsStore.fetchWpComFollowers(site, viewAllInitialLoadMode)).thenReturn(
                 OnStatsFetched(
-                        model = FollowersModel(
-                                0,
-                                listOf(),
-                                hasMore = false
-                        )
+                        model = wpComModel
                 )
         )
+        val emailModel = FollowersModel(
+                totalCount,
+                List(10) { FollowerModel(avatar, user, url, dateSubscribed) },
+                hasMore = true
+        )
+        whenever(insightsStore.getEmailFollowers(site, LimitMode.All)).thenReturn(emailModel)
         whenever(insightsStore.fetchEmailFollowers(site, viewAllInitialLoadMode)).thenReturn(
                 OnStatsFetched(
-                        FollowersModel(
-                                totalCount,
-                                List(10) { FollowerModel(avatar, user, url, dateSubscribed) },
-                                hasMore = true
-                        )
+                        emailModel
                 )
         )
 
         whenever(insightsStore.fetchWpComFollowers(site, viewAllMoreLoadMode, true)).thenReturn(
                 OnStatsFetched(
-                        model = FollowersModel(
-                                0,
-                                listOf(),
-                                hasMore = false
-                        )
+                        model = wpComModel
                 )
+        )
+        val updatedEmailModel = FollowersModel(
+                totalCount,
+                List(11) { FollowerModel(avatar, user, url, dateSubscribed) },
+                hasMore = false
         )
         whenever(insightsStore.fetchEmailFollowers(site, viewAllMoreLoadMode, true)).thenReturn(
                 OnStatsFetched(
-                        FollowersModel(
-                                totalCount,
-                                List(11) { FollowerModel(avatar, user, url, dateSubscribed) },
-                                hasMore = false
-                        )
+                        updatedEmailModel
                 )
         )
 
@@ -285,6 +295,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val button = updatedResult.data!!.assertViewAllFollowersFirstLoad(position = 1)
 
         useCase.liveData.observeForever { if (it != null) updatedResult = it }
+
+        whenever(insightsStore.getEmailFollowers(site, LimitMode.All)).thenReturn(updatedEmailModel)
         button.loadMore()
         updatedResult.data!!.assertViewAllFollowersSecondLoad()
     }

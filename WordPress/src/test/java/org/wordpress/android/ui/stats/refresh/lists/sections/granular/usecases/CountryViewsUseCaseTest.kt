@@ -72,6 +72,14 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     fun `maps country views to UI model`() = test {
         val forced = false
         val model = CountryViewsModel(10, 15, listOf(country), false)
+        whenever(
+                store.getCountryViews(
+                        site,
+                        statsGranularity,
+                        pageSize,
+                        selectedDate
+                )
+        ).thenReturn(model)
         whenever(store.fetchCountryViews(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
@@ -96,6 +104,14 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = CountryViewsModel(10, 15, listOf(country), true)
+        whenever(
+                store.getCountryViews(
+                        site,
+                        statsGranularity,
+                        pageSize,
+                        selectedDate
+                )
+        ).thenReturn(model)
         whenever(
                 store.fetchCountryViews(site, pageSize, statsGranularity, selectedDate, forced)
         ).thenReturn(

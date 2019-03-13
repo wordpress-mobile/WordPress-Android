@@ -56,9 +56,11 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val forced = false
         val followers = 100
         val services = listOf(Service("facebook", followers))
+        val model = PublicizeModel(services, false)
+        whenever(insightsStore.getPublicizeData(site, pageSize)).thenReturn(model)
         whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
                 OnStatsFetched(
-                        PublicizeModel(services, false)
+                        model
                 )
         )
         val mockedItem = mock<ListItemWithIcon>()
@@ -85,9 +87,11 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val services = listOf(
                 Service("service1", followers)
         )
+        val model = PublicizeModel(services, true)
+        whenever(insightsStore.getPublicizeData(site, pageSize)).thenReturn(model)
         whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
                 OnStatsFetched(
-                        PublicizeModel(services, true)
+                        model
                 )
         )
         val mockedItem = mock<ListItemWithIcon>()
@@ -111,8 +115,10 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty services to UI model`() = test {
         val forced = false
+        val model = PublicizeModel(listOf(), false)
+        whenever(insightsStore.getPublicizeData(site, pageSize)).thenReturn(model)
         whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
-                OnStatsFetched(PublicizeModel(listOf(), false))
+                OnStatsFetched(model)
         )
 
         val result = loadPublicizeModel(true, forced)

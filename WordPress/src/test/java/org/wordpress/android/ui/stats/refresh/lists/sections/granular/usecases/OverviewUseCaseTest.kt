@@ -26,8 +26,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -72,7 +72,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps domain model to UI model`() = test {
         val forced = false
-
+        whenever(store.getVisits(site, currentDate, statsGranularity)).thenReturn(model)
         whenever(store.fetchVisits(site, pageSize, currentDate, statsGranularity, forced)).thenReturn(
                 OnStatsFetched(
                         model

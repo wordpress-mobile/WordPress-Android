@@ -50,7 +50,9 @@ class CommentsUseCase
 
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
-            model != null && (model.authors.isNotEmpty() || model.posts.isNotEmpty()) -> State.Data(model)
+            model != null && (model.authors.isNotEmpty() || model.posts.isNotEmpty()) -> State.Data(
+                    model,
+                    cached = response.cached)
             else -> State.Empty()
         }
     }

@@ -72,6 +72,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     fun `maps search_terms to UI model`() = test {
         val forced = false
         val model = SearchTermsModel(10, 15, 0, listOf(searchTerm), false)
+        whenever(store.getSearchTerms(site, statsGranularity, pageSize, selectedDate)).thenReturn(model)
         whenever(store.fetchSearchTerms(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
@@ -93,6 +94,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = SearchTermsModel(10, 15, 0, listOf(searchTerm), true)
+        whenever(store.getSearchTerms(site, statsGranularity, pageSize, selectedDate)).thenReturn(model)
         whenever(
                 store.fetchSearchTerms(site, pageSize, statsGranularity, selectedDate, forced)
         ).thenReturn(
@@ -122,6 +124,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 listOf(searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm),
                 false
         )
+        whenever(store.getSearchTerms(site, statsGranularity, pageSize, selectedDate)).thenReturn(model)
         whenever(
                 store.fetchSearchTerms(site, pageSize, statsGranularity, selectedDate, forced)
         ).thenReturn(
@@ -151,10 +154,12 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty search_terms to UI model`() = test {
         val forced = false
+        val model = SearchTermsModel(0, 0, 0, listOf(), false)
+        whenever(store.getSearchTerms(site, statsGranularity, pageSize, selectedDate)).thenReturn(model)
         whenever(
                 store.fetchSearchTerms(site, pageSize, statsGranularity, selectedDate, forced)
         ).thenReturn(
-                OnStatsFetched(SearchTermsModel(0, 0, 0, listOf(), false))
+                OnStatsFetched(model)
         )
 
         val result = loadData(true, forced)

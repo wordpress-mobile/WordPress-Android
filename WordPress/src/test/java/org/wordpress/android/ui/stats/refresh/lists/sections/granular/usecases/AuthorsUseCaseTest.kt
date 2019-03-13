@@ -80,6 +80,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     fun `maps authors to UI model`() = test {
         val forced = false
         val model = AuthorsModel(10, listOf(authorWithoutPosts, authorWithPosts), false)
+        whenever(store.getAuthors(site, statsGranularity, pageSize, selectedDate)).thenReturn(model)
         whenever(store.fetchAuthors(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
@@ -143,6 +144,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = AuthorsModel(10, listOf(authorWithoutPosts), true)
+        whenever(store.getAuthors(site, statsGranularity, pageSize, selectedDate)).thenReturn(model)
         whenever(store.fetchAuthors(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
