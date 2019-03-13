@@ -36,6 +36,10 @@
                 android:id="@+id/sitePreviewTitle"
                 style="@style/SitePreviewTitle"/>
 
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/sitePreviewSubtitle"
+                style="@style/SitePreviewSubtitle"/>
+
             <Button
                 android:id="@+id/okButton"
                 style="@style/SitePreviewOkButton"

@@ -803,11 +803,21 @@
     <style name="SitePreviewTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:text">@string/new_site_creation_preview_title</item>
         <item name="android:textAlignment">center</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/wp_grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
+    </style>
+
+    <style name="SitePreviewSubtitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/new_site_creation_preview_subtitle</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/wp_grey_darken_20</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="SitePreviewOkButton">
