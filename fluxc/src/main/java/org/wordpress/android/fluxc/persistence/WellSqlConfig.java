@@ -456,19 +456,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 58:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL(
-                        "CREATE TABLE StatsBlockTemp (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
-                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,JSON TEXT NOT NULL)");
-                db.execSQL("INSERT INTO StatsBlockTemp SELECT * FROM StatsBlock");
-                db.execSQL("DROP TABLE StatsBlock");
-                db.execSQL("ALTER TABLE StatsBlockTemp RENAME TO StatsBlock");
-                oldVersion++;
-            case 58:
-                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("DROP TABLE StatsBlock");
                 db.execSQL(
                         "CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
-                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,JSON TEXT NOT NULL)");
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,JSON TEXT NOT "
+                        + "NULL)");
                 db.execSQL(
                         "CREATE TABLE StatsRequest (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,TIME_STAMP INTEGER,"
