@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPay
 @ActionEnum
 enum class TransactionAction : IAction {
     // Remote actions
-    GET_SUPPORTED_COUNTRIES,
+    FETCH_SUPPORTED_COUNTRIES,
     @Action(payloadType = CreateShoppingCartPayload::class)
     CREATE_SHOPPING_CART,
     @Action(payloadType = RedeemShoppingCartPayload::class)
