@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.detail.DayViewsUseCase.UiState
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostDayViewsUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
@@ -20,7 +20,7 @@ import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
 
-class DayViewsUseCase
+class PostDayViewsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val dayViewsMapper: DayViewsMapper,

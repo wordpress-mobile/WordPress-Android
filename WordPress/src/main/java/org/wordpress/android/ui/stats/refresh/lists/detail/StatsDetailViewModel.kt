@@ -61,6 +61,7 @@ class StatsDetailViewModel
     fun refresh() {
         launch {
             detailUseCase.refreshData(true)
+            _isRefreshing.value = false
         }
     }
 
