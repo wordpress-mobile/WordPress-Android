@@ -18,7 +18,7 @@ Here's a quick guide to create a pull request for your WordPress-Android patch:
 
 4. Setup your build environment (see [build instructions in our README][build-instructions]) and start hacking the project. You must follow our [code style guidelines][style], write good commit messages, comment your code and write automated tests.
 
-5. When your patch is ready, [submit a pull request][pr]. Add some comments or screen shots to help us.
+5. When your patch is ready, [submit a pull request][pr]. Make sure the pull request addresses one of our existing issues and its description refers to that issue. Add some comments or screen shots to help us.
 
 6. Wait for us to review your pull request. If something is wrong or if we want you to make some changes before the merge, we'll let you know through commit comments or pull request comments.
 
