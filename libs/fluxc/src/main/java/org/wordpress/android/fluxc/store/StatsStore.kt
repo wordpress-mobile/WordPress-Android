@@ -21,9 +21,14 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.AVERAGE_VIEWS_PER_DAY
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.CLICKS_BY_WEEKS
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.MONTHS_AND_YEARS
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.POST_OVERVIEW
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -51,6 +56,7 @@ class StatsStore
                 COMMENTS,
                 TAGS_AND_CATEGORIES,
                 FOLLOWERS,
+                POSTING_ACTIVITY,
                 PUBLICIZE
         )
     }
@@ -65,6 +71,15 @@ class StatsStore
                 COUNTRIES,
                 SEARCH_TERMS,
                 VIDEOS
+        )
+    }
+
+    suspend fun getPostDetailTypes(): List<PostDetailTypes> = withContext(coroutineContext) {
+        return@withContext listOf(
+                POST_OVERVIEW,
+                MONTHS_AND_YEARS,
+                AVERAGE_VIEWS_PER_DAY,
+                CLICKS_BY_WEEKS
         )
     }
 
@@ -94,6 +109,13 @@ class StatsStore
         SEARCH_TERMS,
         PUBLISHED,
         VIDEOS
+    }
+
+    enum class PostDetailTypes : StatsTypes {
+        POST_OVERVIEW,
+        MONTHS_AND_YEARS,
+        AVERAGE_VIEWS_PER_DAY,
+        CLICKS_BY_WEEKS
     }
 
     data class OnStatsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
