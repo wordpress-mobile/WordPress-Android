@@ -464,11 +464,6 @@ class InsightsRestClientTest {
         assertThat(responseModel.response).isEqualTo(PUBLICIZE_RESPONSE)
         val url = "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/publicize/"
         assertThat(urlCaptor.lastValue).isEqualTo(url)
-        assertThat(paramsCaptor.lastValue).isEqualTo(
-                mapOf(
-                        "max" to "$pageSize"
-                )
-        )
     }
 
     @Test
