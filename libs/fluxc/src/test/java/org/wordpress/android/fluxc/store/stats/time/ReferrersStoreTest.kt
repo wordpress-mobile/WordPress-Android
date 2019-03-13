@@ -86,7 +86,7 @@ class ReferrersStoreTest {
         val model = mock<ReferrersModel>()
         whenever(mapper.map(REFERRERS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
-        val result = store.getReferrers(site, DAYS, DATE, LimitMode.Top(ITEMS_TO_LOAD))
+        val result = store.getReferrers(site, DAYS, LimitMode.Top(ITEMS_TO_LOAD), DATE)
 
         assertThat(result).isEqualTo(model)
     }
