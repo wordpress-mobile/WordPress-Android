@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient.PlanOffersResponse.Feature
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.TransactionsStore.CreatedShoppingCartPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.FetchedSupportedCountriesPayload
@@ -159,7 +158,7 @@ constructor(
     data class CartResponse(
         val blog_id: Int,
         val cart_key: String?,
-        val products: List<Feature>?
+        val products: List<Product>?
     ) : Response {
         data class Product(
             val product_id: Int,
