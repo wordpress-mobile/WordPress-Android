@@ -42,7 +42,7 @@ class ReferrersStore
         }
     }
 
-    fun getReferrers(site: SiteModel, granularity: StatsGranularity, date: Date, limitMode: Top): ReferrersModel? {
+    fun getReferrers(site: SiteModel, granularity: StatsGranularity, limitMode: Top, date: Date): ReferrersModel? {
         return sqlUtils.selectReferrers(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
