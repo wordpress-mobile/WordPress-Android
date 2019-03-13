@@ -152,11 +152,17 @@ class TimeStatsMapper
         } ?: 0
     }
 
-    fun map(response: CountryViewsResponse, pageSize: Int): CountryViewsModel {
+    fun map(response: CountryViewsResponse, cacheMode: LimitMode): CountryViewsModel {
         val first = response.days.values.firstOrNull()
         val countriesInfo = response.countryInfo
         val groups = first?.let {
-            first.views.take(pageSize).mapNotNull { countryViews ->
+            first.views.let {
+                if (cacheMode is LimitMode.Top) {
+                    it.take(cacheMode.limit)
+                } else {
+                    it
+                }
+            }.mapNotNull { countryViews ->
                 val countryInfo = countriesInfo[countryViews.countryCode]
                 if (countryViews.countryCode != null && countryInfo != null && countryInfo.countryFull != null) {
                     CountryViewsModel.Country(
