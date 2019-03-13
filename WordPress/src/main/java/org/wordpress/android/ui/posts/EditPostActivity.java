@@ -3483,8 +3483,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
             if (mShowAztecEditor && !mShowGutenbergEditor) {
-                mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds.add(localMediaId);
-                UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds);
+                setDeletedMediaIdOnUploadService(localMediaId);
                 // passing false here as we need to keep the media item in case the user wants to undo
                 cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
             } else if (mShowGutenbergEditor) {
@@ -3493,8 +3492,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     return;
                 }
 
-                mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds.add(localMediaId);
-                UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds);
+                setDeletedMediaIdOnUploadService(localMediaId);
 
                 // also make sure it's not being uploaded anywhere else (maybe on some other Post,
                 // simultaneously)
@@ -3505,6 +3503,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         }
+    }
+
+    private void setDeletedMediaIdOnUploadService(String localMediaId) {
+        mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds.add(localMediaId);
+        UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds);
     }
 
     private void cancelMediaUpload(int localMediaId, boolean delete) {
