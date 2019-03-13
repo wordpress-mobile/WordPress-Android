@@ -23,7 +23,8 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 @Singleton
-class FollowersStore @Inject constructor(
+class FollowersStore
+@Inject constructor(
     private val restClient: FollowersRestClient,
     private val wpComFollowersSqlUtils: WpComFollowersSqlUtils,
     private val emailFollowersSqlUtils: EmailFollowersSqlUtils,
