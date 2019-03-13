@@ -19,7 +19,7 @@ import javax.inject.Singleton
     AppConfigModule::class,
     ReleaseBaseModule::class,
     DebugOkHttpClientModule::class,
-    InterceptorModule::class,
+    InterceptorModuleTest::class,
     ReleaseNetworkModule::class,
     LegacyModule::class,
     ReleaseToolsModule::class,

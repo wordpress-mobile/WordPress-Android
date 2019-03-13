@@ -27,6 +27,7 @@ public class BaseTest {
     protected AppComponentTest mMockedAppComponent;
 
     private static final String WIREMOCK_PATH = "wiremock";
+    public static final int WIREMOCK_PORT = 8080;
 
     @Before
     public void setup() {
@@ -39,7 +40,7 @@ public class BaseTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(
-            wireMockConfig().port(8080).fileSource(
+            wireMockConfig().port(WIREMOCK_PORT).fileSource(
                     new AssetFileSource(InstrumentationRegistry.getContext().getAssets(), WIREMOCK_PATH)));
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
