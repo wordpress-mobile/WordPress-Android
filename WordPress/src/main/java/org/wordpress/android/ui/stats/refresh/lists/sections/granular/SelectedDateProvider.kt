@@ -87,7 +87,7 @@ class SelectedDateProvider
         return selectedDate.index != null && selectedDate.hasData() && selectedDate.index > 0
     }
 
-    fun hasNextData(statsSection: StatsSection): Boolean {
+    fun hasNextDate(statsSection: StatsSection): Boolean {
         val selectedDate = getSelectedDateState(statsSection)
         return selectedDate.hasData() &&
                 selectedDate.index != null &&

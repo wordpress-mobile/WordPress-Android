@@ -75,9 +75,6 @@ Language: sk
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_no_data_yet">Zatiaľ žiadne dáta</string>
     <string name="menu_debug">Menu ladenia</string>
-    <string name="preference_experimental">*TESTOVACIE*</string>
-    <string name="site_settings_enable_gutenberg_summary">Toto je stále len testovacia verzia Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">Povoliť Gutenberg</string>
     <string name="change_password_dialog_message">Prebieha zmena hesla…</string>
     <string name="change_password_dialog_hint">Vaše heslo by malo obsahovať aspoň 6 znakov. Aby bolo silnejšie, použite veľké a malé písmena, čísla a symboly ako ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Heslo úspešne zmenené</string>
@@ -89,14 +86,6 @@ Language: sk
     <string name="history_detail_title">Revízia</string>
     <string name="history_detail_button_previous">Predchádzajúce</string>
     <string name="history_detail_button_next">Ďalej</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Dozvedieť sa viac </string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Znovu nezobrazovať</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Späť</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Upraviť stránku</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Upraviť článok</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Pracujeme na úplne novom editore WordPress. Stále môžete upraviť túto stránku, no odporúčame vám zobraziť jej ukážku pred zverejnením. </string>
-    <string name="dialog_gutenberg_compatibility_message">Pracujeme na úplne novom editore WordPress. Stále môžete upraviť tento článok, no odporúčame vám zobraziť jeho ukážku pred zverejnením.</string>
-    <string name="dialog_gutenberg_compatibility_title">Skôr než budete pokračovať</string>
     <string name="media_space_used">%1$s použité</string>
     <string name="enter_wpcom_or_jetpack_site">Zadajte WordPress.com alebo samo-hostovanú WordPress webovú stránku pripojenú s Jetpack.</string>
     <string name="history_loading_revision">Načítavanie verzie </string>
@@ -1028,9 +1017,6 @@ Language: sk
     <string name="xmlrpc_post_blocked_error">Nemožno pripojiť. Váš hostiteľ blokuje žiadosti ČLÁNOK. Aplikácia potrebuje to potrebuje na komunikáciu s vašou webovou stránkou. Kontaktujte hostiteľa, aby vyriešil tento problém.</string>
     <string name="reader_hint_search_followed_sites">Hľadajte sledované webové stránky</string>
     <string name="visual_editor_disabled">Zablokovaný vizuálny editor</string>
-    <string name="preference_editor_visual">Vizuál</string>
-    <string name="preference_editor_legacy">Staršia verzia</string>
-    <string name="preference_editor_type">Nastaviť typ editora</string>
     <string name="pending_draft_one_generic">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_month">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_week_2">%1$s\' zostáva ako koncept. Pripomenúť na zverjnenie!</string>
@@ -1081,7 +1067,6 @@ Language: sk
     <string name="alignment_none">Žiadne</string>
     <string name="site_settings_list_editor_action_mode_title">Vybraná %1$d</string>
     <string name="error_fetch_users_list">Nepodarilo sa získať používateľov webovej stránky</string>
-    <string name="plans_manage">Organizujte svoj plán na WordPress.com/plans</string>
     <string name="title_email_follower">Email odberateľa</string>
     <string name="title_follower">Odberateľ</string>
     <string name="people_fetching">Načítavanie používateľov….</string>
@@ -1167,7 +1152,6 @@ Language: sk
     <string name="new_editor_reflection_error">Vizuálny editor nie je kompatibilný s vašim zariadením. Bol automaticky zablokovaný.</string>
     <string name="stats_insights_latest_post_no_title">(žiadny nadpis)</string>
     <string name="capture_or_pick_photo">Odfoť alebo vyber fotku</string>
-    <string name="plans_loading_error">Nemožno nahrať plány</string>
     <string name="plans">Paušály</string>
     <string name="plan">Paušál</string>
     <string name="export_your_content_message">Tvoj článok, webová stránka a nastavenia budú zaslané emailom na %s.</string>

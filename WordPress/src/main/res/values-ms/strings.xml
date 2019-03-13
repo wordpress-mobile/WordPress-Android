@@ -349,9 +349,6 @@ Language: ms
     <string name="retry">Cuba Semula</string>
     <string name="xmlrpc_post_blocked_error">Tidak boleh berhubung. Hos anda menyekat permintaan POST, dan aplikasi\n        memerlukannya untuk berkomunikasi dengan laman anda. Hubungi hos anda untuk menyelesaikan masalah ini.</string>
     <string name="reader_hint_search_followed_sites">Cari laman yang diikuti</string>
-    <string name="preference_editor_legacy">Legasi</string>
-    <string name="preference_editor_type">Tetapkan jenis penyunting</string>
-    <string name="preference_editor_visual">Visual</string>
     <string name="visual_editor_disabled">Penyunting Visual dilumpuhkan</string>
     <string name="pending_draft_one_generic">Jangan biarkannya bergantung! \'%1$s\' sedang menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_month">Jangan biarkannya bergantung! \'%1$s\' sedang menunggu untuk diterbitkan.</string>
@@ -403,7 +400,6 @@ Language: ms
     <string name="alignment_right">Kanan</string>
     <string name="site_settings_list_editor_action_mode_title">%1$d dipilih</string>
     <string name="error_fetch_users_list">Tidak boleh mendapatkan pengguna laman</string>
-    <string name="plans_manage">Urus pelan anda di\nWordPress.com/plans</string>
     <string name="title_follower">Pengikut</string>
     <string name="title_email_follower">Pengikut Emel</string>
     <string name="people_fetching">Mengambil pengguna…</string>
@@ -490,7 +486,6 @@ Language: ms
     <string name="export_your_content_message">Kiriman, halaman, dan tetapan anda akan diemel kepada anda di %s.</string>
     <string name="plan">Pelan</string>
     <string name="plans">Pelan</string>
-    <string name="plans_loading_error">Tidak boleh memuatkan pelan</string>
     <string name="export_your_content">Eksport kandungan anda</string>
     <string name="export_email_sent">Emel eksport dihantar!</string>
     <string name="exporting_content_progress">Mengeksport kandungan…</string>

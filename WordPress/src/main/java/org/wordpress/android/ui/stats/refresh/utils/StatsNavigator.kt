@@ -12,6 +12,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
+import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
@@ -76,23 +77,13 @@ class StatsNavigator
                         target.postUrl)
             }
             is ViewFollowersStats -> {
-                ActivityLauncher.viewAllTabbedInsightsStats(
-                        activity,
-                        siteProvider.siteModel,
-                        FOLLOWERS,
-                        target.selectedTab
-                )
+                ActivityLauncher.viewAllTabbedInsightsStats(activity, FOLLOWERS, target.selectedTab)
             }
             is ViewCommentsStats -> {
-                ActivityLauncher.viewAllTabbedInsightsStats(
-                        activity,
-                        siteProvider.siteModel,
-                        COMMENTS,
-                        target.selectedTab
-                )
+                ActivityLauncher.viewAllTabbedInsightsStats(activity, COMMENTS, target.selectedTab)
             }
             is ViewTagsAndCategoriesStats -> {
-                ActivityLauncher.viewAllInsightsStats(activity, siteProvider.siteModel, TAGS_AND_CATEGORIES)
+                ActivityLauncher.viewAllInsightsStats(activity, TAGS_AND_CATEGORIES)
             }
             is ViewTag -> {
                 ActivityLauncher.openStatsUrl(activity, target.link)
@@ -101,28 +92,13 @@ class StatsNavigator
                 ActivityLauncher.viewPublicizeStats(activity, siteProvider.siteModel)
             }
             is ViewPostsAndPages -> {
-                ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        siteProvider.siteModel,
-                        target.statsGranularity,
-                        TOP_POSTS_AND_PAGES
-                )
+                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, TOP_POSTS_AND_PAGES)
             }
             is ViewReferrers -> {
-                ActivityLauncher.viewAllGranularStats(
-                        activity,
-                        siteProvider.siteModel,
-                        target.statsGranularity,
-                        REFERRERS
-                )
+                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, REFERRERS)
             }
             is ViewClicks -> {
-                ActivityLauncher.viewClicksStats(
-                        activity,
-                        siteProvider.siteModel,
-                        target.statsGranularity.toStatsTimeFrame(),
-                        statsDateFormatter.printStatsDate(target.selectedDate)
-                )
+                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, CLICKS)
             }
             is ViewCountries -> {
                 ActivityLauncher.viewCountriesStats(

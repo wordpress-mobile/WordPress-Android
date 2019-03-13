@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-20 10:54:09+0000
+Translation-Revision-Date: 2019-03-05 17:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">להסיר את התוכן</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">להזיז את הבלוק למטה</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">להזיז את הבלוק למעלה</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">להוסיף בלוק כאן</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">לא נתמך</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">סוג הבלוק לא נתמך.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">בלוק לא נתמך</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">להדביק את כתובת ה-URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">בחירת תמונה</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">שילוב פירטי המדיה נכשל.\nיש להקיש לאפשרויות.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">ניקוי כל ההגדרות</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">טקסט חלופי</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">ספריית המדיה של WordPress</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">לצלם תמונה</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">לבחור מהמכשיר</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">יש להתחיל לכתוב…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">הסרת קישור</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">להוסיף מלל לקישור</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">קישור למלל</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">הוספת כתובת URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">הקישור הוכנס</string>
+    <string name="new_site_creation_preview_back_pressed_warning">ייתכן שההתקדמות שלך לא תישמר. באם ברצונך לצאת?</string>
+    <string name="plans_loading_error_with_cache_button">להציג את התוכניות בכל מקרה</string>
+    <string name="plans_loading_error_with_cache_subtitle">נדרש חיבור פעיל לאינטרנט כדי להציג תוכניות ולכן ייתכן שהפרטים לא מעודכנים.</string>
+    <string name="plans_loading_error_no_cache_subtitle">נדרש חיבור לאינטרנט כדי להציג תוכניות.</string>
+    <string name="plans_loading_error_no_plans_subtitle">אין באפשרותנו לטעון את התוכניות כרגע. יש לנסות שוב מאוחר יותר.</string>
+    <string name="plans_loading_error_no_plans_title">אין אפשרות לטעון תוכניות</string>
+    <string name="plans_loading_error_network_title">אין חיבור</string>
+    <string name="menu_switch_to_gutenberg_editor">מעבר לעורך הבלוקים</string>
+    <string name="menu_switch_to_aztec_editor">מעבר לעורך הקלאסי</string>
+    <string name="stats_loading_block_error">הייתה בעיה בטעינת הנתונים שלך, יש לרענן את העמוד ולנסות שוב.</string>
+    <string name="stats_loading_error">הנתונים לא נטענו</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">לעריכת פוסטים ועמודים חדשים עם עורך הבלוקים</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">שימוש בעורך הבלוקים</string>
+    <string name="dialog_gutenberg_informative_description_page">העמוד הזה נוצר במקור בעורך הבלוקים ולכן הפעלנו אותו בעמוד הנוכחי.\n ניתן לעבור לבלוק הקלאסי בכל עת על ידי הקשה על ⋮ בסרגל העליון.</string>
+    <string name="dialog_gutenberg_informative_description_post">הפוסט הזה נוצר במקור בעורך הבלוקים ולכן הפעלנו אותו בפוסט הנוכחי.\n ניתן לעבור לבלוק הקלאסי בכל עת על ידי הקשה על ⋮ בסרגל העליון.</string>
+    <string name="dialog_gutenberg_informative_title">עורך הבלוקים הופעל</string>
+    <string name="exit">יציאה</string>
     <string name="quick_start_sites_type_subtitle">%1$d מתוך %2$d הושלם</string>
     <string name="quick_start_sites_type_grow">הגדלת הקהל שלך</string>
     <string name="quick_start_sites_type_customize">התאמה אישית של האתר שלך</string>
@@ -155,9 +193,6 @@ Language: he_IL
     <string name="stats_empty_insights_title">עדיין לא נוספו תובנות</string>
     <string name="stats_no_data_yet">עדיין אין נתונים</string>
     <string name="menu_debug">תפריט איתור באגים</string>
-    <string name="preference_experimental">*ניסיוני*</string>
-    <string name="site_settings_enable_gutenberg_summary">זוהי גרסה ניסיונית של Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">הפעלת Gutenberg</string>
     <string name="change_password_dialog_message">מחליף סיסמה…</string>
     <string name="change_password_dialog_hint">על הסיסמה להיות באורך שישה תווים לפחות. כדי להפוך אותה קשה יותר לפיצוח, כדאי להשתמש באותיות קטנות וגדולות, מספרים וסמלים כגון ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">שינוי הסיסמה בוצע בהצלחה</string>
@@ -169,14 +204,6 @@ Language: he_IL
     <string name="history_detail_title">גרסה</string>
     <string name="history_detail_button_previous">הקודם</string>
     <string name="history_detail_button_next">לשלב הבא</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">למידע נוסף</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">לא להציג שוב</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">חזרה</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">עריכת עמוד</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">עריכת פוסט</string>
-    <string name="dialog_gutenberg_compatibility_message_page">אנחנו עובדים על העורך החדש של WordPress. עדיין אפשר לערוך את העמוד הנוכחי אבל אנחנו ממליצים להציג אותו בתצוגה מקדימה לפני שיפורסם.</string>
-    <string name="dialog_gutenberg_compatibility_message">אנחנו עובדים על העורך החדש של WordPress. עדיין אפשר לערוך את הפוסט הנוכחי אבל אנחנו ממליצים להציג אותו בתצוגה מקדימה לפני שיפורסם.</string>
-    <string name="dialog_gutenberg_compatibility_title">לפני ההמשך</string>
     <string name="media_space_used">%1$s נוצלו</string>
     <string name="enter_wpcom_or_jetpack_site">יש להזין אתר של WordPress באחסון עצמי שמחובר ל-WordPress.com או ל-Jetpack</string>
     <string name="history_loading_revision">טוען גרסה עדכנית</string>
@@ -1108,9 +1135,6 @@ Language: he_IL
     <string name="xmlrpc_post_blocked_error">לא ניתן להתחבר. חברת האחסון שלך חוסמת בקשות POST, והאפליקציה דורשת את\n הפעלת האפשרות הזו כדי לבצע התקשרות עם האתר שלך. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
     <string name="reader_hint_search_followed_sites">חיפוש באתרים תחת מעקב</string>
     <string name="visual_editor_disabled">עורך ויזואלי מושבת</string>
-    <string name="preference_editor_visual">עורך ויזואלי</string>
-    <string name="preference_editor_legacy"> דור קודם</string>
-    <string name="preference_editor_type">הגדרת סוג עורך</string>
     <string name="pending_draft_one_generic">מומלץ לסיים את הפעולה! הפוסט \'%1$s \' ממתין לפרסום.</string>
     <string name="pending_draft_one_month">מומלץ לסיים את הפעולה! הפוסט \'%1$s \' ממתין לפרסום.</string>
     <string name="pending_draft_one_week_2">האתר \'%1$s\' נשמר כטיוטה בלבד. לא לשכוח לפרסם אותו!</string>
@@ -1161,7 +1185,6 @@ Language: he_IL
     <string name="alignment_none">ללא</string>
     <string name="site_settings_list_editor_action_mode_title">%1$d נבחרו</string>
     <string name="error_fetch_users_list">משיכת נתונים על משתמשי האתר נכשלה</string>
-    <string name="plans_manage">ניהול התוכנית שלך בכתובת\nWordPress.com/plans</string>
     <string name="title_email_follower">עוקב אימייל</string>
     <string name="title_follower">עוקב</string>
     <string name="people_fetching">מאחזר משתמשים…</string>
@@ -1247,7 +1270,6 @@ Language: he_IL
     <string name="new_editor_reflection_error">עורך ויזואלי לא תואם למכשיר שלך. הוא\n הושבת אוטומטית.</string>
     <string name="stats_insights_latest_post_no_title">(חסרה כותרת)</string>
     <string name="capture_or_pick_photo">בחירה או לכידה של תמונה</string>
-    <string name="plans_loading_error">לא ניתן לטעון תוכניות</string>
     <string name="plans">תוכניות</string>
     <string name="plan">תוכנית</string>
     <string name="export_your_content_message">הפוסטים, העמודים וההגדרות שלך יישלחו באימייל לכתובת %s.</string>

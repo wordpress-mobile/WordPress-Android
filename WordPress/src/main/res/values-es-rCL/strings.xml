@@ -66,9 +66,6 @@ Language: es_CL
     <string name="stats_empty_insights_title">Aún no se ha añadido estadisticas</string>
     <string name="stats_no_data_yet">Aún no hay datos</string>
     <string name="menu_debug">Menú Depuración</string>
-    <string name="preference_experimental">*EXPERIMENTAL*</string>
-    <string name="site_settings_enable_gutenberg_summary">Esta todavía es una versión experimental de Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">Habilitar Gutenberg</string>
     <string name="change_password_dialog_message">Cambiando contraseña…</string>
     <string name="change_password_dialog_hint">Tu contraseña debe tener por lo menos seis caracteres de largo. Para hacerla más fuerte, utiliza letras mayúsculas y minúsculas, números y símbolos como! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Contraseña modificada correctamente</string>
@@ -80,14 +77,6 @@ Language: es_CL
     <string name="history_detail_title">Revisión</string>
     <string name="history_detail_button_previous">Anterior</string>
     <string name="history_detail_button_next">Siguiente</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Aprender más</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">No mostrar de nuevo</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Volver</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Editar Página</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Editar Entrada</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Estamos trabajando en el nuevo editor de WordPress. Todavía puedes editar esta página, pero te recomendamos previsualizarla antes de publicarla.</string>
-    <string name="dialog_gutenberg_compatibility_message">Estamos trabajando en el nuevo editor de WordPress. Todavía puedes editar esta entrada, pero te recomendamos previsualizarla antes de publicarla.</string>
-    <string name="dialog_gutenberg_compatibility_title">Antes de continuar</string>
     <string name="media_space_used">%1$s usado</string>
     <string name="enter_wpcom_or_jetpack_site">Por favor, ingresa un sitio WordPress.com o un sitio auto hospedado que contenga Jetpack</string>
     <string name="history_loading_revision">Cargando revisión</string>
@@ -1018,9 +1007,6 @@ Language: es_CL
     <string name="xmlrpc_endpoint_forbidden_error">No se puede conectar. Recibimos un error 403 cuando intentamos conectarnos\n        al endpoint XMLRPC de tu sitio. La APP lo necesita para comunicarse con tu sitio. Contacta a tu hosting\n        para solucionarlo.</string>
     <string name="xmlrpc_post_blocked_error">No se puede conectar. Tu host está bloqueando las solicitudes POST, y la aplicación\n        Lo necesita para comunicarse con tu sitio. Contacta a tu host para resolver este problema.</string>
     <string name="reader_hint_search_followed_sites">Buscar sitios seguidos</string>
-    <string name="preference_editor_visual">Visual</string>
-    <string name="preference_editor_legacy">Legado</string>
-    <string name="preference_editor_type">Establecer tipo de editor</string>
     <string name="visual_editor_disabled">Editor Visual deshabilitado</string>
     <string name="pending_draft_one_generic">¡no lo dejes colgado! \'%1$s\' está a la espera de ser publicado.</string>
     <string name="pending_draft_one_month">¡No lo dejes colgado! \'%1$s\' está a la espera de ser publicado.</string>
@@ -1072,7 +1058,6 @@ Language: es_CL
     <string name="alignment_none">Ninguno</string>
     <string name="site_settings_list_editor_action_mode_title">Seleccionado %1$d</string>
     <string name="error_fetch_users_list">No se pudo recuperar los usuarios del sitio</string>
-    <string name="plans_manage">Administra tu plan en\nWordPress.com/plans</string>
     <string name="title_email_follower">Seguidor por Email</string>
     <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Obteniendo usuarios…</string>
@@ -1159,7 +1144,6 @@ Language: es_CL
     <string name="stats_insights_latest_post_no_title">(sin título)</string>
     <string name="capture_or_pick_photo">Capturar o seleccionar foto</string>
     <string name="plan">Plan</string>
-    <string name="plans_loading_error">No se pueden cargar planes</string>
     <string name="plans">Planes</string>
     <string name="export_your_content_message">Tus mensajes, páginas y ajustes se te enviarán por correo electrónico a %s.</string>
     <string name="export_your_content">Exporta tu contenido</string>

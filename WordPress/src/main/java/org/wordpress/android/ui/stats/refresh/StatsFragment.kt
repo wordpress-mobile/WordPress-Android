@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +48,6 @@ class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-    private lateinit var actionMenuItem: MenuItem
 
     private var restorePreviousSearch = false
 
@@ -154,21 +152,13 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.selectedDateChanged.observe(this, Observer { statsGranularity ->
-            statsGranularity?.let {
-                viewModel.onSelectedDateChange(statsGranularity)
-            }
-        })
-
-        viewModel.toolbarHasShadow.observe(this, Observer { toolbarElevation ->
-            app_bar_layout.postDelayed(
-                    { ViewCompat.setElevation(app_bar_layout, toolbarElevation?.toFloat() ?: 0.0f) },
-                    100
-            )
+        viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
+            val elevation = if (hasShadow == true) resources.getDimension(R.dimen.appbar_elevation) else 0f
+            app_bar_layout.postDelayed({ ViewCompat.setElevation(app_bar_layout, elevation) }, 100)
         })
 
         viewModel.siteChanged.observe(this, Observer {
-            viewModel.onPullToRefresh()
+            viewModel.refreshData()
         })
     }
 }

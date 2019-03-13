@@ -14,11 +14,11 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoVi
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.YearsListViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;

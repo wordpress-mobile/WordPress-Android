@@ -6,6 +6,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -18,8 +20,9 @@ class DetailListViewModel
     @Named(DETAIL_USE_CASE) private val insightsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     private val statsSiteProvider: StatsSiteProvider,
-    private val statsPostProvider: StatsPostProvider
-) : StatsListViewModel(mainDispatcher, insightsUseCase, analyticsTracker) {
+    private val statsPostProvider: StatsPostProvider,
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(mainDispatcher, insightsUseCase, analyticsTracker, dateSelectorFactory.build(DETAIL)) {
     fun init(
         site: SiteModel,
         postId: String,
