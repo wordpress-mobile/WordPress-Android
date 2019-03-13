@@ -42,7 +42,12 @@ class CountryViewsStore
         }
     }
 
-    fun getCountryViews(site: SiteModel, period: StatsGranularity, limitMode: LimitMode, date: Date): CountryViewsModel? {
+    fun getCountryViews(
+        site: SiteModel,
+        period: StatsGranularity,
+        limitMode: LimitMode,
+        date: Date
+    ): CountryViewsModel? {
         return sqlUtils.selectCountryViews(site, period, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
