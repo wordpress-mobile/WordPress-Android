@@ -20,7 +20,6 @@ import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_AND_KEYBOARD
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
@@ -139,14 +138,6 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment() {
         })
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_DOMAINS)
-        })
-        viewModel.onInputFocusRequested.observe(this, Observer { requestFocusMode ->
-            requestFocusMode?.let {
-                searchInputWithHeader.requestInputFocus()
-                if (requestFocusMode == FOCUS_AND_KEYBOARD) {
-                    searchInputWithHeader.showKeyboard()
-                }
-            }
         })
         viewModel.start(getSiteTitleFromArguments())
     }

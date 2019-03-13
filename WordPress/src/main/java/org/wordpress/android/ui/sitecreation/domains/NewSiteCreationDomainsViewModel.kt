@@ -27,8 +27,6 @@ import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewM
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_AND_KEYBOARD
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_ONLY
 import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
@@ -79,9 +77,6 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
-    private val _onInputFocusRequested = SingleLiveEvent<RequestFocusMode>()
-    val onInputFocusRequested: LiveData<RequestFocusMode> = _onInputFocusRequested
-
     init {
         dispatcher.register(fetchDomainsUseCase)
     }
@@ -100,10 +95,8 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         // isNullOrBlank not smart-casting for some reason..
         if (siteTitle == null || siteTitle.isBlank()) {
             resetUiState()
-            _onInputFocusRequested.value = FOCUS_AND_KEYBOARD
         } else {
             updateQueryInternal(TitleQuery(siteTitle))
-            _onInputFocusRequested.value = FOCUS_ONLY
         }
     }
 
@@ -337,10 +330,5 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
          * Automatic search initiated for the site title.
          */
         class TitleQuery(value: String) : DomainSuggestionsQuery(value)
-    }
-
-    enum class RequestFocusMode {
-        FOCUS_ONLY,
-        FOCUS_AND_KEYBOARD
     }
 }

@@ -82,9 +82,6 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
-    private val _onInputFocusRequested = SingleLiveEvent<Unit>()
-    val onInputFocusRequested: LiveData<Unit> = _onInputFocusRequested
-
     init {
         dispatcher.register(fetchVerticalsUseCase)
         dispatcher.register(fetchSegmentPromptUseCase)
@@ -140,8 +137,6 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             tracker.trackVerticalsViewed()
             segmentPrompt = event.prompt!!
             updateUiStateToContent("", ListState.Ready(emptyList()))
-            // Show the keyboard
-            _onInputFocusRequested.call()
         }
     }
 

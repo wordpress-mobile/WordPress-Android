@@ -16,7 +16,6 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.ViewGroup
-import android.view.accessibility.AccessibilityEvent
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -134,11 +133,6 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment() {
                     }
                 }
             }
-        })
-        viewModel.onTitleInputFocusRequested.observe(this, Observer {
-            siteTitleEditText.requestFocus()
-            // announce header when the input focus is forced
-            headerContainer.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
         })
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_SITE_INFO)
