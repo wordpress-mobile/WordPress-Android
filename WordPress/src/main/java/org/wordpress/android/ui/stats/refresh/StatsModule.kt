@@ -161,7 +161,9 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(DETAIL_USE_CASES)
-    fun provideDetailUseCases(postDayViewsUseCase: PostDayViewsUseCase): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+    fun provideDetailUseCases(
+        postDayViewsUseCase: PostDayViewsUseCase
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(postDayViewsUseCase)
     }
 
