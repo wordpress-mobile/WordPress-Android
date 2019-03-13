@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.detail
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
-import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
@@ -43,7 +42,7 @@ class DayViewsUseCase
 
     override suspend fun loadCachedData(): PostDetailStatsModel? {
         return statsPostProvider.postId?.let { postId ->
-            postDetailStore.getPostingActivity(
+            postDetailStore.getPostDetail(
                     statsSiteProvider.siteModel,
                     postId
             )
@@ -58,40 +57,41 @@ class DayViewsUseCase
         val error = response?.error
 
         return when {
-            error != null -> State.Error(error.message ?: error.type.name)
-            model != null && model.dayViews.isNotEmpty() -> State.Data(
-                    model
-            )
-            else -> State.Empty()
+            error != null -> {
+                selectedDateProvider.dateLoadingSucceeded(DETAIL)
+                State.Error(error.message ?: error.type.name)
+            }
+            model != null && model.dayViews.isNotEmpty() -> {
+                selectedDateProvider.dateLoadingSucceeded(DETAIL)
+                State.Data(model)
+            }
+            else -> {
+                selectedDateProvider.dateLoadingSucceeded(DETAIL)
+                State.Empty()
+            }
         }
     }
 
     override fun buildUiModel(domainModel: PostDetailStatsModel, uiState: UiState): List<BlockListItem> {
         val periodFromProvider = selectedDateProvider.getSelectedDate(DETAIL)
-        if (periodFromProvider == null) {
-            val dates = domainModel.dayViews.map { statsDateFormatter.parseStatsDate(DAYS, it.period) }
-            selectedDateProvider.selectDate(dates.lastIndex, dates, DETAIL)
-        }
-        val selectedPeriod = periodFromProvider?.let { statsDateFormatter.printStatsDate(periodFromProvider) }
-                ?: domainModel.dayViews.last().period
-        var previousDay: Day? = null
-        var selectedDay: Day? = null
-        for (index in 0 until domainModel.dayViews.size) {
-            val day = domainModel.dayViews[index]
-            selectedDay = day
-            if (selectedPeriod == day.period) {
-                break
-            }
-            if (index < domainModel.dayViews.size - 1) {
-                previousDay = day
-            }
-        }
+        val visibleBarCount = uiState.visibleBarCount ?: domainModel.dayViews.size
+        val availablePeriods = domainModel.dayViews.takeLast(visibleBarCount)
+        val availableDates = availablePeriods.map { statsDateFormatter.parseStatsDate(DAYS, it.period) }
+        val selectedPeriod = periodFromProvider ?: availableDates.last()
+        val index = availableDates.indexOf(selectedPeriod)
+
+        selectedDateProvider.selectDate(index, availableDates, DETAIL)
+
+        val shiftedIndex = index + domainModel.dayViews.size - visibleBarCount
+        val selectedItem = domainModel.dayViews.getOrNull(shiftedIndex) ?: domainModel.dayViews.last()
+        val previousItem = domainModel.dayViews.getOrNull(domainModel.dayViews.indexOf(selectedItem) - 1)
+
         val items = mutableListOf<BlockListItem>()
-        items.add(dayViewsMapper.buildTitle(selectedDay ?: domainModel.dayViews.last(), previousDay))
+        items.add(dayViewsMapper.buildTitle(selectedItem, previousItem))
         items.addAll(
                 dayViewsMapper.buildChart(
                         domainModel.dayViews,
-                        selectedPeriod,
+                        selectedItem.period,
                         this::onBarSelected,
                         this::onBarChartDrawn
                 )

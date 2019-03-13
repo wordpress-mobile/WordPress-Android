@@ -117,7 +117,10 @@ class SelectedDateProvider
     }
 
     fun dateLoadingFailed(statsGranularity: StatsGranularity) {
-        val statsSection = statsGranularity.toStatsSection()
+        dateLoadingFailed(statsGranularity.toStatsSection())
+    }
+
+    fun dateLoadingFailed(statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.index != null && !selectedDate.error) {
             updateSelectedDate(selectedDate.copy(error = true), statsSection)
@@ -127,7 +130,10 @@ class SelectedDateProvider
     }
 
     fun dateLoadingSucceeded(statsGranularity: StatsGranularity) {
-        val statsSection = statsGranularity.toStatsSection()
+        dateLoadingSucceeded(statsGranularity.toStatsSection())
+    }
+
+    fun dateLoadingSucceeded(statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.index != null && selectedDate.error) {
             updateSelectedDate(selectedDate.copy(error = false), statsSection)
@@ -140,6 +146,10 @@ class SelectedDateProvider
 
     fun clear() {
         mutableDates.clear()
+    }
+
+    fun clear(statsSection: StatsSection) {
+        mutableDates[statsSection] = SelectedDate(loading = true)
     }
 
     data class SelectedDate(

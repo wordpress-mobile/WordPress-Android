@@ -14,6 +14,7 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoVi
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel;
@@ -116,8 +117,13 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(StatsDetailViewModel.class)
+    abstract ViewModel statsDetailViewModel(StatsDetailViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(DetailListViewModel.class)
-    abstract ViewModel statsDetailViewModel(DetailListViewModel viewModel);
+    abstract ViewModel detailListViewModel(DetailListViewModel viewModel);
 
     @Binds
     @IntoMap
