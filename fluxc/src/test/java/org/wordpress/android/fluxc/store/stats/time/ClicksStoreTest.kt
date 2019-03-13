@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient
@@ -25,8 +26,9 @@ import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-private const val PAGE_SIZE = 8
+private const val ITEMS_TO_LOAD = 8
 private val DATE = Date(0)
+private val limitMode = LimitMode.Top(ITEMS_TO_LOAD)
 
 @RunWith(MockitoJUnitRunner::class)
 class ClicksStoreTest {
@@ -51,13 +53,13 @@ class ClicksStoreTest {
                 CLICKS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchClicks(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(restClient.fetchClicks(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<ClicksModel>()
-        whenever(mapper.map(CLICKS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(CLICKS_RESPONSE, limitMode)).thenReturn(model)
 
-        val responseModel = store.fetchClicks(site, PAGE_SIZE, DAYS, DATE, forced)
+        val responseModel = store.fetchClicks(site, DAYS, limitMode, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, CLICKS_RESPONSE, DAYS, DATE)
@@ -69,9 +71,9 @@ class ClicksStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<ClicksResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchClicks(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchClicks(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchClicks(site, PAGE_SIZE, DAYS, DATE, forced)
+        val responseModel = store.fetchClicks(site, DAYS, limitMode, DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -83,9 +85,9 @@ class ClicksStoreTest {
     fun `returns clicks from db`() {
         whenever(sqlUtils.selectClicks(site, DAYS, DATE)).thenReturn(CLICKS_RESPONSE)
         val model = mock<ClicksModel>()
-        whenever(mapper.map(CLICKS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(CLICKS_RESPONSE, limitMode)).thenReturn(model)
 
-        val result = store.getClicks(site, DAYS, PAGE_SIZE, DATE)
+        val result = store.getClicks(site, DAYS, DATE, limitMode)
 
         assertThat(result).isEqualTo(model)
     }

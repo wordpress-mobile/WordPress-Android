@@ -452,6 +452,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 57:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 58:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL(
                         "CREATE TABLE StatsBlockTemp (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,JSON TEXT NOT NULL)");
@@ -597,6 +601,9 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "IMAGES TEXT NOT NULL,ATTRIBUTES TEXT NOT NULL,"
                                + "VARIATIONS TEXT NOT NULL)");
                     break;
+                case 57:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DELETE FROM WCOrderStatsModel");
             }
         }
     }

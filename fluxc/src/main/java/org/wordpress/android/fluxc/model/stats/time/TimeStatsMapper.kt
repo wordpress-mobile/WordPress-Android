@@ -83,10 +83,16 @@ class TimeStatsMapper
         return ReferrersModel(first?.otherViews ?: 0, first?.totalViews ?: 0, groups ?: listOf(), hasMore)
     }
 
-    fun map(response: ClicksResponse, pageSize: Int): ClicksModel {
+    fun map(response: ClicksResponse, cacheMode: LimitMode): ClicksModel {
         val first = response.groups.values.firstOrNull()
         val groups = first?.let {
-            first.clicks.take(pageSize).map { group ->
+            first.clicks.let {
+                if (cacheMode is LimitMode.Top) {
+                    it.take(cacheMode.limit)
+                } else {
+                    it
+                }
+            }.map { group ->
                 val children = group.clicks?.mapNotNull { result ->
                     if (result.name != null && result.views != null) {
                         Click(result.name, result.views, result.icon, result.url)
