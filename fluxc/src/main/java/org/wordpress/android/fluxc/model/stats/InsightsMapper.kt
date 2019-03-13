@@ -3,6 +3,10 @@ package org.wordpress.android.fluxc.model.stats
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Month
+import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.StreakModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
@@ -16,8 +20,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
@@ -30,7 +37,7 @@ private const val COMMENTS = "comments"
 private const val POSTS = "posts"
 
 class InsightsMapper
-@Inject constructor() {
+@Inject constructor(val statsUtils: StatsUtils) {
     fun map(response: AllTimeResponse, site: SiteModel): InsightsAllTimeModel {
         val stats = response.stats
         return InsightsAllTimeModel(
@@ -75,7 +82,7 @@ class InsightsMapper
                 postResponse.title ?: "",
                 postResponse.url ?: "",
                 postResponse.date ?: Date(0),
-                postResponse.id ?: 0,
+                postResponse.id,
                 viewsCount ?: 0,
                 commentCount,
                 postResponse.likeCount ?: 0,
@@ -165,5 +172,75 @@ class InsightsMapper
                 response.services.take(pageSize).map { PublicizeModel.Service(it.service, it.followers) },
                 response.services.size > pageSize
         )
+    }
+
+    fun map(response: PostingActivityResponse, startDay: Day, endDay: Day): PostingActivityModel {
+        if (response.streak == null) {
+            AppLog.e(STATS, "PostingActivityResponse: Mandatory field streak is null")
+        }
+        val currentStreakStart = response.streak?.currentStreak?.start?.let { statsUtils.fromFormattedDate(it) }
+        val currentStreakEnd = response.streak?.currentStreak?.end?.let { statsUtils.fromFormattedDate(it) }
+        val currentStreakLength = response.streak?.currentStreak?.length
+        val longStreakStart = response.streak?.longStreak?.start?.let { statsUtils.fromFormattedDate(it) }
+        val longStreakEnd = response.streak?.longStreak?.end?.let { statsUtils.fromFormattedDate(it) }
+        val longStreakLength = response.streak?.longStreak?.length
+        val streak = StreakModel(
+                currentStreakStart = currentStreakStart,
+                currentStreakEnd = currentStreakEnd,
+                currentStreakLength = currentStreakLength,
+                longestStreakStart = longStreakStart,
+                longestStreakEnd = longStreakEnd,
+                longestStreakLength = longStreakLength
+        )
+        val nonNullData = response.data ?: mapOf()
+        val days = mutableMapOf<Day, Int>()
+        nonNullData.toList().forEach { (timeStamp, value) ->
+            val day = toDay(timeStamp)
+            days[day] = (days[day] ?: 0) + value
+        }
+        val startCalendar = Calendar.getInstance()
+        startCalendar.set(startDay.year, startDay.month, startDay.day, 0, 0)
+        val endCalendar = Calendar.getInstance()
+        endCalendar.set(
+                endDay.year,
+                endDay.month,
+                endDay.day,
+                endCalendar.getActualMaximum(Calendar.HOUR_OF_DAY),
+                endCalendar.getActualMaximum(Calendar.MINUTE)
+        )
+        var currentYear = startDay.year
+        var currentMonth = startDay.month
+        var currentMonthDays = mutableMapOf<Int, Int>()
+        val result = mutableListOf<Month>()
+        var count = 0
+        var max = 0
+        while (!startCalendar.after(endCalendar)) {
+            if (currentYear != startCalendar.get(Calendar.YEAR) || currentMonth != startCalendar.get(Calendar.MONTH)) {
+                result.add(Month(currentYear, currentMonth, currentMonthDays))
+                currentYear = startCalendar.get(Calendar.YEAR)
+                currentMonth = startCalendar.get(Calendar.MONTH)
+                currentMonthDays = mutableMapOf()
+            }
+            val currentDay = days[Day(
+                    startCalendar.get(Calendar.YEAR),
+                    startCalendar.get(Calendar.MONTH),
+                    startCalendar.get(Calendar.DAY_OF_MONTH)
+            )]
+            val currentDayPostCount = currentDay ?: 0
+            if (currentDayPostCount > max) {
+                max = currentDayPostCount
+            }
+            currentMonthDays[startCalendar.get(Calendar.DAY_OF_MONTH)] = currentDayPostCount
+            count++
+            startCalendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+        result.add(Month(currentYear, currentMonth, currentMonthDays))
+        return PostingActivityModel(streak, result, max, count < nonNullData.count())
+    }
+
+    private fun toDay(timeStamp: Long): Day {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timeStamp * 1000
+        return Day(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
     }
 }
