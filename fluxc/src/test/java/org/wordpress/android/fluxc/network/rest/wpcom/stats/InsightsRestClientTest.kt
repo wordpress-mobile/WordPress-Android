@@ -458,7 +458,7 @@ class InsightsRestClientTest {
         initPublicizeResponse(PUBLICIZE_RESPONSE)
 
         val pageSize = 10
-        val responseModel = publicizeRestClient.fetchPublicizeData(site, pageSize, forced = false)
+        val responseModel = publicizeRestClient.fetchPublicizeData(site, forced = false)
 
         assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(PUBLICIZE_RESPONSE)
