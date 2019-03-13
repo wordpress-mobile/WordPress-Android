@@ -58,40 +58,20 @@ constructor(
 
     suspend fun createShoppingCart(
         site: SiteModel,
-        domainSuggestion: DomainSuggestionResponse,
+        productId: String,
+        domainName: String,
         isPrivacyProtectionEnabled: Boolean
     ): CreatedShoppingCartPayload {
         val url = WPCOMREST.me.shopping_cart.site(site.siteId).urlV1_1
 
-//        val params = HashMap<String, Any>()
-//
-//        val products = JsonArray()
-//
-//        val mainProduct = JsonObject()
-//        mainProduct.addProperty("product_id", domainSuggeStion.product_id)
-//        mainProduct.addProperty("meta", domainSuggeStion.domain_name)
-//
-//        val privacyProtectionProduct = JsonObject()
-//        privacyProtectionProduct.addProperty("product_id", privateRegistrationProductID)
-//        privacyProtectionProduct.addProperty("meta", domainSuggeStion.domain_name)
-//
-//        products.add(mainProduct)
-//
-//        if (isPrivacyProtectionEnabled) {
-//            products.add(privacyProtectionProduct)
-//        }
-//
-//        params["temporary"] = "true"
-//        params["products"] = products
-
         val mainProduct = mapOf(
-                "product_id" to domainSuggestion.product_id,
-                "meta" to domainSuggestion.domain_name
+                "product_id" to productId,
+                "meta" to domainName
         )
 
         val privacyProtectionProduct = mapOf(
                 "product_id" to privateRegistrationProductID,
-                "meta" to domainSuggestion.domain_name
+                "meta" to domainName
         )
 
         val products = if (isPrivacyProtectionEnabled) arrayOf(mainProduct, privacyProtectionProduct) else arrayOf(
