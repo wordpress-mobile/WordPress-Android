@@ -211,6 +211,8 @@ dependencies {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
 
+    kaptAndroidTest "com.google.dagger:dagger-compiler:2.11"
+
     // Dagger
     implementation 'com.google.dagger:dagger:2.11'
     kapt 'com.google.dagger:dagger-compiler:2.11'
