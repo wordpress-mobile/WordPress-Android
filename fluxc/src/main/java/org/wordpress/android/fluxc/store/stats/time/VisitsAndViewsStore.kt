@@ -46,7 +46,12 @@ class VisitsAndViewsStore
         }
     }
 
-    fun getVisits(site: SiteModel, granularity: StatsGranularity, limitMode: LimitMode, date: Date): VisitsAndViewsModel? {
+    fun getVisits(
+        site: SiteModel,
+        granularity: StatsGranularity,
+        limitMode: LimitMode,
+        date: Date
+    ): VisitsAndViewsModel? {
         return sqlUtils.selectVisitsAndViews(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
