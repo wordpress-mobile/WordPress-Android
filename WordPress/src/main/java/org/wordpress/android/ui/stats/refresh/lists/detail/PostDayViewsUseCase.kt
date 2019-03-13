@@ -23,7 +23,7 @@ import javax.inject.Named
 class PostDayViewsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val dayViewsMapper: DayViewsMapper,
+    private val postDayViewsMapper: PostDayViewsMapper,
     private val statsDateFormatter: StatsDateFormatter,
     private val selectedDateProvider: SelectedDateProvider,
     private val statsSiteProvider: StatsSiteProvider,
@@ -87,9 +87,9 @@ class PostDayViewsUseCase
         val previousItem = domainModel.dayViews.getOrNull(domainModel.dayViews.indexOf(selectedItem) - 1)
 
         val items = mutableListOf<BlockListItem>()
-        items.add(dayViewsMapper.buildTitle(selectedItem, previousItem))
+        items.add(postDayViewsMapper.buildTitle(selectedItem, previousItem))
         items.addAll(
-                dayViewsMapper.buildChart(
+                postDayViewsMapper.buildChart(
                         domainModel.dayViews,
                         selectedItem.period,
                         this::onBarSelected,

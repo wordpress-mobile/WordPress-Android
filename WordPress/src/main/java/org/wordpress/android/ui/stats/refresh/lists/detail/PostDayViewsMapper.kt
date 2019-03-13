@@ -13,7 +13,7 @@ import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-class DayViewsMapper
+class PostDayViewsMapper
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val statsDateFormatter: StatsDateFormatter
