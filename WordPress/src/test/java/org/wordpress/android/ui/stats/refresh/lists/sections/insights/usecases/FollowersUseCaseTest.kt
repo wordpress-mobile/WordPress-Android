@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -30,9 +29,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LoadingItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -65,6 +64,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = FollowersUseCase(
+                Dispatchers.Unconfined,
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
@@ -227,6 +227,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     fun `maps email followers to UI model in the view all mode`() = test {
         useCase = FollowersUseCase(
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
                 statsUtilsWrapper,
@@ -283,9 +284,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
         var updatedResult = loadFollowers(refresh)
         val button = updatedResult.data!!.assertViewAllFollowersFirstLoad(position = 1)
 
-        button.navigateAction.click()
-        delay(1000)
-        updatedResult = useCase.liveData.value!!
+        useCase.liveData.observeForever { if (it != null) updatedResult = it }
+        button.loadMore()
         updatedResult.data!!.assertViewAllFollowersSecondLoad()
     }
 
@@ -301,7 +301,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_followers)
     }
 
-    private fun List<BlockListItem>.assertViewAllFollowersFirstLoad(position: Int): Link {
+    private fun List<BlockListItem>.assertViewAllFollowersFirstLoad(position: Int): LoadingItem {
         assertThat(this).hasSize(14)
         val tabsItem = this[0] as TabsItem
         assertThat(tabsItem.tabs[0]).isEqualTo(R.string.stats_followers_wordpress_com)
@@ -323,10 +323,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         assertThat(this[12] is ListItemWithIcon).isTrue()
 
-        val button = this[13] as Link
-        assertThat(button.text).isEqualTo(R.string.stats_insights_load_more)
-
-        return button
+        assertThat(this[13] is LoadingItem).isTrue()
+        return this[13] as LoadingItem
     }
 
     private fun List<BlockListItem>.assertViewAllFollowersSecondLoad() {

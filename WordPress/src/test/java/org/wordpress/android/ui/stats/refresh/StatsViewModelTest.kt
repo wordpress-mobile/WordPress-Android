@@ -51,7 +51,6 @@ class StatsViewModelTest : BaseUnitTest() {
                 statsSectionManager,
                 analyticsTracker,
                 networkUtilsWrapper,
-                resourceProvider,
                 statsSiteProvider
         )
         whenever(statsSectionManager.getSelectedSection()).thenReturn(INSIGHTS)
@@ -97,23 +96,5 @@ class StatsViewModelTest : BaseUnitTest() {
 
         verify(statsSectionManager).setSelectedSection(YEARS)
         verify(analyticsTracker).track(STATS_PERIOD_YEARS_ACCESSED)
-    }
-
-    @Test
-    fun `updates date selector on insights screen`() {
-        viewModel.onSectionSelected(INSIGHTS)
-
-        verify(baseListUseCase).updateDateSelector()
-    }
-
-    @Test
-    fun `updates date selector on date change`() {
-        val statsSection = StatsSection.DAYS
-
-        viewModel.onSectionSelected(DAYS)
-
-        viewModel.onSelectedDateChange(statsSection)
-
-        verify(baseListUseCase, times(2)).updateDateSelector()
     }
 }

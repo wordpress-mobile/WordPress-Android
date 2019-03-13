@@ -14,8 +14,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -30,9 +28,7 @@ import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -45,7 +41,6 @@ class StatsViewModel
     private val statsSectionManager: SelectedSectionManager,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val resourceProvider: ResourceProvider,
     private val statsSiteProvider: StatsSiteProvider
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
@@ -60,14 +55,10 @@ class StatsViewModel
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    val selectedDateChanged = selectedDateProvider.selectedDateChanged
-
     val siteChanged = statsSiteProvider.siteChanged
 
     private val _toolbarHasShadow = MutableLiveData<Boolean>()
-    val toolbarHasShadow: LiveData<Int> = _toolbarHasShadow.mapNullable {
-        if (it == true) resourceProvider.getDimensionPixelSize(R.dimen.appbar_elevation) else 0
-    }
+    val toolbarHasShadow: LiveData<Boolean> = _toolbarHasShadow
 
     fun start(site: SiteModel, launchedFromWidget: Boolean, initialSection: StatsSection?) {
         // Check if VM is not already initialized
@@ -85,7 +76,6 @@ class StatsViewModel
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
             }
         }
-        listUseCases.values.forEach { it.updateDateSelector() }
     }
 
     private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
@@ -96,18 +86,11 @@ class StatsViewModel
         _isRefreshing.value = false
     }
 
-    // TODO: To be implemented in the future
-    fun onMenuAction(action: Action, page: Page): Boolean {
-        return when (action) {
-            else -> true
-        }
-    }
-
-    // TODO: To be implemented in the future
-    fun onItemTapped(pageItem: Page) {
-    }
-
     fun onPullToRefresh() {
+        refreshData()
+    }
+
+    fun refreshData() {
         _showSnackbarMessage.value = null
         statsSiteProvider.clear()
         if (networkUtilsWrapper.isNetworkAvailable()) {
@@ -120,17 +103,13 @@ class StatsViewModel
         }
     }
 
-    fun onSelectedDateChange(statsSection: StatsSection) {
-        launch {
-            listUseCases[statsSection]?.onDateChanged()
-        }
-    }
-
     fun getSelectedSection() = statsSectionManager.getSelectedSection()
 
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
-        listUseCases[statsSection]?.updateDateSelector()
+
+        listUseCases[statsSection]?.onListSelected()
+
         _toolbarHasShadow.value = statsSection == INSIGHTS
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)

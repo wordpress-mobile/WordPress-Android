@@ -165,6 +165,16 @@ fun <T, U> LiveData<T>.map(mapper: (T) -> U?): MediatorLiveData<U> {
 }
 
 /**
+ * Calls the specified function [block] with `this` value as its receiver and returns new instance of LiveData.
+ */
+fun <T> LiveData<T>.perform(block: LiveData<T>.(T) -> Unit): LiveData<T> {
+    return Transformations.map(this) {
+        block(it)
+        return@map it
+    }
+}
+
+/**
  * Simple wrapper of the map utility method that is null safe
  */
 fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U?): LiveData<U> {
