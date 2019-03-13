@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 58;
+        return 59;
     }
 
     @Override
@@ -454,6 +454,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
+            case 58:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -583,6 +587,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                     break;
                 case 57:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DELETE FROM WCOrderStatsModel");
+                    break;
+                case 58:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("DROP TABLE IF EXISTS WCProductVarationModel");
                     db.execSQL("CREATE TABLE WCProductVarationModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "LOCAL_SITE_ID INTEGER,"
@@ -609,8 +617,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "LENGTH TEXT NOT NULL,"
                                + "WIDTH TEXT NOT NULL,"
                                + "HEIGHT TEXT NOT NULL,"
-                               + "ATTRIBUTES TEXT NOT NULL");
-                    break;
+                               + "ATTRIBUTES TEXT NOT NULL)");
             }
         }
     }
