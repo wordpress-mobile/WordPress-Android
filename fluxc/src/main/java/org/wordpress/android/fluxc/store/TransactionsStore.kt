@@ -70,7 +70,8 @@ class TransactionsStore @Inject constructor(
     private suspend fun createShoppingCard(payload: CreateShoppingCartPayload): OnShoppingCartCreated {
         val createdShoppingCartPayload = transactionsRestClient.createShoppingCart(
                 payload.site,
-                payload.domainSuggestionResponse,
+                payload.productId,
+                payload.domainName,
                 payload.isPrivacyEnabled
         )
 
@@ -130,7 +131,8 @@ class TransactionsStore @Inject constructor(
 
     class CreateShoppingCartPayload(
         val site: SiteModel,
-        val domainSuggestionResponse: DomainSuggestionResponse,
+        val productId: String,
+        val domainName: String,
         val isPrivacyEnabled: Boolean
     ) : Payload<BaseRequest.BaseNetworkError>()
 
