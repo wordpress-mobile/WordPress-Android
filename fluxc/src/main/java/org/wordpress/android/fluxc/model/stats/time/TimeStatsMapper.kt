@@ -215,17 +215,23 @@ class TimeStatsMapper
         return AuthorsModel(first?.otherViews ?: 0, authors ?: listOf(), hasMore)
     }
 
-    fun map(response: SearchTermsResponse, pageSize: Int): SearchTermsModel {
+    fun map(response: SearchTermsResponse, cacheMode: LimitMode): SearchTermsModel {
         val first = response.days.values.firstOrNull()
         val groups = first?.let {
-            first.searchTerms.mapNotNull { searchTerm ->
+            first.searchTerms.let {
+                if (cacheMode is LimitMode.Top) {
+                    it.take(cacheMode.limit)
+                } else {
+                    it
+                }
+            }.mapNotNull { searchTerm ->
                 if (searchTerm.term != null) {
                     SearchTermsModel.SearchTerm(searchTerm.term, searchTerm.views ?: 0)
                 } else {
                     AppLog.e(STATS, "SearchTermsResponse: Missing term field on a Search terms object")
                     null
                 }
-            }.take(pageSize)
+            }
         }
         val hasMore = if (first != null && groups != null) first.searchTerms.size > groups.size else false
         return SearchTermsModel(
