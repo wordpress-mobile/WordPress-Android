@@ -42,8 +42,6 @@ androidExtensions {
     experimental = true
 }
 
-kotlin { experimental { coroutines 'enable' } }
-
 android.buildTypes.all { buildType ->
     // Load gradle properties and add them to BuildConfig
     Properties gradleProperties = new Properties()

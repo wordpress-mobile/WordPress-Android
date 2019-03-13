@@ -90,6 +90,8 @@ import javax.inject.Singleton;
 @Singleton
 public class SiteRestClient extends BaseWPComRestClient {
     public static final int NEW_SITE_TIMEOUT_MS = 90000;
+    private static final String SITE_FIELDS = "ID,URL,name,description,jetpack,visible,is_private,options,plan,"
+        + "capabilities,quota,icon,meta";
 
     private final AppSecrets mAppSecrets;
 
@@ -127,8 +129,10 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void fetchSites() {
+        Map<String, String> params = new HashMap<>();
+        params.put("fields", SITE_FIELDS);
         String url = WPCOMREST.me.sites.getUrlV1_1();
-        final WPComGsonRequest<SitesResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+        final WPComGsonRequest<SitesResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 SitesResponse.class,
                 new Listener<SitesResponse>() {
                     @Override
@@ -161,8 +165,10 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void fetchSite(final SiteModel site) {
+        Map<String, String> params = new HashMap<>();
+        params.put("fields", SITE_FIELDS);
         String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
-        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 SiteWPComRestResponse.class,
                 new Listener<SiteWPComRestResponse>() {
                     @Override
