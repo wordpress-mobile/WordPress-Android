@@ -459,7 +459,6 @@ class PostUploadNotifier {
 
         long notificationId = getNotificationIdForPost(post);
         Intent notificationIntent = getNotificationIntent(post, site, notificationId);
-        notificationIntent.putExtra(PostsListActivityKt.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         notificationIntent.setAction(String.valueOf(notificationId));
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
@@ -507,6 +506,7 @@ class PostUploadNotifier {
             notificationIntent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, post.getRemotePostId());
         } else {
             notificationIntent = new Intent(mContext, PostsListActivity.class);
+            notificationIntent.putExtra(PostsListActivityKt.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         }
 
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

@@ -20,7 +20,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
@@ -68,7 +67,7 @@ class PostListFragment : Fragment() {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
         PostViewHolderConfig(
-                // endlist indicator height is hard-coded here so that its horizontal line is in the middle of the fab
+                // endList indicator height is hard-coded here so that its horizontal line is in the middle of the fab
                 endlistIndicatorHeight = DisplayUtils.dpToPx(context, 74),
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
@@ -110,15 +109,12 @@ class PostListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val targetLocalPostId = activity?.intent?.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, -1)?.let {
-            if (it != -1) it else null
-        }
         val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(site, postListType, targetLocalPostId)
-        viewModel.pagedListDataAndScrollPosition.observe(this, Observer {
-            it?.let { (pagedListData, scrollPosition) -> updatePagedListData(pagedListData, scrollPosition) }
+        viewModel.start(site, postListType)
+        viewModel.pagedListData.observe(this, Observer {
+            it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
         viewModel.emptyViewState.observe(this, Observer {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
@@ -138,32 +134,37 @@ class PostListFragment : Fragment() {
         viewModel.toastMessage.observe(this, Observer {
             it?.show(nonNullActivity)
         })
-        viewModel.snackbarAction.observe(this, Observer {
-            it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
+        viewModel.snackBarAction.observe(this, Observer {
+            it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
         })
         viewModel.dialogAction.observe(this, Observer {
             val fragmentManager = requireNotNull(fragmentManager) { "FragmentManager can't be null at this point" }
             it?.show(nonNullActivity, fragmentManager, uiHelpers)
         })
+        viewModel.scrollToPosition.observe(this, Observer {
+            it?.let { index ->
+                recyclerView?.scrollToPosition(index)
+            }
+        })
     }
 
-    private fun showSnackbar(holder: SnackbarMessageHolder) {
+    private fun showSnackBar(holder: SnackbarMessageHolder) {
         nonNullActivity.findViewById<View>(R.id.root_view)?.let { parent ->
             val message = getString(holder.messageRes)
             val duration = AccessibilityUtils.getSnackbarDuration(nonNullActivity)
-            val snackbar = Snackbar.make(parent, message, duration)
+            val snackBar = Snackbar.make(parent, message, duration)
             if (holder.buttonTitleRes != null) {
-                snackbar.setAction(getString(holder.buttonTitleRes)) {
+                snackBar.setAction(getString(holder.buttonTitleRes)) {
                     holder.buttonAction()
                 }
             }
-            snackbar.addCallback(object : Snackbar.Callback() {
+            snackBar.addCallback(object : Snackbar.Callback() {
                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                     holder.onDismissAction()
                     super.onDismissed(transientBottomBar, event)
                 }
             })
-            snackbar.show()
+            snackBar.show()
         }
     }
 
@@ -259,9 +260,8 @@ class PostListFragment : Fragment() {
         }
     }
 
-    private fun updatePagedListData(pagedListData: PagedPostList, scrollPosition: Int?) {
+    private fun updatePagedListData(pagedListData: PagedPostList) {
         postListAdapter.submitList(pagedListData)
-        scrollPosition?.let { recyclerView?.smoothScrollToPosition(it) }
     }
 
     private fun updateEmptyViewForState(state: PostListEmptyUiState) {
@@ -312,18 +312,19 @@ class PostListFragment : Fragment() {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
     }
 
+    fun scrollToTargetPost(localPostId: Int) {
+        viewModel.scrollToPost(localPostId)
+    }
+
     companion object {
         const val TAG = "post_list_fragment_tag"
 
         @JvmStatic
-        fun newInstance(site: SiteModel, postListType: PostListType, targetPost: PostModel?): PostListFragment {
+        fun newInstance(site: SiteModel, postListType: PostListType): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
-            targetPost?.let {
-                bundle.putInt(EXTRA_TARGET_POST_LOCAL_ID, it.id)
-            }
             fragment.arguments = bundle
             return fragment
         }

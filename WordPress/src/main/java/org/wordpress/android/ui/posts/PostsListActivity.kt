@@ -7,12 +7,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -22,6 +24,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashlyticsUtils
 import org.wordpress.android.util.LocaleManager
@@ -35,6 +38,7 @@ class PostsListActivity : AppCompatActivity(),
         BasicDialogOnDismissByOutsideTouchInterface {
     @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var uiHelpers: UiHelpers
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
@@ -58,6 +62,7 @@ class PostsListActivity : AppCompatActivity(),
             return
         }
         restartWhenSiteHasChanged(intent)
+        loadIntentData(intent)
     }
 
     private fun restartWhenSiteHasChanged(intent: Intent) {
@@ -83,6 +88,7 @@ class PostsListActivity : AppCompatActivity(),
         setupActionBar()
         setupContent()
         initViewModel()
+        loadIntentData(intent)
     }
 
     private fun setupActionBar() {
@@ -138,6 +144,32 @@ class PostsListActivity : AppCompatActivity(),
                 }
             }
         })
+        viewModel.selectTab.observe(this, Observer { tabIndex ->
+            tabIndex?.let {
+                tabLayout.getTabAt(tabIndex)?.select()
+            }
+        })
+        viewModel.scrollToLocalPostId.observe(this, Observer { targetLocalPostId ->
+            targetLocalPostId?.let {
+                postsPagerAdapter.getItemAtPosition(pager.currentItem)?.scrollToTargetPost(targetLocalPostId)
+            }
+        })
+        viewModel.snackBarMessage.observe(this, Observer {
+            it?.let { uiString ->
+                Snackbar.make(
+                        findViewById(R.id.coordinator),
+                        getString(it.messageRes),
+                        Snackbar.LENGTH_LONG
+                ).show()
+            }
+        })
+    }
+
+    private fun loadIntentData(intent: Intent) {
+        val targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, -1)
+        if (targetPostId != -1) {
+            viewModel.showTargetPost(targetPostId)
+        }
     }
 
     public override fun onResume() {
