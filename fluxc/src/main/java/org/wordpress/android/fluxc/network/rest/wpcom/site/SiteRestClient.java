@@ -199,7 +199,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
                         @NonNull SiteVisibility visibility, @Nullable String verticalId, @Nullable Long segmentId,
                         @Nullable String tagLine, final boolean dryRun) {
-        String url = WPCOMREST.sites.new_.getUrlV1();
+        String url = WPCOMREST.sites.new_.getUrlV1_1();
         Map<String, Object> body = new HashMap<>();
         body.put("blog_name", siteName);
         body.put("blog_title", siteTitle);
