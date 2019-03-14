@@ -5,6 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
@@ -13,6 +14,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -38,7 +41,8 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_ITEM_COUNT = 6
+private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class AuthorsUseCase
 constructor(
@@ -47,7 +51,8 @@ constructor(
     private val authorsStore: AuthorsStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<AuthorsModel, SelectedAuthor>(
         AUTHORS,
         mainDispatcher,
@@ -56,13 +61,15 @@ constructor(
         statsGranularity,
         SelectedAuthor()
 ) {
+    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
+
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_authors))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): AuthorsModel? {
         return authorsStore.getAuthors(
                 site,
                 statsGranularity,
-                PAGE_SIZE,
+                LimitMode.Top(itemsToLoad),
                 selectedDate
         )
     }
@@ -70,8 +77,8 @@ constructor(
     override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<AuthorsModel> {
         val response = authorsStore.fetchAuthors(
                 site,
-                PAGE_SIZE,
                 statsGranularity,
+                LimitMode.Top(itemsToLoad),
                 selectedDate,
                 forced
         )
@@ -87,7 +94,10 @@ constructor(
 
     override fun buildStatefulUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_authors))
+
+        if (useCaseMode == BLOCK) {
+            items.add(Title(R.string.stats_authors))
+        }
 
         if (domainModel.authors.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
@@ -127,7 +137,7 @@ constructor(
                 }
             }
 
-            if (domainModel.hasMore) {
+            if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,
@@ -184,7 +194,8 @@ constructor(
                         authorsStore,
                         statsSiteProvider,
                         selectedDateProvider,
-                        analyticsTracker
+                        analyticsTracker,
+                        useCaseMode
                 )
     }
 }

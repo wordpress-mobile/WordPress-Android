@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Author
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Post
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -40,7 +42,7 @@ import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
-private const val pageSize = 6
+private const val ITEMS_TO_LOAD = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 
@@ -64,7 +66,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
-                tracker
+                tracker,
+                BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -80,7 +83,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     fun `maps authors to UI model`() = test {
         val forced = false
         val model = AuthorsModel(10, listOf(authorWithoutPosts, authorWithPosts), false)
-        whenever(store.fetchAuthors(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
+        whenever(store.fetchAuthors(site,
+                statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -143,7 +147,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = AuthorsModel(10, listOf(authorWithoutPosts), true)
-        whenever(store.fetchAuthors(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
+        whenever(store.fetchAuthors(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -168,7 +173,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty authors to UI model`() = test {
         val forced = false
-        whenever(store.fetchAuthors(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
+        whenever(store.fetchAuthors(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate, forced)).thenReturn(
                 OnStatsFetched(AuthorsModel(0, listOf(), false))
         )
 
@@ -189,8 +195,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchAuthors(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
