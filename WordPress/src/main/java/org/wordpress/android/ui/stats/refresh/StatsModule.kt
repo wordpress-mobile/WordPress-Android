@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.UiModelMapper
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostDayViewsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostHeaderUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -150,6 +151,7 @@ class StatsModule {
                 overviewUseCaseFactory
         )
     }
+
     /**
      * Provides a list of use cases for the Post detail screen in Stats. Modify this method when you want to add more
      * blocks to the post detail screen.
@@ -158,9 +160,10 @@ class StatsModule {
     @Singleton
     @Named(DETAIL_USE_CASES)
     fun provideDetailUseCases(
+        postHeaderUseCase: PostHeaderUseCase,
         postDayViewsUseCase: PostDayViewsUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
-        return listOf(postDayViewsUseCase)
+        return listOf(postHeaderUseCase, postDayViewsUseCase)
     }
 
     /**

@@ -205,4 +205,15 @@
         <item name="android:layout_height">@dimen/stats_activity_box_size</item>
         <item name="android:layout_marginEnd">@dimen/stats_activity_box_end_margin</item>
     </style>
+
+    <style name="StatsReferredItemLabel" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="StatsReferredItemTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
 </resources>
