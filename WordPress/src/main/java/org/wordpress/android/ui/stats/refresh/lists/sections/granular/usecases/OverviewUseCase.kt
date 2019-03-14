@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
@@ -24,7 +25,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 15
+private const val ITEMS_TO_LOAD = 15
 
 class OverviewUseCase
 constructor(
@@ -54,17 +55,18 @@ constructor(
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
         return visitsAndViewsStore.getVisits(
                 statsSiteProvider.siteModel,
-                selectedDateProvider.getCurrentDate(),
-                statsGranularity
+                statsGranularity,
+                LimitMode.All,
+                selectedDateProvider.getCurrentDate()
         )
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
                 statsSiteProvider.siteModel,
-                PAGE_SIZE,
-                selectedDateProvider.getCurrentDate(),
                 statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDateProvider.getCurrentDate(),
                 forced
         )
         val model = response.model

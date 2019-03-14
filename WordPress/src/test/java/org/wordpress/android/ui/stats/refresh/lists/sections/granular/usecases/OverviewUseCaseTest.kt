@@ -11,6 +11,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -45,7 +46,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: OverviewUseCase
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
-    private val pageSize = 15
+    private val itemsToLoad = 15
     private val statsGranularity = DAYS
     private val model = VisitsAndViewsModel(modelPeriod, listOf(periodData))
     private val currentDate = Date(10)
@@ -73,7 +74,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     fun `maps domain model to UI model`() = test {
         val forced = false
 
-        whenever(store.fetchVisits(site, pageSize, currentDate, statsGranularity, forced)).thenReturn(
+        whenever(store.fetchVisits(site, statsGranularity, LimitMode.Top(itemsToLoad), currentDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -94,7 +95,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(store.fetchVisits(site, pageSize, currentDate, statsGranularity, forced)).thenReturn(
+        whenever(store.fetchVisits(site, statsGranularity, LimitMode.Top(itemsToLoad), currentDate, forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
