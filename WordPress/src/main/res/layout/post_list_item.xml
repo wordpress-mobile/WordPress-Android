@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:padding="@dimen/margin_extra_large">
+
+    <ImageView
+        android:id="@+id/image_featured"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/postlist_featured_image_height"
+        android:contentDescription="@string/featured_image_desc"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/wp_grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_featured"
+        app:layout_goneMarginTop="0dp"
+        tools:text="Testing title"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/excerpt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif"
+        android:importantForAccessibility="no"
+        android:maxLines="3"
+        android:textColor="@color/wp_grey_dark"
+        android:textSize="@dimen/text_sz_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        tools:text="text_excerpt"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/date_and_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/wp_grey_darken_20"
+        android:textSize="@dimen/text_sz_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/excerpt"
+        tools:text="99 days ago"/>
+
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/status_labels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:fontFamily="sans-serif"
+        android:textSize="@dimen/text_sz_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_and_author"
+        tools:text="Private · Local Changes"/>
+
+</android.support.constraint.ConstraintLayout>
