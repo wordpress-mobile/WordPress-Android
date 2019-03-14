@@ -59,7 +59,6 @@ public class WPScreenshotTest extends BaseTest {
         Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
         wpLogin();
-        sleep();
         editBlogPost();
         navigateReader();
         navigateNotifications();
