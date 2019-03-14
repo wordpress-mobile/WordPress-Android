@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient
@@ -25,7 +26,8 @@ import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-private const val PAGE_SIZE = 8
+private const val ITEMS_TO_LOAD = 8
+private val LIMIT_MODE = LimitMode.Top(ITEMS_TO_LOAD)
 private val DATE = Date(0)
 
 @RunWith(MockitoJUnitRunner::class)
@@ -51,13 +53,13 @@ class AuthorsStoreTest {
                 AUTHORS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchAuthors(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(restClient.fetchAuthors(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<AuthorsModel>()
-        whenever(mapper.map(AUTHORS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(AUTHORS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
-        val responseModel = store.fetchAuthors(site, PAGE_SIZE, DAYS, DATE, forced)
+        val responseModel = store.fetchAuthors(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, AUTHORS_RESPONSE, DAYS, DATE)
@@ -69,9 +71,9 @@ class AuthorsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<AuthorsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchAuthors(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchAuthors(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchAuthors(site, PAGE_SIZE, DAYS, DATE, forced)
+        val responseModel = store.fetchAuthors(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -83,9 +85,9 @@ class AuthorsStoreTest {
     fun `returns data from db`() {
         whenever(sqlUtils.selectAuthors(site, DAYS, DATE)).thenReturn(AUTHORS_RESPONSE)
         val model = mock<AuthorsModel>()
-        whenever(mapper.map(AUTHORS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(AUTHORS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
-        val result = store.getAuthors(site, DAYS, PAGE_SIZE, DATE)
+        val result = store.getAuthors(site, DAYS, LIMIT_MODE, DATE)
 
         assertThat(result).isEqualTo(model)
     }
