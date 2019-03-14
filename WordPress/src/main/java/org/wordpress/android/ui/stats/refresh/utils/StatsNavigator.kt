@@ -3,14 +3,8 @@ package org.wordpress.android.ui.stats.refresh.utils
 import android.content.Intent
 import android.support.v4.app.FragmentActivity
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.StatsViewType.AUTHORS
 import org.wordpress.android.ui.stats.StatsViewType.CLICKS
@@ -48,7 +42,7 @@ import javax.inject.Singleton
 
 @Singleton
 class StatsNavigator
-@Inject constructor(private val statsDateFormatter: StatsDateFormatter, private val siteProvider: StatsSiteProvider) {
+@Inject constructor(private val siteProvider: StatsSiteProvider) {
     fun navigate(activity: FragmentActivity, target: NavigationTarget) {
         when (target) {
             is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false)
