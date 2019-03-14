@@ -26,7 +26,7 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.ALL_TIME_
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COMMENTS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAIL_FOLLOWERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_STATS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.DETAILED_POST_STATS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TAGS_AND_CATEGORIES_INSIGHTS
@@ -115,7 +115,7 @@ class InsightsSqlUtilsTest {
         whenever(
                 statsSqlUtils.select(
                         site,
-                        LATEST_POST_STATS_INSIGHTS,
+                        DETAILED_POST_STATS,
                         INSIGHTS,
                         PostStatsResponse::class.java,
                         postId = postId
@@ -124,7 +124,7 @@ class InsightsSqlUtilsTest {
                 POST_STATS_RESPONSE
         )
 
-        val result = insightsSqlUtils.selectLatestPostStats(site, postId)
+        val result = insightsSqlUtils.selectDetailedPostStats(site, postId)
 
         assertEquals(result, POST_STATS_RESPONSE)
     }
@@ -136,7 +136,7 @@ class InsightsSqlUtilsTest {
 
         verify(statsSqlUtils).insert(
                 site,
-                LATEST_POST_STATS_INSIGHTS,
+                DETAILED_POST_STATS,
                 INSIGHTS,
                 POST_STATS_RESPONSE,
                 true,

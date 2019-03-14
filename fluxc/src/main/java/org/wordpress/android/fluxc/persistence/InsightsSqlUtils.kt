@@ -17,9 +17,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsigh
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.ALL_TIME_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COMMENTS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.DETAILED_POST_STATS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAIL_FOLLOWERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_STATS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
@@ -46,7 +46,7 @@ class InsightsSqlUtils
     }
 
     fun insert(site: SiteModel, postId: Long, data: PostStatsResponse) {
-        insert(site, LATEST_POST_STATS_INSIGHTS, data, postId = postId)
+        insert(site, DETAILED_POST_STATS, data, postId = postId)
     }
 
     fun insert(site: SiteModel, data: VisitResponse) {
@@ -85,8 +85,8 @@ class InsightsSqlUtils
         return select(site, LATEST_POST_DETAIL_INSIGHTS, PostResponse::class.java)
     }
 
-    fun selectLatestPostStats(site: SiteModel, postId: Long): PostStatsResponse? {
-        return select(site, LATEST_POST_STATS_INSIGHTS, PostStatsResponse::class.java, postId)
+    fun selectDetailedPostStats(site: SiteModel, postId: Long): PostStatsResponse? {
+        return select(site, DETAILED_POST_STATS, PostStatsResponse::class.java, postId)
     }
 
     fun selectTodayInsights(site: SiteModel): VisitResponse? {
