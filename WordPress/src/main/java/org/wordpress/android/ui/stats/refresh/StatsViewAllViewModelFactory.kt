@@ -10,6 +10,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -159,6 +160,8 @@ class StatsViewAllViewModelFactory(
                         insightsUseCases.first { it is PublicizeUseCase },
                         R.string.stats_view_publicize
                 )
+                StatsViewType.DETAIL_MONTHS_AND_YEARS ->
+                    insightsUseCases.first { it is PostMonthsAndYearsUseCase } to R.string.stats_months_and_years
                 else -> throw InvalidParameterException("Invalid insights stats type: ${type.name}")
             }
         }

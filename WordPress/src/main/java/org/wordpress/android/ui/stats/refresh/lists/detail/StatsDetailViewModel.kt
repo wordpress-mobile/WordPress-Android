@@ -8,7 +8,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.stats.refresh.DETAIL_USE_CASE
+import org.wordpress.android.ui.stats.refresh.BLOCK_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
@@ -23,7 +23,7 @@ import javax.inject.Named
 class StatsDetailViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(DETAIL_USE_CASE) private val detailUseCase: BaseListUseCase,
+    @Named(BLOCK_DETAIL_USE_CASE) private val detailUseCase: BaseListUseCase,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
