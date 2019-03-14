@@ -8,7 +8,7 @@
         "jsonBody": {
             "sites": [
                 {
-                    "ID": 158396482,
+                    "ID": 1,
                     "name": "Mobile E2E Testing",
                     "description": "",
                     "URL": "https:\\/\\/e2eflowtestingmobile.wordpress.com",
@@ -190,10 +190,10 @@
                     "jetpack_modules": null,
                     "meta": {
                         "links": {
-                            "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/158396482",
-                            "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/158396482\\/help",
-                            "posts": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/158396482\\/posts\\/",
-                            "comments": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/158396482\\/comments\\/",
+                            "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1",
+                            "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/help",
+                            "posts": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/posts\\/",
+                            "comments": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/comments\\/",
                             "xmlrpc": "https:\\/\\/e2eflowtestingmobile.wordpress.com\\/xmlrpc.php"
                         }
                     },

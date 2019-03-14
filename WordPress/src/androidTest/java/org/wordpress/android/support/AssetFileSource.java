@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.support;
 
 import android.content.res.AssetManager;
 
@@ -16,6 +16,10 @@ import java.util.List;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 
+/**
+ * AssetFileSource provides a the necessary logic for WireMock to load its JSON mappings from Android assets.
+ * WireMock has no Android specific behaviour so we must implement asset loading here.
+ */
 public class AssetFileSource implements FileSource {
     private final AssetManager mAssetManager;
     private final String mPath;

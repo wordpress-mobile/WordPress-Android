@@ -1,12 +1,12 @@
 {
     "request": {
-        "urlPath": "/rest/v1.1/sites/158396482/settings",
+        "urlPath": "/rest/v1.1/sites/1/settings",
         "method": "GET"
     },
     "response": {
         "status": 200,
         "jsonBody": {
-            "ID": 158396482,
+            "ID": 1,
             "name": "Mobile E2E Testing",
             "description": "",
             "URL": "https:\\/\\/e2eflowtestingmobile.wordpress.com",

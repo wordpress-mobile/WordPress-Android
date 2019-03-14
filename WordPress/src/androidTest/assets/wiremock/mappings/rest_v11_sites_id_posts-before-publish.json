@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/158396482/posts/",
+        "urlPath": "/rest/v1.1/sites/1/posts/",
         "queryParameters": {
             "context": {
                 "equalTo": "edit"
@@ -17,13 +17,8 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "found": 3,
+            "found": 2,
             "posts": [
-                {
-                    "ID": 3,
-                    "modified": "2019-03-07T14:11:34+00:00",
-                    "status": "publish"
-                },
                 {
                     "ID": 2,
                     "modified": "2019-03-05T14:48:47+00:00",
@@ -37,7 +32,7 @@
             ],
             "meta": {
                 "links": {
-                    "counts": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/158396482\\/post-counts\\/post"
+                    "counts": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/post-counts\\/post"
                 },
                 "next_page": "value=&id=29",
                 "wpcom": true
@@ -55,5 +50,7 @@
             "X-ac": "2.lhr _dfw",
             "Strict-Transport-Security": "max-age=15552000"
         }
-    }
+    },
+    "scenarioName": "new-post",
+    "requiredScenarioState": "Started"
 }

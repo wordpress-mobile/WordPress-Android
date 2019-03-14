@@ -6,11 +6,11 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "ID": 152748359,
+            "ID": 1,
             "display_name": "e2eflowtestingmobile",
             "username": "e2eflowtestingmobile",
-            "email": "main.ee0zglcj@mailosaur.io",
-            "primary_blog": 158396482,
+            "email": "e2eflowtestingmobile@example.com",
+            "primary_blog": 1,
             "primary_blog_url": "http:\\/\\/e2eflowtestingmobile.wordpress.com",
             "primary_blog_is_jetpack": false,
             "language": "en",
