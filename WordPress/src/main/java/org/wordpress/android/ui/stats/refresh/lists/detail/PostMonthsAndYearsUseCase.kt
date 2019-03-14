@@ -26,8 +26,8 @@ import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.util.LocaleManagerWrapper
 import java.text.DateFormatSymbols
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -39,6 +39,7 @@ class PostMonthsAndYearsUseCase(
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
     private val postDetailStore: PostDetailStore,
+    private val localeManagerWrapper: LocaleManagerWrapper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<PostDetailStatsModel, UiState>(
         PostDetailTypes.MONTHS_AND_YEARS,
@@ -65,7 +66,7 @@ class PostMonthsAndYearsUseCase(
 
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
-            model != null && model.dayViews.isNotEmpty() -> State.Data(model)
+            model != null && model.yearsTotal.isNotEmpty() -> State.Data(model)
             else -> State.Empty()
         }
     }
@@ -95,8 +96,8 @@ class PostMonthsAndYearsUseCase(
                 if (isExpanded) {
                     yearList.addAll(year.months.sortedByDescending { it.month }.map { month ->
                         ListItemWithIcon(
-                                text = DateFormatSymbols(Locale.getDefault()).shortMonths[month.month - 1],
-                                value = month.count.toFormattedString(MILLION),
+                                text = DateFormatSymbols(localeManagerWrapper.getLocale()).shortMonths[month.month - 1],
+                                value = month.count.toFormattedString(MILLION, localeManagerWrapper.getLocale()),
                                 textStyle = LIGHT,
                                 showDivider = false
                         )
@@ -129,7 +130,7 @@ class PostMonthsAndYearsUseCase(
     ): ListItemWithIcon {
         return ListItemWithIcon(
                 text = year.year.toString(),
-                value = year.value.toFormattedString(MILLION),
+                value = year.value.toFormattedString(MILLION, localeManagerWrapper.getLocale()),
                 showDivider = index < shownYears.size - 1
         )
     }
@@ -149,6 +150,7 @@ class PostMonthsAndYearsUseCase(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val statsSiteProvider: StatsSiteProvider,
         private val statsPostProvider: StatsPostProvider,
+        private val localeManagerWrapper: LocaleManagerWrapper,
         private val postDetailStore: PostDetailStore
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
@@ -157,6 +159,7 @@ class PostMonthsAndYearsUseCase(
                         statsSiteProvider,
                         statsPostProvider,
                         postDetailStore,
+                        localeManagerWrapper,
                         useCaseMode
                 )
     }
