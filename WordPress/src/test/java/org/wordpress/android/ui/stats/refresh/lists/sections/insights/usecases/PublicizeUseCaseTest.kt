@@ -40,7 +40,8 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var serviceMapper: ServiceMapper
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: PublicizeUseCase
-    private val itemsToLoad = 5
+    private val itemsToLoad = 6
+    private val limitMode = LimitMode.Top(itemsToLoad)
     @Before
     fun setUp() {
         useCase = PublicizeUseCase(
@@ -59,7 +60,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val forced = false
         val followers = 100
         val services = listOf(Service("facebook", followers))
-        whenever(insightsStore.fetchPublicizeData(site, LimitMode.Top(itemsToLoad), forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
                 OnStatsFetched(
                         PublicizeModel(services, false)
                 )
@@ -88,7 +89,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val services = listOf(
                 Service("service1", followers)
         )
-        whenever(insightsStore.fetchPublicizeData(site, LimitMode.Top(itemsToLoad), forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
                 OnStatsFetched(
                         PublicizeModel(services, true)
                 )
@@ -114,7 +115,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty services to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchPublicizeData(site, LimitMode.Top(itemsToLoad), forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
                 OnStatsFetched(PublicizeModel(listOf(), false))
         )
 
@@ -132,7 +133,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(insightsStore.fetchPublicizeData(site, LimitMode.Top(itemsToLoad), forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
