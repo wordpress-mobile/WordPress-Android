@@ -97,7 +97,7 @@ class PostMonthsAndYearsUseCase(
                     yearList.addAll(year.months.sortedByDescending { it.month }.map { month ->
                         ListItemWithIcon(
                                 text = DateFormatSymbols(localeManagerWrapper.getLocale()).shortMonths[month.month - 1],
-                                value = month.count.toFormattedString(MILLION, localeManagerWrapper.getLocale()),
+                                value = month.count.toFormattedString(locale = localeManagerWrapper.getLocale()),
                                 textStyle = LIGHT,
                                 showDivider = false
                         )
@@ -130,7 +130,7 @@ class PostMonthsAndYearsUseCase(
     ): ListItemWithIcon {
         return ListItemWithIcon(
                 text = year.year.toString(),
-                value = year.value.toFormattedString(MILLION, localeManagerWrapper.getLocale()),
+                value = year.value.toFormattedString(locale = localeManagerWrapper.getLocale()),
                 showDivider = index < shownYears.size - 1
         )
     }
