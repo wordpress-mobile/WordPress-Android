@@ -261,7 +261,7 @@ class InsightsStoreTest {
     @Test
     fun `returns latest post insights from db`() {
         whenever(sqlUtils.selectLatestPostDetail(site)).thenReturn(LATEST_POST)
-        whenever(sqlUtils.selectLatestPostStats(site, LATEST_POST.id)).thenReturn(POST_STATS_RESPONSE)
+        whenever(sqlUtils.selectDetailedPostStats(site, LATEST_POST.id)).thenReturn(POST_STATS_RESPONSE)
         val model = mock<InsightsLatestPostModel>()
         whenever(mapper.map(
                 LATEST_POST,

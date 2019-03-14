@@ -44,7 +44,7 @@ class LatestPostInsightsStore @Inject constructor(
 
     fun getLatestPostInsights(site: SiteModel): InsightsLatestPostModel? {
         return sqlUtils.selectLatestPostDetail(site)?.let { latestPostDetailResponse ->
-            sqlUtils.selectLatestPostStats(site, latestPostDetailResponse.id)?.let { latestPostViewsResponse ->
+            sqlUtils.selectDetailedPostStats(site, latestPostDetailResponse.id)?.let { latestPostViewsResponse ->
                 insightsMapper.map(latestPostDetailResponse, latestPostViewsResponse, site)
             }
         }
