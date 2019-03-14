@@ -21,24 +21,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/sitePreviewTitle"
-            style="@style/SitePreviewTitle"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/margin_extra_medium_large"
-            android:paddingEnd="@dimen/margin_large"
-            android:paddingStart="@dimen/margin_large"
-            app:fixWidowWords="true"/>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/sitePreviewSubtitle"
-            style="@style/SitePreviewSubtitle"
-            android:layout_below="@id/sitePreviewTitle"
+        <include
+            layout="@layout/new_site_creation_preview_header_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/margin_extra_medium_large"
-            android:paddingEnd="@dimen/margin_large"
-            android:paddingStart="@dimen/margin_large"
-            app:fixWidowWords="true"/>
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_extra_medium_large"/>
 
         <include
             android:id="@+id/webviewContainer"
@@ -46,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/sitePreviewOkButtonContainer"
-            android:layout_below="@id/sitePreviewSubtitle"
+            android:layout_below="@id/sitePreviewHeaderLayout"
             android:layout_marginBottom="@dimen/negative_margin_medium"
             android:layout_marginLeft="@dimen/new_site_creation_preview_web_view_side_margin"
             android:layout_marginRight="@dimen/new_site_creation_preview_web_view_side_margin"/>
