@@ -66,8 +66,8 @@ constructor(
         return store.getClicks(
                 site,
                 statsGranularity,
-                selectedDate,
-                LimitMode.Top(itemsToLoad)
+                LimitMode.Top(itemsToLoad),
+                selectedDate
         )
     }
 
