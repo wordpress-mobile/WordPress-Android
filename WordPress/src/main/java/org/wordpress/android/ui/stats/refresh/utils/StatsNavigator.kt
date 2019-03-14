@@ -12,13 +12,17 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
+import org.wordpress.android.ui.stats.StatsViewType.AUTHORS
 import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
+import org.wordpress.android.ui.stats.StatsViewType.GEOVIEWS
 import org.wordpress.android.ui.stats.StatsViewType.PUBLICIZE
 import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
+import org.wordpress.android.ui.stats.StatsViewType.SEARCH_TERMS
 import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
 import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
+import org.wordpress.android.ui.stats.StatsViewType.VIDEO_PLAYS
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
@@ -103,49 +107,20 @@ class StatsNavigator
                 ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, CLICKS)
             }
             is ViewCountries -> {
-                ActivityLauncher.viewCountriesStats(
-                        activity,
-                        siteProvider.siteModel,
-                        target.statsGranularity.toStatsTimeFrame(),
-                        statsDateFormatter.printStatsDate(target.selectedDate)
-                )
+                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, GEOVIEWS)
             }
             is ViewVideoPlays -> {
-                ActivityLauncher.viewVideoPlays(
-                        activity,
-                        siteProvider.siteModel,
-                        target.statsGranularity.toStatsTimeFrame(),
-                        statsDateFormatter.printStatsDate(target.selectedDate)
-                )
+                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, VIDEO_PLAYS)
             }
             is ViewSearchTerms -> {
-                ActivityLauncher.viewSearchTerms(
-                        activity,
-                        siteProvider.siteModel,
-                        target.statsGranularity.toStatsTimeFrame(),
-                        statsDateFormatter.printStatsDate(target.selectedDate)
-                )
+                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, SEARCH_TERMS)
             }
             is ViewAuthors -> {
-                ActivityLauncher.viewAuthorsStats(
-                        activity,
-                        siteProvider.siteModel,
-                        target.statsGranularity.toStatsTimeFrame(),
-                        statsDateFormatter.printStatsDate(target.selectedDate)
-                )
+                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, AUTHORS)
             }
             is ViewUrl -> {
                 WPWebViewActivity.openURL(activity, target.url)
             }
         }
-    }
-}
-
-fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
-    return when (this) {
-        DAYS -> StatsTimeframe.DAY
-        WEEKS -> StatsTimeframe.WEEK
-        MONTHS -> StatsTimeframe.MONTH
-        YEARS -> StatsTimeframe.YEAR
     }
 }
