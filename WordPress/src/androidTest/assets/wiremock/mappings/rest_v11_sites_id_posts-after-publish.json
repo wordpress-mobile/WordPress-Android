@@ -1,0 +1,61 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/rest/v1.1/sites/1/posts/",
+        "queryParameters": {
+            "context": {
+                "equalTo": "edit"
+            },
+            "fields": {
+                "equalTo": "ID,modified,status"
+            },
+            "status": {
+                "equalTo": "draft,pending,private,publish,future"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "found": 3,
+            "posts": [
+                {
+                    "ID": 3,
+                    "modified": "2019-03-07T14:11:34+00:00",
+                    "status": "publish"
+                },
+                {
+                    "ID": 2,
+                    "modified": "2019-03-05T14:48:47+00:00",
+                    "status": "publish"
+                },
+                {
+                    "ID": 1,
+                    "modified": "2019-03-05T14:46:38+00:00",
+                    "status": "publish"
+                }
+            ],
+            "meta": {
+                "links": {
+                    "counts": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/post-counts\\/post"
+                },
+                "next_page": "value=&id=29",
+                "wpcom": true
+            }
+        },
+        "headers": {
+            "Server": "nginx",
+            "Date": "Tue, 12 Mar 2019 15:00:51 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Vary": "Accept-Encoding",
+            "X-hacker": "Oh, Awesome: Opossum",
+            "Expires": "Wed, 11 Jan 1984 05:00:00 GMT",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0",
+            "X-ac": "2.lhr _dfw",
+            "Strict-Transport-Security": "max-age=15552000"
+        }
+    },
+    "scenarioName": "new-post",
+    "requiredScenarioState": "Post Published"
+}

@@ -15,7 +15,6 @@ import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.modules.AppComponentTest;
 import org.wordpress.android.modules.DaggerAppComponentTest;
 import org.wordpress.android.ui.WPLaunchActivity;
-import org.wordpress.android.util.AssetFileSource;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;

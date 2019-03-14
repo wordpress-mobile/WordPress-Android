@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "POST",
-        "urlPath": "/rest/v1.2/sites/158396482/posts/new/",
+        "urlPath": "/rest/v1.2/sites/1/posts/new/",
         "queryParameters": {
             "context": {
                 "equalTo": "edit"
@@ -17,13 +17,14 @@
     },
     "response": {
         "status": 200,
+        "fixedDelayMilliseconds": 800,
         "jsonBody": {
-            "ID": 4,
-            "site_ID": 158396482,
+            "ID": 3,
+            "site_ID": 1,
             "author": {
-                "ID": 152748359,
+                "ID": 1,
                 "login": "e2eflowtestingmobile",
-                "email": "main.ee0zglcj@mailosaur.io",
+                "email": "e2eflowtestingmobile@example.com",
                 "name": "e2eflowtestingmobile",
                 "first_name": "",
                 "last_name": "",
@@ -31,7 +32,7 @@
                 "URL": "http:\\/\\/e2eflowtestingmobile.wordpress.com",
                 "avatar_URL": "https:\\/\\/1.gravatar.com\\/avatar\\/7a4015c11be6a342f65e0e169092d402?s=96&d=identicon&r=G",
                 "profile_URL": "http:\\/\\/en.gravatar.com\\/e2eflowtestingmobile",
-                "site_ID": 158396482
+                "site_ID": 1
             },
             "date": "2019-03-12T15:00:53+00:00",
             "modified": "2019-03-12T15:00:53+00:00",
@@ -79,9 +80,9 @@
                         "parent": 0,
                         "meta": {
                             "links": {
-                                "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/158396482\\/categories\\/slug:uncategorized",
-                                "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/158396482\\/categories\\/slug:uncategorized\\/help",
-                                "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/158396482"
+                                "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/categories\\/slug:uncategorized",
+                                "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/1\\/categories\\/slug:uncategorized\\/help",
+                                "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/1"
                             }
                         }
                     }
@@ -101,9 +102,9 @@
                     "parent": 0,
                     "meta": {
                         "links": {
-                            "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/158396482\\/categories\\/slug:uncategorized",
-                            "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/158396482\\/categories\\/slug:uncategorized\\/help",
-                            "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/158396482"
+                            "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/categories\\/slug:uncategorized",
+                            "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/1\\/categories\\/slug:uncategorized\\/help",
+                            "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/1"
                         }
                     }
                 }
@@ -119,11 +120,11 @@
             ],
             "meta": {
                 "links": {
-                    "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/158396482\\/posts\\/4",
-                    "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/158396482\\/posts\\/4\\/help",
-                    "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/158396482",
-                    "replies": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/158396482\\/posts\\/4\\/replies\\/",
-                    "likes": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/158396482\\/posts\\/4\\/likes\\/"
+                    "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/posts\\/3",
+                    "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/1\\/posts\\/3\\/help",
+                    "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/1",
+                    "replies": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/posts\\/3\\/replies\\/",
+                    "likes": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/posts\\/3\\/likes\\/"
                 }
             },
             "capabilities": {
@@ -145,5 +146,8 @@
             "X-ac": "2.lhr _dfw",
             "Strict-Transport-Security": "max-age=15552000"
         }
-    }
+    },
+    "scenarioName": "new-post",
+    "requiredScenarioState": "Started",
+    "newScenarioState": "Post Published"
 }
