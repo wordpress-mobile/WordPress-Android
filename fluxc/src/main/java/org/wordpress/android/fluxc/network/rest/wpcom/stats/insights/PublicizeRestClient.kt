@@ -30,16 +30,14 @@ constructor(
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchPublicizeData(
         site: SiteModel,
-        pageSize: Int = 6,
         forced: Boolean
     ): FetchStatsPayload<PublicizeResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.publicize.urlV1_1
 
-        val params = mapOf("max" to pageSize.toString())
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
-                params,
+                emptyMap(),
                 PublicizeResponse::class.java,
                 enableCaching = true,
                 forced = forced

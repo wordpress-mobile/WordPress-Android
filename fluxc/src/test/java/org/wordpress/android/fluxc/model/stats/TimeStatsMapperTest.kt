@@ -64,7 +64,7 @@ class TimeStatsMapperTest {
     fun `parses empty country views`() {
         val response = CountryViewsResponse(emptyMap(), emptyMap())
 
-        val result = timeStatsMapper.map(response, 5)
+        val result = timeStatsMapper.map(response, LimitMode.Top(5))
 
         assertThat(result.countries).isEmpty()
         assertThat(result.hasMore).isFalse()
@@ -76,7 +76,7 @@ class TimeStatsMapperTest {
     fun `parses empty authors`() {
         val response = AuthorsResponse(null, emptyMap())
 
-        val result = timeStatsMapper.map(response, 5)
+        val result = timeStatsMapper.map(response, LimitMode.Top(5))
 
         assertThat(result.authors).isEmpty()
         assertThat(result.hasMore).isFalse()
@@ -87,7 +87,7 @@ class TimeStatsMapperTest {
     fun `parses empty search terms`() {
         val response = SearchTermsResponse(null, emptyMap())
 
-        val result = timeStatsMapper.map(response, 5)
+        val result = timeStatsMapper.map(response, LimitMode.Top(5))
 
         assertThat(result.searchTerms).isEmpty()
         assertThat(result.hasMore).isFalse()
@@ -99,7 +99,7 @@ class TimeStatsMapperTest {
     fun `parses empty videos`() {
         val response = VideoPlaysResponse(null, emptyMap())
 
-        val result = timeStatsMapper.map(response, 5)
+        val result = timeStatsMapper.map(response, LimitMode.Top(5))
 
         assertThat(result.plays).isEmpty()
         assertThat(result.hasMore).isFalse()

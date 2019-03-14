@@ -113,7 +113,7 @@ class TimeStatsMapper
         )
     }
 
-    fun map(response: VisitsAndViewsResponse): VisitsAndViewsModel {
+    fun map(response: VisitsAndViewsResponse, cacheMode: LimitMode): VisitsAndViewsModel {
         val periodIndex = response.fields?.indexOf("period")
         val viewsIndex = response.fields?.indexOf("views")
         val visitorsIndex = response.fields?.indexOf("visitors")
@@ -138,6 +138,12 @@ class TimeStatsMapper
                     null
                 }
             }
+        }?.let {
+            if (cacheMode is LimitMode.Top) {
+                it.take(cacheMode.limit)
+            } else {
+                it
+            }
         }
         if (response.data == null || response.date == null || dataPerPeriod == null) {
             AppLog.e(STATS, "VisitsAndViewsResponse: data, date & dataPerPeriod fields should never be null")
@@ -152,11 +158,17 @@ class TimeStatsMapper
         } ?: 0
     }
 
-    fun map(response: CountryViewsResponse, pageSize: Int): CountryViewsModel {
+    fun map(response: CountryViewsResponse, cacheMode: LimitMode): CountryViewsModel {
         val first = response.days.values.firstOrNull()
         val countriesInfo = response.countryInfo
         val groups = first?.let {
-            first.views.take(pageSize).mapNotNull { countryViews ->
+            first.views.let {
+                if (cacheMode is LimitMode.Top) {
+                    it.take(cacheMode.limit)
+                } else {
+                    it
+                }
+            }.mapNotNull { countryViews ->
                 val countryInfo = countriesInfo[countryViews.countryCode]
                 if (countryViews.countryCode != null && countryInfo != null && countryInfo.countryFull != null) {
                     CountryViewsModel.Country(
@@ -181,10 +193,16 @@ class TimeStatsMapper
         )
     }
 
-    fun map(response: AuthorsResponse, pageSize: Int): AuthorsModel {
+    fun map(response: AuthorsResponse, cacheMode: LimitMode): AuthorsModel {
         val first = response.groups.values.firstOrNull()
         val authors = first?.let {
-            first.authors.take(pageSize).map { author ->
+            first.authors.let {
+                if (cacheMode is LimitMode.Top) {
+                    it.take(cacheMode.limit)
+                } else {
+                    it
+                }
+            }.map { author ->
                 val posts = author.mappedPosts?.mapNotNull { result ->
                     if (result.postId != null && result.title != null) {
                         Post(result.postId, result.title, result.views ?: 0, result.url)
@@ -203,17 +221,23 @@ class TimeStatsMapper
         return AuthorsModel(first?.otherViews ?: 0, authors ?: listOf(), hasMore)
     }
 
-    fun map(response: SearchTermsResponse, pageSize: Int): SearchTermsModel {
+    fun map(response: SearchTermsResponse, cacheMode: LimitMode): SearchTermsModel {
         val first = response.days.values.firstOrNull()
         val groups = first?.let {
-            first.searchTerms.mapNotNull { searchTerm ->
+            first.searchTerms.let {
+                if (cacheMode is LimitMode.Top) {
+                    it.take(cacheMode.limit)
+                } else {
+                    it
+                }
+            }.mapNotNull { searchTerm ->
                 if (searchTerm.term != null) {
                     SearchTermsModel.SearchTerm(searchTerm.term, searchTerm.views ?: 0)
                 } else {
                     AppLog.e(STATS, "SearchTermsResponse: Missing term field on a Search terms object")
                     null
                 }
-            }.take(pageSize)
+            }
         }
         val hasMore = if (first != null && groups != null) first.searchTerms.size > groups.size else false
         return SearchTermsModel(
@@ -225,10 +249,16 @@ class TimeStatsMapper
         )
     }
 
-    fun map(response: VideoPlaysResponse, pageSize: Int): VideoPlaysModel {
+    fun map(response: VideoPlaysResponse, cacheMode: LimitMode): VideoPlaysModel {
         val first = response.days.values.firstOrNull()
         val groups = first?.let {
-            first.plays.take(pageSize).mapNotNull { result ->
+            first.plays.let {
+                if (cacheMode is LimitMode.Top) {
+                    it.take(cacheMode.limit)
+                } else {
+                    it
+                }
+            }.mapNotNull { result ->
                 if (result.postId != null && result.title != null) {
                     VideoPlaysModel.VideoPlays(result.postId, result.title, result.url, result.plays ?: 0)
                 } else {
