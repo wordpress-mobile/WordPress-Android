@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
+import org.wordpress.android.ui.stats.StatsViewType.PUBLICIZE
 import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
 import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
 import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
@@ -90,7 +91,7 @@ class StatsNavigator
                 ActivityLauncher.openStatsUrl(activity, target.link)
             }
             is ViewPublicizeStats -> {
-                ActivityLauncher.viewPublicizeStats(activity, siteProvider.siteModel)
+                ActivityLauncher.viewAllInsightsStats(activity, PUBLICIZE)
             }
             is ViewPostsAndPages -> {
                 ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, TOP_POSTS_AND_PAGES)
