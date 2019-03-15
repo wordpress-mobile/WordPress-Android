@@ -4,7 +4,7 @@ import android.support.annotation.ColorRes
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.widgets.PostListButtonType
 
-data class PostListItemUiModel(
+data class PostListItemUiState(
     val remotePostId: Long,
     val localPostId: Int,
     val title: UiString?,

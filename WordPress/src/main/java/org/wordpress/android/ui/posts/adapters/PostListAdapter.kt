@@ -16,7 +16,7 @@ import org.wordpress.android.ui.PagedListDiffItemCallback
 import org.wordpress.android.ui.posts.PostListItemViewHolder
 import org.wordpress.android.ui.posts.PostViewHolderConfig
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.viewmodel.posts.PostListItemUiModel
+import org.wordpress.android.viewmodel.posts.PostListItemUiState
 
 private const val VIEW_TYPE_POST = 0
 private const val VIEW_TYPE_ENDLIST_INDICATOR = 1
@@ -26,14 +26,14 @@ class PostListAdapter(
     context: Context,
     private val postViewHolderConfig: PostViewHolderConfig,
         private val uiHelpers: UiHelpers
-) : PagedListAdapter<PagedListItemType<PostListItemUiModel>, ViewHolder>(PostListDiffItemCallback) {
+) : PagedListAdapter<PagedListItemType<PostListItemUiState>, ViewHolder>(PostListDiffItemCallback) {
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is EndListIndicatorItem -> VIEW_TYPE_ENDLIST_INDICATOR
             is LoadingItem -> VIEW_TYPE_LOADING
-            is ReadyItem<PostListItemUiModel> -> VIEW_TYPE_POST
+            is ReadyItem<PostListItemUiState> -> VIEW_TYPE_POST
             null -> VIEW_TYPE_LOADING // Placeholder by paged list
         }
     }
@@ -74,7 +74,7 @@ class PostListAdapter(
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
 
-private val PostListDiffItemCallback = PagedListDiffItemCallback<PostListItemUiModel>(
+private val PostListDiffItemCallback = PagedListDiffItemCallback<PostListItemUiState>(
         getRemoteItemId = { item -> item.remotePostId },
         areItemsTheSame = { oldItem, newItem -> oldItem.localPostId == newItem.localPostId },
         areContentsTheSame = { oldItem, newItem -> oldItem == newItem }

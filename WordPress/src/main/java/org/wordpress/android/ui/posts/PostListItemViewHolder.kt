@@ -16,7 +16,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.viewmodel.posts.PostListItemUiModel
+import org.wordpress.android.viewmodel.posts.PostListItemUiState
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 
@@ -45,7 +45,7 @@ class PostListItemViewHolder(
             itemView.findViewById(R.id.btn_ternary)
     )
 
-    fun onBind(item: PostListItemUiModel) {
+    fun onBind(item: PostListItemUiState) {
         showFeaturedImage(item.imageUrl)
         setTextOrHide(tvTitle, item.title)
         setTextOrHide(tvExcerpt, item.excerpt)

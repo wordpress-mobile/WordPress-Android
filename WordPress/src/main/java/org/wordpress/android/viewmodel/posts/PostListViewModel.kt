@@ -90,7 +90,6 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
@@ -112,7 +111,7 @@ const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
 const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 
-typealias PagedPostList = PagedList<PagedListItemType<PostListItemUiModel>>
+typealias PagedPostList = PagedList<PagedListItemType<PostListItemUiState>>
 
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -163,7 +162,7 @@ class PostListViewModel @Inject constructor(
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
 
-    private val pagedListWrapper: PagedListWrapper<PostListItemUiModel> by lazy {
+    private val pagedListWrapper: PagedListWrapper<PostListItemUiState> by lazy {
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
         }
@@ -610,9 +609,9 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    // PostListItemUiModel Management
+    // PostListItemUiState Management
 
-    private fun createPostListItemUiModel(post: PostModel): PostListItemUiModel {
+    private fun createPostListItemUiModel(post: PostModel): PostListItemUiState {
         val title = if (post.title.isNotBlank()) {
             UiStringText(StringEscapeUtils.unescapeHtml4(post.title))
         } else UiStringRes(R.string.untitled_in_parentheses)
@@ -625,7 +624,7 @@ class PostListViewModel @Inject constructor(
 
         val uploadStatus = getUploadStatus(post)
 
-        return PostListItemUiModel(
+        return PostListItemUiState(
                 post.remotePostId,
                 post.id,
                 title,
@@ -1011,8 +1010,8 @@ class PostListViewModel @Inject constructor(
 
     private fun findItemListPosition(data: PagedPostList, localPostId: Int): Int? {
         return data.listIterator().withIndex().asSequence().find { listItem ->
-            if (listItem.value is ReadyItem<PostListItemUiModel>) {
-                val readyItem = listItem.value as ReadyItem<PostListItemUiModel>
+            if (listItem.value is ReadyItem<PostListItemUiState>) {
+                val readyItem = listItem.value as ReadyItem<PostListItemUiState>
                 readyItem.item.localPostId == localPostId
             } else {
                 false
