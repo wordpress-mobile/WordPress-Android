@@ -818,7 +818,7 @@
     </style>
 
     <style name="SiteCreationHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/wp_grey_dark</item>
     </style>
