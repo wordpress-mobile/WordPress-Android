@@ -12,7 +12,7 @@
             "URL": "https://e2eflowtestingmobile.wordpress.com",
             "lang": "en",
             "settings": {
-                "admin_url": "https://e2eflowtestingmobile.wordpress.com\\/wp-admin\\/",
+                "admin_url": "https://e2eflowtestingmobile.wordpress.com/wp-admin/",
                 "default_ping_status": true,
                 "default_comment_status": true,
                 "blog_public": 1,
