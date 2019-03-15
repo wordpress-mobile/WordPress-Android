@@ -582,9 +582,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         for (final SubscriptionModel subscription : subscriptions) {
+            if (context == null) {
+                return;
+            }
+
             // Subscriptions with a "false" blogId are for feeds and don't have notifications settings.
-            if (context == null || subscription.getBlogId().equalsIgnoreCase("false")) {
-                break;
+            if (subscription.getBlogId().equalsIgnoreCase("false")) {
+                continue;
             }
 
             mSubscriptionCount++;
