@@ -510,7 +510,7 @@ class InsightsRestClientTest {
         data: PostStatsResponse? = null,
         error: WPComGsonNetworkError? = null
     ): Response<PostStatsResponse> {
-        return initResponse(PostStatsResponse::class.java, data ?: mock(), error)
+        return initResponse(PostStatsResponse::class.java, data ?: mock(), error, cachingEnabled = false)
     }
 
     private suspend fun initVisitResponse(
