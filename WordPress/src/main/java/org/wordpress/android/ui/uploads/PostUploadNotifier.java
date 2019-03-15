@@ -426,10 +426,18 @@ class PostUploadNotifier {
     }
 
     public static long getNotificationIdForPost(PostModel post) {
-        long remotePostId = post.getRemotePostId();
+        long postIdToUse = post.getRemotePostId();
+        if (post.isLocalDraft()) {
+            postIdToUse = post.getId();
+        }
         // We can't use the local table post id here because it can change between first post (local draft) to
         // first edit (post pulled from the server)
-        return post.getLocalSiteId() + remotePostId;
+        // but, if this is a local draft, we don't have a choice but to use the local id.
+        // otherwise, remote ID is always 0 for any local draft, and this means we'd be providing the same
+        // notificationId for 2 different local drafts for the same site, with this ending in the latest notification
+        // "stepping" on the first one (the user would always get to see the latest failed local draft, but wouldn't get
+        // a notice about the previous ones).
+        return post.getLocalSiteId() + postIdToUse;
     }
 
     public static long getNotificationIdForMedia(SiteModel site) {
