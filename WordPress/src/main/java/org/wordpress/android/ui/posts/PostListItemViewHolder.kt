@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ProgressBar
@@ -12,9 +13,11 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemUiModel
+import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 
 class PostListItemViewHolder(
@@ -35,7 +38,12 @@ class PostListItemViewHolder(
     private val tvDateAndAuthor: WPTextView = itemView.findViewById(R.id.date_and_author)
     private val tvStatusLabels: WPTextView = itemView.findViewById(R.id.status_labels)
     private val pbProgress: ProgressBar = itemView.findViewById(R.id.progress)
-    private val flDisabledOverlay: ProgressBar = itemView.findViewById(R.id.disabled_overlay)
+    private val flDisabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
+    private val btnsList: List<PostListButton> = listOf(
+            itemView.findViewById(R.id.btn_primary),
+            itemView.findViewById(R.id.btn_secondary),
+            itemView.findViewById(R.id.btn_ternary)
+    )
 
     fun onBind(item: PostListItemUiModel) {
         showFeaturedImage(item.imageUrl)
@@ -49,6 +57,20 @@ class PostListItemViewHolder(
         uiHelpers.updateVisibility(pbProgress, item.showProgress)
         uiHelpers.updateVisibility(flDisabledOverlay, item.showOverlay)
         itemView.setOnClickListener { item.onSelected.invoke() }
+
+        if(btnsList.size < item.actions.size) {
+            AppLog.e(AppLog.T.POSTS, "Some actions will not be displayed - max number of actions is ${btnsList.size}")
+        }
+
+        btnsList.forEachIndexed { index, button ->
+            val actionAvailable = item.actions.size > index
+            uiHelpers.updateVisibility(button, actionAvailable)
+            if(actionAvailable) {
+                val action = item.actions[index]
+                button.buttonType = action.buttonType
+                button.setOnClickListener { action.onButtonClicked.invoke(action.buttonType) }
+            }
+        }
     }
 
     private fun showFeaturedImage(imageUrl: String?) {

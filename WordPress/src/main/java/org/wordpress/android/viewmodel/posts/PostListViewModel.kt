@@ -611,7 +611,7 @@ class PostListViewModel @Inject constructor(
                 UiStringText(PostUtils.getFormattedDate(post)),  // TODO How do I get name of the author
                 getStatusLabels(post, uploadStatus),
                 getStatusLabelsColor(post, uploadStatus),
-                createActions(post),
+                createActions(post, uploadStatus),
                 showProgress = shouldShowProgress(uploadStatus),
                 showOverlay = shouldShowOverlay(uploadStatus),
                 onSelected = {
@@ -619,43 +619,6 @@ class PostListViewModel @Inject constructor(
                     handlePostButton(PostListButton.BUTTON_EDIT, post)
                 }
         )
-//        val postStatus = PostStatus.fromPost(post)
-//        val canShowStats = isStatsSupported && postStatus == PostStatus.PUBLISHED && !post.isLocalDraft &&
-//                !post.isLocallyChanged
-//        val uploadStatus = getUploadStatus(post)
-//        val canPublishPost = !uploadStatus.isUploadingOrQueued &&
-//                (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
-//
-//
-//        val postData = PostAdapterItemData(
-//                localPostId = post.id,
-//                remotePostId = if (post.remotePostId != 0L) post.remotePostId else null,
-//                title = title,
-//                excerpt = excerpt,
-//                isLocalDraft = post.isLocalDraft,
-//                date = PostUtils.getFormattedDate(post),
-//                postStatus = postStatus,
-//                isLocallyChanged = post.isLocallyChanged,
-//                isConflicted = doesPostHaveUnhandledConflict(post),
-//                canShowStats = canShowStats,
-//                canPublishPost = canPublishPost,
-//                canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
-//                featuredImageId = post.featuredImageId,
-//                featuredImageUrl =,
-//                uploadStatus = uploadStatus
-//        )
-//
-//        PostAdapterItem(
-//                data = postData,
-//                onSelected = {
-//                    trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
-//                    handlePostButton(PostListButton.BUTTON_EDIT, post)
-//                },
-//                onButtonClicked = {
-//                    trackAction(it, post, AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED)
-//                    handlePostButton(it, post)
-//                }
-//        )
     }
 
     private fun shouldShowProgress(uploadStatus: PostAdapterItemUploadStatus): Boolean {
@@ -736,36 +699,67 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-//    private fun updateForUploadStatus(uploadStatus: PostAdapterItemUploadStatus) {
-//        if (uploadStatus.isUploading) {
-//            disabledOverlay.visibility = View.VISIBLE
-//            progressBar.isIndeterminate = true
-//        } else if (!config.isAztecEditorEnabled && uploadStatus.isUploadingOrQueued) {
-//            // Editing posts with uploading media is only supported in Aztec
-//            disabledOverlay.visibility = View.VISIBLE
-//        } else {
-//            progressBar.isIndeterminate = false
-//            disabledOverlay.visibility = View.GONE
-//        }
-//        if (!uploadStatus.isUploadFailed &&
-//                (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)) {
-//            progressBar.visibility = View.VISIBLE
-//            // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
-//            // Cap the progress bar at MAX_DISPLAYED_UPLOAD_PROGRESS (until we move past the 'uploading media' phase)
-//            progressBar.progress = Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, uploadStatus.mediaUploadProgress)
-//        } else {
-//            progressBar.visibility = View.GONE
-//        }
-//    }
+    private fun createActions(
+        post: PostModel,
+        uploadStatus: PostAdapterItemUploadStatus
+    ): List<PostListItemAction> {
+        val postStatus: PostStatus = PostStatus.fromPost(post)
+        val canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
+        val canPublishPost = !uploadStatus.isUploadingOrQueued
+                && (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
+        val canShowStats = isStatsSupported
+                && postStatus == PostStatus.PUBLISHED
+                && !post.isLocalDraft
+                && !post.isLocallyChanged
+        val canShowViewButton = !canRetryUpload
+        val canShowPublishButton = canRetryUpload || canPublishPost
 
-    private fun createActions(post: PostModel): List<PostListItemAction> {
-        // TODO add valid actions for each item
-        return listOf(
-                PostListItemAction {
-                    trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
-                    handlePostButton(PostListButton.BUTTON_EDIT, post)
-                }
-        )
+        val buttonTypes = ArrayList<Int>()
+        buttonTypes.add(PostListButton.BUTTON_EDIT)
+
+        // publish button is re-purposed depending on the situation
+        if (canShowPublishButton) {
+            buttonTypes.add(
+                    if (!site.hasCapabilityPublishPosts) {
+                        PostListButton.BUTTON_SUBMIT
+                    } else if (canRetryUpload) {
+                        PostListButton.BUTTON_RETRY
+                    } else if (postStatus == PostStatus.SCHEDULED && post.isLocallyChanged) {
+                        PostListButton.BUTTON_SYNC
+                    } else {
+                        PostListButton.BUTTON_PUBLISH
+                    }
+            )
+        }
+
+        if (canShowViewButton) {
+            buttonTypes.add(
+                    if (post.isLocalDraft || post.isLocallyChanged) {
+                        PostListButton.BUTTON_PREVIEW
+                    } else {
+                        PostListButton.BUTTON_VIEW
+                    }
+            )
+        }
+
+        if (postStatus != PostStatus.TRASHED) {
+            buttonTypes.add(PostListButton.BUTTON_TRASH)
+        } else {
+            // TODO add restore
+        }
+
+        if (canShowStats) {
+            buttonTypes.add(PostListButton.BUTTON_STATS)
+        }
+
+        // TODO if buttonTypes > 3 -> decide whether we want to show more instead
+
+        return buttonTypes.map {
+            PostListItemAction(it) { btnType ->
+                trackAction(btnType, post, AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED)
+                handlePostButton(btnType, post)
+            }
+        }
     }
 
     @ColorRes private fun createStatusLabelsColor(): Int {

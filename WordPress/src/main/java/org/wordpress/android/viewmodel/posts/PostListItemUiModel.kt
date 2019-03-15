@@ -18,6 +18,6 @@ data class PostListItemUiModel(
     val onSelected: () -> Unit
 )
 
-data class PostListItemAction(val action: () -> Unit)
+data class PostListItemAction(val buttonType: Int, val onButtonClicked: (Int) -> Unit)
 
 

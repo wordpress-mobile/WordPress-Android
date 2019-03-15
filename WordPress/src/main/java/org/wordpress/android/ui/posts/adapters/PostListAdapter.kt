@@ -16,7 +16,6 @@ import org.wordpress.android.ui.PagedListDiffItemCallback
 import org.wordpress.android.ui.posts.PostListItemViewHolder
 import org.wordpress.android.ui.posts.PostViewHolderConfig
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.posts.PostListItemUiModel
 
 private const val VIEW_TYPE_POST = 0
@@ -26,7 +25,6 @@ private const val VIEW_TYPE_LOADING = 2
 class PostListAdapter(
     context: Context,
     private val postViewHolderConfig: PostViewHolderConfig,
-        private val imageManager: ImageManager,
         private val uiHelpers: UiHelpers
 ) : PagedListAdapter<PagedListItemType<PostListItemUiModel>, ViewHolder>(PostListDiffItemCallback) {
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
@@ -52,7 +50,7 @@ class PostListAdapter(
                 LoadingViewHolder(view)
             }
             VIEW_TYPE_POST -> {
-                PostListItemViewHolder(R.layout.post_list_item, parent, postViewHolderConfig, imageManager, uiHelpers)
+                PostListItemViewHolder(R.layout.post_list_item, parent, postViewHolderConfig, uiHelpers)
             }
             else -> {
                 // Fail fast if a new view type is added so the we can handle it

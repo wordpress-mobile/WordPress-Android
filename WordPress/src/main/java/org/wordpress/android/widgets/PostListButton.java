@@ -157,7 +157,7 @@ public class PostListButton extends LinearLayout {
             case BUTTON_RETRY:
                 return R.color.alert_red;
             default:
-                return R.color.blue_wordpress;
+                return R.color.wp_grey_darken_20;
         }
     }
 }

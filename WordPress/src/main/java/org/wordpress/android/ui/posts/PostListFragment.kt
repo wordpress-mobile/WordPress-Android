@@ -83,7 +83,6 @@ class PostListFragment : Fragment() {
         PostListAdapter(
                 context = nonNullActivity,
                 postViewHolderConfig = postViewHolderConfig,
-                imageManager = imageManager,
                 uiHelpers = uiHelpers
         )
     }
