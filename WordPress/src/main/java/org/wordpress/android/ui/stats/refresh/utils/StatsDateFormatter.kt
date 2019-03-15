@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import org.apache.commons.text.WordUtils
-import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -77,22 +77,38 @@ class StatsDateFormatter
                 val startCalendar = Calendar.getInstance()
                 startCalendar.time = endCalendar.time
                 startCalendar.add(Calendar.DAY_OF_WEEK, -6)
-                return if (startCalendar.get(Calendar.YEAR) != endCalendar.get(Calendar.YEAR)) {
-                    resourceProvider.getString(
-                            R.string.stats_from_to_dates_in_week_label,
-                            outputFormat.format(startCalendar.time),
-                            outputFormat.format(endCalendar.time)
-                    )
-                } else {
-                    resourceProvider.getString(
-                            R.string.stats_from_to_dates_in_week_label,
-                            outputFormatWithoutYear.format(startCalendar.time),
-                            outputFormatWithoutYear.format(endCalendar.time)
-                    )
-                }
+                return printWeek(startCalendar, endCalendar)
             }
             MONTHS -> WordUtils.capitalize(outputMonthFormat.format(date))
             YEARS -> outputYearFormat.format(date)
+        }
+    }
+
+    fun printDayWithoutYear(date: Date): String {
+        return outputFormatWithoutYear.format(date)
+    }
+
+    fun printWeek(startPeriod: Date, endPeriod: Date): String {
+        val startCalendar = Calendar.getInstance()
+        startCalendar.time = startPeriod
+        val endCalendar = Calendar.getInstance()
+        endCalendar.time = endPeriod
+        return printWeek(startCalendar, endCalendar)
+    }
+
+    private fun printWeek(startCalendar: Calendar, endCalendar: Calendar): String {
+        return if (startCalendar.get(Calendar.YEAR) != endCalendar.get(Calendar.YEAR)) {
+            resourceProvider.getString(
+                    string.stats_from_to_dates_in_week_label,
+                    outputFormat.format(startCalendar.time),
+                    outputFormat.format(endCalendar.time)
+            )
+        } else {
+            resourceProvider.getString(
+                    string.stats_from_to_dates_in_week_label,
+                    outputFormatWithoutYear.format(startCalendar.time),
+                    outputFormatWithoutYear.format(endCalendar.time)
+            )
         }
     }
 
