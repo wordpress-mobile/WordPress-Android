@@ -23,4 +23,8 @@ class AppPrefsWrapper @Inject constructor() {
     var avatarVersion: Int
         get() = AppPrefs.getAvatarVersion()
         set(version) = AppPrefs.setAvatarVersion(version)
+
+    var isAztecEditorEnabled: Boolean
+        get() = AppPrefs.isAztecEditorEnabled()
+        set(enabled) = AppPrefs.setAztecEditorEnabled(enabled)
 }
