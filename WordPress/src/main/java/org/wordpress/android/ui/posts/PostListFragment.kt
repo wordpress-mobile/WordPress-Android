@@ -231,7 +231,7 @@ class PostListFragment : Fragment() {
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
 
         val context = nonNullActivity
-        val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.card_gutters)
+        val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.margin_medium)
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.addItemDecoration(RecyclerItemDecoration(0, spacingVertical))
         recyclerView?.adapter = postListAdapter

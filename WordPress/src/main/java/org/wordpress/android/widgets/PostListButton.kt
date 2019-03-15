@@ -149,7 +149,7 @@ class PostListButton : LinearLayout {
             PostListButtonType.BUTTON_MORE,
             PostListButtonType.BUTTON_BACK,
             PostListButtonType.BUTTON_RESTORE,
-            PostListButtonType.BUTTON_SUBMIT -> R.color.blue_wordpress
+            PostListButtonType.BUTTON_SUBMIT -> R.color.wp_grey_darken_20
             PostListButtonType.BUTTON_NONE -> {
                 if (BuildConfig.DEBUG) {
                     throw IllegalStateException("ButtonType needs to be assigned.")
