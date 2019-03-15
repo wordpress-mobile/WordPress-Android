@@ -90,6 +90,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
+import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
