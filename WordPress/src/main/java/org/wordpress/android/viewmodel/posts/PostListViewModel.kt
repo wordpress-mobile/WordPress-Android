@@ -340,6 +340,7 @@ class PostListViewModel @Inject constructor(
         when (buttonType) {
             PostListButton.BUTTON_EDIT -> editPostButtonAction(site, post)
             PostListButton.BUTTON_RETRY -> _postListAction.postValue(PostListAction.RetryUpload(post))
+            PostListButton.BUTTON_RESTORE -> TODO()
             PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
                 showPublishConfirmationDialog(post)
             }
@@ -745,6 +746,7 @@ class PostListViewModel @Inject constructor(
         if (postStatus != PostStatus.TRASHED) {
             buttonTypes.add(PostListButton.BUTTON_TRASH)
         } else {
+            buttonTypes.add(PostListButton.BUTTON_DELETE)
             // TODO add restore
         }
 
@@ -793,6 +795,7 @@ class PostListViewModel @Inject constructor(
             PostListButton.BUTTON_SYNC -> "sync"
             PostListButton.BUTTON_MORE -> "more"
             PostListButton.BUTTON_BACK -> "back"
+            PostListButton.BUTTON_RESTORE -> "restore"
             else -> AppLog.e(AppLog.T.POSTS, "Unknown button type")
         }
 

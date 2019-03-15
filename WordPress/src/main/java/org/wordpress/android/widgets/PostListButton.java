@@ -35,6 +35,7 @@ public class PostListButton extends LinearLayout {
     public static final int BUTTON_BACK = 10;
     public static final int BUTTON_SUBMIT = 11;
     public static final int BUTTON_RETRY = 12;
+    public static final int BUTTON_RESTORE = 13;
 
     public PostListButton(Context context) {
         super(context);
@@ -118,6 +119,8 @@ public class PostListButton extends LinearLayout {
                 return R.string.submit_for_review;
             case BUTTON_RETRY:
                 return R.string.button_retry;
+            case BUTTON_RESTORE:
+                return R.string.button_restore;
             default:
                 return 0;
         }
@@ -146,6 +149,9 @@ public class PostListButton extends LinearLayout {
                 return R.drawable.ic_chevron_left_white_24dp;
             case BUTTON_RETRY:
                 return R.drawable.ic_refresh_white_24dp;
+            case BUTTON_RESTORE:
+                // TODO add restore icon
+                return R.drawable.ic_pencil_white_24dp;
             default:
                 return 0;
         }

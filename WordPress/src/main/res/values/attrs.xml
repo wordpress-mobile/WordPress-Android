@@ -94,6 +94,9 @@
             <enum name="sync" value="8" />
             <enum name="more" value="9" />
             <enum name="back" value="10" />
+            <enum name="submit" value="11" />
+            <enum name="retry" value="12" />
+            <enum name="restore" value="13" />
         </attr>
     </declare-styleable>
 
