@@ -70,6 +70,10 @@ constructor(
         selectedDateProvider.selectPreviousDate(statsSection)
     }
 
+    fun clear() {
+        selectedDateProvider.clear(statsSection)
+    }
+
     class Factory
     @Inject constructor(
         private val selectedDateProvider: SelectedDateProvider,

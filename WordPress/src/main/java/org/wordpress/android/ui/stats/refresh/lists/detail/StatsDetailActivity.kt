@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,10 +14,10 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import javax.inject.Inject
 
-private const val POST_ID = "POST_ID"
-private const val POST_TYPE = "POST_ID"
-private const val POST_TITLE = "POST_TITLE"
-private const val POST_URL = "POST_URL"
+const val POST_ID = "POST_ID"
+const val POST_TYPE = "POST_TYPE"
+const val POST_TITLE = "POST_TITLE"
+const val POST_URL = "POST_URL"
 
 class StatsDetailActivity : AppCompatActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -32,22 +31,6 @@ class StatsDetailActivity : AppCompatActivity() {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
         }
-
-        val site = intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-        val postId = intent?.getSerializableExtra(POST_ID) as String?
-        val postType = intent?.getSerializableExtra(POST_TYPE) as String?
-        val postTitle = intent?.getSerializableExtra(POST_TITLE) as String?
-        val postUrl = intent?.getSerializableExtra(POST_URL) as String?
-
-        val viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(StatsSection.DETAIL.name, DetailListViewModel::class.java)
-        viewModel.init(
-                checkNotNull(site),
-                checkNotNull(postId),
-                checkNotNull(postType),
-                checkNotNull(postTitle),
-                postUrl
-        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -62,7 +45,7 @@ class StatsDetailActivity : AppCompatActivity() {
         fun start(
             context: Context,
             site: SiteModel,
-            postId: String,
+            postId: Long,
             postType: String,
             postTitle: String,
             postUrl: String?

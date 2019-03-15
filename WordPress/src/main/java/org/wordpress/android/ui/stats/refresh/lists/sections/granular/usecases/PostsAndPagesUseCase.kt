@@ -149,7 +149,7 @@ constructor(
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, statsGranularity)
         navigateTo(
                 ViewPostDetailStats(
-                        postId = params.postId.toString(),
+                        postId = params.postId,
                         postTitle = params.postTitle,
                         postUrl = params.postUrl,
                         postType = type

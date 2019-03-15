@@ -12,7 +12,7 @@ sealed class NavigationTarget : Event() {
 
     data class SharePost(val url: String, val title: String) : NavigationTarget()
     data class ViewPostDetailStats(
-        val postId: String,
+        val postId: Long,
         val postTitle: String,
         val postUrl: String?,
         val postType: String = StatsConstants.ITEM_TYPE_POST
