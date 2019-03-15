@@ -66,11 +66,5 @@
                 android:contentDescription="@string/new_site_creation_clear_all_content_description"/>
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/input"
-            android:background="@color/grey_lighten_30"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
