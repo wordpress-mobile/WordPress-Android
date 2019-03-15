@@ -58,7 +58,7 @@ class PostAverageViewsPerDayUseCase(
 
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
-            model != null && model.yearsTotal.isNotEmpty() -> State.Data(model)
+            model != null && model.yearsAverage.isNotEmpty() -> State.Data(model)
             else -> State.Empty()
         }
     }
