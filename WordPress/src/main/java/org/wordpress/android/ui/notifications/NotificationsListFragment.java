@@ -150,6 +150,7 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
 
         WPViewPager viewPager = view.findViewById(R.id.view_pager);
         viewPager.setAdapter(new NotificationsFragmentAdapter(getChildFragmentManager()));
+        viewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
         mTabLayout.setupWithViewPager(viewPager);
 
         TextView jetpackTermsAndConditions = view.findViewById(R.id.jetpack_terms_and_conditions);
