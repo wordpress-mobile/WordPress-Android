@@ -374,7 +374,8 @@ class PostListViewModel @Inject constructor(
                 showTrashConfirmationDialog(post)
             }
             BUTTON_NONE -> throw NotImplementedError("BUTTON_NONE should never be used on UI.")
-            BUTTON_MORE -> TODO()
+            BUTTON_MORE -> {
+            }// do nothing - ui will show a popup window
             BUTTON_BACK -> TODO()
         }
     }

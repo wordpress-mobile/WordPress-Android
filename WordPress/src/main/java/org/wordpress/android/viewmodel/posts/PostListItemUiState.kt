@@ -19,6 +19,15 @@ data class PostListItemUiState(
     val onSelected: () -> Unit
 )
 
-data class PostListItemAction(val buttonType: PostListButtonType, val onButtonClicked: (PostListButtonType) -> Unit)
+sealed class PostListItemAction(val buttonType: PostListButtonType, val onButtonClicked: (PostListButtonType) -> Unit) {
+    class SingleItem(buttonType: PostListButtonType, onButtonClicked: (PostListButtonType) -> Unit) :
+            PostListItemAction(buttonType, onButtonClicked)
+
+    class MoreItem(
+        val actions: List<PostListItemAction>,
+        onButtonClicked: (PostListButtonType) -> Unit
+    ) : PostListItemAction(PostListButtonType.BUTTON_MORE, onButtonClicked)
+}
+
 
 

@@ -31,6 +31,8 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
+private const val MORE_BUTTON_TRESHOLD = 3
+
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
  */
@@ -68,11 +70,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         uploadStatus,
                         capabilitiesToPublish,
                         statsSupported
-                ).map {
-                    PostListItemAction(it) { btnType ->
-                        onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED)
-                    }
-                },
+                ) { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) }
+                ,
                 showProgress = shouldShowProgress(uploadStatus),
                 showOverlay = shouldShowOverlay(uploadStatus),
                 onSelected = {
@@ -169,8 +168,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         isLocallyChanged: Boolean,
         uploadStatus: PostAdapterItemUploadStatus,
         siteHasCapabilitiesToPublish: Boolean,
-        statsSupported: Boolean
-    ): ArrayList<PostListButtonType> {
+        statsSupported: Boolean,
+        onButtonClicked: (PostListButtonType) -> Unit
+    ): List<PostListItemAction> {
         val canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
         val canPublishPost = !uploadStatus.isUploadingOrQueued
                 && (isLocallyChanged || isLocalDraft || postStatus == PostStatus.DRAFT)
@@ -218,8 +218,18 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             buttonTypes.add(PostListButtonType.BUTTON_STATS)
         }
 
-        // TODO if buttonTypes > 3 -> decide whether we want to show more instead
-
-        return buttonTypes
+        return if (buttonTypes.size > MORE_BUTTON_TRESHOLD) {
+            val visibleItems = buttonTypes.take(MORE_BUTTON_TRESHOLD - 1).map {
+                PostListItemAction.SingleItem(it, onButtonClicked)
+            }
+            val itemsUnderMore = buttonTypes.subList(MORE_BUTTON_TRESHOLD - 1, buttonTypes.size).map {
+                PostListItemAction.SingleItem(it, onButtonClicked)
+            }
+            visibleItems.plus(PostListItemAction.MoreItem(itemsUnderMore, onButtonClicked))
+        } else {
+            buttonTypes.map {
+                PostListItemAction.SingleItem(it, onButtonClicked)
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import android.widget.PopupMenu
 import android.widget.ProgressBar
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.utils.ReaderUtils
@@ -16,6 +17,8 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
+import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
 import org.wordpress.android.viewmodel.posts.PostListItemUiState
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
@@ -51,26 +54,55 @@ class PostListItemViewHolder(
         setTextOrHide(tvExcerpt, item.excerpt)
         setTextOrHide(tvDateAndAuthor, item.dateAndAuthor)
         setTextOrHide(tvStatusLabels, item.statusLabels)
-        if(item.statusLabelsColor != null) {
+        if (item.statusLabelsColor != null) {
             tvStatusLabels.setTextColor(tvStatusLabels.context.resources.getColor(item.statusLabelsColor))
         }
         uiHelpers.updateVisibility(pbProgress, item.showProgress)
         uiHelpers.updateVisibility(flDisabledOverlay, item.showOverlay)
         itemView.setOnClickListener { item.onSelected.invoke() }
 
-        if(btnsList.size < item.actions.size) {
+        if (btnsList.size < item.actions.size) {
             AppLog.e(AppLog.T.POSTS, "Some actions will not be displayed - max number of actions is ${btnsList.size}")
         }
 
         btnsList.forEachIndexed { index, button ->
             val actionAvailable = item.actions.size > index
             uiHelpers.updateVisibility(button, actionAvailable)
-            if(actionAvailable) {
-                val action = item.actions[index]
-                button.buttonType = action.buttonType
-                button.setOnClickListener { action.onButtonClicked.invoke(action.buttonType) }
+            if (actionAvailable) {
+                val actionItem = item.actions[index]
+                when (actionItem) {
+                    is SingleItem -> {
+                        button.buttonType = actionItem.buttonType
+                        button.setOnClickListener { actionItem.onButtonClicked.invoke(actionItem.buttonType) }
+                    }
+                    is MoreItem -> {
+                        button.buttonType = actionItem.buttonType
+                        button.setOnClickListener { view ->
+                            actionItem.onButtonClicked.invoke(actionItem.buttonType)
+                            moreClick(actionItem, view)
+                        }
+                    }
+                }
             }
         }
+    }
+
+    private fun moreClick(moreActionItem: MoreItem, v: View) {
+        val popup = PopupMenu(v.context, v)
+        popup.menuInflater.inflate(R.menu.posts_more, popup.menu)
+        moreActionItem.actions.forEach { singleItemAction ->
+            val menuItem = popup.menu.add(
+                    0,
+                    singleItemAction.buttonType.value,
+                    0,
+                    PostListButton.getButtonTextResId(singleItemAction.buttonType)
+            )
+            menuItem.setOnMenuItemClickListener {
+                singleItemAction.onButtonClicked.invoke(singleItemAction.buttonType)
+                true
+            }
+        }
+        popup.show()
     }
 
     private fun showFeaturedImage(imageUrl: String?) {

@@ -85,31 +85,6 @@ class PostListButton : LinearLayout {
         textView.setTextColor(color)
     }
 
-    @StringRes
-    private fun getButtonTextResId(buttonType: PostListButtonType): Int {
-        when (buttonType) {
-            PostListButtonType.BUTTON_EDIT -> return R.string.button_edit
-            PostListButtonType.BUTTON_VIEW -> return R.string.button_view
-            PostListButtonType.BUTTON_PREVIEW -> return R.string.button_preview
-            PostListButtonType.BUTTON_STATS -> return R.string.button_stats
-            PostListButtonType.BUTTON_TRASH -> return R.string.button_trash
-            PostListButtonType.BUTTON_DELETE -> return R.string.button_delete
-            PostListButtonType.BUTTON_PUBLISH -> return R.string.button_publish
-            PostListButtonType.BUTTON_SYNC -> return R.string.button_sync
-            PostListButtonType.BUTTON_MORE -> return R.string.button_more
-            PostListButtonType.BUTTON_BACK -> return R.string.button_back
-            PostListButtonType.BUTTON_SUBMIT -> return R.string.submit_for_review
-            PostListButtonType.BUTTON_RETRY -> return R.string.button_retry
-            PostListButtonType.BUTTON_RESTORE -> return R.string.button_restore
-            PostListButtonType.BUTTON_NONE -> {
-                if (BuildConfig.DEBUG) {
-                    throw IllegalStateException("ButtonType needs to be assigned.")
-                }
-                return 0
-            }
-        }
-    }
-
     @DrawableRes
     private fun getButtonIconResId(buttonType: PostListButtonType): Int {
         when (buttonType) {
@@ -155,6 +130,33 @@ class PostListButton : LinearLayout {
                     throw IllegalStateException("ButtonType needs to be assigned.")
                 }
                 return 0
+            }
+        }
+    }
+
+    companion object {
+        @StringRes
+        fun getButtonTextResId(buttonType: PostListButtonType): Int {
+            when (buttonType) {
+                PostListButtonType.BUTTON_EDIT -> return R.string.button_edit
+                PostListButtonType.BUTTON_VIEW -> return R.string.button_view
+                PostListButtonType.BUTTON_PREVIEW -> return R.string.button_preview
+                PostListButtonType.BUTTON_STATS -> return R.string.button_stats
+                PostListButtonType.BUTTON_TRASH -> return R.string.button_trash
+                PostListButtonType.BUTTON_DELETE -> return R.string.button_delete
+                PostListButtonType.BUTTON_PUBLISH -> return R.string.button_publish
+                PostListButtonType.BUTTON_SYNC -> return R.string.button_sync
+                PostListButtonType.BUTTON_MORE -> return R.string.button_more
+                PostListButtonType.BUTTON_BACK -> return R.string.button_back
+                PostListButtonType.BUTTON_SUBMIT -> return R.string.submit_for_review
+                PostListButtonType.BUTTON_RETRY -> return R.string.button_retry
+                PostListButtonType.BUTTON_RESTORE -> return R.string.button_restore
+                PostListButtonType.BUTTON_NONE -> {
+                    if (BuildConfig.DEBUG) {
+                        throw IllegalStateException("ButtonType needs to be assigned.")
+                    }
+                    return 0
+                }
             }
         }
     }
