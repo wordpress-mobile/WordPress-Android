@@ -1,0 +1,25 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/rest/v1.1/sites/.*(?!\\.wordpress.com).*/?.*"
+    },
+    "response": {
+        "status": 403,
+        "jsonBody": {
+            "error": "unauthorized",
+            "message": "API calls to this blog have been disabled."
+        },
+        "headers": {
+            "Server": "nginx",
+            "Date": "Fri, 15 Mar 2019 14:19:32 GMT",
+            "Content-Type": "text/html; charset=UTF-8",
+            "Connection": "keep-alive",
+            "Vary": "Accept-Encoding",
+            "Expires": "Wed, 11 Jan 1984 05:00:00 GMT",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0",
+            "Link": "<{{ request.requestLine.baseUrl }}/wp-json/>; rel=\"https://api.w.org/\"",
+            "P-LB": "lb1.q1.sat",
+            "P-WS": "web6.q1.sat"
+        }
+    }
+}
