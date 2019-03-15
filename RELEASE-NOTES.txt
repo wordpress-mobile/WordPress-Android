@@ -1,5 +1,6 @@
 12.1
 -----
+* Added swiping between tabs in Notifications
 
 12.0
 -----
