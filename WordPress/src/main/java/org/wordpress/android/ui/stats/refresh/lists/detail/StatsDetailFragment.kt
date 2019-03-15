@@ -70,6 +70,12 @@ class StatsDetailFragment : DaggerFragment() {
     }
 
     private fun setupObservers(viewModel: StatsDetailViewModel) {
+        viewModel.isRefreshing.observe(this, Observer {
+            it?.let { isRefreshing ->
+                swipeToRefreshHelper.isRefreshing = isRefreshing
+            }
+        })
+
         viewModel.selectedDateChanged.observe(this, Observer { statsGranularity ->
             statsGranularity?.let {
                 viewModel.onDateChanged()

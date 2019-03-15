@@ -76,9 +76,9 @@ class StatsNavigator
                         activity,
                         siteProvider.siteModel,
                         target.postId,
-                        target.postTitle,
-                        target.postType,
-                        target.postUrl)
+                        postType = target.postType,
+                        postTitle = target.postTitle,
+                        postUrl = target.postUrl)
             }
             is ViewFollowersStats -> {
                 ActivityLauncher.viewAllTabbedInsightsStats(activity, FOLLOWERS, target.selectedTab)
