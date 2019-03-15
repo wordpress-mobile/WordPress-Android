@@ -135,7 +135,13 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
         )
         val nonExpandedUiState = ExpandedYearUiState()
         val expandedUiState = ExpandedYearUiState(expandedYear = 2019)
-        whenever(postYearsMapper.mapYears(eq(data.takeLast(6)), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
+        whenever(
+                postYearsMapper.mapYears(
+                        eq(data.takeLast(6)),
+                        eq(nonExpandedUiState),
+                        expandCaptor.capture()
+                )
+        ).thenReturn(
                 listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
                     expandCaptor.lastValue.invoke(expandedUiState)
                 })

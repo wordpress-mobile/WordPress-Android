@@ -26,7 +26,8 @@ class PostYearsMapper
                         ExpandableItem(
                                 mapYear(year, index, shownYears), isExpanded = isExpanded
                         ) { changedExpandedState ->
-                            onUiState(expandedYearUiState.copy(expandedYear = if (changedExpandedState) year.year else null))
+                            val expandedYear = if (changedExpandedState) year.year else null
+                            onUiState(expandedYearUiState.copy(expandedYear = expandedYear))
                         })
                 if (isExpanded) {
                     yearList.addAll(year.months.sortedByDescending { it.month }.map { month ->
