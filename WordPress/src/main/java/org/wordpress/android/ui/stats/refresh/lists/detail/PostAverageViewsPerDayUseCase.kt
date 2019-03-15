@@ -26,7 +26,7 @@ import javax.inject.Named
 private const val BLOCK_ITEM_COUNT = 6
 private const val VIEW_ALL_ITEM_COUNT = 1000
 
-class PostMonthsAndYearsUseCase(
+class PostAverageViewsPerDayUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
@@ -34,7 +34,7 @@ class PostMonthsAndYearsUseCase(
     private val postYearsMapper: PostYearsMapper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<PostDetailStatsModel, ExpandedYearUiState>(
-        PostDetailTypes.MONTHS_AND_YEARS,
+        PostDetailTypes.AVERAGE_VIEWS_PER_DAY,
         mainDispatcher,
         ExpandedYearUiState()
 ) {
@@ -66,7 +66,7 @@ class PostMonthsAndYearsUseCase(
     override fun buildUiModel(domainModel: PostDetailStatsModel, uiState: ExpandedYearUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (useCaseMode == BLOCK) {
-            items.add(Title(string.stats_detail_months_and_years))
+            items.add(Title(string.stats_detail_average_views_per_day))
             items.add(Divider)
         }
         items.add(
@@ -75,7 +75,7 @@ class PostMonthsAndYearsUseCase(
                         string.stats_months_and_years_views_label
                 )
         )
-        val shownYears = domainModel.yearsTotal.sortedByDescending { it.year }.takeLast(itemsToLoad)
+        val shownYears = domainModel.yearsAverage.sortedByDescending { it.year }.takeLast(itemsToLoad)
         val yearList = postYearsMapper.mapYears(shownYears, uiState, this::onUiState)
 
         items.addAll(yearList)
@@ -95,10 +95,10 @@ class PostMonthsAndYearsUseCase(
     }
 
     override fun buildLoadingItem(): List<BlockListItem> {
-        return listOf(Title(string.stats_detail_months_and_years))
+        return listOf(Title(string.stats_detail_average_views_per_day))
     }
 
-    class PostMonthsAndYearsUseCaseFactory
+    class PostAverageViewsPerDayUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val statsSiteProvider: StatsSiteProvider,
@@ -107,7 +107,7 @@ class PostMonthsAndYearsUseCase(
         private val postDetailStore: PostDetailStore
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
-                PostMonthsAndYearsUseCase(
+                PostAverageViewsPerDayUseCase(
                         mainDispatcher,
                         statsSiteProvider,
                         statsPostProvider,

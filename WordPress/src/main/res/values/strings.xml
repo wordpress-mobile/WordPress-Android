@@ -1027,6 +1027,7 @@
     <string name="stats_detail_months_and_years">Months and Years</string>
     <string name="stats_months_and_years_period_label">Period</string>
     <string name="stats_months_and_years_views_label">Views</string>
+    <string name="stats_detail_average_views_per_day">Avg. Views Per Day</string>
 
     <string name="stats_posts_and_pages">Posts and Pages</string>
     <string name="stats_referrers">Referrers</string>
