@@ -16,6 +16,7 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.ViewGroup
+import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -72,6 +73,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment() {
         siteTitleEditText = rootView.findViewById(R.id.site_info_site_title)
         initTaglineEditText(rootView)
         headerContainer = rootView.findViewById(R.id.header_container)
+        initHeaderTitleAndSubtitleText(rootView)
         initViewModel()
         initTextWatchers()
     }
@@ -88,6 +90,11 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment() {
         tagLineEditText.setSingleLine(true)
         tagLineEditText.maxLines = Integer.MAX_VALUE
         tagLineEditText.setHorizontallyScrolling(false)
+    }
+
+    private fun initHeaderTitleAndSubtitleText(rootView: ViewGroup) {
+        rootView.findViewById<TextView>(R.id.title).setText(R.string.new_site_creation_site_info_header_title)
+        rootView.findViewById<TextView>(R.id.subtitle).setText(R.string.new_site_creation_site_info_header_subtitle)
     }
 
     private fun initTextWatchers() {
