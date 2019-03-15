@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewDayAverageStats
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostYearsMapper.ExpandedYearUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -67,7 +67,6 @@ class PostAverageViewsPerDayUseCase(
         val items = mutableListOf<BlockListItem>()
         if (useCaseMode == BLOCK) {
             items.add(Title(string.stats_detail_average_views_per_day))
-            items.add(Divider)
         }
         items.add(
                 Header(
@@ -75,11 +74,12 @@ class PostAverageViewsPerDayUseCase(
                         string.stats_months_and_years_views_label
                 )
         )
+        items.add(Divider)
         val shownYears = domainModel.yearsAverage.sortedByDescending { it.year }.takeLast(itemsToLoad)
         val yearList = postYearsMapper.mapYears(shownYears, uiState, this::onUiState)
 
         items.addAll(yearList)
-        if (useCaseMode == BLOCK && domainModel.yearsTotal.size > itemsToLoad) {
+        if (useCaseMode == BLOCK && domainModel.yearsAverage.size > itemsToLoad) {
             items.add(
                     Link(
                             text = string.stats_insights_view_more,
@@ -91,7 +91,7 @@ class PostAverageViewsPerDayUseCase(
     }
 
     private fun onLinkClick() {
-        navigateTo(ViewMonthsAndYearsStats())
+        navigateTo(ViewDayAverageStats())
     }
 
     override fun buildLoadingItem(): List<BlockListItem> {

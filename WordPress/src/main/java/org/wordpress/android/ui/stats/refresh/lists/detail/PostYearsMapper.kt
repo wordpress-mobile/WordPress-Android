@@ -17,7 +17,7 @@ class PostYearsMapper
         shownYears: List<Year>,
         expandedYearUiState: ExpandedYearUiState,
         onUiState: (ExpandedYearUiState) -> Unit
-    ): MutableList<BlockListItem> {
+    ): List<BlockListItem> {
         val yearList = mutableListOf<BlockListItem>()
         shownYears.forEachIndexed { index, year ->
             if (year.months.isNotEmpty()) {

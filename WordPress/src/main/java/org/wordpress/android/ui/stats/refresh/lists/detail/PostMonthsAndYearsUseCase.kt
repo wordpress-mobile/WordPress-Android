@@ -67,7 +67,6 @@ class PostMonthsAndYearsUseCase(
         val items = mutableListOf<BlockListItem>()
         if (useCaseMode == BLOCK) {
             items.add(Title(string.stats_detail_months_and_years))
-            items.add(Divider)
         }
         items.add(
                 Header(
@@ -75,6 +74,7 @@ class PostMonthsAndYearsUseCase(
                         string.stats_months_and_years_views_label
                 )
         )
+        items.add(Divider)
         val shownYears = domainModel.yearsTotal.sortedByDescending { it.year }.takeLast(itemsToLoad)
         val yearList = postYearsMapper.mapYears(shownYears, uiState, this::onUiState)
 

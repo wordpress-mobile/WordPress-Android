@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -17,6 +20,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostYearsMapper.ExpandedYearUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
@@ -35,10 +39,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Locale
 
 class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: PostDetailStore
@@ -47,9 +49,11 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var postYearsMapper: PostYearsMapper
     private lateinit var useCase: PostMonthsAndYearsUseCase
+    private lateinit var expandCaptor: KArgumentCaptor<(ExpandedYearUiState) -> Unit>
     private val postId: Long = 1L
+    private val year = Year(2010, listOf(Month(1, 100)), 150)
     @Before
     fun setUp() {
         useCase = PostMonthsAndYearsUseCase(
@@ -57,23 +61,34 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 statsPostProvider,
                 store,
-                localeManagerWrapper,
+                postYearsMapper,
                 BLOCK
         )
+        expandCaptor = argumentCaptor()
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsPostProvider.postId).thenReturn(postId)
-        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 
     @Test
     fun `maps years to UI model`() = test {
         val forced = false
-        val year = Year(2010, listOf(Month(1, 100)), 150)
         val data = listOf(year)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
                 OnStatsFetched(
                         PostDetailStatsModel(0, listOf(), listOf(), data, listOf())
                 )
+        )
+        val nonExpandedUiState = ExpandedYearUiState()
+        val expandedUiState = ExpandedYearUiState(expandedYear = 2019)
+        whenever(postYearsMapper.mapYears(eq(data), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
+                listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
+                    expandCaptor.lastValue.invoke(expandedUiState)
+                })
+        )
+        whenever(postYearsMapper.mapYears(eq(data), eq(expandedUiState), expandCaptor.capture())).thenReturn(
+                listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
+                    expandCaptor.lastValue.invoke(expandedUiState)
+                }, ListItemWithIcon(text = "Jan", value = "100"))
         )
 
         val result = loadData(true, forced)
@@ -92,8 +107,8 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
         year: Year
     ): ExpandableItem {
         assertTitle(this[0])
-        assertThat(this[1]).isEqualTo(Divider)
-        assertHeader(this[2])
+        assertHeader(this[1])
+        assertThat(this[2]).isEqualTo(Divider)
         return assertYear(this[3], year.year.toString(), year.value)
     }
 
@@ -102,8 +117,8 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     ) {
         val month = year.months.first()
         assertTitle(this[0])
-        assertThat(this[1]).isEqualTo(Divider)
-        assertHeader(this[2])
+        assertHeader(this[1])
+        assertThat(this[2]).isEqualTo(Divider)
         assertYear(this[3], year.year.toString(), year.value)
         assertMonth(this[4], "Jan", month.count.toString())
     }
@@ -111,7 +126,6 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     @Test
     fun `adds view more button when hasMore`() = test {
         val forced = false
-        val year = Year(2010, listOf(Month(1, 100)), 150)
         val data = List(10) { year }
 
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
@@ -119,17 +133,24 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
                         PostDetailStatsModel(0, listOf(), listOf(), data, listOf())
                 )
         )
+        val nonExpandedUiState = ExpandedYearUiState()
+        val expandedUiState = ExpandedYearUiState(expandedYear = 2019)
+        whenever(postYearsMapper.mapYears(eq(data.takeLast(6)), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
+                listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
+                    expandCaptor.lastValue.invoke(expandedUiState)
+                })
+        )
 
         val result = loadData(true, forced)
 
         assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(10)
+            assertThat(this).hasSize(5)
             assertTitle(this[0])
-            assertThat(this[1]).isEqualTo(Divider)
-            assertHeader(this[2])
+            assertHeader(this[1])
+            assertThat(this[2]).isEqualTo(Divider)
             assertYear(this[3], year.year.toString(), year.value)
-            assertLink(this[9])
+            assertLink(this[4])
         }
     }
 

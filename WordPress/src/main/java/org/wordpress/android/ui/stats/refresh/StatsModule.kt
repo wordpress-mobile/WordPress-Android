@@ -111,7 +111,8 @@ class StatsModule {
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCase: PublicizeUseCase,
         postingActivityUseCase: PostingActivityUseCase,
-        postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory
+        postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
+        postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -123,7 +124,8 @@ class StatsModule {
                 tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL),
                 publicizeUseCase,
                 postingActivityUseCase,
-                postMonthsAndYearsUseCaseFactory.build(VIEW_ALL)
+                postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
+                postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL)
         )
     }
 
