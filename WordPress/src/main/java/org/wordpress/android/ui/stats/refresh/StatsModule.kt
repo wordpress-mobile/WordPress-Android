@@ -18,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.UiModelMapper
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostDayViewsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUseCase.PostMonthsAndYearsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostHeaderUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -163,10 +164,11 @@ class StatsModule {
     @Singleton
     @Named(BLOCK_DETAIL_USE_CASES)
     fun provideDetailUseCases(
+        postHeaderUseCase: PostHeaderUseCase,
         postDayViewsUseCase: PostDayViewsUseCase,
         postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
-        return listOf(postDayViewsUseCase, postMonthsAndYearsUseCaseFactory.build(BLOCK))
+        return listOf(postHeaderUseCase, postDayViewsUseCase, postMonthsAndYearsUseCaseFactory.build(BLOCK))
     }
 
     /**
