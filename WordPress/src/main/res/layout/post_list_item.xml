@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="wrap_content"
-                                             android:padding="@dimen/margin_extra_large">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true">
 
     <ImageView
         android:id="@+id/image_featured"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="@dimen/postlist_featured_image_height"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
         android:contentDescription="@string/featured_image_desc"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,8 +24,10 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium"
         android:fontFamily="sans-serif"
         android:textColor="@color/wp_grey_dark"
@@ -29,13 +36,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_featured"
-        app:layout_goneMarginTop="0dp"
+        app:layout_goneMarginTop="@dimen/margin_extra_large"
         tools:text="Testing title"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/excerpt"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium"
         android:ellipsize="end"
         android:fontFamily="sans-serif"
@@ -50,8 +59,10 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/date_and_author"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium"
         android:fontFamily="sans-serif"
         android:textColor="@color/wp_grey_darken_20"
@@ -61,17 +72,42 @@
         app:layout_constraintTop_toBottomOf="@+id/excerpt"
         tools:text="99 days ago"/>
 
+    <FrameLayout
+        android:id="@+id/disabled_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white_translucent_65"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/status_labels"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium"
         android:fontFamily="sans-serif"
         android:textSize="@dimen/text_sz_medium"
+        app:layout_constraintBottom_toTopOf="@+id/progress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_and_author"
+        app:layout_goneMarginBottom="@dimen/margin_extra_large"
         tools:text="Private · Local Changes"/>
 
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/status_labels"/>
 </android.support.constraint.ConstraintLayout>

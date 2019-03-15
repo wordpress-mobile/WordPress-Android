@@ -9,6 +9,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import android.content.Intent
+import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import de.greenrobot.event.EventBus
 import org.apache.commons.text.StringEscapeUtils
@@ -34,6 +35,8 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
@@ -49,8 +52,6 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts.PostAdapterItem
-import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
@@ -70,6 +71,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -91,7 +93,7 @@ const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
 const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 
-typealias PagedPostList = PagedList<PagedListItemType<PostAdapterItem>>
+typealias PagedPostList = PagedList<PagedListItemType<PostListItemUiModel>>
 
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -142,7 +144,7 @@ class PostListViewModel @Inject constructor(
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
 
-    private val pagedListWrapper: PagedListWrapper<PostAdapterItem> by lazy {
+    private val pagedListWrapper: PagedListWrapper<PostListItemUiModel> by lazy {
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
         }
@@ -152,7 +154,7 @@ class PostListViewModel @Inject constructor(
             } else emptyList()
         }
         listStore.getList(listDescriptor, dataStore, lifecycle) { post ->
-            createPostAdapterItem(post)
+            createPostListItemUiModel(post)
         }
     }
 
@@ -585,49 +587,193 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    // PostAdapterItem Management
+    // PostListItemUiModel Management
 
-    private fun createPostAdapterItem(post: PostModel): PostAdapterItem {
+    private fun createPostListItemUiModel(post: PostModel): PostListItemUiModel {
         val title = if (post.title.isNotBlank()) {
-            StringEscapeUtils.unescapeHtml4(post.title)
-        } else null
-        val excerpt = PostUtils.getPostListExcerptFromPost(post).takeIf { !it.isNullOrBlank() }
-                ?.let { StringEscapeUtils.unescapeHtml4(it) }.let { PostUtils.collapseShortcodes(it) }
-        val postStatus = PostStatus.fromPost(post)
-        val canShowStats = isStatsSupported && postStatus == PostStatus.PUBLISHED && !post.isLocalDraft &&
-                !post.isLocallyChanged
-        val uploadStatus = getUploadStatus(post)
-        val canPublishPost = !uploadStatus.isUploadingOrQueued &&
-                (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
-        val postData = PostAdapterItemData(
-                localPostId = post.id,
-                remotePostId = if (post.remotePostId != 0L) post.remotePostId else null,
-                title = title,
-                excerpt = excerpt,
-                isLocalDraft = post.isLocalDraft,
-                date = PostUtils.getFormattedDate(post),
-                postStatus = postStatus,
-                isLocallyChanged = post.isLocallyChanged,
-                isConflicted = doesPostHaveUnhandledConflict(post),
-                canShowStats = canShowStats,
-                canPublishPost = canPublishPost,
-                canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
-                featuredImageId = post.featuredImageId,
-                featuredImageUrl = getFeaturedImageUrl(post.featuredImageId, post.content),
-                uploadStatus = uploadStatus
-        )
+            UiStringText(StringEscapeUtils.unescapeHtml4(post.title))
+        } else UiStringRes(R.string.untitled_in_parentheses)
 
-        return PostAdapterItem(
-                data = postData,
+        val excerpt = PostUtils.getPostListExcerptFromPost(post)
+                .takeIf { !it.isNullOrBlank() }
+                ?.let { StringEscapeUtils.unescapeHtml4(it) }
+                ?.let { PostUtils.collapseShortcodes(it) }
+                ?.let { UiStringText(it) }
+
+        val uploadStatus = getUploadStatus(post)
+
+        return PostListItemUiModel(
+                post.remotePostId,
+                post.id,
+                title,
+                excerpt,
+                getFeaturedImageUrl(post.featuredImageId, post.content),
+                UiStringText(PostUtils.getFormattedDate(post)),  // TODO How do I get name of the author
+                getStatusLabels(post, uploadStatus),
+                getStatusLabelsColor(post, uploadStatus),
+                createActions(post),
+                showProgress = shouldShowProgress(uploadStatus),
+                showOverlay = shouldShowOverlay(uploadStatus),
                 onSelected = {
                     trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
                     handlePostButton(PostListButton.BUTTON_EDIT, post)
-                },
-                onButtonClicked = {
-                    trackAction(it, post, AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED)
-                    handlePostButton(it, post)
                 }
         )
+//        val postStatus = PostStatus.fromPost(post)
+//        val canShowStats = isStatsSupported && postStatus == PostStatus.PUBLISHED && !post.isLocalDraft &&
+//                !post.isLocallyChanged
+//        val uploadStatus = getUploadStatus(post)
+//        val canPublishPost = !uploadStatus.isUploadingOrQueued &&
+//                (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
+//
+//
+//        val postData = PostAdapterItemData(
+//                localPostId = post.id,
+//                remotePostId = if (post.remotePostId != 0L) post.remotePostId else null,
+//                title = title,
+//                excerpt = excerpt,
+//                isLocalDraft = post.isLocalDraft,
+//                date = PostUtils.getFormattedDate(post),
+//                postStatus = postStatus,
+//                isLocallyChanged = post.isLocallyChanged,
+//                isConflicted = doesPostHaveUnhandledConflict(post),
+//                canShowStats = canShowStats,
+//                canPublishPost = canPublishPost,
+//                canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
+//                featuredImageId = post.featuredImageId,
+//                featuredImageUrl =,
+//                uploadStatus = uploadStatus
+//        )
+//
+//        PostAdapterItem(
+//                data = postData,
+//                onSelected = {
+//                    trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
+//                    handlePostButton(PostListButton.BUTTON_EDIT, post)
+//                },
+//                onButtonClicked = {
+//                    trackAction(it, post, AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED)
+//                    handlePostButton(it, post)
+//                }
+//        )
+    }
+
+    private fun shouldShowProgress(uploadStatus: PostAdapterItemUploadStatus): Boolean {
+        return !uploadStatus.isUploadFailed && (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)
+    }
+
+    private fun shouldShowOverlay(uploadStatus: PostAdapterItemUploadStatus): Boolean {
+        // show overlay when post upload is in progress or (media upload is in progress and the user is not using Aztec)
+        return uploadStatus.isUploading || (!AppPrefs.isAztecEditorEnabled() && uploadStatus.isUploadingOrQueued)
+    }
+
+    private fun getStatusLabels(post: PostModel, uploadStatus: PostAdapterItemUploadStatus): UiString? {
+        val postStatus: PostStatus = PostStatus.fromPost(post)
+        // TODO how can a post be published and a localDraft at the same time?
+        val uploadError = uploadStatus.uploadError
+
+        return if (uploadError != null && !uploadStatus.hasInProgressMediaUpload) {
+            when {
+                uploadError.mediaError != null -> UiStringRes(R.string.error_media_recover_post)
+                uploadError.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
+                        false,
+                        uploadError.postError
+                )
+                else -> {
+                    AppLog.e(AppLog.T.POSTS, "MediaError and postError are both null.")
+                    null
+                }
+            }
+        } else if (uploadStatus.isUploading) {
+            UiStringRes(R.string.post_uploading)
+        } else if (uploadStatus.hasInProgressMediaUpload) {
+            UiStringRes(R.string.uploading_media)
+        } else if (uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload) {
+            // the Post (or its related media if such a thing exist) *is strictly* queued
+            UiStringRes(R.string.post_queued)
+        } else if (doesPostHaveUnhandledConflict(post)) {
+            UiStringRes(R.string.local_post_is_conflicted)
+        } else if (post.isLocalDraft) {
+            UiStringRes(R.string.local_draft)
+        } else if (post.isLocallyChanged) {
+            UiStringRes(R.string.local_changes)
+        } else {
+            when (postStatus) {
+                PostStatus.PRIVATE -> UiStringRes(R.string.post_status_post_private)
+                PostStatus.PENDING -> UiStringRes(R.string.post_status_pending_review)
+                PostStatus.UNKNOWN, // TODO Unknown PostStatus
+                PostStatus.DRAFT,
+                PostStatus.SCHEDULED,
+                PostStatus.TRASHED,
+                PostStatus.PUBLISHED ->
+                    null
+            }
+        }
+    }
+
+    @ColorRes private fun getStatusLabelsColor(post: PostModel, uploadStatus: PostAdapterItemUploadStatus): Int? {
+        val postStatus: PostStatus = PostStatus.fromPost(post)
+
+        return if (uploadStatus.uploadError != null
+                && !uploadStatus.hasInProgressMediaUpload
+        ) {
+            R.color.alert_red
+        } else if (uploadStatus.isQueued
+                || uploadStatus.hasPendingMediaUpload
+                || uploadStatus.hasInProgressMediaUpload
+                || uploadStatus.isUploading
+                || doesPostHaveUnhandledConflict(post)
+        ) {
+            R.color.wp_grey_darken_20
+        } else if (post.isLocalDraft
+                || post.isLocallyChanged
+                || postStatus == PRIVATE
+                || postStatus == PENDING
+        ) {
+            R.color.alert_yellow_dark
+        } else {
+            null
+        }
+    }
+
+//    private fun updateForUploadStatus(uploadStatus: PostAdapterItemUploadStatus) {
+//        if (uploadStatus.isUploading) {
+//            disabledOverlay.visibility = View.VISIBLE
+//            progressBar.isIndeterminate = true
+//        } else if (!config.isAztecEditorEnabled && uploadStatus.isUploadingOrQueued) {
+//            // Editing posts with uploading media is only supported in Aztec
+//            disabledOverlay.visibility = View.VISIBLE
+//        } else {
+//            progressBar.isIndeterminate = false
+//            disabledOverlay.visibility = View.GONE
+//        }
+//        if (!uploadStatus.isUploadFailed &&
+//                (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)) {
+//            progressBar.visibility = View.VISIBLE
+//            // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
+//            // Cap the progress bar at MAX_DISPLAYED_UPLOAD_PROGRESS (until we move past the 'uploading media' phase)
+//            progressBar.progress = Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, uploadStatus.mediaUploadProgress)
+//        } else {
+//            progressBar.visibility = View.GONE
+//        }
+//    }
+
+    private fun createActions(post: PostModel): List<PostListItemAction> {
+        // TODO add valid actions for each item
+        return listOf(
+                PostListItemAction {
+                    trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
+                    handlePostButton(PostListButton.BUTTON_EDIT, post)
+                }
+        )
+    }
+
+    @ColorRes private fun createStatusLabelsColor(): Int {
+        return R.color.alert_yellow_dark
+    }
+
+    private fun createStatusLabels(): UiString {
+        return UiStringText("!Local change test!")
     }
 
     private fun trackAction(buttonType: Int, postData: PostModel, statsEvent: Stat) {
@@ -846,9 +992,9 @@ class PostListViewModel @Inject constructor(
 
     private fun findItemListPosition(data: PagedPostList, localPostId: Int): Int? {
         return data.listIterator().withIndex().asSequence().find { listItem ->
-            if (listItem.value is ReadyItem<PostAdapterItem>) {
-                val readyItem = listItem.value as ReadyItem<PostAdapterItem>
-                readyItem.item.data.localPostId == localPostId
+            if (listItem.value is ReadyItem<PostListItemUiModel>) {
+                val readyItem = listItem.value as ReadyItem<PostListItemUiModel>
+                readyItem.item.localPostId == localPostId
             } else {
                 false
             }

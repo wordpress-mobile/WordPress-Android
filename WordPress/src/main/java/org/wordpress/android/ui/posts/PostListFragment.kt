@@ -82,7 +82,9 @@ class PostListFragment : Fragment() {
     private val postListAdapter: PostListAdapter by lazy {
         PostListAdapter(
                 context = nonNullActivity,
-                postViewHolderConfig = postViewHolderConfig
+                postViewHolderConfig = postViewHolderConfig,
+                imageManager = imageManager,
+                uiHelpers = uiHelpers
         )
     }
 
@@ -231,9 +233,8 @@ class PostListFragment : Fragment() {
 
         val context = nonNullActivity
         val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.card_gutters)
-        val spacingHorizontal = context.resources.getDimensionPixelSize(R.dimen.content_margin)
         recyclerView?.layoutManager = LinearLayoutManager(context)
-        recyclerView?.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical))
+        recyclerView?.addItemDecoration(RecyclerItemDecoration(0, spacingVertical))
         recyclerView?.adapter = postListAdapter
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {

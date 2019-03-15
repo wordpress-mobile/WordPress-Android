@@ -4,25 +4,17 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
-import android.graphics.drawable.Drawable
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
-import android.widget.ImageView.ScaleType
 import android.widget.ProgressBar
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.ui.uploads.UploadUtils
-import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.widgets.PostListButton
 
 private const val ROW_ANIM_DURATION: Long = 150
@@ -61,20 +53,20 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
     private val progressBar: ProgressBar = view.findViewById(R.id.post_upload_progress)
 
     fun onBind(postAdapterItem: PostAdapterItem) {
-        val context = view.context
+//        val context = view.context
         val postData = postAdapterItem.data
-        title.text = if (!postData.title.isNullOrBlank()) {
-            postData.title
-        } else context.getString(R.string.untitled_in_parentheses)
+//        title.text = if (!postData.title.isNullOrBlank()) {
+//            postData.title
+//        } else context.getString(R.string.untitled_in_parentheses)
 
-        if (!postData.excerpt.isNullOrBlank()) {
-            excerpt.text = postData.excerpt
-            excerpt.visibility = View.VISIBLE
-        } else {
-            excerpt.visibility = View.GONE
-        }
+//        if (!postData.excerpt.isNullOrBlank()) {
+//            excerpt.text = postData.excerpt
+//            excerpt.visibility = View.VISIBLE
+//        } else {
+//            excerpt.visibility = View.GONE
+//        }
 
-        showFeaturedImage(postData.featuredImageUrl)
+//        showFeaturedImage(postData.featuredImageUrl)
 
         // local drafts say "delete" instead of "trash"
         if (postData.isLocalDraft) {
@@ -86,159 +78,159 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
             trashButton.buttonType = PostListButton.BUTTON_TRASH
         }
 
-        updateForUploadStatus(postData.uploadStatus)
-        updateStatusTextAndImage(postData)
+//        updateForUploadStatus(postData.uploadStatus)
+//        updateStatusTextAndImage(postData)
         configurePostButtons(postAdapterItem)
-        itemView.setOnClickListener {
-            postAdapterItem.onSelected()
-        }
+//        itemView.setOnClickListener {
+//            postAdapterItem.onSelected()
+//        }
     }
 
-    private fun updateForUploadStatus(uploadStatus: PostAdapterItemUploadStatus) {
-        if (uploadStatus.isUploading) {
-            disabledOverlay.visibility = View.VISIBLE
-            progressBar.isIndeterminate = true
-        } else if (!config.isAztecEditorEnabled && uploadStatus.isUploadingOrQueued) {
-            // Editing posts with uploading media is only supported in Aztec
-            disabledOverlay.visibility = View.VISIBLE
-        } else {
-            progressBar.isIndeterminate = false
-            disabledOverlay.visibility = View.GONE
-        }
-        if (!uploadStatus.isUploadFailed &&
-                (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)) {
-            progressBar.visibility = View.VISIBLE
-            // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
-            // Cap the progress bar at MAX_DISPLAYED_UPLOAD_PROGRESS (until we move past the 'uploading media' phase)
-            progressBar.progress = Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, uploadStatus.mediaUploadProgress)
-        } else {
-            progressBar.visibility = View.GONE
-        }
-    }
+//    private fun updateForUploadStatus(uploadStatus: PostAdapterItemUploadStatus) {
+//        if (uploadStatus.isUploading) {
+//            disabledOverlay.visibility = View.VISIBLE
+//            progressBar.isIndeterminate = true
+//        } else if (!config.isAztecEditorEnabled && uploadStatus.isUploadingOrQueued) {
+//            // Editing posts with uploading media is only supported in Aztec
+//            disabledOverlay.visibility = View.VISIBLE
+//        } else {
+//            progressBar.isIndeterminate = false
+//            disabledOverlay.visibility = View.GONE
+//        }
+//        if (!uploadStatus.isUploadFailed &&
+//                (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)) {
+//            progressBar.visibility = View.VISIBLE
+//            // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
+//            // Cap the progress bar at MAX_DISPLAYED_UPLOAD_PROGRESS (until we move past the 'uploading media' phase)
+//            progressBar.progress = Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, uploadStatus.mediaUploadProgress)
+//        } else {
+//            progressBar.visibility = View.GONE
+//        }
+//    }
 
-    private fun showFeaturedImage(imageUrl: String?) {
-        if (imageUrl == null) {
-            featuredImage.visibility = View.GONE
-            config.imageManager.cancelRequestAndClearImageView(featuredImage)
-        } else if (imageUrl.startsWith("http")) {
-            val photonUrl = ReaderUtils.getResizedImageUrl(
-                    imageUrl, config.photonWidth, config.photonHeight, !config.isPhotonCapable
-            )
-            featuredImage.visibility = View.VISIBLE
-            config.imageManager.load(featuredImage, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
-        } else {
-            val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(
-                    featuredImage.context, imageUrl, config.photonWidth
-            )
-            if (bmp != null) {
-                featuredImage.visibility = View.VISIBLE
-                config.imageManager.load(featuredImage, bmp)
-            } else {
-                featuredImage.visibility = View.GONE
-                config.imageManager.cancelRequestAndClearImageView(featuredImage)
-            }
-        }
-    }
+//    private fun showFeaturedImage(imageUrl: String?) {
+//        if (imageUrl == null) {
+//            featuredImage.visibility = View.GONE
+//            config.imageManager.cancelRequestAndClearImageView(featuredImage)
+//        } else if (imageUrl.startsWith("http")) {
+//            val photonUrl = ReaderUtils.getResizedImageUrl(
+//                    imageUrl, config.photonWidth, config.photonHeight, !config.isPhotonCapable
+//            )
+//            featuredImage.visibility = View.VISIBLE
+//            config.imageManager.load(featuredImage, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
+//        } else {
+//            val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(
+//                    featuredImage.context, imageUrl, config.photonWidth
+//            )
+//            if (bmp != null) {
+//                featuredImage.visibility = View.VISIBLE
+//                config.imageManager.load(featuredImage, bmp)
+//            } else {
+//                featuredImage.visibility = View.GONE
+//                config.imageManager.cancelRequestAndClearImageView(featuredImage)
+//            }
+//        }
+//    }
 
-    private fun updateStatusTextAndImage(postAdapterItem: PostAdapterItemData) {
-        val context = view.context
-
-        if (postAdapterItem.postStatus == PostStatus.PUBLISHED && !postAdapterItem.isLocalDraft &&
-                !postAdapterItem.isLocallyChanged) {
-            status.visibility = View.GONE
-            statusImage.visibility = View.GONE
-            config.imageManager.cancelRequestAndClearImageView(statusImage)
-        } else {
-            var statusTextResId = 0
-            var statusIconResId = 0
-            var statusColorResId = R.color.grey_darken_10
-            var errorMessage: String? = null
-            val uploadError = postAdapterItem.uploadStatus.uploadError
-
-            if (uploadError != null && !postAdapterItem.uploadStatus.hasInProgressMediaUpload) {
-                if (uploadError.mediaError != null) {
-                    errorMessage = context.getString(R.string.error_media_recover_post)
-                } else if (uploadError.postError != null) {
-                    errorMessage = UploadUtils.getErrorMessageFromPostError(context, false, uploadError.postError)
-                }
-                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
-                statusColorResId = R.color.alert_red
-            } else if (postAdapterItem.uploadStatus.isUploading) {
-                statusTextResId = R.string.post_uploading
-                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
-            } else if (postAdapterItem.uploadStatus.hasInProgressMediaUpload) {
-                statusTextResId = R.string.uploading_media
-                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
-            } else if (postAdapterItem.uploadStatus.isQueued || postAdapterItem.uploadStatus.hasPendingMediaUpload) {
-                // the Post (or its related media if such a thing exist) *is strictly* queued
-                statusTextResId = R.string.post_queued
-                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
-            } else if (postAdapterItem.isConflicted) {
-                statusTextResId = R.string.local_post_is_conflicted
-                statusIconResId = R.drawable.ic_notice_white_24dp
-                statusColorResId = R.color.alert_red
-            } else if (postAdapterItem.isLocalDraft) {
-                statusTextResId = R.string.local_draft
-                statusIconResId = R.drawable.ic_pages_white_24dp
-                statusColorResId = R.color.alert_yellow_dark
-            } else if (postAdapterItem.isLocallyChanged) {
-                statusTextResId = R.string.local_changes
-                statusIconResId = R.drawable.ic_pages_white_24dp
-                statusColorResId = R.color.alert_yellow_dark
-            } else {
-                when (postAdapterItem.postStatus) {
-                    PostStatus.DRAFT -> {
-                        statusTextResId = R.string.post_status_draft
-                        statusIconResId = R.drawable.ic_pages_white_24dp
-                        statusColorResId = R.color.alert_yellow_dark
-                    }
-                    PostStatus.PRIVATE -> statusTextResId = R.string.post_status_post_private
-                    PostStatus.PENDING -> {
-                        statusTextResId = R.string.post_status_pending_review
-                        statusIconResId = R.drawable.ic_pages_white_24dp
-                        statusColorResId = R.color.alert_yellow_dark
-                    }
-                    PostStatus.SCHEDULED -> {
-                        statusTextResId = R.string.post_status_scheduled
-                        statusIconResId = R.drawable.ic_calendar_white_24dp
-                        statusColorResId = R.color.blue_medium
-                    }
-                    PostStatus.TRASHED -> {
-                        statusTextResId = R.string.post_status_trashed
-                        statusIconResId = R.drawable.ic_pages_white_24dp
-                        statusColorResId = R.color.alert_red
-                    }
-                    PostStatus.UNKNOWN -> {
-                    }
-                    PostStatus.PUBLISHED -> {
-                    }
-                    else ->
-                        // no-op
-                        return
-                }
-            }
-
-            val resources = context.resources
-            status.setTextColor(resources.getColor(statusColorResId))
-            if (!TextUtils.isEmpty(errorMessage)) {
-                status.text = errorMessage
-            } else {
-                status.text = if (statusTextResId != 0) resources.getString(statusTextResId) else ""
-            }
-            status.visibility = View.VISIBLE
-
-            var drawable: Drawable? = if (statusIconResId != 0) resources.getDrawable(statusIconResId) else null
-            if (drawable != null) {
-                drawable = DrawableCompat.wrap(drawable)
-                DrawableCompat.setTint(drawable, resources.getColor(statusColorResId))
-                statusImage.visibility = View.VISIBLE
-                config.imageManager.load(statusImage, drawable)
-            } else {
-                statusImage.visibility = View.GONE
-                config.imageManager.cancelRequestAndClearImageView(statusImage)
-            }
-        }
-    }
+//    private fun updateStatusTextAndImage(postAdapterItem: PostAdapterItemData) {
+//        val context = view.context
+//
+//        if (postAdapterItem.postStatus == PostStatus.PUBLISHED && !postAdapterItem.isLocalDraft &&
+//                !postAdapterItem.isLocallyChanged) {
+//            status.visibility = View.GONE
+//            statusImage.visibility = View.GONE
+//            config.imageManager.cancelRequestAndClearImageView(statusImage)
+//        } else {
+//            var statusTextResId = 0
+//            var statusIconResId = 0
+//            var statusColorResId = R.color.grey_darken_10
+//            var errorMessage: String? = null
+//            val uploadError = postAdapterItem.uploadStatus.uploadError
+//
+//            if (uploadError != null && !postAdapterItem.uploadStatus.hasInProgressMediaUpload) {
+//                if (uploadError.mediaError != null) {
+//                    errorMessage = context.getString(R.string.error_media_recover_post)
+//                } else if (uploadError.postError != null) {
+//                    errorMessage = UploadUtils.getErrorMessageFromPostError(context, false, uploadError.postError)
+//                }
+//                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
+//                statusColorResId = R.color.alert_red
+//            } else if (postAdapterItem.uploadStatus.isUploading) {
+//                statusTextResId = R.string.post_uploading
+//                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
+//            } else if (postAdapterItem.uploadStatus.hasInProgressMediaUpload) {
+//                statusTextResId = R.string.uploading_media
+//                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
+//            } else if (postAdapterItem.uploadStatus.isQueued || postAdapterItem.uploadStatus.hasPendingMediaUpload) {
+//                // the Post (or its related media if such a thing exist) *is strictly* queued
+//                statusTextResId = R.string.post_queued
+//                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
+//            } else if (postAdapterItem.isConflicted) {
+//                statusTextResId = R.string.local_post_is_conflicted
+//                statusIconResId = R.drawable.ic_notice_white_24dp
+//                statusColorResId = R.color.alert_red
+//            } else if (postAdapterItem.isLocalDraft) {
+//                statusTextResId = R.string.local_draft
+//                statusIconResId = R.drawable.ic_pages_white_24dp
+//                statusColorResId = R.color.alert_yellow_dark
+//            } else if (postAdapterItem.isLocallyChanged) {
+//                statusTextResId = R.string.local_changes
+//                statusIconResId = R.drawable.ic_pages_white_24dp
+//                statusColorResId = R.color.alert_yellow_dark
+//            } else {
+//                when (postAdapterItem.postStatus) {
+//                    PostStatus.DRAFT -> {
+//                        statusTextResId = R.string.post_status_draft
+//                        statusIconResId = R.drawable.ic_pages_white_24dp
+//                        statusColorResId = R.color.alert_yellow_dark
+//                    }
+//                    PostStatus.PRIVATE -> statusTextResId = R.string.post_status_post_private
+//                    PostStatus.PENDING -> {
+//                        statusTextResId = R.string.post_status_pending_review
+//                        statusIconResId = R.drawable.ic_pages_white_24dp
+//                        statusColorResId = R.color.alert_yellow_dark
+//                    }
+//                    PostStatus.SCHEDULED -> {
+//                        statusTextResId = R.string.post_status_scheduled
+//                        statusIconResId = R.drawable.ic_calendar_white_24dp
+//                        statusColorResId = R.color.blue_medium
+//                    }
+//                    PostStatus.TRASHED -> {
+//                        statusTextResId = R.string.post_status_trashed
+//                        statusIconResId = R.drawable.ic_pages_white_24dp
+//                        statusColorResId = R.color.alert_red
+//                    }
+//                    PostStatus.UNKNOWN -> {
+//                    }
+//                    PostStatus.PUBLISHED -> {
+//                    }
+//                    else ->
+//                        // no-op
+//                        return
+//                }
+//            }
+//
+//            val resources = context.resources
+//            status.setTextColor(resources.getColor(statusColorResId))
+//            if (!TextUtils.isEmpty(errorMessage)) {
+//                status.text = errorMessage
+//            } else {
+//                status.text = if (statusTextResId != 0) resources.getString(statusTextResId) else ""
+//            }
+//            status.visibility = View.VISIBLE
+//
+//            var drawable: Drawable? = if (statusIconResId != 0) resources.getDrawable(statusIconResId) else null
+//            if (drawable != null) {
+//                drawable = DrawableCompat.wrap(drawable)
+//                DrawableCompat.setTint(drawable, resources.getColor(statusColorResId))
+//                statusImage.visibility = View.VISIBLE
+//                config.imageManager.load(statusImage, drawable)
+//            } else {
+//                statusImage.visibility = View.GONE
+//                config.imageManager.cancelRequestAndClearImageView(statusImage)
+//            }
+//        }
+//    }
 
     private fun configurePostButtons(postAdapterItem: PostAdapterItem) {
         val postData = postAdapterItem.data
