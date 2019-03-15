@@ -53,7 +53,7 @@ class PostYearsMapperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `maps expanded list`() {
+    fun `maps and orders expanded list`() {
         val january = Month(1, 50)
         val february = Month(2, 40)
         val years = listOf(PostDetailStatsModel.Year(2019, listOf(january, february), 100))
@@ -66,13 +66,13 @@ class PostYearsMapperTest : BaseUnitTest() {
             assertThat(this.header.showDivider).isFalse()
         }
         (result[1] as ListItemWithIcon).apply {
-            assertThat(this.text).isEqualTo("Jan")
-            assertThat(this.value).isEqualTo("50")
+            assertThat(this.text).isEqualTo("Feb")
+            assertThat(this.value).isEqualTo("40")
             assertThat(this.showDivider).isFalse()
         }
         (result[2] as ListItemWithIcon).apply {
-            assertThat(this.text).isEqualTo("Feb")
-            assertThat(this.value).isEqualTo("40")
+            assertThat(this.text).isEqualTo("Jan")
+            assertThat(this.value).isEqualTo("50")
             assertThat(this.showDivider).isFalse()
         }
         assertThat(result[4] is Divider).isTrue()
