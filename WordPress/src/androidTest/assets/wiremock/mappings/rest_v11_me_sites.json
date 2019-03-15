@@ -8,10 +8,10 @@
         "jsonBody": {
             "sites": [
                 {
-                    "ID": 1,
+                    "ID": 158396482,
                     "name": "Mobile E2E Testing",
                     "description": "",
-                    "URL": "https:\\/\\/e2eflowtestingmobile.wordpress.com",
+                    "URL": "https://e2eflowtestingmobile.wordpress.com",
                     "user_can_manage": false,
                     "capabilities": {
                         "edit_pages": true,
@@ -55,13 +55,13 @@
                         "blog_public": 1,
                         "videopress_enabled": false,
                         "upgraded_filetypes_enabled": false,
-                        "login_url": "https:\\/\\/e2eflowtestingmobile.wordpress.com\\/wp-login.php",
-                        "admin_url": "https:\\/\\/e2eflowtestingmobile.wordpress.com\\/wp-admin\\/",
+                        "login_url": "https://lowtestingmobile.wordpress.com/wp-login.php",
+                        "admin_url": "https://lowtestingmobile.wordpress.com/wp-admin/",
                         "is_mapped_domain": false,
                         "is_redirect": false,
-                        "unmapped_url": "https:\\/\\/e2eflowtestingmobile.wordpress.com",
+                        "unmapped_url": "https://lowtestingmobile.wordpress.com",
                         "featured_images_enabled": false,
-                        "theme_slug": "pub\\/independent-publisher-2",
+                        "theme_slug": "pub/independent-publisher-2",
                         "header_image": false,
                         "background_color": false,
                         "image_default_link_type": "none",
@@ -72,7 +72,7 @@
                         "image_medium_height": 300,
                         "image_large_width": 1024,
                         "image_large_height": 1024,
-                        "permalink_structure": "\\/%year%\\/%monthnum%\\/%day%\\/%postname%\\/",
+                        "permalink_structure": "/%year%/%monthnum%/%day%/%postname%/",
                         "post_formats": [],
                         "default_post_format": "0",
                         "default_category": 1,
@@ -147,7 +147,7 @@
                                     "value_bundle",
                                     "business-bundle"
                                 ],
-                                "no-adverts\\/no-adverts.php": [
+                                "no-adverts/no-adverts.php": [
                                     "personal-bundle",
                                     "value_bundle",
                                     "business-bundle"
@@ -190,11 +190,11 @@
                     "jetpack_modules": null,
                     "meta": {
                         "links": {
-                            "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1",
-                            "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/help",
-                            "posts": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/posts\\/",
-                            "comments": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/comments\\/",
-                            "xmlrpc": "https:\\/\\/e2eflowtestingmobile.wordpress.com\\/xmlrpc.php"
+                            "self": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482",
+                            "help": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/help",
+                            "posts": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/posts/",
+                            "comments": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/comments/",
+                            "xmlrpc": "https://lowtestingmobile.wordpress.com/xmlrpc.php"
                         }
                     },
                     "quota": {

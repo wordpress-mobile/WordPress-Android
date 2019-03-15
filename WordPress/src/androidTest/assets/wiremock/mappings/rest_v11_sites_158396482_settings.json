@@ -1,18 +1,18 @@
 {
     "request": {
-        "urlPath": "/rest/v1.1/sites/1/settings",
+        "urlPath": "/rest/v1.1/sites/158396482/settings",
         "method": "GET"
     },
     "response": {
         "status": 200,
         "jsonBody": {
-            "ID": 1,
+            "ID": 158396482,
             "name": "Mobile E2E Testing",
             "description": "",
-            "URL": "https:\\/\\/e2eflowtestingmobile.wordpress.com",
+            "URL": "https://e2eflowtestingmobile.wordpress.com",
             "lang": "en",
             "settings": {
-                "admin_url": "https:\\/\\/e2eflowtestingmobile.wordpress.com\\/wp-admin\\/",
+                "admin_url": "https://e2eflowtestingmobile.wordpress.com\\/wp-admin\\/",
                 "default_ping_status": true,
                 "default_comment_status": true,
                 "blog_public": 1,
