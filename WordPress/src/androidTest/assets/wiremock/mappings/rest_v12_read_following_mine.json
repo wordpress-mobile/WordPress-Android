@@ -14,9 +14,9 @@
             "subscriptions": [
                 {
                     "ID": "495248750",
-                    "blog_ID": "1",
+                    "blog_ID": "158396482",
                     "feed_ID": "93780362",
-                    "URL": "http:\\/\\/e2eflowtestingmobile.wordpress.com",
+                    "URL": "http://e2eflowtestingmobile.wordpress.com",
                     "date_subscribed": "2019-02-14T09:49:48+00:00",
                     "delivery_methods": {
                         "notification": {
@@ -26,15 +26,15 @@
                     "is_owner": true,
                     "meta": {
                         "links": {
-                            "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/read\\/sites\\/1",
-                            "feed": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/read\\/feed\\/93780362"
+                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/158396482",
+                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/93780362"
                         },
                         "data": {
                             "site": {
-                                "ID": 1,
+                                "ID": 158396482,
                                 "name": "Mobile E2E Testing",
                                 "description": "",
-                                "URL": "https:\\/\\/e2eflowtestingmobile.wordpress.com",
+                                "URL": "https://e2eflowtestingmobile.wordpress.com",
                                 "user_can_manage": false,
                                 "capabilities": {
                                     "edit_pages": true,
@@ -69,13 +69,13 @@
                                     "blog_public": 1,
                                     "videopress_enabled": false,
                                     "upgraded_filetypes_enabled": false,
-                                    "login_url": "https:\\/\\/e2eflowtestingmobile.wordpress.com\\/wp-login.php",
-                                    "admin_url": "https:\\/\\/e2eflowtestingmobile.wordpress.com\\/wp-admin\\/",
+                                    "login_url": "https://e2eflowtestingmobile.wordpress.com/wp-login.php",
+                                    "admin_url": "https://e2eflowtestingmobile.wordpress.com/wp-admin/",
                                     "is_mapped_domain": false,
                                     "is_redirect": false,
-                                    "unmapped_url": "https:\\/\\/e2eflowtestingmobile.wordpress.com",
+                                    "unmapped_url": "https://e2eflowtestingmobile.wordpress.com",
                                     "featured_images_enabled": false,
-                                    "theme_slug": "pub\\/independent-publisher-2",
+                                    "theme_slug": "pub/independent-publisher-2",
                                     "header_image": false,
                                     "background_color": false,
                                     "image_default_link_type": "none",
@@ -86,7 +86,7 @@
                                     "image_medium_height": 300,
                                     "image_large_width": 1024,
                                     "image_large_height": 1024,
-                                    "permalink_structure": "\\/%year%\\/%monthnum%\\/%day%\\/%postname%\\/",
+                                    "permalink_structure": "/%year%/%monthnum%/%day%/%postname%/",
                                     "post_formats": [],
                                     "default_post_format": "0",
                                     "default_category": 1,
@@ -160,7 +160,7 @@
                                                 "value_bundle",
                                                 "business-bundle"
                                             ],
-                                            "no-adverts\\/no-adverts.php": [
+                                            "no-adverts/no-adverts.php": [
                                                 "personal-bundle",
                                                 "value_bundle",
                                                 "business-bundle"
@@ -203,11 +203,11 @@
                                 "jetpack_modules": null,
                                 "meta": {
                                     "links": {
-                                        "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/1",
-                                        "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/1\\/help",
-                                        "posts": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/1\\/posts\\/",
-                                        "comments": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/1\\/comments\\/",
-                                        "xmlrpc": "https:\\/\\/e2eflowtestingmobile.wordpress.com\\/xmlrpc.php"
+                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/158396482",
+                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/158396482/help",
+                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/158396482/posts/",
+                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/comments/",
+                                        "xmlrpc": "https://e2eflowtestingmobile.wordpress.com/xmlrpc.php"
                                     }
                                 },
                                 "quota": {
@@ -219,18 +219,18 @@
                                 "launch_status": false,
                                 "is_multi_author": false,
                                 "feed_ID": 93780362,
-                                "feed_URL": "http:\\/\\/e2eflowtestingmobile.wordpress.com",
+                                "feed_URL": "http://e2eflowtestingmobile.wordpress.com",
                                 "header_image": false,
                                 "owner": {
-                                    "ID": 1,
+                                    "ID": 152748359,
                                     "login": "e2eflowtestingmobile",
                                     "name": "e2eflowtestingmobile",
                                     "first_name": "",
                                     "last_name": "",
                                     "nice_name": "e2eflowtestingmobile",
-                                    "URL": "http:\\/\\/e2eflowtestingmobile.wordpress.com",
-                                    "avatar_URL": "https:\\/\\/1.gravatar.com\\/avatar\\/7a4015c11be6a342f65e0e169092d402?s=96&d=identicon&r=G",
-                                    "profile_URL": "https:\\/\\/en.gravatar.com\\/e2eflowtestingmobile",
+                                    "URL": "http://e2eflowtestingmobile.wordpress.com",
+                                    "avatar_URL": "https://1.gravatar.com/avatar/7a4015c11be6a342f65e0e169092d402?s=96&d=identicon&r=G",
+                                    "profile_URL": "https://en.gravatar.com/e2eflowtestingmobile",
                                     "ip_address": false,
                                     "site_visible": true,
                                     "has_avatar": true
@@ -252,7 +252,7 @@
                     "ID": "495248661",
                     "blog_ID": "53424024",
                     "feed_ID": "41325786",
-                    "URL": "http:\\/\\/discover.wordpress.com",
+                    "URL": "http://discover.wordpress.com",
                     "date_subscribed": "2019-02-14T09:49:19+00:00",
                     "delivery_methods": {
                         "notification": {
@@ -262,22 +262,22 @@
                     "is_owner": false,
                     "meta": {
                         "links": {
-                            "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/read\\/sites\\/53424024",
-                            "feed": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/read\\/feed\\/41325786"
+                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/53424024",
+                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/41325786"
                         },
                         "data": {
                             "site": {
                                 "ID": 53424024,
                                 "name": "Discover",
                                 "description": "A daily selection of the best content published on WordPress, collected for you by humans who love to read.",
-                                "URL": "https:\\/\\/discover.wordpress.com",
+                                "URL": "https://discover.wordpress.com",
                                 "jetpack": false,
                                 "post_count": 3520,
                                 "subscribers_count": 32844994,
                                 "lang": "en",
                                 "icon": {
-                                    "img": "https:\\/\\/secure.gravatar.com\\/blavatar\\/c9e4e04719c81ca4936a63ea2dce6ace",
-                                    "ico": "https:\\/\\/secure.gravatar.com\\/blavatar\\/c9e4e04719c81ca4936a63ea2dce6ace"
+                                    "img": "https://secure.gravatar.com/blavatar/c9e4e04719c81ca4936a63ea2dce6ace",
+                                    "ico": "https://secure.gravatar.com/blavatar/c9e4e04719c81ca4936a63ea2dce6ace"
                                 },
                                 "logo": {
                                     "id": 0,
@@ -289,12 +289,12 @@
                                 "is_following": true,
                                 "meta": {
                                     "links": {
-                                        "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/53424024",
-                                        "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/53424024\\/help",
-                                        "posts": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/53424024\\/posts\\/",
-                                        "comments": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/53424024\\/comments\\/",
-                                        "xmlrpc": "https:\\/\\/discover.wordpress.com\\/xmlrpc.php",
-                                        "featured": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/read\\/sites\\/53424024\\/featured"
+                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/53424024",
+                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/53424024/help",
+                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/53424024/posts/",
+                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/53424024/comments/",
+                                        "xmlrpc": "https://discover.wordpress.com/xmlrpc.php",
+                                        "featured": "https://public-api.wordpress.com/rest/v1.2/read/sites/53424024/featured"
                                     }
                                 },
                                 "launch_status": false,
@@ -312,7 +312,7 @@
                                 },
                                 "is_multi_author": true,
                                 "feed_ID": 41325786,
-                                "feed_URL": "http:\\/\\/discover.wordpress.com",
+                                "feed_URL": "http://discover.wordpress.com",
                                 "header_image": false,
                                 "owner": {
                                     "ID": 26957695,
@@ -322,8 +322,8 @@
                                     "last_name": "",
                                     "nice_name": "a8cuser",
                                     "URL": "",
-                                    "avatar_URL": "https:\\/\\/1.gravatar.com\\/avatar\\/a64c4a50f3f38f02cd27a9bfb3f11b62?s=96&d=identicon&r=G",
-                                    "profile_URL": "https:\\/\\/en.gravatar.com\\/a8cuser",
+                                    "avatar_URL": "https://1.gravatar.com/avatar/a64c4a50f3f38f02cd27a9bfb3f11b62?s=96&d=identicon&r=G",
+                                    "profile_URL": "https://en.gravatar.com/a8cuser",
                                     "ip_address": false,
                                     "site_visible": true,
                                     "has_avatar": true
@@ -345,7 +345,7 @@
                     "ID": "495248660",
                     "blog_ID": false,
                     "feed_ID": "84614284",
-                    "URL": "http:\\/\\/magazine.atavist.com\\/fbia.rss?wp_auto_sub",
+                    "URL": "http://magazine.atavist.com/fbia.rss?wp_auto_sub",
                     "date_subscribed": "2019-02-14T09:49:19+00:00",
                     "delivery_methods": {
                         "notification": {
@@ -355,7 +355,7 @@
                     "is_owner": false,
                     "meta": {
                         "links": {
-                            "feed": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/read\\/feed\\/84614284"
+                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/84614284"
                         }
                     }
                 },
@@ -363,7 +363,7 @@
                     "ID": "495248659",
                     "blog_ID": "70135762",
                     "feed_ID": "22973954",
-                    "URL": "http:\\/\\/longreads.com",
+                    "URL": "http://longreads.com",
                     "date_subscribed": "2019-02-14T09:49:18+00:00",
                     "delivery_methods": {
                         "notification": {
@@ -373,22 +373,22 @@
                     "is_owner": false,
                     "meta": {
                         "links": {
-                            "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/read\\/sites\\/70135762",
-                            "feed": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/read\\/feed\\/22973954"
+                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/70135762",
+                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/22973954"
                         },
                         "data": {
                             "site": {
                                 "ID": 70135762,
                                 "name": "Longreads",
                                 "description": "The best longform stories on the web",
-                                "URL": "http:\\/\\/longreads.com",
+                                "URL": "http://longreads.com",
                                 "jetpack": false,
                                 "post_count": 6603,
                                 "subscribers_count": 38871021,
                                 "lang": "en",
                                 "icon": {
-                                    "img": "https:\\/\\/secure.gravatar.com\\/blavatar\\/e68667ec6ee7cdd0c6b5416a84c52a9c",
-                                    "ico": "https:\\/\\/secure.gravatar.com\\/blavatar\\/e68667ec6ee7cdd0c6b5416a84c52a9c"
+                                    "img": "https://secure.gravatar.com/blavatar/e68667ec6ee7cdd0c6b5416a84c52a9c",
+                                    "ico": "https://secure.gravatar.com/blavatar/e68667ec6ee7cdd0c6b5416a84c52a9c"
                                 },
                                 "logo": {
                                     "id": 0,
@@ -400,11 +400,11 @@
                                 "is_following": true,
                                 "meta": {
                                     "links": {
-                                        "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/70135762",
-                                        "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/70135762\\/help",
-                                        "posts": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/70135762\\/posts\\/",
-                                        "comments": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/70135762\\/comments\\/",
-                                        "xmlrpc": "https:\\/\\/longreadsblog.wordpress.com\\/xmlrpc.php"
+                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/70135762",
+                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/70135762/help",
+                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/70135762/posts/",
+                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/70135762/comments/",
+                                        "xmlrpc": "https://longreadsblog.wordpress.com/xmlrpc.php"
                                     }
                                 },
                                 "launch_status": false,
@@ -422,7 +422,7 @@
                                 },
                                 "is_multi_author": true,
                                 "feed_ID": 22973954,
-                                "feed_URL": "http:\\/\\/longreads.com",
+                                "feed_URL": "http://longreads.com",
                                 "header_image": false,
                                 "owner": {
                                     "ID": 26957695,
@@ -432,8 +432,8 @@
                                     "last_name": "",
                                     "nice_name": "a8cuser",
                                     "URL": "",
-                                    "avatar_URL": "https:\\/\\/1.gravatar.com\\/avatar\\/a64c4a50f3f38f02cd27a9bfb3f11b62?s=96&d=identicon&r=G",
-                                    "profile_URL": "https:\\/\\/en.gravatar.com\\/a8cuser",
+                                    "avatar_URL": "https://1.gravatar.com/avatar/a64c4a50f3f38f02cd27a9bfb3f11b62?s=96&d=identicon&r=G",
+                                    "profile_URL": "https://en.gravatar.com/a8cuser",
                                     "ip_address": false,
                                     "site_visible": true,
                                     "has_avatar": true
@@ -455,7 +455,7 @@
                     "ID": "495248658",
                     "blog_ID": "3584907",
                     "feed_ID": "25823",
-                    "URL": "http:\\/\\/en.blog.wordpress.com",
+                    "URL": "http://en.blog.wordpress.com",
                     "date_subscribed": "2019-02-14T09:49:18+00:00",
                     "delivery_methods": {
                         "notification": {
@@ -465,22 +465,22 @@
                     "is_owner": false,
                     "meta": {
                         "links": {
-                            "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/read\\/sites\\/3584907",
-                            "feed": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/read\\/feed\\/25823"
+                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/3584907",
+                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/25823"
                         },
                         "data": {
                             "site": {
                                 "ID": 3584907,
                                 "name": "The WordPress.com Blog",
                                 "description": "The latest news on WordPress.com and the WordPress community.",
-                                "URL": "http:\\/\\/en.blog.wordpress.com",
+                                "URL": "http://en.blog.wordpress.com",
                                 "jetpack": false,
                                 "post_count": 1440,
                                 "subscribers_count": 52169767,
                                 "lang": "en",
                                 "icon": {
-                                    "img": "https:\\/\\/secure.gravatar.com\\/blavatar\\/e6392390e3bcfadff3671c5a5653d95b",
-                                    "ico": "https:\\/\\/secure.gravatar.com\\/blavatar\\/e6392390e3bcfadff3671c5a5653d95b"
+                                    "img": "https://secure.gravatar.com/blavatar/e6392390e3bcfadff3671c5a5653d95b",
+                                    "ico": "https://secure.gravatar.com/blavatar/e6392390e3bcfadff3671c5a5653d95b"
                                 },
                                 "logo": {
                                     "id": 0,
@@ -492,11 +492,11 @@
                                 "is_following": true,
                                 "meta": {
                                     "links": {
-                                        "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/3584907",
-                                        "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/3584907\\/help",
-                                        "posts": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.2\\/sites\\/3584907\\/posts\\/",
-                                        "comments": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/3584907\\/comments\\/",
-                                        "xmlrpc": "https:\\/\\/en.blog.wordpress.com\\/xmlrpc.php"
+                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/3584907",
+                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/3584907/help",
+                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/3584907/posts/",
+                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/3584907/comments/",
+                                        "xmlrpc": "https://en.blog.wordpress.com/xmlrpc.php"
                                     }
                                 },
                                 "launch_status": false,
@@ -514,7 +514,7 @@
                                 },
                                 "is_multi_author": true,
                                 "feed_ID": 25823,
-                                "feed_URL": "http:\\/\\/en.blog.wordpress.com",
+                                "feed_URL": "http://en.blog.wordpress.com",
                                 "header_image": false,
                                 "owner": {
                                     "ID": 26957695,
@@ -524,8 +524,8 @@
                                     "last_name": "",
                                     "nice_name": "a8cuser",
                                     "URL": "",
-                                    "avatar_URL": "https:\\/\\/1.gravatar.com\\/avatar\\/a64c4a50f3f38f02cd27a9bfb3f11b62?s=96&d=retro",
-                                    "profile_URL": "https:\\/\\/en.gravatar.com\\/a8cuser",
+                                    "avatar_URL": "https://1.gravatar.com/avatar/a64c4a50f3f38f02cd27a9bfb3f11b62?s=96&d=retro",
+                                    "profile_URL": "https://en.gravatar.com/a8cuser",
                                     "ip_address": false,
                                     "site_visible": true,
                                     "has_avatar": true

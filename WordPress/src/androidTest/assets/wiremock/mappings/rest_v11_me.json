@@ -6,12 +6,12 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "ID": 1,
+            "ID": 152748359,
             "display_name": "e2eflowtestingmobile",
             "username": "e2eflowtestingmobile",
             "email": "e2eflowtestingmobile@example.com",
-            "primary_blog": 1,
-            "primary_blog_url": "http:\\/\\/e2eflowtestingmobile.wordpress.com",
+            "primary_blog": 158396482,
+            "primary_blog_url": "http://e2eflowtestingmobile.wordpress.com",
             "primary_blog_is_jetpack": false,
             "language": "en",
             "locale_variant": "",
@@ -19,8 +19,8 @@
             "token_scope": [
                 "global"
             ],
-            "avatar_URL": "https:\\/\\/1.gravatar.com\\/avatar\\/7a4015c11be6a342f65e0e169092d402?s=96&d=identicon",
-            "profile_URL": "http:\\/\\/en.gravatar.com\\/e2eflowtestingmobile",
+            "avatar_URL": "https://1.gravatar.com/avatar/7a4015c11be6a342f65e0e169092d402?s=96&d=identicon",
+            "profile_URL": "http://en.gravatar.com/e2eflowtestingmobile",
             "verified": true,
             "email_verified": true,
             "date": "2019-02-14T09:49:17+00:00",
@@ -31,15 +31,15 @@
             "phone_account": false,
             "meta": {
                 "links": {
-                    "self": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me",
-                    "help": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/help",
-                    "site": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/sites\\/5836086",
-                    "flags": "https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/flags"
+                    "self": "https://public-api.wordpress.com/rest/v1.1/me",
+                    "help": "https://public-api.wordpress.com/rest/v1.1/me/help",
+                    "site": "https://public-api.wordpress.com/rest/v1.1/sites/5836086",
+                    "flags": "https://public-api.wordpress.com/rest/v1.1/me/flags"
                 }
             },
             "is_valid_google_apps_country": true,
             "user_ip_country_code": "IE",
-            "logout_URL": "https:\\/\\/wordpress.com\\/wp-login.php?action=logout&_wpnonce=2887f970c8&redirect_to=https%3A%2F%2Fwordpress.com%2F",
+            "logout_URL": "https://wordpress.com/wp-login.php?action=logout&_wpnonce=2887f970c8&redirect_to=https%3A%2F%2Fwordpress.com%2F",
             "social_login_connections": null,
             "social_signup_service": null,
             "abtests": {}

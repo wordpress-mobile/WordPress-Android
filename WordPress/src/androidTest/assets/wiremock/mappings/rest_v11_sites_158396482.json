@@ -1,7 +1,12 @@
 {
     "request": {
+        "method": "GET",
         "urlPath": "/rest/v1.1/sites/158396482",
-        "method": "GET"
+        "queryParameters": {
+            "fields": {
+                "equalTo": "ID,URL,name,description,jetpack,visible,is_private,options,plan,capabilities,quota,icon,meta"
+            }
+        }
     },
     "response": {
         "status": 200,
@@ -10,7 +15,6 @@
             "name": "Mobile E2E Testing",
             "description": "",
             "URL": "https://e2eflowtestingmobile.wordpress.com",
-            "user_can_manage": false,
             "capabilities": {
                 "edit_pages": true,
                 "edit_posts": true,
@@ -33,31 +37,19 @@
                 "view_stats": true
             },
             "jetpack": false,
-            "is_multisite": true,
-            "post_count": 80,
-            "subscribers_count": 1,
-            "lang": "en",
-            "logo": {
-                "id": 0,
-                "sizes": [],
-                "url": ""
-            },
             "visible": true,
             "is_private": false,
-            "single_user_site": true,
-            "is_vip": false,
-            "is_following": true,
             "options": {
                 "timezone": "",
                 "gmt_offset": 0,
                 "blog_public": 1,
                 "videopress_enabled": false,
                 "upgraded_filetypes_enabled": false,
-                "login_url": "https://lowtestingmobile.wordpress.com/wp-login.php",
-                "admin_url": "https://lowtestingmobile.wordpress.com/wp-admin/",
+                "login_url": "https://e2eflowtestingmobile.wordpress.com/wp-login.php",
+                "admin_url": "https://e2eflowtestingmobile.wordpress.com/wp-admin/",
                 "is_mapped_domain": false,
                 "is_redirect": false,
-                "unmapped_url": "https://lowtestingmobile.wordpress.com",
+                "unmapped_url": "https://e2eflowtestingmobile.wordpress.com",
                 "featured_images_enabled": false,
                 "theme_slug": "pub/independent-publisher-2",
                 "header_image": false,
@@ -96,11 +88,11 @@
                 "default_sharing_status": true,
                 "default_comment_status": true,
                 "default_ping_status": true,
-                "software_version": "5.1",
+                "software_version": "5.1.1",
                 "created_at": "2019-02-14T09:49:46+00:00",
                 "wordads": false,
                 "publicize_permanently_disabled": false,
-                "frame_nonce": "877da9b185",
+                "frame_nonce": "122060598a",
                 "headstart": false,
                 "headstart_is_fresh": false,
                 "ak_vp_bundle_enabled": null,
@@ -119,7 +111,6 @@
                 "product_id": 1,
                 "product_slug": "free_plan",
                 "product_name_short": "Free",
-                "free_trial": false,
                 "expired": false,
                 "user_is_owner": false,
                 "is_free": true,
@@ -185,14 +176,13 @@
                     }
                 }
             },
-            "jetpack_modules": null,
             "meta": {
                 "links": {
-                    "self": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482",
-                    "help": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/help",
-                    "posts": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/posts/",
-                    "comments": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/comments/",
-                    "xmlrpc": "https://lowtestingmobile.wordpress.com/xmlrpc.php"
+                    "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482",
+                    "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/help",
+                    "posts": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/posts/",
+                    "comments": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/comments/",
+                    "xmlrpc": "https://e2eflowtestingmobile.wordpress.com/xmlrpc.php"
                 }
             },
             "quota": {
@@ -200,19 +190,18 @@
                 "space_used": 55817,
                 "percent_used": 0.0017327877382437389,
                 "space_available": 3221169655
-            },
-            "launch_status": false
+            }
         },
         "headers": {
             "Server": "nginx",
-            "Date": "Tue, 05 Mar 2019 15:43:44 GMT",
+            "Date": "Fri, 15 Mar 2019 12:56:30 GMT",
             "Content-Type": "application/json",
             "Connection": "keep-alive",
             "Vary": "Accept-Encoding",
             "X-hacker": "Oh, Awesome: Opossum",
             "Expires": "Wed, 11 Jan 1984 05:00:00 GMT",
             "Cache-Control": "no-cache, must-revalidate, max-age=0",
-            "X-ac": "2.lhr _dfw",
+            "X-ac": "2.ams _dfw",
             "Strict-Transport-Security": "max-age=15552000"
         }
     }

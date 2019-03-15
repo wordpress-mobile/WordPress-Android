@@ -1,22 +1,23 @@
 {
     "request": {
-        "urlPath": "/rest/v1.1/sites/1/post-formats/",
+        "urlPattern": "/rest/v1.1/sites/158396482/post/0/diffs.*",
         "method": "GET"
     },
     "response": {
-        "status": 200,
+        "status": 400,
         "jsonBody": {
-            "formats": {}
+            "error": "User cannot edit this post",
+            "message": 403
         },
         "headers": {
             "Server": "nginx",
-            "Date": "Tue, 05 Mar 2019 15:43:44 GMT",
+            "Date": "Tue, 12 Mar 2019 15:00:52 GMT",
             "Content-Type": "application/json",
             "Connection": "keep-alive",
-            "Vary": "Accept-Encoding",
             "X-hacker": "Oh, Awesome: Opossum",
             "Expires": "Wed, 11 Jan 1984 05:00:00 GMT",
             "Cache-Control": "no-cache, must-revalidate, max-age=0",
+            "Access-Control-Allow-Origin": "*",
             "X-ac": "2.lhr _dfw",
             "Strict-Transport-Security": "max-age=15552000"
         }
