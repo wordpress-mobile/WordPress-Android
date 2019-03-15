@@ -75,6 +75,6 @@ class PostYearsMapperTest : BaseUnitTest() {
             assertThat(this.value).isEqualTo("50")
             assertThat(this.showDivider).isFalse()
         }
-        assertThat(result[4] is Divider).isTrue()
+        assertThat(result[3] is Divider).isTrue()
     }
 }
