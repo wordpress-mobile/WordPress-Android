@@ -74,6 +74,7 @@ class PostMonthsAndYearsUseCase(
         val items = mutableListOf<BlockListItem>()
         if (useCaseMode == BLOCK) {
             items.add(Title(string.stats_detail_months_and_years))
+            items.add(Divider)
         }
         items.add(
                 Header(

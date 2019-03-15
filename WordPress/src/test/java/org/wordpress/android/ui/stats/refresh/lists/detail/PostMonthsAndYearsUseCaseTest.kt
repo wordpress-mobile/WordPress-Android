@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
@@ -91,8 +92,9 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
         year: Year
     ): ExpandableItem {
         assertTitle(this[0])
-        assertHeader(this[1])
-        return assertYear(this[2], year.year.toString(), year.value)
+        assertThat(this[1]).isEqualTo(Divider)
+        assertHeader(this[2])
+        return assertYear(this[3], year.year.toString(), year.value)
     }
 
     private fun List<BlockListItem>.assertExpandedList(
@@ -100,9 +102,10 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     ) {
         val month = year.months.first()
         assertTitle(this[0])
-        assertHeader(this[1])
-        assertYear(this[2], year.year.toString(), year.value)
-        assertMonth(this[3], "Jan", month.count.toString())
+        assertThat(this[1]).isEqualTo(Divider)
+        assertHeader(this[2])
+        assertYear(this[3], year.year.toString(), year.value)
+        assertMonth(this[4], "Jan", month.count.toString())
     }
 
     @Test
@@ -121,11 +124,12 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(9)
+            assertThat(this).hasSize(10)
             assertTitle(this[0])
-            assertHeader(this[1])
-            assertYear(this[2], year.year.toString(), year.value)
-            assertLink(this[8])
+            assertThat(this[1]).isEqualTo(Divider)
+            assertHeader(this[2])
+            assertYear(this[3], year.year.toString(), year.value)
+            assertLink(this[9])
         }
     }
 
