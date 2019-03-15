@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.posts
 
 import android.support.annotation.ColorRes
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.widgets.PostListButtonType
 
 data class PostListItemUiModel(
     val remotePostId: Long,
@@ -18,6 +19,6 @@ data class PostListItemUiModel(
     val onSelected: () -> Unit
 )
 
-data class PostListItemAction(val buttonType: Int, val onButtonClicked: (Int) -> Unit)
+data class PostListItemAction(val buttonType: PostListButtonType, val onButtonClicked: (PostListButtonType) -> Unit)
 
 

@@ -11,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+
+import static org.wordpress.android.widgets.PostListButtonType.BUTTON_NONE;
 
 /*
  * buttons in footer of post cards
@@ -19,23 +22,7 @@ import org.wordpress.android.R;
 public class PostListButton extends LinearLayout {
     private ImageView mImageView;
     private TextView mTextView;
-    private int mButtonType = BUTTON_NONE;
-
-    // from attrs.xml
-    public static final int BUTTON_NONE = 0;
-    public static final int BUTTON_EDIT = 1;
-    public static final int BUTTON_VIEW = 2;
-    public static final int BUTTON_PREVIEW = 3;
-    public static final int BUTTON_STATS = 4;
-    public static final int BUTTON_TRASH = 5;
-    public static final int BUTTON_DELETE = 6;
-    public static final int BUTTON_PUBLISH = 7;
-    public static final int BUTTON_SYNC = 8;
-    public static final int BUTTON_MORE = 9;
-    public static final int BUTTON_BACK = 10;
-    public static final int BUTTON_SUBMIT = 11;
-    public static final int BUTTON_RETRY = 12;
-    public static final int BUTTON_RESTORE = 13;
+    private PostListButtonType mButtonType = BUTTON_NONE;
 
     public PostListButton(Context context) {
         super(context);
@@ -75,25 +62,38 @@ public class PostListButton extends LinearLayout {
     }
 
 
-    public int getButtonType() {
+    public PostListButtonType getButtonType() {
         return mButtonType;
     }
 
     public void setButtonType(int buttonType) {
+        if (buttonType == mButtonType.getValue()) {
+            return;
+        }
+
+        mButtonType = PostListButtonType.fromInt(buttonType);
+        loadResourcesForButtonType(mButtonType);
+    }
+
+    public void setButtonType(PostListButtonType buttonType) {
         if (buttonType == mButtonType) {
             return;
         }
 
-        int color = getContext().getResources().getColor(getTextColorResId(buttonType));
         mButtonType = buttonType;
+        loadResourcesForButtonType(mButtonType);
+    }
+
+    private void loadResourcesForButtonType(PostListButtonType buttonType) {
+        int color = getContext().getResources().getColor(getTextColorResId(buttonType));
         mImageView.setImageResource(getButtonIconResId(buttonType));
         mImageView.setImageTintList(ColorStateList.valueOf(color));
         mTextView.setText(getButtonTextResId(buttonType));
         mTextView.setTextColor(color);
     }
 
-    public static @StringRes
-    int getButtonTextResId(int buttonType) {
+    private static @StringRes
+    int getButtonTextResId(PostListButtonType buttonType) {
         switch (buttonType) {
             case BUTTON_EDIT:
                 return R.string.button_edit;
@@ -121,13 +121,17 @@ public class PostListButton extends LinearLayout {
                 return R.string.button_retry;
             case BUTTON_RESTORE:
                 return R.string.button_restore;
+            case BUTTON_NONE:
             default:
+                if (BuildConfig.DEBUG) {
+                    throw new IllegalStateException("ButtonType needs to be assigned.");
+                }
                 return 0;
         }
     }
 
-    public static @DrawableRes
-    int getButtonIconResId(int buttonType) {
+    private static @DrawableRes
+    int getButtonIconResId(PostListButtonType buttonType) {
         switch (buttonType) {
             case BUTTON_EDIT:
                 return R.drawable.ic_pencil_white_24dp;
@@ -152,16 +156,47 @@ public class PostListButton extends LinearLayout {
             case BUTTON_RESTORE:
                 // TODO add restore icon
                 return R.drawable.ic_pencil_white_24dp;
+            case BUTTON_NONE:
+                // fall through
             default:
+                if (BuildConfig.DEBUG) {
+                    throw new IllegalStateException("ButtonType needs to be assigned.");
+                }
                 return 0;
         }
     }
 
-    public static @ColorRes
-    int getTextColorResId(int buttonType) {
+    private static @ColorRes
+    int getTextColorResId(PostListButtonType buttonType) {
         switch (buttonType) {
             case BUTTON_RETRY:
                 return R.color.alert_red;
+            case BUTTON_NONE:
+                // fall through
+            case BUTTON_EDIT:
+                // fall through
+            case BUTTON_VIEW:
+                // fall through
+            case BUTTON_PREVIEW:
+                // fall through
+            case BUTTON_STATS:
+                // fall through
+            case BUTTON_TRASH:
+                // fall through
+            case BUTTON_DELETE:
+                // fall through
+            case BUTTON_PUBLISH:
+                // fall through
+            case BUTTON_SYNC:
+                // fall through
+            case BUTTON_MORE:
+                // fall through
+            case BUTTON_BACK:
+                // fall through
+            case BUTTON_SUBMIT:
+                // fall through
+            case BUTTON_RESTORE:
+                // fall through
             default:
                 return R.color.wp_grey_darken_20;
         }

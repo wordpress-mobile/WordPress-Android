@@ -55,6 +55,10 @@ import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
+import org.wordpress.android.ui.posts.PostListAction.PreviewPost
+import org.wordpress.android.ui.posts.PostListAction.RetryUpload
+import org.wordpress.android.ui.posts.PostListAction.ViewPost
+import org.wordpress.android.ui.posts.PostListAction.ViewStats
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
@@ -86,7 +90,21 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import org.wordpress.android.widgets.PostListButton
+import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_NONE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_RESTORE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
 const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
@@ -336,20 +354,23 @@ class PostListViewModel @Inject constructor(
 
     // Private List Actions
 
-    private fun handlePostButton(buttonType: Int, post: PostModel) {
+    private fun handlePostButton(buttonType: PostListButtonType, post: PostModel) {
         when (buttonType) {
-            PostListButton.BUTTON_EDIT -> editPostButtonAction(site, post)
-            PostListButton.BUTTON_RETRY -> _postListAction.postValue(PostListAction.RetryUpload(post))
-            PostListButton.BUTTON_RESTORE -> TODO()
-            PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
+            BUTTON_EDIT -> editPostButtonAction(site, post)
+            BUTTON_RETRY -> _postListAction.postValue(RetryUpload(post))
+            BUTTON_RESTORE -> TODO()
+            BUTTON_SUBMIT, BUTTON_SYNC, BUTTON_PUBLISH -> {
                 showPublishConfirmationDialog(post)
             }
-            PostListButton.BUTTON_VIEW -> _postListAction.postValue(PostListAction.ViewPost(site, post))
-            PostListButton.BUTTON_PREVIEW -> _postListAction.postValue(PostListAction.PreviewPost(site, post))
-            PostListButton.BUTTON_STATS -> _postListAction.postValue(PostListAction.ViewStats(site, post))
-            PostListButton.BUTTON_TRASH, PostListButton.BUTTON_DELETE -> {
+            BUTTON_VIEW -> _postListAction.postValue(ViewPost(site, post))
+            BUTTON_PREVIEW -> _postListAction.postValue(PreviewPost(site, post))
+            BUTTON_STATS -> _postListAction.postValue(ViewStats(site, post))
+            BUTTON_TRASH, BUTTON_DELETE -> {
                 showTrashConfirmationDialog(post)
             }
+            BUTTON_NONE -> throw NotImplementedError("BUTTON_NONE should never be used on UI.")
+            BUTTON_MORE -> TODO()
+            BUTTON_BACK -> TODO()
         }
     }
 
@@ -616,8 +637,8 @@ class PostListViewModel @Inject constructor(
                 showProgress = shouldShowProgress(uploadStatus),
                 showOverlay = shouldShowOverlay(uploadStatus),
                 onSelected = {
-                    trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
-                    handlePostButton(PostListButton.BUTTON_EDIT, post)
+                    trackAction(PostListButtonType.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
+                    handlePostButton(PostListButtonType.BUTTON_EDIT, post)
                 }
         )
     }
@@ -715,20 +736,20 @@ class PostListViewModel @Inject constructor(
         val canShowViewButton = !canRetryUpload
         val canShowPublishButton = canRetryUpload || canPublishPost
 
-        val buttonTypes = ArrayList<Int>()
-        buttonTypes.add(PostListButton.BUTTON_EDIT)
+        val buttonTypes = ArrayList<PostListButtonType>()
+        buttonTypes.add(PostListButtonType.BUTTON_EDIT)
 
         // publish button is re-purposed depending on the situation
         if (canShowPublishButton) {
             buttonTypes.add(
                     if (!site.hasCapabilityPublishPosts) {
-                        PostListButton.BUTTON_SUBMIT
+                        PostListButtonType.BUTTON_SUBMIT
                     } else if (canRetryUpload) {
-                        PostListButton.BUTTON_RETRY
+                        PostListButtonType.BUTTON_RETRY
                     } else if (postStatus == PostStatus.SCHEDULED && post.isLocallyChanged) {
-                        PostListButton.BUTTON_SYNC
+                        PostListButtonType.BUTTON_SYNC
                     } else {
-                        PostListButton.BUTTON_PUBLISH
+                        PostListButtonType.BUTTON_PUBLISH
                     }
             )
         }
@@ -736,22 +757,22 @@ class PostListViewModel @Inject constructor(
         if (canShowViewButton) {
             buttonTypes.add(
                     if (post.isLocalDraft || post.isLocallyChanged) {
-                        PostListButton.BUTTON_PREVIEW
+                        PostListButtonType.BUTTON_PREVIEW
                     } else {
-                        PostListButton.BUTTON_VIEW
+                        PostListButtonType.BUTTON_VIEW
                     }
             )
         }
 
         if (postStatus != PostStatus.TRASHED) {
-            buttonTypes.add(PostListButton.BUTTON_TRASH)
+            buttonTypes.add(PostListButtonType.BUTTON_TRASH)
         } else {
-            buttonTypes.add(PostListButton.BUTTON_DELETE)
+            buttonTypes.add(PostListButtonType.BUTTON_DELETE)
             // TODO add restore
         }
 
         if (canShowStats) {
-            buttonTypes.add(PostListButton.BUTTON_STATS)
+            buttonTypes.add(PostListButtonType.BUTTON_STATS)
         }
 
         // TODO if buttonTypes > 3 -> decide whether we want to show more instead
@@ -772,30 +793,30 @@ class PostListViewModel @Inject constructor(
         return UiStringText("!Local change test!")
     }
 
-    private fun trackAction(buttonType: Int, postData: PostModel, statsEvent: Stat) {
+    private fun trackAction(buttonType: PostListButtonType, postData: PostModel, statsEvent: Stat) {
         val properties = HashMap<String, Any?>()
         if (!postData.isLocalDraft) {
             properties["post_id"] = postData.remotePostId
         }
 
         properties["action"] = when (buttonType) {
-            PostListButton.BUTTON_EDIT -> {
+            PostListButtonType.BUTTON_EDIT -> {
                 properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils
                         .contentContainsGutenbergBlocks(postData.content)
                 "edit"
             }
-            PostListButton.BUTTON_RETRY -> "retry"
-            PostListButton.BUTTON_SUBMIT -> "submit"
-            PostListButton.BUTTON_VIEW -> "view"
-            PostListButton.BUTTON_PREVIEW -> "preview"
-            PostListButton.BUTTON_STATS -> "stats"
-            PostListButton.BUTTON_TRASH -> "trash"
-            PostListButton.BUTTON_DELETE -> "delete"
-            PostListButton.BUTTON_PUBLISH -> "publish"
-            PostListButton.BUTTON_SYNC -> "sync"
-            PostListButton.BUTTON_MORE -> "more"
-            PostListButton.BUTTON_BACK -> "back"
-            PostListButton.BUTTON_RESTORE -> "restore"
+            PostListButtonType.BUTTON_RETRY -> "retry"
+            PostListButtonType.BUTTON_SUBMIT -> "submit"
+            PostListButtonType.BUTTON_VIEW -> "view"
+            PostListButtonType.BUTTON_PREVIEW -> "preview"
+            PostListButtonType.BUTTON_STATS -> "stats"
+            PostListButtonType.BUTTON_TRASH -> "trash"
+            PostListButtonType.BUTTON_DELETE -> "delete"
+            PostListButtonType.BUTTON_PUBLISH -> "publish"
+            PostListButtonType.BUTTON_SYNC -> "sync"
+            PostListButtonType.BUTTON_MORE -> "more"
+            PostListButtonType.BUTTON_BACK -> "back"
+            PostListButtonType.BUTTON_RESTORE -> "restore"
             else -> AppLog.e(AppLog.T.POSTS, "Unknown button type")
         }
 
