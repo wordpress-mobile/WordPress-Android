@@ -257,8 +257,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
         } else {
-            val lastItemIndex = data.size - 1
-            data.forEachIndexed { index, model ->
+            data.forEach { model ->
                 val onItemTapped = {
                     tracker.trackVerticalSelected(model.name, model.verticalId, model.isUserInputVertical)
                     _verticalSelected.value = if (model.isUserInputVertical) {
@@ -271,14 +270,12 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                     VerticalsCustomModelUiState(
                             model.verticalId,
                             model.name,
-                            R.string.new_site_creation_verticals_custom_subtitle,
-                            showDivider = index != lastItemIndex
+                            R.string.new_site_creation_verticals_custom_subtitle
                     )
                 } else {
                     VerticalsModelUiState(
                             model.verticalId,
-                            model.name,
-                            showDivider = index != lastItemIndex
+                            model.name
                     )
                 }
                 itemUiState.onItemTapped = onItemTapped
@@ -358,14 +355,12 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     sealed class VerticalsListItemUiState {
         var onItemTapped: (() -> Unit)? = null
 
-        data class VerticalsModelUiState(val id: String, val title: String, val showDivider: Boolean) :
-                VerticalsListItemUiState()
+        data class VerticalsModelUiState(val id: String, val title: String) : VerticalsListItemUiState()
 
         data class VerticalsCustomModelUiState(
             val id: String,
             val title: String,
-            @StringRes val subTitleResId: Int,
-            val showDivider: Boolean
+            @StringRes val subTitleResId: Int
         ) : VerticalsListItemUiState()
 
         data class VerticalsFetchSuggestionsErrorUiState(

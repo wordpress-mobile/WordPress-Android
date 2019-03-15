@@ -4,7 +4,6 @@ import android.support.annotation.LayoutRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.wordpress.android.R
@@ -24,12 +23,10 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
     ) : NewSiteCreationVerticalsViewHolder(parentView, R.layout.new_site_creation_verticals_suggestion_item) {
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val suggestion = itemView.findViewById<TextView>(R.id.suggestion)
-        private val divider = itemView.findViewById<View>(R.id.divider)
 
         override fun onBind(uiState: VerticalsListItemUiState) {
             uiState as VerticalsModelUiState
             suggestion.text = uiState.title
-            divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
             requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             container.setOnClickListener {
                 uiState.onItemTapped!!.invoke()
@@ -43,13 +40,11 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val title = itemView.findViewById<TextView>(R.id.title)
         private val subtitle = itemView.findViewById<TextView>(R.id.subtitle)
-        private val divider = itemView.findViewById<View>(R.id.divider)
 
         override fun onBind(uiState: VerticalsListItemUiState) {
             uiState as VerticalsCustomModelUiState
             title.text = uiState.title
             subtitle.text = parent.resources.getString(uiState.subTitleResId)
-            divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
             requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             container.setOnClickListener {
                 uiState.onItemTapped!!.invoke()

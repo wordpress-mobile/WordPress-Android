@@ -236,11 +236,9 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
         } else {
-            val lastItemIndex = data.size - 1
-            data.forEachIndexed { index, domainName ->
+            data.forEach { domainName ->
                 val itemUiState = DomainsModelUiState(
                         domainName,
-                        showDivider = index != lastItemIndex,
                         checked = domainName == selectedDomain
                 )
                 itemUiState.onItemTapped = { setSelectedDomainName(domainName) }
@@ -308,8 +306,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     sealed class DomainsListItemUiState {
         var onItemTapped: (() -> Unit)? = null
 
-        data class DomainsModelUiState(val name: String, val showDivider: Boolean, val checked: Boolean) :
-                DomainsListItemUiState()
+        data class DomainsModelUiState(val name: String, val checked: Boolean) : DomainsListItemUiState()
 
         data class DomainsFetchSuggestionsErrorUiState(
             @StringRes val messageResId: Int,
