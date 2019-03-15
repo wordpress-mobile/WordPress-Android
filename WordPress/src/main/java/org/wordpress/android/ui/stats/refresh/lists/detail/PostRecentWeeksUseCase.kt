@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewRecentWeeksStats
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostYearsMapper.ExpandedWeekUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -91,7 +91,7 @@ class PostRecentWeeksUseCase(
     }
 
     private fun onLinkClick() {
-        navigateTo(ViewMonthsAndYearsStats())
+        navigateTo(ViewRecentWeeksStats())
     }
 
     override fun buildLoadingItem(): List<BlockListItem> {

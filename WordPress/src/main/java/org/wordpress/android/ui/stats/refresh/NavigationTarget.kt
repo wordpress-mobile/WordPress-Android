@@ -33,4 +33,5 @@ sealed class NavigationTarget : Event() {
     data class ViewUrl(val url: String) : NavigationTarget()
     class ViewMonthsAndYearsStats : NavigationTarget()
     class ViewDayAverageStats : NavigationTarget()
+    class ViewRecentWeeksStats : NavigationTarget()
 }
