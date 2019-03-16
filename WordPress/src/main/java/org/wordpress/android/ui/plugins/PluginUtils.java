@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.util.AppLog;
@@ -28,7 +29,8 @@ public class PluginUtils {
         return site.isWPCom()
                && SiteUtils.hasNonJetpackBusinessPlan(site)
                && site.getHasCapabilityManageOptions() // Automated Transfer require admin capabilities
-               && !site.getUrl().contains(".wordpress.com") // Automated Transfers require custom domains
+               // Automated Transfers require custom domains
+               && (!site.getUrl().contains(".wordpress.com") || BuildConfig.DOMAIN_REGISTRATION_ENABLED)
                && !site.isPrivate(); // Private sites are not eligible for Automated Transfer
     }
 
