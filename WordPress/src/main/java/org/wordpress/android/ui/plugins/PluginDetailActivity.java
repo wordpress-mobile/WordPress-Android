@@ -292,7 +292,6 @@ public class PluginDetailActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             mIsShowingCustomDomainRequiredDialog = false;
-                            ActivityLauncher.viewDomainSuggestionsActivity(PluginDetailActivity.this, mSite);
                         }
                     });
         } else {
