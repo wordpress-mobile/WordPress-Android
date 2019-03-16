@@ -35,12 +35,14 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
@@ -60,6 +62,7 @@ import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayl
 import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferEligibilityChecked;
 import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferInitiated;
 import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferStatusChecked;
+import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccessibilityUtils;
@@ -108,6 +111,10 @@ public class PluginDetailActivity extends AppCompatActivity {
             = "KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG";
     private static final String KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS
             = "KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS";
+    private static final String KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG
+            = "KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG";
+    private static final String KEY_IS_SHOWING_CUSTOM_DOMAIN_CREDIT_CHECK_PROGRESS
+            = "KEY_IS_SHOWING_CUSTOM_DOMAIN_CREDIT_CHECK_PROGRESS";
 
     private SiteModel mSite;
     private String mSlug;
@@ -126,6 +133,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private SwitchCompat mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
     private ProgressDialog mAutomatedTransferProgressDialog;
+    private ProgressDialog mCheckingDomainCreditsProgressDialog;
 
     private CardView mWPOrgPluginDetailsContainer;
     private RelativeLayout mRatingsSectionContainer;
@@ -149,6 +157,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     protected boolean mIsShowingRemovePluginConfirmationDialog;
     protected boolean mIsShowingInstallFirstPluginConfirmationDialog;
     protected boolean mIsShowingAutomatedTransferProgress;
+    protected boolean mIsShowingCustomDomainRequiredDialog;
+    protected boolean mIsShowingDomainCreditCheckProgress;
 
     // These flags reflects the UI state
     protected boolean mIsActive;
@@ -210,6 +220,10 @@ public class PluginDetailActivity extends AppCompatActivity {
                     .getBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG);
             mIsShowingAutomatedTransferProgress = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS);
+            mIsShowingCustomDomainRequiredDialog = savedInstanceState
+                    .getBoolean(KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG);
+            mIsShowingDomainCreditCheckProgress = savedInstanceState
+                    .getBoolean(KEY_IS_SHOWING_CUSTOM_DOMAIN_CREDIT_CHECK_PROGRESS);
         }
 
         setContentView(R.layout.plugin_detail_activity);
@@ -239,9 +253,70 @@ public class PluginDetailActivity extends AppCompatActivity {
             confirmInstallPluginForAutomatedTransfer();
         }
 
+        if (mIsShowingDomainCreditCheckProgress) {
+            showDomainCreditsCheckProgressDialog();
+        }
+
         if (mIsShowingAutomatedTransferProgress) {
             showAutomatedTransferProgressDialog();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlansFetched(OnPlansFetched event) {
+        cancelDomainCreditsCheckProgressDialog();
+
+        if (event == null || event.plans == null) {
+            return;
+        }
+
+        PlanModel currentPlan = null;
+
+        for (PlanModel plan : event.plans) {
+            if (plan.isCurrentPlan()) {
+                currentPlan = plan;
+            }
+        }
+
+        requestDomainRegistration(currentPlan != null && currentPlan.getHasDomainCredit());
+    }
+
+    private void requestDomainRegistration(boolean hasDomainCredits) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
+        builder.setTitle(getResources().getText(R.string.plugin_install_custom_domain_required_dialog_title));
+        if (hasDomainCredits) {
+            builder.setMessage(R.string.plugin_install_custom_domain_required_dialog_message);
+            builder.setPositiveButton(R.string.plugin_install_custom_domain_required_dialog_register_btn,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mIsShowingCustomDomainRequiredDialog = false;
+                            ActivityLauncher.viewDomainSuggestionsActivity(PluginDetailActivity.this, mSite);
+                        }
+                    });
+        } else {
+            builder.setMessage(R.string.plugin_install_custom_domain_required_no_credits_message);
+        }
+
+        builder.setNegativeButton(R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mIsShowingCustomDomainRequiredDialog = false;
+                    }
+                });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                mIsShowingCustomDomainRequiredDialog = false;
+            }
+        });
+        builder.setCancelable(true);
+        builder.create();
+
+        mIsShowingCustomDomainRequiredDialog = true;
+        builder.show();
     }
 
     @Override
@@ -302,6 +377,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG,
                 mIsShowingInstallFirstPluginConfirmationDialog);
         outState.putBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS, mIsShowingAutomatedTransferProgress);
+        outState.putBoolean(KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG, mIsShowingCustomDomainRequiredDialog);
+        outState.putBoolean(KEY_IS_SHOWING_CUSTOM_DOMAIN_CREDIT_CHECK_PROGRESS, mIsShowingDomainCreditCheckProgress);
     }
 
     // UI Helpers
@@ -412,7 +489,12 @@ public class PluginDetailActivity extends AppCompatActivity {
         mInstallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchInstallPluginAction();
+                if (isCustomDomainRequired()) {
+                    showDomainCreditsCheckProgressDialog();
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(mSite));
+                } else {
+                    dispatchInstallPluginAction();
+                }
             }
         });
 
@@ -456,6 +538,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         imgScrim.getLayoutParams().height = toolbarHeight * 2;
 
         refreshViews();
+    }
+
+    private boolean isCustomDomainRequired() {
+        return mSite.getUrl().contains(".wordpress.com") && BuildConfig.DOMAIN_REGISTRATION_ENABLED;
     }
 
     private void refreshViews() {
@@ -774,6 +860,26 @@ public class PluginDetailActivity extends AppCompatActivity {
                 getString(R.string.plugin_remove_failed, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    private void showDomainCreditsCheckProgressDialog() {
+        if (mCheckingDomainCreditsProgressDialog == null) {
+            mCheckingDomainCreditsProgressDialog = new ProgressDialog(this);
+            mCheckingDomainCreditsProgressDialog.setCancelable(false);
+            mCheckingDomainCreditsProgressDialog.setIndeterminate(true);
+
+            mCheckingDomainCreditsProgressDialog
+                    .setMessage(getString(R.string.plugin_check_domain_credits_progress_dialog_message));
+        }
+        if (!mCheckingDomainCreditsProgressDialog.isShowing()) {
+            mCheckingDomainCreditsProgressDialog.show();
+        }
+    }
+
+    private void cancelDomainCreditsCheckProgressDialog() {
+        if (mCheckingDomainCreditsProgressDialog != null && mCheckingDomainCreditsProgressDialog.isShowing()) {
+            mCheckingDomainCreditsProgressDialog.cancel();
+        }
     }
 
     private void showRemovePluginProgressDialog() {
