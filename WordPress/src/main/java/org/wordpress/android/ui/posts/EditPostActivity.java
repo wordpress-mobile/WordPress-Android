@@ -2474,11 +2474,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     sharedUris = new ArrayList<Uri>();
                     sharedUris.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
                 } else {
-                    return;
+                    sharedUris = null;
                 }
             }
 
             if (sharedUris != null) {
+                // removing this from the intent so it doesn't insert the media items again on each Acivity re-creation
+                getIntent().removeExtra(Intent.EXTRA_STREAM);
                 addMediaList(sharedUris, false);
             }
         }
