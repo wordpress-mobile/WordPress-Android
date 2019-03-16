@@ -64,6 +64,7 @@ android {
         buildConfigField "boolean", "REVISIONS_ENABLED", "false"
         buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "true"
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
+        buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "false"
     }
 
     flavorDimensions "buildType"
@@ -82,6 +83,7 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "true"
         }
     }
 
