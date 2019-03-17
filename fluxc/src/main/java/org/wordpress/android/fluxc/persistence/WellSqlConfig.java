@@ -658,6 +658,9 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "TAGS TEXT NOT NULL,"
                                + "IMAGES TEXT NOT NULL,"
                                + "ATTRIBUTES TEXT NOT NULL,"
+                               + "RELATED_IDS TEXT NOT NULL,"
+                               + "CROSS_SELL_IDS TEXT NOT NULL,"
+                               + "UPSELL_IDS TEXT NOT NULL,"
                                + "VARIATIONS TEXT NOT NULL)");
                     break;
             }
