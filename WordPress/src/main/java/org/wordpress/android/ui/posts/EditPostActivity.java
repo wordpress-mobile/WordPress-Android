@@ -521,12 +521,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
                                    && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
 
-            // override this if we're being fed media to start a Post for now
-            // EXTRA_INSERT_MEDIA comes from the WP app Media section, and EXTRA_STREAM is what we check
-            // for when receiving content from outside the WP app to be shared there
-            if (getIntent().hasExtra(EXTRA_INSERT_MEDIA) || getIntent().hasExtra(Intent.EXTRA_STREAM)) {
-                mShowGutenbergEditor = false;
-            }
         } else {
             mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENBERG_IS_SHOWN);
         }
