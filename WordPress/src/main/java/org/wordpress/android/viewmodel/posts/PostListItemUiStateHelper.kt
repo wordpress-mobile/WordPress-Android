@@ -31,19 +31,20 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
-private const val MORE_BUTTON_TRESHOLD = 3
+private const val MAX_NUMBER_OF_VISIBLE_ACTIONS = 3
 
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
  */
 class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) {
-    fun createPostListItemUiModel(
+    fun createPostListItemUiState(
         post: PostModel,
         uploadStatus: PostAdapterItemUploadStatus,
         unhandledConflicts: Boolean,
         capabilitiesToPublish: Boolean,
         statsSupported: Boolean,
         featuredImageUrl: String?,
+        formattedDate: String,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
@@ -54,7 +55,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 getTitle(post),
                 getExcerpt(post),
                 featuredImageUrl,
-                getFormattedPostedDate(post),  // TODO How do I get name of the author
+                UiStringText(formattedDate),  // TODO Get name of the author
                 getStatusLabels(postStatus, post.isLocalDraft, post.isLocallyChanged, uploadStatus, unhandledConflicts),
                 getStatusLabelsColor(
                         postStatus,
@@ -92,9 +93,6 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                     ?.let { StringEscapeUtils.unescapeHtml4(it) }
                     ?.let { PostUtils.collapseShortcodes(it) }
                     ?.let { UiStringText(it) }
-
-    private fun getFormattedPostedDate(post: PostModel) =
-            UiStringText(PostUtils.getFormattedDate(post))
 
     private fun shouldShowProgress(uploadStatus: PostAdapterItemUploadStatus): Boolean {
         return !uploadStatus.isUploadFailed && (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)
@@ -218,11 +216,11 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             buttonTypes.add(PostListButtonType.BUTTON_STATS)
         }
 
-        return if (buttonTypes.size > MORE_BUTTON_TRESHOLD) {
-            val visibleItems = buttonTypes.take(MORE_BUTTON_TRESHOLD - 1).map {
+        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS) {
+            val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1).map {
                 PostListItemAction.SingleItem(it, onButtonClicked)
             }
-            val itemsUnderMore = buttonTypes.subList(MORE_BUTTON_TRESHOLD - 1, buttonTypes.size).map {
+            val itemsUnderMore = buttonTypes.subList(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1, buttonTypes.size).map {
                 PostListItemAction.SingleItem(it, onButtonClicked)
             }
             visibleItems.plus(PostListItemAction.MoreItem(itemsUnderMore, onButtonClicked))

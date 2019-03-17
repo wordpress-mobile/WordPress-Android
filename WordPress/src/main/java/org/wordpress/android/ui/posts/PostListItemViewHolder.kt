@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.posts
 
 import android.support.annotation.LayoutRes
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -14,9 +16,9 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
 import org.wordpress.android.viewmodel.posts.PostListItemUiState
@@ -28,13 +30,7 @@ class PostListItemViewHolder(
     parentView: ViewGroup,
     private val config: PostViewHolderConfig,
     private val uiHelpers: UiHelpers
-) : RecyclerView.ViewHolder(
-        LayoutInflater.from(parentView.context).inflate(
-                layout,
-                parentView,
-                false
-        )
-) {
+) : RecyclerView.ViewHolder(LayoutInflater.from(parentView.context).inflate(layout, parentView, false)) {
     private val ivImageFeatured: ImageView = itemView.findViewById(R.id.image_featured)
     private val tvTitle: WPTextView = itemView.findViewById(R.id.title)
     private val tvExcerpt: WPTextView = itemView.findViewById(R.id.excerpt)
@@ -42,7 +38,7 @@ class PostListItemViewHolder(
     private val tvStatusLabels: WPTextView = itemView.findViewById(R.id.status_labels)
     private val pbProgress: ProgressBar = itemView.findViewById(R.id.progress)
     private val flDisabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
-    private val btnsList: List<PostListButton> = listOf(
+    private val actionButtons: List<PostListButton> = listOf(
             itemView.findViewById(R.id.btn_primary),
             itemView.findViewById(R.id.btn_secondary),
             itemView.findViewById(R.id.btn_ternary)
@@ -55,46 +51,43 @@ class PostListItemViewHolder(
         setTextOrHide(tvDateAndAuthor, item.dateAndAuthor)
         setTextOrHide(tvStatusLabels, item.statusLabels)
         if (item.statusLabelsColor != null) {
-            tvStatusLabels.setTextColor(tvStatusLabels.context.resources.getColor(item.statusLabelsColor))
+            tvStatusLabels.setTextColor(ContextCompat.getColor(tvStatusLabels.context, item.statusLabelsColor))
         }
         uiHelpers.updateVisibility(pbProgress, item.showProgress)
         uiHelpers.updateVisibility(flDisabledOverlay, item.showOverlay)
         itemView.setOnClickListener { item.onSelected.invoke() }
 
-        if (btnsList.size < item.actions.size) {
-            AppLog.e(AppLog.T.POSTS, "Some actions will not be displayed - max number of actions is ${btnsList.size}")
+        actionButtons.forEachIndexed { index, button ->
+            updateMenuItem(button, item.actions.getOrNull(index))
         }
+    }
 
-        btnsList.forEachIndexed { index, button ->
-            val actionAvailable = item.actions.size > index
-            uiHelpers.updateVisibility(button, actionAvailable)
-            if (actionAvailable) {
-                val actionItem = item.actions[index]
-                when (actionItem) {
-                    is SingleItem -> {
-                        button.buttonType = actionItem.buttonType
-                        button.setOnClickListener { actionItem.onButtonClicked.invoke(actionItem.buttonType) }
-                    }
-                    is MoreItem -> {
-                        button.buttonType = actionItem.buttonType
-                        button.setOnClickListener { view ->
-                            actionItem.onButtonClicked.invoke(actionItem.buttonType)
-                            moreClick(actionItem, view)
-                        }
+    private fun updateMenuItem(postListButton: PostListButton, action: PostListItemAction?) {
+        uiHelpers.updateVisibility(postListButton, action != null)
+        if (action != null) {
+            when (action) {
+                is SingleItem -> {
+                    postListButton.buttonType = action.buttonType
+                    postListButton.setOnClickListener { action.onButtonClicked.invoke(action.buttonType) }
+                }
+                is MoreItem -> {
+                    postListButton.buttonType = action.buttonType
+                    postListButton.setOnClickListener { view ->
+                        action.onButtonClicked.invoke(action.buttonType)
+                        onMoreClicked(action, view)
                     }
                 }
             }
         }
     }
 
-    private fun moreClick(moreActionItem: MoreItem, v: View) {
-        val popup = PopupMenu(v.context, v)
-        popup.menuInflater.inflate(R.menu.posts_more, popup.menu)
+    private fun onMoreClicked(moreActionItem: MoreItem, v: View) {
+        val menu = PopupMenu(v.context, v)
         moreActionItem.actions.forEach { singleItemAction ->
-            val menuItem = popup.menu.add(
-                    0,
+            val menuItem = menu.menu.add(
+                    Menu.NONE,
                     singleItemAction.buttonType.value,
-                    0,
+                    Menu.NONE,
                     PostListButton.getButtonTextResId(singleItemAction.buttonType)
             )
             menuItem.setOnMenuItemClickListener {
@@ -102,7 +95,7 @@ class PostListItemViewHolder(
                 true
             }
         }
-        popup.show()
+        menu.show()
     }
 
     private fun showFeaturedImage(imageUrl: String?) {

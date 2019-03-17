@@ -25,7 +25,7 @@ private const val VIEW_TYPE_LOADING = 2
 class PostListAdapter(
     context: Context,
     private val postViewHolderConfig: PostViewHolderConfig,
-        private val uiHelpers: UiHelpers
+    private val uiHelpers: UiHelpers
 ) : PagedListAdapter<PagedListItemType<PostListItemUiState>, ViewHolder>(PostListDiffItemCallback) {
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
