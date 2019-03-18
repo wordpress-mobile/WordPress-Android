@@ -73,7 +73,7 @@ class PostYearsMapper
         visibleCount: Int,
         uiState: PostYearsMapper.ExpandedWeekUiState,
         onUiState: (ExpandedWeekUiState) -> Unit
-    ): Collection<BlockListItem> {
+    ): List<BlockListItem> {
         val weekList = mutableListOf<BlockListItem>()
         val visibleWeeks = weeks.map { week ->
             val days = week.days.map { DayUiModel(statsDateFormatter.parseStatsDate(DAYS, it.period), it.count) }
