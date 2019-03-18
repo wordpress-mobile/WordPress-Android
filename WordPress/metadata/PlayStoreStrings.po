@@ -26,7 +26,8 @@ msgid ""
 "11.9:\n"
 "* A new, smart site-creation process starts you off with a personalized, already-customized website\n"
 "* Markup lovers rejoice; <em> is now the default markup for italic in the editor.\n"
-"* Fixes! Sometimes the “My Site” screen didn’t look right in right-to-left languages, or posts showed up as scheduled even after they were published — no more.\n"
+"* Fixes! Sometimes the “My Site” screen didn’t look right in right-to-left languages, or posts showed up as scheduled even after they were "
+"published — no more.\n"
 msgstr ""
 
 msgctxt "sample_post_content"
@@ -57,11 +58,14 @@ msgstr ""
 #. translators: Multi-paragraph text used to display in the Play Store.
 msgctxt "play_store_desc"
 msgid ""
-"Manage or create your WordPress blog or website right from your Android device: create and edit posts and pages, upload your favorite photos and videos, view stats and reply to comments.\n"
+"Manage or create your WordPress blog or website right from your Android device: create and edit posts and pages, upload your favorite photos "
+"and videos, view stats and reply to comments.\n"
 "\n"
-"With WordPress for Android, you have the power to publish in the palm of your hand. Draft a spontaneous haiku from the couch. Snap and post a photo on your lunch break. Respond to your latest comments, or check your stats to see what new countries today's readers are coming from.\n"
+"With WordPress for Android, you have the power to publish in the palm of your hand. Draft a spontaneous haiku from the couch. Snap and post a "
+"photo on your lunch break. Respond to your latest comments, or check your stats to see what new countries today's readers are coming from.\n"
 "\n"
-"WordPress for Android is an Open Source project, which means you too can contribute to its development. Learn more at https://apps.wordpress.com/contribute/.\n"
+"WordPress for Android is an Open Source project, which means you too can contribute to its development. Learn more at https://apps.wordpress."
+"com/contribute/.\n"
 "\n"
 "WordPress for Android supports WordPress.com and self-hosted WordPress.org sites running WordPress 4.0 or higher.\n"
 "\n"
@@ -74,7 +78,7 @@ msgid "WordPress – Website & Blog Builder"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the first screenshot in the Play Store.
-#. No specified characters limit here, but try to keep as short as the source one. 
+#. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_1"
 msgid ""
 "Enjoy your\n"
@@ -82,7 +86,7 @@ msgid ""
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the second screenshot in the Play Store.
-#. No specified characters limit here, but try to keep as short as the source one. 
+#. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_2"
 msgid ""
 "Share your ideas\n"
@@ -90,7 +94,7 @@ msgid ""
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the third screenshot in the Play Store.
-#. No specified characters limit here, but try to keep as short as the source one. 
+#. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_3"
 msgid ""
 "Manage your site\n"
@@ -98,7 +102,7 @@ msgid ""
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the fourth screenshot in the Play Store.
-#. No specified characters limit here, but try to keep as short as the source one. 
+#. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_4"
 msgid ""
 "Get notified\n"
@@ -106,7 +110,7 @@ msgid ""
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
-#. No specified characters limit here, but try to keep as short as the source one. 
+#. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_5"
 msgid ""
 "All the stats\n"
@@ -116,35 +120,31 @@ msgstr ""
 #. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_1"
-msgid "<strong>Create </strong>beautiful<br />posts and pages"
+msgid "<strong>Create</strong> beautiful<br />posts and pages"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_2"
-msgid "<strong>Track </strong><span>what your<br />visitors love</span>
-"
+msgid "<strong>Track</strong> what your<br />visitors love"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_3"
-msgid "<strong>Check </strong><span>what's<br />happening in real time</span>
-"
+msgid "<strong>Check</strong> what's<br />happening in real time"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_4"
-msgid "<strong>Share </strong> from<br />anywhere
-"
+msgid "<strong>Share</strong> from<br />anywhere"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_5"
-msgid "<strong>Capture </strong>ideas<br />on the go
-"
+msgid "<strong>Capture</strong> ideas<br />on the go"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
@@ -152,4 +152,3 @@ msgstr ""
 msgctxt "enhanced_app_store_screenshot_6"
 msgid "<strong>Write</strong> without compromises"
 msgstr ""
-
