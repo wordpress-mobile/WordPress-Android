@@ -46,7 +46,7 @@ class PostListAdapter(
                 EndListViewHolder(view)
             }
             VIEW_TYPE_LOADING -> {
-                val view = layoutInflater.inflate(R.layout.post_cardview_skeleton, parent, false)
+                val view = layoutInflater.inflate(R.layout.post_list_item_skeleton, parent, false)
                 LoadingViewHolder(view)
             }
             VIEW_TYPE_POST -> {
