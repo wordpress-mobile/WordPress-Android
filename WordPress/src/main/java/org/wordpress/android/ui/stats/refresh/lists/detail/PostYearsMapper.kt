@@ -69,28 +69,28 @@ class PostYearsMapper
     }
 
     fun mapWeeks(
-        shownWeeks: List<PostDetailStatsModel.Week>,
+        weeks: List<PostDetailStatsModel.Week>,
+        visibleCount: Int,
         uiState: PostYearsMapper.ExpandedWeekUiState,
         onUiState: (ExpandedWeekUiState) -> Unit
     ): Collection<BlockListItem> {
         val weekList = mutableListOf<BlockListItem>()
-        val weeks = shownWeeks.map { week ->
-            val days = week.days
-                    .map { DayUiModel(statsDateFormatter.parseStatsDate(DAYS, it.period), it.count) }
-                    .sortedByDescending { it.date }
+        val visibleWeeks = weeks.map { week ->
+            val days = week.days.map { DayUiModel(statsDateFormatter.parseStatsDate(DAYS, it.period), it.count) }
             val firstDay = days.first().date
-            val lastDay = days.last().date
-            WeekUiModel(firstDay, lastDay, days, week.average)
-        }.sortedByDescending { it.lastDay }
-        weeks.forEachIndexed { index, week ->
+            val lastDay = if (days.size > 1) days.last().date else null
+            val descendingDays = days.sortedByDescending { it.date }
+            WeekUiModel(firstDay, lastDay, descendingDays, week.average)
+        }.sortedByDescending { it.firstDay }.take(visibleCount)
+        visibleWeeks.forEachIndexed { index, week ->
             if (week.days.isNotEmpty()) {
-                val isExpanded = week.lastDay == uiState.expandedWeekLastDay
+                val isExpanded = week.firstDay == uiState.expandedWeekFirstDay
                 weekList.add(
                         ExpandableItem(
-                                mapWeek(week, index, shownWeeks.size), isExpanded = isExpanded
+                                mapWeek(week, index, visibleWeeks.size), isExpanded = isExpanded
                         ) { changedExpandedState ->
-                            val expandedLastDay = if (changedExpandedState) week.lastDay else null
-                            onUiState(uiState.copy(expandedWeekLastDay = expandedLastDay))
+                            val expandedFirstDay = if (changedExpandedState) week.firstDay else null
+                            onUiState(uiState.copy(expandedWeekFirstDay = expandedFirstDay))
                         })
                 if (isExpanded) {
                     weekList.addAll(week.days
@@ -102,9 +102,10 @@ class PostYearsMapper
                                         showDivider = false
                                 )
                             })
+                    weekList.add(Divider)
                 }
             } else {
-                weekList.add(mapWeek(week, index, shownWeeks.size))
+                weekList.add(mapWeek(week, index, visibleWeeks.size))
             }
         }
         return weekList
@@ -114,19 +115,25 @@ class PostYearsMapper
 
     private data class WeekUiModel(
         val firstDay: Date,
-        val lastDay: Date,
+        val lastDay: Date? = null,
         val days: List<DayUiModel>,
         val weekAverage: Int
     )
 
     private fun mapWeek(week: WeekUiModel, index: Int, size: Int): ListItemWithIcon {
+        val lastDay = week.lastDay
+        val label = if (lastDay != null) {
+            statsDateFormatter.printWeek(week.firstDay, lastDay)
+        } else {
+            statsDateFormatter.printGranularDate(week.firstDay, DAYS)
+        }
         return ListItemWithIcon(
-                text = statsDateFormatter.printWeek(week.firstDay, week.lastDay),
+                text = label,
                 value = week.weekAverage.toFormattedString(locale = localeManagerWrapper.getLocale()),
                 showDivider = index < size - 1
         )
     }
 
     data class ExpandedYearUiState(val expandedYear: Int? = null)
-    data class ExpandedWeekUiState(val expandedWeekLastDay: Date? = null)
+    data class ExpandedWeekUiState(val expandedWeekFirstDay: Date? = null)
 }

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
-import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +11,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import javax.inject.Inject
 
 const val POST_ID = "POST_ID"
 const val POST_TYPE = "POST_TYPE"
@@ -20,11 +18,8 @@ const val POST_TITLE = "POST_TITLE"
 const val POST_URL = "POST_URL"
 
 class StatsDetailActivity : AppCompatActivity() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
-
         setContentView(R.layout.stats_detail_activity)
         setSupportActionBar(toolbar)
         supportActionBar?.let {

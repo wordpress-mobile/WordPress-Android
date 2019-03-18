@@ -84,13 +84,13 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
         val nonExpandedUiState = ExpandedWeekUiState()
         val lastDayCalendar = Calendar.getInstance()
         lastDayCalendar.set(2019, 3, 24)
-        val expandedUiState = ExpandedWeekUiState(expandedWeekLastDay = lastDayCalendar.time)
-        whenever(postYearsMapper.mapWeeks(eq(data), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
+        val expandedUiState = ExpandedWeekUiState(expandedWeekFirstDay = lastDayCalendar.time)
+        whenever(postYearsMapper.mapWeeks(eq(data), eq(6), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
                 listOf(ExpandableItem(ListItemWithIcon(text = "Mar 18 - Mar 24, 2019", value = "150"), false) {
                     expandCaptor.lastValue.invoke(expandedUiState)
                 })
         )
-        whenever(postYearsMapper.mapWeeks(eq(data), eq(expandedUiState), expandCaptor.capture())).thenReturn(
+        whenever(postYearsMapper.mapWeeks(eq(data), eq(6), eq(expandedUiState), expandCaptor.capture())).thenReturn(
                 listOf(
                         ExpandableItem(
                                 ListItemWithIcon(text = "Mar 18 - Mar 24, 2019", value = "150"),
@@ -142,10 +142,11 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
         val nonExpandedUiState = ExpandedWeekUiState()
         val lastDayCalendar = Calendar.getInstance()
         lastDayCalendar.set(2019, 3, 24)
-        val expandedUiState = ExpandedWeekUiState(expandedWeekLastDay = lastDayCalendar.time)
+        val expandedUiState = ExpandedWeekUiState(expandedWeekFirstDay = lastDayCalendar.time)
         whenever(
                 postYearsMapper.mapWeeks(
-                        eq(data.takeLast(6)),
+                        eq(data),
+                        eq(6),
                         eq(nonExpandedUiState),
                         expandCaptor.capture()
                 )
@@ -191,7 +192,7 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
     private fun assertHeader(item: BlockListItem) {
         assertThat(item.type).isEqualTo(HEADER)
         assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_months_and_years_period_label)
-        assertThat(item.rightLabel).isEqualTo(R.string.stats_recent_weeks_average_views)
+        assertThat(item.rightLabel).isEqualTo(R.string.stats_months_and_years_views_label)
     }
 
     private fun assertDay(

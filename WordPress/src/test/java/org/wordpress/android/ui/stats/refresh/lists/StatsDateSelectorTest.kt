@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SectionChange
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import java.util.Date
@@ -25,13 +26,13 @@ class StatsDateSelectorTest : BaseUnitTest() {
     private val updatedDate = Date(10)
     private val updatedLabel = "Jan 2"
 
-    private val dateProviderSelectedDate = MutableLiveData<StatsSection>()
+    private val dateProviderSelectedDate = MutableLiveData<SectionChange>()
 
     private lateinit var dateSelector: StatsDateSelector
 
     @Before
     fun setUp() {
-        dateProviderSelectedDate.value = statsSection
+        dateProviderSelectedDate.value = SectionChange(statsSection)
         whenever(selectedDateProvider.selectedDateChanged).thenReturn(dateProviderSelectedDate)
 
         dateSelector = StatsDateSelector(
@@ -123,16 +124,16 @@ class StatsDateSelectorTest : BaseUnitTest() {
         Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
 
         var selectedSection: StatsSection? = null
-        dateSelector.selectedDate.observeForever { selectedSection = it }
+        dateSelector.selectedDate.observeForever { selectedSection = it?.selectedSection }
 
-        dateProviderSelectedDate.value = StatsSection.WEEKS
+        dateProviderSelectedDate.value = SectionChange(StatsSection.WEEKS)
 
         Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
         Assertions.assertThat(selectedSection).isEqualTo(statsSection)
 
         whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(updatedDate)
 
-        dateProviderSelectedDate.value = StatsSection.DAYS
+        dateProviderSelectedDate.value = SectionChange(StatsSection.DAYS)
 
         Assertions.assertThat(selectedSection).isEqualTo(statsSection)
         Assertions.assertThat(model?.date).isEqualTo(updatedLabel)
