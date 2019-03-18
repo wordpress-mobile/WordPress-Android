@@ -32,8 +32,8 @@ import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS = 3
 const val ERROR_COLOR = R.color.alert_red
-const val WARNING_COLOR = R.color.wp_grey_darken_20
-const val INFO_COLOR = R.color.alert_yellow_dark
+const val PROGRESS_INFO_COLOR = R.color.wp_grey_darken_20
+const val STATE_INFO_COLOR = R.color.alert_yellow_dark
 
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
@@ -145,14 +145,14 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         hasUnhandledConflicts: Boolean
     ): Int? {
         val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
-        val isWarning = uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload
+        val isProgressInfo = uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload
                 || uploadStatus.hasInProgressMediaUpload || uploadStatus.isUploading || hasUnhandledConflicts
-        val isInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
+        val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
 
         return when {
             isError -> ERROR_COLOR
-            isWarning -> WARNING_COLOR
-            isInfo -> INFO_COLOR
+            isProgressInfo -> PROGRESS_INFO_COLOR
+            isStateInfo -> STATE_INFO_COLOR
             else -> null
         }
     }
