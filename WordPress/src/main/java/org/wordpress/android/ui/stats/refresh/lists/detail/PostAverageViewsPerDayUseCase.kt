@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewDayAverageStats
-import org.wordpress.android.ui.stats.refresh.lists.detail.PostYearsMapper.ExpandedYearUiState
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedYearUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
@@ -31,7 +31,7 @@ class PostAverageViewsPerDayUseCase(
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
     private val postDetailStore: PostDetailStore,
-    private val postYearsMapper: PostYearsMapper,
+    private val postDetailMapper: PostDetailMapper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<PostDetailStatsModel, ExpandedYearUiState>(
         PostDetailTypes.AVERAGE_VIEWS_PER_DAY,
@@ -76,7 +76,7 @@ class PostAverageViewsPerDayUseCase(
         )
         items.add(Divider)
         val shownYears = domainModel.yearsAverage.sortedByDescending { it.year }.takeLast(itemsToLoad)
-        val yearList = postYearsMapper.mapYears(shownYears, uiState, this::onUiState)
+        val yearList = postDetailMapper.mapYears(shownYears, uiState, this::onUiState)
 
         items.addAll(yearList)
         if (useCaseMode == BLOCK && domainModel.yearsAverage.size > itemsToLoad) {
@@ -103,7 +103,7 @@ class PostAverageViewsPerDayUseCase(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val statsSiteProvider: StatsSiteProvider,
         private val statsPostProvider: StatsPostProvider,
-        private val postYearsMapper: PostYearsMapper,
+        private val postDetailMapper: PostDetailMapper,
         private val postDetailStore: PostDetailStore
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
@@ -112,7 +112,7 @@ class PostAverageViewsPerDayUseCase(
                         statsSiteProvider,
                         statsPostProvider,
                         postDetailStore,
-                        postYearsMapper,
+                        postDetailMapper,
                         useCaseMode
                 )
     }

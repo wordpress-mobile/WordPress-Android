@@ -14,8 +14,8 @@ import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
-import org.wordpress.android.ui.stats.StatsViewType.DETAIL_AVERAGE_VIEWS_PER_DAY
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_MONTHS_AND_YEARS
+import org.wordpress.android.ui.stats.StatsViewType.DETAIL_RECENT_WEEKS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
 import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
@@ -27,13 +27,13 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewDayAverageStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPublicizeStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewRecentWeeksStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReferrers
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewSearchTerms
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
@@ -92,8 +92,8 @@ class StatsNavigator
             is ViewMonthsAndYearsStats -> {
                 ActivityLauncher.viewAllInsightsStats(activity, DETAIL_MONTHS_AND_YEARS)
             }
-            is ViewDayAverageStats -> {
-                ActivityLauncher.viewAllInsightsStats(activity, DETAIL_AVERAGE_VIEWS_PER_DAY)
+            is ViewRecentWeeksStats -> {
+                ActivityLauncher.viewAllInsightsStats(activity, DETAIL_RECENT_WEEKS)
             }
             is ViewTag -> {
                 ActivityLauncher.openStatsUrl(activity, target.link)

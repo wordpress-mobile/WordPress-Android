@@ -6,8 +6,8 @@ import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
-import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedYearUiState
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewRecentWeeksStats
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedWeekUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
@@ -26,17 +26,17 @@ import javax.inject.Named
 private const val BLOCK_ITEM_COUNT = 6
 private const val VIEW_ALL_ITEM_COUNT = 1000
 
-class PostMonthsAndYearsUseCase(
+class PostRecentWeeksUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
     private val postDetailStore: PostDetailStore,
     private val postDetailMapper: PostDetailMapper,
     private val useCaseMode: UseCaseMode
-) : BaseStatsUseCase<PostDetailStatsModel, ExpandedYearUiState>(
-        PostDetailTypes.MONTHS_AND_YEARS,
+) : BaseStatsUseCase<PostDetailStatsModel, ExpandedWeekUiState>(
+        PostDetailTypes.CLICKS_BY_WEEKS,
         mainDispatcher,
-        ExpandedYearUiState()
+        ExpandedWeekUiState()
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
@@ -58,15 +58,15 @@ class PostMonthsAndYearsUseCase(
 
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
-            model != null && model.yearsTotal.isNotEmpty() -> State.Data(model)
+            model != null && model.weekViews.isNotEmpty() -> State.Data(model)
             else -> State.Empty()
         }
     }
 
-    override fun buildUiModel(domainModel: PostDetailStatsModel, uiState: ExpandedYearUiState): List<BlockListItem> {
+    override fun buildUiModel(domainModel: PostDetailStatsModel, uiState: ExpandedWeekUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (useCaseMode == BLOCK) {
-            items.add(Title(string.stats_detail_months_and_years))
+            items.add(Title(string.stats_detail_recent_weeks))
         }
         items.add(
                 Header(
@@ -75,11 +75,10 @@ class PostMonthsAndYearsUseCase(
                 )
         )
         items.add(Divider)
-        val shownYears = domainModel.yearsTotal.sortedByDescending { it.year }.takeLast(itemsToLoad)
-        val yearList = postDetailMapper.mapYears(shownYears, uiState, this::onUiState)
+        val yearList = postDetailMapper.mapWeeks(domainModel.weekViews, itemsToLoad, uiState, this::onUiState)
 
         items.addAll(yearList)
-        if (useCaseMode == BLOCK && domainModel.yearsTotal.size > itemsToLoad) {
+        if (useCaseMode == BLOCK && domainModel.weekViews.size > itemsToLoad) {
             items.add(
                     Link(
                             text = string.stats_insights_view_more,
@@ -91,14 +90,14 @@ class PostMonthsAndYearsUseCase(
     }
 
     private fun onLinkClick() {
-        navigateTo(ViewMonthsAndYearsStats())
+        navigateTo(ViewRecentWeeksStats())
     }
 
     override fun buildLoadingItem(): List<BlockListItem> {
-        return listOf(Title(string.stats_detail_months_and_years))
+        return listOf(Title(string.stats_detail_recent_weeks))
     }
 
-    class PostMonthsAndYearsUseCaseFactory
+    class PostRecentWeeksUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val statsSiteProvider: StatsSiteProvider,
@@ -107,7 +106,7 @@ class PostMonthsAndYearsUseCase(
         private val postDetailStore: PostDetailStore
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
-                PostMonthsAndYearsUseCase(
+                PostRecentWeeksUseCase(
                         mainDispatcher,
                         statsSiteProvider,
                         statsPostProvider,

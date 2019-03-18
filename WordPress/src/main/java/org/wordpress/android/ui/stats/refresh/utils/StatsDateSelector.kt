@@ -21,8 +21,12 @@ constructor(
     val dateSelectorData: LiveData<DateSelectorUiModel> = _dateSelectorUiModel
 
     val selectedDate = selectedDateProvider.selectedDateChanged
-            .filter { statsSection -> statsSection == this.statsSection }
-            .perform { updateDateSelector() }
+            .filter { sectionChange -> sectionChange.selectedSection == this.statsSection }
+            .perform {
+                if (!it.hasBeenHandled) {
+                    updateDateSelector()
+                }
+            }
 
     fun updateDateSelector() {
         val shouldShowDateSelection = this.statsSection != INSIGHTS

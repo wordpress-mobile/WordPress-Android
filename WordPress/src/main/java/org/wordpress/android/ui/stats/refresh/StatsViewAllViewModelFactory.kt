@@ -9,9 +9,11 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsViewType
+import org.wordpress.android.ui.stats.StatsViewType.DETAIL_RECENT_WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostAverageViewsPerDayUseCase
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostRecentWeeksUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -169,6 +171,10 @@ class StatsViewAllViewModelFactory(
                     insightsUseCases.first {
                         it is PostAverageViewsPerDayUseCase
                     } to R.string.stats_detail_average_views_per_day
+                DETAIL_RECENT_WEEKS ->
+                    insightsUseCases.first {
+                        it is PostRecentWeeksUseCase
+                    } to R.string.stats_detail_recent_weeks
                 else -> throw InvalidParameterException("Invalid insights stats type: ${type.name}")
             }
         }

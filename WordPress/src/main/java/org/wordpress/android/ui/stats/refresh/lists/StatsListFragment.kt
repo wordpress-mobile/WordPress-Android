@@ -176,9 +176,10 @@ class StatsListFragment : DaggerFragment() {
             return@observeEvent true
         }
 
-        viewModel.selectedDate.observe(this, Observer {
+        viewModel.selectedDate.observeEvent(this) {
             viewModel.onDateChanged()
-        })
+            true
+        }
 
         viewModel.listSelected.observe(this, Observer {
             viewModel.onListSelected()
