@@ -17,10 +17,12 @@ import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.UiModelMapper
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostDayViewsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUseCase.PostMonthsAndYearsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostHeaderUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
@@ -52,9 +54,9 @@ const val LIST_STATS_USE_CASES = "ListStatsUseCases"
 const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
 const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
 const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
-const val DETAIL_USE_CASE = "DetailUseCase"
+const val BLOCK_DETAIL_USE_CASE = "BlockDetailUseCase"
 // These are injected only internally
-private const val DETAIL_USE_CASES = "DetailUseCases"
+private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
 
 /**
  * Module that provides use cases for Stats.
@@ -108,7 +110,8 @@ class StatsModule {
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCase: PublicizeUseCase,
-        postingActivityUseCase: PostingActivityUseCase
+        postingActivityUseCase: PostingActivityUseCase,
+        postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -119,7 +122,8 @@ class StatsModule {
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL),
                 publicizeUseCase,
-                postingActivityUseCase
+                postingActivityUseCase,
+                postMonthsAndYearsUseCaseFactory.build(VIEW_ALL)
         )
     }
 
@@ -158,12 +162,13 @@ class StatsModule {
      */
     @Provides
     @Singleton
-    @Named(DETAIL_USE_CASES)
+    @Named(BLOCK_DETAIL_USE_CASES)
     fun provideDetailUseCases(
         postHeaderUseCase: PostHeaderUseCase,
-        postDayViewsUseCase: PostDayViewsUseCase
+        postDayViewsUseCase: PostDayViewsUseCase,
+        postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
-        return listOf(postHeaderUseCase, postDayViewsUseCase)
+        return listOf(postHeaderUseCase, postDayViewsUseCase, postMonthsAndYearsUseCaseFactory.build(BLOCK))
     }
 
     /**
@@ -318,13 +323,13 @@ class StatsModule {
      */
     @Provides
     @Singleton
-    @Named(DETAIL_USE_CASE)
+    @Named(BLOCK_DETAIL_USE_CASE)
     fun provideDetailStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSiteProvider: StatsSiteProvider,
-        @Named(DETAIL_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        @Named(BLOCK_DETAIL_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
