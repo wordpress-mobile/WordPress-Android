@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.detail.PostYearsMapper.ExpandedWeekUiState
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedWeekUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
@@ -50,7 +50,7 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var postYearsMapper: PostYearsMapper
+    @Mock lateinit var postDetailMapper: PostDetailMapper
     private lateinit var useCase: PostRecentWeeksUseCase
     private lateinit var expandCaptor: KArgumentCaptor<(ExpandedWeekUiState) -> Unit>
     private val postId: Long = 1L
@@ -64,7 +64,7 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 statsPostProvider,
                 store,
-                postYearsMapper,
+                postDetailMapper,
                 BLOCK
         )
         expandCaptor = argumentCaptor()
@@ -85,12 +85,12 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
         val lastDayCalendar = Calendar.getInstance()
         lastDayCalendar.set(2019, 3, 24)
         val expandedUiState = ExpandedWeekUiState(expandedWeekFirstDay = lastDayCalendar.time)
-        whenever(postYearsMapper.mapWeeks(eq(data), eq(6), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
+        whenever(postDetailMapper.mapWeeks(eq(data), eq(6), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
                 listOf(ExpandableItem(ListItemWithIcon(text = "Mar 18 - Mar 24, 2019", value = "150"), false) {
                     expandCaptor.lastValue.invoke(expandedUiState)
                 })
         )
-        whenever(postYearsMapper.mapWeeks(eq(data), eq(6), eq(expandedUiState), expandCaptor.capture())).thenReturn(
+        whenever(postDetailMapper.mapWeeks(eq(data), eq(6), eq(expandedUiState), expandCaptor.capture())).thenReturn(
                 listOf(
                         ExpandableItem(
                                 ListItemWithIcon(text = "Mar 18 - Mar 24, 2019", value = "150"),
@@ -144,7 +144,7 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
         lastDayCalendar.set(2019, 3, 24)
         val expandedUiState = ExpandedWeekUiState(expandedWeekFirstDay = lastDayCalendar.time)
         whenever(
-                postYearsMapper.mapWeeks(
+                postDetailMapper.mapWeeks(
                         eq(data),
                         eq(6),
                         eq(nonExpandedUiState),

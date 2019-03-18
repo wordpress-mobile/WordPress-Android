@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.detail.PostYearsMapper.ExpandedYearUiState
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedYearUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
@@ -49,7 +49,7 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var postYearsMapper: PostYearsMapper
+    @Mock lateinit var postDetailMapper: PostDetailMapper
     private lateinit var useCase: PostAverageViewsPerDayUseCase
     private lateinit var expandCaptor: KArgumentCaptor<(ExpandedYearUiState) -> Unit>
     private val postId: Long = 1L
@@ -61,7 +61,7 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 statsPostProvider,
                 store,
-                postYearsMapper,
+                postDetailMapper,
                 BLOCK
         )
         expandCaptor = argumentCaptor()
@@ -80,12 +80,12 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
         )
         val nonExpandedUiState = ExpandedYearUiState()
         val expandedUiState = ExpandedYearUiState(expandedYear = 2019)
-        whenever(postYearsMapper.mapYears(eq(data), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
+        whenever(postDetailMapper.mapYears(eq(data), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
                 listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
                     expandCaptor.lastValue.invoke(expandedUiState)
                 })
         )
-        whenever(postYearsMapper.mapYears(eq(data), eq(expandedUiState), expandCaptor.capture())).thenReturn(
+        whenever(postDetailMapper.mapYears(eq(data), eq(expandedUiState), expandCaptor.capture())).thenReturn(
                 listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
                     expandCaptor.lastValue.invoke(expandedUiState)
                 }, ListItemWithIcon(text = "Jan", value = "100"))
@@ -136,7 +136,7 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
         val nonExpandedUiState = ExpandedYearUiState()
         val expandedUiState = ExpandedYearUiState(expandedYear = 2019)
         whenever(
-                postYearsMapper.mapYears(
+                postDetailMapper.mapYears(
                         eq(data.takeLast(6)),
                         eq(nonExpandedUiState),
                         expandCaptor.capture()

@@ -11,8 +11,8 @@ import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Month
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Week
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.ui.stats.refresh.lists.detail.PostYearsMapper.ExpandedWeekUiState
-import org.wordpress.android.ui.stats.refresh.lists.detail.PostYearsMapper.ExpandedYearUiState
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedWeekUiState
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedYearUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -21,13 +21,13 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import java.util.Locale
 
-class PostYearsMapperTest : BaseUnitTest() {
+class PostDetailMapperTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
-    private lateinit var postYearsMapper: PostYearsMapper
+    private lateinit var postDetailMapper: PostDetailMapper
     @Before
     fun setUp() {
-        postYearsMapper = PostYearsMapper(localeManagerWrapper, statsDateFormatter)
+        postDetailMapper = PostDetailMapper(localeManagerWrapper, statsDateFormatter)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 
@@ -37,7 +37,7 @@ class PostYearsMapperTest : BaseUnitTest() {
         val year2019 = PostDetailStatsModel.Year(2019, listOf(Month(1, 50)), 100)
         val years = listOf(year2018, year2019)
         var expandedYear: Int? = null
-        val result = postYearsMapper.mapYears(years, ExpandedYearUiState()) {
+        val result = postDetailMapper.mapYears(years, ExpandedYearUiState()) {
             expandedYear = it.expandedYear
         }
         assertThat(result).hasSize(2)
@@ -64,7 +64,7 @@ class PostYearsMapperTest : BaseUnitTest() {
         val january = Month(1, 50)
         val february = Month(2, 40)
         val years = listOf(PostDetailStatsModel.Year(2019, listOf(january, february), 100))
-        val result = postYearsMapper.mapYears(years, ExpandedYearUiState(expandedYear = 2019)) { }
+        val result = postDetailMapper.mapYears(years, ExpandedYearUiState(expandedYear = 2019)) { }
         assertThat(result).hasSize(4)
         (result[0] as ExpandableItem).apply {
             assertThat(this.isExpanded).isTrue()
@@ -108,7 +108,7 @@ class PostYearsMapperTest : BaseUnitTest() {
         val secondWeekLabel = "Jan 9 - Jan 16, 2019"
         whenever(statsDateFormatter.printWeek(secondWeekFirstDay, secondWeekLastDay)).thenReturn(secondWeekLabel)
 
-        val result = postYearsMapper.mapWeeks(weeks, 1, ExpandedWeekUiState()) {}
+        val result = postDetailMapper.mapWeeks(weeks, 1, ExpandedWeekUiState()) {}
 
         assertThat(result).hasSize(1)
         (result[0] as ExpandableItem).apply {
@@ -137,7 +137,7 @@ class PostYearsMapperTest : BaseUnitTest() {
         val weekLabel = "Jan 9 - Jan 16, 2019"
         whenever(statsDateFormatter.printWeek(firstDay, lastDay)).thenReturn(weekLabel)
 
-        val result = postYearsMapper.mapWeeks(weeks, 1, ExpandedWeekUiState(firstDay)) {}
+        val result = postDetailMapper.mapWeeks(weeks, 1, ExpandedWeekUiState(firstDay)) {}
 
         assertThat(result).hasSize(4)
         (result[0] as ExpandableItem).apply {

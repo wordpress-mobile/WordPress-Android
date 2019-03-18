@@ -15,7 +15,7 @@ import java.text.DateFormatSymbols
 import java.util.Date
 import javax.inject.Inject
 
-class PostYearsMapper
+class PostDetailMapper
 @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val statsDateFormatter: StatsDateFormatter
@@ -71,7 +71,7 @@ class PostYearsMapper
     fun mapWeeks(
         weeks: List<PostDetailStatsModel.Week>,
         visibleCount: Int,
-        uiState: PostYearsMapper.ExpandedWeekUiState,
+        uiState: PostDetailMapper.ExpandedWeekUiState,
         onUiState: (ExpandedWeekUiState) -> Unit
     ): List<BlockListItem> {
         val weekList = mutableListOf<BlockListItem>()
@@ -95,9 +95,10 @@ class PostYearsMapper
                 if (isExpanded) {
                     weekList.addAll(week.days
                             .map { day ->
+                                val value = day.average.toFormattedString(locale = localeManagerWrapper.getLocale())
                                 ListItemWithIcon(
                                         text = statsDateFormatter.printDayWithoutYear(day.date),
-                                        value = day.average.toFormattedString(locale = localeManagerWrapper.getLocale()),
+                                        value = value,
                                         textStyle = LIGHT,
                                         showDivider = false
                                 )

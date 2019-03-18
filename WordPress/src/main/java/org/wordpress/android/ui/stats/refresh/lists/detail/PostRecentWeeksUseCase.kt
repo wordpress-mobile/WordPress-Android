@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewRecentWeeksStats
-import org.wordpress.android.ui.stats.refresh.lists.detail.PostYearsMapper.ExpandedWeekUiState
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedWeekUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
@@ -31,7 +31,7 @@ class PostRecentWeeksUseCase(
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
     private val postDetailStore: PostDetailStore,
-    private val postYearsMapper: PostYearsMapper,
+    private val postDetailMapper: PostDetailMapper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<PostDetailStatsModel, ExpandedWeekUiState>(
         PostDetailTypes.CLICKS_BY_WEEKS,
@@ -75,7 +75,7 @@ class PostRecentWeeksUseCase(
                 )
         )
         items.add(Divider)
-        val yearList = postYearsMapper.mapWeeks(domainModel.weekViews, itemsToLoad, uiState, this::onUiState)
+        val yearList = postDetailMapper.mapWeeks(domainModel.weekViews, itemsToLoad, uiState, this::onUiState)
 
         items.addAll(yearList)
         if (useCaseMode == BLOCK && domainModel.weekViews.size > itemsToLoad) {
@@ -102,7 +102,7 @@ class PostRecentWeeksUseCase(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val statsSiteProvider: StatsSiteProvider,
         private val statsPostProvider: StatsPostProvider,
-        private val postYearsMapper: PostYearsMapper,
+        private val postDetailMapper: PostDetailMapper,
         private val postDetailStore: PostDetailStore
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
@@ -111,7 +111,7 @@ class PostRecentWeeksUseCase(
                         statsSiteProvider,
                         statsPostProvider,
                         postDetailStore,
-                        postYearsMapper,
+                        postDetailMapper,
                         useCaseMode
                 )
     }
