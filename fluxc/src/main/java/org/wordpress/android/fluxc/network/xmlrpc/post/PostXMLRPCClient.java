@@ -123,7 +123,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
-                        offset, pageSize, listDescriptor.getStatusList(), fields,
+                        offset, pageSize, listDescriptor.getStatusList(), listDescriptor.getOnlyAuthorId(), fields,
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue());
         final boolean loadedMore = offset > 0;
 
@@ -166,7 +166,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                            final int offset) {
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(),
-                        getPages, offset, PostStore.NUM_POSTS_PER_FETCH, statusList, null, null, null);
+                        getPages, offset, PostStore.NUM_POSTS_PER_FETCH, statusList, null, null, null, null);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
                 new Listener<Object[]>() {
@@ -612,6 +612,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             final long offset,
             final int number,
             @Nullable final List<PostStatus> statusList,
+            @Nullable Integer onlyAuthorId,
             @Nullable final List<String> fields,
             @Nullable final String orderBy,
             @Nullable final String order) {
@@ -630,6 +631,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         if (getPages) {
             contentStruct.put("post_type", "page");
+        }
+
+        if (onlyAuthorId != null && onlyAuthorId >= 0) {
+            contentStruct.put("author", String.valueOf(onlyAuthorId));
         }
 
         List<Object> params = new ArrayList<>(4);
