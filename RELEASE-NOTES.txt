@@ -1,5 +1,6 @@
 12.1
 -----
+* Refreshed post stats detail screen - opens from the Blog posts/Stats and from Stats/Posts and Pages
 
 12.0
 -----

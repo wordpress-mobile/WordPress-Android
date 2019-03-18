@@ -4,6 +4,7 @@
               android:layout_height="wrap_content"
               android:minHeight="@dimen/two_line_list_item_height"
               android:layout_marginStart="@dimen/margin_extra_large"
+              android:layout_marginEnd="@dimen/margin_extra_large"
               android:orientation="vertical">
 
     <TextView
@@ -20,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:ellipsize="end"
-        android:lines="1"
+        android:lines="2"
         android:text="@string/unknown"/>
 
 </LinearLayout>

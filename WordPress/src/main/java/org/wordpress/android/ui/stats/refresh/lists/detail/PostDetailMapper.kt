@@ -26,12 +26,17 @@ class PostDetailMapper
         onUiState: (ExpandedYearUiState) -> Unit
     ): List<BlockListItem> {
         val yearList = mutableListOf<BlockListItem>()
+
         shownYears.forEachIndexed { index, year ->
+            val isNextNotExpanded = shownYears.getOrNull(index + 1)?.year != expandedYearUiState.expandedYear
             if (year.months.isNotEmpty()) {
                 val isExpanded = year.year == expandedYearUiState.expandedYear
+                if (isExpanded) {
+                    yearList.add(Divider)
+                }
                 yearList.add(
                         ExpandableItem(
-                                mapYear(year, index, shownYears.size), isExpanded = isExpanded
+                                mapYear(year, index, shownYears.size, isNextNotExpanded), isExpanded = isExpanded
                         ) { changedExpandedState ->
                             val expandedYear = if (changedExpandedState) year.year else null
                             onUiState(expandedYearUiState.copy(expandedYear = expandedYear))
@@ -49,7 +54,7 @@ class PostDetailMapper
                 }
             } else {
                 yearList.add(
-                        mapYear(year, index, shownYears.size)
+                        mapYear(year, index, shownYears.size, isNextNotExpanded)
                 )
             }
         }
@@ -59,12 +64,13 @@ class PostDetailMapper
     private fun mapYear(
         year: Year,
         index: Int,
-        size: Int
+        size: Int,
+        isNextNotExpanded: Boolean
     ): ListItemWithIcon {
         return ListItemWithIcon(
                 text = year.year.toString(),
                 value = year.value.toFormattedString(locale = localeManagerWrapper.getLocale()),
-                showDivider = index < size - 1
+                showDivider = isNextNotExpanded && index < size - 1
         )
     }
 
@@ -83,11 +89,15 @@ class PostDetailMapper
             WeekUiModel(firstDay, lastDay, descendingDays, week.average)
         }.sortedByDescending { it.firstDay }.take(visibleCount)
         visibleWeeks.forEachIndexed { index, week ->
+            val isNextNotExpanded = visibleWeeks.getOrNull(index + 1)?.firstDay != uiState.expandedWeekFirstDay
             if (week.days.isNotEmpty()) {
                 val isExpanded = week.firstDay == uiState.expandedWeekFirstDay
+                if (isExpanded) {
+                    weekList.add(Divider)
+                }
                 weekList.add(
                         ExpandableItem(
-                                mapWeek(week, index, visibleWeeks.size), isExpanded = isExpanded
+                                mapWeek(week, index, visibleWeeks.size, isNextNotExpanded), isExpanded = isExpanded
                         ) { changedExpandedState ->
                             val expandedFirstDay = if (changedExpandedState) week.firstDay else null
                             onUiState(uiState.copy(expandedWeekFirstDay = expandedFirstDay))
@@ -106,7 +116,7 @@ class PostDetailMapper
                     weekList.add(Divider)
                 }
             } else {
-                weekList.add(mapWeek(week, index, visibleWeeks.size))
+                weekList.add(mapWeek(week, index, visibleWeeks.size, isNextNotExpanded))
             }
         }
         return weekList
@@ -121,7 +131,7 @@ class PostDetailMapper
         val weekAverage: Int
     )
 
-    private fun mapWeek(week: WeekUiModel, index: Int, size: Int): ListItemWithIcon {
+    private fun mapWeek(week: WeekUiModel, index: Int, size: Int, isNextNotExpanded: Boolean): ListItemWithIcon {
         val lastDay = week.lastDay
         val label = if (lastDay != null) {
             statsDateFormatter.printWeek(week.firstDay, lastDay)
@@ -131,7 +141,7 @@ class PostDetailMapper
         return ListItemWithIcon(
                 text = label,
                 value = week.weekAverage.toFormattedString(locale = localeManagerWrapper.getLocale()),
-                showDivider = index < size - 1
+                showDivider = isNextNotExpanded && index < size - 1
         )
     }
 

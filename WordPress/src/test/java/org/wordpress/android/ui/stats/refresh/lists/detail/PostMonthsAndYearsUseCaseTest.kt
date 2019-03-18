@@ -26,7 +26,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
@@ -108,8 +107,7 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     ): ExpandableItem {
         assertTitle(this[0])
         assertHeader(this[1])
-        assertThat(this[2]).isEqualTo(Divider)
-        return assertYear(this[3], year.year.toString(), year.value)
+        return assertYear(this[2], year.year.toString(), year.value)
     }
 
     private fun List<BlockListItem>.assertExpandedList(
@@ -118,9 +116,8 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
         val month = year.months.first()
         assertTitle(this[0])
         assertHeader(this[1])
-        assertThat(this[2]).isEqualTo(Divider)
-        assertYear(this[3], year.year.toString(), year.value)
-        assertMonth(this[4], "Jan", month.count.toString())
+        assertYear(this[2], year.year.toString(), year.value)
+        assertMonth(this[3], "Jan", month.count.toString())
     }
 
     @Test
@@ -151,12 +148,11 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(5)
+            assertThat(this).hasSize(4)
             assertTitle(this[0])
             assertHeader(this[1])
-            assertThat(this[2]).isEqualTo(Divider)
-            assertYear(this[3], year.year.toString(), year.value)
-            assertLink(this[4])
+            assertYear(this[2], year.year.toString(), year.value)
+            assertLink(this[3])
         }
     }
 
