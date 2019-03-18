@@ -1,4 +1,4 @@
-# Translation of Release Notes & Play Store Descriptions in English (US)
+﻿# Translation of Release Notes & Play Store Descriptions in English (US)
 # This file is distributed under the same license as the Release Notes & Play Store Descriptions package.
 msgid ""
 msgstr ""
