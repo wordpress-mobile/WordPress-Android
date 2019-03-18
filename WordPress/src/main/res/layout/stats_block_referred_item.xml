@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:ellipsize="end"
-        android:lines="1"
+        android:lines="2"
         android:text="@string/unknown"/>
 
 </LinearLayout>
