@@ -92,6 +92,7 @@ import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -255,6 +256,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         versionName = PackageUtils.getVersionName(this);
         initWpDb();
         enableHttpResponseCache(mContext);
+
+        AppRatingDialog.INSTANCE.init(this);
 
         // EventBus setup
         EventBus.TAG = "WordPress-EVENT";

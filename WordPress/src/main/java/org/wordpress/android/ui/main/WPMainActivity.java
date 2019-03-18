@@ -322,7 +322,6 @@ public class WPMainActivity extends AppCompatActivity implements
                     new Intent(this, GCMRegistrationIntentService.class));
         }
 
-        AppRatingDialog.INSTANCE.init(this);
         if (canShowAppRatingPrompt) {
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
