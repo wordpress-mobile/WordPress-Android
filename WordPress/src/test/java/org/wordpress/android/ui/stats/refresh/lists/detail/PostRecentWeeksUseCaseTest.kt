@@ -26,7 +26,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
@@ -116,17 +115,15 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
     private fun List<BlockListItem>.assertNonExpandedList(): ExpandableItem {
         assertTitle(this[0])
         assertHeader(this[1])
-        assertThat(this[2]).isEqualTo(Divider)
-        return assertWeek(this[3], "Mar 18 - Mar 24, 2019", 150)
+        return assertWeek(this[2], "Mar 18 - Mar 24, 2019", 150)
     }
 
     private fun List<BlockListItem>.assertExpandedList() {
         assertTitle(this[0])
         assertHeader(this[1])
-        assertThat(this[2]).isEqualTo(Divider)
-        assertWeek(this[3], "Mar 18 - Mar 24, 2019", 150)
-        assertDay(this[4], "Mar 18", "50")
-        assertDay(this[5], "Mar 24", "100")
+        assertWeek(this[2], "Mar 18 - Mar 24, 2019", 150)
+        assertDay(this[3], "Mar 18", "50")
+        assertDay(this[4], "Mar 24", "100")
     }
 
     @Test
@@ -160,12 +157,11 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
 
         assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(5)
+            assertThat(this).hasSize(4)
             assertTitle(this[0])
             assertHeader(this[1])
-            assertThat(this[2]).isEqualTo(Divider)
-            assertWeek(this[3], "Mar 18 - Mar 24, 2019", 150)
-            assertLink(this[4])
+            assertWeek(this[2], "Mar 18 - Mar 24, 2019", 150)
+            assertLink(this[3])
         }
     }
 

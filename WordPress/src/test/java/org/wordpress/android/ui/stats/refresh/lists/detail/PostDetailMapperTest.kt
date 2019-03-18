@@ -65,24 +65,25 @@ class PostDetailMapperTest : BaseUnitTest() {
         val february = Month(2, 40)
         val years = listOf(PostDetailStatsModel.Year(2019, listOf(january, february), 100))
         val result = postDetailMapper.mapYears(years, ExpandedYearUiState(expandedYear = 2019)) { }
-        assertThat(result).hasSize(4)
-        (result[0] as ExpandableItem).apply {
+        assertThat(result).hasSize(5)
+        assertThat(result[0] is Divider).isTrue()
+        (result[1] as ExpandableItem).apply {
             assertThat(this.isExpanded).isTrue()
             assertThat(this.header.text).isEqualTo("2019")
             assertThat(this.header.value).isEqualTo("100")
             assertThat(this.header.showDivider).isFalse()
         }
-        (result[1] as ListItemWithIcon).apply {
+        (result[2] as ListItemWithIcon).apply {
             assertThat(this.text).isEqualTo("Feb")
             assertThat(this.value).isEqualTo("40")
             assertThat(this.showDivider).isFalse()
         }
-        (result[2] as ListItemWithIcon).apply {
+        (result[3] as ListItemWithIcon).apply {
             assertThat(this.text).isEqualTo("Jan")
             assertThat(this.value).isEqualTo("50")
             assertThat(this.showDivider).isFalse()
         }
-        assertThat(result[3] is Divider).isTrue()
+        assertThat(result[4] is Divider).isTrue()
     }
 
     @Test
@@ -139,23 +140,24 @@ class PostDetailMapperTest : BaseUnitTest() {
 
         val result = postDetailMapper.mapWeeks(weeks, 1, ExpandedWeekUiState(firstDay)) {}
 
-        assertThat(result).hasSize(4)
-        (result[0] as ExpandableItem).apply {
+        assertThat(result).hasSize(5)
+        assertThat(result[0] is Divider).isTrue()
+        (result[1] as ExpandableItem).apply {
             assertThat(this.isExpanded).isTrue()
             assertThat(this.header.text).isEqualTo(weekLabel)
             assertThat(this.header.value).isEqualTo("350")
             assertThat(this.header.showDivider).isFalse()
         }
-        (result[1] as ListItemWithIcon).apply {
+        (result[2] as ListItemWithIcon).apply {
             assertThat(this.text).isEqualTo("Jan 16")
             assertThat(this.value).isEqualTo("400")
             assertThat(this.showDivider).isFalse()
         }
-        (result[2] as ListItemWithIcon).apply {
+        (result[3] as ListItemWithIcon).apply {
             assertThat(this.text).isEqualTo("Jan 9")
             assertThat(this.value).isEqualTo("300")
             assertThat(this.showDivider).isFalse()
         }
-        assertThat(result[3] is Divider).isTrue()
+        assertThat(result[4] is Divider).isTrue()
     }
 }

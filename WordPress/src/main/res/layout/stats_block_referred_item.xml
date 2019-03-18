@@ -4,6 +4,7 @@
               android:layout_height="wrap_content"
               android:minHeight="@dimen/two_line_list_item_height"
               android:layout_marginStart="@dimen/margin_extra_large"
+              android:layout_marginEnd="@dimen/margin_extra_large"
               android:orientation="vertical">
 
     <TextView
