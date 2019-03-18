@@ -25,12 +25,17 @@ public class PluginUtils {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
         }
+
+        boolean isCustomDomain = !site.getUrl().contains(".wordpress.com");
+        boolean isCustomDomainRegistrationAvailable = BuildConfig.DOMAIN_REGISTRATION_ENABLED;
+
         // If the site has business plan we can do an Automated Transfer
         return site.isWPCom()
                && SiteUtils.hasNonJetpackBusinessPlan(site)
                && site.getHasCapabilityManageOptions() // Automated Transfer require admin capabilities
-               // Automated Transfers require custom domains
-               && (!site.getUrl().contains(".wordpress.com") || BuildConfig.DOMAIN_REGISTRATION_ENABLED)
+               // Automated Transfers require custom domains, so if the user has a `xyz.wordpress.com` site
+               // custom domain registrations feature needs to be enabled in order to access plugin feature
+               && (isCustomDomain || isCustomDomainRegistrationAvailable)
                && !site.isPrivate(); // Private sites are not eligible for Automated Transfer
     }
 
