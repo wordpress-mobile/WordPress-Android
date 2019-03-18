@@ -113,7 +113,9 @@ class PostListButton : LinearLayout {
     private fun getButtonIconResId(buttonType: PostListButtonType): Int {
         when (buttonType) {
             PostListButtonType.BUTTON_EDIT -> return R.drawable.ic_pencil_white_24dp
-            PostListButtonType.BUTTON_VIEW, PostListButtonType.BUTTON_PREVIEW -> return R.drawable.ic_external_white_24dp
+            PostListButtonType.BUTTON_VIEW, PostListButtonType.BUTTON_PREVIEW -> {
+                return R.drawable.ic_external_white_24dp
+            }
             PostListButtonType.BUTTON_STATS -> return R.drawable.ic_stats_alt_white_24dp
             PostListButtonType.BUTTON_TRASH,
             PostListButtonType.BUTTON_DELETE -> return R.drawable.ic_trash_white_24dp

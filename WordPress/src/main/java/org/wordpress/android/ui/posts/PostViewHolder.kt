@@ -328,7 +328,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                 BUTTON_PUBLISH,
                 BUTTON_SYNC,
                 BUTTON_SUBMIT,
-                BUTTON_RETRY-> {
+                BUTTON_RETRY -> {
                     // do nothing here
                 }
             }
