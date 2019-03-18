@@ -429,6 +429,11 @@ class PostUploadNotifier {
         long postIdToUse = post.getRemotePostId();
         if (post.isLocalDraft()) {
             postIdToUse = post.getId();
+            // Note: local drafts just don't have a remote post Id set yet, so they are all 0. Because of this, we only
+            // use the local id for local drafts.
+            // there could be the case where a local draft on the device, and a remote post, can get the same ID,
+            // since the ID is returned from 2 different sources. In theory this is true, but however the chances are
+            // too low so it seems it should work in practically 100% of times.
         }
         // We can't use the local table post id here because it can change between first post (local draft) to
         // first edit (post pulled from the server)
