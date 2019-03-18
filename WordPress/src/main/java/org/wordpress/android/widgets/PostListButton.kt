@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
@@ -78,7 +79,7 @@ class PostListButton : LinearLayout {
     }
 
     private fun loadResourcesForButtonType(buttonType: PostListButtonType) {
-        val color = context.resources.getColor(getTextColorResId(buttonType))
+        val color = ContextCompat.getColor(context, getTextColorResId(buttonType))
         imageView.setImageResource(getButtonIconResId(buttonType))
         imageView.imageTintList = ColorStateList.valueOf(color)
         textView.setText(getButtonTextResId(buttonType))
