@@ -47,7 +47,6 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
@@ -126,7 +125,7 @@ class PostListViewModel @Inject constructor(
     private lateinit var postListType: PostListType
 
     // Cache upload statuses and featured images for posts for quicker access
-    private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
+    private val uploadStatusMap = HashMap<Int, PostListItemUploadStatus>()
     private val featuredImageMap = HashMap<Long, String>()
 
     // Keep a reference to the currently being trashed post, so we can hide it during Undo SnackBar
@@ -672,12 +671,12 @@ class PostListViewModel @Inject constructor(
         pagedListWrapper.invalidateData()
     }
 
-    private fun getUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
+    private fun getUploadStatus(post: PostModel): PostListItemUploadStatus {
         uploadStatusMap[post.id]?.let { return it }
         val uploadError = uploadStore.getUploadErrorForPost(post)
         val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
         val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
-        val newStatus = PostAdapterItemUploadStatus(
+        val newStatus = PostListItemUploadStatus(
                 uploadError = uploadError,
                 mediaUploadProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100),
                 isUploading = UploadService.isPostUploading(post),

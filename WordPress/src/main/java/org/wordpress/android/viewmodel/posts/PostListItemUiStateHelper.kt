@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
-import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils
@@ -39,7 +38,7 @@ private const val MAX_NUMBER_OF_VISIBLE_ACTIONS = 3
 class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) {
     fun createPostListItemUiState(
         post: PostModel,
-        uploadStatus: PostAdapterItemUploadStatus,
+        uploadStatus: PostListItemUploadStatus,
         unhandledConflicts: Boolean,
         capabilitiesToPublish: Boolean,
         statsSupported: Boolean,
@@ -94,7 +93,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                     ?.let { PostUtils.collapseShortcodes(it) }
                     ?.let { UiStringText(it) }
 
-    private fun shouldShowProgress(uploadStatus: PostAdapterItemUploadStatus): Boolean {
+    private fun shouldShowProgress(uploadStatus: PostListItemUploadStatus): Boolean {
         return !uploadStatus.isUploadFailed && (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)
     }
 
@@ -102,7 +101,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         postStatus: PostStatus,
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
-        uploadStatus: PostAdapterItemUploadStatus,
+        uploadStatus: PostListItemUploadStatus,
         hasUnhandledConflicts: Boolean
     ): UiString? {
         val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
@@ -139,7 +138,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         postStatus: PostStatus,
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
-        uploadStatus: PostAdapterItemUploadStatus,
+        uploadStatus: PostListItemUploadStatus,
         hasUnhandledConflicts: Boolean
     ): Int? {
         val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
@@ -149,13 +148,13 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
 
         return when {
             isError -> R.color.alert_red
-            isWarning -> R.color.wp_grey_darken_20
-            isInfo -> R.color.alert_yellow_dark
+            isWarning -> R.color.alert_yellow_dark
+            isInfo -> R.color.wp_grey_darken_20
             else -> null
         }
     }
 
-    private fun shouldShowOverlay(uploadStatus: PostAdapterItemUploadStatus): Boolean {
+    private fun shouldShowOverlay(uploadStatus: PostListItemUploadStatus): Boolean {
         // show overlay when post upload is in progress or (media upload is in progress and the user is not using Aztec)
         return uploadStatus.isUploading || (!appPrefsWrapper.isAztecEditorEnabled && uploadStatus.isUploadingOrQueued)
     }
@@ -164,7 +163,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         postStatus: PostStatus,
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
-        uploadStatus: PostAdapterItemUploadStatus,
+        uploadStatus: PostListItemUploadStatus,
         siteHasCapabilitiesToPublish: Boolean,
         statsSupported: Boolean,
         onButtonClicked: (PostListButtonType) -> Unit
