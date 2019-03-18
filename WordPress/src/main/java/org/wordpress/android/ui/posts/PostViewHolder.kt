@@ -7,8 +7,5 @@ class PostViewHolderConfig(
     val photonWidth: Int,
     val photonHeight: Int,
     val isPhotonCapable: Boolean,
-    val showAllButtons: Boolean,
-    val imageManager: ImageManager,
-    val isAztecEditorEnabled: Boolean,
-    val hasCapabilityPublishPosts: Boolean
+    val imageManager: ImageManager
 )

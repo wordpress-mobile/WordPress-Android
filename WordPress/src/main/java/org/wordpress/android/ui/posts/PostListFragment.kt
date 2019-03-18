@@ -25,7 +25,6 @@ import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiHelpers
@@ -72,10 +71,7 @@ class PostListFragment : Fragment() {
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
                 isPhotonCapable = SiteUtils.isPhotonCapable(site),
-                showAllButtons = displayWidth >= 1080, // on larger displays we can always show all buttons
-                imageManager = imageManager,
-                isAztecEditorEnabled = AppPrefs.isAztecEditorEnabled(),
-                hasCapabilityPublishPosts = site.hasCapabilityPublishPosts
+                imageManager = imageManager
         )
     }
 

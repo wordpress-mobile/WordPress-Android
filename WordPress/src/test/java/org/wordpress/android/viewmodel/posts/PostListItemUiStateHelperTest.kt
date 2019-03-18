@@ -7,7 +7,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.store.PostStore.PostError
@@ -39,7 +38,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `label has error color on upload error`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(uploadError = createGenericError()))
-        assertThat(state.statusLabelsColor).isEqualTo(R.color.alert_red)
+        assertThat(state.statusLabelsColor).isEqualTo(ERROR_COLOR)
     }
 
     @Test
@@ -50,31 +49,31 @@ class PostListItemUiStateHelperTest {
                         hasInProgressMediaUpload = true
                 )
         )
-        assertThat(state.statusLabelsColor).isEqualTo(R.color.alert_yellow_dark)
+        assertThat(state.statusLabelsColor).isEqualTo(WARNING_COLOR)
     }
 
     @Test
     fun `label has warning color when post queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isQueued = true))
-        assertThat(state.statusLabelsColor).isEqualTo(R.color.alert_yellow_dark)
+        assertThat(state.statusLabelsColor).isEqualTo(WARNING_COLOR)
     }
 
     @Test
     fun `label has warning color when media queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasPendingMediaUpload = true))
-        assertThat(state.statusLabelsColor).isEqualTo(R.color.alert_yellow_dark)
+        assertThat(state.statusLabelsColor).isEqualTo(WARNING_COLOR)
     }
 
     @Test
     fun `label has warning color when uploading media`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasInProgressMediaUpload = true))
-        assertThat(state.statusLabelsColor).isEqualTo(R.color.alert_yellow_dark)
+        assertThat(state.statusLabelsColor).isEqualTo(WARNING_COLOR)
     }
 
     @Test
     fun `label has warning color when uploading post`() {
         val state = createPostListItemUiState(unhandledConflicts = true)
-        assertThat(state.statusLabelsColor).isEqualTo(R.color.alert_yellow_dark)
+        assertThat(state.statusLabelsColor).isEqualTo(WARNING_COLOR)
     }
 
     private fun createPostListItemUiState(

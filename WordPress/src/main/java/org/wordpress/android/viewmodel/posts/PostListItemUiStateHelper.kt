@@ -31,6 +31,9 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS = 3
+const val ERROR_COLOR = R.color.alert_red
+const val WARNING_COLOR = R.color.wp_grey_darken_20
+const val INFO_COLOR = R.color.alert_yellow_dark
 
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
@@ -147,9 +150,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val isInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
 
         return when {
-            isError -> R.color.alert_red
-            isWarning -> R.color.alert_yellow_dark
-            isInfo -> R.color.wp_grey_darken_20
+            isError -> ERROR_COLOR
+            isWarning -> WARNING_COLOR
+            isInfo -> INFO_COLOR
             else -> null
         }
     }
