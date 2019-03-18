@@ -17,13 +17,13 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.model.revisions.Diff;
 import org.wordpress.android.fluxc.model.revisions.DiffOperations;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
-import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
@@ -102,9 +102,9 @@ public class PostRestClient extends BaseWPComRestClient {
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
         String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status"));
         Map<String, String> params =
-                createFetchPostListParameters(false, offset, pageSize, listDescriptor.getStatusList(), fields,
-                        listDescriptor.getOrder().getValue(), listDescriptor.getOrderBy().getValue(),
-                        listDescriptor.getSearchQuery());
+                createFetchPostListParameters(false, offset, pageSize, listDescriptor.getStatusList(),
+                        listDescriptor.getOnlyAuthorId(), fields, listDescriptor.getOrder().getValue(),
+                        listDescriptor.getOrderBy().getValue(), listDescriptor.getSearchQuery());
 
         final boolean loadedMore = offset > 0;
 
@@ -143,7 +143,7 @@ public class PostRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params =
-                createFetchPostListParameters(getPages, offset, number, statusList, null, null, null, null);
+                createFetchPostListParameters(getPages, offset, number, statusList, null, null, null, null, null);
 
         final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 PostsResponse.class,
@@ -256,7 +256,7 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-     public void restorePost(final PostModel post, final SiteModel site) {
+    public void restorePost(final PostModel post, final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).restore.getUrlV1_1();
 
         final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
@@ -513,6 +513,7 @@ public class PostRestClient extends BaseWPComRestClient {
                                                               final long offset,
                                                               final int number,
                                                               @Nullable final List<PostStatus> statusList,
+                                                              @Nullable Integer onlyAuthorId,
                                                               @Nullable final String fields,
                                                               @Nullable final String order,
                                                               @Nullable final String orderBy,
@@ -544,6 +545,10 @@ public class PostRestClient extends BaseWPComRestClient {
 
         if (!TextUtils.isEmpty(fields)) {
             params.put("fields", fields);
+        }
+
+        if (onlyAuthorId != null && onlyAuthorId >= 0) {
+            params.put("author", String.valueOf(onlyAuthorId));
         }
 
         return params;
