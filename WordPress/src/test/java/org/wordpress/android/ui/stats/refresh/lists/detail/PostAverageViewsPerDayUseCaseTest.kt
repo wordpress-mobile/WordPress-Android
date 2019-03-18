@@ -42,7 +42,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
-class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
+class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: PostDetailStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var statsPostProvider: StatsPostProvider
@@ -50,13 +50,13 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var postYearsMapper: PostYearsMapper
-    private lateinit var useCase: PostMonthsAndYearsUseCase
+    private lateinit var useCase: PostAverageViewsPerDayUseCase
     private lateinit var expandCaptor: KArgumentCaptor<(ExpandedYearUiState) -> Unit>
     private val postId: Long = 1L
     private val year = Year(2010, listOf(Month(1, 100)), 150)
     @Before
     fun setUp() {
-        useCase = PostMonthsAndYearsUseCase(
+        useCase = PostAverageViewsPerDayUseCase(
                 Dispatchers.Unconfined,
                 statsSiteProvider,
                 statsPostProvider,
@@ -75,7 +75,7 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
         val data = listOf(year)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
                 OnStatsFetched(
-                        PostDetailStatsModel(0, listOf(), listOf(), data, listOf())
+                        PostDetailStatsModel(0, listOf(), listOf(), listOf(), data)
                 )
         )
         val nonExpandedUiState = ExpandedYearUiState()
@@ -130,7 +130,7 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
 
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
                 OnStatsFetched(
-                        PostDetailStatsModel(0, listOf(), listOf(), data, listOf())
+                        PostDetailStatsModel(0, listOf(), listOf(), listOf(), data)
                 )
         )
         val nonExpandedUiState = ExpandedYearUiState()
@@ -177,7 +177,7 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).textResource).isEqualTo(R.string.stats_detail_months_and_years)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_detail_average_views_per_day)
     }
 
     private fun assertHeader(item: BlockListItem) {

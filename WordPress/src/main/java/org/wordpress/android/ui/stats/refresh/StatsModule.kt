@@ -16,6 +16,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.UiModelMapper
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostAverageViewsPerDayUseCase.PostAverageViewsPerDayUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostDayViewsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUseCase.PostMonthsAndYearsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostHeaderUseCase
@@ -111,7 +112,8 @@ class StatsModule {
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCase: PublicizeUseCase,
         postingActivityUseCase: PostingActivityUseCase,
-        postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory
+        postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
+        postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -123,7 +125,8 @@ class StatsModule {
                 tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL),
                 publicizeUseCase,
                 postingActivityUseCase,
-                postMonthsAndYearsUseCaseFactory.build(VIEW_ALL)
+                postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
+                postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL)
         )
     }
 
@@ -166,9 +169,15 @@ class StatsModule {
     fun provideDetailUseCases(
         postHeaderUseCase: PostHeaderUseCase,
         postDayViewsUseCase: PostDayViewsUseCase,
-        postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory
+        postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
+        postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
-        return listOf(postHeaderUseCase, postDayViewsUseCase, postMonthsAndYearsUseCaseFactory.build(BLOCK))
+        return listOf(
+                postHeaderUseCase,
+                postDayViewsUseCase,
+                postMonthsAndYearsUseCaseFactory.build(BLOCK),
+                postAverageViewsPerDayUseCaseFactory.build(BLOCK)
+        )
     }
 
     /**
