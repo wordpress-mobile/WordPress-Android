@@ -57,7 +57,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 getTitle(post),
                 getExcerpt(post),
                 featuredImageUrl,
-                UiStringText(formattedDate),  // TODO Get name of the author
+                UiStringText(formattedDate), // TODO Get name of the author
                 getStatusLabels(postStatus, post.isLocalDraft, post.isLocallyChanged, uploadStatus, unhandledConflicts),
                 getStatusLabelsColor(
                         postStatus,
@@ -73,8 +73,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         uploadStatus,
                         capabilitiesToPublish,
                         statsSupported
-                ) { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) }
-                ,
+                ) { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) },
                 showProgress = shouldShowProgress(uploadStatus),
                 showOverlay = shouldShowOverlay(uploadStatus),
                 onSelected = {
@@ -97,7 +96,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                     ?.let { UiStringText(it) }
 
     private fun shouldShowProgress(uploadStatus: PostListItemUploadStatus): Boolean {
-        return !uploadStatus.isUploadFailed && (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)
+        return !uploadStatus.isUploadFailed &&
+                (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)
     }
 
     private fun getStatusLabels(
@@ -145,8 +145,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         hasUnhandledConflicts: Boolean
     ): Int? {
         val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
-        val isProgressInfo = uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload
-                || uploadStatus.hasInProgressMediaUpload || uploadStatus.isUploading || hasUnhandledConflicts
+        val isProgressInfo = uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload ||
+                uploadStatus.hasInProgressMediaUpload || uploadStatus.isUploading || hasUnhandledConflicts
         val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
 
         return when {
@@ -172,12 +172,12 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         onButtonClicked: (PostListButtonType) -> Unit
     ): List<PostListItemAction> {
         val canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
-        val canPublishPost = !uploadStatus.isUploadingOrQueued
-                && (isLocallyChanged || isLocalDraft || postStatus == PostStatus.DRAFT)
-        val canShowStats = statsSupported
-                && postStatus == PostStatus.PUBLISHED
-                && !isLocalDraft
-                && !isLocallyChanged
+        val canPublishPost = !uploadStatus.isUploadingOrQueued &&
+                (isLocallyChanged || isLocalDraft || postStatus == PostStatus.DRAFT)
+        val canShowStats = statsSupported &&
+                postStatus == PostStatus.PUBLISHED &&
+                !isLocalDraft &&
+                !isLocallyChanged
         val canShowViewButton = !canRetryUpload
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()

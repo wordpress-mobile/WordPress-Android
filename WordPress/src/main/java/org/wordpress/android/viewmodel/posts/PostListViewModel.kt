@@ -375,7 +375,7 @@ class PostListViewModel @Inject constructor(
             }
             BUTTON_NONE -> throw NotImplementedError("BUTTON_NONE should never be used on UI.")
             BUTTON_MORE -> {
-            }// do nothing - ui will show a popup window
+            } // do nothing - ui will show a popup window
             BUTTON_BACK -> TODO()
         }
     }
