@@ -12,15 +12,17 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.PostYearsMapper.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Locale
 
 class PostYearsMapperTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var postYearsMapper: PostYearsMapper
     @Before
     fun setUp() {
-        postYearsMapper = PostYearsMapper(localeManagerWrapper)
+        postYearsMapper = PostYearsMapper(localeManagerWrapper, statsDateFormatter)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 

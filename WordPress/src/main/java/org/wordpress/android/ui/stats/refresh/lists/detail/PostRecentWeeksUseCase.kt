@@ -79,7 +79,7 @@ class PostRecentWeeksUseCase(
         val yearList = postYearsMapper.mapWeeks(shownWeeks, uiState, this::onUiState)
 
         items.addAll(yearList)
-        if (useCaseMode == BLOCK && domainModel.yearsTotal.size > itemsToLoad) {
+        if (useCaseMode == BLOCK && domainModel.weekViews.size > itemsToLoad) {
             items.add(
                     Link(
                             text = string.stats_insights_view_more,
