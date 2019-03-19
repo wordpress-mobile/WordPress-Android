@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
+const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
 
 @Singleton
 class StatsSqlUtils
