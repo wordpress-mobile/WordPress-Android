@@ -5,7 +5,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient
-import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.LatestPostDetailSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.DetailedPostStatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,11 +15,15 @@ import kotlin.coroutines.CoroutineContext
 @Singleton
 class LatestPostInsightsStore @Inject constructor(
     private val restClient: LatestPostInsightsRestClient,
-    private val sqlUtils: InsightsSqlUtils,
+    private val latestPostDetailSqlUtils: LatestPostDetailSqlUtils,
+    private val detailedPostStats: DetailedPostStatsSqlUtils,
     private val insightsMapper: InsightsMapper,
     private val coroutineContext: CoroutineContext
 ) {
     suspend fun fetchLatestPostInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
+        if (!forced && latestPostDetailSqlUtils.hasFreshRequest(site)) {
+            return@withContext OnStatsFetched(getLatestPostInsights(site), cached = true)
+        }
         val latestPostPayload = restClient.fetchLatestPostForInsights(site, forced)
         val postsFound = latestPostPayload.response?.postsFound
 
@@ -28,8 +33,8 @@ class LatestPostInsightsStore @Inject constructor(
             val postStats = restClient.fetchPostStats(site, latestPost.id, forced)
             when {
                 postStats.response != null -> {
-                    sqlUtils.insert(site, latestPost)
-                    sqlUtils.insert(site, latestPost.id, postStats.response)
+                    latestPostDetailSqlUtils.insert(site, latestPost)
+                    detailedPostStats.insert(site, postStats.response, postId = latestPost.id)
                     OnStatsFetched(insightsMapper.map(latestPost, postStats.response, site))
                 }
                 postStats.isError -> OnStatsFetched(postStats.error)
@@ -43,8 +48,8 @@ class LatestPostInsightsStore @Inject constructor(
     }
 
     fun getLatestPostInsights(site: SiteModel): InsightsLatestPostModel? {
-        return sqlUtils.selectLatestPostDetail(site)?.let { latestPostDetailResponse ->
-            sqlUtils.selectDetailedPostStats(site, latestPostDetailResponse.id)?.let { latestPostViewsResponse ->
+        return latestPostDetailSqlUtils.select(site)?.let { latestPostDetailResponse ->
+            detailedPostStats.select(site, latestPostDetailResponse.id)?.let { latestPostViewsResponse ->
                 insightsMapper.map(latestPostDetailResponse, latestPostViewsResponse, site)
             }
         }
