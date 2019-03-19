@@ -2415,12 +2415,14 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
         }
 
-        // Special actions
-        String action = getIntent().getAction();
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            setPostContentFromShareAction();
-        } else if (NEW_MEDIA_POST.equals(action)) {
-            prepareMediaPost();
+        // Special actions - these only make sense for empty posts that are going to be populated now
+        if (!mHasSetPostContent) {
+            String action = getIntent().getAction();
+            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                setPostContentFromShareAction();
+            } else if (NEW_MEDIA_POST.equals(action)) {
+                prepareMediaPost();
+            }
         }
     }
 
@@ -2474,11 +2476,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     sharedUris = new ArrayList<Uri>();
                     sharedUris.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
                 } else {
-                    return;
+                    sharedUris = null;
                 }
             }
 
             if (sharedUris != null) {
+                // removing this from the intent so it doesn't insert the media items again on each Acivity re-creation
+                getIntent().removeExtra(Intent.EXTRA_STREAM);
                 addMediaList(sharedUris, false);
             }
         }

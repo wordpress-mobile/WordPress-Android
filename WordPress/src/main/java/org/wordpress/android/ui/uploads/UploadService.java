@@ -816,9 +816,10 @@ public class UploadService extends Service {
                 // the user actively cancelled it. No need to show an error then.
                 String message = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
 
-                int siteLocalId = AppPrefs.getSelectedSite();
+                // if media has a local site id, use that. If not, default to currently selected site.
+                int siteLocalId = event.media.getLocalSiteId() > 0 ? event.media.getLocalSiteId()
+                        : AppPrefs.getSelectedSite();
                 SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-
 
                 List<MediaModel> failedStandAloneMedia = getRetriableStandaloneMedia(selectedSite);
                 if (failedStandAloneMedia.isEmpty()) {
