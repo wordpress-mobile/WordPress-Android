@@ -84,6 +84,14 @@ class ClicksUseCaseTest : BaseUnitTest() {
     fun `maps clicks to UI model`() = test {
         val forced = false
         val model = ClicksModel(10, 15, listOf(singleClick, group), false)
+        whenever(
+                store.getClicks(
+                        site,
+                        statsGranularity,
+                        limitMode,
+                        selectedDate
+                )
+        ).thenReturn(model)
         whenever(store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
@@ -133,6 +141,14 @@ class ClicksUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = ClicksModel(10, 15, listOf(singleClick), true)
+        whenever(
+                store.getClicks(
+                        site,
+                        statsGranularity,
+                        limitMode,
+                        selectedDate
+                )
+        ).thenReturn(model)
         whenever(
                 store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(

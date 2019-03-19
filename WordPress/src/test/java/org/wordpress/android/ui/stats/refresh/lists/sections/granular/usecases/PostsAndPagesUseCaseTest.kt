@@ -127,6 +127,14 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val post = ViewsModel(1L, "Post 1", 10, POST, "post.com")
         val model = PostAndPageViewsModel(listOf(post), false)
         whenever(
+                store.getPostAndPageViews(
+                        site,
+                        statsGranularity,
+                        LimitMode.Top(itemsToLoad),
+                        selectedDate
+                )
+        ).thenReturn(model)
+        whenever(
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
@@ -160,6 +168,14 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val views = 15
         val page = ViewsModel(2L, title, views, PAGE, "page.com")
         val model = PostAndPageViewsModel(listOf(page), false)
+        whenever(
+                store.getPostAndPageViews(
+                        site,
+                        statsGranularity,
+                        LimitMode.Top(itemsToLoad),
+                        selectedDate
+                )
+        ).thenReturn(model)
         whenever(
                 store.fetchPostAndPageViews(
                         site,
@@ -195,6 +211,14 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val homePage = ViewsModel(3L, title, views, HOMEPAGE, "homepage.com")
         val model = PostAndPageViewsModel(listOf(homePage), false)
         whenever(
+                store.getPostAndPageViews(
+                        site,
+                        statsGranularity,
+                        LimitMode.Top(itemsToLoad),
+                        selectedDate
+                )
+        ).thenReturn(model)
+        whenever(
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
@@ -228,6 +252,14 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val homePage = ViewsModel(3L, "Homepage 1", 20, HOMEPAGE, "homepage.com")
         val model = PostAndPageViewsModel(listOf(page, homePage), false)
         whenever(
+                store.getPostAndPageViews(
+                        site,
+                        statsGranularity,
+                        LimitMode.Top(itemsToLoad),
+                        selectedDate
+                )
+        ).thenReturn(model)
+        whenever(
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
@@ -259,6 +291,14 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val page = ViewsModel(id, "Page 1", 10, PAGE, url)
         val hasMore = true
         val model = PostAndPageViewsModel(listOf(page), hasMore)
+        whenever(
+                store.getPostAndPageViews(
+                        site,
+                        statsGranularity,
+                        LimitMode.Top(itemsToLoad),
+                        selectedDate
+                )
+        ).thenReturn(model)
         whenever(
                 store.fetchPostAndPageViews(
                         site,

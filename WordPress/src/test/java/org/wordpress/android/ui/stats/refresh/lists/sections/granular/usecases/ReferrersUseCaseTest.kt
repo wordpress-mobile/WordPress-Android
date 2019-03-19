@@ -9,7 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Group
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
@@ -45,6 +45,7 @@ import java.util.Date
 private const val itemsToLoad = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
+private val limitMode = Top(itemsToLoad)
 
 class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: ReferrersStore
@@ -83,8 +84,9 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     fun `maps referrers to UI model`() = test {
         val forced = false
         val model = ReferrersModel(10, 15, listOf(singleReferrer, group), false)
+        whenever(store.getReferrers(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(store.fetchReferrers(site,
-                statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)).thenReturn(
+                statsGranularity, limitMode, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -135,8 +137,9 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = ReferrersModel(10, 15, listOf(singleReferrer), true)
+        whenever(store.getReferrers(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(store.fetchReferrers(site,
-                statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)).thenReturn(
+                statsGranularity, limitMode, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -163,7 +166,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     fun `maps empty referrers to UI model`() = test {
         val forced = false
         whenever(store.fetchReferrers(site,
-                statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)).thenReturn(
+                statsGranularity, limitMode, selectedDate, forced)).thenReturn(
                 OnStatsFetched(ReferrersModel(0, 0, listOf(), false))
         )
 
@@ -182,7 +185,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(store.fetchReferrers(site,
-                statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)).thenReturn(
+                statsGranularity, limitMode, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )

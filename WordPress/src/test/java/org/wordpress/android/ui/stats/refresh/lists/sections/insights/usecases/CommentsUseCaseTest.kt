@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -11,9 +13,9 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel.Post
-import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
@@ -65,14 +67,16 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps posts comments to UI model`() = test {
         val forced = false
+        val model = CommentsModel(
+                listOf(Post(postId, postTitle, totalCount, url)),
+                listOf(),
+                hasMorePosts = false,
+                hasMoreAuthors = false
+        )
+        whenever(insightsStore.getComments(eq(statsSiteProvider.siteModel), any())).thenReturn(model)
         whenever(insightsStore.fetchComments(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
-                        CommentsModel(
-                                listOf(Post(postId, postTitle, totalCount, url)),
-                                listOf(),
-                                hasMorePosts = false,
-                                hasMoreAuthors = false
-                        )
+                        model
                 )
         )
 
@@ -92,14 +96,16 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `adds link to UI model when has more posts`() = test {
         val forced = false
+        val model = CommentsModel(
+                listOf(Post(postId, postTitle, totalCount, url)),
+                listOf(),
+                hasMorePosts = true,
+                hasMoreAuthors = false
+        )
+        whenever(insightsStore.getComments(eq(statsSiteProvider.siteModel), any())).thenReturn(model)
         whenever(insightsStore.fetchComments(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
-                        CommentsModel(
-                                listOf(Post(postId, postTitle, totalCount, url)),
-                                listOf(),
-                                hasMorePosts = true,
-                                hasMoreAuthors = false
-                        )
+                        model
                 )
         )
 
@@ -127,14 +133,16 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `adds link to UI model when has more authors`() = test {
         val forced = false
+        val model = CommentsModel(
+                listOf(Post(postId, postTitle, totalCount, url)),
+                listOf(),
+                hasMorePosts = false,
+                hasMoreAuthors = true
+        )
+        whenever(insightsStore.getComments(eq(statsSiteProvider.siteModel), any())).thenReturn(model)
         whenever(insightsStore.fetchComments(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
-                        CommentsModel(
-                                listOf(Post(postId, postTitle, totalCount, url)),
-                                listOf(),
-                                hasMorePosts = false,
-                                hasMoreAuthors = true
-                        )
+                        model
                 )
         )
 
@@ -152,14 +160,16 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps comment authors to UI model`() = test {
         val forced = false
+        val model = CommentsModel(
+                listOf(),
+                listOf(CommentsModel.Author(user, totalCount, url, avatar)),
+                hasMorePosts = false,
+                hasMoreAuthors = false
+        )
+        whenever(insightsStore.getComments(eq(statsSiteProvider.siteModel), any())).thenReturn(model)
         whenever(insightsStore.fetchComments(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
-                        CommentsModel(
-                                listOf(),
-                                listOf(CommentsModel.Author(user, totalCount, url, avatar)),
-                                hasMorePosts = false,
-                                hasMoreAuthors = false
-                        )
+                        model
                 )
         )
 
