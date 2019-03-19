@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-17 05:17:03+0000
+Translation-Revision-Date: 2019-03-01 13:34:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Fjern innhold</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Flytt blokk ned</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Flytt blokk opp</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">Legg til blokk her</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Ikke støttet</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Ikke støttet blokktype.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Ikke støttet blokk</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Lim inn URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">Velg bilde</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Mislyktes i iå sete inn media.\nVennligst trykk for alternativer.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Tilbakestil alle innstillinger</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alt-tekst</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Mediebiblioteket i WordPress</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Ta en bilde</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Velg fra enheten</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Start å skrive…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Fjern lenke</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Legg til lenketekst</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Lenketekst</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Legg til URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Lenke satt inn</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Din kan miste din fremdrift. Er du sikker på at du vil gå ut?</string>
+    <string name="plans_loading_error_with_cache_button">Se pakker likevel</string>
+    <string name="plans_loading_error_with_cache_subtitle">En Internet-forbindelse er nødvendig for å vise pakker, så detaljer kan være utdatert.</string>
+    <string name="plans_loading_error_no_cache_subtitle">En Internett-forbindelse er nødvendig for å vise abonnementspakker.</string>
+    <string name="plans_loading_error_no_plans_subtitle">Vi kan ikke laste inn pakker for øyeblikket. Vennligst prøv igjen senere.</string>
+    <string name="plans_loading_error_no_plans_title">Kan ikke laste pakker</string>
+    <string name="plans_loading_error_network_title">Ingen forbindelse</string>
+    <string name="menu_switch_to_gutenberg_editor">Bytt til blokkredigering</string>
+    <string name="menu_switch_to_aztec_editor">Bytt til klassisk redigering</string>
+    <string name="stats_loading_block_error">Det oppsto et problem med lasting av dine data, oppfrisk siden og forsøk igjen.</string>
+    <string name="stats_loading_error">Data ikke lastet inn</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Rediger nye innlegg og sider med blokkredigering</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">Bruk blokkredigering</string>
+    <string name="dialog_gutenberg_informative_description_page">Denne siden var opprinnelig laget med blokkredigering så vi har også aktivert det på denne siden.\n        Bytt tilbake til klassisk når som helst ved å trykke  ⋮  på verktøylinjen i toppen.</string>
+    <string name="dialog_gutenberg_informative_description_post">Dette innlegget var opprinnelig laget med blokkredigering så vi har også aktivert det på dette innlegget.\n        Bytt tilbake til klassisk når som helst ved å trykke  ⋮  på verktøylinjen i toppen.</string>
+    <string name="dialog_gutenberg_informative_title">Blokkredigering aktivert</string>
+    <string name="exit">gå ut</string>
     <string name="quick_start_sites_type_subtitle">%1$d av %2$d ferdig</string>
     <string name="quick_start_sites_type_grow">Gjør ditt publikum større</string>
     <string name="quick_start_sites_type_customize">Tilpass ditt nettsted</string>
@@ -14,14 +52,21 @@ Language: nb_NO
     <string name="quick_start_dialog_view_site_message">Ha glede av ditt ferdige produkt!</string>
     <string name="quick_start_dialog_upload_icon_title">Last opp nettstedsikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dine besøkende vil se ditt ikon i nettleseren. Legg til et tilpasset ikon for et polert og proft utseende.</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">Trykk %1$s Legg til side %2$s for å lage en ny side.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Trykk %1$s Sider på nettstedet %2$s for å fortstte.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Trykk %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
     <string name="quick_start_dialog_publish_post_message">Kladd og publiser ditt første innlegg.</string>
     <string name="quick_start_dialog_explore_plans_title">Utforsk pakker</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktiver deling av innlegg</string>
     <string name="quick_start_dialog_enable_sharing_message">Del dine innlegg automatisk på sosiale media.</string>
+    <string name="quick_start_dialog_customize_site_message">Juster skrifttyper, legg til bilder og mer.</string>
     <string name="quick_start_dialog_create_page_title">Lag en ny side</string>
+    <string name="quick_start_dialog_create_page_message">Legg til en side for nøkkelinnhold — en \"Om\"-side er en god start.</string>
     <string name="quick_start_dialog_check_stats_title">Sjekk din besøksstatistikk</string>
     <string name="quick_start_dialog_check_stats_message">Hold deg oppdatert om ytelsen til ditt nettsted.</string>
     <string name="quick_start_dialog_browse_themes_title">Bla gjennom temaer</string>
+    <string name="quick_start_dialog_browse_themes_message">Utforsk dusinvis med utformingsalternativer og finn din perfekte passform.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Fjern de neste trinn</string>
     <string name="quick_start_remove_next_steps_menu_title">Fjern dette</string>
     <string name="quick_start_complete_view_title">Alle oppgaver ferdige!</string>
@@ -57,6 +102,7 @@ Language: nb_NO
     <string name="new_site_creation_site_info_header_title">Grunnleggende informasjon</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Det oppsto et problem</string>
     <string name="site_creation_fetch_suggestions_error_no_connection">Ingen forbindelse</string>
+    <string name="site_creation_segments_title">Fortell oss hva slags nettsted du ønsker å lage</string>
     <string name="new_site_creation_preview_title">Ditt nettsted er laget!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d av %2$d</string>
     <string name="new_site_creation_screen_title_general">Lag nettsted</string>
@@ -139,9 +185,6 @@ Language: nb_NO
     <string name="stats_empty_insights_title">Ingen innsikter lagt til ennå</string>
     <string name="stats_no_data_yet">Ingen data ennå</string>
     <string name="menu_debug">Feilrettingsmeny</string>
-    <string name="preference_experimental">*EKSPERIMENTELL*</string>
-    <string name="site_settings_enable_gutenberg_summary">Dette er fortsatt en eksperimentell versjon av Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">Aktiver Gutenberg</string>
     <string name="change_password_dialog_message">Endrer passord…</string>
     <string name="change_password_dialog_hint">Ditt passord bør være minst seks tegn langt. for å gjøre det sterkere, bruk store og små bokstaver, tall og symboler som ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Passord vellykket endret</string>
@@ -153,14 +196,6 @@ Language: nb_NO
     <string name="history_detail_title">Revisjon</string>
     <string name="history_detail_button_previous">Forrige</string>
     <string name="history_detail_button_next">Neste</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Lær mer</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Ikke vis igjen</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Gå tilbake</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Rediger side</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Rediger innlegg</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Vi arbeider med et helt nytt redigeringsverktøy for WordPress. Du kan fortsatt redigere denne siden, men vi anbefaler å forhåndsvise den før publisering.</string>
-    <string name="dialog_gutenberg_compatibility_message">Vi arbeider med et helt nytt redigeringsverktøy for WordPress. Du kan fortsatt redigere dette innlegget, men vi anbefaler å forhåndsvise det før publisering.</string>
-    <string name="dialog_gutenberg_compatibility_title">Før du fortsetter</string>
     <string name="media_space_used">%1$s er brukt</string>
     <string name="enter_wpcom_or_jetpack_site">Vennligst opp et nettsted på WordPress.com eller et Jetpack-tilkoblet WordPress-nettsted</string>
     <string name="history_loading_revision">Laster revisjon</string>
@@ -239,6 +274,7 @@ Language: nb_NO
     <string name="quick_start_dialog_follow_sites_message">Finn nettsteder som inspirerer deg og følg dem for å få oppdateringer når de publiserer.</string>
     <string name="quick_start_dialog_customize_site_title">Tilpass ditt nettsted</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Trykk %1$s Tema %2$s for å fortsette</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Trykk %1$s Tilpass %2$s for å starte personliggjøring av ditt nettsted</string>
     <string name="quick_start_dialog_choose_theme_title">Velg et tema</string>
     <string name="quick_start_dialog_browse_themes_message_short">Trykk %1$s Temaer %2$s for å oppdage nye temaer</string>
     <string name="quick_start_dialog_choose_theme_message">Bla gjennom alle våre tema for å finne et som passer perfekt.</string>
@@ -256,6 +292,7 @@ Language: nb_NO
     <string name="jetpack_installation_problem">Det oppsto et problem</string>
     <string name="jetpack_installed_message">Du har installert Jetpack på ditt nettsted. Gratulerer!</string>
     <string name="jetpack_installed">Jetpack installert</string>
+    <string name="installing_jetpack_message">Installerer Jetpack på ditt nettsted. Dette kan ta opp til et par minutter å fullføre</string>
     <string name="installing_jetpack">Installerer Jetpack</string>
     <string name="install_jetpack_message">Din innlogging til nettstedet må lagres og vil kun bli brukt for å installere Jetpoack</string>
     <string name="install_jetpack">Installer Jetpack</string>
@@ -372,7 +409,9 @@ Language: nb_NO
     <string name="post_submitted">Innlegg sendt inn</string>
     <string name="write_post">Skriv innlegg</string>
     <string name="login_email_button_signup">Har du ingen konto? %1$sRegistrer deg%2$s</string>
+    <string name="plugin_install_first_plugin_progress_dialog_message">Installlerer utvidelse…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installer</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Installering av den første utvidelsen på ditt nettsted kan ta opp til 1 minutt. I løpet av denne tiden vil du ikke kunne gjøre endringer på ditt nettsted.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Installer utvidelse</string>
     <string name="notification_settings_followed_dialog_title">Varsler</string>
     <string name="notification_settings_followed_dialog_email_comments">Send meg e-post med nye kommentarer</string>
@@ -388,6 +427,7 @@ Language: nb_NO
     <string name="content_description_people_looking_charts">Folk som ser på grafer og diagrammer</string>
     <string name="comment_title">%s på %s</string>
     <string name="dialog_confirm_delete_permanently_post">Er du sikker på at du vil slette dette innlegget permanent?</string>
+    <string name="notification_site_creation_title_in_progress">Lager nettsted… Dette kan ta et par minutter.</string>
     <string name="notification_channel_important_title">Viktig</string>
     <string name="notification_channel_general_title">Generelt</string>
     <string name="photo_picker_use_photo">Bruk dette bildet</string>
@@ -400,6 +440,8 @@ Language: nb_NO
     <string name="site_settings_quota_space_unlimited">%1$s av ubegrenset</string>
     <string name="preview_count">Forhåndsvis %d</string>
     <string name="add_count">Legg til %d</string>
+    <string name="site_creation_domain_selection_title">Lag nettsted trinn 4</string>
+    <string name="site_creation_site_details_title">Lag nytt nettsted trinn 3</string>
     <string name="site_creation_theme_selection_title">Lag et nytt nettsted - trinn 2</string>
     <string name="site_creation_category_title">Lag et nytt nettsted - trinn 1</string>
     <string name="stats_followers_many_desc">%d følgere</string>
@@ -564,11 +606,13 @@ Language: nb_NO
     <string name="site_creation_label_theme_selection_title">Trinn 2 av 4</string>
     <string name="site_creation_title_portfolio">Start med en portefølje</string>
     <string name="site_creation_title_website">Start med et nettsted</string>
+    <string name="site_creation_subtitle_blog">For å dele dine ideer, historier og bilder med dine følgere.</string>
     <string name="site_creation_title_blog">Start med en blogg</string>
     <string name="site_creation_label_category">Hva slags nettsted trenger du?\nVelg et alternativ nedenfor:</string>
     <string name="site_creation_label_category_title">Trinn 1 av 4</string>
     <string name="site_creation_title">Opprett nytt nettsted</string>
     <string name="notification_site_creation_failed">Det har oppstått en feil.</string>
+    <string name="notification_site_creation_title_stopped">Oppretting av nettsted stanset</string>
     <string name="notification_site_creation_step_theme">Trinn 4 av 4</string>
     <string name="notification_site_creation_step_tagline">Trinn 3 av 4</string>
     <string name="notification_site_creation_step_fetching">Trinn 2 av 4</string>
@@ -609,9 +653,12 @@ Language: nb_NO
     <string name="plugins_empty_search_list">Ingen treff</string>
     <string name="plugin_see_all">Se alle</string>
     <string name="plugin_manage">Behandle</string>
+    <string name="plugin_installed_failed">Feil ved installering av %s</string>
+    <string name="plugin_installed_successfully">Installerte %s</string>
     <string name="plugin_install">Installer</string>
     <string name="site_settings_like_header">Lik</string>
     <string name="my_site_add_new_site">Legg til nytt nettsted</string>
+    <string name="my_site_create_new_site">Lag et nytt nettsted for din virksomhet, magasin eller personlig blogg, eller koble til en eksisterende installasjon av WordPress.</string>
     <string name="notifications_jetpack_connection_setup_info">For å få nyttige varsler fra ditt nettsted på din enhet trenger du å installere utvidelsen Jetpack. Ønsker du å sette opp Jetpack?</string>
     <string name="site_settings_lazy_load_images">\"Lat lasting\" av bilder</string>
     <string name="site_settings_serve_images_from_our_servers">Lever bilder fra våre servere</string>
@@ -641,6 +688,7 @@ Language: nb_NO
     <string name="plugin_version">Versjon %s</string>
     <string name="plugin_byline">av %s</string>
     <string name="change_photo">Endre bilde</string>
+    <string name="plugin_fetch_error">Kan ikke laste utvidelser</string>
     <string name="my_site_btn_site_pages">Sider på nettstedet</string>
     <string name="site_settings_tags_hint">Behandle stikkord på nettstedet</string>
     <string name="dlg_saving_tag">Lagrer</string>
@@ -674,6 +722,9 @@ Language: nb_NO
     <string name="plugin_configuration_failed">En feil oppstod under oppsett av utvidelsen: %s</string>
     <string name="plugin_remove_failed">Feil ved fjerning av %s</string>
     <string name="plugin_removed_successfully">Lyktes i å fjerne %s</string>
+    <string name="plugin_updated_failed_detailed">Feil ved oppdatering av %1$s: %2$s</string>
+    <string name="plugin_updated_failed">Feil ved oppdatering av %s</string>
+    <string name="plugin_updated_successfully">Oppdaterte %s</string>
     <string name="plugin_available_version">Versjon %s er tilgjengelig</string>
     <string name="plugin_detail_label_state_autoupdates">Auto-oppdateringer</string>
     <string name="plugin_detail_label_state_active">Aktiv</string>
@@ -694,6 +745,8 @@ Language: nb_NO
     <string name="login_empty_password">Vennligst skriv inn et passord</string>
     <string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
     <string name="enter_verification_code_sms">Vi sendte en tekstmelding til telefonnummeret som slutter på %s. Vennligst oppgi bekreftelseskoden o SMS-en.</string>
+    <string name="error_generic_error">Kunne ikke utføre operasjonen</string>
+    <string name="error_media_recover_post">Kunne ikke laste opp media til dette innlegget</string>
     <string name="image_size">Størrelse</string>
     <string name="uploading_subtitle_media_only_one">1 fil igjen</string>
     <string name="uploading_subtitle_media_only">%1$d av %2$d filer igjen</string>
@@ -1029,9 +1082,6 @@ Language: nb_NO
     <string name="xmlrpc_post_blocked_error">Klarte ikke å koble til. Verten din blokkerer POST-forespørsler, og appen trenger den for\nå kunne kommunisere med nettstedet ditt. Kontakt verten din for å løse dette problemet.</string>
     <string name="reader_hint_search_followed_sites">Søk i fulgte nettsteder</string>
     <string name="visual_editor_disabled">Visuell redigerer deaktivert</string>
-    <string name="preference_editor_visual">Visuelt</string>
-    <string name="preference_editor_legacy">Gammel versjon</string>
-    <string name="preference_editor_type">Bestem redigeringsvarianten</string>
     <string name="pending_draft_one_generic">Ikke la den henge og slenge! \'%1$s\' venter på å bli publisert.</string>
     <string name="pending_draft_one_month">Ikke la den daffe rundt! \'%1$s\' venter på å bli publisert.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' er fortsatt et utkast. Husk på å publisere den!</string>
@@ -1082,7 +1132,6 @@ Language: nb_NO
     <string name="alignment_none">Ingen</string>
     <string name="site_settings_list_editor_action_mode_title">Valgte %1$d</string>
     <string name="error_fetch_users_list">Klarte ikke å hente inn sidebrukerne</string>
-    <string name="plans_manage">Behandle abonnementet ditt på\nWordPress.com/plans</string>
     <string name="title_email_follower">E-postfølger</string>
     <string name="title_follower">Følger</string>
     <string name="people_fetching">Henter tak i brukere …</string>
@@ -1168,7 +1217,6 @@ Language: nb_NO
     <string name="new_editor_reflection_error">Den visuelle redigereren er ikke kompatibel med\n   enheten din. Den ble automatisk skrudd av.</string>
     <string name="stats_insights_latest_post_no_title">(ingen tittel)</string>
     <string name="capture_or_pick_photo">Ta eller velg et bilde</string>
-    <string name="plans_loading_error">Klarte ikke å laste inn planer</string>
     <string name="plans">Planer</string>
     <string name="plan">Plan</string>
     <string name="export_your_content_message">Dine innlegg, sider og innstillinger vil bli sendt med E-post til deg til %s.</string>

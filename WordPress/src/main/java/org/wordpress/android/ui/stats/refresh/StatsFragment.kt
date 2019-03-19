@@ -166,6 +166,10 @@ class StatsFragment : DaggerFragment() {
                     100
             )
         })
+
+        viewModel.siteChanged.observe(this, Observer {
+            viewModel.onPullToRefresh()
+        })
     }
 }
 

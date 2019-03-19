@@ -1,5 +1,11 @@
+12.1
+-----
+
 12.0
 -----
+Faster opening of large posts
+* Updated Notifications with tabs
+* Add Posting activity block to the Stats/Insights
 
 11.9
 -----
@@ -9,4 +15,3 @@
 * Fixed an issue where posts show up as scheduled even after they are published
 * Add Visitors overlay to the Overview block in Stats
 * Change Stats design to flat on smaller devices
-* Add Posting activity block to the Stats/Insights
