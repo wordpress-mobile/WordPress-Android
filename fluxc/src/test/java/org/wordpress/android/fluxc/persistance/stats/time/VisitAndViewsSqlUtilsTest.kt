@@ -71,7 +71,8 @@ class VisitAndViewsSqlUtilsTest {
         mappedTypes.forEach { statsType, dbGranularity ->
             timeStatsSqlUtils.insert(site, VISITS_AND_VIEWS_RESPONSE, dbGranularity, DATE)
 
-            verify(statsSqlUtils).insert(site, VISITS_AND_VIEWS, statsType, VISITS_AND_VIEWS_RESPONSE, DATE_VALUE)
+            verify(statsSqlUtils).insert(site, VISITS_AND_VIEWS, statsType, VISITS_AND_VIEWS_RESPONSE,
+                    true, DATE_VALUE)
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
+package org.wordpress.android.fluxc.network.rest.wpcom.stats.insights
 
 import android.content.Context
 import com.android.volley.RequestQueue
@@ -12,44 +12,32 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
-import java.util.Date
-import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class VisitAndViewsRestClient
-@Inject constructor(
+class MostPopularRestClient
+constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
-    @Named("regular") requestQueue: RequestQueue,
+    requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent,
-    private val statsUtils: StatsUtils
+    val statsUtils: StatsUtils
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchVisits(
-        site: SiteModel,
-        date: Date,
-        granularity: StatsGranularity,
-        itemsToLoad: Int,
-        forced: Boolean
-    ): FetchStatsPayload<VisitsAndViewsResponse> {
-        val url = WPCOMREST.sites.site(site.siteId).stats.visits.urlV1_1
-        val params = mapOf(
-                "unit" to granularity.toString(),
-                "quantity" to itemsToLoad.toString(),
-                "date" to statsUtils.getFormattedDate(date)
-        )
+    suspend fun fetchMostPopularInsights(site: SiteModel, forced: Boolean): FetchStatsPayload<MostPopularResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.insights.urlV1_1
+
+        val params = mapOf<String, String>()
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
                 params,
-                VisitsAndViewsResponse::class.java,
-                enableCaching = false,
+                MostPopularResponse::class.java,
+                enableCaching = true,
                 forced = forced
         )
         return when (response) {
@@ -62,10 +50,10 @@ class VisitAndViewsRestClient
         }
     }
 
-    data class VisitsAndViewsResponse(
-        @SerializedName("date") val date: String?,
-        @SerializedName("fields") val fields: List<String>?,
-        @SerializedName("data") val data: List<List<String>?>?,
-        @SerializedName("unit") val unit: String?
+    data class MostPopularResponse(
+        @SerializedName("highest_day_of_week") val highestDayOfWeek: Int?,
+        @SerializedName("highest_hour") val highestHour: Int?,
+        @SerializedName("highest_day_percent") val highestDayPercent: Double?,
+        @SerializedName("highest_hour_percent") val highestHourPercent: Double?
     )
 }
