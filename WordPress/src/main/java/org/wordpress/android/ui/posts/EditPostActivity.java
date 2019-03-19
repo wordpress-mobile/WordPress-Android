@@ -2409,7 +2409,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Special actions - these only make sense for empty posts that are going to be populated now
-        if (!mHasSetPostContent) {
+        if (TextUtils.isEmpty(mPost.getContent())) {
             String action = getIntent().getAction();
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 setPostContentFromShareAction();
