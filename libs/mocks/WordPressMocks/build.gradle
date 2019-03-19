@@ -11,4 +11,11 @@ android {
 }
 
 dependencies {
+    implementation("com.github.tomakehurst:wiremock:2.21.0") {
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'org.apache.commons', module: 'commons-lang3'
+        exclude group: 'asm', module: 'asm'
+        exclude group: 'org.json', module: 'json'
+    }
+    implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 }
