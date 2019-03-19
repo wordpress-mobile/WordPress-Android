@@ -72,9 +72,11 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
     fun `maps years to UI model`() = test {
         val forced = false
         val data = listOf(year)
+        val model = PostDetailStatsModel(0, listOf(), listOf(), listOf(), data)
+        whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
                 OnStatsFetched(
-                        PostDetailStatsModel(0, listOf(), listOf(), listOf(), data)
+                        model
                 )
         )
         val nonExpandedUiState = ExpandedYearUiState()
@@ -125,9 +127,11 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
         val forced = false
         val data = List(10) { year }
 
+        val model = PostDetailStatsModel(0, listOf(), listOf(), listOf(), data)
+        whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
                 OnStatsFetched(
-                        PostDetailStatsModel(0, listOf(), listOf(), listOf(), data)
+                        model
                 )
         )
         val nonExpandedUiState = ExpandedYearUiState()

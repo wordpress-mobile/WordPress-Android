@@ -75,9 +75,11 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
     fun `maps years to UI model`() = test {
         val forced = false
         val data = listOf(week)
+        val model = PostDetailStatsModel(0, listOf(), data, listOf(), listOf())
+        whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
                 OnStatsFetched(
-                        PostDetailStatsModel(0, listOf(), data, listOf(), listOf())
+                        model
                 )
         )
         val nonExpandedUiState = ExpandedWeekUiState()
@@ -131,9 +133,11 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
         val forced = false
         val data = List(10) { week }
 
+        val model = PostDetailStatsModel(0, listOf(), data, listOf(), listOf())
+        whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
                 OnStatsFetched(
-                        PostDetailStatsModel(0, listOf(), data, listOf(), listOf())
+                        model
                 )
         )
         val nonExpandedUiState = ExpandedWeekUiState()

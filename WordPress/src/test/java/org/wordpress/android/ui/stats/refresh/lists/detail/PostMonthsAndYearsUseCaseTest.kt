@@ -72,9 +72,11 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     fun `maps years to UI model`() = test {
         val forced = false
         val data = listOf(year)
+        val model = PostDetailStatsModel(0, listOf(), listOf(), data, listOf())
+        whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
                 OnStatsFetched(
-                        PostDetailStatsModel(0, listOf(), listOf(), data, listOf())
+                        model
                 )
         )
         val nonExpandedUiState = ExpandedYearUiState()
@@ -125,9 +127,11 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
         val forced = false
         val data = List(10) { year }
 
+        val model = PostDetailStatsModel(0, listOf(), listOf(), data, listOf())
+        whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
                 OnStatsFetched(
-                        PostDetailStatsModel(0, listOf(), listOf(), data, listOf())
+                        model
                 )
         )
         val nonExpandedUiState = ExpandedYearUiState()

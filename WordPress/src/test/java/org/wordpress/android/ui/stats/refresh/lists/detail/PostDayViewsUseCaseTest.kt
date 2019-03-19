@@ -66,6 +66,7 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
         whenever(mapper.buildChart(any(), any(), any(), any())).thenReturn(listOf(barChartItem))
         whenever(model.dayViews).thenReturn(listOf(Day("2019-10-10", 50)))
 
+        whenever(store.getPostDetail(site, postId)).thenReturn(model)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
                 OnStatsFetched(
                         model
