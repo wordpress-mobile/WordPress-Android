@@ -46,9 +46,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsigh
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.AllTimeSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.CommentsInsightsSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.DetailedPostStatsSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.EmailFollowersSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.LatestPostDetailSqlUtils
-import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.LatestPostStatsSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.MostPopularSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.PublicizeSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.TagsSqlUtils
@@ -92,7 +92,7 @@ class InsightsStoreTest {
     @Mock lateinit var wpComFollowersSqlUtils: WpComFollowersSqlUtils
     @Mock lateinit var emailFollowersSqlUtils: EmailFollowersSqlUtils
     @Mock lateinit var latestPostDetailSqlUtils: LatestPostDetailSqlUtils
-    @Mock lateinit var latestPostStatsSqlUtils: LatestPostStatsSqlUtils
+    @Mock lateinit var detailedPostStatsSqlUtils: DetailedPostStatsSqlUtils
     @Mock lateinit var mostPopularSqlUtils: MostPopularSqlUtils
     @Mock lateinit var publicizeSqlUtils: PublicizeSqlUtils
     @Mock lateinit var tagsSqlUtils: TagsSqlUtils
@@ -132,7 +132,7 @@ class InsightsStoreTest {
         latestPostStore = LatestPostInsightsStore(
                 latestPostInsightsRestClient,
                 latestPostDetailSqlUtils,
-                latestPostStatsSqlUtils,
+                detailedPostStatsSqlUtils,
                 mapper,
                 Unconfined
         )
@@ -275,13 +275,13 @@ class InsightsStoreTest {
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(latestPostDetailSqlUtils).insert(site, LATEST_POST)
-        verify(latestPostStatsSqlUtils).insert(site, LATEST_POST.id, viewsResponse)
+        verify(detailedPostStatsSqlUtils).insert(site, viewsResponse, postId = LATEST_POST.id)
     }
 
     @Test
     fun `returns latest post insights from db`() {
         whenever(latestPostDetailSqlUtils.select(site)).thenReturn(LATEST_POST)
-        whenever(latestPostStatsSqlUtils.select(site, LATEST_POST.id)).thenReturn(POST_STATS_RESPONSE)
+        whenever(detailedPostStatsSqlUtils.select(site, LATEST_POST.id)).thenReturn(POST_STATS_RESPONSE)
         val model = mock<InsightsLatestPostModel>()
         whenever(mapper.map(
                 LATEST_POST,

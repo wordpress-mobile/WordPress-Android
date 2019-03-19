@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsMapper
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient
-import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.DetailedPostStatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -17,7 +17,7 @@ import kotlin.coroutines.CoroutineContext
 class PostDetailStore
 @Inject constructor(
     private val restClient: LatestPostInsightsRestClient,
-    private val sqlUtils: InsightsSqlUtils,
+    private val sqlUtils: DetailedPostStatsSqlUtils,
     private val coroutineContext: CoroutineContext,
     private val mapper: PostDetailStatsMapper
 ) {
@@ -30,7 +30,7 @@ class PostDetailStore
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
-                sqlUtils.insert(site, postId, payload.response)
+                sqlUtils.insert(site, payload.response, postId = postId)
                 OnStatsFetched(mapper.map(payload.response))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
@@ -38,6 +38,6 @@ class PostDetailStore
     }
 
     fun getPostDetail(site: SiteModel, postId: Long): PostDetailStatsModel? {
-        return sqlUtils.selectDetailedPostStats(site, postId)?.let { mapper.map(it) }
+        return sqlUtils.select(site, postId)?.let { mapper.map(it) }
     }
 }
