@@ -1,9 +1,10 @@
 12.1
 -----
+* Refreshed View all Stats screens, when digging into stats data
 
 12.0
 -----
-Faster opening of large posts
+* Faster opening of large posts
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 
