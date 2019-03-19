@@ -1,5 +1,6 @@
 12.1
 -----
+* Added swiping between tabs in Notifications
 * Refreshed View all Stats screens, when digging into stats data
 
 12.0
