@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -31,6 +32,7 @@ val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 
 class PostListMainViewModel @Inject constructor(
     private val postStore: PostStore,
+    private val accountStore: AccountStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
@@ -46,6 +48,12 @@ class PostListMainViewModel @Inject constructor(
     private val _isFabVisible = MutableLiveData<Boolean>()
     val isFabVisible: LiveData<Boolean> = _isFabVisible
 
+    private val _avatarUrl = MutableLiveData<String>()
+    val avatarUrl: LiveData<String> = _avatarUrl
+
+    private val _filterOnlyUser = MutableLiveData<Boolean>()
+    val filterOnlyUser: LiveData<Boolean> = _filterOnlyUser
+
     private val _selectTab = SingleLiveEvent<Int>()
     val selectTab = _selectTab as LiveData<Int>
 
@@ -57,6 +65,7 @@ class PostListMainViewModel @Inject constructor(
 
     fun start(site: SiteModel) {
         this.site = site
+        _avatarUrl.value = accountStore?.account?.avatarUrl ?: ""
     }
 
     override fun onCleared() {
@@ -66,6 +75,10 @@ class PostListMainViewModel @Inject constructor(
 
     fun newPost() {
         _postListAction.postValue(PostListAction.NewPost(site))
+    }
+
+    fun onAuthorSelectionChanged(onlyUser: Boolean) {
+        _filterOnlyUser.value = onlyUser
     }
 
     fun onTabChanged(position: Int) {

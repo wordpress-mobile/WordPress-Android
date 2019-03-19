@@ -283,7 +283,7 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel, postListType: PostListType) {
+    fun start(site: SiteModel, onlyUser: Boolean, postListType: PostListType) {
         if (isStarted) {
             return
         }

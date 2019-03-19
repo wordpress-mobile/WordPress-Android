@@ -12,8 +12,11 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -24,6 +27,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashlyticsUtils
@@ -42,6 +46,9 @@ class PostsListActivity : AppCompatActivity(),
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
+
+    private lateinit var authorSelectionAdapter: AuthorSelectionAdapter
+    private lateinit var authorSelection: AppCompatSpinner
 
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var pager: ViewPager
@@ -101,6 +108,22 @@ class PostsListActivity : AppCompatActivity(),
     }
 
     private fun setupContent() {
+        authorSelection = findViewById(R.id.post_list_author_selection)
+        authorSelectionAdapter = AuthorSelectionAdapter(this)
+        authorSelection.adapter = authorSelectionAdapter
+        authorSelection.setSelection(1) // Defaulting to Everyone
+
+        authorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                authorSelectionAdapter.selectedPosition = -1
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                authorSelectionAdapter.selectedPosition = position
+                viewModel.onAuthorSelectionChanged(position == 0)
+            }
+        }
+
         pager = findViewById(R.id.postPager)
         postsPagerAdapter = PostsPagerAdapter(
                 POST_LIST_PAGES, site,
@@ -144,6 +167,23 @@ class PostsListActivity : AppCompatActivity(),
                 }
             }
         })
+
+        viewModel.avatarUrl.observe(this, Observer { avatarUrl ->
+            authorSelectionAdapter.avatarUrl = avatarUrl
+        })
+
+        viewModel.filterOnlyUser.observe(this, Observer { onlyUser ->
+            onlyUser?.let {
+                val position = when (onlyUser) {
+                    true -> 0
+                    false -> 1
+                }
+
+                authorSelection.setSelection(position)
+                postsPagerAdapter.onlyUser = onlyUser
+            }
+        })
+
         viewModel.selectTab.observe(this, Observer { tabIndex ->
             tabIndex?.let {
                 tabLayout.getTabAt(tabIndex)?.select()

@@ -45,6 +45,7 @@ import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiSt
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
+private const val EXTRA_POST_LIST_ONLY_USER = "post_list_only_user"
 private const val EXTRA_POST_LIST_TYPE = "post_list_type"
 
 class PostListFragment : Fragment() {
@@ -109,10 +110,11 @@ class PostListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val onlyUser = requireNotNull(arguments).getBoolean(EXTRA_POST_LIST_ONLY_USER)
         val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(site, postListType)
+        viewModel.start(site, onlyUser, postListType)
         viewModel.pagedListData.observe(this, Observer {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
@@ -249,8 +251,10 @@ class PostListFragment : Fragment() {
     fun handleEditPostResult(resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             if (data != null && EditPostActivity.checkToRestart(data)) {
-                ActivityLauncher.editPostOrPageForResult(data, nonNullActivity, site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0))
+                ActivityLauncher.editPostOrPageForResult(
+                        data, nonNullActivity, site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+                )
 
                 // a restart will happen so, no need to continue here
                 return
@@ -320,10 +324,11 @@ class PostListFragment : Fragment() {
         const val TAG = "post_list_fragment_tag"
 
         @JvmStatic
-        fun newInstance(site: SiteModel, postListType: PostListType): PostListFragment {
+        fun newInstance(site: SiteModel, onlyUser: Boolean, postListType: PostListType): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
+            bundle.putSerializable(EXTRA_POST_LIST_ONLY_USER, onlyUser)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
             fragment.arguments = bundle
             return fragment
