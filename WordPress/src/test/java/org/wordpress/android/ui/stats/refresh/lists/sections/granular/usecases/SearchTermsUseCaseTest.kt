@@ -9,7 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.SearchTermsModel
 import org.wordpress.android.fluxc.model.stats.time.SearchTermsModel.SearchTerm
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -50,6 +50,8 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: SearchTermsUseCase
     private val searchTerm = SearchTerm("search term", 10)
+
+    private val limitMode = Top(ITEMS_TO_LOAD)
     @Before
     fun setUp() {
         useCase = SearchTermsUseCase(
@@ -75,9 +77,13 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     fun `maps search_terms to UI model`() = test {
         val forced = false
         val model = SearchTermsModel(10, 15, 0, listOf(searchTerm), false)
-        whenever(store.getSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate)).thenReturn(model)
-        whenever(store.fetchSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate,
-                forced)).thenReturn(
+        whenever(store.getSearchTerms(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
+        whenever(
+                store.fetchSearchTerms(
+                        site, statsGranularity, limitMode, selectedDate,
+                        forced
+                )
+        ).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -98,9 +104,9 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = SearchTermsModel(10, 15, 0, listOf(searchTerm), true)
-        whenever(store.getSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate)).thenReturn(model)
+        whenever(store.getSearchTerms(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(
-                store.fetchSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
+                store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         model
@@ -128,9 +134,9 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 listOf(searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm),
                 false
         )
-        whenever(store.getSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate)).thenReturn(model)
+        whenever(store.getSearchTerms(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(
-                store.fetchSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
+                store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         model
@@ -159,9 +165,9 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     fun `maps empty search_terms to UI model`() = test {
         val forced = false
         val model = SearchTermsModel(0, 0, 0, listOf(), false)
-        whenever(store.getSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate)).thenReturn(model)
+        whenever(store.getSearchTerms(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(
-                store.fetchSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
+                store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(model)
         )
@@ -182,7 +188,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
+                store.fetchSearchTerms(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)

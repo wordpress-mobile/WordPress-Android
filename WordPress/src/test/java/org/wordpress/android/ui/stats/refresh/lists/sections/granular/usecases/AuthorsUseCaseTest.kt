@@ -83,8 +83,9 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     fun `maps authors to UI model`() = test {
         val forced = false
         val model = AuthorsModel(10, listOf(authorWithoutPosts, authorWithPosts), false)
-        whenever(store.getAuthors(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate)).thenReturn(model)
-        whenever(store.fetchAuthors(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)).thenReturn(
+        val limitMode = LimitMode.Top(ITEMS_TO_LOAD)
+        whenever(store.getAuthors(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
+        whenever(store.fetchAuthors(site, statsGranularity, limitMode, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
