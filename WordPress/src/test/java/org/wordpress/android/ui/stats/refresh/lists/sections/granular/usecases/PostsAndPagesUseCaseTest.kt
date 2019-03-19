@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
@@ -21,8 +22,9 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -39,7 +41,7 @@ import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
-private const val pageSize = 6
+private const val itemsToLoad = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 
@@ -56,9 +58,10 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 statsGranularity,
                 Dispatchers.Unconfined,
                 store,
-                selectedDateProvider,
                 siteModelProvider,
-                tracker
+                selectedDateProvider,
+                tracker,
+                BLOCK
         )
         whenever(siteModelProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -78,8 +81,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(itemsToLoad),
                         selectedDate,
                         forced
                 )
@@ -99,8 +102,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(itemsToLoad),
                         selectedDate,
                         forced
                 )
@@ -126,8 +129,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(itemsToLoad),
                         selectedDate,
                         forced
                 )
@@ -160,8 +163,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(itemsToLoad),
                         selectedDate,
                         forced
                 )
@@ -194,8 +197,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(itemsToLoad),
                         selectedDate,
                         forced
                 )
@@ -227,8 +230,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(itemsToLoad),
                         selectedDate,
                         forced
                 )
@@ -259,8 +262,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever(
                 store.fetchPostAndPageViews(
                         site,
-                        pageSize,
                         statsGranularity,
+                        LimitMode.Top(itemsToLoad),
                         selectedDate,
                         forced
                 )

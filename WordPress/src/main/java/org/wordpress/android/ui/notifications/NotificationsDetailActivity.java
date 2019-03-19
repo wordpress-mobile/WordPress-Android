@@ -42,6 +42,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.StringUtils;
@@ -385,7 +386,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         if (rangeType == FormattableRangeType.FOLLOW) {
-            ActivityLauncher.viewFollowersStats(this, site);
+            ActivityLauncher.viewAllTabbedInsightsStats(this, StatsViewType.FOLLOWERS, 0);
         } else {
             ActivityLauncher.viewBlogStats(this, site);
         }
