@@ -26,6 +26,9 @@ class PostDetailStore
         postId: Long,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
+        if (!forced && sqlUtils.hasFreshRequest(site, postId = postId)) {
+            return@withContext OnStatsFetched(getPostDetail(site, postId), cached = true)
+        }
         val payload = restClient.fetchPostStats(site, postId, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
