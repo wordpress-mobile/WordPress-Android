@@ -17,8 +17,9 @@ import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.UiModelMapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.CountryViewsUseCase.CountryViewsUseCaseFactory
@@ -28,17 +29,15 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase.CommentsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PostingActivityUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
-import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -48,9 +47,9 @@ const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
 const val YEAR_STATS_USE_CASE = "YearStatsUseCase"
 const val LIST_STATS_USE_CASES = "ListStatsUseCases"
-// These are injected only internally
-private const val INSIGHTS_USE_CASES = "InsightsUseCases"
-private const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
+const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
+const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
+const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
 
 /**
  * Module that provides use cases for Stats.
@@ -63,27 +62,58 @@ class StatsModule {
      */
     @Provides
     @Singleton
-    @Named(INSIGHTS_USE_CASES)
-    fun provideInsightsUseCases(
+    @Named(BLOCK_INSIGHTS_USE_CASES)
+    fun provideBlockInsightsUseCases(
         allTimeStatsUseCase: AllTimeStatsUseCase,
         latestPostSummaryUseCase: LatestPostSummaryUseCase,
         todayStatsUseCase: TodayStatsUseCase,
-        followersUseCase: FollowersUseCase,
-        commentsUseCase: CommentsUseCase,
+        followersUseCaseFactory: FollowersUseCaseFactory,
+        commentsUseCaseFactory: CommentsUseCaseFactory,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
-        tagsAndCategoriesUseCase: TagsAndCategoriesUseCase,
-        publicizeUseCase: PublicizeUseCase,
+        tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
+        publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
                 latestPostSummaryUseCase,
                 todayStatsUseCase,
-                followersUseCase,
-                commentsUseCase,
+                followersUseCaseFactory.build(UseCaseMode.BLOCK),
+                commentsUseCaseFactory.build(UseCaseMode.BLOCK),
                 mostPopularInsightsUseCase,
-                tagsAndCategoriesUseCase,
-                publicizeUseCase,
+                tagsAndCategoriesUseCaseFactory.build(UseCaseMode.BLOCK),
+                publicizeUseCaseFactory.build(UseCaseMode.BLOCK),
+                postingActivityUseCase
+        )
+    }
+
+    /**
+     * Provides a list of use cases for the View all screen in Stats. Modify this method when you want to add more
+     * blocks to the Insights screen.
+     */
+    @Provides
+    @Singleton
+    @Named(VIEW_ALL_INSIGHTS_USE_CASES)
+    fun provideViewAllInsightsUseCases(
+        allTimeStatsUseCase: AllTimeStatsUseCase,
+        latestPostSummaryUseCase: LatestPostSummaryUseCase,
+        todayStatsUseCase: TodayStatsUseCase,
+        followersUseCaseFactory: FollowersUseCaseFactory,
+        commentsUseCaseFactory: CommentsUseCaseFactory,
+        mostPopularInsightsUseCase: MostPopularInsightsUseCase,
+        tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
+        publicizeUseCaseFactory: PublicizeUseCaseFactory,
+        postingActivityUseCase: PostingActivityUseCase
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+        return listOf(
+                allTimeStatsUseCase,
+                latestPostSummaryUseCase,
+                todayStatsUseCase,
+                followersUseCaseFactory.build(UseCaseMode.VIEW_ALL),
+                commentsUseCaseFactory.build(UseCaseMode.VIEW_ALL),
+                mostPopularInsightsUseCase,
+                tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL),
+                publicizeUseCaseFactory.build(UseCaseMode.VIEW_ALL),
                 postingActivityUseCase
         )
     }
@@ -104,7 +134,7 @@ class StatsModule {
         searchTermsUseCaseFactory: SearchTermsUseCaseFactory,
         authorsUseCaseFactory: AuthorsUseCaseFactory,
         overviewUseCaseFactory: OverviewUseCaseFactory
-    ): List<@JvmSuppressWildcards UseCaseFactory> {
+    ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
                 postsAndPagesUseCaseFactory,
                 referrersUseCaseFactory,
@@ -128,19 +158,13 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
-        statsDateFormatter: StatsDateFormatter,
         statsSiteProvider: StatsSiteProvider,
-        @Named(INSIGHTS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        @Named(BLOCK_INSIGHTS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
                 statsSiteProvider,
                 useCases,
                 { statsStore.getInsights() },
@@ -159,21 +183,15 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
-        statsDateFormatter: StatsDateFormatter,
         statsSiteProvider: StatsSiteProvider,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
                 statsSiteProvider,
-                useCasesFactories.map { it.build(DAYS) },
+                useCasesFactories.map { it.build(DAYS, BLOCK) },
                 { statsStore.getTimeStatsTypes() },
                 uiModelMapper::mapTimeStats
         )
@@ -190,21 +208,15 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
-        statsDateFormatter: StatsDateFormatter,
         statsSiteProvider: StatsSiteProvider,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
                 statsSiteProvider,
-                useCasesFactories.map { it.build(WEEKS) },
+                useCasesFactories.map { it.build(WEEKS, BLOCK) },
                 { statsStore.getTimeStatsTypes() },
                 uiModelMapper::mapTimeStats
         )
@@ -221,20 +233,14 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
         statsSiteProvider: StatsSiteProvider,
-        statsDateFormatter: StatsDateFormatter,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
                 bgDispatcher, mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
                 statsSiteProvider,
-                useCasesFactories.map { it.build(MONTHS) },
+                useCasesFactories.map { it.build(MONTHS, BLOCK) },
                 { statsStore.getTimeStatsTypes() },
                 uiModelMapper::mapTimeStats
         )
@@ -251,21 +257,15 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        statsSectionManager: SelectedSectionManager,
-        selectedDateProvider: SelectedDateProvider,
         statsSiteProvider: StatsSiteProvider,
-        statsDateFormatter: StatsDateFormatter,
-        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards UseCaseFactory>,
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
-                statsSectionManager,
-                selectedDateProvider,
-                statsDateFormatter,
                 statsSiteProvider,
-                useCasesFactories.map { it.build(YEARS) },
+                useCasesFactories.map { it.build(YEARS, BLOCK) },
                 { statsStore.getTimeStatsTypes() },
                 uiModelMapper::mapTimeStats
         )

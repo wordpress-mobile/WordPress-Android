@@ -19,7 +19,7 @@ import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
-import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
@@ -81,7 +81,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         void onLoadMore(long timestamp);
     }
 
-    private NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
+    private OnNoteClickListener mOnNoteClickListener;
 
     public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener) {
         super();
@@ -324,7 +324,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         return RecyclerView.NO_POSITION;
     }
 
-    public void setOnNoteClickListener(NotificationsListFragment.OnNoteClickListener mNoteClickListener) {
+    public void setOnNoteClickListener(OnNoteClickListener mNoteClickListener) {
         mOnNoteClickListener = mNoteClickListener;
     }
 

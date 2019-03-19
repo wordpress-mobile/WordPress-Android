@@ -1,66 +1,57 @@
-android_config: &android_config
-  docker:
-    - image: circleci/android:api-28-alpha
-  environment:
-    # kotlin.incremental=false and kotlin.compiler.execution.strategy=in-process are required due to an issue with the Kotlin compiler in
-    # memory constrained environments: https://youtrack.jetbrains.com/issue/KT-15562
-    GRADLE_OPTS: -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false
-    GRADLEW: "./gradlew --stacktrace"
-
-copy_gradle_properties: &copy_gradle_properties
-  run:
-    name: Setup gradle.properties
-    command: cp gradle.properties-example gradle.properties && cp libs/login/gradle.properties-example libs/login/gradle.properties
-
 orbs:
-  android: wordpress-mobile/android@0.0.19
+  android: wordpress-mobile/android@0.0.22
   bundle-install: toshimaru/bundle-install@0.1.1
+
+commands:
+  copy-gradle-properties:
+    steps:
+      - run:
+          name: Setup gradle.properties
+          command: cp gradle.properties-example gradle.properties
 
 version: 2.1
 jobs:
   test:
-    <<: *android_config
+    executor: 
+      name: android/default
+      api-version: "28"
     steps:
       - checkout
-      - android/restore-gradle-cache:
-          cache-prefix: test-cache
-      - <<: *copy_gradle_properties
+      - android/restore-gradle-cache
+      - copy-gradle-properties
       - run:
           name: Test
-          command: $GRADLEW testVanillaRelease
-      - android/save-gradle-cache:
-          cache-prefix: test-cache
+          command: ./gradlew --stacktrace testVanillaRelease
+      - android/save-gradle-cache
       - android/save-test-results
   lint:
-    <<: *android_config
+    executor: 
+      name: android/default
+      api-version: "28"
     steps:
       - checkout
-      - android/restore-gradle-cache:
-          cache-prefix: lint-cache
-      - <<: *copy_gradle_properties
+      - android/restore-gradle-cache
+      - copy-gradle-properties
       - run:
           name: Checkstyle
-          command: $GRADLEW checkstyle
+          command: ./gradlew --stacktrace checkstyle
       - run:
           name: ktlint
-          command: $GRADLEW ciktlint
+          command: ./gradlew --stacktrace ciktlint
       - run:
           name: Lint
-          command: $GRADLEW lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+          command: ./gradlew --stacktrace lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
       - run:
           name: Violations
           when: on_fail
           command: |
             if [ -n "$GITHUB_API_TOKEN" ]; then
-              $GRADLEW violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GITHUB_API_TOKEN
+              ./gradlew --stacktrace violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GITHUB_API_TOKEN
             else
               echo "Not posting lint errors to Github because \$GITHUB_API_TOKEN is not found"
             fi 
-      - android/save-gradle-cache:
-          cache-prefix: lint-cache
-      - store_artifacts:
-          path: WordPress/build/reports
-          destination: reports
+      - android/save-gradle-cache
+      - android/save-lint-results
   strings-check:
     docker:
       - image: circleci/ruby:2.3
