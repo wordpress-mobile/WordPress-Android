@@ -26,7 +26,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.stats.StatsAbstractFragment
-import org.wordpress.android.ui.stats.StatsActivity
+import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsViewAllActivity
 import org.wordpress.android.ui.stats.StatsViewType
@@ -114,7 +114,7 @@ class FormattableContentClickHandler
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY)
             intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "")
             intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true)
-            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.id)
+            intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.id)
 
             intent.putExtra(
                     StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE,

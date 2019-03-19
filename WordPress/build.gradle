@@ -2,11 +2,13 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.27.0'
         classpath 'com.google.gms:google-services:3.2.0'
+        classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.51'
     }
 }
 
@@ -24,27 +26,29 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
-
-apply from: 'gutenberg-tasks.gradle'
+apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
     useLibrary 'org.apache.http.legacy'
+    useLibrary 'android.test.runner'
+
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
 
     dexOptions {
         jumboMode = true
-        javaMaxHeapSize = project.properties.getOrDefault("javaMaxHeapSize", "6g")
         dexInProcess = true
     }
 
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-149"
-        versionCode 671
+        versionName "alpha-157"
+        versionCode 694
         minSdkVersion 21
         targetSdkVersion 26
 
@@ -57,7 +61,8 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
-        buildConfigField "boolean", "REVISIONS_ENABLED", "false"
+        buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "true"
+        buildConfigField "boolean", "OFFER_GUTENBERG", "true"
     }
 
     flavorDimensions "buildType"
@@ -65,20 +70,17 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
-            buildConfigField "boolean", "OFFER_GUTENBERG", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         }
     }
 
@@ -108,14 +110,17 @@ android {
         lintConfig file('lint.xml')
         baseline file("lint-baseline.xml")
     }
+
+    packagingOptions {
+        // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
 }
 
 // allows us to use cool things like @Parcelize annotations
 androidExtensions {
     experimental = true
 }
-// enable kotlin coroutines
-kotlin { experimental { coroutines "enable" } }
 
 dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
@@ -128,17 +133,20 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    implementation 'com.android.support:support-compat:27.1.1'
-    implementation 'com.android.support:support-core-ui:27.1.1'
-    implementation 'com.android.support:support-fragment:27.1.1'
+    implementation 'com.android.support:support-compat:28.0.0'
+    implementation 'com.android.support:support-core-ui:28.0.0'
+    implementation 'com.android.support:support-fragment:28.0.0'
 
     implementation 'com.android.support:multidex:1.0.2'
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:percent:27.1.1'
-    implementation 'com.android.support:preference-v7:27.1.1'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:exifinterface:28.0.0'
+    implementation'com.android.support:support-media-compat:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:percent:28.0.0'
+    implementation 'com.android.support:preference-v7:28.0.0'
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
@@ -161,10 +169,10 @@ dependencies {
     implementation 'org.wordpress:graphview:3.4.0'
     implementation 'org.wordpress:persistentedittext:1.0.2'
     implementation 'org.wordpress:emailchecker2:1.1.0'
-    implementation 'com.squareup.okio:okio:1.13.0'
+    implementation 'com.squareup.okio:okio:1.14.0'
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.airbnb.android:lottie:2.0.0-rc2'
-    implementation 'com.facebook.shimmer:shimmer:0.3.0'
+    implementation 'com.facebook.shimmer:shimmer:0.4.0'
 
     implementation ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'
@@ -185,7 +193,7 @@ dependencies {
     androidTestImplementation 'org.objenesis:objenesis:2.1'
     androidTestImplementation 'org.mockito:mockito-core:1.10.19'
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
-    androidTestImplementation 'com.squareup.okio:okio:1.13.0'
+    androidTestImplementation 'com.squareup.okio:okio:1.14.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
@@ -250,18 +258,6 @@ configurations.all {
     exclude group: 'org.wordpress', module: 'analytics'
 }
 
-task copyGoogleServicesExampleFile(type: Copy) {
-    from('.')
-    into('.')
-    include('google-services.json-example')
-    rename('google-services.json-example', 'google-services.json')
-}
-
-task copyGoogleServicesBuddybuildFile(type: Copy) {
-    from(file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json"))
-    into('.')
-}
-
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
     def inputFile = checkGradlePropertiesFile()
@@ -300,11 +296,11 @@ android.buildTypes.all { buildType ->
     // If Google services file doesn't exist...
     if (!file("google-services.json").exists()) {
         // ... copy example file.
-        if (!file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/google-services.json").exists()) {
-            tasks.copyGoogleServicesExampleFile.execute()
-        // ... copy Buddybuild file.
-        } else {
-            tasks.copyGoogleServicesBuddybuildFile.execute()
+        copy {
+            from(".")
+            into(".")
+            include("google-services.json-example")
+            rename('google-services.json-example', 'google-services.json')
         }
     }
 
@@ -314,14 +310,35 @@ android.buildTypes.all { buildType ->
     }
 }
 
+task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
+   repositoryOwner = "wordpress-mobile";
+   repositoryName = "WordPress-Android"
+   pullRequestId = System.properties['GITHUB_PULLREQUESTID']
+   username = System.properties['GITHUB_USERNAME']
+   password = System.properties['GITHUB_PASSWORD']
+   oAuth2Token = System.properties['GITHUB_OAUTH2TOKEN']
+   gitHubUrl = "https://api.github.com/"
+   createCommentWithAllSingleFileComments = false
+   createSingleFileComments = true
+   commentOnlyChangedContent = true
+   minSeverity = se.bjurr.violations.lib.model.SEVERITY.INFO //ERROR, INFO, WARN
+   commentTemplate = """
+**Reporter**: {{violation.reporter}}{{#violation.rule}}\n
+**Rule**: {{violation.rule}}{{/violation.rule}}
+**Severity**: {{violation.severity}}
+**File**: {{violation.file}} L{{violation.startLine}}{{#violation.source}}
+**Source**: {{violation.source}}{{/violation.source}}
+{{violation.message}}
+"""
+   violations = [
+    ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
+   ]
+}
+
 def checkGradlePropertiesFile() {
     def inputFile = file("${rootDir}/gradle.properties")
     if (!inputFile.exists()) {
-        // Try the BuddyBuild provided file if it's there
-        inputFile = file(System.getenv("BUDDYBUILD_SECURE_FILES") + "/gradle.properties")
-        if (!inputFile.exists()) {
-            throw new StopActionException("Build configuration file gradle.properties doesn't exist, follow README instructions")
-        }
+        throw new StopActionException("Build configuration file gradle.properties doesn't exist, follow README instructions")
     }
     return inputFile
 }
@@ -348,6 +365,9 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
 }
+
+def legacyGBBundleFile = 'src/main/assets/index.android.bundle'
+assert !(file(legacyGBBundleFile).exists()) : "Error: Legacy Gutenberg JS bundle file detected. Please delete it: " + file(legacyGBBundleFile).getAbsolutePath()
 
 // Keep this at the bottom (https://stackoverflow.com/a/37565535)
 apply plugin: 'com.google.gms.google-services'

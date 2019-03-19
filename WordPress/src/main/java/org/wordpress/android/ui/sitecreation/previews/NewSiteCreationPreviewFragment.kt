@@ -21,7 +21,7 @@ import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
 import android.widget.TextView
 import com.facebook.shimmer.ShimmerFrameLayout
-import kotlinx.android.synthetic.main.new_site_creation_preview_screen.*
+import kotlinx.android.synthetic.main.new_site_creation_preview_screen_default.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -66,6 +66,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
     private lateinit var sitePreviewScreenListener: SitePreviewScreenListener
     private lateinit var helpClickedListener: OnHelpClickedListener
 
+    private var okButtonContainer: View? = null
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context !is SitePreviewScreenListener) {
@@ -100,6 +102,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
         sitePreviewWebView = rootView.findViewById(R.id.sitePreviewWebView)
         sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
+        okButtonContainer = rootView.findViewById(R.id.sitePreviewOkButtonContainer)
         initViewModel()
         initRetryButton()
         initOkButton()
@@ -144,7 +147,10 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
             }
         })
         viewModel.onHelpClicked.observe(this, Observer {
-            helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_CREATING)
+            helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
+        })
+        viewModel.onSiteCreationCompleted.observe(this, Observer {
+            sitePreviewScreenListener.onSiteCreationCompleted()
         })
         viewModel.onOkButtonClicked.observe(this, Observer { createSiteState ->
             createSiteState?.let {
@@ -192,6 +198,10 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
         // The view is about to become visible
         if (contentLayout.visibility == View.GONE) {
             animateContentTransition()
+            view?.announceForAccessibility(
+                    getString(R.string.new_site_creation_preview_title) +
+                            getString(R.string.new_site_creation_site_preview_content_description)
+            )
         }
     }
 
@@ -317,25 +327,21 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
                     contentLayout.removeOnLayoutChangeListener(this)
                     val contentHeight = contentLayout.measuredHeight.toFloat()
 
-                    val webViewAnim = createWebViewContainerAnimator(contentHeight)
-                    val okContainerAnim = createOkButtonContainerAnimator(contentHeight)
-                    val titleAnim = createTitleAnimator()
+                    val titleAnim = createFadeInAnimator(sitePreviewTitle)
+                    val webViewAnim = createSlideInFromBottomAnimator(webviewContainer, contentHeight)
+                    // OK button should slide in if the container exists and fade in otherwise
+                    val okAnim = okButtonContainer?.let { createSlideInFromBottomAnimator(it, contentHeight) }
+                            ?: createFadeInAnimator(okButton)
                     AnimatorSet().apply {
                         interpolator = DecelerateInterpolator()
                         duration = SLIDE_IN_ANIMATION_DURATION
-                        playTogether(webViewAnim, okContainerAnim, titleAnim)
+                        playTogether(titleAnim, webViewAnim, okAnim)
                         start()
                     }
                 }
             }
         })
     }
-
-    private fun createWebViewContainerAnimator(contentHeight: Float): ObjectAnimator =
-            createSlideInFromBottomAnimator(webviewContainer, contentHeight)
-
-    private fun createOkButtonContainerAnimator(contentHeight: Float): ObjectAnimator =
-            createSlideInFromBottomAnimator(sitePreviewOkButtonContainer, contentHeight)
 
     private fun createSlideInFromBottomAnimator(view: View, contentHeight: Float): ObjectAnimator {
         return ObjectAnimator.ofFloat(
@@ -347,7 +353,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
         )
     }
 
-    private fun createTitleAnimator() = ObjectAnimator.ofFloat(sitePreviewTitle, "alpha", 0f, 1f)
+    private fun createFadeInAnimator(view: View) = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
 
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"

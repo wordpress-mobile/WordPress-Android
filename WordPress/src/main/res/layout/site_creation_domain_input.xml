@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:background="@color/white">
+
+    <EditText
+        android:id="@+id/input"
+        style="@style/Theme.AppCompat.Light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:drawableStart="@drawable/ic_search_grey_text_min_24dp"
+        android:drawablePadding="@dimen/margin_extra_large"
+        android:hint="@string/site_creation_domain_keywords_hint"
+        android:singleLine="true"
+        android:imeOptions="actionSearch"
+        android:textColorHint="@color/grey_darken_10"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_extra_large"/>
+
+    <!-- ProgressBar seems to render correctly after when scrolled away only when in a container :( -->
+    <FrameLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@color/white"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large">
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_lighten_30"
+        android:layout_below="@+id/input"/>
+</RelativeLayout>
+

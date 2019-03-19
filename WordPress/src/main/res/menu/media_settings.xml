@@ -22,7 +22,7 @@
 
     <item
         android:id="@+id/menu_remove_image"
-        android:icon="@drawable/ic_gridicons_image_remove"
+        android:icon="@drawable/ic_image_remove_white_24dp"
         android:title="@string/remove_image_from_post"
         app:showAsAction="ifRoom"/>
 </menu>

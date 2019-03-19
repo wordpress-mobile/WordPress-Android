@@ -17,6 +17,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
@@ -177,9 +178,13 @@ public abstract class EditorFragmentAbstract extends Fragment {
      */
     public interface EditorFragmentListener {
         void onEditorFragmentInitialized();
+        void onEditorFragmentContentReady(boolean hasUnsupportedContent);
         void onSettingsClicked();
         void onAddMediaClicked();
+        void onAddPhotoClicked();
+        void onCapturePhotoClicked();
         boolean onMediaRetryClicked(String mediaId);
+        void onMediaRetryAllClicked(Set<String> mediaIdSet);
         void onMediaUploadCancelClicked(String mediaId);
         void onMediaDeleted(String mediaId);
         void onUndoMediaCheck(String undoedContent);

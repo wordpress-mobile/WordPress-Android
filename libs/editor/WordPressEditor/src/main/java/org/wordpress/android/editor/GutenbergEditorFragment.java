@@ -3,94 +3,201 @@ package org.wordpress.android.editor;
 import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spanned;
-import android.text.TextWatcher;
+import android.util.DisplayMetrics;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
-import org.wordpress.aztec.source.SourceViewEditText;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
-        View.OnTouchListener,
         EditorMediaUploadListener,
         IHistoryListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
-    private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
+    private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
+    private static final String ARG_LOCALE_SLUG = "param_locale_slug";
 
-    private static boolean mIsToolbarExpanded = false;
+    private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
 
-    private boolean mEditorWasPaused = false;
-    private boolean mHideActionBarOnSoftKeyboardUp = false;
     private boolean mHtmlModeEnabled;
-
-    private EditTextWithKeyBackListener mTitle;
-    private SourceViewEditText mSource;
 
     private Handler mInvalidateOptionsHandler;
     private Runnable mInvalidateOptionsRunnable;
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
-    private WPAndroidGlueCode mWPAndroidGlueCode;
+    // pointer (to the Gutenberg container fragment) that outlives this fragment's Android lifecycle. The retained
+    //  fragment can be alive and accessible even before it gets attached to an activity.
+    //  See discussion at https://github.com/wordpress-mobile/WordPress-Android/pull/9030#issuecomment-459447537 and on.
+    GutenbergContainerFragment mRetainedGutenbergContainerFragment;
+
+    private ConcurrentHashMap<String, Float> mUploadingMediaProgressMax = new ConcurrentHashMap<>();
+    private Set<String> mFailedMediaIds = new HashSet<>();
 
     private boolean mIsNewPost;
 
-    public GutenbergEditorFragment() {
-        mWPAndroidGlueCode = new WPAndroidGlueCode();
-    }
+    private boolean mEditorDidMount;
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
-                                                      boolean isExpanded,
-                                                      boolean isNewPost) {
-        mIsToolbarExpanded = isExpanded;
+                                                      boolean isNewPost,
+                                                      String localeSlug) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
         args.putString(ARG_PARAM_CONTENT, content);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
+        args.putString(ARG_LOCALE_SLUG, localeSlug);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private GutenbergContainerFragment getGutenbergContainerFragment() {
+        if (mRetainedGutenbergContainerFragment == null) {
+            mRetainedGutenbergContainerFragment = (GutenbergContainerFragment) getChildFragmentManager()
+                    .findFragmentByTag(GutenbergContainerFragment.TAG);
+        } else {
+            // Noop. Just use the cached reference. The container fragment might not be attached yet so, getting it from
+            // the fragment manager is not reliable. No need either; it's retained and outlives this EditorFragment.
+        }
+
+        return mRetainedGutenbergContainerFragment;
+    }
+
+    /**
+     * Returns the gutenberg-mobile specific translations
+     *
+     * @return Bundle a map of "english string" => [ "current locale string" ]
+     */
+    public Bundle getTranslations() {
+        Bundle translations = new Bundle();
+        Locale defaultLocale = new Locale("en");
+        Resources currentResources = getActivity().getApplicationContext().getResources();
+        Configuration currentConfiguration = currentResources.getConfiguration();
+        // if the current locale of the app is english stop here and return an empty map
+        if (currentConfiguration.locale.equals(defaultLocale)) {
+            return translations;
+        }
+
+        // Let's create a Resources object for the default locale (english) to get the original values for our strings
+        DisplayMetrics metrics = new DisplayMetrics();
+        Configuration defaultLocaleConfiguration = new Configuration(currentConfiguration);
+        defaultLocaleConfiguration.setLocale(defaultLocale);
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Resources defaultResources = new Resources(getActivity().getAssets(), metrics, defaultLocaleConfiguration);
+
+        // Strings are only being translated in the WordPress package
+        // thus we need to get a reference of the R class for this package
+        // Here we assume the Application class is at the same level as the R class
+        // It will not work if this lib is used outside of WordPress-Android,
+        // in this case let's just return an empty map
+        Class<?> rString;
+        Package mainPackage = getActivity().getApplication().getClass().getPackage();
+
+        if (mainPackage == null) {
+            return translations;
+        }
+
+        try {
+            rString = getActivity().getApplication().getClassLoader().loadClass(mainPackage.getName() + ".R$string");
+        } catch (ClassNotFoundException ex) {
+            return translations;
+        }
+
+        for (Field stringField : rString.getDeclaredFields()) {
+            int resourceId;
+            try {
+                resourceId = stringField.getInt(rString);
+            } catch (IllegalArgumentException | IllegalAccessException iae) {
+                AppLog.e(T.EDITOR, iae);
+                continue;
+            }
+
+            String fieldName = stringField.getName();
+            // Filter out all strings that are not prefixed with `gutenberg_mobile_`
+            if (!fieldName.startsWith("gutenberg_mobile_")) {
+                continue;
+            }
+
+            // Add the mapping english => [ translated ] to the bundle if both string are not empty
+            String currentResourceString = currentResources.getString(resourceId);
+            String defaultResourceString = defaultResources.getString(resourceId);
+            if (currentResourceString.length() > 0 && defaultResourceString.length() > 0) {
+                translations.putStringArrayList(
+                        defaultResourceString,
+                        new ArrayList<>(Arrays.asList(currentResourceString))
+                );
+            }
+        }
+        return translations;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mWPAndroidGlueCode.onCreate(getContext());
+        if (getGutenbergContainerFragment() == null) {
+            boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
+            String localeSlug = getArguments().getString(ARG_LOCALE_SLUG);
+
+            FragmentManager fragmentManager = getChildFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            GutenbergContainerFragment gutenbergContainerFragment =
+                    GutenbergContainerFragment.newInstance(isNewPost, localeSlug, this.getTranslations());
+            gutenbergContainerFragment.setRetainInstance(true);
+            fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
+            fragmentTransaction.commitNow();
+        }
 
         ProfilingUtils.start("Visual Editor Startup");
         ProfilingUtils.split("EditorFragment.onCreate");
 
         if (savedInstanceState != null) {
             mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED);
+            mEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT);
         }
     }
 
@@ -98,63 +205,63 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
-        mTitle = view.findViewById(R.id.title);
-
         if (getArguments() != null) {
             mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
         }
 
-        mWPAndroidGlueCode.onCreateView(
-                view.findViewById(R.id.gutenberg),
-                mHtmlModeEnabled,
+        ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
+        getGutenbergContainerFragment().attachToContainer(gutenbergContainer,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryButtonClick() {
+                    @Override public void onMediaLibraryButtonClicked() {
                         onToolbarMediaButtonClicked();
                     }
-                },
-                getActivity().getApplication(),
-                BuildConfig.DEBUG,
-                BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
-                mIsNewPost);
-        mSource = view.findViewById(R.id.source);
 
-        mTitle.addTextChangedListener(mTextWatcher);
+                    @Override
+                    public void onUploadMediaButtonClicked() {
+                        mEditorFragmentListener.onAddPhotoClicked();
+                    }
+
+                    @Override
+                    public void onCapturePhotoButtonClicked() {
+                        checkAndRequestCameraAndStoragePermissions();
+                    }
+
+                    @Override public void onRetryUploadForMediaClicked(int mediaId) {
+                        showRetryMediaUploadDialog(mediaId);
+                    }
+
+                    @Override public void onCancelUploadForMediaClicked(int mediaId) {
+                        showCancelMediaUploadDialog(mediaId);
+                    }
+                },
+                new OnReattachQueryListener() {
+                    @Override
+                    public void onQueryCurrentProgressForUploadingMedia() {
+                        updateFailedMediaState();
+                        updateMediaProgress();
+                    }
+                },
+                new OnEditorMountListener() {
+                    @Override
+                    public void onEditorDidMount(boolean hasUnsupportedBlocks) {
+                        mEditorDidMount = true;
+                        mEditorFragmentListener.onEditorFragmentContentReady(hasUnsupportedBlocks);
+
+                        // Hide the progress bar when editor is ready
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                setEditorProgressBarVisibility(!mEditorDidMount);
+                            }
+                        });
+                    }
+                }
+            );
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
-
-        mTitle.setOnTouchListener(this);
-        mSource.setOnTouchListener(this);
-
-        mTitle.setOnImeBackListener(new OnImeBackListener() {
-            public void onImeBack() {
-                showActionBarIfNeeded();
-            }
-        });
-
-        mTitle.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                for (int i = s.length(); i > 0; i--) {
-                    if (s.subSequence(i - 1, i).toString().equals("\n")) {
-                        s.replace(i - 1, i, " ");
-                    }
-                }
-            }
-        });
-
-        // We need to intercept the "Enter" key on the title field, and replace it with a space instead
-        mSource.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
         setHasOptionsMenu(true);
 
@@ -168,58 +275,143 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
         };
 
-        mEditorFragmentListener.onEditorFragmentInitialized();
+        if (!getGutenbergContainerFragment().hasReceivedAnyContent()) {
+            // container is empty, which means it's a fresh instance so, signal to complete its init
+            mEditorFragmentListener.onEditorFragmentInitialized();
+        }
 
         if (mIsNewPost) {
-            mTitle.requestFocus();
             showImplicitKeyboard();
         }
 
         return view;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mEditorWasPaused = true;
+    @Override public void onResume() {
+        super.onResume();
 
-        mWPAndroidGlueCode.onPause(getActivity());
-
-        // Reset soft input mode to default as we have change it in onResume()
-        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
-                | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        setEditorProgressBarVisibility(!mEditorDidMount);
     }
 
-    private void setSoftInputMode(int mode) {
-        if (mIsNewPost && mTitle.hasFocus()) {
-            getActivity().getWindow().setSoftInputMode(mode);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
+            checkAndRequestCameraAndStoragePermissions();
         }
+    }
+
+    private void setEditorProgressBarVisibility(boolean shown) {
+        if (isAdded() && getView() != null) {
+            getView().findViewById(R.id.editor_progress).setVisibility(shown ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public void resetUploadingMediaToFailed(Set<Integer> failedMediaIds) {
+        // get all media failed for this post, and represent it on tje UI
+        if (failedMediaIds != null && !failedMediaIds.isEmpty()) {
+            for (Integer mediaId : failedMediaIds) {
+                // and keep track of failed ids around
+                mFailedMediaIds.add(String.valueOf(mediaId));
+            }
+        }
+    }
+
+    private void updateFailedMediaState() {
+        for (String mediaId : mFailedMediaIds) {
+            getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(mediaId));
+        }
+    }
+
+    private void updateMediaProgress() {
+        for (String mediaId : mUploadingMediaProgressMax.keySet()) {
+            getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(mediaId),
+                    mUploadingMediaProgressMax.get(mediaId));
+        }
+    }
+
+    private void checkAndRequestCameraAndStoragePermissions() {
+        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
+                CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
+            mEditorFragmentListener.onCapturePhotoClicked();
+        }
+    }
+
+    private void showCancelMediaUploadDialog(final int localMediaId) {
+        // Display 'cancel upload' dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        builder.setTitle(getString(R.string.stop_upload_dialog_title));
+        builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
+                            mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
+                            // remove from editor
+                            mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
+                            getGutenbergContainerFragment().clearMediaFileURL(localMediaId);
+                            mUploadingMediaProgressMax.remove(localMediaId);
+                        } else {
+                            ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showRetryMediaUploadDialog(final int mediaId) {
+        // Display 'retry upload' dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        builder.setTitle(getString(R.string.retry_failed_upload_title));
+        builder.setPositiveButton(R.string.retry_failed_upload_yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        boolean successfullyRetried = true;
+                        if (mFailedMediaIds.contains(String.valueOf(mediaId))) {
+                            successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(String.valueOf(mediaId));
+                        }
+                        if (successfullyRetried) {
+                            mFailedMediaIds.remove(String.valueOf(mediaId));
+                            mUploadingMediaProgressMax.put(String.valueOf(mediaId), 0f);
+                            getGutenbergContainerFragment().mediaFileUploadProgress(mediaId,
+                                    mUploadingMediaProgressMax.get(String.valueOf(mediaId)));
+                        }
+                    }
+                });
+
+        builder.setNeutralButton(R.string.retry_failed_upload_retry_all, new OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mEditorFragmentListener.onMediaRetryAllClicked(mFailedMediaIds);
+            }
+        });
+
+        builder.setNegativeButton(R.string.retry_failed_upload_remove, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                mEditorFragmentListener.onMediaDeleted(String.valueOf(mediaId));
+                getGutenbergContainerFragment().clearMediaFileURL(mediaId);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void showImplicitKeyboard() {
         InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         keyboard.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // If the editor was previously paused and the current orientation is landscape,
-        // hide the actionbar because the keyboard is going to appear (even if it was hidden
-        // prior to being paused).
-        if (mEditorWasPaused
-                && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        }
-
-        mWPAndroidGlueCode.onResume(this, getActivity());
-
-        // In AndroidManifest for EditActivity we have set android:windowSoftInputMode="stateHidden|adjustResize"
-        // which doesn't allow us to present the keyboard programmatically.
-        // Ugly way to allow showing the keyboard would be to change soft input mode.
-        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override
@@ -234,14 +426,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mWPAndroidGlueCode.onDestroy(getActivity());
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
+        outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
     }
 
     @Override
@@ -262,7 +449,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.debugmenu) {
-            mWPAndroidGlueCode.showDevOptionsDialog();
+            getGutenbergContainerFragment().showDevOptionsDialog();
             return true;
         }
 
@@ -304,15 +491,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void setTitle(CharSequence text) {
-        if (text == null) {
-            text = "";
+    public void setTitle(CharSequence title) {
+        if (title == null) {
+            title = "";
         }
 
-        if (mTitle == null) {
-            return;
-        }
-        mTitle.setText(text);
+        getGutenbergContainerFragment().setTitle(title.toString());
     }
 
     @Override
@@ -321,22 +505,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             text = "";
         }
 
-        if (!mWPAndroidGlueCode.hasReactRootView() || mSource == null) {
-            return;
-        }
-
         String postContent = removeVisualEditorProgressTag(text.toString());
-        if (contentContainsGutenbergBlocks(postContent)) {
-            mSource.setCalypsoMode(false);
-        } else {
-            mSource.setCalypsoMode(true);
-        }
-
-        // Initialize both editors (visual, source) with the same content. Need to do that so the starting point used in
-        //  their content diffing algorithm is the same. That's assumed by the Toolbar's mode-switching logic too.
-        mSource.displayStyledAndFormattedHtml(postContent);
-
-        mWPAndroidGlueCode.setContent(postContent);
+        getGutenbergContainerFragment().setContent(postContent);
     }
 
     public void onToggleHtmlMode() {
@@ -353,30 +523,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
         mEditorFragmentListener.onHtmlModeToggledInToolbar();
 
-        mWPAndroidGlueCode.toggleEditorMode();
-    }
-
-    /*
-        Note the way we detect we're in presence of Gutenberg blocks logic is taken from
-        https://github.com/WordPress/gutenberg/blob/5a6693589285363341bebad15bd56d9371cf8ecc/lib/register.php#L331-L345
-
-        * Determine whether a content string contains blocks. This test optimizes for
-        * performance rather than strict accuracy, detecting the pattern of a block
-        * but not validating its structure. For strict accuracy, you should use the
-        * block parser on post content.
-        *
-        * @since 1.6.0
-        * @see gutenberg_parse_blocks()
-        *
-        * @param string $content Content to test.
-        * @return bool Whether the content contains blocks.
-
-        function gutenberg_content_has_blocks( $content ) {
-            return false !== strpos( $content, '<!-- wp:' );
+        // Don't switch to HTML mode if currently uploading media
+        if (!mUploadingMediaProgressMax.isEmpty() || isActionInProgress()) {
+            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
+            return;
         }
-     */
-    public static boolean contentContainsGutenbergBlocks(String postContent) {
-        return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
+
+        getGutenbergContainerFragment().toggleHtmlMode();
     }
 
     /*
@@ -405,9 +558,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (!isAdded()) {
             return "";
         }
-
-        // TODO: Aztec returns a ZeroWidthJoiner when empty so, strip it. Aztec needs fixing to return empty string.
-        return StringUtils.notNullStr(mTitle.getText().toString().replaceAll("&nbsp;$", "").replaceAll("\u200B", ""));
+        return getGutenbergContainerFragment().getTitle(new OnGetContentTimeout() {
+            @Override public void onGetContentTimeout(InterruptedException ie) {
+                AppLog.e(T.EDITOR, ie);
+                Thread.currentThread().interrupt();
+            }
+        });
     }
 
     @Override
@@ -421,7 +577,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
      */
     @Override
     public CharSequence getContent(CharSequence originalContent) {
-        return mWPAndroidGlueCode.getContent(originalContent, new OnGetContentTimeout() {
+        return getGutenbergContainerFragment().getContent(originalContent, new OnGetContentTimeout() {
             @Override public void onGetContentTimeout(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
@@ -444,7 +600,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        mWPAndroidGlueCode.appendMediaFile(mediaUrl);
+        if (URLUtil.isNetworkUrl(mediaUrl)) {
+            getGutenbergContainerFragment().appendMediaFile(Integer.valueOf(mediaFile.getMediaId()), mediaUrl);
+        } else {
+            getGutenbergContainerFragment().appendUploadMediaFile(mediaFile.getId(), "file://" + mediaUrl);
+            mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
+        }
     }
 
     @Override
@@ -462,7 +623,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public boolean hasFailedMediaUploads() {
-        return false;
+        return (mFailedMediaIds.size() > 0);
     }
 
     @Override
@@ -487,85 +648,44 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadReattached(String localId, float currentProgress) {
+    public void onMediaUploadReattached(String localMediaId, float currentProgress) {
+        mUploadingMediaProgressMax.put(localMediaId, currentProgress);
+        getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(localMediaId), currentProgress);
     }
 
     @Override
-    public void onMediaUploadRetry(String localId, MediaType mediaType) {
+    public void onMediaUploadRetry(String localMediaId, MediaType mediaType) {
+        if (mFailedMediaIds.contains(localMediaId)) {
+            mFailedMediaIds.remove(localMediaId);
+            mUploadingMediaProgressMax.put(localMediaId, 0f);
+        }
+
+        // TODO request to start the upload again from the UploadService
     }
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+        mUploadingMediaProgressMax.remove(localMediaId);
+        getGutenbergContainerFragment().mediaFileUploadSucceeded(Integer.valueOf(localMediaId), mediaFile.getFileURL(),
+                Integer.valueOf(mediaFile.getMediaId()));
     }
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
+        mUploadingMediaProgressMax.put(localMediaId, progress);
+        getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(localMediaId), progress);
     }
 
     @Override
     public void onMediaUploadFailed(final String localMediaId, final MediaType
             mediaType, final String errorMessage) {
+        getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId));
+        mFailedMediaIds.add(localMediaId);
+        mUploadingMediaProgressMax.remove(localMediaId);
     }
 
     @Override
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Toggle action bar auto-hiding for the new orientation
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
-                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        } else {
-            mHideActionBarOnSoftKeyboardUp = false;
-            showActionBarIfNeeded();
-        }
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        // In landscape mode, if the title or content view has received a touch event, the keyboard will be
-        // displayed and the action bar should hide
-        if (event.getAction() == MotionEvent.ACTION_UP
-                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        }
-        return false;
-    }
-
-    /**
-     * Hide the action bar if needed. Don't hide it if
-     * - a hardware keyboard is connected.
-     * - the soft keyboard is not visible.
-     * - it's not visible.
-     */
-    private void hideActionBarIfNeeded() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
-        }
-        if (!isHardwareKeyboardPresent()
-                && mHideActionBarOnSoftKeyboardUp
-                && actionBar.isShowing()) {
-            getActionBar().hide();
-        }
-    }
-
-    /**
-     * Show the action bar if needed.
-     */
-    private void showActionBarIfNeeded() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
-        }
-        if (!actionBar.isShowing()) {
-            actionBar.show();
-        }
     }
 
     /**
@@ -587,16 +707,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
         }
 
-        if (mSource.isFocused()) {
-            ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
-        } else {
-            getActivity().runOnUiThread(new Runnable() {
+
+        getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mEditorFragmentListener.onAddMediaClicked();
                 }
             });
-        }
 
         return true;
     }

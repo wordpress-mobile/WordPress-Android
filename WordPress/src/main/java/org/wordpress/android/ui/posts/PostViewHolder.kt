@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.graphics.drawable.Drawable
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.View
@@ -20,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -161,47 +161,51 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                 } else if (uploadError.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, false, uploadError.postError)
                 }
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload
+                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
                 statusColorResId = R.color.alert_red
             } else if (postAdapterItem.uploadStatus.isUploading) {
                 statusTextResId = R.string.post_uploading
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload
+                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
             } else if (postAdapterItem.uploadStatus.hasInProgressMediaUpload) {
                 statusTextResId = R.string.uploading_media
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload
+                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
             } else if (postAdapterItem.uploadStatus.isQueued || postAdapterItem.uploadStatus.hasPendingMediaUpload) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
                 statusTextResId = R.string.post_queued
-                statusIconResId = R.drawable.ic_gridicons_cloud_upload
+                statusIconResId = R.drawable.ic_cloud_upload_white_24dp
+            } else if (postAdapterItem.isConflicted) {
+                statusTextResId = R.string.local_post_is_conflicted
+                statusIconResId = R.drawable.ic_notice_white_24dp
+                statusColorResId = R.color.alert_red
             } else if (postAdapterItem.isLocalDraft) {
                 statusTextResId = R.string.local_draft
-                statusIconResId = R.drawable.ic_gridicons_page
+                statusIconResId = R.drawable.ic_pages_white_24dp
                 statusColorResId = R.color.alert_yellow_dark
             } else if (postAdapterItem.isLocallyChanged) {
                 statusTextResId = R.string.local_changes
-                statusIconResId = R.drawable.ic_gridicons_page
+                statusIconResId = R.drawable.ic_pages_white_24dp
                 statusColorResId = R.color.alert_yellow_dark
             } else {
                 when (postAdapterItem.postStatus) {
                     PostStatus.DRAFT -> {
                         statusTextResId = R.string.post_status_draft
-                        statusIconResId = R.drawable.ic_gridicons_page
+                        statusIconResId = R.drawable.ic_pages_white_24dp
                         statusColorResId = R.color.alert_yellow_dark
                     }
                     PostStatus.PRIVATE -> statusTextResId = R.string.post_status_post_private
                     PostStatus.PENDING -> {
                         statusTextResId = R.string.post_status_pending_review
-                        statusIconResId = R.drawable.ic_gridicons_page
+                        statusIconResId = R.drawable.ic_pages_white_24dp
                         statusColorResId = R.color.alert_yellow_dark
                     }
                     PostStatus.SCHEDULED -> {
                         statusTextResId = R.string.post_status_scheduled
-                        statusIconResId = R.drawable.ic_gridicons_calendar
+                        statusIconResId = R.drawable.ic_calendar_white_24dp
                         statusColorResId = R.color.blue_medium
                     }
                     PostStatus.TRASHED -> {
                         statusTextResId = R.string.post_status_trashed
-                        statusIconResId = R.drawable.ic_gridicons_page
+                        statusIconResId = R.drawable.ic_pages_white_24dp
                         statusColorResId = R.color.alert_red
                     }
                     PostStatus.UNKNOWN -> {
@@ -225,8 +229,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
 
             var drawable: Drawable? = if (statusIconResId != 0) resources.getDrawable(statusIconResId) else null
             if (drawable != null) {
-                drawable = DrawableCompat.wrap(drawable)
-                DrawableCompat.setTint(drawable, resources.getColor(statusColorResId))
+                drawable = ColorUtils.applyTintToDrawable(context, statusIconResId, statusColorResId)
                 statusImage.visibility = View.VISIBLE
                 config.imageManager.load(statusImage, drawable)
             } else {
@@ -300,8 +303,8 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
             when (buttonType) {
                 PostListButton.BUTTON_MORE -> animateButtonRows(postData, false)
                 PostListButton.BUTTON_BACK -> animateButtonRows(postData, true)
-                else -> postAdapterItem.onButtonClicked(buttonType)
             }
+            postAdapterItem.onButtonClicked(buttonType)
         }
         editButton.setOnClickListener(btnClickListener)
         viewButton.setOnClickListener(btnClickListener)

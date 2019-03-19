@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/theme_grid_card_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
-        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        card_view:cardCornerRadius="@dimen/default_cardview_radius"
         card_view:cardElevation="@dimen/card_elevation"
         android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"
         android:layout_marginEnd="@dimen/theme_browser_cardview_margin_large">
@@ -18,7 +20,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/cardview_default_radius">
+            android:layout_margin="@dimen/default_cardview_radius">
 
             <FrameLayout
                 android:id="@+id/theme_grid_item_image_layout"
@@ -30,9 +32,10 @@
                 <ImageView
                     android:id="@+id/theme_grid_item_image"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/theme_browser_preview_image_height"
+                    android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    android:contentDescription="@string/theme_image_desc"/>
+                    android:contentDescription="@string/theme_image_desc"
+                    tools:src="@drawable/bg_rectangle_grey_lighten_20_themes_100dp"/>
 
             </FrameLayout>
 
@@ -41,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/theme_grid_item_image_layout"
-                android:layout_marginTop="@dimen/cardview_default_radius">
+                android:layout_marginTop="@dimen/default_cardview_radius">
 
                 <LinearLayout
                     android:layout_width="wrap_content"

@@ -5,15 +5,17 @@ import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
-import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
+import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -21,50 +23,61 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_ITEM_COUNT = 6
+private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class TagsAndCategoriesUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsStore: InsightsStore,
+    private val tagsStore: TagsStore,
+    private val statsSiteProvider: StatsSiteProvider,
     private val resourceProvider: ResourceProvider,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<TagsModel, TagsAndCategoriesUiState>(
         TAGS_AND_CATEGORIES,
         mainDispatcher,
         TagsAndCategoriesUiState(null)
 ) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
+    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
+
+    override suspend fun fetchRemoteData(forced: Boolean): State<TagsModel> {
+        val response = tagsStore.fetchTags(statsSiteProvider.siteModel, LimitMode.Top(itemsToLoad), forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> model.let { onModel(model) }
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && model.tags.isNotEmpty() -> State.Data(model)
+            else -> State.Empty()
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val model = insightsStore.getTags(site, PAGE_SIZE)
-        model?.let { onModel(model) }
+    override suspend fun loadCachedData(): TagsModel? {
+        return tagsStore.getTags(statsSiteProvider.siteModel, LimitMode.Top(itemsToLoad))
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_tags_and_categories))
 
     override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_insights_tags_and_categories, menuAction = this::onMenuClick))
+
+        if (useCaseMode == BLOCK) {
+            items.add(Title(R.string.stats_insights_tags_and_categories, menuAction = this::onMenuClick))
+        }
+
         if (domainModel.tags.isEmpty()) {
             items.add(Empty())
         } else {
@@ -97,7 +110,7 @@ class TagsAndCategoriesUseCase
             }
 
             items.addAll(tagsList)
-            if (domainModel.hasMore) {
+            if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
                                 text = R.string.stats_insights_view_more,
@@ -132,7 +145,7 @@ class TagsAndCategoriesUseCase
             }
         }
         return ListItemWithIcon(
-                icon = R.drawable.ic_folder_multiple_grey_dark_24dp,
+                icon = R.drawable.ic_folder_multiple_white_24dp,
                 text = text,
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1
@@ -142,6 +155,7 @@ class TagsAndCategoriesUseCase
     private fun mapItem(item: TagModel.Item): ListItemWithIcon {
         return ListItemWithIcon(
                 icon = getIcon(item.type),
+                textStyle = LIGHT,
                 text = item.name,
                 showDivider = false,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick)
@@ -149,7 +163,7 @@ class TagsAndCategoriesUseCase
     }
 
     private fun getIcon(type: String) =
-            if (type == "tag") drawable.ic_tag_grey_dark_24dp else drawable.ic_folder_grey_dark_24dp
+            if (type == "tag") drawable.ic_tag_white_24dp else drawable.ic_folder_white_24dp
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED)
@@ -162,4 +176,23 @@ class TagsAndCategoriesUseCase
     }
 
     data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null)
+
+    class TagsAndCategoriesUseCaseFactory
+    @Inject constructor(
+        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        private val tagsStore: TagsStore,
+        private val statsSiteProvider: StatsSiteProvider,
+        private val resourceProvider: ResourceProvider,
+        private val analyticsTracker: AnalyticsTrackerWrapper
+    ) : InsightUseCaseFactory {
+        override fun build(useCaseMode: UseCaseMode) =
+                TagsAndCategoriesUseCase(
+                        mainDispatcher,
+                        tagsStore,
+                        statsSiteProvider,
+                        resourceProvider,
+                        analyticsTracker,
+                        useCaseMode
+                )
+    }
 }

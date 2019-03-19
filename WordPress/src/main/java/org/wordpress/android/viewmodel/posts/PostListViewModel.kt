@@ -17,6 +17,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -51,7 +52,6 @@ import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
-import org.wordpress.android.ui.posts.PostListAction.ShowGutenbergWarningDialog
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
@@ -65,6 +65,7 @@ import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
@@ -79,6 +80,7 @@ import javax.inject.Inject
 
 const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
+const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 
 enum class PostListEmptyViewState {
     EMPTY_LIST,
@@ -111,9 +113,12 @@ class PostListViewModel @Inject constructor(
 
     // Keep a reference to the currently being trashed post, so we can hide it during Undo Snackbar
     private var postIdToTrash: Pair<Int, Long>? = null
-    // Since we are using DialogFragments we need to hold onto which post will be published or trashed
+    // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForTrashDialog: Int? = null
+    private var localPostIdForConflictResolutionDialog: Int? = null
+    private var originalPostCopyForConflictUndo: PostModel? = null
+    private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
     // Initial target post to scroll to
     private var targetLocalPostId: Int? = null
 
@@ -324,6 +329,18 @@ class PostListViewModel @Inject constructor(
         _dialogAction.postValue(dialogHolder)
     }
 
+    private fun showConflictedPostResolutionDialog(post: PostModel) {
+        val dialogHolder = DialogHolder(
+                tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
+                message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
+                positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
+                negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
+        )
+        localPostIdForConflictResolutionDialog = post.id
+        _dialogAction.postValue(dialogHolder)
+    }
+
     private fun publishPost(localPostId: Int) {
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
@@ -337,25 +354,16 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
-        // Show Gutenberg Warning Dialog if post contains GB blocks and it's not disabled
-        if (!isGutenbergEnabled() &&
-                PostUtils.contentContainsGutenbergBlocks(post.content) &&
-                !AppPrefs.isGutenbergWarningDialogDisabled()) {
-            _postListAction.postValue(ShowGutenbergWarningDialog(site, post))
-        } else {
-            editPost(site, post)
+        // first of all, check whether this post is in Conflicted state.
+        if (doesPostHaveUnhandledConflict(post)) {
+            showConflictedPostResolutionDialog(post)
+            return
         }
+
+        editPost(site, post)
     }
 
     private fun editPost(site: SiteModel, post: PostModel) {
-        val properties = HashMap<String, Any>()
-        properties["button"] = "edit"
-        if (!post.isLocalDraft) {
-            properties["post_id"] = post.remotePostId
-        }
-        properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils.contentContainsGutenbergBlocks(post.content)
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, site, properties)
-
         if (UploadService.isPostUploadingOrQueued(post)) {
             // If the post is uploading media, allow the media to continue uploading, but don't upload the
             // post itself when they finish (since we're about to edit it again)
@@ -406,6 +414,14 @@ class PostListViewModel @Inject constructor(
                             T.POSTS,
                             "Error updating the post with type: ${event.error.type} and message: ${event.error.message}"
                     )
+                } else {
+                    originalPostCopyForConflictUndo?.id?.let {
+                        val updatedPost = postStore.getPostByLocalPostId(it)
+                        // Conflicted post has been successfully updated with its remote version
+                        if (!PostUtils.isPostInConflictWithRemote(updatedPost)) {
+                            conflictedPostUpdatedWithItsRemoteVersion()
+                        }
+                    }
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {
@@ -525,6 +541,7 @@ class PostListViewModel @Inject constructor(
                 date = PostUtils.getFormattedDate(post),
                 postStatus = postStatus,
                 isLocallyChanged = post.isLocallyChanged,
+                isConflicted = doesPostHaveUnhandledConflict(post),
                 canShowStats = canShowStats,
                 canPublishPost = canPublishPost,
                 canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
@@ -532,11 +549,47 @@ class PostListViewModel @Inject constructor(
                 featuredImageUrl = getFeaturedImageUrl(post.featuredImageId, post.content),
                 uploadStatus = uploadStatus
         )
+
         return PostAdapterItem(
                 data = postData,
-                onSelected = { handlePostButton(PostListButton.BUTTON_EDIT, post) },
-                onButtonClicked = { handlePostButton(it, post) }
+                onSelected = {
+                    trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
+                    handlePostButton(PostListButton.BUTTON_EDIT, post)
+                },
+                onButtonClicked = {
+                    trackAction(it, post, AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED)
+                    handlePostButton(it, post)
+                }
         )
+    }
+
+    private fun trackAction(buttonType: Int, postData: PostModel, statsEvent: Stat) {
+        val properties = HashMap<String, Any?>()
+        if (!postData.isLocalDraft) {
+            properties["post_id"] = postData.remotePostId
+        }
+
+        properties["action"] = when (buttonType) {
+            PostListButton.BUTTON_EDIT -> {
+                properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils
+                        .contentContainsGutenbergBlocks(postData.content)
+                "edit"
+            }
+            PostListButton.BUTTON_RETRY -> "retry"
+            PostListButton.BUTTON_SUBMIT -> "submit"
+            PostListButton.BUTTON_VIEW -> "view"
+            PostListButton.BUTTON_PREVIEW -> "preview"
+            PostListButton.BUTTON_STATS -> "stats"
+            PostListButton.BUTTON_TRASH -> "trash"
+            PostListButton.BUTTON_DELETE -> "delete"
+            PostListButton.BUTTON_PUBLISH -> "publish"
+            PostListButton.BUTTON_SYNC -> "sync"
+            PostListButton.BUTTON_MORE -> "more"
+            PostListButton.BUTTON_BACK -> "back"
+            else -> AppLog.e(AppLog.T.POSTS, "Unknown button type")
+        }
+
+        AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)
     }
 
     private fun getFeaturedImageUrl(featuredImageId: Long, postContent: String): String? {
@@ -601,6 +654,11 @@ class PostListViewModel @Inject constructor(
                 localPostIdForPublishDialog = null
                 publishPost(it)
             }
+            CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
+                localPostIdForConflictResolutionDialog = null
+                // here load version from remote
+                updateConflictedPostWithItsRemoteVersion(it)
+            }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
@@ -609,60 +667,99 @@ class PostListViewModel @Inject constructor(
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
+            CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
+                updateConflictedPostWithItsLocalVersion(it)
+            }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
     }
 
     fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
-        // Cancel and outside touch dismiss works the same way
-        onNegativeClickedForBasicDialog(instanceTag)
-    }
-
-    // Gutenberg Events
-
-    fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
-        if (post != null) {
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, site
-            )
-            editPost(site, post)
+        // Cancel and outside touch dismiss works the same way for all, except for conflict resolution dialog,
+        // for which tapping outside and actively tapping the "edit local" have different meanings
+        if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG) {
+            onNegativeClickedForBasicDialog(instanceTag)
         }
     }
 
-    fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
+    // Post Conflict Resolution
+
+    private fun updateConflictedPostWithItsRemoteVersion(localPostId: Int) {
+        // We need network connection to load a remote post
+        if (!checkNetworkConnection()) {
+            return
+        }
+
+        val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
-            // We only want to track the event if the post is not null
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_CANCEL_TAPPED, post, site
-            )
+            originalPostCopyForConflictUndo = post.clone()
+            dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
+            _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
         }
     }
 
-    fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long) {
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
-        if (post != null) {
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED, post, site
-            )
-        }
-    }
-
-    fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePageId: Long, checked: Boolean) {
-        AppPrefs.setGutenbergWarningDialogDisabled(checked)
-        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, site)
-        if (post != null) { // We only want to track the event if the post is not null
-            val trackValue = if (checked) {
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_CHECKED
-            } else {
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_UNCHECKED
+    private fun conflictedPostUpdatedWithItsRemoteVersion() {
+        val undoAction = {
+            // here replace the post with whatever we had before, again
+            if (originalPostCopyForConflictUndo != null) {
+                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
             }
-            PostUtils.trackGutenbergDialogEvent(trackValue, post, site)
         }
+        val onDismissAction = {
+            originalPostCopyForConflictUndo = null
+        }
+        val snackbarHolder = SnackbarMessageHolder(
+                R.string.snackbar_conflict_local_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+        )
+        _snackbarAction.postValue(snackbarHolder)
+    }
+
+    private fun updateConflictedPostWithItsLocalVersion(localPostId: Int) {
+        // We need network connection to push local version to remote
+        if (!checkNetworkConnection()) {
+            return
+        }
+
+        // Keep a reference to which post is being updated with the local version so we can avoid showing the conflicted
+        // label during the undo snackbar.
+        localPostIdForFetchingRemoteVersionOfConflictedPost = localPostId
+        pagedListWrapper.invalidateData()
+
+        val post = postStore.getPostByLocalPostId(localPostId) ?: return
+
+        // and now show a snackbar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
+        var isUndoed = false
+        val undoAction = {
+            isUndoed = true
+
+            // Remove the reference for the post being updated and re-show the conflicted label on undo
+            localPostIdForFetchingRemoteVersionOfConflictedPost = null
+            pagedListWrapper.invalidateData()
+        }
+
+        val onDismissAction = {
+            if (!isUndoed) {
+                localPostIdForFetchingRemoteVersionOfConflictedPost = null
+                PostUtils.trackSavePostAnalytics(post, site)
+                dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
+            }
+        }
+        val snackbarHolder = SnackbarMessageHolder(
+                R.string.snackbar_conflict_web_version_discarded,
+                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+        )
+        _snackbarAction.postValue(snackbarHolder)
     }
 
     // Utils
+
+    private fun doesPostHaveUnhandledConflict(post: PostModel): Boolean {
+        // If we are fetching the remote version of a conflicted post, it means it's already being handled
+        val isFetchingConflictedPost = localPostIdForFetchingRemoteVersionOfConflictedPost != null &&
+                localPostIdForFetchingRemoteVersionOfConflictedPost == post.id
+        return !isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post)
+    }
 
     private fun checkNetworkConnection(): Boolean =
             if (isNetworkAvailable) {

@@ -10,22 +10,23 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
-msgctxt "release_note_116"
+#. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_120"
 msgid ""
-"11.6:\n"
-"* This is the first version of our refreshed stats! It’s completely rebuilt in the new design.\n"
-"* The Notifications list layout is more readable, as is the Me tab on tablets and large devices.\n"
-"* New privacy settings let you remove of geolocation from uploaded images.\n"
-"* Better messaging when there is no data to show in the stats screen adds clarity.\n"
-"* There was an issue where some users of self-hosted sites couldn’t update their password. Now all users can.\n"
+"12.0:\n"
+"* The editor now opens faster for large posts.\n"
+"* Now, new posts are created as drafts to make sure they won’t be published accidentally.\n"
+"* A new section in stats shows your site’s posting activity.\n"
+"* Fixed a bug where headings inserted in the block editor would appear without formatting.\n"
+"* Updated the notification screen’s design.\n"
 msgstr ""
 
-msgctxt "release_note_115"
+msgctxt "release_note_119"
 msgid ""
-"11.5:\n"
-"* You can now register a .blog subdomain when you start a new site on the app!\n"
-"* Looking to add GIFs to your content? Giphy support is here (while a few rare bugs are gone).\n"
-"* Content you publish with the new WordPress Editor now works smoothly on the app.\n"
+"11.9:\n"
+"* A new, smart site-creation process starts you off with a personalized, already-customized website\n"
+"* Markup lovers rejoice; <em> is now the default markup for italic in the editor.\n"
+"* Fixes! Sometimes the “My Site” screen didn’t look right in right-to-left languages, or posts showed up as scheduled even after they were published — no more.\n"
 msgstr ""
 
 msgctxt "sample_post_content"
@@ -110,5 +111,45 @@ msgctxt "play_store_screenshot_5"
 msgid ""
 "All the stats\n"
 "in your hand\n"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_1"
+msgid "<strong>Create </strong>beautiful<br />posts and pages"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_2"
+msgid "<strong>Track </strong><span>what your<br />visitors love</span>
+"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_3"
+msgid "<strong>Check </strong><span>what's<br />happening in real time</span>
+"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_4"
+msgid "<strong>Share </strong> from<br />anywhere
+"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_5"
+msgid "<strong>Capture </strong>ideas<br />on the go
+"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_6"
+msgid "<strong>Write</strong> without compromises"
 msgstr ""
 

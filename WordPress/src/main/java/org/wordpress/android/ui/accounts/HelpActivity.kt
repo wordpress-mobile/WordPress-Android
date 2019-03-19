@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.SupportHelper
+import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.AppLogViewerActivity
@@ -146,7 +147,11 @@ class HelpActivity : AppCompatActivity() {
         RELEASE_NOTES("origin:release-notes"),
         SIGNUP_EMAIL("origin:signup-email"),
         SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
-        NEW_SITE_CREATION_CREATING("origin:new-site-create-creating"),
+        SITE_CREATION_CATEGORY("origin:site-create-site-category"),
+        SITE_CREATION_THEME("origin:site-create-site-theme"),
+        SITE_CREATION_DETAILS("origin:site-create-site-details"),
+        SITE_CREATION_DOMAIN("origin:site-create-site-domain"),
+        SITE_CREATION_CREATING("origin:site-create-creating"),
         NEW_SITE_CREATION_SEGMENTS("origin:new-site-create-site-segments"),
         NEW_SITE_CREATION_VERTICALS("origin:new-site-create-site-verticals"),
         NEW_SITE_CREATION_DOMAINS("origin:new-site-create-domains"),
@@ -173,9 +178,27 @@ class HelpActivity : AppCompatActivity() {
             if (selectedSite != null) {
                 intent.putExtra(WordPress.SITE, selectedSite)
             }
-            if (extraSupportTags != null && !extraSupportTags.isEmpty()) {
-                intent.putStringArrayListExtra(HelpActivity.EXTRA_TAGS_KEY, extraSupportTags as ArrayList<String>?)
+
+            val tagsList: ArrayList<String>? = if (AppPrefs.isGutenbergDefaultForNewPosts()) {
+                // construct a mutable list to add the Gutenberg related extra tag
+                val list = ArrayList<String>()
+
+                // add the provided list of tags if any
+                extraSupportTags?.let {
+                    list.addAll(extraSupportTags)
+                }
+
+                // Append the "mobile_gutenberg_is_default" tag if gutenberg is set to default for new posts
+                list.add(ZendeskExtraTags.gutenbergIsDefault)
+                list // "return" the list
+            } else {
+                extraSupportTags as ArrayList<String>?
             }
+
+            if (tagsList != null && !tagsList.isEmpty()) {
+                intent.putStringArrayListExtra(HelpActivity.EXTRA_TAGS_KEY, tagsList)
+            }
+
             return intent
         }
     }

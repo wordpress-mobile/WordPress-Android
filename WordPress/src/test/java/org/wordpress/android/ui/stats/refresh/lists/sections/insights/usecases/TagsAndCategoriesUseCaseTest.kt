@@ -11,18 +11,17 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
-import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -35,16 +34,18 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var insightsStore: TagsStore
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: TagsAndCategoriesUseCase
-    private val pageSize = 6
+    private val blockItemCount = 6
     private val singleTagViews: Long = 10
     private val firstTag = TagModel.Item("tag1", "tag", "url.com")
     private val secondTag = TagModel.Item("tag2", "tag", "url2.com")
@@ -55,9 +56,12 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         useCase = TagsAndCategoriesUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
+                statsSiteProvider,
                 resourceProvider,
-                tracker
+                tracker,
+                BLOCK
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
 
     @Test
@@ -71,45 +75,47 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 listOf(firstTag, secondTag),
                 categoryViews
         )
-        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
+        val model = TagsModel(listOf(singleTag, category), hasMore = false)
+        whenever(insightsStore.getTags(site, LimitMode.Top(blockItemCount))).thenReturn(model)
+        whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
-                        TagsModel(listOf(singleTag, category), hasMore = false)
+                        model
                 )
         )
 
         val result = loadTags(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        val expandableItem = (result as BlockList).assertNonExpandedList(categoryName)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        val expandableItem = result.data!!.assertNonExpandedList(categoryName)
 
         expandableItem.onExpandClicked(true)
 
         val updatedResult = loadTags(true, forced)
 
-        (updatedResult as BlockList).assertExpandedList(categoryName)
+        updatedResult.data!!.assertExpandedList(categoryName)
     }
 
-    private fun BlockList.assertNonExpandedList(
+    private fun List<BlockListItem>.assertNonExpandedList(
         categoryName: String
     ): ExpandableItem {
-        assertThat(this.items).hasSize(4)
-        assertTitle(this.items[0])
-        assertHeader(this.items[1])
-        assertSingleTag(this.items[2], firstTag.name, singleTagViews.toString())
-        return assertCategory(this.items[3], categoryName, categoryViews)
+        assertThat(this).hasSize(4)
+        assertTitle(this[0])
+        assertHeader(this[1])
+        assertSingleTag(this[2], firstTag.name, singleTagViews.toString())
+        return assertCategory(this[3], categoryName, categoryViews)
     }
 
-    private fun BlockList.assertExpandedList(
+    private fun List<BlockListItem>.assertExpandedList(
         categoryName: String
     ): ExpandableItem {
-        assertThat(this.items).hasSize(7)
-        assertTitle(this.items[0])
-        assertHeader(this.items[1])
-        assertSingleTag(this.items[2], firstTag.name, singleTagViews.toString())
-        val expandableItem = assertCategory(this.items[3], categoryName, categoryViews)
-        assertSingleTag(this.items[4], firstTag.name, null)
-        assertSingleTag(this.items[5], secondTag.name, null)
-        assertThat(this.items[6]).isEqualTo(Divider)
+        assertThat(this).hasSize(7)
+        assertTitle(this[0])
+        assertHeader(this[1])
+        assertSingleTag(this[2], firstTag.name, singleTagViews.toString())
+        val expandableItem = assertCategory(this[3], categoryName, categoryViews)
+        assertSingleTag(this[4], firstTag.name, null)
+        assertSingleTag(this[5], secondTag.name, null)
+        assertThat(this[6]).isEqualTo(Divider)
         return expandableItem
     }
 
@@ -119,38 +125,39 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         val singleTagViews: Long = 10
         val tagItem = TagModel.Item("tag1", "tag", "url.com")
         val tag = TagModel(listOf(tagItem), singleTagViews)
-        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
+        val model = TagsModel(listOf(tag), hasMore = true)
+        whenever(insightsStore.getTags(site, LimitMode.Top(blockItemCount))).thenReturn(model)
+        whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
-                        TagsModel(listOf(tag), hasMore = true)
+                        model
                 )
         )
 
         val result = loadTags(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(4)
-            assertTitle(this.items[0])
-            assertHeader(this.items[1])
-            assertSingleTag(this.items[2], tagItem.name, singleTagViews.toString())
-            assertLink(this.items[3])
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertHeader(this[1])
+            assertSingleTag(this[2], tagItem.name, singleTagViews.toString())
+            assertLink(this[3])
         }
     }
 
     @Test
     fun `maps empty tags to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(TagsModel(listOf(), hasMore = false))
         )
 
         val result = loadTags(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(BlockListItem.Empty())
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
         }
     }
 
@@ -158,7 +165,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
@@ -166,10 +173,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
 
         val result = loadTags(true, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -195,7 +199,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         } else {
             assertThat(item.value).isNull()
         }
-        assertThat(item.icon).isEqualTo(R.drawable.ic_tag_grey_dark_24dp)
+        assertThat(item.icon).isEqualTo(R.drawable.ic_tag_white_24dp)
     }
 
     private fun assertCategory(
@@ -206,7 +210,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         assertThat(item.type).isEqualTo(EXPANDABLE_ITEM)
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
         assertThat(item.header.value).isEqualTo(views.toString())
-        assertThat(item.header.icon).isEqualTo(R.drawable.ic_folder_multiple_grey_dark_24dp)
+        assertThat(item.header.icon).isEqualTo(R.drawable.ic_folder_multiple_white_24dp)
         return item
     }
 
@@ -215,10 +219,10 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
     }
 
-    private suspend fun loadTags(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadTags(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }

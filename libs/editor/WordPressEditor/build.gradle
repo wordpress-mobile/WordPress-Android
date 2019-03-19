@@ -1,10 +1,15 @@
 buildscript {
+
+    ext {
+        aztecVersion = 'v1.3.21'
+    }
+
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
@@ -25,8 +30,8 @@ apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462
 apply from: 'https://gist.githubusercontent.com/hypest/f526fe0775dedce0ce0133f1400d22a4/raw/0008b271a0d28fc79957fd3c2a027f57e98f796a/wait-jitpack.gradle'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         versionCode 13
@@ -53,25 +58,29 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:animated-vector-drawable:28.0.0'
+    implementation 'com.android.support:gridlayout-v7:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'org.wordpress:utils:1.22'
 
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:v1.3.16')
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:v1.3.16')
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:v1.3.16')
+    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion")
+    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
+    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
     if (rootProject.ext.buildGutenbergFromSource) {
         implementation (project(':react-native-gutenberg-bridge')) {
             exclude group: 'com.squareup.okhttp3'
+            exclude group: 'com.google.code.findbugs'
         }
     } else {
         implementation (waitJitpack('com.github.wordpress-mobile', 'gutenberg-mobile', submoduleGitHash('../../../', 'libs/gutenberg-mobile'))) {
             // Inheriting RN's okhttp version can interfere with FluxC SSL handling
             // See https://github.com/wordpress-mobile/WordPress-Android/issues/9032 and https://github.com/wordpress-mobile/WordPress-FluxC-Android/issues/919
             exclude group: 'com.squareup.okhttp3'
+            exclude group: 'com.google.code.findbugs'
         }
     }
 

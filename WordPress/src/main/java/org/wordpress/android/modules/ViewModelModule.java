@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
+import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel;
@@ -12,11 +13,11 @@ import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsVie
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.YearsListViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
@@ -161,6 +162,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(GiphyPickerViewModel.class)
     abstract ViewModel giphyPickerViewModel(GiphyPickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PlansViewModel.class)
+    abstract ViewModel plansViewModel(PlansViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

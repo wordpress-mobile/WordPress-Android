@@ -4,13 +4,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
-import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -21,6 +21,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -28,36 +30,45 @@ import javax.inject.Named
 
 typealias SelectedTabUiState = Int
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_ITEM_COUNT = 6
 
 class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsStore: InsightsStore,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val commentsStore: CommentsStore,
+    private val statsSiteProvider: StatsSiteProvider,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
+    override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
+        val fetchMode = if (useCaseMode == VIEW_ALL) LimitMode.All else LimitMode.Top(BLOCK_ITEM_COUNT)
+        val response = commentsStore.fetchComments(statsSiteProvider.siteModel, fetchMode, forced)
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> State.Error(error.message ?: error.type.name)
+            model != null && (model.authors.isNotEmpty() || model.posts.isNotEmpty()) -> State.Data(
+                    model,
+                    cached = response.cached)
+            else -> State.Empty()
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = insightsStore.getComments(site, PAGE_SIZE)
-        dbModel?.let { onModel(dbModel) }
+    override suspend fun loadCachedData(): CommentsModel? {
+        val cacheMode = if (useCaseMode == VIEW_ALL) LimitMode.All else LimitMode.Top(BLOCK_ITEM_COUNT)
+        return commentsStore.getComments(statsSiteProvider.siteModel, cacheMode)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_comments))
 
     override fun buildStatefulUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(string.stats_view_comments, menuAction = this::onMenuClick))
+
+        if (useCaseMode == BLOCK) {
+            items.add(Title(string.stats_view_comments, menuAction = this::onMenuClick))
+        }
+
         if (model.authors.isNotEmpty() || model.posts.isNotEmpty()) {
             items.add(
                     TabsItem(
@@ -72,11 +83,11 @@ class CommentsUseCase
                 items.addAll(buildPostsTab(model.posts))
             }
 
-            if (model.hasMoreAuthors || model.hasMorePosts) {
+            if (model.hasMoreAuthors && uiState == 0 || model.hasMorePosts && uiState == 1) {
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,
-                                navigateAction = NavigationAction.create(this::onLinkClick)
+                                navigateAction = NavigationAction.create(uiState, this::onLinkClick)
                         )
                 )
             }
@@ -90,7 +101,7 @@ class CommentsUseCase
         val mutableItems = mutableListOf<BlockListItem>()
         if (authors.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_author_label, R.string.stats_comments_label))
-            mutableItems.addAll(authors.take(PAGE_SIZE).mapIndexed { index, author ->
+            mutableItems.addAll(authors.mapIndexed { index, author ->
                 ListItemWithIcon(
                         iconUrl = author.gravatar,
                         iconStyle = AVATAR,
@@ -109,7 +120,7 @@ class CommentsUseCase
         val mutableItems = mutableListOf<BlockListItem>()
         if (posts.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_title_label, R.string.stats_comments_label))
-            mutableItems.addAll(posts.take(PAGE_SIZE).mapIndexed { index, post ->
+            mutableItems.addAll(posts.mapIndexed { index, post ->
                 ListItem(
                         post.name,
                         post.comments.toFormattedString(),
@@ -122,8 +133,25 @@ class CommentsUseCase
         return mutableItems
     }
 
-    private fun onLinkClick() {
+    private fun onLinkClick(selectedTab: Int) {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_COMMENTS_VIEW_MORE_TAPPED)
-        navigateTo(ViewCommentsStats())
+        navigateTo(ViewCommentsStats(selectedTab))
+    }
+
+    class CommentsUseCaseFactory
+    @Inject constructor(
+        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        private val commentsStore: CommentsStore,
+        private val statsSiteProvider: StatsSiteProvider,
+        private val analyticsTracker: AnalyticsTrackerWrapper
+    ) : InsightUseCaseFactory {
+        override fun build(useCaseMode: UseCaseMode) =
+                CommentsUseCase(
+                        mainDispatcher,
+                        commentsStore,
+                        statsSiteProvider,
+                        analyticsTracker,
+                        useCaseMode
+                )
     }
 }

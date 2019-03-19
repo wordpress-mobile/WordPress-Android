@@ -3,24 +3,25 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.view.View
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Alignment.CENTER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BACKGROUND_INFO
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CENTERED_COLUMNS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LEFT_COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 
 sealed class BlockListItem(val type: Type) {
     fun id(): Int {
@@ -31,21 +32,23 @@ sealed class BlockListItem(val type: Type) {
 
     enum class Type {
         TITLE,
+        VALUE_ITEM,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
         INFO,
-        BACKGROUND_INFO,
         EMPTY,
         TEXT,
-        CENTERED_COLUMNS,
-        LEFT_COLUMNS,
+        COLUMNS,
         LINK,
         BAR_CHART,
+        CHART_LEGEND,
         TABS,
         HEADER,
         MAP,
         EXPANDABLE_ITEM,
-        DIVIDER
+        DIVIDER,
+        LOADING_ITEM,
+        ACTIVITY_ITEM
     }
 
     data class Title(
@@ -53,6 +56,14 @@ sealed class BlockListItem(val type: Type) {
         val text: String? = null,
         val menuAction: ((View) -> Unit)? = null
     ) : BlockListItem(TITLE)
+
+    data class ValueItem(
+        val value: String,
+        @StringRes val unit: Int,
+        val isFirst: Boolean = false,
+        val change: String? = null,
+        val positive: Boolean = true
+    ) : BlockListItem(VALUE_ITEM)
 
     data class ListItem(
         val text: String,
@@ -74,21 +85,30 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
         val showDivider: Boolean = true,
+        val textStyle: TextStyle = TextStyle.NORMAL,
         val navigationAction: NavigationAction? = null
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
 
         enum class IconStyle {
-            NORMAL, AVATAR
+            NORMAL, AVATAR, EMPTY_SPACE
+        }
+
+        enum class TextStyle {
+            NORMAL, LIGHT
         }
     }
 
     data class Information(val text: String) : BlockListItem(INFO)
 
-    data class BackgroundInformation(val text: String) : BlockListItem(BACKGROUND_INFO)
-
-    data class Text(val text: String, val links: List<Clickable>? = null) : BlockListItem(TEXT) {
+    data class Text(
+        val text: String? = null,
+        val textResource: Int? = null,
+        val links: List<Clickable>? = null,
+        val isLast: Boolean = false
+    ) :
+            BlockListItem(TEXT) {
         data class Clickable(
             val link: String,
             val navigationAction: NavigationAction
@@ -99,13 +119,10 @@ sealed class BlockListItem(val type: Type) {
         val headers: List<Int>,
         val values: List<String>,
         val selectedColumn: Int? = null,
-        val alignment: Alignment = CENTER,
         val onColumnSelected: ((position: Int) -> Unit)? = null
-    ) : BlockListItem(if (alignment == CENTER) CENTERED_COLUMNS else LEFT_COLUMNS) {
+    ) : BlockListItem(COLUMNS) {
         override val itemId: Int
             get() = headers.hashCode()
-
-        enum class Alignment { CENTER, LEFT }
     }
 
     data class Link(
@@ -117,14 +134,18 @@ sealed class BlockListItem(val type: Type) {
 
     data class BarChartItem(
         val entries: List<Bar>,
+        val overlappingEntries: List<Bar>? = null,
         val selectedItem: String? = null,
-        val onBarSelected: ((String?) -> Unit)? = null
+        val onBarSelected: ((period: String?) -> Unit)? = null,
+        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null
     ) : BlockListItem(BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
 
         override val itemId: Int
             get() = entries.hashCode()
     }
+
+    data class ChartLegend(@StringRes val text: Int) : BlockListItem(CHART_LEGEND)
 
     data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
             BlockListItem(TABS) {
@@ -150,6 +171,18 @@ sealed class BlockListItem(val type: Type) {
     data class MapItem(val mapData: String, @StringRes val label: Int) : BlockListItem(MAP)
 
     object Divider : BlockListItem(DIVIDER)
+
+    data class LoadingItem(val loadMore: () -> Unit, val isLoading: Boolean = false) : BlockListItem(LOADING_ITEM)
+
+    data class ActivityItem(val blocks: List<Block>) : BlockListItem(ACTIVITY_ITEM) {
+        data class Block(val label: String, val boxes: List<Box>)
+        enum class Box {
+            INVISIBLE, VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
+        }
+
+        override val itemId: Int
+            get() = blocks.fold(0) { acc, block -> acc + block.label.hashCode() }
+    }
 
     interface NavigationAction {
         fun click()

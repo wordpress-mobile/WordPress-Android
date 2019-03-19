@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -69,6 +68,7 @@ import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -971,10 +971,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (canTrash()) {
             mBtnTrashComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.TRASH) {
-                mBtnModerateIcon.setImageResource(R.drawable.ic_undo_24dp);
-                mBtnModerateIcon
-                        .setColorFilter(ContextCompat.getColor(mBtnModerateIcon.getContext(), R.color.grey_text_min),
-                                android.graphics.PorterDuff.Mode.SRC_IN);
+                ColorUtils.INSTANCE.setImageResourceWithTint(mBtnModerateIcon, R.drawable.ic_undo_white_24dp,
+                        R.color.grey_text_min);
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
@@ -1014,15 +1012,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int color;
 
         if (status == CommentStatus.APPROVED) {
-            color = ContextCompat.getColor(getActivity(), R.color.orange_jazzy);
+            color = R.color.orange_jazzy;
             mBtnModerateTextView.setText(R.string.comment_status_approved);
         } else {
-            color = ContextCompat.getColor(getActivity(), R.color.grey_text_min);
+            color = R.color.grey_text_min;
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
         }
 
-        mBtnModerateIcon.setImageTintList(ColorStateList.valueOf(color));
-        mBtnModerateTextView.setTextColor(color);
+        ColorUtils.INSTANCE.setImageResourceWithTint(mBtnModerateIcon, R.drawable.ic_checkmark_white_24dp, color);
+        mBtnModerateTextView.setTextColor(ContextCompat.getColor(requireContext(), color));
     }
 
     /*
@@ -1144,20 +1142,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int drawable;
 
         if (isLiked) {
-            color = ContextCompat.getColor(getActivity(), R.color.orange_jazzy);
-            drawable = R.drawable.ic_star_orange_jazzy_24dp;
+            color = R.color.orange_jazzy;
+            drawable = R.drawable.ic_star_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setActivated(true);
         } else {
-            color = ContextCompat.getColor(getActivity(), R.color.grey_text_min);
-            drawable = R.drawable.ic_star_outline_grey_min_24dp;
+            color = R.color.grey_text_min;
+            drawable = R.drawable.ic_star_outline_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeComment.setActivated(false);
         }
 
-        mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), drawable));
-        mBtnLikeIcon.setImageTintList(ColorStateList.valueOf(color));
-        mBtnLikeTextView.setTextColor(color);
+        ColorUtils.INSTANCE.setImageResourceWithTint(mBtnLikeIcon, drawable, color);
+        mBtnLikeTextView.setTextColor(ContextCompat.getColor(requireContext(), color));
     }
 
     private void setProgressVisible(boolean visible) {

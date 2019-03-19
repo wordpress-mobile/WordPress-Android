@@ -17,8 +17,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <!-- GCM all build types configuration -->
@@ -112,9 +110,20 @@
             android:theme="@style/LoginTheme" />
 
         <activity
+            android:name=".ui.accounts.NewBlogActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.accounts.SignupEpilogueActivity"
             android:label="@string/signup_epilogue_screen_title"
             android:theme="@style/LoginTheme" />
+
+        <activity
+            android:name=".ui.accounts.SiteCreationActivity"
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.sitecreation.NewSiteCreationActivity"
@@ -252,11 +261,11 @@
         <activity android:name=".ui.plans.PlansActivity"
                   android:theme="@style/Calypso.NoActionBar"
                   android:launchMode="singleTop"
-                  android:label="@string/plans"/>
+                  android:parentActivityName=".ui.main.WPMainActivity"/>
 
         <!-- Stats Activities -->
         <activity
-            android:name=".ui.stats.StatsActivity"
+            android:name=".ui.stats.OldStatsActivity"
             android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
@@ -275,6 +284,11 @@
         </activity>
         <activity
             android:name=".ui.stats.refresh.StatsActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
+            android:name=".ui.stats.refresh.StatsViewAllActivity"
+            android:label="@string/stats"
             android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
@@ -626,10 +640,6 @@
             android:exported="false"
             android:label="Suggestion Service" />
         <service
-            android:name=".ui.plans.PlanUpdateService"
-            android:exported="false"
-            android:label="Plans Update Service" />
-        <service
             android:name=".push.NotificationsProcessingService"
             android:exported="false"
             android:label="Notifications Quick Actions processing Service" />
@@ -660,6 +670,10 @@
             android:name=".login.LoginWpcomService"
             android:exported="false"
             android:label="Login to WPCOM Service" />
+        <service
+            android:name=".ui.accounts.signup.SiteCreationService"
+            android:exported="false"
+            android:label="Site Creation Service" />
 
         <service
             android:name=".ui.sitecreation.services.NewSiteCreationService"
@@ -702,6 +716,7 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".ui.quickstart.QuickStartReminderReceiver" />
 
 
         <!-- Google Cloud Messaging receiver and services -->
@@ -728,12 +743,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name=".ui.quickstart.QuickStartActivity"
-            android:label="@string/quick_start_sites"
-            android:parentActivityName=".ui.main.WPMainActivity"
-            android:theme="@style/CalypsoTheme" />
 
         <!-- Smart Lock for Passwords -->
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />

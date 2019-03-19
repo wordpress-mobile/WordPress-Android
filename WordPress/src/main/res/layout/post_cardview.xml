@@ -9,7 +9,7 @@
                                     android:layout_height="wrap_content"
                                     android:stateListAnimator="@anim/pressed_card"
                                     card_view:cardBackgroundColor="@color/white"
-                                    card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                                    card_view:cardCornerRadius="@dimen/default_cardview_radius"
                                     card_view:cardElevation="@dimen/card_elevation" >
 
     <LinearLayout
@@ -70,7 +70,7 @@
                 android:layout_height="16dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                tools:src="@drawable/ic_gridicons_cloud_upload"
+                tools:src="@drawable/ic_cloud_upload_white_24dp"
                 android:layout_marginEnd="@dimen/margin_small"/>
 
             <org.wordpress.android.widgets.WPTextView

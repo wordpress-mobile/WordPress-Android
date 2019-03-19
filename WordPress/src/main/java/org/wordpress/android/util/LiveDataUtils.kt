@@ -5,17 +5,27 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.Transformations
+import kotlinx.coroutines.CoroutineScope
+import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 
 /**
  * A helper function that merges sources into a single LiveData object
  * @param sources producing an item of the same type
+ * @param distinct true if all the emitted items should be distinct
+ * @param singleEvent is true when each item should be shown only once
  * @return merged results from all the sources
  */
-fun <T> mergeNotNull(vararg sources: LiveData<T>): LiveData<T> {
-    val mediator = MediatorLiveData<T>()
+fun <T> mergeNotNull(
+    vararg sources: LiveData<T>,
+    distinct: Boolean = true,
+    singleEvent: Boolean = false
+): MediatorLiveData<T> {
+    val mediator = if (singleEvent) SingleMediatorLiveEvent() else MediatorLiveData<T>()
     for (source in sources) {
         mediator.addSource(source) {
-            mediator.value = it
+            if (mediator.value != it || !distinct) {
+                mediator.value = it
+            }
         }
     }
     return mediator
@@ -24,13 +34,21 @@ fun <T> mergeNotNull(vararg sources: LiveData<T>): LiveData<T> {
 /**
  * A helper function that merges sources into a single LiveData object
  * @param sources producing an item of the same type
+ * @param distinct true if all the emitted items should be distinct
+ * @param singleEvent is true when each item should be shown only once
  * @return merged results from all the sources
  */
-fun <T> mergeNotNull(sources: Iterable<LiveData<T>>): LiveData<T> {
-    val mediator = MediatorLiveData<T>()
+fun <T> mergeNotNull(
+    sources: Iterable<LiveData<T>>,
+    distinct: Boolean = true,
+    singleEvent: Boolean = false
+): MediatorLiveData<T> {
+    val mediator = if (singleEvent) SingleMediatorLiveEvent() else MediatorLiveData<T>()
     for (source in sources) {
         mediator.addSource(source) {
-            mediator.value = it
+            if (mediator.value != it || !distinct) {
+                mediator.value = it
+            }
         }
     }
     return mediator
@@ -45,10 +63,14 @@ fun <T> mergeNotNull(sources: Iterable<LiveData<T>>): LiveData<T> {
 fun <T, U, V> mergeNotNull(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T, U) -> V): LiveData<V> {
     val mediator = MediatorLiveData<Pair<T?, U?>>()
     mediator.addSource(sourceA) {
-        mediator.value = it to mediator.value?.second
+        if (mediator.value?.first != it) {
+            mediator.value = it to mediator.value?.second
+        }
     }
     mediator.addSource(sourceB) {
-        mediator.value = mediator.value?.first to it
+        if (mediator.value?.second != it) {
+            mediator.value = mediator.value?.first to it
+        }
     }
     return mediator.map { (dataA, dataB) ->
         if (dataA != null && dataB != null) {
@@ -65,7 +87,7 @@ fun <T, U, V> mergeNotNull(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (
  * @param sourceB second source
  * @return new data source
  */
-fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?) -> V?): LiveData<V> {
+fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?) -> V?): MediatorLiveData<V> {
     val mediator = MediatorLiveData<Pair<T?, U?>>()
     mediator.addSource(sourceA) {
         mediator.value = Pair(it, mediator.value?.second)
@@ -88,16 +110,22 @@ fun <S, T, U, V> merge(
     sourceB: LiveData<T>,
     sourceC: LiveData<U>,
     merger: (S?, T?, U?) -> V
-): LiveData<V> {
+): MediatorLiveData<V> {
     val mediator = MediatorLiveData<Triple<S?, T?, U?>>()
     mediator.addSource(sourceA) {
-        mediator.value = Triple(it, mediator.value?.second, mediator.value?.third)
+        if (mediator.value?.first != it) {
+            mediator.value = Triple(it, mediator.value?.second, mediator.value?.third)
+        }
     }
     mediator.addSource(sourceB) {
-        mediator.value = Triple(mediator.value?.first, it, mediator.value?.third)
+        if (mediator.value?.second != it) {
+            mediator.value = Triple(mediator.value?.first, it, mediator.value?.third)
+        }
     }
     mediator.addSource(sourceC) {
-        mediator.value = Triple(mediator.value?.first, mediator.value?.second, it)
+        if (mediator.value?.third != it) {
+            mediator.value = Triple(mediator.value?.first, mediator.value?.second, it)
+        }
     }
     return mediator.map { (dataA, dataB, dataC) -> merger(dataA, dataB, dataC) }
 }
@@ -107,18 +135,20 @@ fun <S, T, U, V> merge(
  * @param sources is a map of all the live data sources in a map by a given key
  * @return one livedata instance that combines all the values into one map
  */
-fun <Key, Value> combineMap(sources: Map<Key, LiveData<Value>>): LiveData<Map<Key, Value>> {
+fun <Key, Value> combineMap(sources: Map<Key, LiveData<Value>>): MediatorLiveData<Map<Key, Value>> {
     val mediator = MediatorLiveData<MutableMap<Key, Value>>()
     mediator.value = mutableMapOf()
     for (source in sources) {
-        mediator.addSource(source.value) {
+        mediator.addSource(source.value) { updatedValue ->
             val value = mediator.value ?: mutableMapOf()
-            if (it != null) {
-                value[source.key] = it
-            } else {
-                value.remove(source.key)
+            if (value[source.key] != updatedValue) {
+                if (updatedValue != null) {
+                    value[source.key] = updatedValue
+                } else {
+                    value.remove(source.key)
+                }
+                mediator.value = value
             }
-            mediator.value = value
         }
     }
     return mediator.map { it.toMap() }
@@ -127,10 +157,73 @@ fun <Key, Value> combineMap(sources: Map<Key, LiveData<Value>>): LiveData<Map<Ke
 /**
  * Simple wrapper of the map utility method that is null safe
  */
-fun <T, U> LiveData<T>.map(mapper: (T) -> U?): LiveData<U> {
+fun <T, U> LiveData<T>.map(mapper: (T) -> U?): MediatorLiveData<U> {
+    val result = MediatorLiveData<U>()
+    result.addSource(this) { x -> result.value = x?.let { mapper(x) } }
+    return result
+}
+
+/**
+ * Calls the specified function [block] with `this` value as its receiver and returns new instance of LiveData.
+ */
+fun <T> LiveData<T>.perform(block: LiveData<T>.(T) -> Unit): LiveData<T> {
     return Transformations.map(this) {
-        it?.let(mapper)
+        block(it)
+        return@map it
     }
+}
+
+/**
+ * Simple wrapper of the map utility method that is null safe
+ */
+fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U?): LiveData<U> {
+    return Transformations.map(this) { mapper(it) }
+}
+
+/**
+ * This method ensures that the LiveData instance doesn't emit the same item twice
+ */
+fun <T> LiveData<T>.distinct(): MediatorLiveData<T> {
+    val mediatorLiveData: MediatorLiveData<T> = MediatorLiveData()
+    mediatorLiveData.addSource(this) {
+        if (it != mediatorLiveData.value) {
+            mediatorLiveData.value = it
+        }
+    }
+    return mediatorLiveData
+}
+
+/**
+ * Call this method if you want to throttle the LiveData emissions.
+ * The default implementation takes only the last emitted result after 100ms.
+ */
+fun <T> LiveData<T>.throttle(
+    coroutineScope: CoroutineScope,
+    distinct: Boolean = false,
+    offset: Long = 100
+): ThrottleLiveData<T> {
+    val mediatorLiveData: ThrottleLiveData<T> = ThrottleLiveData(coroutineScope = coroutineScope, offset = offset)
+    mediatorLiveData.addSource(this) {
+        if (it != mediatorLiveData.value || !distinct) {
+            mediatorLiveData.value = it
+        }
+    }
+    return mediatorLiveData
+}
+
+/**
+ * A helper function that filters data and only emits what fits the predicate
+ * @param predicate
+ * @return filtered result
+ */
+fun <T> LiveData<T>.filter(predicate: (T) -> Boolean): LiveData<T> {
+    val mediator = MediatorLiveData<T>()
+    mediator.addSource(this) {
+        if (it != null && predicate(it)) {
+            mediator.value = it
+        }
+    }
+    return mediator
 }
 
 /**

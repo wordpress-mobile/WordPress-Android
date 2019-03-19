@@ -3,22 +3,7 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:key="@string/pref_key_app_settings_root">
-
-    <PreferenceCategory
-        android:key="@string/pref_key_experimental_section"
-        android:layout="@layout/wp_preference_category"
-        android:title="@string/preference_experimental">
-
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_enable_gutenberg"
-            android:key="@string/pref_key_enable_gutenberg"
-            android:layout="@layout/wp_preference_layout"
-            android:summary="@string/site_settings_enable_gutenberg_summary"
-            android:title="@string/site_settings_enable_gutenberg"/>
-
-    </PreferenceCategory>
 
     <org.wordpress.android.ui.prefs.DetailListPreference
         android:key="@string/pref_key_language"
@@ -33,28 +18,37 @@
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:defaultValue="true"
             android:key="@string/pref_key_send_usage"
+            android:icon="@drawable/ic_stats_white_24dp"
             android:layout="@layout/wp_preference_layout"
             android:title="@string/preference_collect_information"
-            android:icon="@drawable/ic_stats_grey_min_24dp"/>
+            app:iconTint="@color/grey_text_min"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/cookie_policy_learn_more_header"
+            app:button="@string/learn_more"
             app:caption="@string/cookie_policy_learn_more_caption"
-            app:url="https://www.automattic.com/cookies"
-            app:icon="@drawable/ic_info_outline_grey_min_24dp"/>
+            app:url="https://www.automattic.com/cookies"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/privacy_policy_learn_more_header"
-            app:caption="@string/privacy_policy_learn_more_caption"
             app:button="@string/privacy_policy_read"
-            app:url="https://www.automattic.com/privacy"
-            app:icon="@drawable/ic_user_circle_grey_min_24dp"/>
+            app:caption="@string/privacy_policy_learn_more_caption"
+            app:url="https://www.automattic.com/privacy"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/third_party_policy_learn_more_header"
+            app:button="@string/learn_more"
             app:caption="@string/third_party_policy_learn_more_caption"
-            app:url="https://www.automattic.com/cookies"
-            app:icon="@drawable/ic_briefcase_grey_min_24dp"/>
+            app:url="https://www.automattic.com/cookies"/>
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_send_crash"
+            android:icon="@drawable/ic_bug_white_24dp"
+            android:layout="@layout/wp_preference"
+            android:summary="@string/preference_crash_reports_summary"
+            android:title="@string/preference_crash_reports"
+            app:iconTint="@color/grey_text_min"/>
 
     </PreferenceScreen>
 
@@ -68,14 +62,12 @@
         android:layout="@layout/wp_preference_category"
         android:title="@string/preference_editor">
 
-        <org.wordpress.android.ui.prefs.DetailListPreference
-            android:defaultValue="1"
-            android:entries="@array/editor_entries"
-            android:entryValues="@array/editor_values"
-            android:key="@string/pref_key_editor_type"
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_gutenberg_default_for_new_posts"
+            android:key="@string/pref_key_gutenberg_default_for_new_posts"
             android:layout="@layout/wp_preference_layout"
-            android:title="@string/preference_editor_type"
-            tools:summary="Visual"/>
+            android:title="@string/site_settings_gutenberg_default_for_new_posts"
+            android:summary="@string/site_settings_gutenberg_default_for_new_posts_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory

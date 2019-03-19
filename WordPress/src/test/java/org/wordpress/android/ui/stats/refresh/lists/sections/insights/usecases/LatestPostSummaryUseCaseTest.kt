@@ -13,28 +13,30 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
-import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var insightsStore: LatestPostInsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: LatestPostSummaryUseCase
@@ -43,9 +45,11 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         useCase = LatestPostSummaryUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
+                statsSiteProvider,
                 latestPostSummaryMapper,
                 tracker
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
         useCase.navigationTarget.observeForever {}
     }
 
@@ -65,20 +69,18 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(Error::class.java)
-        val failed = result as Error
-        assertThat(failed.errorMessage).isEqualTo(message)
+        assertThat(result!!.state).isEqualTo(UseCaseState.ERROR)
     }
 
     @Test
-    fun `returns null item when model is missing`() = test {
+    fun `returns empty item when model is missing`() = test {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(OnStatsFetched())
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isNull()
+        assertThat(result!!.state).isEqualTo(UseCaseState.EMPTY)
     }
 
     @Test
@@ -88,6 +90,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         val viewsCount = 0
         val postTitle = "title"
         val model = buildLatestPostModel(postTitle, viewsCount, listOf())
+        whenever(insightsStore.getLatestPostInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
                 OnStatsFetched(
                         model
@@ -98,13 +101,13 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(BlockList::class.java)
-        (result as BlockList).items.apply {
+        assertThat(result!!.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
             val title = this[0] as Title
             assertThat(title.textResource).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
             val link = this[2] as Link
-            assertThat(link.icon).isEqualTo(R.drawable.ic_share_blue_medium_24dp)
+            assertThat(link.icon).isEqualTo(R.drawable.ic_share_white_24dp)
             assertThat(link.text).isEqualTo(R.string.stats_insights_share_post)
 
             link.toNavigationTarget().apply {
@@ -123,6 +126,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         val postTitle = "title"
         val dayViews = listOf("2018-01-01" to 10)
         val model = buildLatestPostModel(postTitle, viewsCount, dayViews)
+        whenever(insightsStore.getLatestPostInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
                 OnStatsFetched(
                         model
@@ -130,21 +134,27 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         )
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(eq(model), any())).thenReturn(textItem)
-        val columnItem = mock<Columns>()
-        whenever(latestPostSummaryMapper.buildColumnItem(viewsCount, 0, 0)).thenReturn(columnItem)
         val chartItem = mock<BarChartItem>()
         whenever(latestPostSummaryMapper.buildBarChartItem(dayViews)).thenReturn(chartItem)
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(BlockList::class.java)
-        (result as BlockList).items.apply {
+        assertThat(result!!.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
             val title = this[0] as Title
             assertThat(title.textResource).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
-            assertThat(this[2]).isEqualTo(columnItem)
+            val valueItem = this[2] as ValueItem
+            assertThat(valueItem.value).isEqualTo(viewsCount.toString())
+            assertThat(valueItem.unit).isEqualTo(R.string.stats_views)
             assertThat(this[3]).isEqualTo(chartItem)
-            val link = this[4] as Link
+            val likesItem = this[4] as ListItemWithIcon
+            assertThat(likesItem.textResource).isEqualTo(R.string.stats_likes)
+            assertThat(likesItem.value).isEqualTo("0")
+            val commentsItem = this[5] as ListItemWithIcon
+            assertThat(commentsItem.textResource).isEqualTo(R.string.stats_comments)
+            assertThat(commentsItem.value).isEqualTo("0")
+            val link = this[6] as Link
             assertThat(link.icon).isNull()
             assertThat(link.text).isEqualTo(R.string.stats_insights_view_more)
 
@@ -160,10 +170,10 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     private suspend fun loadLatestPostSummary(
         refresh: Boolean,
         forced: Boolean
-    ): StatsBlock? {
-        var result: StatsBlock? = null
+    ): UseCaseModel? {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return result
     }
 

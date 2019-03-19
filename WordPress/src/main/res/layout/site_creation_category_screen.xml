@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:clipChildren="false"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_extra_large">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/label_title"
+                style="@style/SiteCreation.Heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/site_creation_label_category_title"/>
+
+            <TextView
+                android:id="@+id/label"
+                style="@style/LoginTheme.TextLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:text="@string/site_creation_label_category"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:clipChildren="false"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/site_creation_card_blog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/card_elevation"
+                android:layout_marginStart="@dimen/card_elevation"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_extra_large">
+
+                    <ImageView
+                        android:id="@+id/image_blog"
+                        android:layout_width="@dimen/site_creation_category_illustration_sz"
+                        android:layout_height="@dimen/site_creation_category_illustration_sz"
+                        android:layout_centerVertical="true"
+                        android:importantForAccessibility="no"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/img_type_blog_80dp"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/margin_extra_large"
+                        android:layout_toEndOf="@id/image_blog" >
+
+                        <TextView
+                            android:id="@+id/title_blog"
+                            style="@style/SiteCreation.CardTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/site_creation_title_blog"/>
+
+                        <TextView
+                            style="@style/SiteCreation.Subhead"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/title_blog"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:text="@string/site_creation_subtitle_blog"/>
+                    </RelativeLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/site_creation_card_website"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/card_elevation"
+                android:layout_marginStart="@dimen/card_elevation"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_extra_large">
+
+                    <ImageView
+                        android:id="@+id/image_website"
+                        android:layout_width="@dimen/site_creation_category_illustration_sz"
+                        android:layout_height="@dimen/site_creation_category_illustration_sz"
+                        android:layout_centerVertical="true"
+                        android:importantForAccessibility="no"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/img_type_website_80dp"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/margin_extra_large"
+                        android:layout_toEndOf="@id/image_website" >
+
+                        <TextView
+                            android:id="@+id/title_website"
+                            style="@style/SiteCreation.CardTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/site_creation_title_website"/>
+
+                        <TextView
+                            style="@style/SiteCreation.Subhead"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/title_website"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:text="@string/site_creation_subtitle_website"/>
+                    </RelativeLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/site_creation_card_portfolio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/card_elevation"
+                android:layout_marginStart="@dimen/card_elevation"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/default_cardview_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_extra_large">
+
+                    <ImageView
+                        android:id="@+id/image_portfolio"
+                        android:layout_width="@dimen/site_creation_category_illustration_sz"
+                        android:layout_height="@dimen/site_creation_category_illustration_sz"
+                        android:layout_centerVertical="true"
+                        android:importantForAccessibility="no"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/img_type_portfolio_80dp"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/margin_extra_large"
+                        android:layout_toEndOf="@id/image_portfolio" >
+
+                        <TextView
+                            android:id="@+id/title_portfolio"
+                            style="@style/SiteCreation.CardTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/site_creation_title_portfolio"/>
+
+                        <TextView
+                            style="@style/SiteCreation.Subhead"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/title_portfolio"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:text="@string/site_creation_subtitle_portfolio"/>
+                    </RelativeLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

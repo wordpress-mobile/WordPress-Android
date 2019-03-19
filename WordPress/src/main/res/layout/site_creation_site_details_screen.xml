@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:clipChildren="false"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_extra_large">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/label_title"
+                style="@style/SiteCreation.Heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/site_creation_label_site_details_title"/>
+
+            <TextView
+                android:id="@+id/label"
+                style="@style/LoginTheme.TextLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:text="@string/site_creation_label_site_details"/>
+
+        </LinearLayout>
+
+        <org.wordpress.android.login.widgets.WPLoginInputRow
+            android:id="@+id/site_creation_site_title_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/site_creation_title_hint"
+            android:imeOptions="actionNext"
+            android:inputType="textNoSuggestions"
+            app:wpIconDrawable="@drawable/ic_globe_white_24dp"
+            app:wpIconDrawableTint="@color/grey"/>
+
+        <org.wordpress.android.login.widgets.WPLoginInputRow
+            android:id="@+id/site_creation_site_tagline_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:hint="@string/site_creation_tagline_hint"
+            android:inputType="textNoSuggestions"
+            app:wpIconDrawable="@drawable/ic_aside_white_24dp"
+            app:wpIconDrawableTint="@color/grey"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_tagline_left"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/site_creation_tagline_helper"/>
+    </LinearLayout>
+</ScrollView>

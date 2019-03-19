@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.arch.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -12,7 +14,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_A
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
@@ -20,32 +24,37 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 
 class StatsViewModelTest : BaseUnitTest() {
-    @Mock lateinit var insightsUseCase: BaseListUseCase
-    @Mock lateinit var dayStatsUseCase: BaseListUseCase
-    @Mock lateinit var weekStatsUseCase: BaseListUseCase
-    @Mock lateinit var monthStatsUseCase: BaseListUseCase
-    @Mock lateinit var yearStatsUseCase: BaseListUseCase
+    @Mock lateinit var baseListUseCase: BaseListUseCase
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var statsSectionManager: SelectedSectionManager
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var site: SiteModel
     private lateinit var viewModel: StatsViewModel
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
+        whenever(baseListUseCase.snackbarMessage).thenReturn(MutableLiveData())
         viewModel = StatsViewModel(
-                insightsUseCase,
-                dayStatsUseCase,
-                weekStatsUseCase,
-                monthStatsUseCase,
-                yearStatsUseCase,
+                mapOf(StatsSection.DAYS to baseListUseCase),
                 Dispatchers.Unconfined,
                 selectedDateProvider,
                 statsSectionManager,
-                analyticsTracker
+                analyticsTracker,
+                networkUtilsWrapper,
+                statsSiteProvider
         )
+        whenever(statsSectionManager.getSelectedSection()).thenReturn(INSIGHTS)
+
+        viewModel.start(site, false, null)
     }
 
     @Test

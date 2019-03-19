@@ -2,6 +2,7 @@ package org.wordpress.android.util.analytics
 
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
 
 class AnalyticsTrackerWrapper
@@ -12,6 +13,10 @@ class AnalyticsTrackerWrapper
 
     fun track(stat: Stat, properties: Map<String, *>) {
         AnalyticsTracker.track(stat, properties)
+    }
+
+    fun track(stat: Stat, site: SiteModel) {
+        AnalyticsUtils.trackWithSiteDetails(stat, site)
     }
 
     /**
