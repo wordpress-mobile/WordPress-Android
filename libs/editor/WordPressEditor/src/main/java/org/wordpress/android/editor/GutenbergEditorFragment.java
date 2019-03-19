@@ -233,6 +233,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override public void onCancelUploadForMediaClicked(int mediaId) {
                         showCancelMediaUploadDialog(mediaId);
                     }
+
+                    @Override public void onCancelUploadForMediaDueToDeletedBlock(int mediaId) {
+                        cancelMediaUploadForDeletedBlock(mediaId);
+                    }
                 },
                 new OnReattachQueryListener() {
                     @Override
@@ -334,6 +338,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
                 CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
             mEditorFragmentListener.onCapturePhotoClicked();
+        }
+    }
+
+    private void cancelMediaUploadForDeletedBlock(int localMediaId) {
+        if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
+            // first make sure to signal deletion
+            mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
+            // second also perform a media upload cancel action, through the onMediaUploadCancelClicked interface
+            mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
+            mUploadingMediaProgressMax.remove(localMediaId);
+        } else {
+            // upload has already finished by the time the user deleted the block, so no op
         }
     }
 
