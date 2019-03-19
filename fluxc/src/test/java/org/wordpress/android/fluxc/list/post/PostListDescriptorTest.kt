@@ -227,21 +227,8 @@ internal class PostListDescriptorTest(
                             ),
                             shouldHaveSameTypeIdentifier = true,
                             shouldHaveSameUniqueIdentifier = false
-                    ),
-                    PostListDescriptorTestCase(
-                            typeIdentifierReason = "Different onlyAuthorId should have same type identifiers",
-                            uniqueIdentifierReason = "Different onlyAuthorId should have different unique identifiers",
-                            descriptor1 = PostListDescriptorForXmlRpcSite(
-                                    mockSite,
-                                    onlyAuthorId = null
-                            ),
-                            descriptor2 = PostListDescriptorForXmlRpcSite(
-                                    mockSite,
-                                    onlyAuthorId = 1337
-                            ),
-                            shouldHaveSameTypeIdentifier = true,
-                            shouldHaveSameUniqueIdentifier = false
                     )
+                    // No test required for XMLRPC since it doesn't support author filtering
             )
         }
     }
