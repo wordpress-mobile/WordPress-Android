@@ -9,6 +9,7 @@ import com.yarolegovich.wellsql.core.annotation.Table
 class QuickStartTaskModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     @Column var siteId: Long = 0
     @Column var taskName: String? = null
+    @Column var taskType: String? = null
     @Column var isDone: Boolean = false
         @JvmName("setIsDone")
         set

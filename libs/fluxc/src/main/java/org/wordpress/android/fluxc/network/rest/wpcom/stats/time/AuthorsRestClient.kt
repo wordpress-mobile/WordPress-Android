@@ -41,14 +41,14 @@ class AuthorsRestClient
         site: SiteModel,
         granularity: StatsGranularity,
         date: Date,
-        pageSize: Int,
+        itemsToLoad: Int,
         forced: Boolean
     ): FetchStatsPayload<AuthorsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.top_authors.urlV1_1
         val params = mapOf(
                 "period" to granularity.toString(),
-                "max" to pageSize.toString(),
-                "date" to statsUtils.getFormattedDate(site, date)
+                "max" to itemsToLoad.toString(),
+                "date" to statsUtils.getFormattedDate(date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,

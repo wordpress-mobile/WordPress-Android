@@ -35,14 +35,14 @@ class VisitAndViewsRestClient
         site: SiteModel,
         date: Date,
         granularity: StatsGranularity,
-        pageSize: Int,
+        itemsToLoad: Int,
         forced: Boolean
     ): FetchStatsPayload<VisitsAndViewsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.visits.urlV1_1
         val params = mapOf(
                 "unit" to granularity.toString(),
-                "quantity" to pageSize.toString(),
-                "date" to statsUtils.getFormattedDate(site, date)
+                "quantity" to itemsToLoad.toString(),
+                "date" to statsUtils.getFormattedDate(date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,

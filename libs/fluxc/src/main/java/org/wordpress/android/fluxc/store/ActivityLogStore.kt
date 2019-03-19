@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import android.annotation.SuppressLint
 import com.yarolegovich.wellsql.SelectQuery
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -55,6 +56,7 @@ class ActivityLogStore
         }
     }
 
+    @SuppressLint("WrongConstant")
     fun getActivityLogForSite(site: SiteModel, ascending: Boolean = true): List<ActivityLogModel> {
         val order = if (ascending) SelectQuery.ORDER_ASCENDING else SelectQuery.ORDER_DESCENDING
         return activityLogSqlUtils.getActivitiesForSite(site, order)
@@ -76,6 +78,7 @@ class ActivityLogStore
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }
 
+    @SuppressLint("WrongConstant")
     suspend fun fetchActivities(fetchActivityLogPayload: FetchActivityLogPayload): OnActivityLogFetched {
         var offset = 0
         if (fetchActivityLogPayload.loadMore) {

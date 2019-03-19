@@ -40,7 +40,7 @@ class AuthorsSqlUtilsTest {
     @Before
     fun setUp() {
         timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils, statsUtils)
-        whenever(statsUtils.getFormattedDate(eq(site), eq(DATE))).thenReturn(STRING_DATE)
+        whenever(statsUtils.getFormattedDate(eq(DATE))).thenReturn(STRING_DATE)
     }
 
     @Test
@@ -63,7 +63,7 @@ class AuthorsSqlUtilsTest {
         mappedTypes.forEach { statsType, dbGranularity ->
             timeStatsSqlUtils.insert(site, AUTHORS_RESPONSE, dbGranularity, DATE)
 
-            verify(statsSqlUtils).insert(site, AUTHORS, statsType, AUTHORS_RESPONSE, STRING_DATE)
+            verify(statsSqlUtils).insert(site, AUTHORS, statsType, AUTHORS_RESPONSE, true, STRING_DATE)
         }
     }
 }

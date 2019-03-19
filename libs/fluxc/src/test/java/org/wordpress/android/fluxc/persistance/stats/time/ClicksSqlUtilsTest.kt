@@ -40,7 +40,7 @@ class ClicksSqlUtilsTest {
     @Before
     fun setUp() {
         timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils, statsUtils)
-        whenever(statsUtils.getFormattedDate(eq(site), eq(DATE))).thenReturn(DATE_VALUE)
+        whenever(statsUtils.getFormattedDate(eq(DATE))).thenReturn(DATE_VALUE)
     }
 
     @Test
@@ -63,7 +63,7 @@ class ClicksSqlUtilsTest {
         mappedTypes.forEach { statsType, dbGranularity ->
             timeStatsSqlUtils.insert(site, CLICKS_RESPONSE, dbGranularity, DATE)
 
-            verify(statsSqlUtils).insert(site, CLICKS, statsType, CLICKS_RESPONSE, DATE_VALUE)
+            verify(statsSqlUtils).insert(site, CLICKS, statsType, CLICKS_RESPONSE, true, DATE_VALUE)
         }
     }
 }
