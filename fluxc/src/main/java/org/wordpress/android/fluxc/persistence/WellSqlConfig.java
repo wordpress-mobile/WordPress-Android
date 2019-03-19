@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 60;
+        return 61;
     }
 
     @Override
@@ -466,7 +466,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,JSON "
                         + "TEXT NOT NULL)");
                 oldVersion++;
-            case 59:
+            case 60:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("DROP TABLE StatsBlock");
                 db.execSQL(
