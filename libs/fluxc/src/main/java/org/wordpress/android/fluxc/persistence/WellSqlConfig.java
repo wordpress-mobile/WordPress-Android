@@ -466,6 +466,18 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,JSON "
                         + "TEXT NOT NULL)");
                 oldVersion++;
+            case 59:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE StatsBlock");
+                db.execSQL(
+                        "CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,JSON TEXT NOT "
+                        + "NULL)");
+                db.execSQL(
+                        "CREATE TABLE StatsRequest (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,TIME_STAMP INTEGER,"
+                        + "REQUESTED_ITEMS INTEGER)");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();

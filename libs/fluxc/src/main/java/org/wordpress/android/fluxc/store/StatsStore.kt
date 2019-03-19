@@ -121,7 +121,7 @@ class StatsStore
         CLICKS_BY_WEEKS
     }
 
-    data class OnStatsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
+    data class OnStatsFetched<T>(val model: T? = null, val cached: Boolean = false) : Store.OnChanged<StatsError>() {
         constructor(error: StatsError) : this() {
             this.error = error
         }
