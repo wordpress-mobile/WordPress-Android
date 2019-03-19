@@ -205,6 +205,8 @@ dependencies {
     }
     androidTestImplementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 
+    androidTestImplementation project(path:':libs:mocks:WordPressMocks')
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'tools.fastlane:screengrab:1.2.0',  {
