@@ -42,7 +42,7 @@ class PostAndPageViewsSqlUtilsTest {
     @Before
     fun setUp() {
         timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils, statsUtils)
-        whenever(statsUtils.getFormattedDate(eq(site), eq(DATE))).thenReturn(DATE_VALUE)
+        whenever(statsUtils.getFormattedDate(eq(DATE))).thenReturn(DATE_VALUE)
     }
 
     @Test
@@ -72,7 +72,8 @@ class PostAndPageViewsSqlUtilsTest {
                 DAY_POST_AND_PAGE_VIEWS_RESPONSE, DAYS, DATE
         )
 
-        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, DAY, DAY_POST_AND_PAGE_VIEWS_RESPONSE, DATE_VALUE)
+        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, DAY, DAY_POST_AND_PAGE_VIEWS_RESPONSE,
+                true, DATE_VALUE)
     }
 
     @Test
@@ -102,7 +103,8 @@ class PostAndPageViewsSqlUtilsTest {
                 WEEK_POST_AND_PAGE_VIEWS_RESPONSE, WEEKS, DATE
         )
 
-        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, WEEK, WEEK_POST_AND_PAGE_VIEWS_RESPONSE, DATE_VALUE)
+        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, WEEK, WEEK_POST_AND_PAGE_VIEWS_RESPONSE,
+                true, DATE_VALUE)
     }
 
     @Test
@@ -132,7 +134,8 @@ class PostAndPageViewsSqlUtilsTest {
                 MONTH_POST_AND_PAGE_VIEWS_RESPONSE, MONTHS, DATE
         )
 
-        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, MONTH, MONTH_POST_AND_PAGE_VIEWS_RESPONSE, DATE_VALUE)
+        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, MONTH, MONTH_POST_AND_PAGE_VIEWS_RESPONSE,
+                true, DATE_VALUE)
     }
 
     @Test
@@ -162,6 +165,7 @@ class PostAndPageViewsSqlUtilsTest {
                 YEAR_POST_AND_PAGE_VIEWS_RESPONSE, YEARS, DATE
         )
 
-        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, YEAR, YEAR_POST_AND_PAGE_VIEWS_RESPONSE, DATE_VALUE)
+        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, YEAR, YEAR_POST_AND_PAGE_VIEWS_RESPONSE,
+                true, DATE_VALUE)
     }
 }

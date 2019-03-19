@@ -164,7 +164,7 @@ public class MediaUtils {
             exifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, "0");
             exifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, "0/0,0/0,000000/00000 ");
             exifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, "0");
-            exifInterface.setAttribute(ExifInterface.TAG_GPS_TIMESTAMP, "0:0:0 ");
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_TIMESTAMP, "00:00:00");
             exifInterface.setAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD, "0");
             exifInterface.setAttribute(ExifInterface.TAG_GPS_DATESTAMP, " ");
             exifInterface.saveAttributes();

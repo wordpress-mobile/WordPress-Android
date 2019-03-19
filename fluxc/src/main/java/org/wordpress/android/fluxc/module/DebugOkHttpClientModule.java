@@ -8,6 +8,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
@@ -18,21 +19,37 @@ import javax.net.ssl.TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.Multibinds;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 
 @Module
-public class DebugOkHttpClientModule {
+public abstract class DebugOkHttpClientModule {
+    // These allow a library client to use this module without contributing any interceptors
+    @Multibinds abstract @Named("interceptors") Set<Interceptor> interceptorSet();
+    @Multibinds abstract @Named("network-interceptors") Set<Interceptor> networkInterceptorSet();
+
     @Provides
     @Named("regular")
-    public OkHttpClient.Builder provideOkHttpClientBuilder(Interceptor interceptor) {
-        return new OkHttpClient.Builder().addNetworkInterceptor(interceptor);
+    public static OkHttpClient.Builder provideOkHttpClientBuilder(
+            @Named("interceptors") Set<Interceptor> interceptors,
+            @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        for (Interceptor interceptor : interceptors) {
+            builder.addInterceptor(interceptor);
+        }
+        for (Interceptor networkInterceptor : networkInterceptors) {
+            builder.addNetworkInterceptor(networkInterceptor);
+        }
+        return builder;
     }
 
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(MemorizingTrustManager memorizingTrustManager,
-                                                                    Interceptor interceptor) {
+    public static OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(
+            MemorizingTrustManager memorizingTrustManager,
+            @Named("interceptors") Set<Interceptor> interceptors,
+            @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
@@ -42,14 +59,20 @@ public class DebugOkHttpClientModule {
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             AppLog.e(T.API, e);
         }
-        builder.addNetworkInterceptor(interceptor);
+        for (Interceptor interceptor : interceptors) {
+            builder.addInterceptor(interceptor);
+        }
+        for (Interceptor networkInterceptor : networkInterceptors) {
+            builder.addNetworkInterceptor(networkInterceptor);
+        }
         return builder;
     }
 
     @Singleton
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient provideMediaOkHttpClientInstanceCustomSSL(@Named("custom-ssl") OkHttpClient.Builder builder) {
+    public static OkHttpClient provideMediaOkHttpClientInstanceCustomSSL(
+            @Named("custom-ssl") OkHttpClient.Builder builder) {
         return builder
                 .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
                 .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
@@ -60,7 +83,8 @@ public class DebugOkHttpClientModule {
     @Singleton
     @Provides
     @Named("regular")
-    public OkHttpClient provideMediaOkHttpClientInstance(@Named("regular") OkHttpClient.Builder builder) {
+    public static OkHttpClient provideMediaOkHttpClientInstance(
+            @Named("regular") OkHttpClient.Builder builder) {
         return builder
                 .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
                 .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)

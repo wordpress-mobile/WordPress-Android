@@ -40,7 +40,7 @@ class SearchTermsSqlUtilsTest {
     @Before
     fun setUp() {
         timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils, statsUtils)
-        whenever(statsUtils.getFormattedDate(eq(site), eq(DATE))).thenReturn(DATE_VALUE)
+        whenever(statsUtils.getFormattedDate(eq(DATE))).thenReturn(DATE_VALUE)
     }
 
     @Test
@@ -63,7 +63,8 @@ class SearchTermsSqlUtilsTest {
         mappedTypes.forEach { statsType, dbGranularity ->
             timeStatsSqlUtils.insert(site, SEARCH_TERMS_RESPONSE, dbGranularity, DATE)
 
-            verify(statsSqlUtils).insert(site, SEARCH_TERMS, statsType, SEARCH_TERMS_RESPONSE, DATE_VALUE)
+            verify(statsSqlUtils).insert(site, SEARCH_TERMS, statsType, SEARCH_TERMS_RESPONSE,
+                    true, DATE_VALUE)
         }
     }
 }

@@ -37,7 +37,7 @@ class PostListDataStore(
         }
     }
 
-    override fun fetchList(listDescriptor: ListDescriptor, offset: Int) {
+    override fun fetchList(listDescriptor: ListDescriptor, offset: Long) {
         if (listDescriptor is PostListDescriptor) {
             val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
             dispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))
