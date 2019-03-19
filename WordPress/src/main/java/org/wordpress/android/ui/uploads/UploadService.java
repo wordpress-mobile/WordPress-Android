@@ -923,10 +923,8 @@ public class UploadService extends Service {
                         }
                         // TODO Should do some extra validation here
                         // e.g. what if the post has local media URLs but no pending media uploads?
-                        if (PostUtils.isPublishable(updatedPost)) {
-                            mPostUploadHandler.upload(updatedPost);
-                            return true;
-                        }
+                        mPostUploadHandler.upload(updatedPost);
+                        return true;
                     }
                 }
             }
