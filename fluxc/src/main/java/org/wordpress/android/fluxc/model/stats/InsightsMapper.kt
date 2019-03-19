@@ -221,10 +221,16 @@ class InsightsMapper
         }
     }
 
-    fun map(response: PublicizeResponse, pageSize: Int): PublicizeModel {
+    fun map(response: PublicizeResponse, limitMode: LimitMode): PublicizeModel {
         return PublicizeModel(
-                response.services.take(pageSize).map { PublicizeModel.Service(it.service, it.followers) },
-                response.services.size > pageSize
+                response.services.sortedBy { it.followers }.let {
+                    if (limitMode is LimitMode.Top) {
+                        return@let it.take(limitMode.limit)
+                    } else {
+                        return@let it
+                    }
+                }.map { PublicizeModel.Service(it.service, it.followers) },
+                limitMode is LimitMode.Top && response.services.size > limitMode.limit
         )
     }
 

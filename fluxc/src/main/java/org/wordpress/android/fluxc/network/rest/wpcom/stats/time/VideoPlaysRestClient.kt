@@ -37,13 +37,13 @@ class VideoPlaysRestClient
         site: SiteModel,
         granularity: StatsGranularity,
         date: Date,
-        pageSize: Int,
+        itemsToLoad: Int,
         forced: Boolean
     ): FetchStatsPayload<VideoPlaysResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.video_plays.urlV1_1
         val params = mapOf(
                 "period" to granularity.toString(),
-                "max" to pageSize.toString(),
+                "max" to itemsToLoad.toString(),
                 "date" to statsUtils.getFormattedDate(date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(

@@ -275,13 +275,13 @@ class InsightsStoreTest {
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(latestPostDetailSqlUtils).insert(site, LATEST_POST)
-        verify(latestPostStatsSqlUtils).insert(site, viewsResponse)
+        verify(latestPostStatsSqlUtils).insert(site, LATEST_POST.id, viewsResponse)
     }
 
     @Test
     fun `returns latest post insights from db`() {
         whenever(latestPostDetailSqlUtils.select(site)).thenReturn(LATEST_POST)
-        whenever(latestPostStatsSqlUtils.select(site)).thenReturn(POST_STATS_RESPONSE)
+        whenever(latestPostStatsSqlUtils.select(site, LATEST_POST.id)).thenReturn(POST_STATS_RESPONSE)
         val model = mock<InsightsLatestPostModel>()
         whenever(mapper.map(
                 LATEST_POST,
@@ -584,13 +584,13 @@ class InsightsStoreTest {
                 PUBLICIZE_RESPONSE
         )
         val forced = true
-        whenever(publicizeRestClient.fetchPublicizeData(site, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(publicizeRestClient.fetchPublicizeData(site, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<PublicizeModel>()
-        whenever(mapper.map(PUBLICIZE_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(PUBLICIZE_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val responseModel = publicizeStore.fetchPublicizeData(site, PAGE_SIZE, forced)
+        val responseModel = publicizeStore.fetchPublicizeData(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(publicizeSqlUtils).insert(site, PUBLICIZE_RESPONSE)
@@ -600,9 +600,9 @@ class InsightsStoreTest {
     fun `returns publicize data from db`() {
         whenever(publicizeSqlUtils.select(site)).thenReturn(PUBLICIZE_RESPONSE)
         val model = mock<PublicizeModel>()
-        whenever(mapper.map(PUBLICIZE_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(PUBLICIZE_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val result = publicizeStore.getPublicizeData(site, PAGE_SIZE)
+        val result = publicizeStore.getPublicizeData(site, LimitMode.Top(PAGE_SIZE))
 
         assertThat(result).isEqualTo(model)
     }
@@ -613,9 +613,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<PublicizeResponse>(StatsError(type, message))
         val forced = true
-        whenever(publicizeRestClient.fetchPublicizeData(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(publicizeRestClient.fetchPublicizeData(site, forced)).thenReturn(errorPayload)
 
-        val responseModel = publicizeStore.fetchPublicizeData(site, PAGE_SIZE, forced)
+        val responseModel = publicizeStore.fetchPublicizeData(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!

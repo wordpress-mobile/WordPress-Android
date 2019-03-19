@@ -457,18 +457,12 @@ class InsightsRestClientTest {
     fun `returns publicize`() = test {
         initPublicizeResponse(PUBLICIZE_RESPONSE)
 
-        val pageSize = 10
-        val responseModel = publicizeRestClient.fetchPublicizeData(site, pageSize, forced = false)
+        val responseModel = publicizeRestClient.fetchPublicizeData(site, forced = false)
 
         assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(PUBLICIZE_RESPONSE)
         val url = "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/publicize/"
         assertThat(urlCaptor.lastValue).isEqualTo(url)
-        assertThat(paramsCaptor.lastValue).isEqualTo(
-                mapOf(
-                        "max" to "$pageSize"
-                )
-        )
     }
 
     @Test
@@ -516,7 +510,7 @@ class InsightsRestClientTest {
         data: PostStatsResponse? = null,
         error: WPComGsonNetworkError? = null
     ): Response<PostStatsResponse> {
-        return initResponse(PostStatsResponse::class.java, data ?: mock(), error)
+        return initResponse(PostStatsResponse::class.java, data ?: mock(), error, cachingEnabled = false)
     }
 
     private suspend fun initVisitResponse(
