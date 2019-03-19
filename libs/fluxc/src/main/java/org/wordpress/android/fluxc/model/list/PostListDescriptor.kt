@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.store.PostStore.DEFAULT_POST_STATUS_LIST
 sealed class PostListDescriptor(
     val site: SiteModel,
     val statusList: List<PostStatus>,
-    val onlyAuthorId: Int?,
+    val onlyAuthorId: Long?,
     val order: ListOrder,
     val orderBy: PostListOrderBy,
     listConfig: ListConfig
@@ -60,7 +60,7 @@ sealed class PostListDescriptor(
     class PostListDescriptorForRestSite(
         site: SiteModel,
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
-        onlyAuthorId: Int? = null,
+        onlyAuthorId: Long? = null,
         order: ListOrder = DESC,
         orderBy: PostListOrderBy = DATE,
         val searchQuery: String? = null,
@@ -70,7 +70,7 @@ sealed class PostListDescriptor(
     class PostListDescriptorForXmlRpcSite(
         site: SiteModel,
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
-        onlyAuthorId: Int? = null,
+        onlyAuthorId: Long? = null,
         order: ListOrder = DESC,
         orderBy: PostListOrderBy = DATE,
         config: ListConfig = ListConfig.default
