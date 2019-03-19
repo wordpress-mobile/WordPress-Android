@@ -12,6 +12,7 @@ import org.wordpress.android.ui.WPLaunchActivity;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_SITE_ADDRESS;
+import static org.wordpress.android.support.WPSupportUtils.sleep;
 
 public class EditorTests extends BaseTest {
     @Rule
