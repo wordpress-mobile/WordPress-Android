@@ -40,7 +40,7 @@ class StatsRequestSqlUtils
                         blockType = blockType.name,
                         statsType = statsType.name,
                         date = date,
-                        postId =  postId,
+                        postId = postId,
                         timeStamp = System.currentTimeMillis(),
                         requestedItems = requestedItems
                 )
