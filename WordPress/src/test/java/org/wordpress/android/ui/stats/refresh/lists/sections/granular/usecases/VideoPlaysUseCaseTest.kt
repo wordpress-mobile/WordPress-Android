@@ -9,7 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel.VideoPlays
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -40,6 +40,7 @@ import java.util.Date
 private const val ITEMS_TO_LOAD = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
+private val limitMode = Top(ITEMS_TO_LOAD)
 
 class VideoPlaysUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: VideoPlaysStore
@@ -74,7 +75,15 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     fun `maps video plays to UI model`() = test {
         val forced = false
         val model = VideoPlaysModel(10, 15, listOf(videoPlay), false)
-        whenever(store.fetchVideoPlays(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate,
+        whenever(
+                store.getVideoPlays(
+                        site,
+                        statsGranularity,
+                        limitMode,
+                        selectedDate
+                )
+        ).thenReturn(model)
+        whenever(store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate,
                 forced)).thenReturn(
                 OnStatsFetched(
                         model
@@ -97,7 +106,15 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = VideoPlaysModel(10, 15, listOf(videoPlay), true)
         whenever(
-                store.fetchVideoPlays(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
+                store.getVideoPlays(
+                        site,
+                        statsGranularity,
+                        limitMode,
+                        selectedDate
+                )
+        ).thenReturn(model)
+        whenever(
+                store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         model
@@ -120,7 +137,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     fun `maps empty video plays to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchVideoPlays(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
+                store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(VideoPlaysModel(0, 0, listOf(), false))
         )
@@ -141,7 +158,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchVideoPlays(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
+                store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)

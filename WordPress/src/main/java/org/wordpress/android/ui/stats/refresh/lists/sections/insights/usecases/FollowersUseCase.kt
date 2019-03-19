@@ -61,8 +61,9 @@ class FollowersUseCase
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_ITEM_COUNT
 
     override suspend fun loadCachedData(): Pair<FollowersModel, FollowersModel>? {
-        val wpComFollowers = followersStore.getWpComFollowers(statsSiteProvider.siteModel, LimitMode.Top(itemsToLoad))
-        val emailFollowers = followersStore.getEmailFollowers(statsSiteProvider.siteModel, LimitMode.Top(itemsToLoad))
+        val cacheMode = if (useCaseMode == VIEW_ALL) LimitMode.All else LimitMode.Top(itemsToLoad)
+        val wpComFollowers = followersStore.getWpComFollowers(statsSiteProvider.siteModel, cacheMode)
+        val emailFollowers = followersStore.getEmailFollowers(statsSiteProvider.siteModel, cacheMode)
         if (wpComFollowers != null && emailFollowers != null) {
             return wpComFollowers to emailFollowers
         }
@@ -109,7 +110,8 @@ class FollowersUseCase
             error != null -> State.Error(error.message ?: error.type.name)
             wpComModel != null && emailModel != null &&
                     (wpComModel.followers.isNotEmpty() || emailModel.followers.isNotEmpty()) -> State.Data(
-                    wpComModel to emailModel
+                    wpComModel to emailModel,
+                    cached = wpComResponse.cached && emailResponse.cached
             )
             else -> State.Empty()
         }

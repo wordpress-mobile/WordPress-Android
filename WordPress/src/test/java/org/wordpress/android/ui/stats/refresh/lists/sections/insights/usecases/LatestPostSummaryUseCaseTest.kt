@@ -90,6 +90,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         val viewsCount = 0
         val postTitle = "title"
         val model = buildLatestPostModel(postTitle, viewsCount, listOf())
+        whenever(insightsStore.getLatestPostInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
                 OnStatsFetched(
                         model
@@ -125,6 +126,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         val postTitle = "title"
         val dayViews = listOf("2018-01-01" to 10)
         val model = buildLatestPostModel(postTitle, viewsCount, dayViews)
+        whenever(insightsStore.getLatestPostInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
                 OnStatsFetched(
                         model

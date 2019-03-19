@@ -9,7 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.CountryViewsModel
 import org.wordpress.android.fluxc.model.stats.time.CountryViewsModel.Country
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -41,6 +41,8 @@ import java.util.Date
 private const val itemsToLoad = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
+
+private val limitMode = Top(itemsToLoad)
 
 class CountryViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: CountryViewsStore
@@ -75,8 +77,16 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     fun `maps country views to UI model`() = test {
         val forced = false
         val model = CountryViewsModel(10, 15, listOf(country), false)
+        whenever(
+                store.getCountryViews(
+                        site,
+                        statsGranularity,
+                        limitMode,
+                        selectedDate
+                )
+        ).thenReturn(model)
         whenever(store.fetchCountryViews(site, statsGranularity,
-                LimitMode.Top(itemsToLoad), selectedDate, forced)).thenReturn(
+                limitMode, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -101,7 +111,15 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = CountryViewsModel(10, 15, listOf(country), true)
         whenever(
-                store.fetchCountryViews(site, statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)
+                store.getCountryViews(
+                        site,
+                        statsGranularity,
+                        limitMode,
+                        selectedDate
+                )
+        ).thenReturn(model)
+        whenever(
+                store.fetchCountryViews(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         model
@@ -120,7 +138,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     fun `maps empty country views to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchCountryViews(site, statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)
+                store.fetchCountryViews(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(CountryViewsModel(0, 0, listOf(), false))
         )
@@ -140,7 +158,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchCountryViews(site, statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)
+                store.fetchCountryViews(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
