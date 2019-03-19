@@ -46,7 +46,8 @@ constructor(
                     site,
                     blockType,
                     INSIGHTS,
-                    requestedItems
+                    requestedItems,
+                    postId = postId
             )
         }
     }
@@ -59,8 +60,8 @@ constructor(
         return statsSqlUtils.selectAll(site, blockType, INSIGHTS, classOfResponse)
     }
 
-    fun hasFreshRequest(site: SiteModel, requestedItems: Int? = null): Boolean {
-        return statsRequestSqlUtils.hasFreshRequest(site, blockType, INSIGHTS, requestedItems)
+    fun hasFreshRequest(site: SiteModel, requestedItems: Int? = null, postId: Long? = null): Boolean {
+        return statsRequestSqlUtils.hasFreshRequest(site, blockType, INSIGHTS, requestedItems, postId = postId)
     }
 
     class AllTimeSqlUtils

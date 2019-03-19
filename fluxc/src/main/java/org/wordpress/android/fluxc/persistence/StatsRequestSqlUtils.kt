@@ -22,7 +22,8 @@ class StatsRequestSqlUtils
         blockType: BlockType,
         statsType: StatsType,
         requestedItems: Int? = null,
-        date: String? = null
+        date: String? = null,
+        postId: Long? = null
     ) {
         var deleteStatement = WellSql.delete(StatsRequestBuilder::class.java)
                 .where()
@@ -39,6 +40,7 @@ class StatsRequestSqlUtils
                         blockType = blockType.name,
                         statsType = statsType.name,
                         date = date,
+                        postId =  postId,
                         timeStamp = System.currentTimeMillis(),
                         requestedItems = requestedItems
                 )
@@ -51,13 +53,15 @@ class StatsRequestSqlUtils
         statsType: StatsType,
         requestedItems: Int? = null,
         after: Long = System.currentTimeMillis() - STALE_PERIOD,
-        date: String? = null
+        date: String? = null,
+        postId: Long? = null
     ): Boolean {
         return createSelectStatement(
                 site,
                 blockType,
                 statsType,
                 date,
+                postId,
                 after,
                 requestedItems
         ).asModel.firstOrNull<StatsRequestBuilder?>() != null
@@ -68,6 +72,7 @@ class StatsRequestSqlUtils
         blockType: BlockType,
         statsType: StatsType,
         date: String?,
+        postId: Long?,
         after: Long,
         requestedItems: Int? = null
     ): SelectQuery<StatsRequestBuilder> {
@@ -83,6 +88,9 @@ class StatsRequestSqlUtils
         if (date != null) {
             select = select.equals(StatsRequestTable.DATE, date)
         }
+        if (postId != null) {
+            select = select.equals(StatsRequestTable.POST_ID, postId)
+        }
         return select.endWhere()
     }
 
@@ -93,10 +101,11 @@ class StatsRequestSqlUtils
         @Column var blockType: String,
         @Column var statsType: String,
         @Column var date: String?,
+        @Column var postId: Long?,
         @Column var timeStamp: Long,
         @Column var requestedItems: Int?
     ) : Identifiable {
-        constructor() : this(-1, -1, "", "", null, 0, null)
+        constructor() : this(-1, -1, "", "", null, null, 0, null)
 
         override fun setId(id: Int) {
             this.mId = id
