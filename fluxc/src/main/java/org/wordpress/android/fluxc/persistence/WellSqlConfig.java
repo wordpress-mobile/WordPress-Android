@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 50;
+        return 62;
     }
 
     @Override
@@ -110,35 +110,35 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 11:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE RoleModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER,"
-                        + "NAME TEXT,DISPLAY_NAME TEXT)");
+                           + "NAME TEXT,DISPLAY_NAME TEXT)");
                 oldVersion++;
             case 12:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE PluginModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
-                        + "NAME TEXT,DISPLAY_NAME TEXT,PLUGIN_URL TEXT,VERSION TEXT,SLUG TEXT,DESCRIPTION TEXT,"
-                        + "AUTHOR_NAME TEXT,AUTHOR_URL TEXT,IS_ACTIVE INTEGER,IS_AUTO_UPDATE_ENABLED INTEGER)");
+                           + "NAME TEXT,DISPLAY_NAME TEXT,PLUGIN_URL TEXT,VERSION TEXT,SLUG TEXT,DESCRIPTION TEXT,"
+                           + "AUTHOR_NAME TEXT,AUTHOR_URL TEXT,IS_ACTIVE INTEGER,IS_AUTO_UPDATE_ENABLED INTEGER)");
                 oldVersion++;
             case 13:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE PluginInfoModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + "NAME TEXT,SLUG TEXT,VERSION TEXT,RATING TEXT,ICON TEXT)");
+                           + "NAME TEXT,SLUG TEXT,VERSION TEXT,RATING TEXT,ICON TEXT)");
                 oldVersion++;
             case 14:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE MediaUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER,"
-                        + "PROGRESS REAL,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
-                        + "MediaModel(_id) ON DELETE CASCADE)");
+                           + "PROGRESS REAL,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
+                           + "MediaModel(_id) ON DELETE CASCADE)");
                 db.execSQL("CREATE TABLE PostUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER,"
-                        + "ASSOCIATED_MEDIA_IDS TEXT,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
-                        + "PostModel(_id) ON DELETE CASCADE)");
+                           + "ASSOCIATED_MEDIA_IDS TEXT,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
+                           + "PostModel(_id) ON DELETE CASCADE)");
                 oldVersion++;
             case 15:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE ThemeModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
-                        + "THEME_ID TEXT,NAME TEXT,DESCRIPTION TEXT,SLUG TEXT,VERSION TEXT,AUTHOR_NAME TEXT,"
-                        + "AUTHOR_URL TEXT,THEME_URL TEXT,SCREENSHOT_URL TEXT,DEMO_URL TEXT,DOWNLOAD_URL TEXT,"
-                        + "STYLESHEET TEXT,CURRENCY TEXT,PRICE REAL,ACTIVE INTEGER,AUTO_UPDATE INTEGER,"
-                        + "AUTO_UPDATE_TRANSLATION INTEGER,IS_WP_COM_THEME INTEGER)");
+                           + "THEME_ID TEXT,NAME TEXT,DESCRIPTION TEXT,SLUG TEXT,VERSION TEXT,AUTHOR_NAME TEXT,"
+                           + "AUTHOR_URL TEXT,THEME_URL TEXT,SCREENSHOT_URL TEXT,DEMO_URL TEXT,DOWNLOAD_URL TEXT,"
+                           + "STYLESHEET TEXT,CURRENCY TEXT,PRICE REAL,ACTIVE INTEGER,AUTO_UPDATE INTEGER,"
+                           + "AUTO_UPDATE_TRANSLATION INTEGER,IS_WP_COM_THEME INTEGER)");
                 oldVersion++;
             case 16:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
@@ -190,7 +190,7 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 23:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE PluginDirectoryModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + "SLUG TEXT,DIRECTORY_TYPE TEXT,PAGE INTEGER)");
+                           + "SLUG TEXT,DIRECTORY_TYPE TEXT,PAGE INTEGER)");
                 oldVersion++;
             case 24:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
@@ -203,16 +203,17 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("DROP TABLE IF EXISTS SitePluginModel");
                 db.execSQL("DROP TABLE IF EXISTS WPOrgPluginModel");
                 db.execSQL("CREATE TABLE SitePluginModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
-                        + "NAME TEXT,DISPLAY_NAME TEXT,PLUGIN_URL TEXT,VERSION TEXT,SLUG TEXT,DESCRIPTION TEXT,"
-                        + "AUTHOR_NAME TEXT,AUTHOR_URL TEXT,SETTINGS_URL TEXT,IS_ACTIVE INTEGER,"
-                        + "IS_AUTO_UPDATE_ENABLED INTEGER,UNIQUE (SLUG, LOCAL_SITE_ID))");
+                           + "NAME TEXT,DISPLAY_NAME TEXT,PLUGIN_URL TEXT,VERSION TEXT,SLUG TEXT,DESCRIPTION TEXT,"
+                           + "AUTHOR_NAME TEXT,AUTHOR_URL TEXT,SETTINGS_URL TEXT,IS_ACTIVE INTEGER,"
+                           + "IS_AUTO_UPDATE_ENABLED INTEGER,UNIQUE (SLUG, LOCAL_SITE_ID))");
                 db.execSQL("CREATE TABLE WPOrgPluginModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,AUTHOR_AS_HTML TEXT,"
-                        + "AUTHOR_NAME TEXT,BANNER TEXT,DESCRIPTION_AS_HTML TEXT,DISPLAY_NAME TEXT,FAQ_AS_HTML TEXT,"
-                        + "HOMEPAGE_URL TEXT,ICON TEXT,INSTALLATION_INSTRUCTIONS_AS_HTML TEXT,LAST_UPDATED TEXT,"
-                        + "RATING TEXT,REQUIRED_WORD_PRESS_VERSION TEXT,SLUG TEXT,VERSION TEXT,WHATS_NEW_AS_HTML TEXT,"
-                        + "DOWNLOAD_COUNT INTEGER,NUMBER_OF_RATINGS INTEGER,NUMBER_OF_RATINGS_OF_ONE INTEGER,"
-                        + "NUMBER_OF_RATINGS_OF_TWO INTEGER,NUMBER_OF_RATINGS_OF_THREE INTEGER,"
-                        + "NUMBER_OF_RATINGS_OF_FOUR INTEGER,NUMBER_OF_RATINGS_OF_FIVE INTEGER,UNIQUE (SLUG))");
+                           + "AUTHOR_NAME TEXT,BANNER TEXT,DESCRIPTION_AS_HTML TEXT,DISPLAY_NAME TEXT,FAQ_AS_HTML TEXT,"
+                           + "HOMEPAGE_URL TEXT,ICON TEXT,INSTALLATION_INSTRUCTIONS_AS_HTML TEXT,LAST_UPDATED TEXT,"
+                           + "RATING TEXT,REQUIRED_WORD_PRESS_VERSION TEXT,SLUG TEXT,VERSION TEXT,WHATS_NEW_AS_HTML "
+                           + "TEXT,"
+                           + "DOWNLOAD_COUNT INTEGER,NUMBER_OF_RATINGS INTEGER,NUMBER_OF_RATINGS_OF_ONE INTEGER,"
+                           + "NUMBER_OF_RATINGS_OF_TWO INTEGER,NUMBER_OF_RATINGS_OF_THREE INTEGER,"
+                           + "NUMBER_OF_RATINGS_OF_FOUR INTEGER,NUMBER_OF_RATINGS_OF_FIVE INTEGER,UNIQUE (SLUG))");
                 oldVersion++;
             case 25:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
@@ -406,6 +407,78 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 49:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 50:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE PlanOffers (_id INTEGER PRIMARY KEY AUTOINCREMENT,INTERNAL_PLAN_ID INTEGER,"
+                        + "NAME TEXT,SHORT_NAME TEXT,TAGLINE TEXT,DESCRIPTION TEXT,ICON TEXT)");
+                db.execSQL(
+                        "CREATE TABLE PlanOffersId (_id INTEGER PRIMARY KEY AUTOINCREMENT,PRODUCT_ID INTEGER,"
+                        + "INTERNAL_PLAN_ID INTEGER)");
+                db.execSQL(
+                        "CREATE TABLE PlanOffersFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + "INTERNAL_PLAN_ID INTEGER,STRING_ID TEXT UNIQUE,NAME TEXT,DESCRIPTION TEXT)");
+                oldVersion++;
+            case 51:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 52:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE PlanOffersFeatureTemp (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "INTERNAL_PLAN_ID INTEGER,STRING_ID TEXT,NAME TEXT,DESCRIPTION TEXT)");
+                db.execSQL("INSERT INTO PlanOffersFeatureTemp SELECT * FROM PlanOffersFeature");
+                db.execSQL("DROP TABLE PlanOffersFeature");
+                db.execSQL("ALTER TABLE PlanOffersFeatureTemp RENAME TO PlanOffersFeature");
+                oldVersion++;
+            case 53:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("ALTER TABLE QuickStartTaskModel ADD TASK_TYPE TEXT");
+                oldVersion++;
+            case 54:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 55:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 56:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 57:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 58:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 59:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE IF EXISTS StatsBlock");
+                db.execSQL(
+                        "CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,JSON "
+                        + "TEXT NOT NULL)");
+                oldVersion++;
+            case 60:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE StatsBlock");
+                db.execSQL(
+                        "CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,JSON TEXT NOT "
+                        + "NULL)");
+                db.execSQL(
+                        "CREATE TABLE StatsRequest (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,TIME_STAMP INTEGER,"
+                        + "REQUESTED_ITEMS INTEGER)");
+                oldVersion++;
+            case 61:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL(
                         "CREATE TABLE InsightTypes (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "REMOTE_SITE_ID INTEGER,INSIGHT_TYPE TEXT NOT NULL,POSITION INTEGER,STATUS TEXT NOT NULL)");
@@ -478,6 +551,98 @@ public class WellSqlConfig extends DefaultWellConfig {
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("ALTER TABLE WCOrderNoteModel ADD IS_SYSTEM_NOTE INTEGER");
                     break;
+                case 49:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCSettingsModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,CURRENCY_CODE TEXT NOT NULL,CURRENCY_POSITION TEXT NOT NULL,"
+                               + "CURRENCY_THOUSAND_SEPARATOR TEXT NOT NULL,CURRENCY_DECIMAL_SEPARATOR TEXT NOT NULL,"
+                               + "CURRENCY_DECIMAL_NUMBER INTEGER)");
+                    break;
+                case 51:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCOrderStatusModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,STATUS_KEY TEXT NOT NULL,LABEL TEXT NOT NULL)");
+                    break;
+                case 54:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD IS_CUSTOM_FIELD INTEGER");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD DATE TEXT");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD ENDDATE TEXT");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD STARTDATE TEXT");
+                    db.execSQL("ALTER TABLE WCOrderStatsModel ADD QUANTITY TEXT");
+                    break;
+                case 55:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DROP TABLE IF EXISTS WCOrderStatsModel");
+                    db.execSQL("CREATE TABLE WCOrderStatsModel(\n"
+                               + "  LOCAL_SITE_ID INTEGER,\n"
+                               + "  UNIT TEXT NOT NULL,\n"
+                               + "  DATE TEXT NOT NULL,\n"
+                               + "  START_DATE TEXT NOT NULL,\n"
+                               + "  END_DATE TEXT NOT NULL,\n"
+                               + "  QUANTITY TEXT NOT NULL,\n"
+                               + "  IS_CUSTOM_FIELD INTEGER,\n"
+                               + "  FIELDS TEXT NOT NULL,\n"
+                               + "  DATA TEXT NOT NULL,\n"
+                               + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
+                    break;
+                case 56:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DROP TABLE IF EXISTS WCProductModel");
+                    db.execSQL("CREATE TABLE WCProductModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,REMOTE_PRODUCT_ID INTEGER,"
+                               + "NAME TEXT NOT NULL,SLUG TEXT NOT NULL,PERMALINK TEXT NOT NULL,"
+                               + "DATE_CREATED TEXT NOT NULL,DATE_MODIFIED TEXT NOT NULL,"
+                               + "TYPE TEXT NOT NULL,STATUS TEXT NOT NULL,FEATURED INTEGER,"
+                               + "CATALOG_VISIBILITY TEXT NOT NULL,DESCRIPTION TEXT NOT NULL,"
+                               + "SHORT_DESCRIPTION TEXT NOT NULL,SKU TEXT NOT NULL,"
+                               + "PRICE TEXT NOT NULL,REGULAR_PRICE TEXT NOT NULL, SALE_PRICE TEXT NOT NULL,"
+                               + "ON_SALE INTEGER,TOTAL_SALES INTEGER,VIRTUAL INTEGER,DOWNLOADABLE INTEGER,"
+                               + "TAX_STATUS TEXT NOT NULL,TAX_CLASS TEXT NOT NULL,"
+                               + "MANAGE_STOCK INTEGER,STOCK_QUANTITY INTEGER,STOCK_STATUS TEXT NOT NULL,"
+                               + "BACKORDERS TEXT NOT NULL,BACKORDERS_ALLOWED INTEGER,BACKORDERED INTEGER,"
+                               + "SOLD_INDIVIDUALLY INTEGER,WEIGHT TEXT NOT NULL,LENGTH TEXT NOT NULL,"
+                               + "WIDTH TEXT NOT NULL,HEIGHT TEXT NOT NULL,SHIPPING_REQUIRED INTEGER,"
+                               + "SHIPPING_TAXABLE INTEGER,SHIPPING_CLASS TEXT NOT NULL,"
+                               + "SHIPPING_CLASS_ID INTEGER,REVIEWS_ALLOWED INTEGER,AVERAGE_RATING TEXT NOT NULL,"
+                               + "RATING_COUNT INTEGER,PARENT_ID INTEGER,PURCHASE_NOTE TEXT NOT NULL,"
+                               + "CATEGORIES TEXT NOT NULL,TAGS TEXT NOT NULL,"
+                               + "IMAGES TEXT NOT NULL,ATTRIBUTES TEXT NOT NULL,"
+                               + "VARIATIONS TEXT NOT NULL)");
+                    break;
+                case 57:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DELETE FROM WCOrderStatsModel");
+                    break;
+                case 58:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DROP TABLE IF EXISTS WCProductVariationModel");
+                    db.execSQL("CREATE TABLE WCProductVariationModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "REMOTE_PRODUCT_ID INTEGER,"
+                               + "REMOTE_VARIATION_ID INTEGER,"
+                               + "DATE_CREATED TEXT NOT NULL,"
+                               + "DATE_MODIFIED TEXT NOT NULL,"
+                               + "DESCRIPTION TEXT NOT NULL,"
+                               + "PERMALINK TEXT NOT NULL,"
+                               + "SKU TEXT NOT NULL,"
+                               + "STATUS TEXT NOT NULL,"
+                               + "PRICE TEXT NOT NULL,"
+                               + "REGULAR_PRICE TEXT NOT NULL,"
+                               + "SALE_PRICE TEXT NOT NULL,"
+                               + "ON_SALE INTEGER,"
+                               + "PURCHASABLE INTEGER,"
+                               + "VIRTUAL INTEGER,"
+                               + "DOWNLOADABLE INTEGER,"
+                               + "MANAGE_STOCK INTEGER,"
+                               + "STOCK_QUANTITY INTEGER,"
+                               + "STOCK_STATUS TEXT NOT NULL,"
+                               + "IMAGE_URL TEXT NOT NULL,"
+                               + "WEIGHT TEXT NOT NULL,"
+                               + "LENGTH TEXT NOT NULL,"
+                               + "WIDTH TEXT NOT NULL,"
+                               + "HEIGHT TEXT NOT NULL,"
+                               + "ATTRIBUTES TEXT NOT NULL)");
             }
         }
     }

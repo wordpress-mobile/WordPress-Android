@@ -22,13 +22,13 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         versionCode 4
         versionName "0.1"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
     }
     buildTypes {
         release {
@@ -41,8 +41,6 @@ android {
 androidExtensions {
     experimental = true
 }
-
-kotlin { experimental { coroutines 'enable' } }
 
 android.buildTypes.all { buildType ->
     // Load gradle properties and add them to BuildConfig
@@ -81,8 +79,8 @@ dependencies {
     }
 
     // Custom WellSql version
-    api 'org.wordpress:wellsql:1.3.0'
-    kapt 'org.wordpress:wellsql-processor:1.3.0'
+    api "org.wordpress:wellsql:$wellSqlVersion"
+    kapt "org.wordpress:wellsql-processor:$wellSqlVersion"
 
     // FluxC annotations
     api project(':fluxc-annotations')

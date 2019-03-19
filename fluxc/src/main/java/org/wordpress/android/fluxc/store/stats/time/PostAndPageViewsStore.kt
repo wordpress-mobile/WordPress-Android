@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.store.stats.time
 
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient
@@ -25,17 +27,17 @@ class PostAndPageViewsStore
 ) {
     suspend fun fetchPostAndPageViews(
         site: SiteModel,
-        pageSize: Int,
         granularity: StatsGranularity,
+        limitMode: Top,
         date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchPostAndPageViews(site, granularity, date, pageSize + 1, forced)
+        val payload = restClient.fetchPostAndPageViews(site, granularity, date, limitMode.limit + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, granularity, date)
-                OnStatsFetched(timeStatsMapper.map(payload.response, pageSize))
+                OnStatsFetched(timeStatsMapper.map(payload.response, limitMode))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
@@ -44,9 +46,9 @@ class PostAndPageViewsStore
     fun getPostAndPageViews(
         site: SiteModel,
         granularity: StatsGranularity,
-        date: Date,
-        pageSize: Int
+        cacheMode: LimitMode,
+        date: Date
     ): PostAndPageViewsModel? {
-        return sqlUtils.selectPostAndPageViews(site, granularity, date)?.let { timeStatsMapper.map(it, pageSize) }
+        return sqlUtils.selectPostAndPageViews(site, granularity, date)?.let { timeStatsMapper.map(it, cacheMode) }
     }
 }
