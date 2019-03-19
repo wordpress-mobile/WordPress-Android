@@ -274,7 +274,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
-    private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
+    private List<String> mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds = new ArrayList<>();
     private List<String> mMediaMarkedUploadingOnStartIds = new ArrayList<>();
     private PostEditorAnalyticsSession mPostEditorAnalyticsSession;
     private boolean mIsConfigChange = false;
@@ -3486,9 +3486,8 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            if (mShowAztecEditor) {
-                mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
-                UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
+            if (mShowAztecEditor && !mShowGutenbergEditor) {
+                setDeletedMediaIdOnUploadService(localMediaId);
                 // passing false here as we need to keep the media item in case the user wants to undo
                 cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
             } else if (mShowGutenbergEditor) {
@@ -3496,6 +3495,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (mediaModel == null) {
                     return;
                 }
+
+                setDeletedMediaIdOnUploadService(localMediaId);
 
                 // also make sure it's not being uploaded anywhere else (maybe on some other Post,
                 // simultaneously)
@@ -3506,6 +3507,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         }
+    }
+
+    private void setDeletedMediaIdOnUploadService(String localMediaId) {
+        mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds.add(localMediaId);
+        UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds);
     }
 
     private void cancelMediaUpload(int localMediaId, boolean delete) {
@@ -3524,7 +3530,7 @@ public class EditPostActivity extends AppCompatActivity implements
     * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
     * */
     private void definitelyDeleteBackspaceDeletedMediaItems() {
-        for (String mediaId : mAztecBackspaceDeletedMediaItemIds) {
+        for (String mediaId : mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds) {
             if (!TextUtils.isEmpty(mediaId)) {
                 // make sure the MediaModel exists
                 MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
@@ -3567,9 +3573,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
             if (!found) {
                 if (mEditorFragment instanceof AztecEditorFragment) {
-                    mAztecBackspaceDeletedMediaItemIds.remove(mediaId);
+                    mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds.remove(mediaId);
                     // update the mediaIds list in UploadService
-                    UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
+                    UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds);
                     ((AztecEditorFragment) mEditorFragment).setMediaToFailed(mediaId);
                 }
             }
