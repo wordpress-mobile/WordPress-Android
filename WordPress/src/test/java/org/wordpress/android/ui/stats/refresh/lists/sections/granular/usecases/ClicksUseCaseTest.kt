@@ -88,8 +88,8 @@ class ClicksUseCaseTest : BaseUnitTest() {
                 store.getClicks(
                         site,
                         statsGranularity,
-                        selectedDate,
-                        limitMode
+                        limitMode,
+                        selectedDate
                 )
         ).thenReturn(model)
         whenever(store.fetchClicks(site, statsGranularity, limitMode, selectedDate, forced)).thenReturn(
@@ -145,8 +145,8 @@ class ClicksUseCaseTest : BaseUnitTest() {
                 store.getClicks(
                         site,
                         statsGranularity,
-                        selectedDate,
-                        limitMode
+                        limitMode,
+                        selectedDate
                 )
         ).thenReturn(model)
         whenever(

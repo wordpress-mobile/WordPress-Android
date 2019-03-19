@@ -16,7 +16,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.A
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.CountryViewsUseCase.CountryViewsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
@@ -105,7 +107,7 @@ class StatsViewAllViewModelFactory(
             return when (type) {
                 StatsViewType.TOP_POSTS_AND_PAGES -> Pair(granularFactories.first { it is PostsAndPagesUseCaseFactory }
                         .build(granularity, VIEW_ALL), R.string.stats_view_top_posts_and_pages)
-                StatsViewType.REFERRERS -> Pair(granularFactories.first { it is PostsAndPagesUseCaseFactory }
+                StatsViewType.REFERRERS -> Pair(granularFactories.first { it is ReferrersUseCaseFactory }
                         .build(granularity, VIEW_ALL), R.string.stats_view_referrers)
                 StatsViewType.CLICKS -> Pair(granularFactories.first { it is ClicksUseCaseFactory }
                         .build(granularity, VIEW_ALL), R.string.stats_view_clicks)
@@ -115,7 +117,7 @@ class StatsViewAllViewModelFactory(
                         .build(granularity, VIEW_ALL), R.string.stats_view_countries)
                 StatsViewType.SEARCH_TERMS -> Pair(granularFactories.first { it is SearchTermsUseCaseFactory }
                         .build(granularity, VIEW_ALL), R.string.stats_view_search_terms)
-                StatsViewType.VIDEO_PLAYS -> Pair(granularFactories.first { it is CountryViewsUseCaseFactory }
+                StatsViewType.VIDEO_PLAYS -> Pair(granularFactories.first { it is VideoPlaysUseCaseFactory }
                         .build(granularity, VIEW_ALL), R.string.stats_view_videos)
                 else -> throw InvalidParameterException("Invalid granular stats type: ${type.name}")
             }
