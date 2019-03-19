@@ -513,7 +513,7 @@ public class PostRestClient extends BaseWPComRestClient {
                                                               final long offset,
                                                               final int number,
                                                               @Nullable final List<PostStatus> statusList,
-                                                              @Nullable Integer onlyAuthorId,
+                                                              @Nullable Long onlyAuthorId,
                                                               @Nullable final String fields,
                                                               @Nullable final String order,
                                                               @Nullable final String orderBy,
@@ -547,7 +547,7 @@ public class PostRestClient extends BaseWPComRestClient {
             params.put("fields", fields);
         }
 
-        if (onlyAuthorId != null && onlyAuthorId >= 0) {
+        if (onlyAuthorId != null && onlyAuthorId > 0) {
             params.put("author", String.valueOf(onlyAuthorId));
         }
 

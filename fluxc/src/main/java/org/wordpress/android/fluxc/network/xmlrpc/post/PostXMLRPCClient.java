@@ -612,7 +612,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             final long offset,
             final int number,
             @Nullable final List<PostStatus> statusList,
-            @Nullable Integer onlyAuthorId,
+            @Nullable Long onlyAuthorId,
             @Nullable final List<String> fields,
             @Nullable final String orderBy,
             @Nullable final String order) {
@@ -633,7 +633,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             contentStruct.put("post_type", "page");
         }
 
-        if (onlyAuthorId != null && onlyAuthorId >= 0) {
+        if (onlyAuthorId != null && onlyAuthorId > 0) {
             contentStruct.put("author", String.valueOf(onlyAuthorId));
         }
 
