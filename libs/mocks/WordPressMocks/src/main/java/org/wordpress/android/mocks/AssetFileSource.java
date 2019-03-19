@@ -1,4 +1,4 @@
-package org.wordpress.android.support;
+package org.wordpress.android.mocks;
 
 import android.content.res.AssetManager;
 
@@ -21,8 +21,14 @@ import static com.google.common.collect.Lists.newArrayList;
  * WireMock has no Android specific behaviour so we must implement asset loading here.
  */
 public class AssetFileSource implements FileSource {
+    private static final String MOCKS_PATH = "mocks";
+
     private final AssetManager mAssetManager;
     private final String mPath;
+
+    public AssetFileSource(AssetManager assetManager) {
+        this(assetManager, MOCKS_PATH);
+    }
 
     public AssetFileSource(AssetManager assetManager, String path) {
         mAssetManager = assetManager;

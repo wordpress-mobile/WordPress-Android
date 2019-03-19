@@ -3,7 +3,6 @@ package org.wordpress.android.support;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 
-import com.github.tomakehurst.wiremock.common.ConsoleNotifier;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
@@ -14,6 +13,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.e2e.pages.MePage;
 import org.wordpress.android.e2e.pages.MySitesPage;
+import org.wordpress.android.mocks.AndroidNotifier;
+import org.wordpress.android.mocks.AssetFileSource;
 import org.wordpress.android.modules.AppComponentTest;
 import org.wordpress.android.modules.DaggerAppComponentTest;
 import org.wordpress.android.ui.WPLaunchActivity;
@@ -27,7 +28,6 @@ public class BaseTest {
     protected WordPress mAppContext;
     protected AppComponentTest mMockedAppComponent;
 
-    private static final String WIREMOCK_PATH = "wiremock";
     public static final int WIREMOCK_PORT = 8080;
 
     @Before
@@ -42,9 +42,9 @@ public class BaseTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(
             options().port(WIREMOCK_PORT)
-                     .fileSource(new AssetFileSource(InstrumentationRegistry.getContext().getAssets(), WIREMOCK_PATH))
+                     .fileSource(new AssetFileSource(InstrumentationRegistry.getContext().getAssets()))
                      .extensions(new ResponseTemplateTransformer(true))
-                     .notifier(new ConsoleNotifier(true)));
+                     .notifier(new AndroidNotifier()));
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
