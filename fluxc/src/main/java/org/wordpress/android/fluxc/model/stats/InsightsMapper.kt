@@ -1,26 +1,27 @@
 package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Month
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.StreakModel
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient.CommentsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.WP_COM
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostStatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse.PostResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse.TagsGroup.TagResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
@@ -109,7 +110,7 @@ class InsightsMapper
         )
     }
 
-    fun map(response: FollowersResponse, followerType: FollowerType, pageSize: Int): FollowersModel {
+    fun map(response: FollowersResponse, followerType: FollowerType): FollowersModel {
         val followers = response.subscribers.mapNotNull {
             if (it.avatar != null && it.label != null && it.dateSubscribed != null) {
                 FollowerModel(
@@ -122,16 +123,50 @@ class InsightsMapper
                 AppLog.e(STATS, "CommentsResponse.posts: Non-null field is coming as null from API")
                 null
             }
-        }.take(pageSize)
+        }
         val total = when (followerType) {
             WP_COM -> response.totalWpCom
             EMAIL -> response.totalEmail
         }
-        return FollowersModel(total ?: 0, followers, response.subscribers.size > pageSize)
+        val hasMore = if (response.page != null && response.pages != null) {
+            response.page < response.pages
+        } else {
+            false
+        }
+        return FollowersModel(total ?: 0, followers, hasMore)
     }
 
-    fun map(response: CommentsResponse, pageSize: Int): CommentsModel {
-        val authors = response.authors?.take(pageSize)?.mapNotNull {
+    fun mapAndMergeFollowersModels(
+        followerResponses: List<FollowersResponse>,
+        followerType: FollowerType,
+        cacheMode: LimitMode
+    ): FollowersModel {
+        return followerResponses.fold(FollowersModel(0, emptyList(), false)) { accumulator, next ->
+                val nextModel = map(next, followerType)
+                accumulator.copy(
+                        totalCount = nextModel.totalCount,
+                        followers = accumulator.followers + nextModel.followers,
+                        hasMore = nextModel.hasMore
+                )
+            }
+            .let {
+                if (cacheMode is LimitMode.Top) {
+                    return@let it.copy(followers = it.followers.take(cacheMode.limit))
+                } else {
+                    return@let it
+                }
+            }
+    }
+
+    fun map(response: CommentsResponse, cacheMode: LimitMode): CommentsModel {
+        val authors = response.authors?.let {
+            if (cacheMode is LimitMode.Top) {
+                return@let it.take(cacheMode.limit)
+            } else {
+                return@let it
+            }
+        }
+        ?.mapNotNull {
             if (it.name != null && it.comments != null && it.link != null && it.gravatar != null) {
                 CommentsModel.Author(it.name, it.comments, it.link, it.gravatar)
             } else {
@@ -139,7 +174,14 @@ class InsightsMapper
                 null
             }
         }
-        val posts = response.posts?.take(pageSize)?.mapNotNull {
+        val posts = response.posts?.let {
+            if (cacheMode is LimitMode.Top) {
+                return@let it.take(cacheMode.limit)
+            } else {
+                return@let it
+            }
+        }
+        ?.mapNotNull {
             if (it.id != null && it.name != null && it.comments != null && it.link != null) {
                 CommentsModel.Post(it.id, it.name, it.comments, it.link)
             } else {
@@ -147,15 +189,27 @@ class InsightsMapper
                 null
             }
         }
-        val hasMoreAuthors = (response.authors != null && response.authors.size > pageSize)
-        val hasMorePosts = (response.posts != null && response.posts.size > pageSize)
+        val hasMoreAuthors = (response.authors != null && cacheMode is Top && response.authors.size > cacheMode.limit)
+        val hasMorePosts = (response.posts != null && cacheMode is Top && response.posts.size > cacheMode.limit)
         return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
 
-    fun map(response: TagsResponse, pageSize: Int): TagsModel {
-        return TagsModel(response.tags.take(pageSize).map { tag ->
-            TagModel(tag.tags.mapNotNull { it.toItem() }.take(pageSize), tag.views ?: 0)
-        }, response.tags.size > pageSize)
+    fun map(response: TagsResponse, cacheMode: LimitMode): TagsModel {
+        return TagsModel(response.tags.let {
+            if (cacheMode is LimitMode.Top) {
+                return@let it.take(cacheMode.limit)
+            } else {
+                return@let it
+            }
+        }.map { tag ->
+            TagModel(tag.tags.mapNotNull { it.toItem() }.let {
+                if (cacheMode is LimitMode.Top) {
+                    return@let it.take(cacheMode.limit)
+                } else {
+                    return@let it
+                }
+            }, tag.views ?: 0)
+        }, cacheMode is LimitMode.Top && response.tags.size > cacheMode.limit)
     }
 
     private fun TagResponse.toItem(): TagModel.Item? {
@@ -167,10 +221,16 @@ class InsightsMapper
         }
     }
 
-    fun map(response: PublicizeResponse, pageSize: Int): PublicizeModel {
+    fun map(response: PublicizeResponse, limitMode: LimitMode): PublicizeModel {
         return PublicizeModel(
-                response.services.take(pageSize).map { PublicizeModel.Service(it.service, it.followers) },
-                response.services.size > pageSize
+                response.services.sortedBy { it.followers }.let {
+                    if (limitMode is LimitMode.Top) {
+                        return@let it.take(limitMode.limit)
+                    } else {
+                        return@let it
+                    }
+                }.map { PublicizeModel.Service(it.service, it.followers) },
+                limitMode is LimitMode.Top && response.services.size > limitMode.limit
         )
     }
 

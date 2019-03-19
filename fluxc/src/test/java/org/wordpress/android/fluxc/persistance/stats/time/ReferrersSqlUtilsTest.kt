@@ -63,7 +63,8 @@ class ReferrersSqlUtilsTest {
         mappedTypes.forEach { statsType, dbGranularity ->
             timeStatsSqlUtils.insert(site, REFERRERS_RESPONSE, dbGranularity, DATE)
 
-            verify(statsSqlUtils).insert(site, REFERRERS, statsType, REFERRERS_RESPONSE, DATE_VALUE)
+            verify(statsSqlUtils).insert(site, REFERRERS, statsType, REFERRERS_RESPONSE,
+                    true, DATE_VALUE)
         }
     }
 }

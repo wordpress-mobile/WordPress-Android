@@ -17,29 +17,54 @@ import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse.Discussion
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient.CommentsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.WP_COM
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostStatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse.PostResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse.PostResponse.Discussion
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
-import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.AllTimeSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.CommentsInsightsSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.DetailedPostStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.EmailFollowersSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.LatestPostDetailSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.MostPopularSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.PublicizeSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.TagsSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.TodayInsightsSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.WpComFollowersSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
+import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
+import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
+import org.wordpress.android.fluxc.store.stats.insights.TagsStore
+import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import java.util.Date
@@ -47,21 +72,91 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 private const val PAGE_SIZE = 8
+private const val PAGE = 1
+private val LOAD_MODE_INITIAL = PagedMode(PAGE_SIZE, false)
+private val CACHE_MODE_TOP = LimitMode.Top(PAGE_SIZE)
 
 @RunWith(MockitoJUnitRunner::class)
 class InsightsStoreTest {
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var insightsRestClient: InsightsRestClient
-    @Mock lateinit var sqlUtils: InsightsSqlUtils
+    @Mock lateinit var allTimeInsightsRestClient: AllTimeInsightsRestClient
+    @Mock lateinit var commentsRestClient: CommentsRestClient
+    @Mock lateinit var followersRestClient: FollowersRestClient
+    @Mock lateinit var latestPostInsightsRestClient: LatestPostInsightsRestClient
+    @Mock lateinit var mostPopularRestClient: MostPopularRestClient
+    @Mock lateinit var publicizeRestClient: PublicizeRestClient
+    @Mock lateinit var tagsRestClient: TagsRestClient
+    @Mock lateinit var todayInsightsRestClient: TodayInsightsRestClient
+    @Mock lateinit var allTimeSqlUtils: AllTimeSqlUtils
+    @Mock lateinit var commentInsightsSqlUtils: CommentsInsightsSqlUtils
+    @Mock lateinit var wpComFollowersSqlUtils: WpComFollowersSqlUtils
+    @Mock lateinit var emailFollowersSqlUtils: EmailFollowersSqlUtils
+    @Mock lateinit var latestPostDetailSqlUtils: LatestPostDetailSqlUtils
+    @Mock lateinit var detailedPostStatsSqlUtils: DetailedPostStatsSqlUtils
+    @Mock lateinit var mostPopularSqlUtils: MostPopularSqlUtils
+    @Mock lateinit var publicizeSqlUtils: PublicizeSqlUtils
+    @Mock lateinit var tagsSqlUtils: TagsSqlUtils
+    @Mock lateinit var todaySqlUtils: TodayInsightsSqlUtils
     @Mock lateinit var mapper: InsightsMapper
     @Mock lateinit var timeProvider: CurrentTimeProvider
-    private lateinit var store: InsightsStore
+    private lateinit var allTimeStore: AllTimeInsightsStore
+    private lateinit var commentsStore: CommentsStore
+    private lateinit var followersStore: FollowersStore
+    private lateinit var latestPostStore: LatestPostInsightsStore
+    private lateinit var mostPopularStore: MostPopularInsightsStore
+    private lateinit var publicizeStore: PublicizeStore
+    private lateinit var tagsStore: TagsStore
+    private lateinit var todayStore: TodayInsightsStore
     private val currentDate = Date(10)
     @Before
     fun setUp() {
-        store = InsightsStore(
-                insightsRestClient,
-                sqlUtils,
+        allTimeStore = AllTimeInsightsStore(
+                allTimeInsightsRestClient,
+                allTimeSqlUtils,
+                mapper,
+                Unconfined
+        )
+        commentsStore = CommentsStore(
+                commentsRestClient,
+                commentInsightsSqlUtils,
+                mapper,
+                Unconfined
+        )
+        followersStore = FollowersStore(
+                followersRestClient,
+                wpComFollowersSqlUtils,
+                emailFollowersSqlUtils,
+                mapper,
+                Unconfined
+        )
+        latestPostStore = LatestPostInsightsStore(
+                latestPostInsightsRestClient,
+                latestPostDetailSqlUtils,
+                detailedPostStatsSqlUtils,
+                mapper,
+                Unconfined
+        )
+        mostPopularStore = MostPopularInsightsStore(
+                mostPopularRestClient,
+                mostPopularSqlUtils,
+                mapper,
+                Unconfined
+        )
+        publicizeStore = PublicizeStore(
+                publicizeRestClient,
+                publicizeSqlUtils,
+                mapper,
+                Unconfined
+        )
+        tagsStore = TagsStore(
+                tagsRestClient,
+                tagsSqlUtils,
+                mapper,
+                Unconfined
+        )
+        todayStore = TodayInsightsStore(
+                todayInsightsRestClient,
+                todaySqlUtils,
                 mapper,
                 timeProvider,
                 Unconfined
@@ -75,14 +170,14 @@ class InsightsStoreTest {
                 ALL_TIME_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchAllTimeInsights(site, forced)).thenReturn(fetchInsightsPayload)
+        whenever(allTimeInsightsRestClient.fetchAllTimeInsights(site, forced)).thenReturn(fetchInsightsPayload)
         val model = mock<InsightsAllTimeModel>()
         whenever(mapper.map(ALL_TIME_RESPONSE, site)).thenReturn(model)
 
-        val responseModel = store.fetchAllTimeInsights(site, forced)
+        val responseModel = allTimeStore.fetchAllTimeInsights(site, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, ALL_TIME_RESPONSE)
+        verify(allTimeSqlUtils).insert(site, ALL_TIME_RESPONSE)
     }
 
     @Test
@@ -91,9 +186,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<AllTimeResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchAllTimeInsights(site, forced)).thenReturn(errorPayload)
+        whenever(allTimeInsightsRestClient.fetchAllTimeInsights(site, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchAllTimeInsights(site, forced)
+        val responseModel = allTimeStore.fetchAllTimeInsights(site, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -103,11 +198,11 @@ class InsightsStoreTest {
 
     @Test
     fun `returns all time insights from db`() {
-        whenever(sqlUtils.selectAllTimeInsights(site)).thenReturn(ALL_TIME_RESPONSE)
+        whenever(allTimeSqlUtils.select(site)).thenReturn(ALL_TIME_RESPONSE)
         val model = mock<InsightsAllTimeModel>()
         whenever(mapper.map(ALL_TIME_RESPONSE, site)).thenReturn(model)
 
-        val result = store.getAllTimeInsights(site)
+        val result = allTimeStore.getAllTimeInsights(site)
 
         assertThat(result).isEqualTo(model)
     }
@@ -118,14 +213,14 @@ class InsightsStoreTest {
                 MOST_POPULAR_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchMostPopularInsights(site, forced)).thenReturn(fetchInsightsPayload)
+        whenever(mostPopularRestClient.fetchMostPopularInsights(site, forced)).thenReturn(fetchInsightsPayload)
         val model = mock<InsightsMostPopularModel>()
         whenever(mapper.map(MOST_POPULAR_RESPONSE, site)).thenReturn(model)
 
-        val responseModel = store.fetchMostPopularInsights(site, forced)
+        val responseModel = mostPopularStore.fetchMostPopularInsights(site, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, MOST_POPULAR_RESPONSE)
+        verify(mostPopularSqlUtils).insert(site, MOST_POPULAR_RESPONSE)
     }
 
     @Test
@@ -134,9 +229,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<MostPopularResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchMostPopularInsights(site, forced)).thenReturn(errorPayload)
+        whenever(mostPopularRestClient.fetchMostPopularInsights(site, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchMostPopularInsights(site, forced)
+        val responseModel = mostPopularStore.fetchMostPopularInsights(site, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -146,11 +241,11 @@ class InsightsStoreTest {
 
     @Test
     fun `returns most popular insights from db`() {
-        whenever(sqlUtils.selectMostPopularInsights(site)).thenReturn(MOST_POPULAR_RESPONSE)
+        whenever(mostPopularSqlUtils.select(site)).thenReturn(MOST_POPULAR_RESPONSE)
         val model = mock<InsightsMostPopularModel>()
         whenever(mapper.map(MOST_POPULAR_RESPONSE, site)).thenReturn(model)
 
-        val result = store.getMostPopularInsights(site)
+        val result = mostPopularStore.getMostPopularInsights(site)
 
         assertThat(result).isEqualTo(model)
     }
@@ -164,9 +259,9 @@ class InsightsStoreTest {
                 postsResponse
         )
         val forced = true
-        whenever(insightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(fetchInsightsPayload)
+        whenever(latestPostInsightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(fetchInsightsPayload)
         val viewsResponse = POST_STATS_RESPONSE
-        whenever(insightsRestClient.fetchPostStats(site, ID, forced)).thenReturn(
+        whenever(latestPostInsightsRestClient.fetchPostStats(site, ID, forced)).thenReturn(
                 FetchStatsPayload(
                         viewsResponse
                 )
@@ -176,23 +271,23 @@ class InsightsStoreTest {
                 LATEST_POST,
                 POST_STATS_RESPONSE, site)).thenReturn(model)
 
-        val responseModel = store.fetchLatestPostInsights(site, forced)
+        val responseModel = latestPostStore.fetchLatestPostInsights(site, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, LATEST_POST)
-        verify(sqlUtils).insert(site, viewsResponse)
+        verify(latestPostDetailSqlUtils).insert(site, LATEST_POST)
+        verify(detailedPostStatsSqlUtils).insert(site, viewsResponse, postId = LATEST_POST.id)
     }
 
     @Test
     fun `returns latest post insights from db`() {
-        whenever(sqlUtils.selectLatestPostDetail(site)).thenReturn(LATEST_POST)
-        whenever(sqlUtils.selectLatestPostStats(site)).thenReturn(POST_STATS_RESPONSE)
+        whenever(latestPostDetailSqlUtils.select(site)).thenReturn(LATEST_POST)
+        whenever(detailedPostStatsSqlUtils.select(site, LATEST_POST.id)).thenReturn(POST_STATS_RESPONSE)
         val model = mock<InsightsLatestPostModel>()
         whenever(mapper.map(
                 LATEST_POST,
                 POST_STATS_RESPONSE, site)).thenReturn(model)
 
-        val result = store.getLatestPostInsights(site)
+        val result = latestPostStore.getLatestPostInsights(site)
 
         assertThat(result).isEqualTo(model)
     }
@@ -203,9 +298,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<PostsResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(errorPayload)
+        whenever(latestPostInsightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchLatestPostInsights(site, forced)
+        val responseModel = latestPostStore.fetchLatestPostInsights(site, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -229,14 +324,14 @@ class InsightsStoreTest {
                 )
         )
         val forced = true
-        whenever(insightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(fetchInsightsPayload)
+        whenever(latestPostInsightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(fetchInsightsPayload)
 
         val type = API_ERROR
         val message = "message"
         val errorPayload = FetchStatsPayload<PostStatsResponse>(StatsError(type, message))
-        whenever(insightsRestClient.fetchPostStats(site, id, forced)).thenReturn(errorPayload)
+        whenever(latestPostInsightsRestClient.fetchPostStats(site, id, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchLatestPostInsights(site, forced)
+        val responseModel = latestPostStore.fetchLatestPostInsights(site, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -250,25 +345,25 @@ class InsightsStoreTest {
                 VISITS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(
+        whenever(todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<VisitsModel>()
         whenever(mapper.map(VISITS_RESPONSE)).thenReturn(model)
 
-        val responseModel = store.fetchTodayInsights(site, forced)
+        val responseModel = todayStore.fetchTodayInsights(site, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, VISITS_RESPONSE)
+        verify(todaySqlUtils).insert(site, VISITS_RESPONSE)
     }
 
     @Test
     fun `returns today stats from db`() {
-        whenever(sqlUtils.selectTodayInsights(site)).thenReturn(VISITS_RESPONSE)
+        whenever(todaySqlUtils.select(site)).thenReturn(VISITS_RESPONSE)
         val model = mock<VisitsModel>()
         whenever(mapper.map(VISITS_RESPONSE)).thenReturn(model)
 
-        val result = store.getTodayInsights(site)
+        val result = todayStore.getTodayInsights(site)
 
         assertThat(result).isEqualTo(model)
     }
@@ -279,9 +374,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<VisitResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(errorPayload)
+        whenever(todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchTodayInsights(site, forced)
+        val responseModel = todayStore.fetchTodayInsights(site, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -295,16 +390,22 @@ class InsightsStoreTest {
                 FOLLOWERS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(followersRestClient.fetchFollowers(site, WP_COM, PAGE, PAGE_SIZE, forced)).thenReturn(
                 fetchInsightsPayload
         )
-        val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, WP_COM, PAGE_SIZE)).thenReturn(model)
-
-        val responseModel = store.fetchWpComFollowers(site, PAGE_SIZE, forced)
+        val model = FollowersModel(0, emptyList(), false)
+        whenever(wpComFollowersSqlUtils.selectAll(site)).thenReturn(listOf(FOLLOWERS_RESPONSE))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), WP_COM, LimitMode.All))
+                .thenReturn(model)
+        val responseModel = followersStore.fetchWpComFollowers(site, LOAD_MODE_INITIAL, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, FOLLOWERS_RESPONSE, WP_COM)
+        verify(wpComFollowersSqlUtils).insert(
+                site,
+                FOLLOWERS_RESPONSE,
+                requestedItems = PAGE_SIZE,
+                replaceExistingData = true
+        )
     }
 
     @Test
@@ -313,36 +414,44 @@ class InsightsStoreTest {
                 FOLLOWERS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(followersRestClient.fetchFollowers(site, EMAIL, PAGE, PAGE_SIZE, forced)).thenReturn(
                 fetchInsightsPayload
         )
-        val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, EMAIL, PAGE_SIZE)).thenReturn(model)
-
-        val responseModel = store.fetchEmailFollowers(site, PAGE_SIZE, forced)
+        val model = FollowersModel(0, emptyList(), false)
+        whenever(emailFollowersSqlUtils.selectAll(site)).thenReturn(listOf(FOLLOWERS_RESPONSE))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), EMAIL, LimitMode.All))
+                .thenReturn(model)
+        val responseModel = followersStore.fetchEmailFollowers(site, LOAD_MODE_INITIAL, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, FOLLOWERS_RESPONSE, EMAIL)
+        verify(emailFollowersSqlUtils).insert(
+                site,
+                FOLLOWERS_RESPONSE,
+                requestedItems = PAGE_SIZE,
+                replaceExistingData = true
+        )
     }
 
     @Test
     fun `returns WPCOM followers from db`() {
-        whenever(sqlUtils.selectFollowers(site, WP_COM)).thenReturn(FOLLOWERS_RESPONSE)
         val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, WP_COM, PAGE_SIZE)).thenReturn(model)
+        whenever(wpComFollowersSqlUtils.selectAll(site)).thenReturn(listOf(FOLLOWERS_RESPONSE))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), WP_COM, LimitMode.Top(PAGE_SIZE)))
+                .thenReturn(model)
 
-        val result = store.getWpComFollowers(site, PAGE_SIZE)
+        val result = followersStore.getWpComFollowers(site, CACHE_MODE_TOP)
 
         assertThat(result).isEqualTo(model)
     }
 
     @Test
     fun `returns email followers from db`() {
-        whenever(sqlUtils.selectFollowers(site, EMAIL)).thenReturn(FOLLOWERS_RESPONSE)
         val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, EMAIL, PAGE_SIZE)).thenReturn(model)
+        whenever(emailFollowersSqlUtils.selectAll(site)).thenReturn(listOf(FOLLOWERS_RESPONSE))
+        whenever(mapper.mapAndMergeFollowersModels(listOf(FOLLOWERS_RESPONSE), EMAIL, LimitMode.Top(PAGE_SIZE)))
+                .thenReturn(model)
 
-        val result = store.getEmailFollowers(site, PAGE_SIZE)
+        val result = followersStore.getEmailFollowers(site, CACHE_MODE_TOP)
 
         assertThat(result).isEqualTo(model)
     }
@@ -353,9 +462,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<FollowersResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(followersRestClient.fetchFollowers(site, WP_COM, PAGE, PAGE_SIZE, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchWpComFollowers(site, PAGE_SIZE, forced)
+        val responseModel = followersStore.fetchWpComFollowers(site, LOAD_MODE_INITIAL, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -369,9 +478,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<FollowersResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(followersRestClient.fetchFollowers(site, EMAIL, PAGE, PAGE_SIZE, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchEmailFollowers(site, PAGE_SIZE, forced)
+        val responseModel = followersStore.fetchEmailFollowers(site, LOAD_MODE_INITIAL, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -385,25 +494,25 @@ class InsightsStoreTest {
                 TOP_COMMENTS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(commentsRestClient.fetchTopComments(site, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<CommentsModel>()
-        whenever(mapper.map(TOP_COMMENTS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(TOP_COMMENTS_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val responseModel = store.fetchComments(site, PAGE_SIZE, forced)
+        val responseModel = commentsStore.fetchComments(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, TOP_COMMENTS_RESPONSE)
+        verify(commentInsightsSqlUtils).insert(site, TOP_COMMENTS_RESPONSE, requestedItems = PAGE_SIZE)
     }
 
     @Test
     fun `returns top comments from db`() {
-        whenever(sqlUtils.selectCommentInsights(site)).thenReturn(TOP_COMMENTS_RESPONSE)
+        whenever(commentInsightsSqlUtils.select(site)).thenReturn(TOP_COMMENTS_RESPONSE)
         val model = mock<CommentsModel>()
-        whenever(mapper.map(TOP_COMMENTS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(TOP_COMMENTS_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val result = store.getComments(site, PAGE_SIZE)
+        val result = commentsStore.getComments(site, LimitMode.Top(PAGE_SIZE))
 
         assertThat(result).isEqualTo(model)
     }
@@ -414,9 +523,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<CommentsResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(commentsRestClient.fetchTopComments(site, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchComments(site, PAGE_SIZE, forced)
+        val responseModel = commentsStore.fetchComments(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -430,25 +539,25 @@ class InsightsStoreTest {
                 TAGS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchTags(site, PAGE_SIZE + 1, forced = forced)).thenReturn(
+        whenever(tagsRestClient.fetchTags(site, PAGE_SIZE + 1, forced = forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<TagsModel>()
-        whenever(mapper.map(TAGS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(TAGS_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val responseModel = store.fetchTags(site, PAGE_SIZE, forced)
+        val responseModel = tagsStore.fetchTags(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, TAGS_RESPONSE)
+        verify(tagsSqlUtils).insert(site, TAGS_RESPONSE, requestedItems = PAGE_SIZE)
     }
 
     @Test
     fun `returns tags and categories from db`() {
-        whenever(sqlUtils.selectTags(site)).thenReturn(TAGS_RESPONSE)
+        whenever(tagsSqlUtils.select(site)).thenReturn(TAGS_RESPONSE)
         val model = mock<TagsModel>()
-        whenever(mapper.map(TAGS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(TAGS_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val result = store.getTags(site, PAGE_SIZE)
+        val result = tagsStore.getTags(site, LimitMode.Top(PAGE_SIZE))
 
         assertThat(result).isEqualTo(model)
     }
@@ -459,9 +568,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<TagsResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchTags(site, PAGE_SIZE + 1, forced = forced)).thenReturn(errorPayload)
+        whenever(tagsRestClient.fetchTags(site, PAGE_SIZE + 1, forced = forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchTags(site, PAGE_SIZE, forced)
+        val responseModel = tagsStore.fetchTags(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -475,25 +584,25 @@ class InsightsStoreTest {
                 PUBLICIZE_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchPublicizeData(site, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(publicizeRestClient.fetchPublicizeData(site, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<PublicizeModel>()
-        whenever(mapper.map(PUBLICIZE_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(PUBLICIZE_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val responseModel = store.fetchPublicizeData(site, PAGE_SIZE, forced)
+        val responseModel = publicizeStore.fetchPublicizeData(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, PUBLICIZE_RESPONSE)
+        verify(publicizeSqlUtils).insert(site, PUBLICIZE_RESPONSE)
     }
 
     @Test
     fun `returns publicize data from db`() {
-        whenever(sqlUtils.selectPublicizeInsights(site)).thenReturn(PUBLICIZE_RESPONSE)
+        whenever(publicizeSqlUtils.select(site)).thenReturn(PUBLICIZE_RESPONSE)
         val model = mock<PublicizeModel>()
-        whenever(mapper.map(PUBLICIZE_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(PUBLICIZE_RESPONSE, LimitMode.Top(PAGE_SIZE))).thenReturn(model)
 
-        val result = store.getPublicizeData(site, PAGE_SIZE)
+        val result = publicizeStore.getPublicizeData(site, LimitMode.Top(PAGE_SIZE))
 
         assertThat(result).isEqualTo(model)
     }
@@ -504,9 +613,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<PublicizeResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchPublicizeData(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(publicizeRestClient.fetchPublicizeData(site, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchPublicizeData(site, PAGE_SIZE, forced)
+        val responseModel = publicizeStore.fetchPublicizeData(site, LimitMode.Top(PAGE_SIZE), forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!

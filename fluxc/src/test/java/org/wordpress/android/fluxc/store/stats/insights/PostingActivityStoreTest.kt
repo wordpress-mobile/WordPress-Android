@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
-import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.PostingActivitySqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -29,7 +29,7 @@ import kotlin.test.assertNotNull
 class PostingActivityStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var restClient: PostingActivityRestClient
-    @Mock lateinit var sqlUtils: InsightsSqlUtils
+    @Mock lateinit var sqlUtils: PostingActivitySqlUtils
     @Mock lateinit var mapper: InsightsMapper
     private lateinit var store: PostingActivityStore
     private val startDate = Day(2018, 1, 1)

@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.store.stats.time
 
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient
@@ -25,23 +27,23 @@ class AuthorsStore
 ) {
     suspend fun fetchAuthors(
         site: SiteModel,
-        pageSize: Int,
         period: StatsGranularity,
+        limitMode: Top,
         date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchAuthors(site, period, date, pageSize + 1, forced)
+        val payload = restClient.fetchAuthors(site, period, date, limitMode.limit + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, period, date)
-                OnStatsFetched(timeStatsMapper.map(payload.response, pageSize))
+                OnStatsFetched(timeStatsMapper.map(payload.response, limitMode))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
-    fun getAuthors(site: SiteModel, period: StatsGranularity, pageSize: Int, date: Date): AuthorsModel? {
-        return sqlUtils.selectAuthors(site, period, date)?.let { timeStatsMapper.map(it, pageSize) }
+    fun getAuthors(site: SiteModel, period: StatsGranularity, limitMode: LimitMode, date: Date): AuthorsModel? {
+        return sqlUtils.selectAuthors(site, period, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }

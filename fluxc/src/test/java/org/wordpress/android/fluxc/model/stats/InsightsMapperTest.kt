@@ -9,15 +9,17 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse.Streak
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse.Streaks
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.WP_COM
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.store.stats.ALL_TIME_RESPONSE
 import org.wordpress.android.fluxc.store.stats.COMMENT_COUNT
 import org.wordpress.android.fluxc.store.stats.FIRST_DAY
 import org.wordpress.android.fluxc.store.stats.FIRST_DAY_VIEWS
+import org.wordpress.android.fluxc.store.stats.FOLLOWER_RESPONSE
 import org.wordpress.android.fluxc.store.stats.LATEST_POST
 import org.wordpress.android.fluxc.store.stats.LIKE_COUNT
 import org.wordpress.android.fluxc.store.stats.MOST_POPULAR_RESPONSE
@@ -27,6 +29,7 @@ import org.wordpress.android.fluxc.store.stats.REBLOG_COUNT
 import org.wordpress.android.fluxc.store.stats.SECOND_DAY
 import org.wordpress.android.fluxc.store.stats.SECOND_DAY_VIEWS
 import org.wordpress.android.fluxc.store.stats.VIEWS
+import org.wordpress.android.fluxc.store.stats.VIEW_ALL_FOLLOWERS_RESPONSE
 import org.wordpress.android.fluxc.store.stats.VISITS_DATE
 import org.wordpress.android.fluxc.store.stats.VISITS_RESPONSE
 import java.util.Calendar
@@ -105,6 +108,14 @@ class InsightsMapperTest {
 
         assertThat(model.views).isEqualTo(10)
         assertThat(model.comments).isEqualTo(0)
+    }
+
+    @Test
+    fun `maps and merges followers responses`() {
+        val model = mapper.mapAndMergeFollowersModels(VIEW_ALL_FOLLOWERS_RESPONSE, WP_COM, LimitMode.Top(1))
+
+        assertThat(model.followers.size).isEqualTo(1)
+        assertThat(model.followers.first().label).isEqualTo(FOLLOWER_RESPONSE.label)
     }
 
     @Test
