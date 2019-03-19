@@ -10,6 +10,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel.Service
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -38,7 +40,8 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var serviceMapper: ServiceMapper
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: PublicizeUseCase
-    private val pageSize = 5
+    private val itemsToLoad = 6
+    private val limitMode = LimitMode.Top(itemsToLoad)
     @Before
     fun setUp() {
         useCase = PublicizeUseCase(
@@ -46,7 +49,8 @@ class PublicizeUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 statsSiteProvider,
                 serviceMapper,
-                tracker
+                tracker,
+                BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
@@ -56,7 +60,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val forced = false
         val followers = 100
         val services = listOf(Service("facebook", followers))
-        whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
                 OnStatsFetched(
                         PublicizeModel(services, false)
                 )
@@ -85,7 +89,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val services = listOf(
                 Service("service1", followers)
         )
-        whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
                 OnStatsFetched(
                         PublicizeModel(services, true)
                 )
@@ -111,7 +115,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty services to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
                 OnStatsFetched(PublicizeModel(listOf(), false))
         )
 
@@ -129,7 +133,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, limitMode, forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )

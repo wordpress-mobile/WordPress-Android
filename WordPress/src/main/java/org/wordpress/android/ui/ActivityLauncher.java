@@ -66,12 +66,9 @@ import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
-import org.wordpress.android.ui.stats.OldStatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
-import org.wordpress.android.ui.stats.StatsTimeframe;
-import org.wordpress.android.ui.stats.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
@@ -302,75 +299,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity);
-        context.startActivity(intent);
-    }
-
-    public static void viewCountriesStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
-                                          String selectedDate) {
-        Intent intent = new Intent(context, StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.GEOVIEWS);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
-        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
-        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
-
-        String title = context.getResources().getString(R.string.stats_view_countries);
-        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
-        context.startActivity(intent);
-    }
-
-    public static void viewVideoPlays(Context context, SiteModel site, StatsTimeframe statsTimeframe,
-                                      String selectedDate) {
-        Intent intent = new Intent(context, StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.VIDEO_PLAYS);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
-        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
-        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
-
-        String title = context.getResources().getString(R.string.stats_view_videos);
-        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
-        context.startActivity(intent);
-    }
-
-    public static void viewSearchTerms(Context context, SiteModel site, StatsTimeframe statsTimeframe,
-                                       String selectedDate) {
-        Intent intent = new Intent(context, StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.SEARCH_TERMS);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
-        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
-        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
-
-        String title = context.getResources().getString(R.string.stats_view_search_terms);
-        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
-        context.startActivity(intent);
-    }
-
-    public static void viewAuthorsStats(Context context, SiteModel site, StatsTimeframe statsTimeframe,
-                                        String selectedDate) {
-        Intent intent = new Intent(context, StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.AUTHORS);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
-        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
-        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
-
-        String title = context.getResources().getString(R.string.stats_view_authors);
-        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
-        context.startActivity(intent);
-    }
-
-    public static void viewPublicizeStats(Context context, SiteModel site) {
-        Intent intent = new Intent(context, StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.PUBLICIZE);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
-        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
-        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-        intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
-
-        String title = context.getResources().getString(R.string.stats_view_publicize);
-        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
         context.startActivity(intent);
     }
 

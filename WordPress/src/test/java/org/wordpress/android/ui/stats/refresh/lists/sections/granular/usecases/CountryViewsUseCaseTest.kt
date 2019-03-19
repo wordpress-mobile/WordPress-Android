@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.CountryViewsModel
 import org.wordpress.android.fluxc.model.stats.time.CountryViewsModel.Country
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -17,6 +18,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.CountryViewsStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -36,7 +38,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
-private const val pageSize = 6
+private const val itemsToLoad = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 
@@ -56,7 +58,8 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
-                tracker
+                tracker,
+                BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -72,7 +75,8 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     fun `maps country views to UI model`() = test {
         val forced = false
         val model = CountryViewsModel(10, 15, listOf(country), false)
-        whenever(store.fetchCountryViews(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
+        whenever(store.fetchCountryViews(site, statsGranularity,
+                LimitMode.Top(itemsToLoad), selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -97,7 +101,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = CountryViewsModel(10, 15, listOf(country), true)
         whenever(
-                store.fetchCountryViews(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchCountryViews(site, statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         model
@@ -116,7 +120,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     fun `maps empty country views to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchCountryViews(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchCountryViews(site, statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(CountryViewsModel(0, 0, listOf(), false))
         )
@@ -136,7 +140,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchCountryViews(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchCountryViews(site, statsGranularity, LimitMode.Top(itemsToLoad), selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)

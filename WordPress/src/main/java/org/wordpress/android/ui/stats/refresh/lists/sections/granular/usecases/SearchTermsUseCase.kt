@@ -5,12 +5,15 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.SearchTermsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.SEARCH_TERMS
 import org.wordpress.android.fluxc.store.stats.time.SearchTermsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewSearchTerms
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -29,7 +32,8 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_ITEM_COUNT = 6
+private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class SearchTermsUseCase
 constructor(
@@ -38,7 +42,8 @@ constructor(
     private val store: SearchTermsStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<SearchTermsModel>(
         SEARCH_TERMS,
         mainDispatcher,
@@ -46,13 +51,15 @@ constructor(
         statsSiteProvider,
         statsGranularity
 ) {
+    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
+
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_search_terms))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): SearchTermsModel? {
         return store.getSearchTerms(
                 site,
                 statsGranularity,
-                PAGE_SIZE,
+                LimitMode.Top(itemsToLoad),
                 selectedDate
         )
     }
@@ -64,8 +71,8 @@ constructor(
     ): State<SearchTermsModel> {
         val response = store.fetchSearchTerms(
                 site,
-                PAGE_SIZE,
                 statsGranularity,
+                LimitMode.Top(itemsToLoad),
                 selectedDate,
                 forced
         )
@@ -81,7 +88,10 @@ constructor(
 
     override fun buildUiModel(domainModel: SearchTermsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_search_terms))
+
+        if (useCaseMode == BLOCK) {
+            items.add(Title(R.string.stats_search_terms))
+        }
 
         if (domainModel.searchTerms.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
@@ -108,7 +118,7 @@ constructor(
                 items.addAll(mappedSearchTerms)
             }
 
-            if (domainModel.hasMore) {
+            if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,
@@ -145,7 +155,8 @@ constructor(
                         store,
                         statsSiteProvider,
                         selectedDateProvider,
-                        analyticsTracker
+                        analyticsTracker,
+                        useCaseMode
                 )
     }
 }

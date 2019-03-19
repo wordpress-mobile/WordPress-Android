@@ -67,8 +67,8 @@ constructor(
         return referrersStore.getReferrers(
                 site,
                 statsGranularity,
-                selectedDate,
-                LimitMode.Top(itemsToLoad)
+                LimitMode.Top(itemsToLoad),
+                selectedDate
         )
     }
 

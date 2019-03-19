@@ -39,8 +39,8 @@ import static org.wordpress.android.ui.JetpackConnectionSource.STATS;
  */
 public class StatsConnectJetpackActivity extends AppCompatActivity {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
-    private static final String FAQ_URL = "https://wordpress.org/plugins/jetpack/#faq";
-    private static final String TERMS_URL = "https://en.wordpress.com/tos/";
+    public static final String FAQ_URL = "https://wordpress.org/plugins/jetpack/#faq";
+    public static final String TERMS_URL = "https://en.wordpress.com/tos/";
 
     private boolean mIsJetpackConnectStarted;
 

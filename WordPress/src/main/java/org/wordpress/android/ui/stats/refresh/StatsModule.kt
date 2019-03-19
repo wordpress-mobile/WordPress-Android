@@ -40,7 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.F
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PostingActivityUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -80,7 +80,7 @@ class StatsModule {
         commentsUseCaseFactory: CommentsUseCaseFactory,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
-        publicizeUseCase: PublicizeUseCase,
+        publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
@@ -91,7 +91,7 @@ class StatsModule {
                 commentsUseCaseFactory.build(UseCaseMode.BLOCK),
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCaseFactory.build(UseCaseMode.BLOCK),
-                publicizeUseCase,
+                publicizeUseCaseFactory.build(UseCaseMode.BLOCK),
                 postingActivityUseCase
         )
     }
@@ -111,7 +111,7 @@ class StatsModule {
         commentsUseCaseFactory: CommentsUseCaseFactory,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
-        publicizeUseCase: PublicizeUseCase,
+        publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
         postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
         postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
@@ -125,7 +125,7 @@ class StatsModule {
                 commentsUseCaseFactory.build(UseCaseMode.VIEW_ALL),
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL),
-                publicizeUseCase,
+                publicizeUseCaseFactory.build(UseCaseMode.VIEW_ALL),
                 postingActivityUseCase,
                 postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
                 postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
