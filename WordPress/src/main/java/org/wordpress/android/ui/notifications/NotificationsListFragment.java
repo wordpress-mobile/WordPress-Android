@@ -17,9 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -39,6 +41,7 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
@@ -64,6 +67,8 @@ import static org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SEL
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
+import static org.wordpress.android.ui.stats.StatsConnectJetpackActivity.FAQ_URL;
+import static org.wordpress.android.ui.stats.StatsConnectJetpackActivity.TERMS_URL;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class NotificationsListFragment extends Fragment implements
@@ -213,6 +218,20 @@ public class NotificationsListFragment extends Fragment implements
 
         mToolbar = view.findViewById(R.id.toolbar_main);
         mToolbar.setTitle(mToolbarTitle);
+
+        TextView jetpackTermsAndConditions = view.findViewById(R.id.jetpack_terms_and_conditions);
+        jetpackTermsAndConditions.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                WPWebViewActivity.openURL(requireContext(), TERMS_URL);
+            }
+        });
+
+        Button jetpackFaq = view.findViewById(R.id.jetpack_faq);
+        jetpackFaq.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                WPWebViewActivity.openURL(requireContext(), FAQ_URL);
+            }
+        });
 
         return view;
     }

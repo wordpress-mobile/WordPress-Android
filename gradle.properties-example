@@ -25,7 +25,7 @@ wp.giphy.api_key=wordpress
 # Needed to use the Google Maps component aka the PlacePicker (Post Settings -> Location)
 wp.res.com.google.android.geo.api.key = geo-api-key
 
-# Needed for the end to end tests
+# Optional: Needed for the end to end tests
 wp.e2e.wp_com_user.email=
 wp.e2e.wp_com_user.password=
 wp.e2e.wp_com_user.site_address=

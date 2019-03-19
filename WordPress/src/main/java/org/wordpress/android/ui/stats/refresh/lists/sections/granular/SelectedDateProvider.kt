@@ -69,7 +69,7 @@ class SelectedDateProvider
         return selectedDate.index != null && selectedDate.hasData() && selectedDate.index > 0
     }
 
-    fun hasNextData(statsGranularity: StatsGranularity): Boolean {
+    fun hasNextDate(statsGranularity: StatsGranularity): Boolean {
         val selectedDate = getSelectedDateState(statsGranularity)
         return selectedDate.hasData() &&
                 selectedDate.index != null &&

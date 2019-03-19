@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
@@ -59,9 +60,30 @@ public class WPSupportUtils {
                 .perform(click());
     }
 
+    public static void scrollToThenClickOn(ViewInteraction element) {
+        waitForElementToBeDisplayed(element);
+        element.perform(scrollTo())
+                .perform(click());
+    }
+
     public static void clickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
         onView(withId(elementID)).perform(click());
+    }
+
+    public static void clickOn(ViewInteraction element) {
+        waitForElementToBeDisplayed(element);
+        element.perform(click());
+    }
+
+    public static void longClickOn(Integer elementID) {
+        waitForElementToBeDisplayed(elementID);
+        onView(withId(elementID)).perform(longClick());
+    }
+
+    public static void longClickOn(ViewInteraction element) {
+        waitForElementToBeDisplayed(element);
+        element.perform(longClick());
     }
 
     public static void clickOnChildAtIndex(int index, int parentElementID, int childElementID) {
@@ -91,6 +113,12 @@ public class WPSupportUtils {
         onView(withId(elementID))
                 .perform(replaceText(text))
                 .perform(closeSoftKeyboard());
+    }
+
+    public static void populateTextField(ViewInteraction element, String text) {
+        waitForElementToBeDisplayed(element);
+        element.perform(replaceText(text))
+               .perform(closeSoftKeyboard());
     }
 
     public static void focusEditPostTitle() {
@@ -230,6 +258,21 @@ public class WPSupportUtils {
         } catch (Exception ex) {
             // do nothing
         }
+    }
+
+    public static void sleep(int timeout) {
+        // TODO: The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        // https://developer.android.com/training/testing/espresso/idling-resource
+        try {
+            Thread.sleep(timeout);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sleep() {
+        sleep(2000);
     }
 
     // MATCHERS

@@ -184,7 +184,7 @@ class PostListFragment : Fragment() {
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
-        nonNullActivity.findViewById<View>(R.id.root_view)?.let { parent ->
+        nonNullActivity.findViewById<View>(R.id.coordinator)?.let { parent ->
             val message = getString(holder.messageRes)
             val duration = AccessibilityUtils.getSnackbarDuration(nonNullActivity)
             val snackbar = Snackbar.make(parent, message, duration)

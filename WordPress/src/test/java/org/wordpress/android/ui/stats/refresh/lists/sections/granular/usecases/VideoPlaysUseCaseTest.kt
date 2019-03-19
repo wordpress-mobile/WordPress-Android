@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel.VideoPlays
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.VideoPlaysStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -35,7 +37,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
-private const val pageSize = 6
+private const val ITEMS_TO_LOAD = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 
@@ -53,9 +55,10 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
                 statsGranularity,
                 Dispatchers.Unconfined,
                 store,
-                selectedDateProvider,
                 siteModelProvider,
-                tracker
+                selectedDateProvider,
+                tracker,
+                BLOCK
         )
         whenever(siteModelProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -71,7 +74,8 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     fun `maps video plays to UI model`() = test {
         val forced = false
         val model = VideoPlaysModel(10, 15, listOf(videoPlay), false)
-        whenever(store.fetchVideoPlays(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
+        whenever(store.fetchVideoPlays(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate,
+                forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -93,7 +97,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = VideoPlaysModel(10, 15, listOf(videoPlay), true)
         whenever(
-                store.fetchVideoPlays(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchVideoPlays(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         model
@@ -116,7 +120,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     fun `maps empty video plays to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchVideoPlays(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchVideoPlays(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(VideoPlaysModel(0, 0, listOf(), false))
         )
@@ -137,7 +141,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchVideoPlays(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchVideoPlays(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)

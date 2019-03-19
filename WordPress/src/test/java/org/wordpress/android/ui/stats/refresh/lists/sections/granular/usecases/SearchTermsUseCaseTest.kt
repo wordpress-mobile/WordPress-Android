@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.SearchTermsModel
 import org.wordpress.android.fluxc.model.stats.time.SearchTermsModel.SearchTerm
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.SearchTermsStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -36,7 +38,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
-private const val pageSize = 6
+private const val ITEMS_TO_LOAD = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 
@@ -54,9 +56,10 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 statsGranularity,
                 Dispatchers.Unconfined,
                 store,
-                selectedDateProvider,
                 statsSiteProvider,
-                tracker
+                selectedDateProvider,
+                tracker,
+                BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -72,7 +75,8 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     fun `maps search_terms to UI model`() = test {
         val forced = false
         val model = SearchTermsModel(10, 15, 0, listOf(searchTerm), false)
-        whenever(store.fetchSearchTerms(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
+        whenever(store.fetchSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate,
+                forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -94,7 +98,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = SearchTermsModel(10, 15, 0, listOf(searchTerm), true)
         whenever(
-                store.fetchSearchTerms(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         model
@@ -123,7 +127,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 false
         )
         whenever(
-                store.fetchSearchTerms(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         model
@@ -152,7 +156,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     fun `maps empty search_terms to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchSearchTerms(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(SearchTermsModel(0, 0, 0, listOf(), false))
         )
@@ -173,7 +177,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchSearchTerms(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchSearchTerms(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)

@@ -3,8 +3,8 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.VisitsModel
-import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
+import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -19,15 +19,15 @@ import javax.inject.Named
 class TodayStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsStore: InsightsStore,
+    private val todayStore: TodayInsightsStore,
     private val statsSiteProvider: StatsSiteProvider
 ) : StatelessUseCase<VisitsModel>(TODAY_STATS, mainDispatcher) {
     override suspend fun loadCachedData(): VisitsModel? {
-        return insightsStore.getTodayInsights(statsSiteProvider.siteModel)
+        return todayStore.getTodayInsights(statsSiteProvider.siteModel)
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsModel> {
-        val response = insightsStore.fetchTodayInsights(statsSiteProvider.siteModel, forced)
+        val response = todayStore.fetchTodayInsights(statsSiteProvider.siteModel, forced)
         val model = response.model
         val error = response.error
 

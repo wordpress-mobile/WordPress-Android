@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Error
@@ -85,18 +85,22 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
                 updateUseCaseState(LOADING)
             }
             val state = fetchRemoteData(forced)
-            withContext(mainDispatcher) {
-                val useCaseState = when (state) {
-                    is Error -> ERROR
-                    is Data -> {
-                        domainModel.value = state.model
-                        SUCCESS
-                    }
-                    is Empty -> EMPTY
-                    is Loading -> LOADING
+            evaluateState(state)
+        }
+    }
+
+    protected suspend fun evaluateState(state: State<DOMAIN_MODEL>) {
+        withContext(mainDispatcher) {
+            val useCaseState = when (state) {
+                is Error -> ERROR
+                is Data -> {
+                    domainModel.value = state.model
+                    SUCCESS
                 }
-                updateUseCaseState(useCaseState)
+                is Empty -> EMPTY
+                is Loading -> LOADING
             }
+            updateUseCaseState(useCaseState)
         }
     }
 
@@ -240,5 +244,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         }
 
         object NotUsedUiState
+    }
+
+    enum class UseCaseMode {
+        BLOCK,
+        VIEW_ALL
     }
 }
