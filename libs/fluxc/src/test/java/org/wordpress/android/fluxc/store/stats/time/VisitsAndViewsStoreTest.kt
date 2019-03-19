@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient
@@ -25,7 +26,8 @@ import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-private const val PAGE_SIZE = 8
+private const val ITEMS_TO_LOAD = 8
+private val LIMIT_MODE = LimitMode.Top(ITEMS_TO_LOAD)
 private val DATE = Date(0)
 
 @RunWith(MockitoJUnitRunner::class)
@@ -51,12 +53,10 @@ class VisitsAndViewsStoreTest {
                 VISITS_AND_VIEWS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE, forced)).thenReturn(
-                fetchInsightsPayload
-        )
-        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(VISITS_AND_VIEWS_MODEL)
+        whenever(restClient.fetchVisits(site, DATE, DAYS, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
+        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(VISITS_AND_VIEWS_MODEL)
 
-        val responseModel = store.fetchVisits(site, PAGE_SIZE, DATE, DAYS, forced)
+        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(VISITS_AND_VIEWS_MODEL)
         verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, DATE)
@@ -68,13 +68,11 @@ class VisitsAndViewsStoreTest {
         val fetchInsightsPayload = FetchStatsPayload(
                 VISITS_AND_VIEWS_RESPONSE
         )
-        whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE, forced)).thenReturn(
-                fetchInsightsPayload
-        )
+        whenever(restClient.fetchVisits(site, DATE, DAYS, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
         val emptyModel = VisitsAndViewsModel("", emptyList())
-        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(emptyModel)
+        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(emptyModel)
 
-        val responseModel = store.fetchVisits(site, PAGE_SIZE, DATE, DAYS, forced)
+        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.error.type).isEqualTo(INVALID_DATA_ERROR.type)
         assertThat(responseModel.error.message).isEqualTo(INVALID_DATA_ERROR.message)
@@ -86,9 +84,9 @@ class VisitsAndViewsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<VisitsAndViewsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchVisits(site, DATE, DAYS, ITEMS_TO_LOAD, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchVisits(site, PAGE_SIZE, DATE, DAYS, forced)
+        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -100,9 +98,9 @@ class VisitsAndViewsStoreTest {
     fun `returns data from db`() {
         whenever(sqlUtils.selectVisitsAndViews(site, DAYS, DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
         val model = mock<VisitsAndViewsModel>()
-        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(model)
+        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
-        val result = store.getVisits(site, DATE, DAYS)
+        val result = store.getVisits(site, DAYS, LIMIT_MODE, DATE)
 
         assertThat(result).isEqualTo(model)
     }

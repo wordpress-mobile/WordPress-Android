@@ -14,9 +14,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsigh
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.ALL_TIME_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COMMENTS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.DETAILED_POST_STATS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAIL_FOLLOWERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_STATS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
@@ -37,9 +37,10 @@ constructor(
         site: SiteModel,
         data: RESPONSE_TYPE,
         requestedItems: Int? = null,
-        replaceExistingData: Boolean = true
+        replaceExistingData: Boolean = true,
+        postId: Long? = null
     ) {
-        statsSqlUtils.insert(site, blockType, INSIGHTS, data, replaceExistingData)
+        statsSqlUtils.insert(site, blockType, INSIGHTS, data, replaceExistingData, postId = postId)
         if (replaceExistingData) {
             statsRequestSqlUtils.insert(
                     site,
@@ -50,8 +51,8 @@ constructor(
         }
     }
 
-    fun select(site: SiteModel): RESPONSE_TYPE? {
-        return statsSqlUtils.select(site, blockType, INSIGHTS, classOfResponse)
+    fun select(site: SiteModel, postId: Long? = null): RESPONSE_TYPE? {
+        return statsSqlUtils.select(site, blockType, INSIGHTS, classOfResponse, postId = postId)
     }
 
     fun selectAll(site: SiteModel): List<RESPONSE_TYPE> {
@@ -95,14 +96,14 @@ constructor(
             PostResponse::class.java
     )
 
-    class LatestPostStatsSqlUtils
+    class DetailedPostStatsSqlUtils
     @Inject constructor(
         statsSqlUtils: StatsSqlUtils,
         statsRequestSqlUtils: StatsRequestSqlUtils
     ) : InsightsSqlUtils<PostStatsResponse>(
             statsSqlUtils,
             statsRequestSqlUtils,
-            LATEST_POST_STATS_INSIGHTS,
+            DETAILED_POST_STATS,
             PostStatsResponse::class.java
     )
 

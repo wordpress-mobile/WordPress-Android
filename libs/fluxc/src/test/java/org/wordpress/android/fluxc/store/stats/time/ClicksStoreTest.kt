@@ -87,7 +87,7 @@ class ClicksStoreTest {
         val model = mock<ClicksModel>()
         whenever(mapper.map(CLICKS_RESPONSE, limitMode)).thenReturn(model)
 
-        val result = store.getClicks(site, DAYS, DATE, limitMode)
+        val result = store.getClicks(site, DAYS, limitMode, DATE)
 
         assertThat(result).isEqualTo(model)
     }
