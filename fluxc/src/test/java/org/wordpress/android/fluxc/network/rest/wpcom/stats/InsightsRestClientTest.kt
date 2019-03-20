@@ -24,18 +24,26 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient.CommentsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.WP_COM
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostStatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -59,7 +67,14 @@ class InsightsRestClientTest {
     @Mock private lateinit var statsUtils: StatsUtils
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
-    private lateinit var insightsRestClient: InsightsRestClient
+    private lateinit var allTimeInsightsRestClient: AllTimeInsightsRestClient
+    private lateinit var commentsRestClient: CommentsRestClient
+    private lateinit var followersRestClient: FollowersRestClient
+    private lateinit var latestPostInsightsRestClient: LatestPostInsightsRestClient
+    private lateinit var mostPopularRestClient: MostPopularRestClient
+    private lateinit var publicizeRestClient: PublicizeRestClient
+    private lateinit var tagsRestClient: TagsRestClient
+    private lateinit var todayInsightsRestClient: TodayInsightsRestClient
     private val siteId: Long = 12
     private val postId: Long = 1
     private val pageSize = 5
@@ -68,7 +83,70 @@ class InsightsRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        insightsRestClient = InsightsRestClient(
+        allTimeInsightsRestClient = AllTimeInsightsRestClient(
+                dispatcher,
+                wpComGsonRequestBuilder,
+                null,
+                requestQueue,
+                accessToken,
+                userAgent,
+                statsUtils
+        )
+        commentsRestClient = CommentsRestClient(
+                dispatcher,
+                wpComGsonRequestBuilder,
+                null,
+                requestQueue,
+                accessToken,
+                userAgent,
+                statsUtils
+        )
+        followersRestClient = FollowersRestClient(
+                dispatcher,
+                wpComGsonRequestBuilder,
+                null,
+                requestQueue,
+                accessToken,
+                userAgent,
+                statsUtils
+        )
+        latestPostInsightsRestClient = LatestPostInsightsRestClient(
+                dispatcher,
+                wpComGsonRequestBuilder,
+                null,
+                requestQueue,
+                accessToken,
+                userAgent,
+                statsUtils
+        )
+        mostPopularRestClient = MostPopularRestClient(
+                dispatcher,
+                wpComGsonRequestBuilder,
+                null,
+                requestQueue,
+                accessToken,
+                userAgent,
+                statsUtils
+        )
+        publicizeRestClient = PublicizeRestClient(
+                dispatcher,
+                wpComGsonRequestBuilder,
+                null,
+                requestQueue,
+                accessToken,
+                userAgent,
+                statsUtils
+        )
+        tagsRestClient = TagsRestClient(
+                dispatcher,
+                wpComGsonRequestBuilder,
+                null,
+                requestQueue,
+                accessToken,
+                userAgent,
+                statsUtils
+        )
+        todayInsightsRestClient = TodayInsightsRestClient(
                 dispatcher,
                 wpComGsonRequestBuilder,
                 null,
@@ -84,9 +162,9 @@ class InsightsRestClientTest {
         val response = mock<AllTimeResponse>()
         initAllTimeResponse(response)
 
-        val responseModel = insightsRestClient.fetchAllTimeInsights(site, false)
+        val responseModel = allTimeInsightsRestClient.fetchAllTimeInsights(site, false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(response)
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/")
         assertThat(paramsCaptor.lastValue).isEmpty()
@@ -105,9 +183,9 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchAllTimeInsights(site, false)
+        val responseModel = allTimeInsightsRestClient.fetchAllTimeInsights(site, false)
 
-        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
@@ -117,9 +195,9 @@ class InsightsRestClientTest {
         val response = mock<MostPopularResponse>()
         initMostPopularResponse(response)
 
-        val responseModel = insightsRestClient.fetchMostPopularInsights(site, false)
+        val responseModel = mostPopularRestClient.fetchMostPopularInsights(site, false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(response)
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/insights/")
         assertThat(paramsCaptor.lastValue).isEmpty()
@@ -138,9 +216,9 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchMostPopularInsights(site, false)
+        val responseModel = mostPopularRestClient.fetchMostPopularInsights(site, false)
 
-        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
@@ -150,9 +228,9 @@ class InsightsRestClientTest {
         val response = mock<PostsResponse>()
         initLatestPostResponse(response)
 
-        val responseModel = insightsRestClient.fetchLatestPostForInsights(site, false)
+        val responseModel = latestPostInsightsRestClient.fetchLatestPostForInsights(site, false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(response)
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/posts/")
         assertThat(paramsCaptor.lastValue).isEqualTo(
@@ -178,9 +256,9 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchLatestPostForInsights(site, false)
+        val responseModel = latestPostInsightsRestClient.fetchLatestPostForInsights(site, false)
 
-        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
@@ -189,9 +267,9 @@ class InsightsRestClientTest {
     fun `returns posts view success response`() = test {
         initPostsViewResponse(POST_STATS_RESPONSE)
 
-        val responseModel = insightsRestClient.fetchPostStats(site, postId, false)
+        val responseModel = latestPostInsightsRestClient.fetchPostStats(site, postId, false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(POST_STATS_RESPONSE)
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/post/1/")
         assertThat(paramsCaptor.lastValue).isEmpty()
@@ -210,9 +288,9 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchPostStats(site, postId, false)
+        val responseModel = latestPostInsightsRestClient.fetchPostStats(site, postId, false)
 
-        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
@@ -224,9 +302,9 @@ class InsightsRestClientTest {
         val date = Date(10)
         val formattedDate = "2019-01-17"
         whenever(statsUtils.getFormattedDate(date)).thenReturn(formattedDate)
-        val responseModel = insightsRestClient.fetchTimePeriodStats(site, DAYS, date, false)
+        val responseModel = todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, date, false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(VISITS_RESPONSE)
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/visits/")
         assertThat(paramsCaptor.lastValue).isEqualTo(
@@ -252,9 +330,9 @@ class InsightsRestClientTest {
         )
 
         val date = Date()
-        val responseModel = insightsRestClient.fetchTimePeriodStats(site, DAYS, date, false)
+        val responseModel = todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, date, false)
 
-        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
@@ -276,9 +354,10 @@ class InsightsRestClientTest {
         initFollowersResponse(FOLLOWERS_RESPONSE)
 
         val pageSize = 10
-        val responseModel = insightsRestClient.fetchFollowers(site, followerType, pageSize, false)
+        val page = 1
+        val responseModel = followersRestClient.fetchFollowers(site, followerType, page, pageSize, false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(FOLLOWERS_RESPONSE)
         val expectedUrl = "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/followers/"
         assertThat(urlCaptor.lastValue).isEqualTo(expectedUrl)
@@ -303,9 +382,9 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchFollowers(site, WP_COM, 10, false)
+        val responseModel = followersRestClient.fetchFollowers(site, WP_COM, 1, 10, false)
 
-        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
@@ -315,16 +394,11 @@ class InsightsRestClientTest {
         initCommentsResponse(TOP_COMMENTS_RESPONSE)
 
         val pageSize = 10
-        val responseModel = insightsRestClient.fetchTopComments(site, pageSize, forced = false)
+        val responseModel = commentsRestClient.fetchTopComments(site, forced = false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(TOP_COMMENTS_RESPONSE)
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/comments/")
-        assertThat(paramsCaptor.lastValue).isEqualTo(
-                mapOf(
-                        "max" to "$pageSize"
-                )
-        )
     }
 
     @Test
@@ -340,9 +414,9 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchTopComments(site, pageSize = pageSize, forced = false)
+        val responseModel = commentsRestClient.fetchTopComments(site, forced = false)
 
-        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
@@ -351,9 +425,9 @@ class InsightsRestClientTest {
     fun `returns tags and categories`() = test {
         initTagsResponse(TAGS_RESPONSE)
 
-        val responseModel = insightsRestClient.fetchTags(site, pageSize = pageSize, forced = false)
+        val responseModel = tagsRestClient.fetchTags(site, max = pageSize, forced = false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(TAGS_RESPONSE)
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/tags/")
         assertThat(paramsCaptor.lastValue).isEqualTo(mapOf("max" to "$pageSize"))
@@ -372,9 +446,9 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchTags(site, pageSize = pageSize, forced = false)
+        val responseModel = tagsRestClient.fetchTags(site, max = pageSize, forced = false)
 
-        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
@@ -383,18 +457,12 @@ class InsightsRestClientTest {
     fun `returns publicize`() = test {
         initPublicizeResponse(PUBLICIZE_RESPONSE)
 
-        val pageSize = 10
-        val responseModel = insightsRestClient.fetchPublicizeData(site, pageSize, forced = false)
+        val responseModel = publicizeRestClient.fetchPublicizeData(site, forced = false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(PUBLICIZE_RESPONSE)
         val url = "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/publicize/"
         assertThat(urlCaptor.lastValue).isEqualTo(url)
-        assertThat(paramsCaptor.lastValue).isEqualTo(
-                mapOf(
-                        "max" to "$pageSize"
-                )
-        )
     }
 
     @Test
@@ -410,9 +478,9 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchPublicizeData(site, forced = false)
+        val responseModel = publicizeRestClient.fetchPublicizeData(site, forced = false)
 
-        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
@@ -442,7 +510,7 @@ class InsightsRestClientTest {
         data: PostStatsResponse? = null,
         error: WPComGsonNetworkError? = null
     ): Response<PostStatsResponse> {
-        return initResponse(PostStatsResponse::class.java, data ?: mock(), error)
+        return initResponse(PostStatsResponse::class.java, data ?: mock(), error, cachingEnabled = false)
     }
 
     private suspend fun initVisitResponse(
@@ -463,14 +531,14 @@ class InsightsRestClientTest {
         data: CommentsResponse? = null,
         error: WPComGsonNetworkError? = null
     ): Response<CommentsResponse> {
-        return initResponse(CommentsResponse::class.java, data ?: mock(), error)
+        return initResponse(CommentsResponse::class.java, data ?: mock(), error, cachingEnabled = false)
     }
 
     private suspend fun initTagsResponse(
         data: TagsResponse? = null,
         error: WPComGsonNetworkError? = null
     ): Response<TagsResponse> {
-        return initResponse(TagsResponse::class.java, data ?: mock(), error)
+        return initResponse(TagsResponse::class.java, data ?: mock(), error, cachingEnabled = false)
     }
 
     private suspend fun initPublicizeResponse(
@@ -489,7 +557,7 @@ class InsightsRestClientTest {
         val response = if (error != null) Response.Error<T>(error) else Success(data)
         whenever(
                 wpComGsonRequestBuilder.syncGetRequest(
-                        eq(insightsRestClient),
+                        any(),
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
                         eq(kclass),
