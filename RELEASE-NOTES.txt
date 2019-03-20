@@ -2,6 +2,7 @@
 -----
 * Added swiping between tabs in Notifications
 * Refreshed View all Stats screens, when digging into stats data
+* Visual update to Today's stats, All-time stats and Most popular stats blocks
 
 12.0
 -----
