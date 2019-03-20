@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store.stats.time
 
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient
@@ -25,17 +26,17 @@ class VisitsAndViewsStore
 ) {
     suspend fun fetchVisits(
         site: SiteModel,
-        pageSize: Int,
-        date: Date,
         granularity: StatsGranularity,
+        limitMode: LimitMode.Top,
+        date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchVisits(site, date, granularity, pageSize, forced)
+        val payload = restClient.fetchVisits(site, date, granularity, limitMode.limit, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, granularity, date)
-                val overviewResponse = timeStatsMapper.map(payload.response)
+                val overviewResponse = timeStatsMapper.map(payload.response, limitMode)
                 if (overviewResponse.period.isBlank() || overviewResponse.dates.isEmpty())
                     OnStatsFetched(StatsError(INVALID_RESPONSE, "Overview: Required data 'period' or 'dates' missing"))
                 else
@@ -45,7 +46,12 @@ class VisitsAndViewsStore
         }
     }
 
-    fun getVisits(site: SiteModel, date: Date, granularity: StatsGranularity): VisitsAndViewsModel? {
-        return sqlUtils.selectVisitsAndViews(site, granularity, date)?.let { timeStatsMapper.map(it) }
+    fun getVisits(
+        site: SiteModel,
+        granularity: StatsGranularity,
+        limitMode: LimitMode,
+        date: Date
+    ): VisitsAndViewsModel? {
+        return sqlUtils.selectVisitsAndViews(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
