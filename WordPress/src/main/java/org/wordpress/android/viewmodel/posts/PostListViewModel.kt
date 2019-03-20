@@ -372,7 +372,7 @@ class PostListViewModel @Inject constructor(
             BUTTON_TRASH, BUTTON_DELETE -> {
                 showTrashConfirmationDialog(post)
             }
-            BUTTON_MORE ->{
+            BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
             BUTTON_BACK -> TODO("will be removed during PostViewHolder refactoring")
         }
