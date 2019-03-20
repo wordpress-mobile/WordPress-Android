@@ -21,7 +21,7 @@ sealed class PostListDescriptor(
         when (this) {
             is PostListDescriptorForRestSite -> {
                 ListDescriptorUniqueIdentifier(
-                        ("rest-site-post-list-${site.id}-st$statusStr-oa$onlyAuthorId-o${order.value}-ob${orderBy.value}" +
+                        ("rest-site-post-list-${site.id}-st$statusStr-oa${author.getValue()}-o${order.value}-ob${orderBy.value}" +
                                 "-sq$searchQuery").hashCode()
                 )
             }
@@ -59,7 +59,7 @@ sealed class PostListDescriptor(
     class PostListDescriptorForRestSite(
         site: SiteModel,
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
-        val onlyAuthorId: Long? = null,
+        val author: AuthorFilter = AuthorFilter.Everyone,
         order: ListOrder = DESC,
         orderBy: PostListOrderBy = DATE,
         val searchQuery: String? = null,
