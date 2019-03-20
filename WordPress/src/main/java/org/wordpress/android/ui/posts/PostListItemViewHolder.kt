@@ -67,11 +67,11 @@ class PostListItemViewHolder(
         if (action != null) {
             when (action) {
                 is SingleItem -> {
-                    postListButton.buttonType = action.buttonType
+                    postListButton.updateButtonType(action.buttonType)
                     postListButton.setOnClickListener { action.onButtonClicked.invoke(action.buttonType) }
                 }
                 is MoreItem -> {
-                    postListButton.buttonType = action.buttonType
+                    postListButton.updateButtonType(action.buttonType)
                     postListButton.setOnClickListener { view ->
                         action.onButtonClicked.invoke(action.buttonType)
                         onMoreClicked(action, view)

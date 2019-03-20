@@ -19,13 +19,7 @@ class PostListButton : LinearLayout {
     private lateinit var imageView: ImageView
     private lateinit var textView: TextView
     var buttonType: PostListButtonType? = null
-        set(value) {
-            if (value === this.buttonType || value == null) {
-                return
-            }
-            field = value
-            loadResourcesForButtonType(value)
-        }
+        private set
 
     constructor(context: Context) : super(context) {
         initView(context, null)
@@ -71,12 +65,20 @@ class PostListButton : LinearLayout {
         }
         val nullableType = PostListButtonType.fromInt(buttonTypeInt)
         nullableType?.let {
-            this.buttonType = nullableType
+            updateButtonType(nullableType)
         } ?: if (BuildConfig.DEBUG) {
             throw IllegalStateException("Unknown button type id: $buttonTypeInt")
         } else {
             AppLog.e(AppLog.T.POSTS, "PostListButton.setButtonType called from xml with an unknown buttonType.")
         }
+    }
+
+    fun updateButtonType(buttonType: PostListButtonType) {
+        if (buttonType === this.buttonType) {
+            return
+        }
+        this.buttonType = buttonType
+        loadResourcesForButtonType(buttonType)
     }
 
     private fun loadResourcesForButtonType(buttonType: PostListButtonType) {
