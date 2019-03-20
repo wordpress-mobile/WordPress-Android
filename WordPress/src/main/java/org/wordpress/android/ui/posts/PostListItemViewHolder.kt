@@ -88,7 +88,7 @@ class PostListItemViewHolder(
                     Menu.NONE,
                     singleItemAction.buttonType.value,
                     Menu.NONE,
-                    PostListButton.getButtonTextResId(singleItemAction.buttonType)
+                    singleItemAction.buttonType.textResId
             )
             menuItem.setOnMenuItemClickListener {
                 singleItemAction.onButtonClicked.invoke(singleItemAction.buttonType)
