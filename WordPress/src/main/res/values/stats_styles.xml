@@ -210,7 +210,7 @@
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">1</item>
+        <item name="android:maxLines">2</item>
     </style>
 
     <style name="StatsBlockQuickScanValue" parent="TextAppearance.AppCompat.Body1">
