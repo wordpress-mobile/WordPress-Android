@@ -684,14 +684,17 @@ public class UploadService extends Service {
             return false;
         }
 
-        SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
-        mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(postToCancel);
+        if (PostUploadHandler.isPostUploadingOrQueued(postToCancel) && !isPostCurrentlyBeingEdited(postToCancel)) {
+            // post is not being edited and is currently queued, update the count on the foreground notification
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(postToCancel);
+        }
 
         if (showError || mUploadStore.isFailedPost(postToCancel)) {
             // Only show the media upload error notification if the post is NOT registered in the UploadStore
             // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
             // the user actively cancelled it. No need to show an error then.
             String message = UploadUtils.getErrorMessage(this, postToCancel, errorMessage, true);
+            SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
             mPostUploadNotifier.updateNotificationErrorForPost(postToCancel, site, message,
                                                                mUploadStore.getFailedMediaForPost(postToCancel).size());
         }
@@ -816,9 +819,10 @@ public class UploadService extends Service {
                 // the user actively cancelled it. No need to show an error then.
                 String message = UploadUtils.getErrorMessageFromMediaError(this, event.media, event.error);
 
-                int siteLocalId = AppPrefs.getSelectedSite();
+                // if media has a local site id, use that. If not, default to currently selected site.
+                int siteLocalId = event.media.getLocalSiteId() > 0 ? event.media.getLocalSiteId()
+                        : AppPrefs.getSelectedSite();
                 SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-
 
                 List<MediaModel> failedStandAloneMedia = getRetriableStandaloneMedia(selectedSite);
                 if (failedStandAloneMedia.isEmpty()) {

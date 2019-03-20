@@ -815,6 +815,7 @@
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
     <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Site not loaded yet</string>
+    <string name="showing_stats_for">Showing stats for:</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
@@ -1013,6 +1014,7 @@
     <string name="stats_insights_create_post">Create post</string>
     <string name="stats_insights_share_post">Share post</string>
     <string name="stats_insights_view_more">View more</string>
+    <string name="stats_insights_load_more" tools:ignore="UnusedResources">Load more</string>
     <string name="stats_insights_facebook">Facebook</string>
     <string name="stats_insights_twitter">Twitter</string>
     <string name="stats_insights_tumblr">Tumblr</string>
@@ -1021,6 +1023,13 @@
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
+
+    <!-- Stats post detail -->
+    <string name="stats_detail_months_and_years">Months and Years</string>
+    <string name="stats_months_and_years_period_label">Period</string>
+    <string name="stats_months_and_years_views_label">Views</string>
+    <string name="stats_detail_average_views_per_day">Avg. Views Per Day</string>
+    <string name="stats_detail_recent_weeks">Recent Weeks</string>
 
     <string name="stats_posts_and_pages">Posts and Pages</string>
     <string name="stats_referrers">Referrers</string>
