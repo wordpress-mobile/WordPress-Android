@@ -104,5 +104,5 @@ buildScan {
 }
 
 ext {
-    fluxCVersion = 'b5f72ff5a2e6657ea6cd5301e07d9c3bd42100e2'
+    fluxCVersion = '1dfb0d15b16cf5c747287bcf580a22419f1ec7be'
 }
