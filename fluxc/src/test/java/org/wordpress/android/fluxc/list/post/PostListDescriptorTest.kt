@@ -214,10 +214,10 @@ internal class PostListDescriptorTest(
                             shouldHaveSameTypeIdentifier = true,
                             shouldHaveSameUniqueIdentifier = true
                     ),
-                    // Different only author id
+                    // Different author which is only available for REST sites
                     PostListDescriptorTestCase(
-                            typeIdentifierReason = "Different onlyAuthorId should have same type identifiers",
-                            uniqueIdentifierReason = "Different onlyAuthorId should have different unique identifiers",
+                            typeIdentifierReason = "Different author should have same type identifiers",
+                            uniqueIdentifierReason = "Different author should have different unique identifiers",
                             descriptor1 = PostListDescriptorForRestSite(
                                     mockSite,
                                     author = AuthorFilter.Everyone
@@ -229,7 +229,6 @@ internal class PostListDescriptorTest(
                             shouldHaveSameTypeIdentifier = true,
                             shouldHaveSameUniqueIdentifier = false
                     )
-                    // No test required for XMLRPC since it doesn't support author filtering
             )
         }
     }

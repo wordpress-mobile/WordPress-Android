@@ -548,8 +548,9 @@ public class PostRestClient extends BaseWPComRestClient {
             params.put("fields", fields);
         }
 
-        if (authorFilter != null && authorFilter.getValue() > 0) {
-            params.put("author", String.valueOf(authorFilter.getValue()));
+        if (authorFilter instanceof AuthorFilter.SpecificAuthor) {
+            AuthorFilter.SpecificAuthor specificAuthor = (AuthorFilter.SpecificAuthor) authorFilter;
+            params.put("author", String.valueOf(specificAuthor.getAuthorId()));
         }
 
         return params;
