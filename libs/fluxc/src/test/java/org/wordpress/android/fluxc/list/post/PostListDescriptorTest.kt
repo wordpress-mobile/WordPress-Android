@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.AuthorFilter
 import org.wordpress.android.fluxc.model.list.ListOrder.ASC
 import org.wordpress.android.fluxc.model.list.ListOrder.DESC
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
@@ -219,11 +220,11 @@ internal class PostListDescriptorTest(
                             uniqueIdentifierReason = "Different onlyAuthorId should have different unique identifiers",
                             descriptor1 = PostListDescriptorForRestSite(
                                     mockSite,
-                                    onlyAuthorId = null
+                                    author = AuthorFilter.Everyone
                             ),
                             descriptor2 = PostListDescriptorForRestSite(
                                     mockSite,
-                                    onlyAuthorId = 1337
+                                    author = AuthorFilter.SpecificAuthor(1337)
                             ),
                             shouldHaveSameTypeIdentifier = true,
                             shouldHaveSameUniqueIdentifier = false
