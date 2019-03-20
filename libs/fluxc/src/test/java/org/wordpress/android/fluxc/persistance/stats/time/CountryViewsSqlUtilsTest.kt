@@ -63,7 +63,7 @@ class CountryViewsSqlUtilsTest {
         mappedTypes.forEach { statsType, dbGranularity ->
             timeStatsSqlUtils.insert(site, COUNTRY_VIEWS_RESPONSE, dbGranularity, DATE)
 
-            verify(statsSqlUtils).insert(site, COUNTRY_VIEWS, statsType, COUNTRY_VIEWS_RESPONSE, DATE_VALUE)
+            verify(statsSqlUtils).insert(site, COUNTRY_VIEWS, statsType, COUNTRY_VIEWS_RESPONSE, true, DATE_VALUE)
         }
     }
 }

@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.store
 
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Payload
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.InsightTypesModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.CENSORED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.HTTP_AUTH_ERROR
@@ -16,18 +18,15 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.SERVER_E
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.TIMEOUT
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.persistence.InsightTypesSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVITY
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.AVERAGE_VIEWS_PER_DAY
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.CLICKS_BY_WEEKS
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.MONTHS_AND_YEARS
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.POST_HEADER
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.POST_OVERVIEW
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
@@ -40,25 +39,99 @@ import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAG
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.REFERRERS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.SEARCH_TERMS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.VIDEOS
+import org.wordpress.android.fluxc.store.Store.OnChangedError
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class StatsStore
-@Inject constructor(private val coroutineContext: CoroutineContext) {
-    suspend fun getInsights(): List<InsightsTypes> = withContext(coroutineContext) {
-        return@withContext listOf(
-                LATEST_POST_SUMMARY,
-                TODAY_STATS,
-                ALL_TIME_STATS,
-                MOST_POPULAR_DAY_AND_HOUR,
-                COMMENTS,
-                TAGS_AND_CATEGORIES,
-                FOLLOWERS,
-                POSTING_ACTIVITY,
-                PUBLICIZE
-        )
+@Inject constructor(
+    private val coroutineContext: CoroutineContext,
+    private val insightTypesSqlUtils: InsightTypesSqlUtils
+) {
+    private val defaultList = listOf(LATEST_POST_SUMMARY, TODAY_STATS, ALL_TIME_STATS, POSTING_ACTIVITY)
+
+    suspend fun getInsights(site: SiteModel): List<InsightsTypes> = withContext(coroutineContext) {
+        val cachedData = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
+
+        return@withContext if (cachedData.isNotEmpty()) {
+            cachedData
+        } else {
+            defaultList
+        }
+    }
+
+    suspend fun getInsightsManagementModel(site: SiteModel) = withContext(coroutineContext) {
+        val cachedData = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
+        return@withContext if (cachedData.isNotEmpty()) {
+            InsightTypesModel(cachedData, insightTypesSqlUtils.selectRemovedItemsOrderedByStatus(site))
+        } else {
+            InsightTypesModel(defaultList, InsightsTypes.values().filter { !defaultList.contains(it) })
+        }
+    }
+
+    suspend fun updateTypes(site: SiteModel, model: InsightTypesModel) = withContext(coroutineContext) {
+        insertOrReplaceItems(site, model.addedTypes, model.removedTypes)
+    }
+
+    suspend fun moveTypeUp(site: SiteModel, type: InsightsTypes) {
+        val insightTypes = getInsights(site)
+        val indexOfMovedItem = insightTypes.indexOf(type)
+        if (indexOfMovedItem > 0 && indexOfMovedItem < insightTypes.size) {
+            val updatedInsights = mutableListOf<InsightsTypes>()
+            val switchedItemIndex = indexOfMovedItem - 1
+            if (indexOfMovedItem > 1) {
+                updatedInsights.addAll(insightTypes.subList(0, switchedItemIndex))
+            }
+            updatedInsights.add(type)
+            updatedInsights.add(insightTypes[switchedItemIndex])
+            if (indexOfMovedItem + 1 < insightTypes.size) {
+                updatedInsights.addAll(insightTypes.subList(indexOfMovedItem + 1, insightTypes.size))
+            }
+            insightTypesSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
+        }
+    }
+
+    suspend fun moveTypeDown(site: SiteModel, type: InsightsTypes) {
+        val insightTypes = getInsights(site)
+        val indexOfMovedItem = insightTypes.indexOf(type)
+        if (indexOfMovedItem >= 0 && indexOfMovedItem < insightTypes.size - 1) {
+            val updatedInsights = mutableListOf<InsightsTypes>()
+            val switchedItemIndex = indexOfMovedItem + 1
+            if (indexOfMovedItem > 0) {
+                updatedInsights.addAll(insightTypes.subList(0, indexOfMovedItem))
+            }
+            updatedInsights.add(insightTypes[switchedItemIndex])
+            updatedInsights.add(type)
+            if (switchedItemIndex + 1 < insightTypes.size) {
+                updatedInsights.addAll(insightTypes.subList(switchedItemIndex + 1, insightTypes.size))
+            }
+            insightTypesSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
+        }
+    }
+
+    suspend fun removeType(site: SiteModel, type: InsightsTypes) = withContext(coroutineContext) {
+        val insightsModel = getInsightsManagementModel(site)
+        val addedItems = insightsModel.addedTypes.filter { it != type }
+        val removedItems = insightsModel.removedTypes + listOf(type)
+        insertOrReplaceItems(site, addedItems, removedItems)
+    }
+
+    suspend fun addType(site: SiteModel, type: InsightsTypes) = withContext(coroutineContext) {
+        val insightsModel = getInsightsManagementModel(site)
+        val addedItems = insightsModel.addedTypes + listOf(type)
+        val removedItems = insightsModel.removedTypes.filter { it != type }
+        insertOrReplaceItems(site, addedItems, removedItems)
+    }
+
+    private fun insertOrReplaceItems(
+        site: SiteModel,
+        addedItems: List<InsightsTypes>,
+        removedItems: List<InsightsTypes>
+    ) {
+        insightTypesSqlUtils.insertOrReplaceAddedItems(site, addedItems)
+        insightTypesSqlUtils.insertOrReplaceRemovedItems(site, removedItems)
     }
 
     suspend fun getTimeStatsTypes(): List<TimeStatsTypes> = withContext(coroutineContext) {
@@ -76,6 +149,7 @@ class StatsStore
 
     suspend fun getPostDetailTypes(): List<PostDetailTypes> = withContext(coroutineContext) {
         return@withContext listOf(
+                POST_HEADER,
                 POST_OVERVIEW,
                 MONTHS_AND_YEARS,
                 AVERAGE_VIEWS_PER_DAY,
@@ -112,13 +186,14 @@ class StatsStore
     }
 
     enum class PostDetailTypes : StatsTypes {
+        POST_HEADER,
         POST_OVERVIEW,
         MONTHS_AND_YEARS,
         AVERAGE_VIEWS_PER_DAY,
         CLICKS_BY_WEEKS
     }
 
-    data class OnStatsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
+    data class OnStatsFetched<T>(val model: T? = null, val cached: Boolean = false) : Store.OnChanged<StatsError>() {
         constructor(error: StatsError) : this() {
             this.error = error
         }
@@ -140,7 +215,7 @@ class StatsStore
         INVALID_RESPONSE
     }
 
-    class StatsError(var type: StatsErrorType, var message: String? = null) : Store.OnChangedError
+    class StatsError(var type: StatsErrorType, var message: String? = null) : OnChangedError
 }
 
 fun WPComGsonNetworkError.toStatsError(): StatsError {

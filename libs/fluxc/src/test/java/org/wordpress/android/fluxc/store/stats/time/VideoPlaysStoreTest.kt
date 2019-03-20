@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient
@@ -25,7 +26,8 @@ import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-private const val PAGE_SIZE = 8
+private const val ITEMS_TO_LOAD = 8
+private val LIMIT_MODE = LimitMode.Top(ITEMS_TO_LOAD)
 private val DATE = Date(0)
 
 @RunWith(MockitoJUnitRunner::class)
@@ -51,13 +53,13 @@ class VideoPlaysStoreTest {
                 VIDEO_PLAYS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchVideoPlays(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(restClient.fetchVideoPlays(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<VideoPlaysModel>()
-        whenever(mapper.map(VIDEO_PLAYS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(VIDEO_PLAYS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
-        val responseModel = store.fetchVideoPlays(site, PAGE_SIZE, DAYS, DATE, forced)
+        val responseModel = store.fetchVideoPlays(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, VIDEO_PLAYS_RESPONSE, DAYS, DATE)
@@ -69,9 +71,9 @@ class VideoPlaysStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<VideoPlaysResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchVideoPlays(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchVideoPlays(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchVideoPlays(site, PAGE_SIZE, DAYS, DATE, forced)
+        val responseModel = store.fetchVideoPlays(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -83,9 +85,9 @@ class VideoPlaysStoreTest {
     fun `returns video plays from db`() {
         whenever(sqlUtils.selectVideoPlays(site, DAYS, DATE)).thenReturn(VIDEO_PLAYS_RESPONSE)
         val model = mock<VideoPlaysModel>()
-        whenever(mapper.map(VIDEO_PLAYS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(VIDEO_PLAYS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
-        val result = store.getVideoPlays(site, DAYS, PAGE_SIZE, DATE)
+        val result = store.getVideoPlays(site, DAYS, LIMIT_MODE, DATE)
 
         assertThat(result).isEqualTo(model)
     }
