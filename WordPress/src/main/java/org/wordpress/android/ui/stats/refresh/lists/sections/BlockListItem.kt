@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -47,7 +48,8 @@ sealed class BlockListItem(val type: Type) {
         EXPANDABLE_ITEM,
         DIVIDER,
         LOADING_ITEM,
-        ACTIVITY_ITEM
+        ACTIVITY_ITEM,
+        QUICK_SCAN_ITEM
     }
 
     data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
@@ -94,6 +96,12 @@ sealed class BlockListItem(val type: Type) {
             NORMAL, LIGHT
         }
     }
+
+    data class QuickScanItem(
+        @StringRes val leftLabel: Int,
+        val leftValue: String,
+        @StringRes val rightLabel: Int,
+        val rightValue: String) : BlockListItem(QUICK_SCAN_ITEM)
 
     data class Information(val text: String) : BlockListItem(INFO)
 
