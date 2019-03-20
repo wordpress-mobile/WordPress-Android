@@ -2,11 +2,12 @@ package org.wordpress.android.ui.posts
 
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
+import org.wordpress.android.widgets.PostListButtonType
 
 class PostAdapterItem(
     val data: PostAdapterItemData,
     val onSelected: () -> Unit,
-    val onButtonClicked: (Int) -> Unit
+    val onButtonClicked: (PostListButtonType) -> Unit
 )
 
 data class PostAdapterItemData(
