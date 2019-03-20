@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.list.AuthorFilter;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -103,7 +104,7 @@ public class PostRestClient extends BaseWPComRestClient {
         String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status"));
         Map<String, String> params =
                 createFetchPostListParameters(false, offset, pageSize, listDescriptor.getStatusList(),
-                        listDescriptor.getOnlyAuthorId(), fields, listDescriptor.getOrder().getValue(),
+                        listDescriptor.getAuthor(), fields, listDescriptor.getOrder().getValue(),
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getSearchQuery());
 
         final boolean loadedMore = offset > 0;
@@ -513,7 +514,7 @@ public class PostRestClient extends BaseWPComRestClient {
                                                               final long offset,
                                                               final int number,
                                                               @Nullable final List<PostStatus> statusList,
-                                                              @Nullable Long onlyAuthorId,
+                                                              @Nullable AuthorFilter authorFilter,
                                                               @Nullable final String fields,
                                                               @Nullable final String order,
                                                               @Nullable final String orderBy,
@@ -547,8 +548,8 @@ public class PostRestClient extends BaseWPComRestClient {
             params.put("fields", fields);
         }
 
-        if (onlyAuthorId != null && onlyAuthorId > 0) {
-            params.put("author", String.valueOf(onlyAuthorId));
+        if (authorFilter != null && authorFilter.getValue() > 0) {
+            params.put("author", String.valueOf(authorFilter.getValue()));
         }
 
         return params;
