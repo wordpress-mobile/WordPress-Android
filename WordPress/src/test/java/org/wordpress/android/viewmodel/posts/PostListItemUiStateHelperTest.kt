@@ -42,7 +42,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `label has warning color on error when media upload in progress`() {
+    fun `label has progress color on error when media upload in progress`() {
         val state = createPostListItemUiState(
                 uploadStatus = createUploadStatus(
                         uploadError = createGenericError(),
@@ -53,25 +53,25 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `label has warning color when post queued`() {
+    fun `label has progress color when post queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isQueued = true))
         assertThat(state.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
-    fun `label has warning color when media queued`() {
+    fun `label has progress color when media queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasPendingMediaUpload = true))
         assertThat(state.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
-    fun `label has warning color when uploading media`() {
+    fun `label has progress color when uploading media`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasInProgressMediaUpload = true))
         assertThat(state.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
-    fun `label has warning color when uploading post`() {
+    fun `label has progress color when uploading post`() {
         val state = createPostListItemUiState(unhandledConflicts = true)
         assertThat(state.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
