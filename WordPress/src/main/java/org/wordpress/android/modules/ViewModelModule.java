@@ -31,6 +31,7 @@ import org.wordpress.android.viewmodel.pages.SearchListViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
+import org.wordpress.android.viewmodel.domainregister.DomainSuggestionsViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -167,6 +168,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PlansViewModel.class)
     abstract ViewModel plansViewModel(PlansViewModel viewModel);
+
+    @Binds
+    @ViewModelKey(DomainSuggestionsViewModel.class)
+    abstract ViewModel domainSuggestionsViewModel(DomainSuggestionsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

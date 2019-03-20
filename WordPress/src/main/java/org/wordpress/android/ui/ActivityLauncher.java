@@ -66,6 +66,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.OldStatsActivity;
+import org.wordpress.android.ui.domainregister.suggestionslist.DomainSuggestionsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
@@ -903,5 +904,11 @@ public class ActivityLauncher {
         } else if (url.startsWith("https") || url.startsWith("http")) {
             WPWebViewActivity.openURL(context, url);
         }
+    }
+
+    public static void viewDomainSuggestionsActivity(Activity activity, SiteModel site) {
+        Intent intent = new Intent(activity, DomainSuggestionsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
     }
 }

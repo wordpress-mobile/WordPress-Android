@@ -136,6 +136,7 @@ import org.wordpress.android.ui.sitecreation.services.NewSiteCreationService;
 import org.wordpress.android.ui.sitecreation.siteinfo.NewSiteCreationSiteInfoFragment;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment;
 import org.wordpress.android.ui.stats.OldStatsActivity;
+import org.wordpress.android.ui.domainregister.suggestionslist.DomainSuggestionsFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
@@ -471,6 +472,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PlansListAdapter object);
 
     void inject(PlanDetailsFragment object);
+
+    void inject(DomainSuggestionsFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

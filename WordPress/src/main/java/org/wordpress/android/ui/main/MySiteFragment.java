@@ -425,6 +425,12 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
+        rootView.findViewById(R.id.row_register_domain).setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                ActivityLauncher.viewDomainSuggestionsActivity(getActivity(), getSelectedSite());
+            }
+        });
+
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

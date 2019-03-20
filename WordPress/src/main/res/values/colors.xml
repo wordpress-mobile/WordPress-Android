@@ -214,4 +214,7 @@
 
     <color name="pink_500">#bc4681</color>
 
+    <!-- Domain Registration -->
+    <color name="domain_reg_disable_btn_color">#E4E9EC</color>
+
 </resources>
