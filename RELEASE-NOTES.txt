@@ -1,5 +1,6 @@
 12.1
 -----
+* Added swiping between tabs in Notifications
 * Refreshed View all Stats screens, when digging into stats data
 
 12.0
@@ -7,6 +8,7 @@
 * Faster opening of large posts
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
+* Fixed error notifications for failed uploads
 
 11.9
 -----
