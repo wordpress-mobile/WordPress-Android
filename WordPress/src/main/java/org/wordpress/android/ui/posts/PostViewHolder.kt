@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ProgressBar
 import android.widget.TextView
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.reader.utils.ReaderUtils
@@ -92,11 +93,11 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
         // local drafts say "delete" instead of "trash"
         if (postData.isLocalDraft) {
             date.visibility = View.GONE
-            trashButton.buttonType = PostListButtonType.BUTTON_DELETE
+            trashButton.updateButtonType(PostListButtonType.BUTTON_DELETE)
         } else {
             date.text = postData.date
             date.visibility = View.VISIBLE
-            trashButton.buttonType = PostListButtonType.BUTTON_TRASH
+            trashButton.updateButtonType(PostListButtonType.BUTTON_TRASH)
         }
 
         updateForUploadStatus(postData.uploadStatus)
@@ -261,22 +262,22 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
         // publish button is re-purposed depending on the situation
         if (canShowPublishButton) {
             if (!config.hasCapabilityPublishPosts) {
-                publishButton.buttonType = PostListButtonType.BUTTON_SUBMIT
+                publishButton.updateButtonType(PostListButtonType.BUTTON_SUBMIT)
             } else if (postData.canRetryUpload) {
-                publishButton.buttonType = PostListButtonType.BUTTON_RETRY
+                publishButton.updateButtonType(PostListButtonType.BUTTON_RETRY)
             } else if (postData.postStatus == PostStatus.SCHEDULED && postData.isLocallyChanged) {
-                publishButton.buttonType = PostListButtonType.BUTTON_SYNC
+                publishButton.updateButtonType(PostListButtonType.BUTTON_SYNC)
             } else {
-                publishButton.buttonType = PostListButtonType.BUTTON_PUBLISH
+                publishButton.updateButtonType(PostListButtonType.BUTTON_PUBLISH)
             }
         }
 
         // posts with local changes have preview rather than view button
         if (canShowViewButton) {
             if (postData.isLocalDraft || postData.isLocallyChanged) {
-                viewButton.buttonType = PostListButtonType.BUTTON_PREVIEW
+                viewButton.updateButtonType(PostListButtonType.BUTTON_PREVIEW)
             } else {
-                viewButton.buttonType = PostListButtonType.BUTTON_VIEW
+                viewButton.updateButtonType(PostListButtonType.BUTTON_VIEW)
             }
         }
 
@@ -333,7 +334,9 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                 }
                 postAdapterItem.onButtonClicked(buttonType)
             } else {
-                throw IllegalStateException("Button type must be set.")
+                if (BuildConfig.DEBUG) {
+                    throw IllegalStateException("Button type must be set.")
+                }
             }
         }
         editButton.setOnClickListener(btnClickListener)
