@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
@@ -81,11 +80,11 @@ class StatsListFragment : DaggerFragment() {
         recyclerView.layoutManager = this.layoutManager
         recyclerView.addItemDecoration(
                 StatsListItemDecoration(
-                        resources.getDimensionPixelSize(dimen.stats_list_card_horizontal_spacing),
-                        resources.getDimensionPixelSize(dimen.stats_list_card_top_spacing),
-                        resources.getDimensionPixelSize(dimen.stats_list_card_bottom_spacing),
-                        resources.getDimensionPixelSize(dimen.stats_list_card_first_spacing),
-                        resources.getDimensionPixelSize(dimen.stats_list_card_last_spacing),
+                        resources.getDimensionPixelSize(R.dimen.stats_list_card_horizontal_spacing),
+                        resources.getDimensionPixelSize(R.dimen.stats_list_card_top_spacing),
+                        resources.getDimensionPixelSize(R.dimen.stats_list_card_bottom_spacing),
+                        resources.getDimensionPixelSize(R.dimen.stats_list_card_first_spacing),
+                        resources.getDimensionPixelSize(R.dimen.stats_list_card_last_spacing),
                         columns
                 )
         )
