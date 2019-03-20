@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
@@ -36,9 +35,9 @@ class BaseListUseCase(
     private val useCases: List<BaseStatsUseCase<*, *>>,
     private val getStatsTypes: suspend () -> List<StatsTypes>,
     private val mapUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel,
-    private val moveTypeUp: suspend ((site: SiteModel, type: StatsTypes) -> Unit) = { _, _ -> },
-    private val moveTypeDown: suspend ((site: SiteModel, type: StatsTypes) -> Unit) = { _, _ -> },
-    private val removeType: suspend ((site: SiteModel, type: StatsTypes) -> Unit) = { _, _ -> }
+    private val moveTypeUp: suspend ((type: StatsTypes) -> Unit) = {},
+    private val moveTypeDown: suspend ((type: StatsTypes) -> Unit) = {},
+    private val removeType: suspend ((type: StatsTypes) -> Unit) = {}
 ) {
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
@@ -62,7 +61,10 @@ class BaseListUseCase(
             useCases.map { it.navigationTarget },
             distinct = false
     )
-    val menuClick: LiveData<MenuClick> = merge(mergeNotNull(useCases.map { it.menuClick }), data) { click, viewModel: UiModel? ->
+    val menuClick: LiveData<MenuClick> = merge(
+            mergeNotNull(useCases.map { it.menuClick }),
+            data
+    ) { click, viewModel: UiModel? ->
         val success = viewModel as? Success
         if (click != null && success != null) {
             val indexOfBlock = success.data.indexOfFirst { it.statsTypes == click.type }
@@ -127,11 +129,11 @@ class BaseListUseCase(
         mutableListSelected.call()
     }
 
-    suspend fun onAction(site: SiteModel, type: StatsTypes, action: Action) {
+    suspend fun onAction(type: StatsTypes, action: Action) {
         when (action) {
-            MOVE_UP -> moveTypeUp(site, type)
-            MOVE_DOWN -> moveTypeDown(site, type)
-            REMOVE -> removeType(site, type)
+            MOVE_UP -> moveTypeUp(type)
+            MOVE_DOWN -> moveTypeDown(type)
+            REMOVE -> removeType(type)
         }
     }
 }

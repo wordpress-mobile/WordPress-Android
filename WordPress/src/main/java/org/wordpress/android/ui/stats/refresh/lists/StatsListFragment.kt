@@ -20,11 +20,14 @@ import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
+import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
+import org.wordpress.android.util.Event
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
@@ -111,10 +114,10 @@ class StatsListFragment : DaggerFragment() {
         val nonNullActivity = checkNotNull(activity)
 
         initializeViews(savedInstanceState)
-        initializeViewModels(nonNullActivity, savedInstanceState)
+        initializeViewModels(nonNullActivity)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
+    private fun initializeViewModels(activity: FragmentActivity) {
         val statsSection = arguments?.getSerializable(typeKey) as StatsSection
 
         val viewModelClass = when (statsSection) {
@@ -189,15 +192,15 @@ class StatsListFragment : DaggerFragment() {
             popup.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_move_up -> {
-                        viewModel.onAction(site, menuClick.type, Action.MOVE_UP)
+                        viewModel.onAction(menuClick.type, Action.MOVE_UP)
                         true
                     }
                     R.id.action_move_down -> {
-                        viewModel.onAction(site, menuClick.type, Action.MOVE_DOWN)
+                        viewModel.onAction(menuClick.type, Action.MOVE_DOWN)
                         true
                     }
                     R.id.action_remove -> {
-                        viewModel.onAction(site, menuClick.type, Action.REMOVE)
+                        viewModel.onAction(menuClick.type, Action.REMOVE)
                         true
                     }
                     else -> {

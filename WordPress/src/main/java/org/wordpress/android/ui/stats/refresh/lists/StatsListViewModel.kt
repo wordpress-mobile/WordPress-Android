@@ -7,9 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
@@ -22,8 +22,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.throttle
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -119,10 +117,10 @@ abstract class StatsListViewModel(
         class Error(val message: Int = R.string.stats_loading_error) : UiModel()
     }
 
-    fun onAction(site: SiteModel, type: StatsTypes, action: Action) {
+    fun onAction(type: StatsTypes, action: Action) {
         launch {
-            statsUseCase.onAction(site, type, action)
-            statsUseCase.refreshTypes(site)
+            statsUseCase.onAction(type, action)
+            statsUseCase.refreshTypes()
         }
     }
 

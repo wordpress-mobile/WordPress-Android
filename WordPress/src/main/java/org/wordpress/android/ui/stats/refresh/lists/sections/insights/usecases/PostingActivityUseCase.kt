@@ -44,7 +44,7 @@ class PostingActivityUseCase
 
     override fun buildUiModel(domainModel: PostingActivityModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_insights_posting_activity))
+        items.add(Title(R.string.stats_insights_posting_activity, menuAction = this::onMenuClick))
         val activityItem = postingActivityMapper.buildActivityItem(domainModel.months, domainModel.max)
         items.add(activityItem)
         return items

@@ -168,21 +168,21 @@ class StatsModule {
                 mainDispatcher,
                 statsSiteProvider,
                 useCases,
-                { statsStore.getInsights() },
+                { statsStore.getInsights(statsSiteProvider.siteModel) },
                 uiModelMapper::mapInsights,
-                moveTypeUp = { site, type ->
+                moveTypeUp = { type ->
                     if (type is InsightsTypes) {
-                        statsStore.moveTypeUp(site, type)
+                        statsStore.moveTypeUp(statsSiteProvider.siteModel, type)
                     }
                 },
-                moveTypeDown = { site, type ->
+                moveTypeDown = { type ->
                     if (type is InsightsTypes) {
-                        statsStore.moveTypeDown(site, type)
+                        statsStore.moveTypeDown(statsSiteProvider.siteModel, type)
                     }
                 },
-                removeType = { site, type ->
+                removeType = { type ->
                     if (type is InsightsTypes) {
-                        statsStore.removeType(site, type)
+                        statsStore.removeType(statsSiteProvider.siteModel, type)
                     }
                 }
         )
