@@ -1,6 +1,8 @@
 package org.wordpress.android.fluxc.model.list
 
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.AuthorFilter.Everyone
+import org.wordpress.android.fluxc.model.list.AuthorFilter.SpecificAuthor
 import org.wordpress.android.fluxc.model.list.ListOrder.DESC
 import org.wordpress.android.fluxc.model.list.PostListOrderBy.DATE
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -20,8 +22,13 @@ sealed class PostListDescriptor(
         val statusStr = statusList.asSequence().map { it.name }.joinToString(separator = ",")
         when (this) {
             is PostListDescriptorForRestSite -> {
+                val authorFilter: String = when (author) {
+                    Everyone -> "Everyone"
+                    is SpecificAuthor -> author.authorId.toString()
+                }
+
                 ListDescriptorUniqueIdentifier(
-                        ("rest-site-post-list-${site.id}-st$statusStr-oa${author.getValue()}-o${order.value}-ob${orderBy.value}" +
+                        ("rest-site-post-list-${site.id}-st$statusStr-a$authorFilter-o${order.value}-ob${orderBy.value}" +
                                 "-sq$searchQuery").hashCode()
                 )
             }
