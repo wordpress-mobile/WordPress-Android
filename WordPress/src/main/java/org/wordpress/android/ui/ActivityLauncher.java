@@ -73,6 +73,7 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
@@ -658,13 +659,12 @@ public class ActivityLauncher {
     }
 
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post) {
-        if (post == null) {
+        if (post == null || site == null) {
             return;
         }
-
-        StatsPostModel statsPostModel = new StatsPostModel(site.getSiteId(), String.valueOf(post.getRemotePostId()),
-                post.getTitle(), post.getLink(), StatsConstants.ITEM_TYPE_POST);
-        viewStatsSinglePostDetails(context, statsPostModel);
+        StatsDetailActivity.Companion
+                .start(context, site, post.getRemotePostId(), StatsConstants.ITEM_TYPE_POST, post.getTitle(),
+                        post.getLink());
     }
 
     public static void viewStatsSinglePostDetails(Context context, StatsPostModel post) {

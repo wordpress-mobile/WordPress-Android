@@ -9,6 +9,8 @@ import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.StatsViewType.AUTHORS
 import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
+import org.wordpress.android.ui.stats.StatsViewType.DETAIL_MONTHS_AND_YEARS
+import org.wordpress.android.ui.stats.StatsViewType.DETAIL_RECENT_WEEKS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsViewType.GEOVIEWS
 import org.wordpress.android.ui.stats.StatsViewType.PUBLICIZE
@@ -17,7 +19,6 @@ import org.wordpress.android.ui.stats.StatsViewType.SEARCH_TERMS
 import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
 import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
 import org.wordpress.android.ui.stats.StatsViewType.VIDEO_PLAYS
-import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
@@ -26,16 +27,19 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPublicizeStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewRecentWeeksStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReferrers
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewSearchTerms
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -67,14 +71,13 @@ class StatsNavigator
                 }
             }
             is ViewPostDetailStats -> {
-                val postModel = StatsPostModel(
-                        siteProvider.siteModel.siteId,
+                StatsDetailActivity.start(
+                        activity,
+                        siteProvider.siteModel,
                         target.postId,
-                        target.postTitle,
-                        target.postUrl,
-                        target.postType
-                )
-                ActivityLauncher.viewStatsSinglePostDetails(activity, postModel)
+                        postType = target.postType,
+                        postTitle = target.postTitle,
+                        postUrl = target.postUrl)
             }
             is ViewFollowersStats -> {
                 ActivityLauncher.viewAllTabbedInsightsStats(activity, FOLLOWERS, target.selectedTab)
@@ -84,6 +87,12 @@ class StatsNavigator
             }
             is ViewTagsAndCategoriesStats -> {
                 ActivityLauncher.viewAllInsightsStats(activity, TAGS_AND_CATEGORIES)
+            }
+            is ViewMonthsAndYearsStats -> {
+                ActivityLauncher.viewAllInsightsStats(activity, DETAIL_MONTHS_AND_YEARS)
+            }
+            is ViewRecentWeeksStats -> {
+                ActivityLauncher.viewAllInsightsStats(activity, DETAIL_RECENT_WEEKS)
             }
             is ViewTag -> {
                 ActivityLauncher.openStatsUrl(activity, target.link)
