@@ -314,7 +314,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
         val btnClickListener = View.OnClickListener { view ->
             // handle back/more here, pass other actions to activity/fragment
             val buttonType = (view as PostListButton).buttonType
-            if(buttonType!=null) {
+            if (buttonType != null) {
                 when (buttonType) {
                     BUTTON_MORE -> animateButtonRows(postData, false)
                     BUTTON_BACK -> animateButtonRows(postData, true)
