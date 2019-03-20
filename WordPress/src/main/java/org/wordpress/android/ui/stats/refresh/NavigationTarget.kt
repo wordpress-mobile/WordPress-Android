@@ -12,7 +12,7 @@ sealed class NavigationTarget : Event() {
 
     data class SharePost(val url: String, val title: String) : NavigationTarget()
     data class ViewPostDetailStats(
-        val postId: String,
+        val postId: Long,
         val postTitle: String,
         val postUrl: String?,
         val postType: String = StatsConstants.ITEM_TYPE_POST
@@ -31,4 +31,7 @@ sealed class NavigationTarget : Event() {
     data class ViewSearchTerms(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
     data class ViewAuthors(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
     data class ViewUrl(val url: String) : NavigationTarget()
+    class ViewMonthsAndYearsStats : NavigationTarget()
+    class ViewDayAverageStats : NavigationTarget()
+    class ViewRecentWeeksStats : NavigationTarget()
 }

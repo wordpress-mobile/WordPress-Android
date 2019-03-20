@@ -8,41 +8,39 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SectionChange
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import java.util.Date
 
 class StatsDateSelectorTest : BaseUnitTest() {
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
-    @Mock lateinit var statsSectionManager: SelectedSectionManager
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     private val selectedDate = Date(0)
     private val selectedDateLabel = "Jan 1"
+    private val statsSection = StatsSection.DAYS
     private val statsGranularity = StatsGranularity.DAYS
     private val updatedDate = Date(10)
     private val updatedLabel = "Jan 2"
 
-    private val dateProviderSelectedDate = MutableLiveData<StatsGranularity>()
+    private val dateProviderSelectedDate = MutableLiveData<SectionChange>()
 
     private lateinit var dateSelector: StatsDateSelector
 
     @Before
     fun setUp() {
-        dateProviderSelectedDate.value = statsGranularity
+        dateProviderSelectedDate.value = SectionChange(statsSection)
         whenever(selectedDateProvider.selectedDateChanged).thenReturn(dateProviderSelectedDate)
 
         dateSelector = StatsDateSelector(
                 selectedDateProvider,
                 statsDateFormatter,
-                statsSectionManager
+                StatsSection.DAYS
         )
-        whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(selectedDate)
-        whenever(statsSectionManager.getSelectedStatsGranularity()).thenReturn(statsGranularity)
+        whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(selectedDate)
         whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(selectedDateLabel)
         whenever(statsDateFormatter.printGranularDate(updatedDate, statsGranularity)).thenReturn(updatedLabel)
     }
@@ -63,9 +61,9 @@ class StatsDateSelectorTest : BaseUnitTest() {
 
     @Test
     fun `shows date selector on days screen`() {
-        whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(selectedDate)
-        whenever(selectedDateProvider.hasPreviousDate(statsGranularity)).thenReturn(true)
-        whenever(selectedDateProvider.hasNextDate(statsGranularity)).thenReturn(true)
+        whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(selectedDate)
+        whenever(selectedDateProvider.hasPreviousDate(statsSection)).thenReturn(true)
+        whenever(selectedDateProvider.hasNextDate(statsSection)).thenReturn(true)
         var model: DateSelectorUiModel? = null
 
         dateSelector.dateSelectorData.observeForever { model = it }
@@ -81,8 +79,8 @@ class StatsDateSelectorTest : BaseUnitTest() {
 
     @Test
     fun `updates date selector on date change`() {
-        whenever(selectedDateProvider.hasPreviousDate(statsGranularity)).thenReturn(true)
-        whenever(selectedDateProvider.hasNextDate(statsGranularity)).thenReturn(true)
+        whenever(selectedDateProvider.hasPreviousDate(statsSection)).thenReturn(true)
+        whenever(selectedDateProvider.hasNextDate(statsSection)).thenReturn(true)
         var model: DateSelectorUiModel? = null
         dateSelector.dateSelectorData.observeForever { model = it }
 
@@ -90,7 +88,7 @@ class StatsDateSelectorTest : BaseUnitTest() {
 
         Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
 
-        whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(updatedDate)
+        whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(updatedDate)
 
         dateSelector.updateDateSelector()
 
@@ -99,7 +97,11 @@ class StatsDateSelectorTest : BaseUnitTest() {
 
     @Test
     fun `verify date selector hidden for insights`() {
-        whenever(statsSectionManager.getSelectedStatsGranularity()).thenReturn(null)
+        dateSelector = StatsDateSelector(
+                selectedDateProvider,
+                statsDateFormatter,
+                StatsSection.INSIGHTS
+        )
         var model: DateSelectorUiModel? = null
         dateSelector.dateSelectorData.observeForever { model = it }
 
@@ -121,19 +123,19 @@ class StatsDateSelectorTest : BaseUnitTest() {
 
         Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
 
-        var selectedGranularity: StatsGranularity? = null
-        dateSelector.selectedDate.observeForever { selectedGranularity = it }
+        var selectedSection: StatsSection? = null
+        dateSelector.selectedDate.observeForever { selectedSection = it?.selectedSection }
 
-        dateProviderSelectedDate.value = WEEKS
+        dateProviderSelectedDate.value = SectionChange(StatsSection.WEEKS)
 
         Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
-        Assertions.assertThat(selectedGranularity).isEqualTo(statsGranularity)
+        Assertions.assertThat(selectedSection).isEqualTo(statsSection)
 
-        whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(updatedDate)
+        whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(updatedDate)
 
-        dateProviderSelectedDate.value = DAYS
+        dateProviderSelectedDate.value = SectionChange(StatsSection.DAYS)
 
-        Assertions.assertThat(selectedGranularity).isEqualTo(statsGranularity)
+        Assertions.assertThat(selectedSection).isEqualTo(statsSection)
         Assertions.assertThat(model?.date).isEqualTo(updatedLabel)
     }
 }

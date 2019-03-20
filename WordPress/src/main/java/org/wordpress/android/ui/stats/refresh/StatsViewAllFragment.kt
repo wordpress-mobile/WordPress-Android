@@ -206,9 +206,10 @@ class StatsViewAllFragment : DaggerFragment() {
             return@observeEvent true
         }
 
-        viewModel.selectedDate.observe(this, Observer {
+        viewModel.selectedDate.observeEvent(this) {
             viewModel.onDateChanged()
-        })
+            true
+        }
 
         viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
             val elevation = if (hasShadow == true) resources.getDimension(R.dimen.appbar_elevation) else 0f

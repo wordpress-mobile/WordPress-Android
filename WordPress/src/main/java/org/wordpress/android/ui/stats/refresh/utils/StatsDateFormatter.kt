@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import org.apache.commons.text.WordUtils
-import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -49,10 +49,20 @@ class StatsDateFormatter
             return sdf
         }
 
-    fun printDate(text: String): String {
-        return printDate(inputFormat.parse(text))
+    /**
+     * Parses the stats date and prints it in localizes readable format.
+     * @param period in this format yyyy-MM-dd
+     * @return localized date in the medium format, in English - Jan 5, 2019
+     */
+    fun printDate(period: String): String {
+        return printDate(inputFormat.parse(period))
     }
 
+    /**
+     * Prints a date in the stats format - yyyy-MM-dd
+     * @param date
+     * @return date in stats string format
+     */
     fun printStatsDate(date: Date): String {
         return inputFormat.format(date)
     }
@@ -65,6 +75,16 @@ class StatsDateFormatter
         }
     }
 
+    /**
+     * Prints the given date in a localized format according to the StatsGranularity:
+     * DAYS - returns Jan 1, 2019
+     * WEEKS - returns Jan 1 - Jan 8
+     * MONTHS - returns Jan 2019
+     * YEARS - returns 2019
+     * @param date to be printed
+     * @param granularity defines the output format
+     * @return printed date
+     */
     fun printGranularDate(date: Date, granularity: StatsGranularity): String {
         return when (granularity) {
             DAYS -> outputFormat.format(date)
@@ -77,30 +97,81 @@ class StatsDateFormatter
                 val startCalendar = Calendar.getInstance()
                 startCalendar.time = endCalendar.time
                 startCalendar.add(Calendar.DAY_OF_WEEK, -6)
-                return if (startCalendar.get(Calendar.YEAR) != endCalendar.get(Calendar.YEAR)) {
-                    resourceProvider.getString(
-                            R.string.stats_from_to_dates_in_week_label,
-                            outputFormat.format(startCalendar.time),
-                            outputFormat.format(endCalendar.time)
-                    )
-                } else {
-                    resourceProvider.getString(
-                            R.string.stats_from_to_dates_in_week_label,
-                            outputFormatWithoutYear.format(startCalendar.time),
-                            outputFormatWithoutYear.format(endCalendar.time)
-                    )
-                }
+                return printWeek(startCalendar, endCalendar)
             }
             MONTHS -> WordUtils.capitalize(outputMonthFormat.format(date))
             YEARS -> outputYearFormat.format(date)
         }
     }
 
+    /**
+     * Prints a date in the Medium format but strips the year. For example prints only Jan 1 instead of Jan 1, 2019
+     * @param date
+     * @return printed date
+     */
+    fun printDayWithoutYear(date: Date): String {
+        return outputFormatWithoutYear.format(date)
+    }
+
+    /**
+     * Prints a week with a start and end date in the week format - Jan 1 - Jan 8, 2019.
+     * It also adds both years when the week is overlapping - Dec 31, 2018 - Jan 7, 2019
+     * @param startPeriod First day of the week
+     * @param endPeriod Last day of the week
+     * @return printed week
+     */
+    fun printWeek(startPeriod: Date, endPeriod: Date): String {
+        val startCalendar = Calendar.getInstance()
+        startCalendar.time = startPeriod
+        val endCalendar = Calendar.getInstance()
+        endCalendar.time = endPeriod
+        return printWeek(startCalendar, endCalendar, showSecondYear = true)
+    }
+
+    private fun printWeek(startCalendar: Calendar, endCalendar: Calendar, showSecondYear: Boolean = false): String {
+        // Always show both years when the first and the last day of a week are in different years
+        return if (startCalendar.get(Calendar.YEAR) != endCalendar.get(Calendar.YEAR)) {
+            printWeek(startCalendar, endCalendar, showFirstYear = true, showSecondYear = true)
+        } else {
+            printWeek(startCalendar, endCalendar, showFirstYear = false, showSecondYear = showSecondYear)
+        }
+    }
+
+    private fun printWeek(
+        startCalendar: Calendar,
+        endCalendar: Calendar,
+        showFirstYear: Boolean,
+        showSecondYear: Boolean
+    ): String {
+        return resourceProvider.getString(
+                string.stats_from_to_dates_in_week_label,
+                if (showFirstYear) outputFormat.format(startCalendar.time) else outputFormatWithoutYear.format(
+                        startCalendar.time
+                ),
+                if (showSecondYear) outputFormat.format(endCalendar.time) else outputFormatWithoutYear.format(
+                        endCalendar.time
+                )
+        )
+    }
+
+    /**
+     * Parses the date coming from an endpoint and print the granular result.
+     */
     fun printGranularDate(date: String, granularity: StatsGranularity): String {
         val parsedDate = parseStatsDate(granularity, date)
         return printGranularDate(parsedDate, granularity)
     }
 
+    /**
+     * Parses date coming from the endpoint in format specific for the stats granularity
+     * DAYS -> the input format is yyyy-MM-dd, output is the selected date
+     * WEEKS -> the input format is yyyy'W'MM'W'dd, output is the last day of the week
+     * MONTHS -> the input format is yyyy-MM, output is the last day of the month
+     * YEARS -> the input format is yyyy-MM-dd, output is the last day of the year
+     * @param granularity selected granularity
+     * @param date string date coming from the endpoints
+     * @return parsed Date
+     */
     fun parseStatsDate(
         granularity: StatsGranularity,
         date: String
@@ -152,9 +223,5 @@ class StatsDateFormatter
         calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY))
         calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE))
         return calendar.time
-    }
-
-    fun todaysDateInStatsFormat(): String {
-        return inputFormat.format(Date())
     }
 }

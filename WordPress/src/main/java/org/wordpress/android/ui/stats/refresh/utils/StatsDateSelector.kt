@@ -2,41 +2,45 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.perform
 import javax.inject.Inject
 
-class StatsDateSelector @Inject constructor(
+class StatsDateSelector
+constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
-    private val statsSectionManager: SelectedSectionManager
+    private val statsSection: StatsSection
 ) {
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
     val dateSelectorData: LiveData<DateSelectorUiModel> = _dateSelectorUiModel
 
-    private val granularity
-        get() = statsSectionManager.getSelectedStatsGranularity()
-
     val selectedDate = selectedDateProvider.selectedDateChanged
-            .filter { statsGranularity -> statsGranularity == granularity }
-            .perform { updateDateSelector() }
+            .filter { sectionChange -> sectionChange.selectedSection == this.statsSection }
+            .perform {
+                if (!it.hasBeenHandled) {
+                    updateDateSelector()
+                }
+            }
 
     fun updateDateSelector() {
-        val statsGranularity = granularity
-        val shouldShowDateSelection = statsGranularity != null
+        val shouldShowDateSelection = this.statsSection != INSIGHTS
 
         val updatedDate = getDateLabelForSection()
         val currentState = dateSelectorData.value
-        if ((!shouldShowDateSelection && currentState?.isVisible != false) || statsGranularity == null) {
+        if (!shouldShowDateSelection && currentState?.isVisible != false) {
             emitValue(currentState, DateSelectorUiModel(false))
         } else {
             val updatedState = DateSelectorUiModel(
                     shouldShowDateSelection,
                     updatedDate,
-                    enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsGranularity),
-                    enableSelectNext = selectedDateProvider.hasNextDate(statsGranularity)
+                    enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsSection),
+                    enableSelectNext = selectedDateProvider.hasNextDate(statsSection)
             )
             emitValue(currentState, updatedState)
         }
@@ -56,23 +60,31 @@ class StatsDateSelector @Inject constructor(
     }
 
     private fun getDateLabelForSection(): String? {
-        return granularity?.let {
-            statsDateFormatter.printGranularDate(
-                    selectedDateProvider.getSelectedDate(it) ?: selectedDateProvider.getCurrentDate(),
-                    it
-            )
-        }
+        return statsDateFormatter.printGranularDate(
+                selectedDateProvider.getSelectedDate(statsSection) ?: selectedDateProvider.getCurrentDate(),
+                statsSection.toStatsGranularity() ?: DAYS
+        )
     }
 
     fun onNextDateSelected() {
-        granularity?.let {
-            selectedDateProvider.selectNextDate(it)
-        }
+        selectedDateProvider.selectNextDate(statsSection)
     }
 
     fun onPreviousDateSelected() {
-        granularity?.let {
-            selectedDateProvider.selectPreviousDate(it)
+        selectedDateProvider.selectPreviousDate(statsSection)
+    }
+
+    fun clear() {
+        selectedDateProvider.clear(statsSection)
+    }
+
+    class Factory
+    @Inject constructor(
+        private val selectedDateProvider: SelectedDateProvider,
+        private val statsDateFormatter: StatsDateFormatter
+    ) {
+        fun build(statsSection: StatsSection): StatsDateSelector {
+            return StatsDateSelector(selectedDateProvider, statsDateFormatter, statsSection)
         }
     }
 }
