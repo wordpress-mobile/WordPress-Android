@@ -10,6 +10,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -56,18 +57,14 @@ class TodayStatsUseCase
         } else {
             items.add(
                     QuickScanItem(
-                            R.string.stats_views,
-                            domainModel.views.toFormattedString(),
-                            R.string.stats_visitors,
-                            domainModel.visitors.toFormattedString()
+                            Column(R.string.stats_views, domainModel.views.toFormattedString()),
+                            Column(R.string.stats_visitors, domainModel.visitors.toFormattedString())
                     )
             )
             items.add(
                     QuickScanItem(
-                            R.string.stats_likes,
-                            domainModel.likes.toFormattedString(),
-                            R.string.stats_comments,
-                            domainModel.comments.toFormattedString()
+                            Column(R.string.stats_likes, domainModel.likes.toFormattedString()),
+                            Column(R.string.stats_comments, domainModel.comments.toFormattedString())
                     )
             )
         }

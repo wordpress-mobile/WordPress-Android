@@ -97,11 +97,9 @@ sealed class BlockListItem(val type: Type) {
         }
     }
 
-    data class QuickScanItem(
-        @StringRes val leftLabel: Int,
-        val leftValue: String,
-        @StringRes val rightLabel: Int,
-        val rightValue: String) : BlockListItem(QUICK_SCAN_ITEM)
+    data class QuickScanItem(val leftColumn: Column, val rightColumn: Column) : BlockListItem(QUICK_SCAN_ITEM) {
+        data class Column(@StringRes val label: Int, val value: String, val tooltip: String? = null)
+    }
 
     data class Information(val text: String) : BlockListItem(INFO)
 

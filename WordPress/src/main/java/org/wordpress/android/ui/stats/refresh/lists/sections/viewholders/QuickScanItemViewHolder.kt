@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
+import android.support.v7.widget.TooltipCompat
 import android.view.ViewGroup
 import android.widget.TextView
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 
 class QuickScanItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
@@ -16,9 +18,14 @@ class QuickScanItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     private val rightValue = itemView.findViewById<TextView>(id.right_value)
 
     fun bind(item: QuickScanItem) {
-        leftLabel.setText(item.leftLabel)
-        leftValue.text = item.leftValue
-        rightLabel.setText(item.rightLabel)
-        rightValue.text = item.rightValue
+        bindColumn(item.leftColumn, leftLabel, leftValue)
+        bindColumn(item.rightColumn, rightLabel, rightValue)
+    }
+
+    private fun bindColumn(column: Column, label: TextView, value: TextView) {
+        label.setText(column.label)
+        value.text = column.value
+        TooltipCompat.setTooltipText(value, column.tooltip)
+        value.setOnClickListener { it.performLongClick() }
     }
 }

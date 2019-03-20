@@ -9,24 +9,28 @@
     <TextView
         android:id="@+id/left_label"
         style="@style/StatsBlockQuickScanLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/unknown"
         app:layout_constraintBottom_toTopOf="@id/left_value"
+        app:layout_constraintEnd_toStartOf="@+id/horizontal_divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/left_value"
         style="@style/StatsBlockQuickScanValue"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/unknown"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/horizontal_divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/left_label"/>
 
@@ -47,24 +51,28 @@
     <TextView
         android:id="@+id/right_label"
         style="@style/StatsBlockQuickScanLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/unknown"
         app:layout_constraintBottom_toTopOf="@id/right_value"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/horizontal_divider"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/right_value"
         style="@style/StatsBlockQuickScanValue"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/unknown"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/horizontal_divider"
         app:layout_constraintTop_toBottomOf="@id/right_label"/>
 
