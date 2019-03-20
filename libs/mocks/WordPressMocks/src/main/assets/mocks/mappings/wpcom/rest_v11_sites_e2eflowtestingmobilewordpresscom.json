@@ -35,16 +35,9 @@
             "launch_status": false
         },
         "headers": {
-            "Server": "nginx",
-            "Date": "Fri, 15 Mar 2019 12:56:23 GMT",
             "Content-Type": "application/json",
             "Connection": "keep-alive",
-            "Vary": "Accept-Encoding",
-            "X-hacker": "Oh, Awesome: Opossum",
-            "Expires": "Wed, 11 Jan 1984 05:00:00 GMT",
-            "Cache-Control": "no-cache, must-revalidate, max-age=0",
-            "X-ac": "2.ams _dfw",
-            "Strict-Transport-Security": "max-age=15552000"
+            "Cache-Control": "no-cache, must-revalidate, max-age=0"
         }
     },
     "uuid": "5b687fe3-831a-489c-b1c6-e91c6af36c42",

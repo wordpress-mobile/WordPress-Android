@@ -22,16 +22,9 @@
             "notes": []
         },
         "headers": {
-            "Server": "nginx",
-            "Date": "Tue, 05 Mar 2019 15:43:43 GMT",
             "Content-Type": "application/json",
             "Connection": "keep-alive",
-            "Vary": "Accept-Encoding",
-            "X-hacker": "Oh, Awesome: Opossum",
-            "Expires": "Wed, 11 Jan 1984 05:00:00 GMT",
-            "Cache-Control": "no-cache, must-revalidate, max-age=0",
-            "X-ac": "2.lhr _dfw",
-            "Strict-Transport-Security": "max-age=15552000"
+            "Cache-Control": "no-cache, must-revalidate, max-age=0"
         }
     }
 }
