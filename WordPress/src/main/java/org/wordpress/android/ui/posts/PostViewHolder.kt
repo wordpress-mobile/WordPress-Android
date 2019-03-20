@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ProgressBar
 import android.widget.TextView
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.reader.utils.ReaderUtils
@@ -24,6 +25,19 @@ import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.widgets.PostListButton
+import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 
 private const val ROW_ANIM_DURATION: Long = 150
 private const val MAX_DISPLAYED_UPLOAD_PROGRESS = 90
@@ -79,11 +93,11 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
         // local drafts say "delete" instead of "trash"
         if (postData.isLocalDraft) {
             date.visibility = View.GONE
-            trashButton.buttonType = PostListButton.BUTTON_DELETE
+            trashButton.updateButtonType(PostListButtonType.BUTTON_DELETE)
         } else {
             date.text = postData.date
             date.visibility = View.VISIBLE
-            trashButton.buttonType = PostListButton.BUTTON_TRASH
+            trashButton.updateButtonType(PostListButtonType.BUTTON_TRASH)
         }
 
         updateForUploadStatus(postData.uploadStatus)
@@ -248,22 +262,22 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
         // publish button is re-purposed depending on the situation
         if (canShowPublishButton) {
             if (!config.hasCapabilityPublishPosts) {
-                publishButton.buttonType = PostListButton.BUTTON_SUBMIT
+                publishButton.updateButtonType(PostListButtonType.BUTTON_SUBMIT)
             } else if (postData.canRetryUpload) {
-                publishButton.buttonType = PostListButton.BUTTON_RETRY
+                publishButton.updateButtonType(PostListButtonType.BUTTON_RETRY)
             } else if (postData.postStatus == PostStatus.SCHEDULED && postData.isLocallyChanged) {
-                publishButton.buttonType = PostListButton.BUTTON_SYNC
+                publishButton.updateButtonType(PostListButtonType.BUTTON_SYNC)
             } else {
-                publishButton.buttonType = PostListButton.BUTTON_PUBLISH
+                publishButton.updateButtonType(PostListButtonType.BUTTON_PUBLISH)
             }
         }
 
         // posts with local changes have preview rather than view button
         if (canShowViewButton) {
             if (postData.isLocalDraft || postData.isLocallyChanged) {
-                viewButton.buttonType = PostListButton.BUTTON_PREVIEW
+                viewButton.updateButtonType(PostListButtonType.BUTTON_PREVIEW)
             } else {
-                viewButton.buttonType = PostListButton.BUTTON_VIEW
+                viewButton.updateButtonType(PostListButtonType.BUTTON_VIEW)
             }
         }
 
@@ -301,11 +315,29 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
         val btnClickListener = View.OnClickListener { view ->
             // handle back/more here, pass other actions to activity/fragment
             val buttonType = (view as PostListButton).buttonType
-            when (buttonType) {
-                PostListButton.BUTTON_MORE -> animateButtonRows(postData, false)
-                PostListButton.BUTTON_BACK -> animateButtonRows(postData, true)
+            if (buttonType != null) {
+                when (buttonType) {
+                    BUTTON_MORE -> animateButtonRows(postData, false)
+                    BUTTON_BACK -> animateButtonRows(postData, true)
+                    BUTTON_EDIT,
+                    BUTTON_VIEW,
+                    BUTTON_PREVIEW,
+                    BUTTON_STATS,
+                    BUTTON_TRASH,
+                    BUTTON_DELETE,
+                    BUTTON_PUBLISH,
+                    BUTTON_SYNC,
+                    BUTTON_SUBMIT,
+                    BUTTON_RETRY -> {
+                        // do nothing here
+                    }
+                }
+                postAdapterItem.onButtonClicked(buttonType)
+            } else {
+                if (BuildConfig.DEBUG) {
+                    throw IllegalStateException("Button type must be set.")
+                }
             }
-            postAdapterItem.onButtonClicked(buttonType)
         }
         editButton.setOnClickListener(btnClickListener)
         viewButton.setOnClickListener(btnClickListener)
