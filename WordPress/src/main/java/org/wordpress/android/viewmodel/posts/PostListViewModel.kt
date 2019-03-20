@@ -88,7 +88,6 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
-import org.wordpress.android.widgets.PostListButtonType.BUTTON_NONE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RESTORE
@@ -373,10 +372,9 @@ class PostListViewModel @Inject constructor(
             BUTTON_TRASH, BUTTON_DELETE -> {
                 showTrashConfirmationDialog(post)
             }
-            BUTTON_NONE -> throw NotImplementedError("BUTTON_NONE should never be used on UI.")
-            BUTTON_MORE -> {
+            BUTTON_MORE ->{
             } // do nothing - ui will show a popup window
-            BUTTON_BACK -> TODO()
+            BUTTON_BACK -> TODO("will be removed during PostViewHolder refactoring")
         }
     }
 
@@ -639,7 +637,6 @@ class PostListViewModel @Inject constructor(
             PostListButtonType.BUTTON_MORE -> "more"
             PostListButtonType.BUTTON_BACK -> "back"
             PostListButtonType.BUTTON_RESTORE -> "restore"
-            else -> AppLog.e(AppLog.T.POSTS, "Unknown button type")
         }
 
         AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)
