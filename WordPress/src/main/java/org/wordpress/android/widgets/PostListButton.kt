@@ -2,9 +2,6 @@ package org.wordpress.android.widgets
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
@@ -21,9 +18,9 @@ import org.wordpress.android.util.AppLog
 class PostListButton : LinearLayout {
     private lateinit var imageView: ImageView
     private lateinit var textView: TextView
-    var buttonType: PostListButtonType = PostListButtonType.BUTTON_NONE
+    var buttonType: PostListButtonType? = null
         set(value) {
-            if (value === this.buttonType) {
+            if (value === this.buttonType || value == null) {
                 return
             }
             field = value
@@ -69,93 +66,24 @@ class PostListButton : LinearLayout {
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setButtonType(buttonTypeInt: Int) {
-        if (buttonTypeInt == this.buttonType.value) {
+        if (buttonTypeInt == this.buttonType?.value) {
             return
         }
         val nullableType = PostListButtonType.fromInt(buttonTypeInt)
         nullableType?.let {
-            this.buttonType = it
-        } ?: AppLog.e(AppLog.T.POSTS, "PostListButton.setButtonType called from xml with an unknown buttonType.")
+            this.buttonType = nullableType
+        } ?: if (BuildConfig.DEBUG) {
+            throw IllegalStateException("Unknown button type id: $buttonTypeInt")
+        } else {
+            AppLog.e(AppLog.T.POSTS, "PostListButton.setButtonType called from xml with an unknown buttonType.")
+        }
     }
 
     private fun loadResourcesForButtonType(buttonType: PostListButtonType) {
-        val color = ContextCompat.getColor(context, getTextColorResId(buttonType))
-        imageView.setImageResource(getButtonIconResId(buttonType))
+        val color = ContextCompat.getColor(context, buttonType.colorResId)
+        imageView.setImageResource(buttonType.iconResId)
         imageView.imageTintList = ColorStateList.valueOf(color)
-        textView.setText(getButtonTextResId(buttonType))
+        textView.setText(buttonType.textResId)
         textView.setTextColor(color)
-    }
-
-    @StringRes
-    private fun getButtonTextResId(buttonType: PostListButtonType): Int {
-        when (buttonType) {
-            PostListButtonType.BUTTON_EDIT -> return R.string.button_edit
-            PostListButtonType.BUTTON_VIEW -> return R.string.button_view
-            PostListButtonType.BUTTON_PREVIEW -> return R.string.button_preview
-            PostListButtonType.BUTTON_STATS -> return R.string.button_stats
-            PostListButtonType.BUTTON_TRASH -> return R.string.button_trash
-            PostListButtonType.BUTTON_DELETE -> return R.string.button_delete
-            PostListButtonType.BUTTON_PUBLISH -> return R.string.button_publish
-            PostListButtonType.BUTTON_SYNC -> return R.string.button_sync
-            PostListButtonType.BUTTON_MORE -> return R.string.button_more
-            PostListButtonType.BUTTON_BACK -> return R.string.button_back
-            PostListButtonType.BUTTON_SUBMIT -> return R.string.submit_for_review
-            PostListButtonType.BUTTON_RETRY -> return R.string.button_retry
-            PostListButtonType.BUTTON_NONE -> {
-                if (BuildConfig.DEBUG) {
-                    throw IllegalStateException("ButtonType needs to be assigned.")
-                }
-                return 0
-            }
-        }
-    }
-
-    @DrawableRes
-    private fun getButtonIconResId(buttonType: PostListButtonType): Int {
-        when (buttonType) {
-            PostListButtonType.BUTTON_EDIT -> return R.drawable.ic_pencil_white_24dp
-            PostListButtonType.BUTTON_VIEW, PostListButtonType.BUTTON_PREVIEW -> {
-                return R.drawable.ic_external_white_24dp
-            }
-            PostListButtonType.BUTTON_STATS -> return R.drawable.ic_stats_alt_white_24dp
-            PostListButtonType.BUTTON_TRASH,
-            PostListButtonType.BUTTON_DELETE -> return R.drawable.ic_trash_white_24dp
-            PostListButtonType.BUTTON_PUBLISH,
-            PostListButtonType.BUTTON_SYNC,
-            PostListButtonType.BUTTON_SUBMIT -> return R.drawable.ic_reader_white_24dp
-            PostListButtonType.BUTTON_MORE -> return R.drawable.ic_ellipsis_white_24dp
-            PostListButtonType.BUTTON_BACK -> return R.drawable.ic_chevron_left_white_24dp
-            PostListButtonType.BUTTON_RETRY -> return R.drawable.ic_refresh_white_24dp
-            PostListButtonType.BUTTON_NONE -> {
-                if (BuildConfig.DEBUG) {
-                    throw IllegalStateException("ButtonType needs to be assigned.")
-                }
-                return 0
-            }
-        }
-    }
-
-    @ColorRes
-    private fun getTextColorResId(buttonType: PostListButtonType): Int {
-        return when (buttonType) {
-            PostListButtonType.BUTTON_RETRY -> R.color.alert_red
-            PostListButtonType.BUTTON_EDIT,
-            PostListButtonType.BUTTON_VIEW,
-            PostListButtonType.BUTTON_PREVIEW,
-            PostListButtonType.BUTTON_STATS,
-            PostListButtonType.BUTTON_TRASH,
-            PostListButtonType.BUTTON_DELETE,
-            PostListButtonType.BUTTON_PUBLISH,
-            PostListButtonType.BUTTON_SYNC,
-            PostListButtonType.BUTTON_MORE,
-            PostListButtonType.BUTTON_BACK,
-            PostListButtonType.BUTTON_SUBMIT -> R.color.blue_wordpress
-            PostListButtonType.BUTTON_NONE -> {
-                if (BuildConfig.DEBUG) {
-                    throw IllegalStateException("ButtonType needs to be assigned.")
-                }
-                return 0
-            }
-        }
     }
 }

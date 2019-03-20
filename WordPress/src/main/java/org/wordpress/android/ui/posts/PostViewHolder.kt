@@ -29,7 +29,6 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
-import org.wordpress.android.widgets.PostListButtonType.BUTTON_NONE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
@@ -315,24 +314,27 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
         val btnClickListener = View.OnClickListener { view ->
             // handle back/more here, pass other actions to activity/fragment
             val buttonType = (view as PostListButton).buttonType
-            when (buttonType) {
-                BUTTON_MORE -> animateButtonRows(postData, false)
-                BUTTON_BACK -> animateButtonRows(postData, true)
-                BUTTON_NONE,
-                BUTTON_EDIT,
-                BUTTON_VIEW,
-                BUTTON_PREVIEW,
-                BUTTON_STATS,
-                BUTTON_TRASH,
-                BUTTON_DELETE,
-                BUTTON_PUBLISH,
-                BUTTON_SYNC,
-                BUTTON_SUBMIT,
-                BUTTON_RETRY -> {
-                    // do nothing here
+            if(buttonType!=null) {
+                when (buttonType) {
+                    BUTTON_MORE -> animateButtonRows(postData, false)
+                    BUTTON_BACK -> animateButtonRows(postData, true)
+                    BUTTON_EDIT,
+                    BUTTON_VIEW,
+                    BUTTON_PREVIEW,
+                    BUTTON_STATS,
+                    BUTTON_TRASH,
+                    BUTTON_DELETE,
+                    BUTTON_PUBLISH,
+                    BUTTON_SYNC,
+                    BUTTON_SUBMIT,
+                    BUTTON_RETRY -> {
+                        // do nothing here
+                    }
                 }
+                postAdapterItem.onButtonClicked(buttonType)
+            } else {
+                throw IllegalStateException("Button type must be set.")
             }
-            postAdapterItem.onButtonClicked(buttonType)
         }
         editButton.setOnClickListener(btnClickListener)
         viewButton.setOnClickListener(btnClickListener)
