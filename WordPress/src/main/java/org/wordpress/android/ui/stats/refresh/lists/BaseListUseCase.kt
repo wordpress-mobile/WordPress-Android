@@ -34,8 +34,8 @@ class BaseListUseCase(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
     private val statsTypes = DistinctMutableLiveData<List<StatsTypes>>(listOf())
-    val data: MediatorLiveData<UiModel> = mergeNotNull(statsTypes, blockListData) { insights, map ->
-        insights.mapNotNull {
+    val data: MediatorLiveData<UiModel> = mergeNotNull(statsTypes, blockListData) { types, map ->
+        types.mapNotNull {
             if (map.containsKey(it)) {
                 map[it]
             } else {
@@ -69,11 +69,12 @@ class BaseListUseCase(
         loadData(true, forced)
     }
 
-    suspend fun refreshTypes() {
+    suspend fun refreshTypes(): List<StatsTypes> {
         val items = getStatsTypes()
         withContext(mainDispatcher) {
             statsTypes.value = items
         }
+        return items
     }
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean) {
@@ -82,8 +83,13 @@ class BaseListUseCase(
                 if (PackageUtils.isDebugBuild() && useCases.distinctBy { it.type }.size < useCases.size) {
                     throw RuntimeException("Duplicate stats type in a use case")
                 }
-                useCases.forEach { block -> launch { block.fetch(refresh, forced) } }
-                refreshTypes()
+                val visibleTypes = refreshTypes()
+                visibleTypes.forEach { type ->
+                    useCases.find { it.type == type }
+                            ?.let { block -> launch(bgDispatcher) {
+                                block.fetch(refresh, forced) }
+                            }
+                }
             }
         } else {
             mutableSnackbarMessage.value = R.string.stats_site_not_loaded_yet

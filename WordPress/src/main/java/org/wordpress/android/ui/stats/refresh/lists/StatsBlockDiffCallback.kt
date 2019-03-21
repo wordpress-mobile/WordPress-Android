@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.support.v7.util.DiffUtil.Callback
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 
 class StatsBlockDiffCallback(
     private val oldList: List<StatsBlock>,
@@ -30,7 +29,7 @@ class StatsBlockDiffCallback(
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
-        if (oldItem is Success && newItem is Success) {
+        if (oldItem.type == newItem.type) {
             return Payload
         }
         return null
