@@ -109,14 +109,19 @@ class PostsListActivity : AppCompatActivity(),
 
     private fun setupContent() {
         authorSelection = findViewById(R.id.post_list_author_selection)
-        authorSelectionAdapter = AuthorSelectionAdapter(this)
-        authorSelection.adapter = authorSelectionAdapter
+        authorSelection.visibility = if (site.isWPCom) View.VISIBLE else View.GONE
 
-        authorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>) {}
+        if (site.isWPCom) {
+            // Non REST sites can't filter by author
+            authorSelectionAdapter = AuthorSelectionAdapter(this)
+            authorSelection.adapter = authorSelectionAdapter
 
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                viewModel.updateAuthorFilterSelection(position)
+            authorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>) {}
+
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                    viewModel.updateAuthorFilterSelection(position)
+                }
             }
         }
 
@@ -159,15 +164,18 @@ class PostsListActivity : AppCompatActivity(),
             }
         })
 
-        viewModel.filterAuthorListItems.observe(this, Observer { items ->
-            items?.let {
-                authorSelectionAdapter.updateItems(items)
-                val selectionIndex = items.indexOfFirst { item -> item.isSelected }
-                if (selectionIndex >= 0) {
-                    authorSelection.setSelection(selectionIndex)
+        if (site.isWPCom) {
+            // Non REST sites can't filter by author
+            viewModel.filterAuthorListItems.observe(this, Observer { items ->
+                items?.let {
+                    authorSelectionAdapter.updateItems(items)
+                    val selectionIndex = items.indexOfFirst { item -> item.isSelected }
+                    if (selectionIndex >= 0) {
+                        authorSelection.setSelection(selectionIndex)
+                    }
                 }
-            }
-        })
+            })
+        }
 
         viewModel.filterOnlyUser.observe(this, Observer { onlyUser ->
             onlyUser?.let {
