@@ -224,18 +224,19 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             buttonTypes.add(PostListButtonType.BUTTON_STATS)
         }
 
+        val createSinglePostListItem = { buttonType: PostListButtonType ->
+            PostListItemAction.SingleItem(buttonType, onButtonClicked)
+        }
+
         return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS) {
-            val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1).map {
-                PostListItemAction.SingleItem(it, onButtonClicked)
-            }
-            val itemsUnderMore = buttonTypes.subList(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1, buttonTypes.size).map {
-                PostListItemAction.SingleItem(it, onButtonClicked)
-            }
+            val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1)
+                    .map(createSinglePostListItem)
+            val itemsUnderMore = buttonTypes.subList(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1, buttonTypes.size)
+                    .map(createSinglePostListItem)
+
             visibleItems.plus(PostListItemAction.MoreItem(itemsUnderMore, onButtonClicked))
         } else {
-            buttonTypes.map {
-                PostListItemAction.SingleItem(it, onButtonClicked)
-            }
+            buttonTypes.map(createSinglePostListItem)
         }
     }
 }
