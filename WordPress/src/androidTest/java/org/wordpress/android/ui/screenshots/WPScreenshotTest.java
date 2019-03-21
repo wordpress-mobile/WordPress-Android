@@ -15,21 +15,22 @@ import org.wordpress.android.e2e.pages.SitePickerPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.image.ImageType;
 
-import java.util.function.Supplier;
 
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
 
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
-import static org.wordpress.android.support.WPSupportUtils.focusEditPostTitle;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
+import static org.wordpress.android.support.WPSupportUtils.idleFor;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
-import static org.wordpress.android.support.WPSupportUtils.waitForConditionToBeTrue;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
@@ -51,6 +52,10 @@ public class WPScreenshotTest extends BaseTest {
         Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
         wpLogin();
+
+        // Never show the Gutenberg dialog when opening a post
+        AppPrefs.setGutenbergInformativeDialogDisabled(true);
+
         editBlogPost();
         manageMedia();
         navigateStats();
@@ -74,7 +79,7 @@ public class WPScreenshotTest extends BaseTest {
         screenshotPostWithName("Ideas", "5-DraftEditor", false);
 
         // Get a screenshot of the writing feature (without image)
-        screenshotPostWithName("Book Your Summer Sessions", "6-Writing", true);
+        screenshotPostWithName("Time to Book Summer Sessions", "6-Writing", true);
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -89,17 +94,13 @@ public class WPScreenshotTest extends BaseTest {
 
         PostsListPage.tapPostWithName(name);
 
-        // Wait for the editor to appear and load all images
-        waitForElementToBeDisplayed(R.id.aztec);
-        waitForConditionToBeTrue(new Supplier<Boolean>() {
-            @Override
-            public Boolean get() {
-                return editPostActivityIsNoLongerLoadingImages();
-            }
-        });
+        waitForElementToBeDisplayed(R.id.editor_activity);
+
+        // Wait for the editor to load all images
+        idleFor(5000);
 
         // Click in the post title editor and ensure the caret is at the end of the title editor
-        focusEditPostTitle();
+//        focusEditPostTitle();
 
         if (hideKeyboard) {
             Espresso.closeSoftKeyboard();
