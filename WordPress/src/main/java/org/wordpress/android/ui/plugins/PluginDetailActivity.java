@@ -113,8 +113,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             = "KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS";
     private static final String KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG
             = "KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG";
-    private static final String KEY_IS_SHOWING_CUSTOM_DOMAIN_CREDIT_CHECK_PROGRESS
-            = "KEY_IS_SHOWING_CUSTOM_DOMAIN_CREDIT_CHECK_PROGRESS";
+    private static final String KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS
+            = "KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS";
 
     private SiteModel mSite;
     private String mSlug;
@@ -223,7 +223,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             mIsShowingCustomDomainRequiredDialog = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG);
             mIsShowingDomainCreditCheckProgress = savedInstanceState
-                    .getBoolean(KEY_IS_SHOWING_CUSTOM_DOMAIN_CREDIT_CHECK_PROGRESS);
+                    .getBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS);
         }
 
         setContentView(R.layout.plugin_detail_activity);
@@ -279,10 +279,10 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         }
 
-        requestDomainRegistration(currentPlan != null && currentPlan.getHasDomainCredit());
+        promptDomainRegistration(currentPlan != null && currentPlan.getHasDomainCredit());
     }
 
-    private void requestDomainRegistration(boolean hasDomainCredits) {
+    private void promptDomainRegistration(boolean hasDomainCredits) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
         builder.setTitle(getResources().getText(R.string.plugin_install_custom_domain_required_dialog_title));
         if (hasDomainCredits) {
@@ -377,7 +377,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 mIsShowingInstallFirstPluginConfirmationDialog);
         outState.putBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS, mIsShowingAutomatedTransferProgress);
         outState.putBoolean(KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG, mIsShowingCustomDomainRequiredDialog);
-        outState.putBoolean(KEY_IS_SHOWING_CUSTOM_DOMAIN_CREDIT_CHECK_PROGRESS, mIsShowingDomainCreditCheckProgress);
+        outState.putBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS, mIsShowingDomainCreditCheckProgress);
     }
 
     // UI Helpers
