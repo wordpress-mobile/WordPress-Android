@@ -66,21 +66,13 @@ constructor(
 
         val mainProduct = mapOf(
                 "product_id" to productId,
-                "meta" to domainName
-        )
-
-        val privacyProtectionProduct = mapOf(
-                "product_id" to privateRegistrationProductID,
-                "meta" to domainName
-        )
-
-        val products = if (isPrivacyProtectionEnabled) arrayOf(mainProduct, privacyProtectionProduct) else arrayOf(
-                mainProduct
+                "meta" to domainName,
+                "extra" to PrivacyExtra(isPrivacyProtectionEnabled)
         )
 
         val params = mapOf(
                 "temporary" to "true",
-                "products" to products
+                "products" to arrayOf(mainProduct)
         )
 
         val response = wpComGsonRequestBuilder.syncPostRequest(
@@ -134,6 +126,8 @@ constructor(
             }
         }
     }
+
+    data class PrivacyExtra(val privacy: Boolean)
 
     data class CartResponse(
         val blog_id: Int,
