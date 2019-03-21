@@ -30,7 +30,6 @@ class NewSiteCreationSiteInfoViewModelTest {
     @JvmField val rule = InstantTaskExecutorRule()
     @Mock private lateinit var tracker: NewSiteCreationTracker
     @Mock private lateinit var uiStateObserver: Observer<SiteInfoUiState>
-    @Mock private lateinit var onTitleInputFocusRequestedObserver: Observer<Unit>
     @Mock private lateinit var onSkipClickedObserver: Observer<Unit>
     @Mock private lateinit var onNextClickedObserver: Observer<SiteInfoUiState>
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
@@ -41,7 +40,6 @@ class NewSiteCreationSiteInfoViewModelTest {
     fun setUp() {
         viewModel = NewSiteCreationSiteInfoViewModel(tracker, TEST_DISPATCHER)
         viewModel.uiState.observeForever(uiStateObserver)
-        viewModel.onTitleInputFocusRequested.observeForever(onTitleInputFocusRequestedObserver)
         viewModel.skipBtnClicked.observeForever(onSkipClickedObserver)
         viewModel.nextBtnClicked.observeForever(onNextClickedObserver)
         viewModel.onHelpClicked.observeForever(onHelpClickedObserver)
@@ -50,13 +48,6 @@ class NewSiteCreationSiteInfoViewModelTest {
     @Test
     fun verifyInitialUiStateIsEmpty() {
         assertThat(viewModel.uiState.value).isEqualToComparingFieldByField(EMPTY_UI_STATE)
-    }
-
-    @Test
-    fun verifyRequestTitleInputFocusCalledOnStart() {
-        viewModel.start()
-        val captor = ArgumentCaptor.forClass(Unit::class.java)
-        verify(onTitleInputFocusRequestedObserver).onChanged(captor.capture())
     }
 
     @Test
