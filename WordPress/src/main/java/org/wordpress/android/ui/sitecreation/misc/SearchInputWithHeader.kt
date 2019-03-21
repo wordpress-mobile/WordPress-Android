@@ -20,6 +20,7 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
     private val progressBar = rootView.findViewById<View>(R.id.progress_bar)
     private val clearAllButton = rootView.findViewById<View>(R.id.clear_all_btn)
     private val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
+    private val divider = rootView.findViewById<View>(R.id.divider)
 
     var onTextChanged: ((String) -> Unit)? = null
 
@@ -74,5 +75,6 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
         searchInput.hint = uiHelpers.getTextOfUiString(context, uiState.hint)
         uiHelpers.updateVisibility(progressBar, uiState.showProgress)
         uiHelpers.updateVisibility(clearAllLayout, uiState.showClearButton)
+        uiHelpers.updateVisibility(divider, uiState.showDivider)
     }
 }

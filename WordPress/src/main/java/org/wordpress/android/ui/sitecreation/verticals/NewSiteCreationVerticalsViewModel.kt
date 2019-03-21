@@ -226,6 +226,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                         searchInputUiState = createSearchInputUiState(
                                 query,
                                 showProgress = state is Loading,
+                                showDivider = !state.data.isEmpty(),
                                 hint = segmentPrompt.hint
                         ),
                         items = createSuggestionsUiStates(
@@ -304,12 +305,14 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private fun createSearchInputUiState(
         query: String,
         showProgress: Boolean,
+        showDivider: Boolean,
         hint: String
     ): SiteCreationSearchInputUiState {
         return SiteCreationSearchInputUiState(
                 UiStringText(hint),
                 showProgress,
-                showClearButton = !StringUtils.isEmpty(query)
+                showClearButton = !StringUtils.isEmpty(query),
+                showDivider = showDivider
         )
     }
 
