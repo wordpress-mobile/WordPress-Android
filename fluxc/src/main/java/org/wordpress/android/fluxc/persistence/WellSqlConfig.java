@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 58;
+        return 61;
     }
 
     @Override
@@ -454,6 +454,30 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
+            case 58:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 59:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE IF EXISTS StatsBlock");
+                db.execSQL(
+                        "CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,JSON "
+                        + "TEXT NOT NULL)");
+                oldVersion++;
+            case 60:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE StatsBlock");
+                db.execSQL(
+                        "CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,JSON TEXT NOT "
+                        + "NULL)");
+                db.execSQL(
+                        "CREATE TABLE StatsRequest (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,TIME_STAMP INTEGER,"
+                        + "REQUESTED_ITEMS INTEGER)");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -584,6 +608,36 @@ public class WellSqlConfig extends DefaultWellConfig {
                 case 57:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("DELETE FROM WCOrderStatsModel");
+                    break;
+                case 58:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DROP TABLE IF EXISTS WCProductVariationModel");
+                    db.execSQL("CREATE TABLE WCProductVariationModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "REMOTE_PRODUCT_ID INTEGER,"
+                               + "REMOTE_VARIATION_ID INTEGER,"
+                               + "DATE_CREATED TEXT NOT NULL,"
+                               + "DATE_MODIFIED TEXT NOT NULL,"
+                               + "DESCRIPTION TEXT NOT NULL,"
+                               + "PERMALINK TEXT NOT NULL,"
+                               + "SKU TEXT NOT NULL,"
+                               + "STATUS TEXT NOT NULL,"
+                               + "PRICE TEXT NOT NULL,"
+                               + "REGULAR_PRICE TEXT NOT NULL,"
+                               + "SALE_PRICE TEXT NOT NULL,"
+                               + "ON_SALE INTEGER,"
+                               + "PURCHASABLE INTEGER,"
+                               + "VIRTUAL INTEGER,"
+                               + "DOWNLOADABLE INTEGER,"
+                               + "MANAGE_STOCK INTEGER,"
+                               + "STOCK_QUANTITY INTEGER,"
+                               + "STOCK_STATUS TEXT NOT NULL,"
+                               + "IMAGE_URL TEXT NOT NULL,"
+                               + "WEIGHT TEXT NOT NULL,"
+                               + "LENGTH TEXT NOT NULL,"
+                               + "WIDTH TEXT NOT NULL,"
+                               + "HEIGHT TEXT NOT NULL,"
+                               + "ATTRIBUTES TEXT NOT NULL)");
             }
         }
     }

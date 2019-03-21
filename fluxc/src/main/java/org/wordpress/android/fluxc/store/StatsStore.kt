@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.AVERAGE_VIEWS_PER_DAY
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.CLICKS_BY_WEEKS
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.MONTHS_AND_YEARS
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.POST_HEADER
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.POST_OVERVIEW
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
@@ -76,6 +77,7 @@ class StatsStore
 
     suspend fun getPostDetailTypes(): List<PostDetailTypes> = withContext(coroutineContext) {
         return@withContext listOf(
+                POST_HEADER,
                 POST_OVERVIEW,
                 MONTHS_AND_YEARS,
                 AVERAGE_VIEWS_PER_DAY,
@@ -112,13 +114,14 @@ class StatsStore
     }
 
     enum class PostDetailTypes : StatsTypes {
+        POST_HEADER,
         POST_OVERVIEW,
         MONTHS_AND_YEARS,
         AVERAGE_VIEWS_PER_DAY,
         CLICKS_BY_WEEKS
     }
 
-    data class OnStatsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
+    data class OnStatsFetched<T>(val model: T? = null, val cached: Boolean = false) : Store.OnChanged<StatsError>() {
         constructor(error: StatsError) : this() {
             this.error = error
         }
