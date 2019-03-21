@@ -11,13 +11,11 @@ import android.arch.paging.PagedList
 import android.content.Intent
 import android.support.annotation.DrawableRes
 import de.greenrobot.event.EventBus
-import org.apache.commons.text.StringEscapeUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -49,9 +47,6 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts.PostAdapterItem
-import org.wordpress.android.ui.posts.PostAdapterItemData
-import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
@@ -95,6 +90,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_RESTORE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
@@ -107,7 +103,7 @@ const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
 const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 
-typealias PagedPostList = PagedList<PagedListItemType<PostAdapterItem>>
+typealias PagedPostList = PagedList<PagedListItemType<PostListItemUiState>>
 
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -115,6 +111,7 @@ class PostListViewModel @Inject constructor(
     private val uploadStore: UploadStore,
     private val mediaStore: MediaStore,
     private val postStore: PostStore,
+    private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     connectionStatus: LiveData<ConnectionStatus>
 ) : ViewModel(), LifecycleOwner {
@@ -127,7 +124,7 @@ class PostListViewModel @Inject constructor(
     private lateinit var postListType: PostListType
 
     // Cache upload statuses and featured images for posts for quicker access
-    private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
+    private val uploadStatusMap = HashMap<Int, PostListItemUploadStatus>()
     private val featuredImageMap = HashMap<Long, String>()
 
     // Keep a reference to the currently being trashed post, so we can hide it during Undo SnackBar
@@ -158,7 +155,7 @@ class PostListViewModel @Inject constructor(
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
 
-    private val pagedListWrapper: PagedListWrapper<PostAdapterItem> by lazy {
+    private val pagedListWrapper: PagedListWrapper<PostListItemUiState> by lazy {
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
         }
@@ -168,7 +165,21 @@ class PostListViewModel @Inject constructor(
             } else emptyList()
         }
         listStore.getList(listDescriptor, dataStore, lifecycle) { post ->
-            createPostAdapterItem(post)
+            listItemUiStateHelper.createPostListItemUiState(
+                    post = post,
+                    uploadStatus = getUploadStatus(post),
+                    unhandledConflicts = doesPostHaveUnhandledConflict(post),
+                    capabilitiesToPublish = site.hasCapabilityPublishPosts,
+                    statsSupported = isStatsSupported,
+                    featuredImageUrl = getFeaturedImageUrl(
+                            featuredImageId = post.featuredImageId,
+                            postContent = post.content
+                    ),
+                    formattedDate = PostUtils.getFormattedDate(post)
+            ) { postModel, buttonType, statEvent ->
+                trackAction(buttonType, postModel, statEvent)
+                handlePostButton(buttonType, postModel)
+            }
         }
     }
 
@@ -354,6 +365,7 @@ class PostListViewModel @Inject constructor(
         when (buttonType) {
             BUTTON_EDIT -> editPostButtonAction(site, post)
             BUTTON_RETRY -> _postListAction.postValue(RetryUpload(post))
+            BUTTON_RESTORE -> TODO()
             BUTTON_SUBMIT, BUTTON_SYNC, BUTTON_PUBLISH -> {
                 showPublishConfirmationDialog(post)
             }
@@ -363,7 +375,8 @@ class PostListViewModel @Inject constructor(
             BUTTON_TRASH, BUTTON_DELETE -> {
                 showTrashConfirmationDialog(post)
             }
-            BUTTON_MORE -> TODO("will be removed during PostViewHolder refactoring")
+            BUTTON_MORE -> {
+            } // do nothing - ui will show a popup window
             BUTTON_BACK -> TODO("will be removed during PostViewHolder refactoring")
         }
     }
@@ -603,51 +616,6 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    // PostAdapterItem Management
-
-    private fun createPostAdapterItem(post: PostModel): PostAdapterItem {
-        val title = if (post.title.isNotBlank()) {
-            StringEscapeUtils.unescapeHtml4(post.title)
-        } else null
-        val excerpt = PostUtils.getPostListExcerptFromPost(post).takeIf { !it.isNullOrBlank() }
-                ?.let { StringEscapeUtils.unescapeHtml4(it) }.let { PostUtils.collapseShortcodes(it) }
-        val postStatus = PostStatus.fromPost(post)
-        val canShowStats = isStatsSupported && postStatus == PostStatus.PUBLISHED && !post.isLocalDraft &&
-                !post.isLocallyChanged
-        val uploadStatus = getUploadStatus(post)
-        val canPublishPost = !uploadStatus.isUploadingOrQueued &&
-                (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
-        val postData = PostAdapterItemData(
-                localPostId = post.id,
-                remotePostId = if (post.remotePostId != 0L) post.remotePostId else null,
-                title = title,
-                excerpt = excerpt,
-                isLocalDraft = post.isLocalDraft,
-                date = PostUtils.getFormattedDate(post),
-                postStatus = postStatus,
-                isLocallyChanged = post.isLocallyChanged,
-                isConflicted = doesPostHaveUnhandledConflict(post),
-                canShowStats = canShowStats,
-                canPublishPost = canPublishPost,
-                canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
-                featuredImageId = post.featuredImageId,
-                featuredImageUrl = getFeaturedImageUrl(post.featuredImageId, post.content),
-                uploadStatus = uploadStatus
-        )
-
-        return PostAdapterItem(
-                data = postData,
-                onSelected = {
-                    trackAction(PostListButtonType.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
-                    handlePostButton(PostListButtonType.BUTTON_EDIT, post)
-                },
-                onButtonClicked = {
-                    trackAction(it, post, AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED)
-                    handlePostButton(it, post)
-                }
-        )
-    }
-
     private fun trackAction(buttonType: PostListButtonType, postData: PostModel, statsEvent: Stat) {
         val properties = HashMap<String, Any?>()
         if (!postData.isLocalDraft) {
@@ -671,6 +639,7 @@ class PostListViewModel @Inject constructor(
             PostListButtonType.BUTTON_SYNC -> "sync"
             PostListButtonType.BUTTON_MORE -> "more"
             PostListButtonType.BUTTON_BACK -> "back"
+            PostListButtonType.BUTTON_RESTORE -> "restore"
         }
 
         AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)
@@ -702,12 +671,12 @@ class PostListViewModel @Inject constructor(
         pagedListWrapper.invalidateData()
     }
 
-    private fun getUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
+    private fun getUploadStatus(post: PostModel): PostListItemUploadStatus {
         uploadStatusMap[post.id]?.let { return it }
         val uploadError = uploadStore.getUploadErrorForPost(post)
         val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
         val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
-        val newStatus = PostAdapterItemUploadStatus(
+        val newStatus = PostListItemUploadStatus(
                 uploadError = uploadError,
                 mediaUploadProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100),
                 isUploading = UploadService.isPostUploading(post),
@@ -863,8 +832,8 @@ class PostListViewModel @Inject constructor(
 
     private fun findItemListPosition(data: PagedPostList, localPostId: Int): Int? {
         return data.listIterator().withIndex().asSequence().find { listItem ->
-            if (listItem.value is ReadyItem<PostAdapterItem>) {
-                val readyItem = listItem.value as ReadyItem<PostAdapterItem>
+            if (listItem.value is ReadyItem<PostListItemUiState>) {
+                val readyItem = listItem.value as ReadyItem<PostListItemUiState>
                 readyItem.item.data.localPostId == localPostId
             } else {
                 false
