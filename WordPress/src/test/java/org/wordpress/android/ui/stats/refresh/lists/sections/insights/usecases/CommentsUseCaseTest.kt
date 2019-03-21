@@ -61,8 +61,8 @@ class CommentsUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 statsSiteProvider,
                 tracker,
-                BLOCK,
-                popupMenuHandler
+                popupMenuHandler,
+                BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }

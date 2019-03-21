@@ -123,10 +123,6 @@ abstract class StatsListViewModel(
             statsUseCase.refreshTypes()
         }
     }
-
-    enum class Action {
-        MOVE_DOWN, MOVE_UP, REMOVE
-    }
 }
 
 class InsightsListViewModel
