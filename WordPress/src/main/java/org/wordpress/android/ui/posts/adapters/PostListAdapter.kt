@@ -75,7 +75,7 @@ class PostListAdapter(
 }
 
 private val PostListDiffItemCallback = PagedListDiffItemCallback<PostListItemUiState>(
-        getRemoteItemId = { item -> item.remotePostId },
-        areItemsTheSame = { oldItem, newItem -> oldItem.localPostId == newItem.localPostId },
-        areContentsTheSame = { oldItem, newItem -> oldItem == newItem }
+        getRemoteItemId = { item -> item.data.remotePostId },
+        areItemsTheSame = { oldItem, newItem -> oldItem.data.localPostId == newItem.data.localPostId },
+        areContentsTheSame = { oldItem, newItem -> oldItem.data == newItem.data }
 )

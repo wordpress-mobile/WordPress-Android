@@ -834,7 +834,7 @@ class PostListViewModel @Inject constructor(
         return data.listIterator().withIndex().asSequence().find { listItem ->
             if (listItem.value is ReadyItem<PostListItemUiState>) {
                 val readyItem = listItem.value as ReadyItem<PostListItemUiState>
-                readyItem.item.localPostId == localPostId
+                readyItem.item.data.localPostId == localPostId
             } else {
                 false
             }

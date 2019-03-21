@@ -4,19 +4,23 @@ import android.support.annotation.ColorRes
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.widgets.PostListButtonType
 
-data class PostListItemUiState(
+class PostListItemUiState(
+    val data: PostListItemUiStateData,
+    val actions: List<PostListItemAction>,
+    val onSelected: () -> Unit
+)
+
+data class PostListItemUiStateData(
     val remotePostId: Long,
     val localPostId: Int,
     val title: UiString?,
     val excerpt: UiString?,
     val imageUrl: String?,
     val dateAndAuthor: UiString?,
-    val statusLabels: UiString?,
     @ColorRes val statusLabelsColor: Int?,
-    val actions: List<PostListItemAction>,
+    val statusLabels: UiString?,
     val showProgress: Boolean,
-    val showOverlay: Boolean,
-    val onSelected: () -> Unit
+    val showOverlay: Boolean
 )
 
 sealed class PostListItemAction(val buttonType: PostListButtonType, val onButtonClicked: (PostListButtonType) -> Unit) {

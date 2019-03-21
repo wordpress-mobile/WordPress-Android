@@ -52,25 +52,29 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val postStatus: PostStatus = PostStatus.fromPost(post)
 
         return PostListItemUiState(
-                remotePostId = post.remotePostId,
-                localPostId = post.id,
-                title = getTitle(post = post),
-                excerpt = getExcerpt(post = post),
-                imageUrl = featuredImageUrl,
-                dateAndAuthor = UiStringText(text = formattedDate), // TODO Get name of the author
-                statusLabels = getStatusLabels(
-                        postStatus = postStatus,
-                        isLocalDraft = post.isLocalDraft,
-                        isLocallyChanged = post.isLocallyChanged,
-                        uploadStatus = uploadStatus,
-                        hasUnhandledConflicts = unhandledConflicts
-                ),
-                statusLabelsColor = getStatusLabelsColor(
-                        postStatus = postStatus,
-                        isLocalDraft = post.isLocalDraft,
-                        isLocallyChanged = post.isLocallyChanged,
-                        uploadStatus = uploadStatus,
-                        hasUnhandledConflicts = unhandledConflicts
+                data = PostListItemUiStateData(
+                        remotePostId = post.remotePostId,
+                        localPostId = post.id,
+                        title = getTitle(post = post),
+                        excerpt = getExcerpt(post = post),
+                        imageUrl = featuredImageUrl,
+                        dateAndAuthor = UiStringText(text = formattedDate), // TODO Get name of the author
+                        statusLabels = getStatusLabels(
+                                postStatus = postStatus,
+                                isLocalDraft = post.isLocalDraft,
+                                isLocallyChanged = post.isLocallyChanged,
+                                uploadStatus = uploadStatus,
+                                hasUnhandledConflicts = unhandledConflicts
+                        ),
+                        statusLabelsColor = getStatusLabelsColor(
+                                postStatus = postStatus,
+                                isLocalDraft = post.isLocalDraft,
+                                isLocallyChanged = post.isLocallyChanged,
+                                uploadStatus = uploadStatus,
+                                hasUnhandledConflicts = unhandledConflicts
+                        ),
+                        showProgress = shouldShowProgress(uploadStatus = uploadStatus),
+                        showOverlay = shouldShowOverlay(uploadStatus = uploadStatus)
                 ),
                 actions = createActions(
                         postStatus = postStatus,
@@ -78,10 +82,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         isLocallyChanged = post.isLocallyChanged,
                         uploadStatus = uploadStatus,
                         siteHasCapabilitiesToPublish = capabilitiesToPublish,
-                        statsSupported = statsSupported
-                ) { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) },
-                showProgress = shouldShowProgress(uploadStatus = uploadStatus),
-                showOverlay = shouldShowOverlay(uploadStatus = uploadStatus),
+                        statsSupported = statsSupported,
+                        onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) }
+                ),
                 onSelected = {
                     onAction.invoke(post, BUTTON_EDIT, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
                 }

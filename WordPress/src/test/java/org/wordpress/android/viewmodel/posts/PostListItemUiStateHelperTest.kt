@@ -32,13 +32,13 @@ class PostListItemUiStateHelperTest {
     fun `featureImgUrl is propagated`() {
         val testUrl = "https://example.com"
         val state = createPostListItemUiState(featuredImageUrl = testUrl)
-        assertThat(state.imageUrl).isEqualTo(testUrl)
+        assertThat(state.data.imageUrl).isEqualTo(testUrl)
     }
 
     @Test
     fun `label has error color on upload error`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(uploadError = createGenericError()))
-        assertThat(state.statusLabelsColor).isEqualTo(ERROR_COLOR)
+        assertThat(state.data.statusLabelsColor).isEqualTo(ERROR_COLOR)
     }
 
     @Test
@@ -49,31 +49,31 @@ class PostListItemUiStateHelperTest {
                         hasInProgressMediaUpload = true
                 )
         )
-        assertThat(state.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
     fun `label has progress color when post queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isQueued = true))
-        assertThat(state.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
     fun `label has progress color when media queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasPendingMediaUpload = true))
-        assertThat(state.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
     fun `label has progress color when uploading media`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasInProgressMediaUpload = true))
-        assertThat(state.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
     fun `label has progress color when uploading post`() {
         val state = createPostListItemUiState(unhandledConflicts = true)
-        assertThat(state.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     private fun createPostListItemUiState(

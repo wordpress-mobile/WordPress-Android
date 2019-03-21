@@ -45,16 +45,16 @@ class PostListItemViewHolder(
     )
 
     fun onBind(item: PostListItemUiState) {
-        showFeaturedImage(item.imageUrl)
-        setTextOrHide(tvTitle, item.title)
-        setTextOrHide(tvExcerpt, item.excerpt)
-        setTextOrHide(tvDateAndAuthor, item.dateAndAuthor)
-        setTextOrHide(tvStatusLabels, item.statusLabels)
-        if (item.statusLabelsColor != null) {
-            tvStatusLabels.setTextColor(ContextCompat.getColor(tvStatusLabels.context, item.statusLabelsColor))
+        showFeaturedImage(item.data.imageUrl)
+        setTextOrHide(tvTitle, item.data.title)
+        setTextOrHide(tvExcerpt, item.data.excerpt)
+        setTextOrHide(tvDateAndAuthor, item.data.dateAndAuthor)
+        setTextOrHide(tvStatusLabels, item.data.statusLabels)
+        if (item.data.statusLabelsColor != null) {
+            tvStatusLabels.setTextColor(ContextCompat.getColor(tvStatusLabels.context, item.data.statusLabelsColor))
         }
-        uiHelpers.updateVisibility(pbProgress, item.showProgress)
-        uiHelpers.updateVisibility(flDisabledOverlay, item.showOverlay)
+        uiHelpers.updateVisibility(pbProgress, item.data.showProgress)
+        uiHelpers.updateVisibility(flDisabledOverlay, item.data.showOverlay)
         itemView.setOnClickListener { item.onSelected.invoke() }
 
         actionButtons.forEachIndexed { index, button ->
