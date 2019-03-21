@@ -3,13 +3,17 @@ package org.wordpress.android.ui.posts
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.support.annotation.DrawableRes
+import android.support.v7.preference.PreferenceManager
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -21,11 +25,15 @@ import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+private const val POST_LIST_AUTHOR_FILTER = "wp_pref_post_list_author_filter"
 private const val SCROLL_TO_DELAY = 50L
 private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS)
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
@@ -48,11 +56,12 @@ class PostListMainViewModel @Inject constructor(
     private val _isFabVisible = MutableLiveData<Boolean>()
     val isFabVisible: LiveData<Boolean> = _isFabVisible
 
-    private val _avatarUrl = MutableLiveData<String>()
-    val avatarUrl: LiveData<String> = _avatarUrl
+    private val _filterAuthorListItems = MutableLiveData<List<AuthorFilterListItemUIState>>()
+    val filterAuthorListItems: LiveData<List<AuthorFilterListItemUIState>> = _filterAuthorListItems
 
-    private val _filterOnlyUser = MutableLiveData<Boolean>()
-    val filterOnlyUser: LiveData<Boolean> = _filterOnlyUser
+    val filterOnlyUser: LiveData<Boolean> = _filterAuthorListItems.map { items ->
+        return@map items.firstOrNull { state -> state.isSelected } is AuthorFilterListItemUIState.Me
+    }
 
     private val _selectTab = SingleLiveEvent<Int>()
     val selectTab = _selectTab as LiveData<Int>
@@ -65,7 +74,8 @@ class PostListMainViewModel @Inject constructor(
 
     fun start(site: SiteModel) {
         this.site = site
-        _avatarUrl.value = accountStore?.account?.avatarUrl ?: ""
+
+        updateAuthorFilterSelection(getAuthorFilterPref().ordinal)
     }
 
     override fun onCleared() {
@@ -77,8 +87,20 @@ class PostListMainViewModel @Inject constructor(
         _postListAction.postValue(PostListAction.NewPost(site))
     }
 
-    fun onAuthorSelectionChanged(onlyUser: Boolean) {
-        _filterOnlyUser.value = onlyUser
+    fun updateAuthorFilterSelection(position: Int) {
+        val selection: AuthorFilterSelection = when (position) {
+            AuthorFilterSelection.ME.ordinal -> AuthorFilterSelection.ME
+            else -> AuthorFilterSelection.EVERYONE
+        }
+
+        _filterAuthorListItems.value = listOf(
+                AuthorFilterListItemUIState.Me(
+                        accountStore.account?.avatarUrl, isSelected = selection == AuthorFilterSelection.ME
+                ),
+                AuthorFilterListItemUIState.Everyone(isSelected = selection == AuthorFilterSelection.EVERYONE)
+        )
+
+        updateAuthorFilterPref(selection)
     }
 
     fun onTabChanged(position: Int) {
@@ -100,6 +122,49 @@ class PostListMainViewModel @Inject constructor(
                     delay(SCROLL_TO_DELAY)
                 }
                 _scrollToLocalPostId.value = postModel.id
+            }
+        }
+    }
+
+    // TODO implement this in better way when I hear back if we already have a nice way to do this or not
+    private fun getAuthorFilterPref(): AuthorFilterSelection {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
+        val prefString: String = prefs.getString(POST_LIST_AUTHOR_FILTER, null) ?: AuthorFilterSelection.EVERYONE.name
+        return AuthorFilterSelection.valueOf(prefString, AuthorFilterSelection.EVERYONE)
+    }
+
+    private fun updateAuthorFilterPref(selection: AuthorFilterSelection) {
+        PreferenceManager.getDefaultSharedPreferences(WordPress.getContext()).edit()
+                .putString(POST_LIST_AUTHOR_FILTER, selection.name)
+                .apply()
+    }
+
+    sealed class AuthorFilterListItemUIState(
+        internal val text: UiString, @DrawableRes val iconRes: Int, val isSelected: Boolean
+    ) {
+        class Everyone(isSelected: Boolean) : AuthorFilterListItemUIState(
+                text = UiStringRes(R.string.post_list_author_everyone),
+                iconRes = R.drawable.ic_multiple_users_white_24dp,
+                isSelected = isSelected
+        )
+
+        class Me(val avatarUrl: String?, isSelected: Boolean) : AuthorFilterListItemUIState(
+                text = UiStringRes(R.string.post_list_author_me),
+                iconRes = R.drawable.ic_user_circle_grey_24dp,
+                isSelected = isSelected
+        )
+    }
+
+    enum class AuthorFilterSelection {
+        ME, EVERYONE;
+
+        companion object {
+            fun valueOf(value: String, default: AuthorFilterSelection): AuthorFilterSelection {
+                return try {
+                    valueOf(value)
+                } catch (ignored: IllegalArgumentException) {
+                    default
+                }
             }
         }
     }

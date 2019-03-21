@@ -111,25 +111,16 @@ class PostsListActivity : AppCompatActivity(),
         authorSelection = findViewById(R.id.post_list_author_selection)
         authorSelectionAdapter = AuthorSelectionAdapter(this)
         authorSelection.adapter = authorSelectionAdapter
-        authorSelection.setSelection(1) // Defaulting to Everyone
 
         authorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                authorSelectionAdapter.selectedPosition = -1
-            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
 
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                authorSelectionAdapter.selectedPosition = position
-                viewModel.onAuthorSelectionChanged(position == 0)
+                viewModel.updateAuthorFilterSelection(position)
             }
         }
 
         pager = findViewById(R.id.postPager)
-        postsPagerAdapter = PostsPagerAdapter(
-                POST_LIST_PAGES, site,
-                supportFragmentManager
-        )
-        pager.adapter = postsPagerAdapter
 
         // Just a safety measure - there shouldn't by any existing listeners since this method is called just once.
         pager.clearOnPageChangeListeners()
@@ -168,19 +159,20 @@ class PostsListActivity : AppCompatActivity(),
             }
         })
 
-        viewModel.avatarUrl.observe(this, Observer { avatarUrl ->
-            authorSelectionAdapter.avatarUrl = avatarUrl
+        viewModel.filterAuthorListItems.observe(this, Observer { items ->
+            items?.let {
+                authorSelectionAdapter.updateItems(items)
+                val selectionIndex = items.indexOfFirst { item -> item.isSelected }
+                if (selectionIndex >= 0) {
+                    authorSelection.setSelection(selectionIndex)
+                }
+            }
         })
 
         viewModel.filterOnlyUser.observe(this, Observer { onlyUser ->
             onlyUser?.let {
-                val position = when (onlyUser) {
-                    true -> 0
-                    false -> 1
-                }
-
-                authorSelection.setSelection(position)
-                postsPagerAdapter.onlyUser = onlyUser
+                postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, onlyUser, supportFragmentManager)
+                pager.adapter = postsPagerAdapter
             }
         })
 

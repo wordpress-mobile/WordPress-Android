@@ -3,42 +3,40 @@ package org.wordpress.android.ui.posts.adapters
 import android.content.Context
 import android.database.DataSetObserver
 import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.AppCompatTextView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SpinnerAdapter
-import androidx.annotation.StringRes
+import androidx.annotation.CallSuper
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.posts.PostListMainViewModel.AuthorFilterListItemUIState
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
+import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
+@ColorRes private const val ICON_TINT_RES = R.color.grey_darken_20
+
 class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var uiHelpers: UiHelpers
 
     private var observers: MutableList<WeakReference<DataSetObserver>> = mutableListOf()
-
-    var avatarUrl: String? = null
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-
-    var selectedPosition: Int = 0
+    private val items = mutableListOf<AuthorFilterListItemUIState>()
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
     }
 
-    override fun getCount(): Int = 2
+    override fun getCount(): Int = items.count()
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view: View? = convertView
@@ -53,37 +51,14 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
             holder = view.tag as DropdownViewHolder
         }
 
-        @StringRes val textRes: Int = getItem(position)
-        val isSelected = position == selectedPosition
-
-        when (position) {
-            0 -> {
-                val avatarUrl = avatarUrl
-
-                if (avatarUrl != null) {
-                    holder.bind(avatarUrl, textRes, isSelected, imageManager)
-                } else {
-                    holder.bind(R.drawable.ic_user_grey_darken_20_24dp, textRes, isSelected, imageManager)
-                }
-            }
-
-            else -> holder.bind(R.drawable.ic_multiple_users_grey_darken_20_24dp, textRes, isSelected, imageManager)
-        }
+        holder.bind(items[position], imageManager, uiHelpers)
 
         return view!!
     }
 
-    @StringRes override fun getItem(position: Int): Int = when (position) {
-        0 -> ME
-        else -> EVERYONE
-    }
+    override fun getItem(position: Int): AuthorFilterListItemUIState = items[position]
 
-    override fun getItemId(position: Int): Long {
-        return when (position) {
-            0 -> ME
-            else -> EVERYONE
-        }.toLong()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getItemViewType(position: Int): Int = 0
 
@@ -100,25 +75,13 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
             holder = view.tag as NormalViewHolder
         }
 
-        when (position) {
-            0 -> {
-                val avatarUrl = avatarUrl
-
-                if (avatarUrl != null) {
-                    holder.bind(avatarUrl, imageManager)
-                } else {
-                    holder.bind(R.drawable.ic_user_grey_darken_20_24dp, imageManager)
-                }
-            }
-
-            else -> holder.bind(R.drawable.ic_multiple_users_grey_darken_20_24dp, imageManager)
-        }
+        holder.bind(items[position], imageManager, uiHelpers)
 
         return view!!
     }
 
     override fun getViewTypeCount(): Int = 1
-    override fun hasStableIds(): Boolean = true
+    override fun hasStableIds(): Boolean = false
     override fun isEmpty(): Boolean = false
 
     fun notifyDataSetChanged() {
@@ -138,6 +101,12 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
         observers.add(WeakReference(observer))
     }
 
+    fun updateItems(newItems: List<AuthorFilterListItemUIState>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
     override fun unregisterDataSetObserver(observer: DataSetObserver) {
         for ((index, currentRef) in observers.withIndex()) {
             if (observer == currentRef.get()) {
@@ -147,63 +116,56 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
         }
     }
 
-    companion object {
-        private const val ME = R.string.post_list_author_me
-        private const val EVERYONE = R.string.post_list_author_everyone
+    open class NormalViewHolder(protected val itemView: View) {
+        protected val image: AppCompatImageView = itemView.findViewById(R.id.post_list_author_selection_image)
+
+        @CallSuper
+        open fun bind(state: AuthorFilterListItemUIState, imageManager: ImageManager, uiHelpers: UiHelpers) {
+            val context = itemView.context
+            val avatarUrl: String? = (state as? AuthorFilterListItemUIState.Me)?.avatarUrl
+
+            val padding: Int
+            if (avatarUrl != null) {
+                padding = DisplayUtils.dpToPx(context, 8)
+
+                val avatarSize = image.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
+                val url = GravatarUtils.fixGravatarUrl(avatarUrl, avatarSize)
+                imageManager.loadIntoCircle(
+                        image, AVATAR_WITHOUT_BACKGROUND, url, tintFallbackAndPlaceholder = ICON_TINT_RES
+                )
+            } else {
+                padding = DisplayUtils.dpToPx(context, 12)
+
+                val drawable = ContextCompat.getDrawable(context, state.iconRes)?.apply {
+                    mutate()
+                    DrawableCompat.setTint(this, ContextCompat.getColor(context, ICON_TINT_RES))
+                }
+
+                if (drawable != null) {
+                    imageManager.load(image, drawable)
+                } else {
+                    imageManager.cancelRequestAndClearImageView(image)
+                }
+            }
+
+            image.setPaddingRelative(padding, padding, padding, padding)
+        }
     }
 
-    class DropdownViewHolder(private val itemView: View) {
-        private val image: AppCompatImageView = itemView.findViewById(R.id.post_list_author_selection_image)
+    class DropdownViewHolder(itemView: View) : NormalViewHolder(itemView) {
         private val text: AppCompatTextView = itemView.findViewById(R.id.post_list_author_selection_text)
 
-        private fun bind(@StringRes textRes: Int, isSelected: Boolean) {
-            text.setText(textRes)
+        override fun bind(state: AuthorFilterListItemUIState, imageManager: ImageManager, uiHelpers: UiHelpers) {
+            super.bind(state, imageManager, uiHelpers)
+            val context = itemView.context
 
-            @ColorRes val backgroundColorRes: Int = when (isSelected) {
+            text.text = uiHelpers.getTextOfUiString(context, state.text)
+
+            @ColorRes val backgroundColorRes: Int = when (state.isSelected) {
                 true -> R.color.grey_lighten_30_translucent_50
                 false -> R.color.transparent
             }
-            itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, backgroundColorRes))
-        }
-
-        fun bind(avatarUrl: String, @StringRes textRes: Int, isSelected: Boolean, imageManager: ImageManager) {
-            bind(textRes, isSelected)
-
-            val avatarSize = image.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
-            val url = GravatarUtils.fixGravatarUrl(avatarUrl, avatarSize)
-            imageManager.loadIntoCircle(image, AVATAR_WITH_BACKGROUND, url)
-
-            val padding = DisplayUtils.dpToPx(image.context, 8)
-            image.setPaddingRelative(padding, padding, padding, padding)
-        }
-
-        fun bind(@DrawableRes imageRes: Int, @StringRes textRes: Int, isSelected: Boolean, imageManager: ImageManager) {
-            bind(textRes, isSelected)
-
-            imageManager.load(image, imageRes)
-
-            val padding = DisplayUtils.dpToPx(image.context, 12)
-            image.setPaddingRelative(padding, padding, padding, padding)
-        }
-    }
-
-    class NormalViewHolder(itemView: View) {
-        private val image: AppCompatImageView = itemView.findViewById(R.id.post_list_author_selection_image)
-
-        fun bind(avatarUrl: String, imageManager: ImageManager) {
-            val avatarSize = image.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
-            val url = GravatarUtils.fixGravatarUrl(avatarUrl, avatarSize)
-            imageManager.loadIntoCircle(image, AVATAR_WITH_BACKGROUND, url)
-
-            val padding = DisplayUtils.dpToPx(image.context, 8)
-            image.setPaddingRelative(padding, padding, padding, padding)
-        }
-
-        fun bind(@DrawableRes imageRes: Int, imageManager: ImageManager) {
-            imageManager.load(image, imageRes)
-
-            val padding = DisplayUtils.dpToPx(image.context, 12)
-            image.setPaddingRelative(padding, padding, padding, padding)
+            itemView.setBackgroundColor(ContextCompat.getColor(context, backgroundColorRes))
         }
     }
 }
