@@ -10,8 +10,9 @@ import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
@@ -56,25 +57,23 @@ class MostPopularInsightsUseCase
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
         items.add(
-                ListItemWithIcon(
-                        icon = R.drawable.ic_calendar_white_24dp,
-                        text = dateUtils.getWeekDay(domainModel.highestDayOfWeek),
-                        value = resourceProvider.getString(
-                                R.string.stats_most_popular_percent_views,
-                                domainModel.highestDayPercent.roundToInt()
+                QuickScanItem(
+                        Column(
+                                R.string.stats_insights_best_day,
+                                dateUtils.getWeekDay(domainModel.highestDayOfWeek),
+                                resourceProvider.getString(
+                                        R.string.stats_most_popular_percent_views,
+                                        domainModel.highestDayPercent.roundToInt()
+                                )
                         ),
-                        showDivider = true
-                )
-        )
-        items.add(
-                ListItemWithIcon(
-                        icon = R.drawable.ic_time_white_24dp,
-                        text = dateUtils.getHour(domainModel.highestHour),
-                        value = resourceProvider.getString(
-                                R.string.stats_most_popular_percent_views,
-                                domainModel.highestHourPercent.roundToInt()
-                        ),
-                        showDivider = false
+                        Column(
+                                R.string.stats_insights_best_hour,
+                                dateUtils.getHour(domainModel.highestHour),
+                                resourceProvider.getString(
+                                        R.string.stats_most_popular_percent_views,
+                                        domainModel.highestHourPercent.roundToInt()
+                                )
+                        )
                 )
         )
         return items

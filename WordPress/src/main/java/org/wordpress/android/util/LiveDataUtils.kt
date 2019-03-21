@@ -109,21 +109,22 @@ fun <S, T, U, V> merge(
     sourceA: LiveData<S>,
     sourceB: LiveData<T>,
     sourceC: LiveData<U>,
+    distinct: Boolean = false,
     merger: (S?, T?, U?) -> V
 ): MediatorLiveData<V> {
     val mediator = MediatorLiveData<Triple<S?, T?, U?>>()
     mediator.addSource(sourceA) {
-        if (mediator.value?.first != it) {
+        if (mediator.value?.first != it || !distinct) {
             mediator.value = Triple(it, mediator.value?.second, mediator.value?.third)
         }
     }
     mediator.addSource(sourceB) {
-        if (mediator.value?.second != it) {
+        if (mediator.value?.second != it || !distinct) {
             mediator.value = Triple(mediator.value?.first, it, mediator.value?.third)
         }
     }
     mediator.addSource(sourceC) {
-        if (mediator.value?.third != it) {
+        if (mediator.value?.third != it || !distinct) {
             mediator.value = Triple(mediator.value?.first, mediator.value?.second, it)
         }
     }

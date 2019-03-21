@@ -17,6 +17,11 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.WEEK_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.YEAR_STATS_USE_CASE
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -43,7 +48,8 @@ abstract class StatsListViewModel(
         DAYS(R.string.stats_timeframe_days),
         WEEKS(R.string.stats_timeframe_weeks),
         MONTHS(R.string.stats_timeframe_months),
-        YEARS(R.string.stats_timeframe_years);
+        YEARS(R.string.stats_timeframe_years),
+        DETAIL(R.string.stats);
     }
 
     val selectedDate = dateSelector.selectedDate
@@ -130,34 +136,40 @@ class InsightsListViewModel
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(INSIGHTS_USE_CASE) private val insightsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelector: StatsDateSelector,
+    dateSelectorFactory: StatsDateSelector.Factory,
     popupMenuHandler: ItemPopupMenuHandler
-) : StatsListViewModel(mainDispatcher, insightsUseCase, analyticsTracker, dateSelector, popupMenuHandler)
+) : StatsListViewModel(
+        mainDispatcher,
+        insightsUseCase,
+        analyticsTracker,
+        dateSelectorFactory.build(INSIGHTS),
+        popupMenuHandler
+)
 
 class YearsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(YEAR_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelector: StatsDateSelector
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelector)
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(YEARS))
 
 class MonthsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(MONTH_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelector: StatsDateSelector
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelector)
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(MONTHS))
 
 class WeeksListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(WEEK_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelector: StatsDateSelector
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelector)
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(WEEKS))
 
 class DaysListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(DAY_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelector: StatsDateSelector
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelector)
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(DAYS))

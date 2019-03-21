@@ -16,9 +16,15 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.UiModelMapper
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostAverageViewsPerDayUseCase.PostAverageViewsPerDayUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostDayViewsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostHeaderUseCase
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUseCase.PostMonthsAndYearsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.detail.PostRecentWeeksUseCase.PostRecentWeeksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
@@ -50,6 +56,9 @@ const val LIST_STATS_USE_CASES = "ListStatsUseCases"
 const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
 const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
 const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
+const val BLOCK_DETAIL_USE_CASE = "BlockDetailUseCase"
+// These are injected only internally
+private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
 
 /**
  * Module that provides use cases for Stats.
@@ -103,7 +112,10 @@ class StatsModule {
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
-        postingActivityUseCase: PostingActivityUseCase
+        postingActivityUseCase: PostingActivityUseCase,
+        postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
+        postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
+        postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -114,7 +126,10 @@ class StatsModule {
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL),
                 publicizeUseCaseFactory.build(UseCaseMode.VIEW_ALL),
-                postingActivityUseCase
+                postingActivityUseCase,
+                postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
+                postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
+                postRecentWeeksUseCaseFactory.build(VIEW_ALL)
         )
     }
 
@@ -144,6 +159,29 @@ class StatsModule {
                 searchTermsUseCaseFactory,
                 authorsUseCaseFactory,
                 overviewUseCaseFactory
+        )
+    }
+
+    /**
+     * Provides a list of use cases for the Post detail screen in Stats. Modify this method when you want to add more
+     * blocks to the post detail screen.
+     */
+    @Provides
+    @Singleton
+    @Named(BLOCK_DETAIL_USE_CASES)
+    fun provideDetailUseCases(
+        postHeaderUseCase: PostHeaderUseCase,
+        postDayViewsUseCase: PostDayViewsUseCase,
+        postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
+        postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
+        postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+        return listOf(
+                postHeaderUseCase,
+                postDayViewsUseCase,
+                postMonthsAndYearsUseCaseFactory.build(BLOCK),
+                postAverageViewsPerDayUseCaseFactory.build(BLOCK),
+                postRecentWeeksUseCaseFactory.build(BLOCK)
         )
     }
 
@@ -290,6 +328,31 @@ class StatsModule {
                 StatsSection.WEEKS to weekStatsUseCase,
                 StatsSection.MONTHS to monthStatsUseCase,
                 StatsSection.YEARS to yearStatsUseCase
+        )
+    }
+
+    /**
+     * Provides a singleton usecase that represents the Year stats screen.
+     * @param useCases build the use cases for the YEARS granularity
+     */
+    @Provides
+    @Singleton
+    @Named(BLOCK_DETAIL_USE_CASE)
+    fun provideDetailStatsUseCase(
+        statsStore: StatsStore,
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(BLOCK_DETAIL_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                statsSiteProvider,
+                useCases,
+                { statsStore.getPostDetailTypes() },
+                uiModelMapper::mapDetailStats
         )
     }
 

@@ -11,7 +11,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -66,47 +67,22 @@ class AllTimeStatsUseCase
         if (!hasPosts && !hasViews && !hasVisitors && !hasViewsBestDayTotal) {
             items.add(Empty())
         } else {
-            if (hasPosts) {
-                items.add(
-                        ListItemWithIcon(
-                                R.drawable.ic_posts_white_24dp,
-                                textResource = R.string.posts,
-                                value = domainModel.posts.toFormattedString(),
-                                showDivider = hasViews || hasVisitors || hasViewsBestDayTotal
-                        )
-                )
-            }
-            if (hasViews) {
-                items.add(
-                        ListItemWithIcon(
-                                R.drawable.ic_visible_on_white_24dp,
-                                textResource = R.string.stats_views,
-                                value = domainModel.views.toFormattedString(),
-                                showDivider = hasVisitors || hasViewsBestDayTotal
-                        )
-                )
-            }
-            if (hasVisitors) {
-                items.add(
-                        ListItemWithIcon(
-                                R.drawable.ic_user_white_24dp,
-                                textResource = R.string.stats_visitors,
-                                value = domainModel.visitors.toFormattedString(),
-                                showDivider = hasViewsBestDayTotal
-                        )
-                )
-            }
-            if (hasViewsBestDayTotal) {
-                items.add(
-                        ListItemWithIcon(
-                                R.drawable.ic_trophy_white_24dp,
-                                textResource = R.string.stats_insights_best_ever,
-                                subText = statsDateFormatter.printDate(domainModel.viewsBestDay),
-                                value = domainModel.viewsBestDayTotal.toFormattedString(),
-                                showDivider = false
-                        )
-                )
-            }
+            items.add(
+                    QuickScanItem(
+                            Column(string.stats_views, domainModel.views.toFormattedString()),
+                            Column(string.stats_visitors, domainModel.visitors.toFormattedString())
+                    )
+            )
+            items.add(
+                    QuickScanItem(
+                            Column(string.posts, domainModel.posts.toFormattedString()),
+                            Column(
+                                    string.stats_insights_best_ever,
+                                    domainModel.viewsBestDayTotal.toFormattedString(),
+                                    statsDateFormatter.printDate(domainModel.viewsBestDay)
+                            )
+                    )
+            )
         }
         return items
     }
