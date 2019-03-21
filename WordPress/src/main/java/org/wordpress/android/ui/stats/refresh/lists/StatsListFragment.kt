@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.LayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
@@ -20,14 +19,11 @@ import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
-import org.wordpress.android.util.Event
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
@@ -182,32 +178,8 @@ class StatsListFragment : DaggerFragment() {
             viewModel.onListSelected()
         })
 
-        viewModel.menuClick.observeEvent(this) { menuClick ->
-            val popup = PopupMenu(activity, menuClick.view)
-            val popupMenu = popup.menu
-            popup.inflate(R.menu.menu_stats_item)
-            popupMenu.findItem(R.id.action_move_up).isVisible = menuClick.showUpAction
-            popupMenu.findItem(R.id.action_move_down).isVisible = menuClick.showDownAction
-            popup.show()
-            popup.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.action_move_up -> {
-                        viewModel.onAction(menuClick.type, Action.MOVE_UP)
-                        true
-                    }
-                    R.id.action_move_down -> {
-                        viewModel.onAction(menuClick.type, Action.MOVE_DOWN)
-                        true
-                    }
-                    R.id.action_remove -> {
-                        viewModel.onAction(menuClick.type, Action.REMOVE)
-                        true
-                    }
-                    else -> {
-                        false
-                    }
-                }
-            }
+        viewModel.typeMoved?.observeEvent(this) {
+            viewModel.onTypeMoved()
             true
         }
     }
@@ -228,10 +200,3 @@ class StatsListFragment : DaggerFragment() {
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }
-
-data class MenuClick(
-    val view: View,
-    val type: StatsTypes,
-    var showUpAction: Boolean = true,
-    var showDownAction: Boolean = true
-) : Event()

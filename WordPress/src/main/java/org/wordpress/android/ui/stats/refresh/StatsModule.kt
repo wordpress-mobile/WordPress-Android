@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -169,22 +168,7 @@ class StatsModule {
                 statsSiteProvider,
                 useCases,
                 { statsStore.getInsights(statsSiteProvider.siteModel) },
-                uiModelMapper::mapInsights,
-                moveTypeUp = { type ->
-                    if (type is InsightsTypes) {
-                        statsStore.moveTypeUp(statsSiteProvider.siteModel, type)
-                    }
-                },
-                moveTypeDown = { type ->
-                    if (type is InsightsTypes) {
-                        statsStore.moveTypeDown(statsSiteProvider.siteModel, type)
-                    }
-                },
-                removeType = { type ->
-                    if (type is InsightsTypes) {
-                        statsStore.removeType(statsSiteProvider.siteModel, type)
-                    }
-                }
+                uiModelMapper::mapInsights
         )
     }
 

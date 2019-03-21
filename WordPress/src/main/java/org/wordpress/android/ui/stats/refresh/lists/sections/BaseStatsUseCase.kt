@@ -3,13 +3,11 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
-import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.MenuClick
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Error
@@ -58,8 +56,6 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
-    private val mutableMenuClick = MutableLiveData<MenuClick>()
-    val menuClick: LiveData<MenuClick> = mutableMenuClick
 
     /**
      * Fetches data either from a local cache or from remote API
@@ -121,13 +117,6 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      */
     fun onUiState(newState: UI_STATE? = null) {
         uiState.value = newState ?: uiState.value
-    }
-
-    /**
-     * Trigger this method when the item menu button is clicked
-     */
-    fun onMenuClick(view: View) {
-        mutableMenuClick.value = MenuClick(view, type)
     }
 
     /**

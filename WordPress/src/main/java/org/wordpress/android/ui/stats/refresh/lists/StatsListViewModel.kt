@@ -9,7 +9,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
@@ -18,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.WEEK_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.YEAR_STATS_USE_CASE
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
@@ -32,7 +32,8 @@ abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val dateSelector: StatsDateSelector
+    private val dateSelector: StatsDateSelector,
+    private val popupMenuHandler: ItemPopupMenuHandler? = null
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
     private var isInitialized = false
@@ -57,7 +58,7 @@ abstract class StatsListViewModel(
         it ?: DateSelectorUiModel(false)
     }
 
-    val menuClick: LiveData<MenuClick> = statsUseCase.menuClick
+    val typeMoved = popupMenuHandler?.typeMoved
 
     override fun onCleared() {
         statsUseCase.onCleared()
@@ -117,9 +118,8 @@ abstract class StatsListViewModel(
         class Error(val message: Int = R.string.stats_loading_error) : UiModel()
     }
 
-    fun onAction(type: StatsTypes, action: Action) {
+    fun onTypeMoved() {
         launch {
-            statsUseCase.onAction(type, action)
             statsUseCase.refreshTypes()
         }
     }
@@ -134,8 +134,9 @@ class InsightsListViewModel
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(INSIGHTS_USE_CASE) private val insightsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelector: StatsDateSelector
-) : StatsListViewModel(mainDispatcher, insightsUseCase, analyticsTracker, dateSelector)
+    dateSelector: StatsDateSelector,
+    popupMenuHandler: ItemPopupMenuHandler
+) : StatsListViewModel(mainDispatcher, insightsUseCase, analyticsTracker, dateSelector, popupMenuHandler)
 
 class YearsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,

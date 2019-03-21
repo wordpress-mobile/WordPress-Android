@@ -10,12 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action.MOVE_DOWN
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action.MOVE_UP
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.Action.REMOVE
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Success
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -24,7 +19,6 @@ import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
-import org.wordpress.android.util.merge
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
@@ -34,10 +28,7 @@ class BaseListUseCase(
     private val statsSiteProvider: StatsSiteProvider,
     private val useCases: List<BaseStatsUseCase<*, *>>,
     private val getStatsTypes: suspend () -> List<StatsTypes>,
-    private val mapUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel,
-    private val moveTypeUp: suspend ((type: StatsTypes) -> Unit) = {},
-    private val moveTypeDown: suspend ((type: StatsTypes) -> Unit) = {},
-    private val removeType: suspend ((type: StatsTypes) -> Unit) = {}
+    private val mapUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel
 ) {
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
@@ -61,20 +52,6 @@ class BaseListUseCase(
             useCases.map { it.navigationTarget },
             distinct = false
     )
-    val menuClick: LiveData<MenuClick> = merge(
-            mergeNotNull(useCases.map { it.menuClick }),
-            data
-    ) { click, viewModel: UiModel? ->
-        val success = viewModel as? Success
-        if (click != null && success != null) {
-            val indexOfBlock = success.data.indexOfFirst { it.statsTypes == click.type }
-            click.showUpAction = indexOfBlock > 0
-            click.showDownAction = indexOfBlock < success.data.size - 1
-            click
-        } else {
-            null
-        }
-    }
 
     private val mutableSnackbarMessage = MutableLiveData<Int>()
     val snackbarMessage: LiveData<SnackbarMessageHolder> = mutableSnackbarMessage.map {
@@ -127,13 +104,5 @@ class BaseListUseCase(
 
     fun onListSelected() {
         mutableListSelected.call()
-    }
-
-    suspend fun onAction(type: StatsTypes, action: Action) {
-        when (action) {
-            MOVE_UP -> moveTypeUp(type)
-            MOVE_DOWN -> moveTypeDown(type)
-            REMOVE -> removeType(type)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUiState
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -52,6 +54,7 @@ class FollowersUseCase
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val popupMenuHandler: ItemPopupMenuHandler,
     private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
         FOLLOWERS,
@@ -119,6 +122,10 @@ class FollowersUseCase
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_followers))
 
+    override fun buildEmptyItem(): List<BlockListItem> {
+        return listOf(buildTitle(), Empty())
+    }
+
     override fun buildStatefulUiModel(
         domainModel: Pair<FollowersModel, FollowersModel>,
         uiState: FollowersUiState
@@ -128,7 +135,7 @@ class FollowersUseCase
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {
-            items.add(Title(string.stats_view_followers, menuAction = this::onMenuClick))
+            items.add(buildTitle())
         }
 
         if (domainModel.first.followers.isNotEmpty() || domainModel.second.followers.isNotEmpty()) {
@@ -168,6 +175,8 @@ class FollowersUseCase
         }
         return items
     }
+
+    private fun buildTitle() = Title(string.stats_view_followers, menuAction = this::onMenuClick)
 
     private fun loadMore() {
         GlobalScope.launch(bgDispatcher) {
@@ -215,6 +224,10 @@ class FollowersUseCase
 
     data class FollowersUiState(val selectedTab: Int = 0, val isLoading: Boolean = false)
 
+    private fun onMenuClick(view: View) {
+        popupMenuHandler.onMenuClick(view, type)
+    }
+
     class FollowersUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -223,6 +236,7 @@ class FollowersUseCase
         private val statsSiteProvider: StatsSiteProvider,
         private val statsUtilsWrapper: StatsUtilsWrapper,
         private val resourceProvider: ResourceProvider,
+        private val popupMenuHandler: ItemPopupMenuHandler,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
@@ -234,6 +248,7 @@ class FollowersUseCase
                         statsUtilsWrapper,
                         resourceProvider,
                         analyticsTracker,
+                        popupMenuHandler,
                         useCaseMode
                 )
     }
