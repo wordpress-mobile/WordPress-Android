@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs
 
+import org.wordpress.android.ui.posts.PostListMainViewModel.AuthorFilterSelection
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,4 +24,8 @@ class AppPrefsWrapper @Inject constructor() {
     var avatarVersion: Int
         get() = AppPrefs.getAvatarVersion()
         set(version) = AppPrefs.setAvatarVersion(version)
+
+    var postListAuthorSelection: AuthorFilterSelection
+        get() = AppPrefs.getAuthorFilterSelection()
+        set(value) = AppPrefs.setAuthorFilterSelection(value)
 }

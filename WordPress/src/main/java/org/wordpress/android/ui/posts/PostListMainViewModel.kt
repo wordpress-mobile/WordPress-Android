@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.DrawableRes
-import android.support.v7.preference.PreferenceManager
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -13,7 +12,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.R.string
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -25,6 +23,7 @@ import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.map
@@ -33,7 +32,6 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-private const val POST_LIST_AUTHOR_FILTER = "wp_pref_post_list_author_filter"
 private const val SCROLL_TO_DELAY = 50L
 private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS)
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
@@ -41,6 +39,7 @@ val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 class PostListMainViewModel @Inject constructor(
     private val postStore: PostStore,
     private val accountStore: AccountStore,
+    private val prefs: AppPrefsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
@@ -75,7 +74,7 @@ class PostListMainViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
 
-        updateAuthorFilterSelection(getAuthorFilterPref().ordinal)
+        updateAuthorFilterSelection(prefs.postListAuthorSelection.ordinal)
     }
 
     override fun onCleared() {
@@ -100,7 +99,7 @@ class PostListMainViewModel @Inject constructor(
                 AuthorFilterListItemUIState.Everyone(isSelected = selection == AuthorFilterSelection.EVERYONE)
         )
 
-        updateAuthorFilterPref(selection)
+        prefs.postListAuthorSelection = selection
     }
 
     fun onTabChanged(position: Int) {
@@ -126,19 +125,6 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
-    // TODO implement this in better way when I hear back if we already have a nice way to do this or not
-    private fun getAuthorFilterPref(): AuthorFilterSelection {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
-        val prefString: String = prefs.getString(POST_LIST_AUTHOR_FILTER, null) ?: AuthorFilterSelection.EVERYONE.name
-        return AuthorFilterSelection.valueOf(prefString, AuthorFilterSelection.EVERYONE)
-    }
-
-    private fun updateAuthorFilterPref(selection: AuthorFilterSelection) {
-        PreferenceManager.getDefaultSharedPreferences(WordPress.getContext()).edit()
-                .putString(POST_LIST_AUTHOR_FILTER, selection.name)
-                .apply()
-    }
-
     sealed class AuthorFilterListItemUIState(
         internal val text: UiString, @DrawableRes val iconRes: Int, val isSelected: Boolean
     ) {
@@ -159,6 +145,7 @@ class PostListMainViewModel @Inject constructor(
         ME, EVERYONE;
 
         companion object {
+            @JvmStatic
             fun valueOf(value: String, default: AuthorFilterSelection): AuthorFilterSelection {
                 return try {
                     valueOf(value)

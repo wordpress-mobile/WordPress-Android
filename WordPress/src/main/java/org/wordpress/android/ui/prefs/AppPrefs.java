@@ -14,6 +14,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.posts.PostListMainViewModel.AuthorFilterSelection;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.util.StringUtils;
@@ -113,7 +114,9 @@ public class AppPrefs {
         GUTENBERG_EDITOR_ENABLED,
         GUTENBERG_DEAFULT_FOR_NEW_POSTS,
 
-        IS_QUICK_START_NOTICE_REQUIRED
+        IS_QUICK_START_NOTICE_REQUIRED,
+
+        POST_LIST_AUTHOR_FILTER
     }
 
     /**
@@ -829,5 +832,14 @@ public class AppPrefs {
 
     public static boolean isGutenbergInformativeDialogDisabled() {
         return getBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, false);
+    }
+
+    @NonNull public static AuthorFilterSelection getAuthorFilterSelection() {
+        String prefString = getString(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, AuthorFilterSelection.EVERYONE.name());
+        return AuthorFilterSelection.valueOf(prefString, AuthorFilterSelection.EVERYONE);
+    }
+
+    public static void setAuthorFilterSelection(@NonNull AuthorFilterSelection selection) {
+        setString(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, selection.name());
     }
 }
