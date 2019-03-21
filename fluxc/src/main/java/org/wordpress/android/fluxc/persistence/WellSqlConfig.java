@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 61;
+        return 62;
     }
 
     @Override
@@ -478,6 +478,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,TIME_STAMP INTEGER,"
                         + "REQUESTED_ITEMS INTEGER)");
                 oldVersion++;
+            case 61:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -638,6 +642,18 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "WIDTH TEXT NOT NULL,"
                                + "HEIGHT TEXT NOT NULL,"
                                + "ATTRIBUTES TEXT NOT NULL)");
+                    break;
+                case 61:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCOrderShipmentTrackingModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "LOCAL_ORDER_ID INTEGER,"
+                               + "REMOTE_TRACKING_ID TEXT NOT NULL,"
+                               + "TRACKING_NUMBER TEXT NOT NULL,"
+                               + "TRACKING_PROVIDER TEXT NOT NULL,"
+                               + "TRACKING_LINK TEXT NOT NULL,"
+                               + "DATE_SHIPPED TEXT NOT NULL)");
+                    break;
             }
         }
     }
