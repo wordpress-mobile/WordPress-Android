@@ -42,6 +42,9 @@ platform :android do
 
   desc "Capture screenshots"
   lane :take_screenshots do |options|
+
+  	rebuild_screenshot_devices
+
     screenshot_devices = [
       {
         screenshot_type: 'phone',
