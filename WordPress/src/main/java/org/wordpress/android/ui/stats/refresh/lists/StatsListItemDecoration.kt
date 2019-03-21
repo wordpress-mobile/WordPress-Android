@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.lists
 
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
