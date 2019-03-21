@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
 import android.support.annotation.ColorRes
-import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.widgets.PostListButtonType
 
@@ -29,14 +28,3 @@ sealed class PostListItemAction(val buttonType: PostListButtonType, val onButton
         onButtonClicked: (PostListButtonType) -> Unit
     ) : PostListItemAction(PostListButtonType.BUTTON_MORE, onButtonClicked)
 }
-
-data class PostListItemUploadStatus(
-    val uploadError: UploadError?,
-    val mediaUploadProgress: Int,
-    val isUploading: Boolean,
-    val isUploadingOrQueued: Boolean,
-    val isQueued: Boolean,
-    val isUploadFailed: Boolean,
-    val hasInProgressMediaUpload: Boolean,
-    val hasPendingMediaUpload: Boolean
-)
