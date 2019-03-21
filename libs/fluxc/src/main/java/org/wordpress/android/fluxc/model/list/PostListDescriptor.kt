@@ -1,6 +1,10 @@
 package org.wordpress.android.fluxc.model.list
 
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.AuthorFilter.Everyone
+import org.wordpress.android.fluxc.model.list.AuthorFilter.SpecificAuthor
+import org.wordpress.android.fluxc.model.list.ListOrder.DESC
+import org.wordpress.android.fluxc.model.list.PostListOrderBy.DATE
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore.DEFAULT_POST_STATUS_LIST
 
@@ -18,9 +22,14 @@ sealed class PostListDescriptor(
         val statusStr = statusList.asSequence().map { it.name }.joinToString(separator = ",")
         when (this) {
             is PostListDescriptorForRestSite -> {
+                val authorFilter: String = when (author) {
+                    Everyone -> "Everyone"
+                    is SpecificAuthor -> author.authorId.toString()
+                }
+
                 ListDescriptorUniqueIdentifier(
-                        ("rest-site-post-list-${site.id}-st$statusStr-o${order.value}-ob${orderBy.value}" +
-                                "-sq$searchQuery").hashCode()
+                        ("rest-site-post-list-${site.id}-st$statusStr-a$authorFilter-o${order.value}" +
+                                "-ob${orderBy.value}-sq$searchQuery").hashCode()
                 )
             }
             is PostListDescriptorForXmlRpcSite -> {
@@ -57,8 +66,9 @@ sealed class PostListDescriptor(
     class PostListDescriptorForRestSite(
         site: SiteModel,
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
-        order: ListOrder = ListOrder.DESC,
-        orderBy: PostListOrderBy = PostListOrderBy.DATE,
+        val author: AuthorFilter = AuthorFilter.Everyone,
+        order: ListOrder = DESC,
+        orderBy: PostListOrderBy = DATE,
         val searchQuery: String? = null,
         config: ListConfig = ListConfig.default
     ) : PostListDescriptor(site, statusList, order, orderBy, config)
@@ -66,8 +76,8 @@ sealed class PostListDescriptor(
     class PostListDescriptorForXmlRpcSite(
         site: SiteModel,
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
-        order: ListOrder = ListOrder.DESC,
-        orderBy: PostListOrderBy = PostListOrderBy.DATE,
+        order: ListOrder = DESC,
+        orderBy: PostListOrderBy = DATE,
         config: ListConfig = ListConfig.default
     ) : PostListDescriptor(site, statusList, order, orderBy, config)
 }
