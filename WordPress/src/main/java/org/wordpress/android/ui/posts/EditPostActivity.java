@@ -1997,12 +1997,6 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
-        boolean postUpdateSuccessful = updatePostObject();
-        if (!postUpdateSuccessful) {
-            // just return, since the only case updatePostObject() can fail is when the editor
-            // fragment is not added to the activity
-            return;
-        }
 
         // Update post, save to db and publish in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
