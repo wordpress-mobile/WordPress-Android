@@ -86,14 +86,14 @@ class PostListItemUiStateHelperTest {
         formattedDate: String = FORMATTER_DATE,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit = { _, _, _ -> }
     ): PostListItemUiState = helper.createPostListItemUiState(
-            post,
-            uploadStatus,
-            unhandledConflicts,
-            capabilitiesToPublish,
-            statsSupported,
-            featuredImageUrl,
-            formattedDate,
-            onAction
+            post = post,
+            uploadStatus = uploadStatus,
+            unhandledConflicts = unhandledConflicts,
+            capabilitiesToPublish = capabilitiesToPublish,
+            statsSupported = statsSupported,
+            featuredImageUrl = featuredImageUrl,
+            formattedDate = formattedDate,
+            onAction = onAction
     )
 
     private fun createUploadStatus(
@@ -107,14 +107,14 @@ class PostListItemUiStateHelperTest {
         hasPendingMediaUpload: Boolean = false
     ): PostListItemUploadStatus =
             PostListItemUploadStatus(
-                    uploadError,
-                    mediaUploadProgress,
-                    isUploading,
-                    isUploadingOrQueued,
-                    isQueued,
-                    isUploadFailed,
-                    hasInProgressMediaUpload,
-                    hasPendingMediaUpload
+                    uploadError = uploadError,
+                    mediaUploadProgress = mediaUploadProgress,
+                    isUploading = isUploading,
+                    isUploadingOrQueued = isUploadingOrQueued,
+                    isQueued = isQueued,
+                    isUploadFailed = isUploadFailed,
+                    hasInProgressMediaUpload = hasInProgressMediaUpload,
+                    hasPendingMediaUpload = hasPendingMediaUpload
             )
 
     private fun createGenericError(): UploadError = UploadError(PostError(GENERIC_ERROR))

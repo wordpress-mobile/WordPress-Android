@@ -166,13 +166,16 @@ class PostListViewModel @Inject constructor(
         }
         listStore.getList(listDescriptor, dataStore, lifecycle) { post ->
             listItemUiStateHelper.createPostListItemUiState(
-                    post,
-                    getUploadStatus(post),
-                    doesPostHaveUnhandledConflict(post),
-                    site.hasCapabilityPublishPosts,
-                    isStatsSupported,
-                    getFeaturedImageUrl(post.featuredImageId, post.content),
-                    PostUtils.getFormattedDate(post)
+                    post = post,
+                    uploadStatus = getUploadStatus(post),
+                    unhandledConflicts = doesPostHaveUnhandledConflict(post),
+                    capabilitiesToPublish = site.hasCapabilityPublishPosts,
+                    statsSupported = isStatsSupported,
+                    featuredImageUrl = getFeaturedImageUrl(
+                            featuredImageId = post.featuredImageId,
+                            postContent = post.content
+                    ),
+                    formattedDate = PostUtils.getFormattedDate(post)
             ) { postModel, buttonType, statEvent ->
                 trackAction(buttonType, postModel, statEvent)
                 handlePostButton(buttonType, postModel)
