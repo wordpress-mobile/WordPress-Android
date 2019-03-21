@@ -73,11 +73,10 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         block.fetch(true, false)
 
-        assertThat(result.size).isEqualTo(4)
+        assertThat(result.size).isEqualTo(3)
         assertThat(result[0]?.state).isEqualTo(UseCaseState.LOADING)
         assertData(1, localData)
-        assertThat(result[2]?.state).isEqualTo(LOADING)
-        assertData(3, remoteData)
+        assertThat(result[2]?.state).isEqualTo(UseCaseState.SUCCESS)
     }
 
     @Test

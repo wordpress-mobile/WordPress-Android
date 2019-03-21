@@ -274,7 +274,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
-    private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
+    private List<String> mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds = new ArrayList<>();
     private List<String> mMediaMarkedUploadingOnStartIds = new ArrayList<>();
     private PostEditorAnalyticsSession mPostEditorAnalyticsSession;
     private boolean mIsConfigChange = false;
@@ -520,13 +520,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
             mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
                                    && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
-
-            // override this if we're being fed media to start a Post for now
-            // EXTRA_INSERT_MEDIA comes from the WP app Media section, and EXTRA_STREAM is what we check
-            // for when receiving content from outside the WP app to be shared there
-            if (getIntent().hasExtra(EXTRA_INSERT_MEDIA) || getIntent().hasExtra(Intent.EXTRA_STREAM)) {
-                mShowGutenbergEditor = false;
-            }
         } else {
             mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENBERG_IS_SHOWN);
         }
@@ -2415,12 +2408,14 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
         }
 
-        // Special actions
-        String action = getIntent().getAction();
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            setPostContentFromShareAction();
-        } else if (NEW_MEDIA_POST.equals(action)) {
-            prepareMediaPost();
+        // Special actions - these only make sense for empty posts that are going to be populated now
+        if (TextUtils.isEmpty(mPost.getContent())) {
+            String action = getIntent().getAction();
+            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                setPostContentFromShareAction();
+            } else if (NEW_MEDIA_POST.equals(action)) {
+                prepareMediaPost();
+            }
         }
     }
 
@@ -2474,11 +2469,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     sharedUris = new ArrayList<Uri>();
                     sharedUris.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
                 } else {
-                    return;
+                    sharedUris = null;
                 }
             }
 
             if (sharedUris != null) {
+                // removing this from the intent so it doesn't insert the media items again on each Acivity re-creation
+                getIntent().removeExtra(Intent.EXTRA_STREAM);
                 addMediaList(sharedUris, false);
             }
         }
@@ -3482,9 +3479,8 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            if (mShowAztecEditor) {
-                mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
-                UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
+            if (mShowAztecEditor && !mShowGutenbergEditor) {
+                setDeletedMediaIdOnUploadService(localMediaId);
                 // passing false here as we need to keep the media item in case the user wants to undo
                 cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
             } else if (mShowGutenbergEditor) {
@@ -3492,6 +3488,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (mediaModel == null) {
                     return;
                 }
+
+                setDeletedMediaIdOnUploadService(localMediaId);
 
                 // also make sure it's not being uploaded anywhere else (maybe on some other Post,
                 // simultaneously)
@@ -3502,6 +3500,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         }
+    }
+
+    private void setDeletedMediaIdOnUploadService(String localMediaId) {
+        mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds.add(localMediaId);
+        UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds);
     }
 
     private void cancelMediaUpload(int localMediaId, boolean delete) {
@@ -3520,7 +3523,7 @@ public class EditPostActivity extends AppCompatActivity implements
     * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
     * */
     private void definitelyDeleteBackspaceDeletedMediaItems() {
-        for (String mediaId : mAztecBackspaceDeletedMediaItemIds) {
+        for (String mediaId : mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds) {
             if (!TextUtils.isEmpty(mediaId)) {
                 // make sure the MediaModel exists
                 MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
@@ -3563,9 +3566,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
             if (!found) {
                 if (mEditorFragment instanceof AztecEditorFragment) {
-                    mAztecBackspaceDeletedMediaItemIds.remove(mediaId);
+                    mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds.remove(mediaId);
                     // update the mediaIds list in UploadService
-                    UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
+                    UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds);
                     ((AztecEditorFragment) mEditorFragment).setMediaToFailed(mediaId);
                 }
             }

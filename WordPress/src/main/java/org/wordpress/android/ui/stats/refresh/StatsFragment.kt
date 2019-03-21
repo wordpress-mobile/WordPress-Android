@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +48,6 @@ class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-    private lateinit var actionMenuItem: MenuItem
 
     private var restorePreviousSearch = false
 
@@ -77,6 +75,7 @@ class StatsFragment : DaggerFragment() {
     private fun initializeViews(activity: FragmentActivity) {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
+        statsPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
         statsPager.setCurrentItem(viewModel.getSelectedSection().ordinal, false)
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabReselected(tab: Tab?) {
@@ -154,21 +153,24 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.selectedDateChanged.observe(this, Observer { statsGranularity ->
-            statsGranularity?.let {
-                viewModel.onSelectedDateChange(statsGranularity)
-            }
-        })
-
-        viewModel.toolbarHasShadow.observe(this, Observer { toolbarElevation ->
+        viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
             app_bar_layout.postDelayed(
-                    { ViewCompat.setElevation(app_bar_layout, toolbarElevation?.toFloat() ?: 0.0f) },
+                    {
+                        if (app_bar_layout != null) {
+                            val elevation = if (hasShadow == true) {
+                                resources.getDimension(R.dimen.appbar_elevation)
+                            } else {
+                                0f
+                            }
+                            ViewCompat.setElevation(app_bar_layout, elevation)
+                        }
+                    },
                     100
             )
         })
 
         viewModel.siteChanged.observe(this, Observer {
-            viewModel.onPullToRefresh()
+            viewModel.refreshData()
         })
     }
 }
