@@ -1,6 +1,6 @@
 12.1
 -----
-Design improvements for the new site creation flow
+* Design improvements for the new site creation flow
 * Refreshed post stats detail screen - opens from the Blog posts/Stats and from Stats/Posts and Pages
 * Added swiping between tabs in Notifications
 * Refreshed View all Stats screens, when digging into stats data
