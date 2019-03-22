@@ -26,7 +26,7 @@ import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
  * to either let the user know of each error or present the error in the empty view when it's visible.
  */
 class PagedListWrapper<T>(
-    val data: LiveData<PagedList<PagedListItemType<T>>>,
+    val data: LiveData<PagedList<T>>,
     private val dispatcher: Dispatcher,
     private val listDescriptor: ListDescriptor,
     private val lifecycle: Lifecycle,
