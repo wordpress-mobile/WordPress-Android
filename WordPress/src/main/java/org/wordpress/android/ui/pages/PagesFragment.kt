@@ -64,7 +64,6 @@ class PagesFragment : Fragment() {
     private lateinit var viewModel: PagesViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
-    @Inject lateinit var postStore: PostStore
     @Inject lateinit var quickStartStore: QuickStartStore
     @Inject lateinit var dispatcher: Dispatcher
     private var quickStartEvent: QuickStartEvent? = null
