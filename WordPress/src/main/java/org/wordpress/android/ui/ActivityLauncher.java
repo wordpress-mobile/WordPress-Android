@@ -73,6 +73,7 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
@@ -298,6 +299,11 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
         intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity);
+        context.startActivity(intent);
+    }
+
+    public static void viewInsightsManagement(Context context) {
+        Intent intent = new Intent(context, InsightsManagementActivity.class);
         context.startActivity(intent);
     }
 

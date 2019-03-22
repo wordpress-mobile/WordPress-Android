@@ -26,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
@@ -114,6 +115,9 @@ class StatsNavigator
             }
             is ViewUrl -> {
                 WPWebViewActivity.openURL(activity, target.url)
+            }
+            is ViewInsightsManagement -> {
+                ActivityLauncher.viewInsightsManagement(activity)
             }
         }
     }
