@@ -68,7 +68,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferStatusChec
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
