@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout.OnTabSelectedListener
@@ -15,6 +14,9 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +40,10 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
@@ -48,6 +52,9 @@ class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
+    @Inject lateinit var navigator: StatsNavigator
+
+    private var menu: Menu? = null
 
     private var restorePreviousSearch = false
 
@@ -57,7 +64,23 @@ class StatsFragment : DaggerFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
+
         return inflater.inflate(R.layout.stats_fragment, container, false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater?.inflate(R.menu.menu_stats_insights, menu)
+        this.menu = menu
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.manage_insights) {
+            viewModel.onManageInsightsButtonTapped()
+        }
+        return true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,9 +90,6 @@ class StatsFragment : DaggerFragment() {
 
         initializeViewModels(nonNullActivity, savedInstanceState == null)
         initializeViews(nonNullActivity)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     }
 
     private fun initializeViews(activity: FragmentActivity) {
@@ -172,6 +192,17 @@ class StatsFragment : DaggerFragment() {
         viewModel.siteChanged.observe(this, Observer {
             viewModel.refreshData()
         })
+
+        viewModel.isMenuVisible.observe(this, Observer { isMenuVisible ->
+            isMenuVisible?.let {
+                menu?.findItem(R.id.manage_insights)?.isVisible = isMenuVisible
+            }
+        })
+
+        viewModel.navigationTarget.observeEvent(this) { target ->
+            navigator.navigate(activity, target)
+            return@observeEvent true
+        }
     }
 }
 

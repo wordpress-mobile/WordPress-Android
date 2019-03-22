@@ -34,4 +34,5 @@ sealed class NavigationTarget : Event() {
     class ViewMonthsAndYearsStats : NavigationTarget()
     class ViewDayAverageStats : NavigationTarget()
     class ViewRecentWeeksStats : NavigationTarget()
+    class ViewInsightsManagement : NavigationTarget()
 }

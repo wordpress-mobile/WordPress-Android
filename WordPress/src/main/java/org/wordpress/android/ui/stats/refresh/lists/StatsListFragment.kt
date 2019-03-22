@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
