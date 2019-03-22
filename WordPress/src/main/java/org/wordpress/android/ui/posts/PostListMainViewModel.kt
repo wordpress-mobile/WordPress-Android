@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -19,6 +20,8 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
@@ -59,15 +62,19 @@ class PostListMainViewModel @Inject constructor(
     val isAuthorFilterSelectionVisible: LiveData<Boolean> = _isAuthorFilterSelectionVisible
 
     private val _authorFilterSelection = MutableLiveData<AuthorFilterSelection>()
+    val authorFilterSelection: LiveData<AuthorFilterSelection> = _authorFilterSelection
 
     val filterAuthorListItems: LiveData<List<AuthorFilterListItemUIState>> = _authorFilterSelection.map { selection ->
-        // Order has to be the same as the AuthorFilterSelection enum
-        listOf(
-                AuthorFilterListItemUIState.Me(
-                        accountStore.account?.avatarUrl, isSelected = selection == AuthorFilterSelection.ME
-                ),
-                AuthorFilterListItemUIState.Everyone(isSelected = selection == AuthorFilterSelection.EVERYONE)
-        )
+        AuthorFilterSelection.values().map mapEnumValues@{ value ->
+            @ColorRes val backgroundColorRes: Int =
+                    if (selection == value) R.color.grey_lighten_30_translucent_50
+                    else R.color.transparent
+
+            return@mapEnumValues when (value) {
+                ME -> AuthorFilterListItemUIState.Me(accountStore.account?.avatarUrl, backgroundColorRes)
+                EVERYONE -> AuthorFilterListItemUIState.Everyone(backgroundColorRes)
+            }
+        }
     }
 
     val filterOnlyUser: LiveData<Boolean> = _authorFilterSelection.map { selection ->
@@ -136,18 +143,18 @@ class PostListMainViewModel @Inject constructor(
     sealed class AuthorFilterListItemUIState(
         val text: UiString,
         @DrawableRes val iconRes: Int,
-        val isSelected: Boolean
+        @ColorRes val dropDownBackground: Int
     ) {
-        class Everyone(isSelected: Boolean) : AuthorFilterListItemUIState(
+        class Everyone(@ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
                 text = UiStringRes(R.string.post_list_author_everyone),
                 iconRes = R.drawable.ic_multiple_users_white_24dp,
-                isSelected = isSelected
+                dropDownBackground = dropDownBackground
         )
 
-        class Me(val avatarUrl: String?, isSelected: Boolean) : AuthorFilterListItemUIState(
+        class Me(val avatarUrl: String?, @ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
                 text = UiStringRes(R.string.post_list_author_me),
                 iconRes = R.drawable.ic_user_circle_grey_24dp,
-                isSelected = isSelected
+                dropDownBackground = dropDownBackground
         )
     }
 }

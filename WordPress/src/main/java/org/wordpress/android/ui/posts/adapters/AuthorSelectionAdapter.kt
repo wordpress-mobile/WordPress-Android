@@ -161,11 +161,7 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
 
             text.text = uiHelpers.getTextOfUiString(context, state.text)
 
-            @ColorRes val backgroundColorRes: Int = when (state.isSelected) {
-                true -> R.color.grey_lighten_30_translucent_50
-                false -> R.color.transparent
-            }
-            itemView.setBackgroundColor(ContextCompat.getColor(context, backgroundColorRes))
+            itemView.setBackgroundColor(ContextCompat.getColor(context, state.dropDownBackground))
         }
     }
 }

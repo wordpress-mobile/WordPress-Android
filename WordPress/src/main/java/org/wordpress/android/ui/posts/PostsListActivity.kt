@@ -165,13 +165,15 @@ class PostsListActivity : AppCompatActivity(),
             }
         })
 
+        viewModel.authorFilterSelection.observe(this, Observer { selection ->
+            selection?.let {
+                authorSelection.setSelection(selection.ordinal)
+            }
+        })
+
         viewModel.filterAuthorListItems.observe(this, Observer { items ->
             items?.let {
                 authorSelectionAdapter.updateItems(items)
-                val selectionIndex = items.indexOfFirst { item -> item.isSelected }
-                if (selectionIndex >= 0) {
-                    authorSelection.setSelection(selectionIndex)
-                }
             }
         })
 
