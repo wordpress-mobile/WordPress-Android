@@ -245,7 +245,9 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     }
 
     private fun <T : Any> GlideRequest<T>.addPlaceholder(
-        context: Context, imageType: ImageType, @ColorRes tint: Int? = null
+        context: Context,
+        imageType: ImageType,
+        @ColorRes tint: Int? = null
     ): GlideRequest<T> {
         val placeholderImageRes = placeholderManager.getPlaceholderResource(imageType)
         return if (placeholderImageRes == null) {
@@ -263,7 +265,9 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
     }
 
     private fun <T : Any> GlideRequest<T>.addFallback(
-        context: Context, imageType: ImageType, @ColorRes tint: Int? = null
+        context: Context,
+        imageType: ImageType,
+        @ColorRes tint: Int? = null
     ): GlideRequest<T> {
         val errorImageRes = placeholderManager.getErrorResource(imageType)
         return if (errorImageRes == null) {

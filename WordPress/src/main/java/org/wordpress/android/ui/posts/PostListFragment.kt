@@ -322,7 +322,9 @@ class PostListFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(
-            site: SiteModel, authorFilter: AuthorFilterSelection, postListType: PostListType
+            site: SiteModel,
+            authorFilter: AuthorFilterSelection,
+            postListType: PostListType
         ): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
