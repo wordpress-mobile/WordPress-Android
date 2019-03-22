@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.managemen
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 
 class InsightsManagementActivity : AppCompatActivity() {
@@ -12,7 +11,6 @@ class InsightsManagementActivity : AppCompatActivity() {
 
         setContentView(R.layout.insights_management_activity)
 
-        setSupportActionBar(toolbar)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
