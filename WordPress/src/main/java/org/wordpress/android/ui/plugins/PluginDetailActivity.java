@@ -273,12 +273,13 @@ public class PluginDetailActivity extends AppCompatActivity {
         for (PlanModel plan : event.plans) {
             if (plan.isCurrentPlan()) {
                 currentPlan = plan;
+                break;
             }
         }
 
         boolean isDomainCreditAvailable = currentPlan != null && currentPlan.getHasDomainCredit();
         if (isDomainCreditAvailable) {
-            promptDomainRegistration();
+            showDomainRegistrationDialog();
         } else {
             dispatchInstallPluginAction();
         }
@@ -292,7 +293,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(
                     new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
-            builder.setTitle(getResources().getText(R.string.plugin_install_custom_domain_required_dialog_title));
+            builder.setTitle(R.string.plugin_install_custom_domain_required_dialog_title);
             builder.setMessage(R.string.plugin_install_custom_domain_required_dialog_message);
             builder.setPositiveButton(R.string.plugin_install_custom_domain_required_dialog_register_btn,
                     new DialogInterface.OnClickListener() {
@@ -314,7 +315,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void promptDomainRegistration() {
+    private void showDomainRegistrationDialog() {
         DialogFragment dialogFragment = new DomainRegistrationPromptDialog();
         dialogFragment.show(getSupportFragmentManager(),
                 DomainRegistrationPromptDialog.DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG);
