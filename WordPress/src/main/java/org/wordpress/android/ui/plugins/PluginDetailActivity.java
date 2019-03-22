@@ -272,7 +272,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         } else {
             // This should not happen
             if (event.plans == null) {
-                AppLog.e(T.PLANS, "Fetching user plans are null.")
+                AppLog.e(T.PLANS, "Fetched user plans are null.");
                 return;
             }
 
