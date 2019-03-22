@@ -275,56 +275,38 @@ public class PluginDetailActivity extends AppCompatActivity {
                 currentPlan = plan;
             }
         }
-        promptDomainRegistration(currentPlan != null && currentPlan.getHasDomainCredit());
-    }
 
+        boolean isDomainCreditAvailable = currentPlan != null && currentPlan.getHasDomainCredit();
+        if (isDomainCreditAvailable) {
+            promptDomainRegistration();
+        } else {
+            dispatchInstallPluginAction();
+        }
+    }
 
     public static class DomainRegistrationPromptDialog extends DialogFragment {
         static final String DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG = "DOMAIN_REGISTRATION_PROMPT_DIALOG";
-        static final String DOMAIN_CREDIT_AVAILABILITY_KEY = "DOMAIN_CREDIT_AVAILABILITY_KEY";
-
-        public static DomainRegistrationPromptDialog newInstance(boolean isDomainCreditAvailable) {
-            DomainRegistrationPromptDialog fragment = new DomainRegistrationPromptDialog();
-            Bundle args = new Bundle();
-            args.putBoolean(DOMAIN_CREDIT_AVAILABILITY_KEY, isDomainCreditAvailable);
-            fragment.setArguments(args);
-            return fragment;
-        }
 
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            boolean isDomainCreditAvailable =
-                    getArguments() != null && getArguments().getBoolean(DOMAIN_CREDIT_AVAILABILITY_KEY, false);
-
-
-            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+            AlertDialog.Builder builder = new AlertDialog.Builder(
                     new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             builder.setTitle(getResources().getText(R.string.plugin_install_custom_domain_required_dialog_title));
-            if (isDomainCreditAvailable) {
-                builder.setMessage(R.string.plugin_install_custom_domain_required_dialog_message);
-                builder.setPositiveButton(R.string.plugin_install_custom_domain_required_dialog_register_btn,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // TODO navigate to domain registration flow
-                            }
-                        });
-                builder.setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
-                        });
-            } else {
-                builder.setMessage(R.string.plugin_install_custom_domain_required_no_credits_message);
-                builder.setPositiveButton(R.string.dialog_button_ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
-                        });
-            }
+            builder.setMessage(R.string.plugin_install_custom_domain_required_dialog_message);
+            builder.setPositiveButton(R.string.plugin_install_custom_domain_required_dialog_register_btn,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // TODO navigate to domain registration flow
+                        }
+                    });
+            builder.setNegativeButton(R.string.cancel,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
 
             builder.setCancelable(true);
             builder.create();
@@ -332,8 +314,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void promptDomainRegistration(boolean hasDomainCredits) {
-        DialogFragment dialogFragment = DomainRegistrationPromptDialog.newInstance(hasDomainCredits);
+    private void promptDomainRegistration() {
+        DialogFragment dialogFragment = new DomainRegistrationPromptDialog();
         dialogFragment.show(getSupportFragmentManager(),
                 DomainRegistrationPromptDialog.DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG);
     }
