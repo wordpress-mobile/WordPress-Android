@@ -169,8 +169,10 @@ class PostsListActivity : AppCompatActivity(),
             authorFilter?.let {
                 authorSelection.setSelection(authorFilter.ordinal)
 
+                val currentItem: Int = pager.currentItem
                 postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
                 pager.adapter = postsPagerAdapter
+                pager.currentItem = currentItem
             }
         })
 
