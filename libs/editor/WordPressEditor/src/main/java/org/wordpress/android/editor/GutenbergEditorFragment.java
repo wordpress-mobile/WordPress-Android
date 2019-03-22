@@ -1,6 +1,7 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -80,6 +81,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private boolean mIsNewPost;
 
     private boolean mEditorDidMount;
+
+    private ProgressDialog mSavingContentProgressDialog;
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
@@ -661,6 +664,38 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setContentPlaceholder(CharSequence placeholderText) {
+    }
+
+    // Getting the content from the HTML editor can take time and the UI seems to be unresponsive.
+    // Show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
+    @Override
+    public boolean showSavingProgressDialogIfNeeded() {
+        if (!isAdded()) {
+            return false;
+        }
+
+        if (!mHtmlModeEnabled) return false;
+
+        if (mSavingContentProgressDialog != null && mSavingContentProgressDialog.isShowing()) {
+            // Already on the screen? no need to show it again.
+            return true;
+        }
+
+        mSavingContentProgressDialog = new ProgressDialog(getActivity());
+        mSavingContentProgressDialog.setCancelable(false);
+        mSavingContentProgressDialog.setIndeterminate(true);
+        mSavingContentProgressDialog.setMessage(getActivity().getString(R.string.long_post_dlg_saving));
+        mSavingContentProgressDialog.show();
+       return true;
+    }
+
+    @Override
+    public boolean hideSavingProgressDialog() {
+        if (mSavingContentProgressDialog != null && mSavingContentProgressDialog.isShowing()) {
+            mSavingContentProgressDialog.dismiss();
+            return true;
+        }
+        return false;
     }
 
     @Override

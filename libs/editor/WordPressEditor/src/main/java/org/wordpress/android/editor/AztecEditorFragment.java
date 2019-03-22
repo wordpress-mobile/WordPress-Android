@@ -1124,6 +1124,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public boolean showSavingProgressDialogIfNeeded() {
+        return false;
+    }
+
+    @Override
+    public boolean hideSavingProgressDialog() {
+        return false;
+    }
+
+    @Override
     public void onMediaUploadReattached(String localId, float currentProgress) {
         mUploadingMediaProgressMax.put(localId, currentProgress);
         overlayProgressingMediaForMediaId(localId);

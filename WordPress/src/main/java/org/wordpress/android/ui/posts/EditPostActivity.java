@@ -1997,6 +1997,9 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
+        // Loading the content from the GB HTML editor can take time on long posts.
+        // Let's show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
+        mEditorFragment.showSavingProgressDialogIfNeeded();
 
         // Update post, save to db and publish in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
@@ -2010,6 +2013,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (!postUpdateSuccessful) {
                     // just return, since the only case updatePostObject() can fail is when the editor
                     // fragment is not added to the activity
+                    mEditorFragment.hideSavingProgressDialog();
                     return;
                 }
 
@@ -2018,6 +2022,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 // if post was modified or has unsaved local changes and is publishable, save it
                 saveResult(isPublishable, false, false);
 
+                // Hide the progress dialog now
+                mEditorFragment.hideSavingProgressDialog();
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         // Show an Alert Dialog asking the user if they want to remove all failed media before upload
