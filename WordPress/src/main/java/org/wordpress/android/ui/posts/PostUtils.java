@@ -281,6 +281,13 @@ public class PostUtils {
         return pubDate == null || !pubDate.after(now);
     }
 
+    static boolean isPublishDateInTheFuture(PostModel postModel) {
+        Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
+        Date now = new Date();
+        // Publish immediately for posts that don't have any date set yet and drafts with publish dates in the past
+        return pubDate != null && pubDate.after(now);
+    }
+
     // Only drafts should have the option to publish immediately to avoid user confusion
     static boolean shouldPublishImmediatelyOptionBeAvailable(PostModel postModel) {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;

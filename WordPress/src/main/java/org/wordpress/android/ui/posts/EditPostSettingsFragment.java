@@ -711,7 +711,7 @@ public class EditPostSettingsFragment extends Fragment {
         getPost().setDateCreated(DateTimeUtils.iso8601FromDate(calendar.getTime()));
         // Posts that are scheduled have a `future` date for REST but their status should be set to `published` as
         // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
-        if (!PostUtils.shouldPublishImmediately(getPost())) {
+        if (PostStatus.fromPost(getPost()) == PostStatus.DRAFT && PostUtils.isPublishDateInTheFuture(getPost())) {
             updatePostStatus(PostStatus.PUBLISHED.toString());
         }
         updatePublishDateTextView();
@@ -723,16 +723,32 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         PostModel postModel = getPost();
-        if (PostUtils.shouldPublishImmediately(postModel)) {
-            mPublishDateTextView.setText(R.string.immediately);
-        } else {
-            String dateCreated = postModel.getDateCreated();
-            if (!TextUtils.isEmpty(dateCreated)) {
-                String formattedDate = DateUtils.formatDateTime(getActivity(),
-                                                                DateTimeUtils.timestampFromIso8601Millis(dateCreated),
-                                                                getDateTimeFlags());
-                mPublishDateTextView.setText(formattedDate);
+        String labelToUse = "%s"; // default label to use is just the formatted date
+        String dateCreated = postModel.getDateCreated();
+        // for labels logic see https://opengrok.a8c.com/source/xref/trunk/wp-admin/includes/meta-boxes.php#196
+        if (!TextUtils.isEmpty(dateCreated)) {
+            String formattedDate = DateUtils.formatDateTime(getActivity(),
+                    DateTimeUtils.timestampFromIso8601Millis(dateCreated),
+                    getDateTimeFlags());
+
+            PostStatus status = PostStatus.fromPost(postModel);
+            if (status == PostStatus.SCHEDULED) {
+                labelToUse = getString(R.string.scheduled_for, formattedDate);
+            } else if (status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE) {
+                labelToUse = getString(R.string.published_on, formattedDate);
+            } else if (postModel.isLocalDraft() && PostUtils.shouldPublishImmediately(postModel)) {
+                // only show Publish "Immediate" label if it'' a local draft. If it's also saved online,
+                // then show the back-date appropriately.
+                mPublishDateTextView.setText(R.string.immediately);
+                return;
+            } else if (PostUtils.isPublishDateInTheFuture(postModel)) {
+                labelToUse = getString(R.string.schedule_for, formattedDate);
+            } else {
+                labelToUse = getString(R.string.publish_on, formattedDate);
             }
+            mPublishDateTextView.setText(labelToUse);
+        } else if (PostUtils.shouldPublishImmediatelyOptionBeAvailable(postModel)) {
+            mPublishDateTextView.setText(R.string.immediately);
         }
     }
 
@@ -888,9 +904,6 @@ public class EditPostSettingsFragment extends Fragment {
 
     private Calendar getCurrentPublishDateAsCalendar() {
         PostModel postModel = getPost();
-        if (PostUtils.shouldPublishImmediately(postModel)) {
-            return Calendar.getInstance();
-        }
         Calendar calendar = Calendar.getInstance();
         String dateCreated = postModel.getDateCreated();
         // Set the currently selected time if available
