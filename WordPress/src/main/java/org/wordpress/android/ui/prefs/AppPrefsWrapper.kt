@@ -25,6 +25,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getAvatarVersion()
         set(version) = AppPrefs.setAvatarVersion(version)
 
+    var isAztecEditorEnabled: Boolean
+        get() = AppPrefs.isAztecEditorEnabled()
+        set(enabled) = AppPrefs.setAztecEditorEnabled(enabled)
+
     var postListAuthorSelection: AuthorFilterSelection
         get() = AppPrefs.getAuthorFilterSelection()
         set(value) = AppPrefs.setAuthorFilterSelection(value)

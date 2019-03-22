@@ -25,7 +25,6 @@ import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiHelpers
@@ -73,17 +72,15 @@ class PostListFragment : Fragment() {
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
                 isPhotonCapable = SiteUtils.isPhotonCapable(site),
-                showAllButtons = displayWidth >= 1080, // on larger displays we can always show all buttons
-                imageManager = imageManager,
-                isAztecEditorEnabled = AppPrefs.isAztecEditorEnabled(),
-                hasCapabilityPublishPosts = site.hasCapabilityPublishPosts
+                imageManager = imageManager
         )
     }
 
     private val postListAdapter: PostListAdapter by lazy {
         PostListAdapter(
                 context = nonNullActivity,
-                postViewHolderConfig = postViewHolderConfig
+                postViewHolderConfig = postViewHolderConfig,
+                uiHelpers = uiHelpers
         )
     }
 
@@ -232,10 +229,9 @@ class PostListFragment : Fragment() {
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
 
         val context = nonNullActivity
-        val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.card_gutters)
-        val spacingHorizontal = context.resources.getDimensionPixelSize(R.dimen.content_margin)
+        val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.margin_medium)
         recyclerView?.layoutManager = LinearLayoutManager(context)
-        recyclerView?.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical))
+        recyclerView?.addItemDecoration(RecyclerItemDecoration(0, spacingVertical))
         recyclerView?.adapter = postListAdapter
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {

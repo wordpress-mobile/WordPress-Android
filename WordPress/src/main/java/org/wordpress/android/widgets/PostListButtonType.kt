@@ -5,6 +5,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import org.wordpress.android.R
 
+// PostListButton.java types - from attrs.xml
 enum class PostListButtonType constructor(
     val value: Int,
     @StringRes val textResId: Int,
@@ -20,9 +21,10 @@ enum class PostListButtonType constructor(
     BUTTON_PUBLISH(7, R.string.button_publish, R.drawable.ic_reader_white_24dp, R.color.blue_wordpress),
     BUTTON_SYNC(8, R.string.button_sync, R.drawable.ic_reader_white_24dp, R.color.blue_wordpress),
     BUTTON_MORE(9, R.string.button_more, R.drawable.ic_ellipsis_white_24dp, R.color.blue_wordpress),
-    BUTTON_SUBMIT(10, R.string.submit_for_review, R.drawable.ic_reader_white_24dp, R.color.blue_wordpress),
-    BUTTON_RETRY(11, R.string.button_retry, R.drawable.ic_refresh_white_24dp, R.color.alert_red),
-    BUTTON_BACK(12, R.string.button_back, R.drawable.ic_chevron_left_white_24dp, R.color.blue_wordpress);
+    BUTTON_BACK(10, R.string.button_back, R.drawable.ic_chevron_left_white_24dp, R.color.blue_wordpress),
+    BUTTON_SUBMIT(11, R.string.submit_for_review, R.drawable.ic_reader_white_24dp, R.color.blue_wordpress),
+    BUTTON_RETRY(12, R.string.button_retry, R.drawable.ic_refresh_white_24dp, R.color.alert_red),
+    BUTTON_RESTORE(13, R.string.button_restore, R.drawable.ic_refresh_white_24dp, R.color.blue_wordpress);
 
     companion object {
         fun fromInt(value: Int): PostListButtonType? = values().firstOrNull { it.value == value }
