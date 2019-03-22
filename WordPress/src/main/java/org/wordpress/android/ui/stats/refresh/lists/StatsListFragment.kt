@@ -18,9 +18,9 @@ import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
+import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.util.image.ImageManager
@@ -39,12 +39,12 @@ class StatsListFragment : DaggerFragment() {
     private val listStateKey = "list_state"
 
     companion object {
-        private const val typeKey = "type_key"
+        const val LIST_TYPE = "type_key"
 
         fun newInstance(section: StatsSection): StatsListFragment {
             val fragment = StatsListFragment()
             val bundle = Bundle()
-            bundle.putSerializable(typeKey, section)
+            bundle.putSerializable(LIST_TYPE, section)
             fragment.arguments = bundle
             return fragment
         }
@@ -58,7 +58,9 @@ class StatsListFragment : DaggerFragment() {
         layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
-
+        (activity?.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection)?.let { sectionFromIntent ->
+            outState.putSerializable(LIST_TYPE, sectionFromIntent)
+        }
         super.onSaveInstanceState(outState)
     }
 
@@ -77,11 +79,11 @@ class StatsListFragment : DaggerFragment() {
         recyclerView.layoutManager = this.layoutManager
         recyclerView.addItemDecoration(
                 StatsListItemDecoration(
-                        resources.getDimensionPixelSize(dimen.stats_list_card_horizontal_spacing),
-                        resources.getDimensionPixelSize(dimen.stats_list_card_top_spacing),
-                        resources.getDimensionPixelSize(dimen.stats_list_card_bottom_spacing),
-                        resources.getDimensionPixelSize(dimen.stats_list_card_first_spacing),
-                        resources.getDimensionPixelSize(dimen.stats_list_card_last_spacing),
+                        resources.getDimensionPixelSize(R.dimen.stats_list_card_horizontal_spacing),
+                        resources.getDimensionPixelSize(R.dimen.stats_list_card_top_spacing),
+                        resources.getDimensionPixelSize(R.dimen.stats_list_card_bottom_spacing),
+                        resources.getDimensionPixelSize(R.dimen.stats_list_card_first_spacing),
+                        resources.getDimensionPixelSize(R.dimen.stats_list_card_last_spacing),
                         columns
                 )
         )
@@ -113,9 +115,12 @@ class StatsListFragment : DaggerFragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity) {
-        val statsSection = arguments?.getSerializable(typeKey) as StatsSection
+        val statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
+                ?: activity.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
+                ?: StatsSection.INSIGHTS
 
         val viewModelClass = when (statsSection) {
+            StatsSection.DETAIL -> DetailListViewModel::class.java
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
             StatsSection.WEEKS -> WeeksListViewModel::class.java
@@ -169,9 +174,10 @@ class StatsListFragment : DaggerFragment() {
             return@observeEvent true
         }
 
-        viewModel.selectedDate.observe(this, Observer {
+        viewModel.selectedDate.observeEvent(this) {
             viewModel.onDateChanged()
-        })
+            true
+        }
 
         viewModel.listSelected.observe(this, Observer {
             viewModel.onListSelected()

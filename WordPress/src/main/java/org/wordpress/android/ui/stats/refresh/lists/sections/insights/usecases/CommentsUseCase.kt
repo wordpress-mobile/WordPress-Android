@@ -42,8 +42,8 @@ class CommentsUseCase
     private val commentsStore: CommentsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val useCaseMode: UseCaseMode,
-    private val popupMenuHandler: ItemPopupMenuHandler
+    private val popupMenuHandler: ItemPopupMenuHandler,
+    private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
         val fetchMode = if (useCaseMode == VIEW_ALL) LimitMode.All else LimitMode.Top(BLOCK_ITEM_COUNT)
@@ -160,7 +160,7 @@ class CommentsUseCase
         private val commentsStore: CommentsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
-            private val popupMenuHandler: ItemPopupMenuHandler
+        private val popupMenuHandler: ItemPopupMenuHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 CommentsUseCase(
@@ -168,8 +168,8 @@ class CommentsUseCase
                         commentsStore,
                         statsSiteProvider,
                         analyticsTracker,
-                        useCaseMode,
-                        popupMenuHandler
+                        popupMenuHandler,
+                        useCaseMode
                 )
     }
 }

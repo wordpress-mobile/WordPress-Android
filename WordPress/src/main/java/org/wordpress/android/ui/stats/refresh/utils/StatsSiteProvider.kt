@@ -15,11 +15,15 @@ import javax.inject.Singleton
 class StatsSiteProvider
 @Inject constructor(private val siteStore: SiteStore, private val dispatcher: Dispatcher) {
     lateinit var siteModel: SiteModel
+    private var initialized = false
     private val mutableSiteChanged = SingleLiveEvent<OnSiteChanged>()
     val siteChanged: LiveData<OnSiteChanged> = mutableSiteChanged
 
     fun start(site: SiteModel) {
-        dispatcher.register(this)
+        if (!initialized) {
+            dispatcher.register(this)
+            initialized = true
+        }
         this.siteModel = site
     }
 
@@ -30,7 +34,10 @@ class StatsSiteProvider
     }
 
     fun stop() {
-        dispatcher.unregister(this)
+        if (initialized) {
+            dispatcher.unregister(this)
+            initialized = false
+        }
     }
 
     fun hasLoadedSite(): Boolean = siteModel.siteId != 0L

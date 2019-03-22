@@ -163,7 +163,7 @@ constructor(
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_POST_TAPPED, statsGranularity)
         navigateTo(
                 ViewPostDetailStats(
-                        postId = params.postId,
+                        postId = params.postId.toLong(),
                         postTitle = params.postTitle,
                         postUrl = params.postUrl,
                         postType = StatsConstants.ITEM_TYPE_POST
