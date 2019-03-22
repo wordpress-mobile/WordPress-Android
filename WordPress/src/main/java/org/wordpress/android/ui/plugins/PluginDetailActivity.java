@@ -68,6 +68,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferStatusChec
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -265,23 +266,30 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onPlansFetched(OnPlansFetched event) {
         cancelDomainCreditsCheckProgressDialog();
 
-        if (event == null || event.plans == null) {
-            return;
-        }
-
-        PlanModel currentPlan = null;
-        for (PlanModel plan : event.plans) {
-            if (plan.isCurrentPlan()) {
-                currentPlan = plan;
-                break;
-            }
-        }
-
-        boolean isDomainCreditAvailable = currentPlan != null && currentPlan.getHasDomainCredit();
-        if (isDomainCreditAvailable) {
-            showDomainRegistrationDialog();
+        if (event.isError()) {
+            AppLog.e(T.PLANS, PluginDetailActivity.class.getSimpleName() + ".onPlansFetched: "
+                              + event.error.type + " - " + event.error.message);
         } else {
-            dispatchInstallPluginAction();
+            // This should not happen
+            if (event.plans == null) {
+                AppLog.e(T.PLANS, "Fetching user plans are null.")
+                return;
+            }
+
+            PlanModel currentPlan = null;
+            for (PlanModel plan : event.plans) {
+                if (plan.isCurrentPlan()) {
+                    currentPlan = plan;
+                    break;
+                }
+            }
+
+            boolean isDomainCreditAvailable = currentPlan != null && currentPlan.getHasDomainCredit();
+            if (isDomainCreditAvailable) {
+                showDomainRegistrationDialog();
+            } else {
+                dispatchInstallPluginAction();
+            }
         }
     }
 
