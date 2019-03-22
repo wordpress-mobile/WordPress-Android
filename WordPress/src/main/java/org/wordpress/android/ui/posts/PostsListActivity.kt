@@ -165,22 +165,18 @@ class PostsListActivity : AppCompatActivity(),
             }
         })
 
-        viewModel.authorFilterSelection.observe(this, Observer { selection ->
-            selection?.let {
-                authorSelection.setSelection(selection.ordinal)
+        viewModel.authorFilterSelection.observe(this, Observer { authorFilter ->
+            authorFilter?.let {
+                authorSelection.setSelection(authorFilter.ordinal)
+
+                postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
+                pager.adapter = postsPagerAdapter
             }
         })
 
         viewModel.filterAuthorListItems.observe(this, Observer { items ->
             items?.let {
                 authorSelectionAdapter.updateItems(items)
-            }
-        })
-
-        viewModel.filterOnlyUser.observe(this, Observer { onlyUser ->
-            onlyUser?.let {
-                postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, onlyUser, supportFragmentManager)
-                pager.adapter = postsPagerAdapter
             }
         })
 

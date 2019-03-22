@@ -44,7 +44,7 @@ import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiSt
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
-private const val EXTRA_POST_LIST_ONLY_USER = "post_list_only_user"
+private const val EXTRA_POST_LIST_AUTHOR_FILTER = "post_list_author_filter"
 private const val EXTRA_POST_LIST_TYPE = "post_list_type"
 
 class PostListFragment : Fragment() {
@@ -107,11 +107,12 @@ class PostListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val onlyUser = requireNotNull(arguments).getBoolean(EXTRA_POST_LIST_ONLY_USER)
+        val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
+                .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
         val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(site, onlyUser, postListType)
+        viewModel.start(site, authorFilter, postListType)
         viewModel.pagedListData.observe(this, Observer {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
@@ -320,11 +321,13 @@ class PostListFragment : Fragment() {
         const val TAG = "post_list_fragment_tag"
 
         @JvmStatic
-        fun newInstance(site: SiteModel, onlyUser: Boolean, postListType: PostListType): PostListFragment {
+        fun newInstance(
+            site: SiteModel, authorFilter: AuthorFilterSelection, postListType: PostListType
+        ): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
-            bundle.putSerializable(EXTRA_POST_LIST_ONLY_USER, onlyUser)
+            bundle.putSerializable(EXTRA_POST_LIST_AUTHOR_FILTER, authorFilter)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
             fragment.arguments = bundle
             return fragment

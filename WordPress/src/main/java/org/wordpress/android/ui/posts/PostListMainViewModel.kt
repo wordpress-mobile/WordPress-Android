@@ -77,10 +77,6 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
-    val filterOnlyUser: LiveData<Boolean> = _authorFilterSelection.map { selection ->
-        selection == AuthorFilterSelection.ME
-    }
-
     private val _selectTab = SingleLiveEvent<Int>()
     val selectTab = _selectTab as LiveData<Int>
 

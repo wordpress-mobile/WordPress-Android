@@ -46,6 +46,7 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
@@ -310,7 +311,7 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel, onlyUser: Boolean, postListType: PostListType) {
+    fun start(site: SiteModel, authorFilter: AuthorFilterSelection, postListType: PostListType) {
         if (isStarted) {
             return
         }
