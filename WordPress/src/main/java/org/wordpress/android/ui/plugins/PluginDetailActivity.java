@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.plugins;
 
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -111,8 +114,6 @@ public class PluginDetailActivity extends AppCompatActivity {
             = "KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG";
     private static final String KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS
             = "KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS";
-    private static final String KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG
-            = "KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG";
     private static final String KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS
             = "KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS";
 
@@ -157,7 +158,6 @@ public class PluginDetailActivity extends AppCompatActivity {
     protected boolean mIsShowingRemovePluginConfirmationDialog;
     protected boolean mIsShowingInstallFirstPluginConfirmationDialog;
     protected boolean mIsShowingAutomatedTransferProgress;
-    protected boolean mIsShowingCustomDomainRequiredDialog;
     protected boolean mIsShowingDomainCreditCheckProgress;
 
     // These flags reflects the UI state
@@ -220,8 +220,6 @@ public class PluginDetailActivity extends AppCompatActivity {
                     .getBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG);
             mIsShowingAutomatedTransferProgress = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS);
-            mIsShowingCustomDomainRequiredDialog = savedInstanceState
-                    .getBoolean(KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG);
             mIsShowingDomainCreditCheckProgress = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS);
         }
@@ -257,6 +255,10 @@ public class PluginDetailActivity extends AppCompatActivity {
             showDomainCreditsCheckProgressDialog();
         }
 
+//        if(mIsShowingCustomDomainRequiredDialog){
+//            promptDomainRegistration();
+//        }
+
         if (mIsShowingAutomatedTransferProgress) {
             showAutomatedTransferProgressDialog();
         }
@@ -272,50 +274,72 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         PlanModel currentPlan = null;
-
         for (PlanModel plan : event.plans) {
             if (plan.isCurrentPlan()) {
                 currentPlan = plan;
             }
         }
-
         promptDomainRegistration(currentPlan != null && currentPlan.getHasDomainCredit());
     }
 
-    private void promptDomainRegistration(boolean hasDomainCredits) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog_Alert);
-        builder.setTitle(getResources().getText(R.string.plugin_install_custom_domain_required_dialog_title));
-        if (hasDomainCredits) {
-            builder.setMessage(R.string.plugin_install_custom_domain_required_dialog_message);
-            builder.setPositiveButton(R.string.plugin_install_custom_domain_required_dialog_register_btn,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            mIsShowingCustomDomainRequiredDialog = false;
-                        }
-                    });
-        } else {
-            builder.setMessage(R.string.plugin_install_custom_domain_required_no_credits_message);
+
+    public static class DomainRegistrationPromptDialog extends DialogFragment {
+        static final String DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG = "DOMAIN_REGISTRATION_PROMPT_DIALOG";
+        static final String DOMAIN_CREDIT_AVAILABILITY_KEY = "DOMAIN_CREDIT_AVAILABILITY_KEY";
+
+        public static DomainRegistrationPromptDialog newInstance(boolean isDomainCreditAvailable) {
+            DomainRegistrationPromptDialog fragment = new DomainRegistrationPromptDialog();
+            Bundle args = new Bundle();
+            args.putBoolean(DOMAIN_CREDIT_AVAILABILITY_KEY, isDomainCreditAvailable);
+            fragment.setArguments(args);
+            return fragment;
         }
 
-        builder.setNegativeButton(R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mIsShowingCustomDomainRequiredDialog = false;
-                    }
-                });
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                mIsShowingCustomDomainRequiredDialog = false;
-            }
-        });
-        builder.setCancelable(true);
-        builder.create();
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            boolean isDomainCreditAvailable =
+                    getArguments() != null && getArguments().getBoolean(DOMAIN_CREDIT_AVAILABILITY_KEY, false);
 
-        mIsShowingCustomDomainRequiredDialog = true;
-        builder.show();
+
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+            builder.setTitle(getResources().getText(R.string.plugin_install_custom_domain_required_dialog_title));
+            if (isDomainCreditAvailable) {
+                builder.setMessage(R.string.plugin_install_custom_domain_required_dialog_message);
+                builder.setPositiveButton(R.string.plugin_install_custom_domain_required_dialog_register_btn,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // TODO navigate to domain registration flow
+                            }
+                        });
+                builder.setNegativeButton(R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        });
+            } else {
+                builder.setMessage(R.string.plugin_install_custom_domain_required_no_credits_message);
+                builder.setPositiveButton(R.string.dialog_button_ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        });
+            }
+
+            builder.setCancelable(true);
+            builder.create();
+            return builder.create();
+        }
+    }
+
+    private void promptDomainRegistration(boolean hasDomainCredits) {
+        DialogFragment dialogFragment = DomainRegistrationPromptDialog.newInstance(hasDomainCredits);
+        dialogFragment.show(getSupportFragmentManager(),
+                DomainRegistrationPromptDialog.DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG);
     }
 
     @Override
@@ -376,7 +400,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG,
                 mIsShowingInstallFirstPluginConfirmationDialog);
         outState.putBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS, mIsShowingAutomatedTransferProgress);
-        outState.putBoolean(KEY_IS_SHOWING_CUSTOM_DOMAIN_REQUIRED_DIALOG, mIsShowingCustomDomainRequiredDialog);
         outState.putBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS, mIsShowingDomainCreditCheckProgress);
     }
 
@@ -1415,7 +1438,7 @@ public class PluginDetailActivity extends AppCompatActivity {
      * become a Jetpack site at that point and we'll need the updated site to be able to fetch the plugins and refresh
      * this page. If the transfer is not completed, we use the current step and total steps to update the progress bar
      * and check the status again after waiting for a second.
-     *
+     * 
      * Unfortunately we can't close the progress dialog until both the site and its plugins are fetched. Check out
      * `onSiteChanged` for the next step.
      */
