@@ -255,10 +255,6 @@ public class PluginDetailActivity extends AppCompatActivity {
             showDomainCreditsCheckProgressDialog();
         }
 
-//        if(mIsShowingCustomDomainRequiredDialog){
-//            promptDomainRegistration();
-//        }
-
         if (mIsShowingAutomatedTransferProgress) {
             showAutomatedTransferProgressDialog();
         }
@@ -1438,7 +1434,7 @@ public class PluginDetailActivity extends AppCompatActivity {
      * become a Jetpack site at that point and we'll need the updated site to be able to fetch the plugins and refresh
      * this page. If the transfer is not completed, we use the current step and total steps to update the progress bar
      * and check the status again after waiting for a second.
-     * 
+     *
      * Unfortunately we can't close the progress dialog until both the site and its plugins are fetched. Check out
      * `onSiteChanged` for the next step.
      */
