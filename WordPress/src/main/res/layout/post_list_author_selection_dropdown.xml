@@ -6,18 +6,19 @@
               android:foreground="?attr/selectableItemBackground"
               android:gravity="center"
               android:orientation="horizontal"
-              android:padding="4dp"
+              android:padding="@dimen/margin_small"
               tools:ignore="UnusedAttribute">
     <!-- UnusedAttribute is ignored since foreground was added in API 23, however the impact of the missing foreground
          on lower APIs will be minimal -->
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/post_list_author_selection_image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/tab_height"
+        android:layout_height="@dimen/tab_height"
         android:importantForAccessibility="no"
-        android:padding="12dp"
-        tools:src="@drawable/ic_multiple_users_grey_darken_20_24dp"/>
+        tools:padding="12dp"
+        tools:src="@drawable/ic_multiple_users_white_24dp"
+        tools:tint="@color/grey_darken_20"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/post_list_author_selection_text"

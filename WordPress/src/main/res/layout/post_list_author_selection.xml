@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/post_list_author_background"
-        android:padding="12dp"
+        tools:padding="12dp"
         tools:src="@drawable/ic_multiple_users_white_24dp"/>
 </FrameLayout>
 
