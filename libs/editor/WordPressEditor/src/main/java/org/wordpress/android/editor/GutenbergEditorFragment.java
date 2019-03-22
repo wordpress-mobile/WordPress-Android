@@ -681,10 +681,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return true;
         }
 
-        mSavingContentProgressDialog = new ProgressDialog(getActivity());
-        mSavingContentProgressDialog.setCancelable(false);
-        mSavingContentProgressDialog.setIndeterminate(true);
-        mSavingContentProgressDialog.setMessage(getActivity().getString(R.string.long_post_dlg_saving));
+        if (mSavingContentProgressDialog == null) {
+            mSavingContentProgressDialog = new ProgressDialog(getActivity());
+            mSavingContentProgressDialog.setCancelable(false);
+            mSavingContentProgressDialog.setIndeterminate(true);
+            mSavingContentProgressDialog.setMessage(getActivity().getString(R.string.long_post_dlg_saving));
+        }
         mSavingContentProgressDialog.show();
        return true;
     }
