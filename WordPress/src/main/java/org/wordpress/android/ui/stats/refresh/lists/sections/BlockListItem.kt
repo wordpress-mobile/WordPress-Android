@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.view.View
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
@@ -54,7 +55,11 @@ sealed class BlockListItem(val type: Type) {
         QUICK_SCAN_ITEM
     }
 
-    data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
+    data class Title(
+        @StringRes val textResource: Int? = null,
+        val text: String? = null,
+        val menuAction: ((View) -> Unit)? = null
+    ) : BlockListItem(TITLE)
 
     data class ReferredItem(@StringRes val label: Int, val itemTitle: String) : BlockListItem(REFERRED_ITEM)
 

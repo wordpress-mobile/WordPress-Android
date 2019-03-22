@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
@@ -10,8 +12,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -24,7 +28,8 @@ class MostPopularInsightsUseCase
     private val mostPopularStore: MostPopularInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val dateUtils: DateUtils,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val popupMenuHandler: ItemPopupMenuHandler
 ) : StatelessUseCase<InsightsMostPopularModel>(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
     override suspend fun loadCachedData(): InsightsMostPopularModel? {
         return mostPopularStore.getMostPopularInsights(statsSiteProvider.siteModel)
@@ -44,9 +49,13 @@ class MostPopularInsightsUseCase
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_popular))
 
+    override fun buildEmptyItem(): List<BlockListItem> {
+        return listOf(buildTitle(), Empty())
+    }
+
     override fun buildUiModel(domainModel: InsightsMostPopularModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_insights_popular))
+        items.add(buildTitle())
         items.add(
                 QuickScanItem(
                         Column(
@@ -68,5 +77,11 @@ class MostPopularInsightsUseCase
                 )
         )
         return items
+    }
+
+    private fun buildTitle() = Title(string.stats_insights_popular, menuAction = this::onMenuClick)
+
+    private fun onMenuClick(view: View) {
+        popupMenuHandler.onMenuClick(view, type)
     }
 }

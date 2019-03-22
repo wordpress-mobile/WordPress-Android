@@ -23,11 +23,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Quick
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 
 class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: TodayInsightsStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: TodayStatsUseCase
     private val views = 10
@@ -39,7 +41,8 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         useCase = TodayStatsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                statsSiteProvider
+                statsSiteProvider,
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }

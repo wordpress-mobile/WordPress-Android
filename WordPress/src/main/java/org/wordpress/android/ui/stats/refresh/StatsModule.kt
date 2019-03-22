@@ -205,7 +205,7 @@ class StatsModule {
                 mainDispatcher,
                 statsSiteProvider,
                 useCases,
-                { statsStore.getInsights() },
+                { statsStore.getInsights(statsSiteProvider.siteModel) },
                 uiModelMapper::mapInsights
         )
     }

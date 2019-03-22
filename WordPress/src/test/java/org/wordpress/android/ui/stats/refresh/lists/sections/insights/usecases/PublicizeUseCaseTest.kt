@@ -29,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -39,6 +40,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var serviceMapper: ServiceMapper
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     private lateinit var useCase: PublicizeUseCase
     private val itemsToLoad = 6
     private val limitMode = LimitMode.Top(itemsToLoad)
@@ -50,6 +52,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 serviceMapper,
                 tracker,
+                popupMenuHandler,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)

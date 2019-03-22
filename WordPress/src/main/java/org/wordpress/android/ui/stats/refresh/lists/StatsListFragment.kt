@@ -183,6 +183,11 @@ class StatsListFragment : DaggerFragment() {
         viewModel.listSelected.observe(this, Observer {
             viewModel.onListSelected()
         })
+
+        viewModel.typeMoved?.observeEvent(this) {
+            viewModel.onTypeMoved()
+            true
+        }
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {

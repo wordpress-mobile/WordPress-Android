@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
@@ -36,7 +37,8 @@ abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val dateSelector: StatsDateSelector
+    private val dateSelector: StatsDateSelector,
+    private val popupMenuHandler: ItemPopupMenuHandler? = null
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
     private var isInitialized = false
@@ -61,6 +63,8 @@ abstract class StatsListViewModel(
     val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {
         it ?: DateSelectorUiModel(false)
     }
+
+    val typeMoved = popupMenuHandler?.typeMoved
 
     override fun onCleared() {
         statsUseCase.onCleared()
@@ -119,6 +123,12 @@ abstract class StatsListViewModel(
         data class Success(val data: List<StatsBlock>) : UiModel()
         class Error(val message: Int = R.string.stats_loading_error) : UiModel()
     }
+
+    fun onTypeMoved() {
+        launch {
+            statsUseCase.refreshTypes()
+        }
+    }
 }
 
 class InsightsListViewModel
@@ -126,8 +136,15 @@ class InsightsListViewModel
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(INSIGHTS_USE_CASE) private val insightsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, insightsUseCase, analyticsTracker, dateSelectorFactory.build(INSIGHTS))
+    dateSelectorFactory: StatsDateSelector.Factory,
+    popupMenuHandler: ItemPopupMenuHandler
+) : StatsListViewModel(
+        mainDispatcher,
+        insightsUseCase,
+        analyticsTracker,
+        dateSelectorFactory.build(INSIGHTS),
+        popupMenuHandler
+)
 
 class YearsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,

@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 
@@ -30,6 +31,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: AllTimeInsightsStore
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: AllTimeStatsUseCase
     private val bestDay = "2018-11-25"
@@ -40,7 +42,8 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
-                statsDateFormatter
+                statsDateFormatter,
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsDateFormatter.printDate(bestDay)).thenReturn(bestDayTransformed)
