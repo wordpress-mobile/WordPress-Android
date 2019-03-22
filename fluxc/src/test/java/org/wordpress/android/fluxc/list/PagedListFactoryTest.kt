@@ -7,12 +7,12 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 import org.wordpress.android.fluxc.model.list.PagedListFactory
-import org.wordpress.android.fluxc.model.list.datastore.ListStoreInternalDataStore
+import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataStore
 
 internal class PagedListFactoryTest {
     @Test
     fun `create factory triggers create data store`() {
-        val mockCreateDataStore = mock<() -> ListStoreInternalDataStore<String>>()
+        val mockCreateDataStore = mock<() -> InternalPagedListDataStore<String>>()
         whenever(mockCreateDataStore.invoke()).thenReturn(mock())
         val pagedListFactory = PagedListFactory(mockCreateDataStore)
 
@@ -23,7 +23,7 @@ internal class PagedListFactoryTest {
 
     @Test
     fun `invalidate triggers create data store`() {
-        val mockCreateDataStore = mock<() -> ListStoreInternalDataStore<String>>()
+        val mockCreateDataStore = mock<() -> InternalPagedListDataStore<String>>()
         whenever(mockCreateDataStore.invoke()).thenReturn(mock())
         val invalidatedCallback = mock<InvalidatedCallback>()
 

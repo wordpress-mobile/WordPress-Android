@@ -2,15 +2,15 @@ package org.wordpress.android.fluxc.model.list
 
 import android.arch.paging.DataSource
 import android.arch.paging.PositionalDataSource
-import org.wordpress.android.fluxc.model.list.datastore.ListStoreInternalDataStore
+import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataStore
 
 /**
  * A [DataSource.Factory] instance for `ListStore` lists.
  *
- * @param createDataStore A function that creates an instance of [ListStoreInternalDataStore].
+ * @param createDataStore A function that creates an instance of [InternalPagedListDataStore].
  */
 class PagedListFactory<T>(
-    private val createDataStore: () -> ListStoreInternalDataStore<T>
+    private val createDataStore: () -> InternalPagedListDataStore<T>
 ) : DataSource.Factory<Int, T>() {
     private var currentSource: PagedListPositionalDataSource<T>? = null
 
@@ -31,7 +31,7 @@ class PagedListFactory<T>(
  * @param dataStore Describes how to take certain actions such as fetching list for the item type [T].
  */
 private class PagedListPositionalDataSource<T>(
-    private val dataStore: ListStoreInternalDataStore<T>
+    private val dataStore: InternalPagedListDataStore<T>
 ) : PositionalDataSource<T>() {
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
         val startPosition = computeInitialLoadPosition(params, dataStore.totalSize)
