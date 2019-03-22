@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="UnusedResources">
-    <!-- material colors -->
-    <!--
-        colorPrimary            app branding color for the app bar
-        colorPrimaryDark        status bar and contextual app bars
-        colorControlNormal      (unused here) controls in their normal state (spinner arrow, scrollbars, unchecked checkboxes)
-        colorControlActivated   controls in their activated/checked state (search highlight, checked checkboxes)
-        colorControlHighlight   control highlights (ripples, list selectors)
-    -->
-    <color name="color_primary">@color/blue_wordpress</color>
+
+    <color name="color_primary">@color/primary</color>
     <color name="color_primary_dark">@color/status_bar_tint</color>
     <color name="color_accent">@color/orange_jazzy</color>
     <color name="color_control_normal">@color/white</color>
@@ -26,191 +20,175 @@
     <color name="light_gray">@color/grey_lighten_30</color>
     <color name="gray">@color/grey_lighten_20</color>
     <color name="white">#FFFFFF</color>
-    <color name="white_dotorg_back">#F1F1F1</color> <!-- CHECKSTYLE IGNORE -->
-    <!-- note that black should NOT be used for text - use grey_dark instead -->
     <color name="black">#000000</color>
     <color name="default_background">@color/grey_lighten_30</color>
 
-    <!-- ==================================== -->
-    <!-- WordPress.com Colors                 -->
-    <!-- wordpress.com/design-handbook/colors -->
     <!-- Blues -->
-    <color name="blue_wordpress">#0087be</color>
-    <color name="blue_light">#78dcfa</color>
-    <color name="blue_medium">#00aadc</color>
-    <color name="blue_dark">#005082</color>
+    <color name="blue_wordpress">@color/primary_500</color>
+    <color name="blue_light">@color/primary_300</color>
+    <color name="blue_medium">@color/primary_400</color>
+    <color name="blue_dark">@color/primary_700</color>
 
     <!-- Primary Greys -->
-    <color name="grey">#87a6bc</color>
-    <color name="grey_light">#f3f6f8</color>
-    <color name="grey_dark">#2e4453</color>
-    <color name="grey_disabled">@color/grey_darken_10</color>
+    <color name="grey">@color/neutral_300</color>
+    <color name="grey_light">@color/neutral_0</color>
+    <color name="grey_dark">@color/neutral_700</color>
+    <color name="grey_disabled">@color/neutral_400</color>
 
     <!-- Secondary Greys -->
-    <color name="grey_lighten_30">#e9eff3</color>
-    <color name="grey_lighten_20">#c8d7e1</color>
-    <color name="grey_lighten_10">#a8bece</color>
-    <color name="grey_darken_10">#668eaa</color>
-    <color name="grey_darken_20">#4f748e</color>
-    <color name="grey_darken_30">#3d596d</color>
+    <color name="grey_lighten_30">@color/neutral_0</color>
+    <color name="grey_lighten_20">@color/neutral_100</color>
+    <color name="grey_lighten_10">@color/neutral_200</color>
+    <color name="grey_darken_10">@color/neutral_400</color>
+    <color name="grey_darken_20">@color/neutral_500</color>
+    <color name="grey_darken_30">@color/neutral_600</color>
 
-    <color name="grey_text_min">#537994</color>
+    <color name="grey_text_min">@color/neutral</color>
 
     <!-- Standard Greys -->
     <color name="grey_3">#333333</color>
-    <color name="grey_c">#cccccc</color>
+    <color name="grey_c">@color/neutral_50</color>
 
     <!-- Oranges -->
-    <color name="orange_jazzy">#f0821e</color>
-    <color name="orange_fire">#d54e21</color>
-    <color name="orange_active">#f58335</color>
-    <color name="orange_dark_active">#c55b12</color>
+    <color name="orange_jazzy">@color/accent_500</color>
+    <color name="orange_fire">@color/accent_600</color>
+    <color name="orange_active">@color/accent_400</color>
+    <color name="orange_dark_active">@color/accent_700</color>
 
     <!-- Alerts -->
-    <color name="alert_yellow">#f0b849</color>
-    <color name="alert_yellow_dark">#d89511</color>
-    <color name="alert_red">#d94f4f</color>
-    <color name="alert_green">#4ab866</color>
+    <color name="alert_yellow">@color/warning_500</color>
+    <color name="alert_yellow_dark">@color/warning_700</color>
+    <color name="alert_red">@color/error_500</color>
+    <color name="alert_green">@color/success_500</color>
 
     <!-- Translucent -->
     <color name="black_translucent_40">#66000000</color>
     <color name="black_translucent_50">#80000000</color>
-    <color name="blue_light_translucent_80">#cc78dcfa</color>
-    <color name="grey_dark_translucent_50">#802e4453</color>
-    <color name="grey_dark_translucent_70">#b32e4453</color>
-    <color name="grey_translucent_50">#80888888</color>
-    <color name="grey_lighten_10_translucent_50">#80a8bece</color>
-    <color name="grey_lighten_20_translucent_50">#80c8d7e1</color>
-    <color name="grey_lighten_30_translucent_50">#80e9eff3</color>
+    <color name="blue_light_translucent_80">@color/primary_50</color>
+    <color name="grey_dark_translucent_50">@color/black_translucent_50</color>
+    <color name="grey_translucent_50">@color/black_translucent_50</color>
+    <color name="grey_lighten_10_translucent_50">@color/black_translucent_40</color>
+    <color name="grey_lighten_20_translucent_50">@color/gray_50</color>
+    <color name="grey_lighten_30_translucent_50">#80e9eff3</color> <!-- Use for old Stats.  Will be removed soon. -->
     <color name="white_translucent_40">#66ffffff</color>
-    <color name="white_translucent_60">#99ffffff</color>
     <color name="white_translucent_65">#a6ffffff</color>
 
-    <!-- END WordPress.com Colors -->
-    <!-- ======================== -->
-
     <!-- Material Design -->
-    <color name="grey_50">#fffafafa</color>
-    <color name="grey_100">#fff5f5f5</color>
-    <color name="grey_200">#ffeeeeee</color>
-    <color name="grey_300">#ffe0e0e0</color>
-    <color name="grey_400">#ffbdbdbd</color>
-    <color name="grey_500">#ff9e9e9e</color>
-    <color name="grey_600">#ff757575</color>
-    <color name="grey_700">#ff616161</color>
-    <color name="grey_800">#ff424242</color>
-    <color name="grey_900">#ff212121</color>
+    <color name="grey_100">@color/gray_100</color>
+    <color name="grey_200">@color/gray_200</color>
+    <color name="grey_400">@color/gray_400</color>
+    <color name="grey_500">@color/gray_500</color>
+    <color name="grey_600">@color/gray_600</color>
+    <color name="grey_800">@color/gray_800</color>
+    <color name="grey_900">@color/gray_900</color>
 
     <!-- App specific colors -->
-    <!-- We could use blue_dark for the status bar color, but to adhere to the material design spec very closely,
-      we're using a shade of blue_wordpress -->
-    <color name="status_bar_tint">#006b98</color>
-    <color name="action_mode_status_bar_tint">#ff517188</color>
+    <color name="status_bar_tint">@color/primary_600</color>
+    <color name="action_mode_status_bar_tint">@color/neutral</color>
 
     <!-- Media Gallery -->
-    <color name="media_gallery_bg">@color/grey_darken_30</color>
-    <color name="media_gallery_option_selected">@color/grey_dark</color>
-    <color name="media_gallery_option_default">@color/grey_lighten_30</color>
+    <color name="media_gallery_bg">@color/neutral_600</color>
+    <color name="media_gallery_option_selected">@color/neutral_700</color>
+    <color name="media_gallery_option_default">@color/neutral_50</color>
 
     <!-- Theme Details -->
-    <color name="theme_details_name">@color/grey_dark</color>
+    <color name="theme_details_name">@color/neutral_800</color>
     <color name="theme_details_button">@color/white</color>
-    <color name="theme_details_premium">@color/orange_jazzy</color>
-    <color name="theme_feature_text">@color/grey_dark</color>
+    <color name="theme_details_premium">@color/accent</color>
+    <color name="theme_feature_text">@color/neutral_800</color>
 
     <!-- Tab Strip -->
-    <color name="tab_background">@color/color_primary</color>
-    <color name="tab_text_normal">@color/blue_light</color>
+    <color name="tab_background">@color/primary</color>
+    <color name="tab_text_normal">@color/primary_50</color>
     <color name="tab_text_selected">@color/white</color>
     <color name="tab_indicator">@color/white</color>
 
     <!-- Stats -->
-    <color name="stats_text_color">@color/grey_dark</color>
-    <color name="stats_link_text_color">@color/blue_wordpress</color>
-    <color name="stats_module_content_list_header">@color/grey_text_min</color>
-    <color name="stats_blue_labels">@color/grey_darken_20</color>
-    <color name="stats_bar_graph_main_series">@color/blue_wordpress</color>
-    <color name="stats_bar_graph_main_series_highlight">@color/orange_jazzy</color>
-    <color name="stats_bar_graph_outer_highlight">#1Af0821e</color> <!-- 10% Opacity on orange_jazzy #f0821e -->
-    <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
-    <color name="stats_empty_placeholder_color">@color/grey_lighten_30_translucent_50</color>
-    <color name="stats_bar_chart_gradient_start_color">#260087be</color>
-    <color name="stats_low_activity">#91e2fb</color>
-    <color name="stats_medium_activity">#00bef6</color>
-    <color name="stats_high_activity">#0083a9</color>
+    <color name="stats_text_color">@color/neutral_800</color>
+    <color name="stats_link_text_color">@color/accent</color>
+    <color name="stats_module_content_list_header">@color/neutral</color>
+    <color name="stats_blue_labels">@color/neutral</color>
+    <color name="stats_bar_graph_main_series">@color/primary</color>
+    <color name="stats_bar_graph_main_series_highlight">@color/accent</color>
+    <color name="stats_bar_graph_outer_highlight">@color/accent_100</color> <!-- 10% Opacity on orange_jazzy #f0821e -->
+    <color name="stats_bar_graph_secondary_series">@color/primary_dark</color>
+    <color name="stats_empty_placeholder_color">@color/neutral_0</color>
+    <color name="stats_bar_chart_gradient_start_color">@color/primary_50</color>
+    <color name="stats_low_activity">@color/primary_light</color>
+    <color name="stats_medium_activity">@color/primary</color>
+    <color name="stats_high_activity">@color/primary_dark</color>
 
     <!-- Reader  -->
-    <color name="reader_divider_grey">@color/grey_lighten_30</color>
-    <color name="reader_follow">@color/blue_medium</color>
-    <color name="reader_following">@color/alert_green</color>
-    <color name="reader_hyperlink">@color/blue_medium</color>
-    <color name="reader_notifications_off">@color/alert_green</color>
-    <color name="reader_notifications_on">@color/grey_dark</color>
-    <color name="filtered_list_suggestions">#f8f8f8</color>
-    <color name="reader_accent_material_dark">@color/material_deep_teal_200</color>
+    <color name="reader_divider_grey">@color/divider</color>
+    <color name="reader_follow">@color/primary</color>
+    <color name="reader_following">@color/success</color>
+    <color name="reader_hyperlink">@color/primary</color>
+    <color name="reader_notifications_off">@color/success</color>
+    <color name="reader_notifications_on">@color/neutral_800</color>
+    <color name="filtered_list_suggestions">@color/neutral_0</color>
+    <color name="reader_accent_material_dark">@color/accent</color>
 
     <!-- Comment Status -->
-    <color name="comment_status_unapproved">@color/orange_jazzy</color>
-    <color name="comment_status_spam">@color/alert_red</color>
+    <color name="comment_status_unapproved">@color/accent</color>
+    <color name="comment_status_spam">@color/error</color>
 
     <!-- Notification Status -->
-    <color name="notification_status_unapproved">@color/alert_yellow</color>
-    <color name="notification_status_unapproved_dark">#eeac31</color>
-    <color name="notification_status_unapproved_background">#fef8ee</color>
+    <color name="notification_status_unapproved">@color/warning</color>
+    <color name="notification_status_unapproved_dark">@color/warning_600</color>
+    <color name="notification_status_unapproved_background">@color/warning_0</color>
 
     <!-- NUX -->
-    <color name="nux_grey_button">@color/grey_lighten_20</color>
-    <color name="nux_alert_bg">@color/grey_dark</color>
-    <color name="nux_background">@color/blue_wordpress</color>
-    <color name="nux_background_org">@color/white_dotorg_back</color> <!-- CHECKSTYLE IGNORE -->
-    <color name="nux_eye_icon_color_closed">@color/grey_lighten_20</color>
-    <color name="nux_eye_icon_color_open">@color/grey_lighten_10</color>
+    <color name="nux_grey_button">@color/neutral_100</color>
+    <color name="nux_alert_bg">@color/neutral_800</color>
+    <color name="nux_background">@color/primary</color>
+    <color name="nux_eye_icon_color_closed">@color/neutral_100</color>
+    <color name="nux_eye_icon_color_open">@color/neutral_200</color>
 
     <!-- Editor -->
-    <color name="image_options_label">@color/grey_lighten_20</color>
+    <color name="image_options_label">@color/neutral_100</color>
     <!-- copied from private support lib resource: color/design_snackbar_background_color -->
-    <color name="snackbar_background_color">#323232</color>
+    <color name="snackbar_background_color">@color/neutral_800</color>
 
     <!-- Misc -->
-    <color name="pressed_wordpress">@color/blue_light_translucent_80</color>
-    <color name="background_grey">@color/grey_lighten_30</color>
-    <color name="dialog_button_text">@color/blue_medium</color>
+    <color name="pressed_wordpress">@color/primary_50</color>
+    <color name="background_grey">@color/neutral_0</color>
+    <color name="dialog_button_text">@color/primary_400</color>
 
     <!--Me-->
-    <color name="me_divider">#D8E3EA</color>
+    <color name="me_divider">@color/divider</color>
 
     <!-- Notifications -->
-    <color name="notifications_settings_divider_color">#d0d5d9</color>
+    <color name="notifications_settings_divider_color">@color/divider</color>
 
     <!-- Site Settings -->
-    <color name="site_settings_pref_divider_color">#dce1e6</color>
+    <color name="site_settings_pref_divider_color">@color/divider</color>
 
     <!-- Themes -->
-    <color name="theme_price">#4FB769</color>
-    <color name="theme_active">#A9E9FC</color>
+    <color name="theme_price">@color/success</color>
+    <color name="theme_active">@color/primary_50</color>
 
     <!-- dividers -->
     <!-- TODO: consolidate divider colors -->
-    <color name="divider_grey">#D8E3EA</color>
+    <color name="divider_grey">@color/divider</color>
 
     <!-- Login -->
-    <color name="login_background_color">@color/grey_light</color>
+    <color name="login_background_color">@color/neutral_0</color>
 
     <!-- Quick Start -->
-    <color name="quickstart_focus_inner_circle">@color/blue_wordpress</color>
-    <color name="quickstart_focus_outer_circle">#7e0087be</color>
+    <color name="quickstart_focus_inner_circle">@color/primary</color>
+    <color name="quickstart_focus_outer_circle">@color/primary_100</color>
 
-    <color name="switch_tint">@color/blue_medium</color>
+    <color name="switch_tint">@color/primary_400</color>
     <color name="jetpack_green">#00be28</color>
 
     <!-- Pages -->
-    <color name="page_item_tag_background">#fbf4e7</color>
+    <color name="page_item_tag_background">@color/warning_0</color>
 
     <!-- Revisions -->
-    <color name="revision_diff_del_action_underline">@color/alert_red</color>
-    <color name="revision_diff_del_action_background">#1Ad94f4f</color>
-    <color name="revision_diff_add_action_underline">@color/blue_wordpress</color>
-    <color name="revision_diff_add_action_background">#1A0087BE</color>
+    <color name="revision_diff_del_action_underline">@color/error</color>
+    <color name="revision_diff_del_action_background">@color/error_0</color>
+    <color name="revision_diff_add_action_underline">@color/primary</color>
+    <color name="revision_diff_add_action_background">@color/primary_0</color>
 
     <!-- SEMANTIC -->
     <color name="accent">@color/hot_pink_500</color>
