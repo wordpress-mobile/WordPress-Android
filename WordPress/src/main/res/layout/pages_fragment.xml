@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="start"
-                android:background="@color/color_primary"
+                android:background="@color/primary"
                 app:tabContentStart="72dp"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/white"

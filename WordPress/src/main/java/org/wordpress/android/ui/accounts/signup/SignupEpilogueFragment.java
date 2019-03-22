@@ -643,7 +643,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             UCrop.Options options = new UCrop.Options();
             options.setShowCropGrid(false);
             options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar_tint));
-            options.setToolbarColor(ContextCompat.getColor(context, R.color.color_primary));
+            options.setToolbarColor(ContextCompat.getColor(context, R.color.primary));
             options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
             options.setHideBottomControls(true);
 
