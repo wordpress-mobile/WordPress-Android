@@ -55,11 +55,23 @@ class PostListMainViewModel @Inject constructor(
     private val _isFabVisible = MutableLiveData<Boolean>()
     val isFabVisible: LiveData<Boolean> = _isFabVisible
 
-    private val _filterAuthorListItems = MutableLiveData<List<AuthorFilterListItemUIState>>()
-    val filterAuthorListItems: LiveData<List<AuthorFilterListItemUIState>> = _filterAuthorListItems
+    private val _isAuthorFilterSelectionVisible = MutableLiveData<Boolean>()
+    val isAuthorFilterSelectionVisible: LiveData<Boolean> = _isAuthorFilterSelectionVisible
 
-    val filterOnlyUser: LiveData<Boolean> = _filterAuthorListItems.map { items ->
-        return@map items.firstOrNull { state -> state.isSelected } is AuthorFilterListItemUIState.Me
+    private val _authorFilterSelection = MutableLiveData<AuthorFilterSelection>()
+
+    val filterAuthorListItems: LiveData<List<AuthorFilterListItemUIState>> = _authorFilterSelection.map { selection ->
+        // Order has to be the same as the AuthorFilterSelection enum
+        listOf(
+                AuthorFilterListItemUIState.Me(
+                        accountStore.account?.avatarUrl, isSelected = selection == AuthorFilterSelection.ME
+                ),
+                AuthorFilterListItemUIState.Everyone(isSelected = selection == AuthorFilterSelection.EVERYONE)
+        )
+    }
+
+    val filterOnlyUser: LiveData<Boolean> = _authorFilterSelection.map { selection ->
+        selection == AuthorFilterSelection.ME
     }
 
     private val _selectTab = SingleLiveEvent<Int>()
@@ -74,7 +86,8 @@ class PostListMainViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
 
-        updateAuthorFilterSelection(prefs.postListAuthorSelection.ordinal)
+        _isAuthorFilterSelectionVisible.value = site.isWPCom
+        _authorFilterSelection.value = prefs.postListAuthorSelection
     }
 
     override fun onCleared() {
@@ -89,16 +102,11 @@ class PostListMainViewModel @Inject constructor(
     fun updateAuthorFilterSelection(position: Int) {
         val selection: AuthorFilterSelection = when (position) {
             AuthorFilterSelection.ME.ordinal -> AuthorFilterSelection.ME
-            else -> AuthorFilterSelection.EVERYONE
+            AuthorFilterSelection.EVERYONE.ordinal -> AuthorFilterSelection.EVERYONE
+            else -> throw IllegalArgumentException("Unhandled author filter selection position")
         }
 
-        _filterAuthorListItems.value = listOf(
-                AuthorFilterListItemUIState.Me(
-                        accountStore.account?.avatarUrl, isSelected = selection == AuthorFilterSelection.ME
-                ),
-                AuthorFilterListItemUIState.Everyone(isSelected = selection == AuthorFilterSelection.EVERYONE)
-        )
-
+        _authorFilterSelection.value = selection
         prefs.postListAuthorSelection = selection
     }
 
@@ -126,7 +134,9 @@ class PostListMainViewModel @Inject constructor(
     }
 
     sealed class AuthorFilterListItemUIState(
-        internal val text: UiString, @DrawableRes val iconRes: Int, val isSelected: Boolean
+        val text: UiString,
+        @DrawableRes val iconRes: Int,
+        val isSelected: Boolean
     ) {
         class Everyone(isSelected: Boolean) : AuthorFilterListItemUIState(
                 text = UiStringRes(R.string.post_list_author_everyone),
@@ -139,20 +149,5 @@ class PostListMainViewModel @Inject constructor(
                 iconRes = R.drawable.ic_user_circle_grey_24dp,
                 isSelected = isSelected
         )
-    }
-
-    enum class AuthorFilterSelection {
-        ME, EVERYONE;
-
-        companion object {
-            @JvmStatic
-            fun valueOf(value: String, default: AuthorFilterSelection): AuthorFilterSelection {
-                return try {
-                    valueOf(value)
-                } catch (ignored: IllegalArgumentException) {
-                    default
-                }
-            }
-        }
     }
 }

@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.prefs
 
-import org.wordpress.android.ui.posts.PostListMainViewModel.AuthorFilterSelection
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import javax.inject.Inject
 import javax.inject.Singleton
 
