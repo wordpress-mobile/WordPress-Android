@@ -26,7 +26,7 @@ class PagedListFactory<T>(
 }
 
 /**
- * A positional data source for [PagedListItemType].
+ * A positional data source for [T].
  *
  * @param dataStore Describes how to take certain actions such as fetching list for the item type [T].
  */
