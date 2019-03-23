@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="UnusedResources">
 
-    <color name="color_primary_dark">@color/status_bar_tint</color>
     <color name="color_accent">@color/orange_jazzy</color>
     <color name="color_control_normal">@color/white</color>
     <color name="color_control_activated">@color/blue_light</color>
@@ -82,7 +81,7 @@
     <color name="grey_900">@color/gray_900</color>
 
     <!-- App specific colors -->
-    <color name="status_bar_tint">@color/primary_600</color>
+    <color name="status_bar_tint">@color/primary_dark</color>
     <color name="action_mode_status_bar_tint">@color/neutral</color>
 
     <!-- Media Gallery -->
