@@ -2,7 +2,7 @@
 <resources>
 
     <style name="StatsHeader">
-        <item name="android:textColor">@color/stats_module_content_list_header</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:textStyle">bold</item>
         <!--  item name="android:textAllCaps">true</item -->

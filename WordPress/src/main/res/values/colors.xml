@@ -60,7 +60,6 @@
 
     <!-- Stats -->
     <color name="link_stats">@color/accent</color>
-    <color name="stats_module_content_list_header">@color/neutral</color>
     <color name="stats_blue_labels">@color/neutral</color>
     <color name="stats_bar_graph_main_series">@color/primary</color>
     <color name="stats_bar_graph_main_series_highlight">@color/accent</color>
