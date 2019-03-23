@@ -25,7 +25,7 @@ class ImagePlaceholderManager @Inject constructor() {
 
     fun getPlaceholderResource(imgType: ImageType): Int? {
         return when (imgType) {
-            ImageType.AVATAR -> R.drawable.shape_oval_grey_light
+            ImageType.AVATAR -> R.drawable.bg_oval_neutral_0
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_grey_user_32dp
             ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
             ImageType.BLAVATAR -> R.color.neutral_0

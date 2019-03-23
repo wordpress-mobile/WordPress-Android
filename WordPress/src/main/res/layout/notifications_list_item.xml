@@ -55,7 +55,7 @@
 
             <org.wordpress.android.widgets.NoticonTextView
                 android:id="@+id/note_icon"
-                android:background="@drawable/shape_oval_blue_white_stroke"
+                android:background="@drawable/bg_oval_primary_400_stroke_neutral_0"
                 android:gravity="center"
                 android:layout_height="@dimen/note_icon_sz"
                 android:layout_marginStart="31dp"

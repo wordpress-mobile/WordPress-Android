@@ -58,7 +58,7 @@
                             style="@android:style/Widget.Holo.ProgressBar"
                             android:layout_width="@dimen/avatar_sz_inner_circle"
                             android:layout_height="@dimen/avatar_sz_inner_circle"
-                            android:background="@drawable/shape_oval_translucent"
+                            android:background="@drawable/bg_oval_black_translucent_50"
                             android:layout_gravity="center"
                             android:padding="@dimen/margin_large"
                             android:indeterminate="true"
