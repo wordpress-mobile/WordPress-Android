@@ -241,7 +241,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         mQuotaText.setText(getString(R.string.media_space_used, quota));
         mQuotaText.setTextColor(
-                getResources().getColor(mSite.getSpacePercentUsed() > 90 ? R.color.alert_red : R.color.grey_text_min));
+                getResources().getColor(mSite.getSpacePercentUsed() > 90 ? R.color.alert_red : R.color.neutral));
     }
 
     private void showQuota(boolean show) {

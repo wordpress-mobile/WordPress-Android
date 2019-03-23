@@ -187,7 +187,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mValue.setTextColor(getResources().getColor(R.color.orange_jazzy));
             } else {
                 if (currentValue == 0) {
-                    mValue.setTextColor(getResources().getColor(R.color.grey_text_min));
+                    mValue.setTextColor(getResources().getColor(R.color.neutral));
                 } else {
                     mValue.setTextColor(getResources().getColor(R.color.primary_500));
                 }

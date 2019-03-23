@@ -152,7 +152,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         value = currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
-            value.setTextColor(getResources().getColor(R.color.grey_text_min));
+            value.setTextColor(getResources().getColor(R.color.neutral));
         } else {
             value.setTextColor(getResources().getColor(R.color.primary_500));
         }

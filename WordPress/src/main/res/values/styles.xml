@@ -44,11 +44,11 @@
     </style>
 
     <style name="SiteCreation.Heading" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
     </style>
 
     <style name="SiteCreation.Subhead" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
@@ -164,7 +164,7 @@
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/neutral_400</item>
         <!-- Header color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorControlNormal">@color/grey_text_min</item>
+        <item name="colorControlNormal">@color/neutral</item>
         <item name="colorControlActivated">@color/primary_500</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:gravity">start</item>
@@ -184,7 +184,7 @@
     <style name="MediaSettings.Value">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -257,7 +257,7 @@
     </style>
 
     <style name="WordPress.EmptyList">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginEnd">16dp</item>
@@ -406,7 +406,7 @@
     <style name="MyProfileText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -575,8 +575,8 @@
     <style name="PostSettingsSubtitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_text_min</item>
-        <item name="android:textColorHint">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColorHint">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -719,7 +719,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 

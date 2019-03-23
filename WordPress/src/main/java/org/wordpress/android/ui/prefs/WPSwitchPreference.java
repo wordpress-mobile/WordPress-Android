@@ -34,7 +34,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             if (index == R.styleable.SummaryEditTextPreference_longClickHint) {
                 mHint = array.getString(index);
             } else if (index == R.styleable.SummaryEditTextPreference_iconTint) {
-                mTint = array.getResourceId(index, R.color.grey_text_min);
+                mTint = array.getResourceId(index, R.color.neutral);
             }
         }
 

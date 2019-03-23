@@ -15,7 +15,7 @@
         <item name="android:textColorLink">@color/reader_hyperlink</item>
     </style>
     <style name="ReaderTextView.Label" parent="ReaderTextView">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
@@ -47,8 +47,8 @@
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/grey_text_min</item>
-        <item name="android:drawableTint">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
+        <item name="android:drawableTint">@color/neutral</item>
         <item name="android:drawableStart">@drawable/ic_time_neutral_400_16dp</item>
     </style>
     <style name="ReaderTextView.EmptyList" parent="ReaderTextView">

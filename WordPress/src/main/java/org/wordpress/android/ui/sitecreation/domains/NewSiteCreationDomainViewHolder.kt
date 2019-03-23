@@ -30,7 +30,7 @@ sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @La
         init {
             suggestion.buttonTintList = ContextCompat.getColorStateList(
                     parentView.context,
-                    R.color.grey_blue_radio_button_state_list
+                    R.color.neutral_100_primary_400_selector
             )
             container.setOnClickListener {
                 onDomainSelected?.invoke()

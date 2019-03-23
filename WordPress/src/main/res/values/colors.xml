@@ -19,7 +19,6 @@
 
     <!-- Secondary Greys -->
 
-    <color name="grey_text_min">@color/neutral</color>
 
     <!-- Standard Greys -->
     <color name="grey_3">#333333</color>

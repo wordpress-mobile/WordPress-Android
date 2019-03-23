@@ -67,7 +67,7 @@ public class DetailListPreference extends ListPreference
         setupView((TextView) view.findViewById(android.R.id.title),
                   R.dimen.text_sz_large, R.color.neutral_700, R.color.neutral_200);
         setupView((TextView) view.findViewById(android.R.id.summary),
-                  R.dimen.text_sz_medium, R.color.grey_text_min, R.color.neutral_200);
+                  R.dimen.text_sz_medium, R.color.neutral, R.color.neutral_200);
     }
 
     @Override

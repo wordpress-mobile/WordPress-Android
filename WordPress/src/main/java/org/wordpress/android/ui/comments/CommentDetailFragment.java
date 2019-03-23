@@ -972,7 +972,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnTrashComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.TRASH) {
                 ColorUtils.INSTANCE.setImageResourceWithTint(mBtnModerateIcon, R.drawable.ic_undo_white_24dp,
-                        R.color.grey_text_min);
+                        R.color.neutral);
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
@@ -1015,7 +1015,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             color = R.color.orange_jazzy;
             mBtnModerateTextView.setText(R.string.comment_status_approved);
         } else {
-            color = R.color.grey_text_min;
+            color = R.color.neutral;
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
         }
 
@@ -1147,7 +1147,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setActivated(true);
         } else {
-            color = R.color.grey_text_min;
+            color = R.color.neutral;
             drawable = R.drawable.ic_star_outline_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeComment.setActivated(false);
