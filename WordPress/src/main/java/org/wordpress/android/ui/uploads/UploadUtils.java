@@ -227,7 +227,7 @@ public class UploadUtils {
                                                   View.OnClickListener onClickListener) {
         Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
                 .setAction(buttonTitleRes, onClickListener).
-                        setActionTextColor(view.getResources().getColor(R.color.orange_jazzy))
+                        setActionTextColor(view.getResources().getColor(R.color.accent))
                 .show();
     }
 

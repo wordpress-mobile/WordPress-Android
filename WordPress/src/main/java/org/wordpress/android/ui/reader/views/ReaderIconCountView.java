@@ -55,7 +55,7 @@ public class ReaderIconCountView extends LinearLayout {
                         mImageView.setImageDrawable(ContextCompat.getDrawable(context,
                                 R.drawable.reader_button_like));
                         mImageView.setImageTintList(getResources().getColorStateList(
-                                R.color.neutral_orange_jazzy_neutral_400_selector));
+                                R.color.neutral_accent_neutral_400_selector));
                         break;
                     case ICON_COMMENT:
                         mImageView.setImageDrawable(ContextCompat.getDrawable(context,

@@ -1012,7 +1012,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int color;
 
         if (status == CommentStatus.APPROVED) {
-            color = R.color.orange_jazzy;
+            color = R.color.accent;
             mBtnModerateTextView.setText(R.string.comment_status_approved);
         } else {
             color = R.color.neutral;
@@ -1142,7 +1142,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int drawable;
 
         if (isLiked) {
-            color = R.color.orange_jazzy;
+            color = R.color.accent;
             drawable = R.drawable.ic_star_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setActivated(true);

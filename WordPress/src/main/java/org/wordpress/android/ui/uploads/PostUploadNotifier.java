@@ -489,7 +489,7 @@ class PostUploadNotifier {
                                                                          PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
                                           actionPendingIntent)
-                               .setColor(mContext.getResources().getColor(R.color.orange_jazzy));
+                               .setColor(mContext.getResources().getColor(R.color.accent));
         }
 
         EventBus.getDefault().postSticky(new UploadService.UploadErrorEvent(post, snackbarMessage));
@@ -558,7 +558,7 @@ class PostUploadNotifier {
                                                                          PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
                                           actionPendingIntent)
-                               .setColor(mContext.getResources().getColor(R.color.orange_jazzy));
+                               .setColor(mContext.getResources().getColor(R.color.accent));
         }
 
         EventBus.getDefault().postSticky(new UploadService.UploadErrorEvent(mediaList, snackbarMessage));

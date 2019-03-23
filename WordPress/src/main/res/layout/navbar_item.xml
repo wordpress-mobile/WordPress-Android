@@ -26,7 +26,7 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="top"
-            android:background="@drawable/notification_badge"
+            android:background="@drawable/bg_oval_accent_stroke_white"
             android:visibility="gone"
             tools:visibility="visible"/>
 

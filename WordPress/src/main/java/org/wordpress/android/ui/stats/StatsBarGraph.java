@@ -142,7 +142,7 @@ class StatsBarGraph extends GraphView {
     private class HorizontalLabelsColor implements IndexDependentColor {
         public int get(int index) {
             if (mBarPositionToHighlight == index) {
-                return getResources().getColor(R.color.orange_jazzy);
+                return getResources().getColor(R.color.accent);
             } else {
                 return getResources().getColor(R.color.neutral_600);
             }

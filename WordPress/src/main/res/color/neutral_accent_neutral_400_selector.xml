@@ -5,7 +5,7 @@
 
     <item android:color="@color/neutral_400" android:state_enabled="false" android:state_selected="false" />
     <item android:color="@color/neutral_400" android:state_enabled="false" android:state_selected="true" />
-    <item android:color="@color/orange_jazzy" android:state_enabled="true" android:state_selected="true" />
+    <item android:color="@color/accent" android:state_enabled="true" android:state_selected="true" />
     <item android:color="@color/neutral" />
 
 </selector>

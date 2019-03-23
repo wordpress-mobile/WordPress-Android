@@ -184,7 +184,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         public void updateBackGroundAndIcon(int currentValue) {
             if (mIsChecked) {
-                mValue.setTextColor(getResources().getColor(R.color.orange_jazzy));
+                mValue.setTextColor(getResources().getColor(R.color.accent));
             } else {
                 if (currentValue == 0) {
                     mValue.setTextColor(getResources().getColor(R.color.neutral));
