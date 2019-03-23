@@ -5,7 +5,6 @@
     tools:ignore="UnusedResources">
 
     <color name="color_control_normal">@color/white</color>
-    <color name="color_control_highlight">@color/grey_lighten_20</color>
 
     <color name="fab_normal">@color/accent</color>
     <color name="fab_pressed">@color/orange_fire</color>

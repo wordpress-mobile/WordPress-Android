@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="colorControlActivated">@color/primary_300</item>
-        <item name="colorControlHighlight">@color/color_control_highlight</item>
+        <item name="colorControlHighlight">@color/neutral_100</item>
 
         <item name="android:windowBackground">@color/grey_lighten_30</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
