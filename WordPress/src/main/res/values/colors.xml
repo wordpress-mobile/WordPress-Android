@@ -7,7 +7,7 @@
     <color name="color_control_normal">@color/white</color>
 
     <color name="fab_normal">@color/accent</color>
-    <color name="list_selected">@color/blue_light_translucent_80</color>
+    <color name="list_selected">@color/primary_50</color>
 
     <!-- Default Colors -->
     <color name="gray">@color/neutral_100</color>
@@ -31,7 +31,6 @@
     <!-- Translucent -->
     <color name="black_translucent_40">#66000000</color>
     <color name="black_translucent_50">#80000000</color>
-    <color name="blue_light_translucent_80">@color/primary_50</color>
     <color name="grey_dark_translucent_50">@color/black_translucent_50</color>
     <color name="grey_translucent_50">@color/black_translucent_50</color>
     <color name="grey_lighten_10_translucent_50">@color/black_translucent_40</color>
