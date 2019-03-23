@@ -92,7 +92,7 @@
     <!-- We could use blue_dark for the status bar color, but to adhere to the material design spec very closely,
       we're using a shade of blue_wordpress -->
     <color name="status_bar">#006b98</color>
-    <color name="action_mode_status_bar_tint">#ff517188</color>
+    <color name="status_bar_action_mode">#ff517188</color>
 
     <!-- Login -->
     <color name="login_theme_accent_color">@color/blue_medium</color>
