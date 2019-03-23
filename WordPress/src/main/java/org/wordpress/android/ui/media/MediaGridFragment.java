@@ -815,7 +815,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         public void onDestroyActionMode(ActionMode mode) {
             setSwipeToRefreshEnabled(true);
             getAdapter().setInMultiSelect(false);
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar_tint);
+            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar);
             mActionMode = null;
         }
     }

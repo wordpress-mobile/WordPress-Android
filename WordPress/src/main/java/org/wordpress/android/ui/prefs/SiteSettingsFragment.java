@@ -1850,7 +1850,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.status_bar_tint);
+            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.status_bar);
             getAdapter().removeItemsSelected();
             mActionMode = null;
         }

@@ -38,7 +38,7 @@
     <!-- Material Design -->
 
     <!-- App specific colors -->
-    <color name="status_bar_tint">@color/primary_dark</color>
+    <color name="status_bar">@color/primary_dark</color>
     <color name="action_mode_status_bar_tint">@color/neutral</color>
 
     <!-- Media Gallery -->

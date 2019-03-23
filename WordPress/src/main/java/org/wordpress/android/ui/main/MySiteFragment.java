@@ -851,7 +851,7 @@ public class MySiteFragment extends Fragment implements
 
         UCrop.Options options = new UCrop.Options();
         options.setShowCropGrid(false);
-        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar_tint));
+        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar));
         options.setToolbarColor(ContextCompat.getColor(context, R.color.primary));
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
         options.setHideBottomControls(true);
