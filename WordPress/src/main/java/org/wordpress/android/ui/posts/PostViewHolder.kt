@@ -180,23 +180,23 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
             } else if (postAdapterItem.isLocalDraft) {
                 statusTextResId = R.string.local_draft
                 statusIconResId = R.drawable.ic_pages_white_24dp
-                statusColorResId = R.color.alert_yellow_dark
+                statusColorResId = R.color.warning_700
             } else if (postAdapterItem.isLocallyChanged) {
                 statusTextResId = R.string.local_changes
                 statusIconResId = R.drawable.ic_pages_white_24dp
-                statusColorResId = R.color.alert_yellow_dark
+                statusColorResId = R.color.warning_700
             } else {
                 when (postAdapterItem.postStatus) {
                     PostStatus.DRAFT -> {
                         statusTextResId = R.string.post_status_draft
                         statusIconResId = R.drawable.ic_pages_white_24dp
-                        statusColorResId = R.color.alert_yellow_dark
+                        statusColorResId = R.color.warning_700
                     }
                     PostStatus.PRIVATE -> statusTextResId = R.string.post_status_post_private
                     PostStatus.PENDING -> {
                         statusTextResId = R.string.post_status_pending_review
                         statusIconResId = R.drawable.ic_pages_white_24dp
-                        statusColorResId = R.color.alert_yellow_dark
+                        statusColorResId = R.color.warning_700
                     }
                     PostStatus.SCHEDULED -> {
                         statusTextResId = R.string.post_status_scheduled
