@@ -27,7 +27,6 @@
     <!-- Oranges -->
 
     <!-- Alerts -->
-    <color name="alert_yellow">@color/warning_500</color>
     <color name="alert_yellow_dark">@color/warning_700</color>
     <color name="alert_red">@color/error_500</color>
     <color name="alert_green">@color/success_500</color>

@@ -65,7 +65,7 @@
             android:layout_gravity="center_vertical"
             android:contentDescription="@null"
             tools:src="@drawable/ic_sync_white_24dp"
-            tools:tint="@color/alert_yellow" />
+            tools:tint="@color/warning_500" />
 
         <TextView
             android:id="@+id/plugin_status_text"
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_small"
             android:gravity="center_vertical"
-            android:textColor="@color/alert_yellow"
+            android:textColor="@color/warning_500"
             android:textSize="@dimen/text_sz_large"
             tools:text="@string/plugin_needs_update" />
 
