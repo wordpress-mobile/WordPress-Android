@@ -36,7 +36,6 @@
     <color name="white_translucent_65">#a6ffffff</color>
 
     <!-- Material Design -->
-    <color name="grey_900">@color/gray_900</color>
 
     <!-- App specific colors -->
     <color name="status_bar_tint">@color/primary_dark</color>
