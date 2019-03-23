@@ -162,7 +162,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, false, uploadError.postError)
                 }
                 statusIconResId = R.drawable.ic_cloud_upload_white_24dp
-                statusColorResId = R.color.alert_red
+                statusColorResId = R.color.error_500
             } else if (postAdapterItem.uploadStatus.isUploading) {
                 statusTextResId = R.string.post_uploading
                 statusIconResId = R.drawable.ic_cloud_upload_white_24dp
@@ -176,7 +176,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
             } else if (postAdapterItem.isConflicted) {
                 statusTextResId = R.string.local_post_is_conflicted
                 statusIconResId = R.drawable.ic_notice_white_24dp
-                statusColorResId = R.color.alert_red
+                statusColorResId = R.color.error_500
             } else if (postAdapterItem.isLocalDraft) {
                 statusTextResId = R.string.local_draft
                 statusIconResId = R.drawable.ic_pages_white_24dp
@@ -206,7 +206,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                     PostStatus.TRASHED -> {
                         statusTextResId = R.string.post_status_trashed
                         statusIconResId = R.drawable.ic_pages_white_24dp
-                        statusColorResId = R.color.alert_red
+                        statusColorResId = R.color.error_500
                     }
                     PostStatus.UNKNOWN -> {
                     }

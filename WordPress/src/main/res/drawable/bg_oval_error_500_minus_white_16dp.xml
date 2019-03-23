@@ -10,7 +10,7 @@
             android:shape="oval" >
 
             <solid
-                android:color="@color/alert_red" >
+                android:color="@color/error_500" >
             </solid>
 
             <padding

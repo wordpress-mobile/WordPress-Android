@@ -72,7 +72,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
     }
 
     enum class Status(val value: String, @DrawableRes val color: Int) {
-        NEGATIVE("error", R.drawable.shape_oval_red),
+        NEGATIVE("error", R.drawable.bg_oval_error_500),
         INFO("warning", R.drawable.shape_oval_blue_wordpress),
         POSITIVE("success", R.drawable.shape_oval_green),
         NEUTRAL("", R.drawable.shape_oval_grey);
