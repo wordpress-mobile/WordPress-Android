@@ -226,7 +226,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS) {
                 value.setTextColor(getResources().getColor(R.color.primary_500));
             } else {
-                value.setTextColor(getResources().getColor(R.color.grey_darken_30));
+                value.setTextColor(getResources().getColor(R.color.neutral_600));
             }
         }
         icon = currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);

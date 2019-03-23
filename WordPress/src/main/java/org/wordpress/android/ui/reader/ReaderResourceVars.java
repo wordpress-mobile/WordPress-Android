@@ -40,7 +40,7 @@ class ReaderResourceVars {
         mMarginMediumPx = resources.getDimensionPixelSize(R.dimen.margin_medium);
 
         mLinkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
-        mGreyMediumDarkStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_darken_30);
+        mGreyMediumDarkStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_600);
         mGreyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_0);
         mGreyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_0);
 

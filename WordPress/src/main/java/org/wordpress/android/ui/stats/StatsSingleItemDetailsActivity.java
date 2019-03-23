@@ -463,7 +463,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mGraphView.addSeries(mCurrentSeriesOnScreen);
         // mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
-        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.grey_darken_30));
+        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.neutral_600));
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
                 DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
         mGraphView.getGraphViewStyle().setTextSize(

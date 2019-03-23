@@ -144,7 +144,7 @@ class StatsBarGraph extends GraphView {
             if (mBarPositionToHighlight == index) {
                 return getResources().getColor(R.color.orange_jazzy);
             } else {
-                return getResources().getColor(R.color.grey_darken_30);
+                return getResources().getColor(R.color.neutral_600);
             }
         }
     }
@@ -152,7 +152,7 @@ class StatsBarGraph extends GraphView {
     private void setProperties() {
         GraphViewStyle gStyle = getGraphViewStyle();
         gStyle.setHorizontalLabelsIndexDependentColor(new HorizontalLabelsColor());
-        gStyle.setHorizontalLabelsColor(getResources().getColor(R.color.grey_darken_30));
+        gStyle.setHorizontalLabelsColor(getResources().getColor(R.color.neutral_600));
         gStyle.setVerticalLabelsColor(getResources().getColor(R.color.neutral_400));
         gStyle.setTextSize(getResources().getDimensionPixelSize(R.dimen.text_sz_extra_small));
         gStyle.setGridXColor(Color.TRANSPARENT);
