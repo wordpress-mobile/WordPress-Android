@@ -10,7 +10,7 @@
             android:shape="oval" >
 
             <solid
-                android:color="@color/blue_medium" >
+                android:color="@color/primary_400" >
             </solid>
 
             <padding

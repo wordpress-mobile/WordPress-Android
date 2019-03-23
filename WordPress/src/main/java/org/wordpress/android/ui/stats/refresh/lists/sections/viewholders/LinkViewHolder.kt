@@ -18,7 +18,7 @@ class LinkViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     fun bind(item: Link) {
         if (item.icon != null) {
-            val drawable = ColorUtils.applyTintToDrawable(text.context, item.icon, R.color.blue_medium)
+            val drawable = ColorUtils.applyTintToDrawable(text.context, item.icon, R.color.primary_400)
             text.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         } else {
             text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)

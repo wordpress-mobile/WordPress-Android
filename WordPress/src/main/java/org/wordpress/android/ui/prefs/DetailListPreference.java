@@ -141,12 +141,12 @@ public class DetailListPreference extends ListPreference
 
         if (positive != null) {
             //noinspection deprecation
-            positive.setTextColor(res.getColor(R.color.blue_medium));
+            positive.setTextColor(res.getColor(R.color.primary_400));
         }
 
         if (negative != null) {
             //noinspection deprecation
-            negative.setTextColor(res.getColor(R.color.blue_medium));
+            negative.setTextColor(res.getColor(R.color.primary_400));
         }
     }
 

@@ -74,7 +74,7 @@
             android:minHeight="@dimen/default_dialog_button_height"
             android:minWidth="@dimen/min_touch_target_sz"
             android:textAllCaps="true"
-            android:textColor="@color/blue_medium"
+            android:textColor="@color/primary_400"
             tools:text="Yes"
             style="@style/Widget.AppCompat.Button.Borderless" >
         </android.support.v7.widget.AppCompatButton>
@@ -88,7 +88,7 @@
             android:minHeight="@dimen/default_dialog_button_height"
             android:minWidth="@dimen/min_touch_target_sz"
             android:textAllCaps="true"
-            android:textColor="@color/blue_medium"
+            android:textColor="@color/primary_400"
             android:visibility="gone"
             tools:text="No"
             tools:visibility="visible"
@@ -104,7 +104,7 @@
             android:minHeight="@dimen/default_dialog_button_height"
             android:minWidth="@dimen/min_touch_target_sz"
             android:textAllCaps="true"
-            android:textColor="@color/blue_medium"
+            android:textColor="@color/primary_400"
             android:visibility="gone"
             tools:text="Maybe"
             tools:visibility="visible"

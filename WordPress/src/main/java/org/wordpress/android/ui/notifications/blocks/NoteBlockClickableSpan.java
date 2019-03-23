@@ -44,7 +44,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         // Text/background colors
         mTextColor = context.getResources().getColor(R.color.grey_dark);
         mBackgroundColor = context.getResources().getColor(R.color.pressed_wordpress);
-        mLinkColor = context.getResources().getColor(R.color.blue_medium);
+        mLinkColor = context.getResources().getColor(R.color.primary_400);
         mLightTextColor = context.getResources().getColor(R.color.grey_dark);
 
         processRangeData(range);

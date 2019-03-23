@@ -80,7 +80,7 @@ public class ReaderFollowButton extends LinearLayout {
             colorId = R.color.alert_green;
         } else {
             drawableId = R.drawable.ic_reader_follow_white_24dp;
-            colorId = R.color.blue_medium;
+            colorId = R.color.primary_400;
         }
         ColorUtils.INSTANCE.setImageResourceWithTint(mImageFollow, drawableId, colorId);
     }

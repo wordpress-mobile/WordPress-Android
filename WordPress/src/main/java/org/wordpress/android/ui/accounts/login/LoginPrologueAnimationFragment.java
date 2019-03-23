@@ -48,7 +48,7 @@ public class LoginPrologueAnimationFragment extends Fragment {
             savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_intro_template_view, container, false);
         rootView.setBackgroundColor(
-                getResources().getColor(mLightBackground ? R.color.primary_300 : R.color.blue_medium));
+                getResources().getColor(mLightBackground ? R.color.primary_300 : R.color.primary_400));
 
         TextView promoText = (TextView) rootView.findViewById(R.id.promo_text);
         promoText.setText(mPromoText);
