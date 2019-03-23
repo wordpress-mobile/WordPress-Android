@@ -1841,7 +1841,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.action_mode_status_bar_tint);
+            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.status_bar_action_mode);
             mActionMode = actionMode;
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.list_editor, menu);
