@@ -11,7 +11,7 @@
 
     <!-- Default Colors -->
     <color name="gray">@color/grey_lighten_20</color>
-    <color name="default_background">@color/grey_lighten_30</color>
+    <color name="default_background">@color/neutral_0</color>
 
     <!-- Blues -->
     <color name="blue_wordpress">@color/primary_500</color>
