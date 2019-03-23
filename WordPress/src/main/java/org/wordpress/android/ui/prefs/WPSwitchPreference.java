@@ -54,7 +54,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         if (titleView != null) {
             Resources res = getContext().getResources();
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
-            titleView.setTextColor(res.getColor(isEnabled() ? R.color.neutral_700 : R.color.grey_lighten_10));
+            titleView.setTextColor(res.getColor(isEnabled() ? R.color.neutral_700 : R.color.neutral_200));
 
             // add padding to the start of nested preferences
             if (!TextUtils.isEmpty(getDependency())) {

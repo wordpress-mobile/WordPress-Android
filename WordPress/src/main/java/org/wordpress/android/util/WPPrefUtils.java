@@ -75,7 +75,7 @@ public class WPPrefUtils {
      * Styles a {@link TextView} to display medium sized text as a header with sub-elements.
      */
     public static void layoutAsSubhead(TextView view) {
-        int color = view.isEnabled() ? R.color.neutral_700 : R.color.grey_lighten_10;
+        int color = view.isEnabled() ? R.color.neutral_700 : R.color.neutral_200;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
         setTextViewAttributes(view, size, color);
     }
@@ -84,7 +84,7 @@ public class WPPrefUtils {
      * Styles a {@link TextView} to display smaller text.
      */
     public static void layoutAsBody1(TextView view) {
-        int color = view.isEnabled() ? R.color.grey_text_min : R.color.grey_lighten_10;
+        int color = view.isEnabled() ? R.color.grey_text_min : R.color.neutral_200;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
         setTextViewAttributes(view, size, color);
     }
@@ -127,7 +127,7 @@ public class WPPrefUtils {
     public static void layoutAsInput(EditText view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
         setTextViewAttributes(view, size, R.color.neutral_700);
-        view.setHintTextColor(view.getResources().getColor(R.color.grey_lighten_10));
+        view.setHintTextColor(view.getResources().getColor(R.color.neutral_200));
         view.setTextColor(view.getResources().getColor(R.color.neutral_700));
         view.setSingleLine(true);
     }

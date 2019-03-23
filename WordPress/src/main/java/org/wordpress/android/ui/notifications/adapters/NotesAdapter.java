@@ -289,7 +289,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         } else if (isUnread) {
             noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.shape_oval_blue_white_stroke);
         } else {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.shape_oval_grey_lighten_10);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_200_stroke_white);
         }
 
         if (isUnread) {
