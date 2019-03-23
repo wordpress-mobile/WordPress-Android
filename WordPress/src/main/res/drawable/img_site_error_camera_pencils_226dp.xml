@@ -9,7 +9,7 @@
         android:fillColor="@color/neutral_300"
         android:pathData="M108.8 71.7c0-1.5 0.5-2.5 1-3s1.5-1 3-1 2.5 0.5 3 1 1 1.5 1 3c0 1-0.5 2-1 3s-1.5 1-3 1-2.5-0.5-3-1-1-1.5-1-3zm7-8.1h-5.5l-1-22.7h8.1l-1.6 22.7z"/>
     <path
-        android:fillColor="@color/grey_lighten_20"
+        android:fillColor="@color/neutral_100"
         android:pathData="M180.7 99.4l-21.8-0.1h-16.5l-16.5 0.1c-11 0.1-22 0.2-33 0.8-0.1 0.1-0.1 0.1-0.2 0.4 0 0.1 0.1 0.2 0.2 0.2 11 0.5 22 0.7 33 0.8l16.5 0.1h16.5l21.9-0.1-0.1-2.2zm44.2 0.7c-5.2-0.2-10.4-0.3-15.7-0.4l-0.1 1.6c5.3-0.1 10.5-0.2 15.8-0.4 0.2 0 0.4-0.2 0.4-0.4s-0.2-0.4-0.4-0.4z"/>
     <path
         android:fillColor="@color/grey_lighten_10"

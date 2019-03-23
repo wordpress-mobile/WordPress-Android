@@ -17,7 +17,7 @@
         android:layout_height="1dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:background="@color/grey_lighten_20" />
+        android:background="@color/neutral_100" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -34,6 +34,6 @@
         android:layout_height="1dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:background="@color/grey_lighten_20" />
+        android:background="@color/neutral_100" />
 
 </LinearLayout>

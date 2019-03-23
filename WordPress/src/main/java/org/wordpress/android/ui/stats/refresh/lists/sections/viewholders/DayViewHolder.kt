@@ -24,7 +24,7 @@ class DayViewHolder(parent: ViewGroup) : ViewHolder(
     fun bind(box: Box) {
         val color = when (box) {
             INVISIBLE -> android.R.color.transparent
-            VERY_LOW -> R.color.grey_lighten_20
+            VERY_LOW -> R.color.neutral_100
             LOW -> R.color.stats_low_activity
             MEDIUM -> R.color.stats_medium_activity
             HIGH -> R.color.stats_high_activity

@@ -23,7 +23,7 @@
             android:id="@+id/image_blavatar"
             style="@style/ReaderImageView.Avatar"
             android:layout_centerVertical="true"
-            android:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"
+            android:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
             android:layout_marginEnd="@dimen/margin_large"
             android:contentDescription="@null"/>
 
@@ -97,7 +97,7 @@
                 android:layout_height="1dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@color/grey_lighten_20" />
+                android:background="@color/neutral_100" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_follow_count"
@@ -112,7 +112,7 @@
                 android:layout_height="1dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@color/grey_lighten_20" />
+                android:background="@color/neutral_100" />
         </LinearLayout>
 
     </LinearLayout>

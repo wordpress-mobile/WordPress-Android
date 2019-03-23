@@ -10,7 +10,7 @@
             android:shape="rectangle" >
 
             <solid
-                android:color="@color/grey_lighten_20" >
+                android:color="@color/neutral_100" >
             </solid>
 
             <padding
@@ -25,7 +25,7 @@
     </item>
 
     <item
-        android:drawable="@drawable/ic_globe_white_24dp" >
+        android:drawable="@drawable/ic_user_white_24dp" >
     </item>
 
 </layer-list>

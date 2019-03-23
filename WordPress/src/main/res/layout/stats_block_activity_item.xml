@@ -73,7 +73,7 @@
     <View
         android:id="@+id/very_low_box"
         style="@style/StatsActivityBox"
-        android:background="@color/grey_lighten_20"
+        android:background="@color/neutral_100"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/low_box"
         app:layout_constraintHorizontal_bias="0.5"
