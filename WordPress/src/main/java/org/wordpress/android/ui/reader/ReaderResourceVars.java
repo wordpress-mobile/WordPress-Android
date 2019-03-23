@@ -41,7 +41,7 @@ class ReaderResourceVars {
 
         mLinkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
         mGreyMediumDarkStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_darken_30);
-        mGreyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
+        mGreyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_0);
         mGreyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_lighten_30);
 
         // full-size image width must take margin into account

@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_light">
+    android:background="@color/neutral_0">
 
     <ScrollView
         android:id="@+id/scroll_view"

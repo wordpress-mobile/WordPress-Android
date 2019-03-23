@@ -21,7 +21,7 @@
         android:background="@drawable/reader_photo_count_background"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
-        android:textColor="@color/grey_light"
+        android:textColor="@color/neutral_0"
         android:textSize="@dimen/text_sz_large"
         tools:text="title"
         android:paddingEnd="@dimen/margin_large"

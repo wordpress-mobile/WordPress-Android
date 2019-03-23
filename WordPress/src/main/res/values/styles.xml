@@ -215,7 +215,7 @@
     </style>
 
     <style name="WordPress.Button.Grey" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/grey_light</item>
+        <item name="colorButtonNormal">@color/neutral_0</item>
         <item name="android:textColor">@color/primary_500</item>
     </style>
 

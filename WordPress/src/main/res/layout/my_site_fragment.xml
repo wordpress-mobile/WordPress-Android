@@ -107,7 +107,7 @@
 
                     <LinearLayout
                         android:id="@+id/switch_site"
-                        android:background="@color/grey_light"
+                        android:background="@color/neutral_0"
                         android:foreground="?attr/selectableItemBackgroundBorderless"
                         android:layout_below="@id/top_container"
                         android:layout_height="wrap_content"

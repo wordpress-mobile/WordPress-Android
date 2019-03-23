@@ -28,14 +28,14 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.AVATAR -> R.drawable.shape_oval_grey_light
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_grey_user_32dp
             ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
-            ImageType.BLAVATAR -> R.color.grey_light
+            ImageType.BLAVATAR -> R.color.neutral_0
             ImageType.IMAGE -> null // don't display any placeholder
-            ImageType.PHOTO -> R.color.grey_light
+            ImageType.PHOTO -> R.color.neutral_0
             ImageType.PLAN -> R.drawable.bg_oval_grey_plans_32dp
             ImageType.PLUGIN -> R.drawable.plugin_placeholder
             ImageType.THEME -> R.drawable.bg_rectangle_grey_lighten_20_themes_100dp
             ImageType.UNKNOWN -> R.drawable.legacy_dashicon_format_image_big_grey
-            ImageType.VIDEO -> R.color.grey_light
+            ImageType.VIDEO -> R.color.neutral_0
             ImageType.ICON -> R.drawable.bg_grey_light_with_radius
         }
     }

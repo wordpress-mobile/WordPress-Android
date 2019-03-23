@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:orientation="vertical"
-            android:background="@color/grey_light">
+            android:background="@color/neutral_0">
 
             <ProgressBar
                 android:id="@+id/post_upload_progress"

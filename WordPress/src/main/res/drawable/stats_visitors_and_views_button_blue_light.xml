@@ -9,7 +9,7 @@
     <item android:right="1dp" android:bottom="1dp">
         <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
             <solid
-                android:color="@color/grey_light"/>
+                android:color="@color/neutral_0"/>
         </shape>
     </item>
 

@@ -111,7 +111,7 @@
         android:id="@+id/layout_child_container"
         android:orientation="vertical"
         android:visibility="gone"
-        android:background="@color/grey_light"
+        android:background="@color/neutral_0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
