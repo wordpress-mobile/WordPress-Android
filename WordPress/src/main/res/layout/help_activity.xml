@@ -33,7 +33,7 @@
         <TextView
             android:id="@+id/applicationVersion"
             style="@style/HelpActivitySingleText"
-            android:textColor="@color/grey_darken_10"/>
+            android:textColor="@color/neutral_400"/>
 
         <View style="@style/HelpActivityDivider"/>
 
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/support_contact_email_not_set"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 android:textSize="@dimen/text_sz_medium"/>
         </LinearLayout>
 

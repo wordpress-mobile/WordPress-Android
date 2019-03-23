@@ -186,7 +186,7 @@
     </path>
 
     <path
-        android:fillColor="@color/grey_darken_10"
+        android:fillColor="@color/neutral_400"
         android:pathData="M65.046,93.49L63.622,101.884L44.194,97.874C44.194,97.874 49.38,68.793 60.198,68.712C63.663,68.686 67.23,71.285 66.636,76.822" >
     </path>
 

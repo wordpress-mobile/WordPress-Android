@@ -162,7 +162,7 @@
     </style>
     <style name="MediaSettings.TextInputTheme" parent="ThemeOverlay.AppCompat.Light">
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/grey_darken_10</item>
+        <item name="android:textColorHint">@color/neutral_400</item>
         <!-- Header color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">@color/grey_text_min</item>
         <item name="colorControlActivated">@color/primary_500</item>
@@ -192,7 +192,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:gravity">center_horizontal|center_vertical</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/neutral_400</item>
     </style>
 
     <style name="WhiteButton" parent="Widget.AppCompat.Button">
@@ -338,7 +338,7 @@
         <item name="android:paddingBottom">@dimen/my_site_margin_general</item>
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:paddingTop">@dimen/my_site_margin_general</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/neutral_400</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -650,7 +650,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/neutral_400</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -664,7 +664,7 @@
     <style name="PluginCardViewSecondaryElement.ExternalLinkImage" parent="PluginCardViewSecondaryElement">
         <item name="android:layout_width">@dimen/plugin_external_link_image_size</item>
         <item name="android:layout_height">@dimen/plugin_external_link_image_size</item>
-        <item name="android:tint">@color/grey_darken_10</item>
+        <item name="android:tint">@color/neutral_400</item>
         <item name="android:layout_marginEnd">@dimen/margin_medium</item>
     </style>
 
@@ -757,7 +757,7 @@
         <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
         <item name="android:maxWidth">@dimen/actionable_empty_view_text_maximum_width</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/neutral_400</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>
 

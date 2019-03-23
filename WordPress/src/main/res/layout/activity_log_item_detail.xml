@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 tools:text="Plugin autoupdated"/>
 
             <LinearLayout

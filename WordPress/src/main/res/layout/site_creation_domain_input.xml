@@ -18,7 +18,7 @@
         android:hint="@string/site_creation_domain_keywords_hint"
         android:singleLine="true"
         android:imeOptions="actionSearch"
-        android:textColorHint="@color/grey_darken_10"
+        android:textColorHint="@color/neutral_400"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingBottom="@dimen/margin_extra_large"

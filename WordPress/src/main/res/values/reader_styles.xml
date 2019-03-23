@@ -49,7 +49,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/grey_text_min</item>
         <item name="android:drawableTint">@color/grey_text_min</item>
-        <item name="android:drawableStart">@drawable/ic_time_grey_darken_10_16dp</item>
+        <item name="android:drawableStart">@drawable/ic_time_neutral_400_16dp</item>
     </style>
     <style name="ReaderTextView.EmptyList" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
@@ -62,7 +62,7 @@
     <!-- EditTexts -->
     <style name="ReaderEditText" parent="android:Widget.EditText">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColorHint">@color/grey_darken_10</item>
+        <item name="android:textColorHint">@color/neutral_400</item>
     </style>
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
         <item name="android:background">@android:color/transparent</item>
@@ -71,7 +71,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:maxLength">@integer/max_length_reader_topic_name</item>
-        <item name="android:textColorHint">@color/grey_darken_10</item>
+        <item name="android:textColorHint">@color/neutral_400</item>
     </style>
 
     <!-- images -->

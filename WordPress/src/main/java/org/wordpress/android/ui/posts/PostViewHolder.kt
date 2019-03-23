@@ -151,7 +151,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
         } else {
             var statusTextResId = 0
             var statusIconResId = 0
-            var statusColorResId = R.color.grey_darken_10
+            var statusColorResId = R.color.neutral_400
             var errorMessage: String? = null
             val uploadError = postAdapterItem.uploadStatus.uploadError
 
