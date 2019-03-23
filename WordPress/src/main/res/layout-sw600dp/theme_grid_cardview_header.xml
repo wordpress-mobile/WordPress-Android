@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="@android:color/black"
                     android:text="@string/current_theme" />
 
             </LinearLayout>

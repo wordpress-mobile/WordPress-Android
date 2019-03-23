@@ -11,7 +11,6 @@
 
     <!-- Default Colors -->
     <color name="gray">@color/grey_lighten_20</color>
-    <color name="black">#000000</color>
     <color name="default_background">@color/grey_lighten_30</color>
 
     <!-- Blues -->
