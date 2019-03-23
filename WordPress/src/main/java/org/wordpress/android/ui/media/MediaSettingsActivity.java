@@ -364,7 +364,7 @@ public class MediaSettingsActivity extends AppCompatActivity
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
             @DrawableRes int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
             ColorUtils.INSTANCE.setImageResourceWithTint(mImageView,
-                    imageRes != 0 ? imageRes : R.drawable.ic_pages_white_24dp, R.color.grey);
+                    imageRes != 0 ? imageRes : R.drawable.ic_pages_white_24dp, R.color.neutral_300);
             mImageView.setPadding(padding, padding * 2, padding, padding);
             mImageView.setImageResource(imageRes);
         } else {

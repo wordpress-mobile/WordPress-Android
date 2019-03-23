@@ -92,7 +92,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
 
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
         mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
-        mTextColorHidden = context.getResources().getColor(R.color.grey);
+        mTextColorHidden = context.getResources().getColor(R.color.neutral_300);
 
         mSelectedItemBackground =
                 new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20_translucent_50));

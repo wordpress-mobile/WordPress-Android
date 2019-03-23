@@ -16,7 +16,6 @@
     <!-- Blues -->
 
     <!-- Primary Greys -->
-    <color name="grey">@color/neutral_300</color>
     <color name="grey_light">@color/neutral_0</color>
     <color name="grey_dark">@color/neutral_700</color>
     <color name="grey_disabled">@color/neutral_400</color>

@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:src="@drawable/ic_my_sites_white_24dp"
-        android:tint="@color/grey"
+        android:tint="@color/neutral_300"
         android:contentDescription="@null"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_medium"/>
