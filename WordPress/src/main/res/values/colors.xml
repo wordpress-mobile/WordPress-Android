@@ -14,7 +14,6 @@
     <color name="default_background">@color/neutral_0</color>
 
     <!-- Blues -->
-    <color name="blue_light">@color/primary_300</color>
     <color name="blue_medium">@color/primary_400</color>
     <color name="blue_dark">@color/primary_700</color>
 
