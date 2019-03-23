@@ -81,7 +81,7 @@
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:visibility="gone"
-                android:background="@drawable/stats_barchart_no_activity_background"
+                android:background="@drawable/bg_rectangle_white_neutral_0_radius_4dp"
                 android:orientation="horizontal">
                 <ImageView
                     android:layout_width="24dp"
