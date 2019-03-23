@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.TransactionsStore.CreatedShoppingCartPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.FetchedSupportedCountriesPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemedShoppingCartPayload
