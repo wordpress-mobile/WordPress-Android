@@ -25,7 +25,6 @@
     <color name="grey_c">@color/neutral_50</color>
 
     <!-- Oranges -->
-    <color name="orange_dark_active">@color/accent_700</color>
 
     <!-- Alerts -->
     <color name="alert_yellow">@color/warning_500</color>
