@@ -27,7 +27,6 @@
     <!-- Oranges -->
 
     <!-- Alerts -->
-    <color name="alert_green">@color/success_500</color>
 
     <!-- Translucent -->
     <color name="black_translucent_40">#66000000</color>

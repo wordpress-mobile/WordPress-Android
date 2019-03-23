@@ -266,7 +266,7 @@ public class PluginListFragment extends Fragment {
                 @DrawableRes int drawableResId;
                 if (PluginUtils.isAutoManaged(mViewModel.getSite(), plugin)) {
                     textResId = R.string.plugin_auto_managed;
-                    colorResId = R.color.alert_green;
+                    colorResId = R.color.success_500;
                     drawableResId = android.R.color.transparent;
                 } else if (PluginUtils.isUpdateAvailable(plugin)) {
                     textResId = R.string.plugin_needs_update;
@@ -274,7 +274,7 @@ public class PluginListFragment extends Fragment {
                     drawableResId = R.drawable.ic_sync_white_24dp;
                 } else if (plugin.isActive()) {
                     textResId = R.string.plugin_active;
-                    colorResId = R.color.alert_green;
+                    colorResId = R.color.success_500;
                     drawableResId = R.drawable.ic_checkmark_white_24dp;
                 } else {
                     textResId = R.string.plugin_inactive;
