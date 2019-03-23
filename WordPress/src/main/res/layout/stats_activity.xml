@@ -208,7 +208,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_small"
-                            android:textColor="@color/stats_link_text_color"
+                            android:textColor="@color/link_stats"
                             android:gravity="start"
                             android:textAlignment="viewStart"
                             android:textSize="@dimen/text_sz_small"

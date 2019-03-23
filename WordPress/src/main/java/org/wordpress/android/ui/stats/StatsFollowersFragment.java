@@ -367,7 +367,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     // Open the in-app web browser
                     holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
                 }
-                holder.entryTextView.setTextColor(mContext.getResources().getColor(R.color.stats_link_text_color));
+                holder.entryTextView.setTextColor(mContext.getResources().getColor(R.color.link_stats));
             } else {
                 // Email followers, or wpcom followers with empty URL and no blogID
                 holder.setEntryText(currentRowData.getLabel());

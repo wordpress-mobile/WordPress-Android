@@ -46,7 +46,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         TextView moduleTitle = view.findViewById(R.id.stats_module_title);
         moduleTitle.setTag(StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
         moduleTitle.setOnClickListener(mButtonsOnClickListener);
-        moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+        moduleTitle.setTextColor(getResources().getColor(R.color.link_stats));
         return view;
     }
 

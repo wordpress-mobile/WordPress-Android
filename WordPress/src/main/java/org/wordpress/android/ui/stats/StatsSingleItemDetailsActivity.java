@@ -219,7 +219,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             mStatsForLabel.setText(mItemTitle != null ? mItemTitle : mItemURL);
             // make the label clickable if the URL is available
             if (mItemURL != null) {
-                mStatsForLabel.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+                mStatsForLabel.setTextColor(getResources().getColor(R.color.link_stats));
                 mStatsForLabel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -674,7 +674,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                         StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
             }
 
-            holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+            holder.setEntryText(name, getResources().getColor(R.color.link_stats));
 
             holder.networkImageView.setVisibility(View.GONE);
 
@@ -846,7 +846,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 }
             }
 
-            holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+            holder.setEntryText(name, getResources().getColor(R.color.link_stats));
 
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);

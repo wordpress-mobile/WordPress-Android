@@ -136,7 +136,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
 
         TextView moduleTitle = (TextView) getView().findViewById(R.id.stats_module_title);
         moduleTitle.setOnClickListener(mViewsTabOnClickListener);
-        moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+        moduleTitle.setTextColor(getResources().getColor(R.color.link_stats));
 
         // update the tabs and the text now
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
@@ -161,7 +161,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         endIndex = startIndex + postTitle.length() + 1;
 
         Spannable descriptionTextToSpan = new SpannableString(trendLabelFormatted);
-        descriptionTextToSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.stats_link_text_color)),
+        descriptionTextToSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.link_stats)),
                                       startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView trendLabelTextField = ll.findViewById(R.id.stats_post_trend_label);
         trendLabelTextField.setText(descriptionTextToSpan);

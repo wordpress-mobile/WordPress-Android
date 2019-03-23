@@ -71,7 +71,7 @@
             android:gravity="center_vertical|start"
             android:autoLink="none"
             android:textColor="@color/text"
-            android:textColorLink="@color/stats_link_text_color"
+            android:textColorLink="@color/link_stats"
             android:textColorHighlight="@android:color/transparent"
             android:textAlignment="viewStart"
             android:textSize="@dimen/text_sz_medium" />
