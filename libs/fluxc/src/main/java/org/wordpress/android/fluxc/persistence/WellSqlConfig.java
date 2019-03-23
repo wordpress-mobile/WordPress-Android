@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 61;
+        return 62;
     }
 
     @Override
@@ -460,7 +460,6 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 59:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 db.execSQL("DROP TABLE IF EXISTS StatsBlock");
                 db.execSQL(
                         "CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
@@ -478,6 +477,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                         "CREATE TABLE StatsRequest (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,TIME_STAMP INTEGER,"
                         + "REQUESTED_ITEMS INTEGER)");
+                oldVersion++;
+            case 61:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
         }
         db.setTransactionSuccessful();
@@ -640,7 +643,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "HEIGHT TEXT NOT NULL,"
                                + "ATTRIBUTES TEXT NOT NULL)");
                     break;
-                case 59:
+                case 61:
                     db.execSQL("DROP TABLE IF EXISTS WCProductModel");
                     db.execSQL("CREATE TABLE WCProductModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "LOCAL_SITE_ID INTEGER,"
