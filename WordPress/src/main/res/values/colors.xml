@@ -4,12 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="UnusedResources">
 
-    <color name="color_accent">@color/orange_jazzy</color>
     <color name="color_control_normal">@color/white</color>
     <color name="color_control_activated">@color/blue_light</color>
     <color name="color_control_highlight">@color/grey_lighten_20</color>
 
-    <color name="fab_normal">@color/color_accent</color>
+    <color name="fab_normal">@color/accent</color>
     <color name="fab_pressed">@color/orange_fire</color>
     <color name="list_selected">@color/blue_light_translucent_80</color>
 

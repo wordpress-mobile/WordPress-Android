@@ -57,7 +57,7 @@
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/button_discard_changes"
                 android:textAllCaps="true"
-                android:textColor="@color/color_accent"
+                android:textColor="@color/accent"
                 android:textSize="@dimen/text_sz_small"
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"/>
@@ -72,7 +72,7 @@
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/button_publish"
                 android:textAllCaps="true"
-                android:textColor="@color/color_accent"
+                android:textColor="@color/accent"
                 android:textSize="@dimen/text_sz_small"
                 android:paddingEnd="@dimen/margin_large"
                 android:paddingStart="@dimen/margin_large"/>

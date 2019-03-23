@@ -2220,7 +2220,7 @@ public class ReaderPostListFragment extends Fragment
                                 ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
                             }
                         })
-                .setActionTextColor(getResources().getColor(R.color.color_accent))
+                .setActionTextColor(getResources().getColor(R.color.accent))
                 .show();
     }
 
