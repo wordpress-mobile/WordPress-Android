@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="-12dp"
         android:gravity="start|center_vertical"
-        android:background="@color/transparent"
+        android:background="@android:color/transparent"
         android:textStyle="bold"
         android:textAllCaps="true"
         android:text="@string/learn_more"

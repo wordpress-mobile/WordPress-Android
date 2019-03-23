@@ -10,7 +10,6 @@
     <color name="list_selected">@color/blue_light_translucent_80</color>
 
     <!-- Default Colors -->
-    <color name="transparent">#00000000</color>
     <color name="light_gray">@color/grey_lighten_30</color>
     <color name="gray">@color/grey_lighten_20</color>
     <color name="white">#FFFFFF</color>

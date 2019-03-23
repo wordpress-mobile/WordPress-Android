@@ -206,7 +206,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                         R.color.stats_bar_chart_gradient_start_color
                 ), ContextCompat.getColor(
                 context,
-                R.color.transparent
+                android.R.color.transparent
         )
         )
         dataSet.formLineWidth = 0f
@@ -268,14 +268,14 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             BarEntry(it.x, maxEntry.y, it.data)
         }
         val dataSet = BarDataSet(highlightedDataSet, "Highlight")
-        dataSet.color = ContextCompat.getColor(context, R.color.transparent)
+        dataSet.color = ContextCompat.getColor(context, android.R.color.transparent)
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.transparent
+                        android.R.color.transparent
                 ), ContextCompat.getColor(
                 context,
-                R.color.transparent
+                android.R.color.transparent
         )
         )
         dataSet.formLineWidth = 0f

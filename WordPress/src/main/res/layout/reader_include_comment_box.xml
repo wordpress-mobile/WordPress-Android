@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:background="@color/transparent"
+            android:background="@android:color/transparent"
             android:hint="@string/reader_hint_comment_on_post"
             android:imeOptions="actionSend"
             android:focusableInTouchMode="false"

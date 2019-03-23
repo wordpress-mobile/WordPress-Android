@@ -74,7 +74,7 @@
 
     <style name="JetpackFaqButton">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-        <item name="android:background">@color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textAllCaps">true</item>

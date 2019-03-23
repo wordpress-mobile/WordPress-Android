@@ -38,7 +38,7 @@
     </style>
 
     <style name="Calypso.ActionMode.Button" parent="ActionButton.CloseMode.WordPress">
-        <item name="android:background">@color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="Calypso.ActionMode.Text">

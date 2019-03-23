@@ -423,7 +423,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 if (isAutoManaged) {
                     textResId = R.string.plugin_auto_managed;
                     colorResId = R.color.alert_green;
-                    drawableResId = R.color.transparent;
+                    drawableResId = android.R.color.transparent;
                 } else if (PluginUtils.isUpdateAvailable(plugin)) {
                     textResId = R.string.plugin_needs_update;
                     colorResId = R.color.alert_yellow;

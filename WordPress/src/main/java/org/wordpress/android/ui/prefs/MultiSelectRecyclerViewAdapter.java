@@ -25,7 +25,7 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
 
     public MultiSelectRecyclerViewAdapter(Context context, List<String> items) {
         this.mSelectedColor = ContextCompat.getColor(context, R.color.white);
-        this.mUnselectedColor = ContextCompat.getColor(context, R.color.transparent);
+        this.mUnselectedColor = ContextCompat.getColor(context, android.R.color.transparent);
         this.mItems = items;
         this.mItemsSelected = new SparseBooleanArray();
     }

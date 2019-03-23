@@ -65,7 +65,6 @@ import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -77,6 +76,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ValidationUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -831,7 +831,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // remove footer divider bar
         prefList.setFooterDividersEnabled(false);
         //noinspection deprecation
-        prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
+        prefList.setOverscrollFooter(res.getDrawable(android.R.color.transparent));
     }
 
     /**

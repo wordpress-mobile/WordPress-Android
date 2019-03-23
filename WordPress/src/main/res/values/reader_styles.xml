@@ -65,7 +65,7 @@
         <item name="android:textColorHint">@color/grey_darken_10</item>
     </style>
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
-        <item name="android:background">@color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:padding">@dimen/margin_medium</item>
         <item name="android:inputType">text</item>
         <item name="android:singleLine">true</item>

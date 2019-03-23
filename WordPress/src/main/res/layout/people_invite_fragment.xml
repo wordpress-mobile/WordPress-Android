@@ -52,7 +52,7 @@
                     android:id="@+id/invite_usernames"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/transparent"
+                    android:background="@android:color/transparent"
                     android:imeOptions="actionDone"
                     android:inputType="text"
                     android:minWidth="40dp"
