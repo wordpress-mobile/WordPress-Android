@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@android:color/white"
     app:cardElevation="@dimen/card_elevation">
 
     <LinearLayout
@@ -16,7 +16,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@android:color/white"
             android:elevation="@dimen/card_elevation">
 
             <FrameLayout

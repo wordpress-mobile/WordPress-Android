@@ -10,7 +10,7 @@
     android:drawableRight="@drawable/ic_dropdown_blue_light_24dp"
     android:textAlignment="viewStart"
     android:gravity="start"
-    android:textColor="@color/white"
+    android:textColor="@android:color/white"
     tools:ignore="RtlHardcoded"
     tools:text="spinner item" >
 </org.wordpress.android.widgets.WPTextView>

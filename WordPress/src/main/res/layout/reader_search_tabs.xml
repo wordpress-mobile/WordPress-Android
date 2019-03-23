@@ -8,7 +8,7 @@
     app:tabIndicatorColor="@color/tab_indicator"
     app:tabMaxWidth="0dp"
     app:tabMode="fixed"
-    app:tabSelectedTextColor="@color/white"
+    app:tabSelectedTextColor="@android:color/white"
     app:tabTextColor="@color/blue_light">
 
     <android.support.design.widget.TabItem

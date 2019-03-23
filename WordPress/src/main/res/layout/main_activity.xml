@@ -30,7 +30,7 @@
             android:paddingTop="@dimen/margin_medium"
             android:text="@string/connectionbar_no_connection"
             android:textAllCaps="true"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_sz_small"
             android:visibility="gone"
             tools:visibility="visible"/>
@@ -51,7 +51,7 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@android:color/white"
             app:elevation="0dp"
             app:menu="@menu/bottom_nav_main"/>
     </LinearLayout>

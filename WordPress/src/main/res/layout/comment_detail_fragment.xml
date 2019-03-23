@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_large"
-                android:background="@color/white"
+                android:background="@android:color/white"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large">
 
@@ -115,7 +115,7 @@
                 android:paddingBottom="@dimen/margin_large"
                 android:textColor="@color/grey_dark"
                 android:textColorLink="@color/reader_hyperlink"
-                android:background="@color/white"
+                android:background="@android:color/white"
                 android:textIsSelectable="false"
                 android:textSize="@dimen/text_sz_large"
                 android:fontFamily="serif"

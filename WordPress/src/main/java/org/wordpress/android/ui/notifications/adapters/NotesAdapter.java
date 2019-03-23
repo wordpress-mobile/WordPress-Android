@@ -96,7 +96,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         setHasStableIds(false);
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
-        mColorRead = context.getResources().getColor(R.color.white);
+        mColorRead = context.getResources().getColor(android.R.color.white);
         mColorUnread = context.getResources().getColor(R.color.grey_light);
         mTextIndentSize = context.getResources().getDimensionPixelSize(R.dimen.notifications_text_indent_sz);
     }

@@ -39,7 +39,7 @@
                 android:layout_marginEnd="@dimen/margin_large"
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="match_parent"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation"
                 app:cardUseCompatPadding="true" >
@@ -183,7 +183,7 @@
 
     <RelativeLayout
         android:id="@+id/bottom_buttons"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:clipToPadding="false"
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"

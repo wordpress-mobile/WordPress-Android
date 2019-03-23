@@ -4,7 +4,7 @@
                                              android:layout_width="match_parent"
                                              android:layout_height="@dimen/one_line_list_item_height"
                                              android:elevation="@dimen/appbar_elevation"
-                                             android:background="@color/white">
+                                             android:background="@android:color/white">
 
     <TextView
         android:id="@+id/selected_date"

@@ -159,7 +159,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private void configureCardView(ThemeViewHolder themeViewHolder, boolean isCurrent) {
         Resources resources = mContext.getResources();
         if (isCurrent) {
-            ColorStateList color = ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.white));
+            ColorStateList color = ColorStateList.valueOf(ContextCompat.getColor(mContext, android.R.color.white));
             themeViewHolder.mDetailsView.setBackgroundColor(resources.getColor(R.color.blue_wordpress));
             themeViewHolder.mNameView.setTextColor(color);
             themeViewHolder.mActiveView.setVisibility(View.VISIBLE);
@@ -167,10 +167,10 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             themeViewHolder.mImageButton.setImageTintList(color);
         } else {
             ColorStateList color = ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.black));
-            themeViewHolder.mDetailsView.setBackgroundColor(resources.getColor(R.color.white));
+            themeViewHolder.mDetailsView.setBackgroundColor(resources.getColor(android.R.color.white));
             themeViewHolder.mNameView.setTextColor(color);
             themeViewHolder.mActiveView.setVisibility(View.GONE);
-            themeViewHolder.mCardView.setCardBackgroundColor(resources.getColor(R.color.white));
+            themeViewHolder.mCardView.setCardBackgroundColor(resources.getColor(android.R.color.white));
             themeViewHolder.mImageButton.setImageTintList(color);
         }
     }

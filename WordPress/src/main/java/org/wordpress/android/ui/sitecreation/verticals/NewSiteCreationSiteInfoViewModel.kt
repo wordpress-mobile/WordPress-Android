@@ -107,11 +107,11 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
             SKIP(
                     text = R.string.new_site_creation_button_skip,
                     textColor = R.color.wp_grey_dark,
-                    backgroundColor = R.color.white
+                    backgroundColor = android.R.color.white
             ),
             NEXT(
                     text = R.string.next,
-                    textColor = R.color.white,
+                    textColor = android.R.color.white,
                     backgroundColor = R.color.wp_blue_medium
             )
         }

@@ -49,12 +49,12 @@
                 android:layout_gravity="start"
                 android:background="@color/primary"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@color/white"
+                app:tabIndicatorColor="@android:color/white"
                 app:tabMode="scrollable"
                 app:tabPaddingEnd="16dp"
                 app:tabPaddingStart="16dp"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/white"
+                app:tabSelectedTextColor="@android:color/white"
+                app:tabTextColor="@android:color/white"
                 app:theme="@style/Base.Widget.Design.TabLayout"/>
 
         </android.support.design.widget.AppBarLayout>

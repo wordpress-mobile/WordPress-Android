@@ -57,10 +57,10 @@
                 android:background="@color/primary"
                 app:tabContentStart="72dp"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@color/white"
+                app:tabIndicatorColor="@android:color/white"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/white"
+                app:tabSelectedTextColor="@android:color/white"
+                app:tabTextColor="@android:color/white"
                 app:theme="@style/Base.Widget.Design.TabLayout"/>
 
         </android.support.design.widget.AppBarLayout>

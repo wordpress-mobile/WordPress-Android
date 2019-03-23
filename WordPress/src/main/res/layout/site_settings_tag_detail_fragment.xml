@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stateListAnimator="@anim/pressed_card"
-        card_view:cardBackgroundColor="@color/white"
+        card_view:cardBackgroundColor="@android:color/white"
         card_view:cardCornerRadius="@dimen/default_cardview_radius"
         card_view:cardElevation="@dimen/card_elevation">
 
@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
-            android:background="@color/white"
+            android:background="@android:color/white"
             android:orientation="vertical"
             android:padding="@dimen/margin_extra_large">
 

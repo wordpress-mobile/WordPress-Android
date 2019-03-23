@@ -52,7 +52,7 @@ public class LoginPrologueAnimationFragment extends Fragment {
 
         TextView promoText = (TextView) rootView.findViewById(R.id.promo_text);
         promoText.setText(mPromoText);
-        promoText.setTextColor(getResources().getColor(mLightBackground ? R.color.blue_dark : R.color.white));
+        promoText.setTextColor(getResources().getColor(mLightBackground ? R.color.blue_dark : android.R.color.white));
 
         mLottieAnimationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
         mLottieAnimationView.setAnimation(mAnimationFilename, LottieAnimationView.CacheStrategy.Weak);

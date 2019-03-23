@@ -35,7 +35,7 @@
                 android:layout_marginEnd="@dimen/content_margin"
                 android:layout_marginStart="@dimen/content_margin"
                 android:layout_marginTop="@dimen/margin_medium"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -149,7 +149,7 @@
                 android:layout_marginEnd="@dimen/content_margin"
                 android:layout_marginStart="@dimen/content_margin"
                 android:layout_width="match_parent"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 

@@ -107,7 +107,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        mBackgroundColor = getResources().getColor(R.color.white);
+        mBackgroundColor = getResources().getColor(android.R.color.white);
 
         ListView listView = getListView();
         listView.setDivider(null);

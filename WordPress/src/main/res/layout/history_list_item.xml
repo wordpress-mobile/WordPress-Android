@@ -3,15 +3,14 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_layout"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:minHeight="?attr/listPreferredItemHeight"
-    tools:layout_height="?attr/listPreferredItemHeightLarge" >
+    tools:layout_height="?attr/listPreferredItemHeightLarge">
 
     <RelativeLayout
         android:background="?attr/selectableItemBackground"

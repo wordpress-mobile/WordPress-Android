@@ -250,7 +250,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         }
 
         mNormalTextColor = context.getResources().getColor(R.color.grey_dark);
-        mNormalBackgroundColor = context.getResources().getColor(R.color.white);
+        mNormalBackgroundColor = context.getResources().getColor(android.R.color.white);
         mAgoTextColor = context.getResources().getColor(R.color.grey_text_min);
         mUnapprovedTextColor = context.getResources().getColor(R.color.notification_status_unapproved_dark);
         // Double margin_extra_large for increased indent in comment replies

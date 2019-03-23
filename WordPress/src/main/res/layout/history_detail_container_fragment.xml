@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/white">
+        android:background="@android:color/white">
 
         <ImageView
             android:id="@+id/previous"
@@ -104,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_bar"
         android:layout_alignParentTop="true"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:fillViewport="true"
         android:visibility="gone">
 

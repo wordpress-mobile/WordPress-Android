@@ -60,7 +60,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsLightTitle(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_extra_large);
-        setTextViewAttributes(view, size, R.color.white);
+        setTextViewAttributes(view, size, android.R.color.white);
     }
 
     /**
@@ -118,7 +118,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsRaisedButton(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, R.color.white);
+        setTextViewAttributes(view, size, android.R.color.white);
     }
 
     /**

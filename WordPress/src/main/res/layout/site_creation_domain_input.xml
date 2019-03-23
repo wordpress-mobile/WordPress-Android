@@ -5,14 +5,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_vertical"
-    android:background="@color/white">
+    android:background="@android:color/white">
 
     <EditText
         android:id="@+id/input"
         style="@style/Theme.AppCompat.Light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:drawableStart="@drawable/ic_search_grey_text_min_24dp"
         android:drawablePadding="@dimen/margin_extra_large"
         android:hint="@string/site_creation_domain_keywords_hint"
@@ -29,7 +29,7 @@
         android:id="@+id/progress_bar"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large">
 

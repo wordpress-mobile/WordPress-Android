@@ -16,7 +16,7 @@
 
         <android.support.v7.widget.CardView
             style="@style/PostSettingsCardView"
-            card_view:cardBackgroundColor="@color/white"
+            card_view:cardBackgroundColor="@android:color/white"
             card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
             <LinearLayout
@@ -74,7 +74,7 @@
         <android.support.v7.widget.CardView
             style="@style/PostSettingsCardView"
             android:id="@+id/post_categories_and_tags_card"
-            card_view:cardBackgroundColor="@color/white"
+            card_view:cardBackgroundColor="@android:color/white"
             card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
             <LinearLayout
@@ -121,7 +121,7 @@
         <android.support.v7.widget.CardView
             android:id="@+id/post_featured_image_card_view"
             style="@style/PostSettingsCardView"
-            card_view:cardBackgroundColor="@color/white"
+            card_view:cardBackgroundColor="@android:color/white"
             card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
             <LinearLayout
@@ -158,7 +158,7 @@
 
         <android.support.v7.widget.CardView
             style="@style/PostSettingsCardView"
-            card_view:cardBackgroundColor="@color/white"
+            card_view:cardBackgroundColor="@android:color/white"
             card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
             <LinearLayout

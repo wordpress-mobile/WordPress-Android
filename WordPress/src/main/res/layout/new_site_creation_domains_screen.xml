@@ -69,7 +69,7 @@
             android:paddingEnd="@dimen/margin_medium"
             android:paddingStart="@dimen/margin_medium"
             android:text="@string/new_site_creation_create_site_button"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_sz_medium"
             android:theme="@style/WordPress.Button"/>
     </android.support.v7.widget.CardView>

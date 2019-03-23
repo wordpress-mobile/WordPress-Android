@@ -169,7 +169,7 @@ public class ShareIntentReceiverFragment extends Fragment {
 
                                 if (mRecyclerView.computeVerticalScrollRange() > mRecyclerView.getHeight()) {
                                     mBottomButtonsShadow.setVisibility(View.VISIBLE);
-                                    mBottomButtonsContainer.setBackgroundResource(R.color.white);
+                                    mBottomButtonsContainer.setBackgroundResource(android.R.color.white);
                                     mShareMediaBtn.setTextColor(getResources().getColor(R.color.blue_wordpress));
                                     ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
                                                                        R.style.WordPress_Button_Grey,
