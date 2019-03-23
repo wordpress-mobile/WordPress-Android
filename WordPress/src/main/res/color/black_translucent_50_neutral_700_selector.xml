@@ -8,6 +8,6 @@
         android:state_enabled="true" />
 
     <item
-        android:color="@color/grey_translucent_50" />
+        android:color="@color/black_translucent_50" />
 
 </selector>

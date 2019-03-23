@@ -77,7 +77,7 @@
         <item name="android:background">@color/white</item>
         <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
         <item name="android:fadeScrollbars">false</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_transparent_black</item>
+        <item name="android:scrollbarThumbVertical">@drawable/bg_rectangle_black_translucent_50_3dp</item>
     </style>
 
     <style name="TabTextStyle.WordPress" parent="android:Widget.Material.ActionBar.TabText">

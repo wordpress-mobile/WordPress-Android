@@ -86,7 +86,7 @@
             android:text="@string/site_settings_rp_preview_header"
             android:textStyle="bold"
             android:textSize="@dimen/text_sz_medium"
-            android:textColor="@color/related_posts_list_header"
+            android:textColor="@color/black_translucent_50_neutral_700_selector"
             android:fontFamily="sans-serif-light" />
 
         <LinearLayout
