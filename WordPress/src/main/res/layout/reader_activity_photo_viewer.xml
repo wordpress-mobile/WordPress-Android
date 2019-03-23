@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/margin_small"
-        android:background="@drawable/reader_photo_count_background"
+        android:background="@drawable/bg_rectangle_black_translucent_50_radius_36dp"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
         android:textColor="@color/neutral_0"

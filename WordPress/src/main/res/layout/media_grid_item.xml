@@ -70,7 +70,7 @@
         android:id="@+id/media_grid_item_upload_state_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_dark_translucent_50"
+        android:background="@color/black_translucent_50"
         android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible">

@@ -16,7 +16,7 @@
         android:id="@+id/view_overlay"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_tag_header_image_height"
-        android:background="@color/grey_dark_translucent_50" />
+        android:background="@color/black_translucent_50" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_tag"
