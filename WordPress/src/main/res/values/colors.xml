@@ -7,7 +7,6 @@
     <color name="color_control_normal">@color/white</color>
 
     <color name="fab_normal">@color/accent</color>
-    <color name="fab_pressed">@color/orange_fire</color>
     <color name="list_selected">@color/blue_light_translucent_80</color>
 
     <!-- Default Colors -->
