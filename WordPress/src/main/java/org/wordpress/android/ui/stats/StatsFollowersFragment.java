@@ -332,7 +332,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             final FollowerModel currentRowData = mList.get(position);
             final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
-            holder.entryTextView.setTextColor(mContext.getResources().getColor(R.color.stats_text_color));
+            holder.entryTextView.setTextColor(mContext.getResources().getColor(R.color.text));
             holder.rowContent.setClickable(false);
 
             final FollowDataModel followData = currentRowData.getFollowData();

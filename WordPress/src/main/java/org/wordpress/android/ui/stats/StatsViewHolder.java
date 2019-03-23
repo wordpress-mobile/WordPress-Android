@@ -51,7 +51,7 @@ public class StatsViewHolder {
 
         entryTextView.setText(linkName);
         if (TextUtils.isEmpty(linkURL)) {
-            entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_text_color));
+            entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.text));
             rowContent.setClickable(false);
             return;
         }
