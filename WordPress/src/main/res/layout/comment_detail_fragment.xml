@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_large"
                 android:paddingBottom="@dimen/margin_large"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textColorLink="@color/reader_hyperlink"
                 android:background="@android:color/white"
                 android:textIsSelectable="false"

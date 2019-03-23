@@ -86,7 +86,7 @@
                                 android:fontFamily="sans-serif-light"
                                 android:gravity="center_vertical"
                                 android:maxLines="1"
-                                android:textColor="@color/grey_dark"
+                                android:textColor="@color/neutral_700"
                                 android:textSize="@dimen/text_sz_large"
                                 android:textStyle="bold"
                                 tools:text="Example" />
@@ -130,7 +130,7 @@
                             android:layout_width="wrap_content"
                             android:text="@string/my_site_btn_switch_site"
                             android:textAllCaps="true"
-                            android:textColor="@color/grey_dark"
+                            android:textColor="@color/neutral_700"
                             android:textSize="@dimen/text_sz_small"
                             style="@style/MySiteListRowTextView" >
                         </org.wordpress.android.widgets.WPTextView>
@@ -177,7 +177,7 @@
                             android:layout_width="wrap_content"
                             android:maxLines="1"
                             android:text="@string/quick_start_sites"
-                            android:textColor="@color/grey_dark"
+                            android:textColor="@color/neutral_700"
                             android:textSize="@dimen/text_sz_large"
                             android:textStyle="bold" >
                         </org.wordpress.android.widgets.WPTextView>

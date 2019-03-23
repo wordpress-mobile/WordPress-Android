@@ -177,7 +177,7 @@ public class ShareIntentReceiverFragment extends Fragment {
                                 } else {
                                     mBottomButtonsShadow.setVisibility(View.GONE);
                                     mBottomButtonsContainer.setBackground(null);
-                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.grey_dark));
+                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.neutral_700));
                                     ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
                                                                        R.style.WordPress_Button,
                                                                        R.attr.colorButtonNormal);

@@ -27,7 +27,7 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
         iconContainer.setIconOrAvatar(item, imageManager)
         text.setTextOrHide(item.textResource, item.text)
         val textColor = when (item.textStyle) {
-            TextStyle.NORMAL -> R.color.grey_dark
+            TextStyle.NORMAL -> R.color.neutral_700
             LIGHT -> R.color.grey_darken_20
         }
         text.setTextColor(ContextCompat.getColor(text.context, textColor))

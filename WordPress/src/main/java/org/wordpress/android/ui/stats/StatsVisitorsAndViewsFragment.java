@@ -193,7 +193,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 }
             }
 
-            ColorUtils.INSTANCE.setImageResourceWithTint(mIcon, getTabIcon(), R.color.grey_dark);
+            ColorUtils.INSTANCE.setImageResourceWithTint(mIcon, getTabIcon(), R.color.neutral_700);
 
             if (mIsLastItem) {
                 if (mIsChecked) {

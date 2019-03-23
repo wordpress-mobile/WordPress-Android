@@ -24,7 +24,7 @@
         android:paddingTop="@dimen/margin_large"
         android:singleLine="true"
         android:textAlignment="viewStart"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/neutral_700"
         android:textColorHint="@color/neutral_300"
         tools:hint="@string/site_creation_domain_keywords_hint"
         tools:ignore="RtlSymmetry"

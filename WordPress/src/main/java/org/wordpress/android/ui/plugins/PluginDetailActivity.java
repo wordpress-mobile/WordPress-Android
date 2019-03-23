@@ -508,7 +508,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
-            textView.setTextColor(getResources().getColor(R.color.grey_dark));
+            textView.setTextColor(getResources().getColor(R.color.neutral_700));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             textView.setText(Html.fromHtml(htmlText));
         } else {

@@ -68,14 +68,14 @@ public class WPPrefUtils {
      */
     public static void layoutAsDarkTitle(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_extra_large);
-        setTextViewAttributes(view, size, R.color.grey_dark);
+        setTextViewAttributes(view, size, R.color.neutral_700);
     }
 
     /**
      * Styles a {@link TextView} to display medium sized text as a header with sub-elements.
      */
     public static void layoutAsSubhead(TextView view) {
-        int color = view.isEnabled() ? R.color.grey_dark : R.color.grey_lighten_10;
+        int color = view.isEnabled() ? R.color.neutral_700 : R.color.grey_lighten_10;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
         setTextViewAttributes(view, size, color);
     }
@@ -126,9 +126,9 @@ public class WPPrefUtils {
      */
     public static void layoutAsInput(EditText view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size, R.color.grey_dark);
+        setTextViewAttributes(view, size, R.color.neutral_700);
         view.setHintTextColor(view.getResources().getColor(R.color.grey_lighten_10));
-        view.setTextColor(view.getResources().getColor(R.color.grey_dark));
+        view.setTextColor(view.getResources().getColor(R.color.neutral_700));
         view.setSingleLine(true);
     }
 
@@ -145,7 +145,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsNumberPickerPeek(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size, R.color.grey_dark);
+        setTextViewAttributes(view, size, R.color.neutral_700);
     }
 
     /**

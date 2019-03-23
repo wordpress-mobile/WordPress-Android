@@ -7,6 +7,6 @@
         android:color="@color/grey_lighten_10"
         android:state_enabled="false" />
 
-    <item android:color="@color/grey_dark" />
+    <item android:color="@color/neutral_700" />
 
 </selector>
