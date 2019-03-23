@@ -27,7 +27,7 @@
         <item name="android:actionModeStyle">@style/Calypso.ActionMode</item>
         <item name="colorPrimaryDark">@color/grey_darken_10</item>
 
-        <item name="android:windowContentOverlay">@color/grey_lighten_30</item>
+        <item name="android:windowContentOverlay">@color/neutral_0</item>
         <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="dialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="colorControlActivated">@color/primary_400</item>

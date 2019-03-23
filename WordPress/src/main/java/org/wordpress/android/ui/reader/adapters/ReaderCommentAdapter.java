@@ -151,7 +151,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         mColorAuthor = ContextCompat.getColor(context, R.color.primary_400);
         mColorNotAuthor = ContextCompat.getColor(context, R.color.neutral_700);
-        mColorHighlight = ContextCompat.getColor(context, R.color.grey_lighten_30);
+        mColorHighlight = ContextCompat.getColor(context, R.color.neutral_0);
 
         setHasStableIds(true);
     }

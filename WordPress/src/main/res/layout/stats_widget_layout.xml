@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:orientation="horizontal"
-        android:background="@color/grey_lighten_30" />
+        android:background="@color/neutral_0" />
 
     <LinearLayout
         android:id="@+id/stats_widget_values_container"

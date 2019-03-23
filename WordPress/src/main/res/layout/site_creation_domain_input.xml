@@ -41,7 +41,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/grey_lighten_30"
+        android:background="@color/neutral_0"
         android:layout_below="@+id/input"/>
 </RelativeLayout>
 

@@ -18,7 +18,6 @@
     <!-- Primary Greys -->
 
     <!-- Secondary Greys -->
-    <color name="grey_lighten_30">@color/neutral_0</color>
     <color name="grey_lighten_20">@color/neutral_100</color>
     <color name="grey_lighten_10">@color/neutral_200</color>
     <color name="grey_darken_10">@color/neutral_400</color>

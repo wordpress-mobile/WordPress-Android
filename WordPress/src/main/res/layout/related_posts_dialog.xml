@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/site_settings_divider_height"
     android:paddingBottom="@dimen/site_settings_divider_height"
     android:orientation="vertical"
-    android:background="@color/grey_lighten_30">
+    android:background="@color/neutral_0">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/notifications_label_new_notifications"
-            android:textColor="@color/grey_lighten_30"
+            android:textColor="@color/neutral_0"
             android:textSize="@dimen/text_sz_large">
         </org.wordpress.android.widgets.WPTextView>
 
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/notifications_label_new_notifications_subtitle"
-            android:textColor="@color/grey_lighten_30"
+            android:textColor="@color/neutral_0"
             android:textSize="@dimen/text_sz_small">
         </org.wordpress.android.widgets.WPTextView>
 

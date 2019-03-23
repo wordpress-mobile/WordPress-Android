@@ -13,12 +13,12 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
             ImageType.BLAVATAR -> R.drawable.bg_rectangle_grey_lighten_20_globe_32dp
             ImageType.IMAGE -> null // don't display any error drawable
-            ImageType.PHOTO -> R.color.grey_lighten_30
+            ImageType.PHOTO -> R.color.neutral_0
             ImageType.PLAN -> R.drawable.bg_oval_grey_plans_32dp
             ImageType.PLUGIN -> R.drawable.plugin_placeholder
-            ImageType.THEME -> R.color.grey_lighten_30
+            ImageType.THEME -> R.color.neutral_0
             ImageType.UNKNOWN -> R.drawable.ic_notice_white_24dp
-            ImageType.VIDEO -> R.color.grey_lighten_30
+            ImageType.VIDEO -> R.color.neutral_0
             ImageType.ICON -> R.drawable.bg_grey_lighten_30_with_radius
         }
     }
