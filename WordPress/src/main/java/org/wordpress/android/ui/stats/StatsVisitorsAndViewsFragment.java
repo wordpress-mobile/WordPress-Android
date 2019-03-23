@@ -189,7 +189,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 if (currentValue == 0) {
                     mValue.setTextColor(getResources().getColor(R.color.grey_text_min));
                 } else {
-                    mValue.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                    mValue.setTextColor(getResources().getColor(R.color.primary_500));
                 }
             }
 

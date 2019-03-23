@@ -154,7 +154,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         if (total.equals("0")) {
             value.setTextColor(getResources().getColor(R.color.grey_text_min));
         } else {
-            value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+            value.setTextColor(getResources().getColor(R.color.primary_500));
         }
         icon = currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
         ColorUtils.INSTANCE.setImageResourceWithTint(icon, getTabIcon(itemType), R.color.grey_dark);

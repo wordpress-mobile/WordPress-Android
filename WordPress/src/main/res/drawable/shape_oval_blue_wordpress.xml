@@ -3,5 +3,5 @@
        xmlns:tools="http://schemas.android.com/tools"
        android:shape="oval"
        tools:ignore="UnusedResources">
-    <solid android:color="@color/blue_wordpress" />
+    <solid android:color="@color/primary_500" />
 </shape>

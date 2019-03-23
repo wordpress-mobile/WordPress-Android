@@ -32,7 +32,7 @@
         <item name="android:minHeight">48dp</item>
         <item name="android:paddingEnd">@dimen/margin_large</item>
         <item name="android:paddingStart">@dimen/margin_large</item>
-        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textColor">@color/primary_500</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -143,7 +143,7 @@
     </style>
 
     <style name="StatsBlockLink" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textColor">@color/primary_500</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 

@@ -10,7 +10,7 @@
             android:shape="oval" >
 
             <solid
-                android:color="@color/blue_wordpress" >
+                android:color="@color/primary_500" >
             </solid>
 
             <padding

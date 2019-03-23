@@ -224,7 +224,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             // Likes and Comments shouldn't link anywhere because they don't have summaries
             // so their color should be Gray Darken 30 or #3d596d
             if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS) {
-                value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                value.setTextColor(getResources().getColor(R.color.primary_500));
             } else {
                 value.setTextColor(getResources().getColor(R.color.grey_darken_30));
             }
