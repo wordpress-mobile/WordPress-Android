@@ -159,7 +159,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mTextColorHidden = context.getResources().getColor(R.color.neutral_300);
 
         mSelectedItemBackground =
-                new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20_translucent_50));
+                new ColorDrawable(context.getResources().getColor(R.color.gray_50));
 
         mHeaderHandler = headerHandler;
         mSelectedItemPos = getPositionOffset();
