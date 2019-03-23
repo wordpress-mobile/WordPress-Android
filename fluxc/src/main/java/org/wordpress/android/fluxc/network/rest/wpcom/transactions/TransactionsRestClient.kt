@@ -28,8 +28,7 @@ constructor(
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     companion object {
-        const val privateRegistrationProductID = 16
-        const val freeDomainPaymentMethod = "WPCOM_Billing_WPCOM"
+        const val domainCreditPaymentMethod = "WPCOM_Billing_WPCOM"
     }
 
     suspend fun fetchSupportedCountries(): FetchedSupportedCountriesPayload {
@@ -39,7 +38,7 @@ constructor(
                 this,
                 url,
                 emptyMap(),
-                Array<Country>::class.java,
+                Array<SupportedDomainCountry>::class.java,
                 enableCaching = false,
                 forced = true
         )
@@ -63,7 +62,7 @@ constructor(
     ): CreatedShoppingCartPayload {
         val url = WPCOMREST.me.shopping_cart.site(site.siteId).urlV1_1
 
-        val mainProduct = mapOf(
+        val domainProduct = mapOf(
                 "product_id" to productId,
                 "meta" to domainName,
                 "extra" to PrivacyExtra(isPrivacyProtectionEnabled)
@@ -71,7 +70,7 @@ constructor(
 
         val params = mapOf(
                 "temporary" to "true",
-                "products" to arrayOf(mainProduct)
+                "products" to arrayOf(domainProduct)
         )
 
         val response = wpComGsonRequestBuilder.syncPostRequest(
@@ -99,7 +98,7 @@ constructor(
         val url = WPCOMREST.me.transactions.urlV1_1
 
         val paymentMethod = mapOf(
-                "payment_method" to freeDomainPaymentMethod
+                "payment_method" to domainCreditPaymentMethod
         )
 
         val params = mapOf(
@@ -126,7 +125,7 @@ constructor(
         }
     }
 
-    data class PrivacyExtra(val privacy: Boolean)
+    private data class PrivacyExtra(val privacy: Boolean)
 
     data class CartResponse(
         val blog_id: Int,

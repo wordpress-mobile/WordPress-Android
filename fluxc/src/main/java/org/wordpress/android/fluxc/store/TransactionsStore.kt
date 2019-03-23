@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.DomainContactModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.Country
+import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CartResponse
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.GENERIC_ERROR
@@ -40,12 +40,12 @@ class TransactionsStore @Inject constructor(
             }
             CREATE_SHOPPING_CART -> {
                 GlobalScope.launch(coroutineContext) {
-                    emitChange(createShoppingCard(action.payload as CreateShoppingCartPayload))
+                    emitChange(createShoppingCart(action.payload as CreateShoppingCartPayload))
                 }
             }
             REDEEM_CART_WITH_CREDITS -> {
                 GlobalScope.launch(coroutineContext) {
-                    emitChange(redeemCardUsingCredits(action.payload as RedeemShoppingCartPayload))
+                    emitChange(redeemCartUsingCredits(action.payload as RedeemShoppingCartPayload))
                 }
             }
         }
@@ -66,7 +66,7 @@ class TransactionsStore @Inject constructor(
         }
     }
 
-    private suspend fun createShoppingCard(payload: CreateShoppingCartPayload): OnShoppingCartCreated {
+    private suspend fun createShoppingCart(payload: CreateShoppingCartPayload): OnShoppingCartCreated {
         val createdShoppingCartPayload = transactionsRestClient.createShoppingCart(
                 payload.site,
                 payload.productId,
@@ -83,7 +83,7 @@ class TransactionsStore @Inject constructor(
         }
     }
 
-    private suspend fun redeemCardUsingCredits(payload: RedeemShoppingCartPayload): OnCartRedeemed {
+    private suspend fun redeemCartUsingCredits(payload: RedeemShoppingCartPayload): OnCartRedeemed {
         val cartRedeemedPayload = transactionsRestClient.redeemCartUsingCredits(
                 payload.cartDetails,
                 payload.domainContactModel
@@ -105,7 +105,7 @@ class TransactionsStore @Inject constructor(
     // Actions
 
     data class OnSupportedCountriesFetched(
-        val countries: Array<Country>? = null
+        val countries: Array<SupportedDomainCountry>? = null
     ) : Store.OnChanged<FetchSupportedCountriesError>() {
         constructor(error: FetchSupportedCountriesError) : this() {
             this.error = error
@@ -141,7 +141,7 @@ class TransactionsStore @Inject constructor(
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchedSupportedCountriesPayload(
-        val countries: Array<Country>? = null
+        val countries: Array<SupportedDomainCountry>? = null
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class CreatedShoppingCartPayload(
