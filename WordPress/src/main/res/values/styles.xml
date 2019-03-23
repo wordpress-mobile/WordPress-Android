@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="colorControlActivated">@color/color_control_activated</item>
+        <item name="colorControlActivated">@color/primary_300</item>
         <item name="colorControlHighlight">@color/color_control_highlight</item>
 
         <item name="android:windowBackground">@color/grey_lighten_30</item>
