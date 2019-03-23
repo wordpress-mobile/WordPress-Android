@@ -36,7 +36,6 @@
     <color name="white_translucent_65">#a6ffffff</color>
 
     <!-- Material Design -->
-    <color name="grey_100">@color/gray_100</color>
     <color name="grey_200">@color/gray_200</color>
     <color name="grey_400">@color/gray_400</color>
     <color name="grey_500">@color/gray_500</color>
