@@ -16,7 +16,7 @@
         app:tabSelectedTextColor="@color/wp_blue"
         app:tabPaddingStart="@dimen/margin_extra_large"
         app:tabPaddingEnd="@dimen/margin_extra_large"
-        app:tabTextColor="@color/wp_grey_darken_20"/>
+        app:tabTextColor="@color/neutral_500"/>
 
     <View
         android:layout_width="match_parent"

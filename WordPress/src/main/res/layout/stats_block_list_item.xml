@@ -84,7 +84,7 @@
         android:layout_marginStart="8dp"
         android:contentDescription="@string/icon"
         android:src="@drawable/ic_chevron_down_white_16dp"
-        android:tint="@color/grey_darken_20"
+        android:tint="@color/neutral_500"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

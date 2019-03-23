@@ -32,7 +32,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:gravity="center"
         android:lineSpacingMultiplier="1.1"
-        android:textColor="@color/wp_grey_darken_20"
+        android:textColor="@color/neutral_500"
         android:textSize="@dimen/text_sz_large"
         app:fixWidowWords="true"
         tools:text="We’ll use your answer to add sections to your website."/>

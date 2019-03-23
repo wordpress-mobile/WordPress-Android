@@ -33,7 +33,7 @@
         android:fillColor="@color/alert_red"
         android:pathData="M54.3 20.4V9c0-4.5 3.1-8.2 6.9-8.2h102c3.8 0 6.9 3.7 6.9 8.2v11.4H54.3z"/>
     <path
-        android:fillColor="@color/grey_darken_20"
+        android:fillColor="@color/neutral_500"
         android:pathData="M173.3 20.4c-10.1 0.8-20.3 0.7-30.4 0.8l-30.4 0.1-30.4-0.1c-10.1 0-20.3 0-30.4-0.8v-0.5c10.1-0.8 20.3-0.7 30.4-0.8l30.4-0.1 30.4 0.1c10.1 0 20.3 0 30.4 0.8v0.5z"/>
     <path
         android:fillColor="@color/neutral_200"

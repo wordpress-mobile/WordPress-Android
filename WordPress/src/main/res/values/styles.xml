@@ -315,7 +315,7 @@
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textColor">@color/neutral_500</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
@@ -455,7 +455,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textColor">@color/neutral_500</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -506,7 +506,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textColor">@color/neutral_500</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -600,7 +600,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textColor">@color/neutral_500</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 

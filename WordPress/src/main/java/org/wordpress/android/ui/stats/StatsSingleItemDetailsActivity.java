@@ -232,7 +232,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                     }
                 });
             } else {
-                mStatsForLabel.setTextColor(getResources().getColor(R.color.grey_darken_20));
+                mStatsForLabel.setTextColor(getResources().getColor(R.color.neutral_500));
             }
         } else {
             mStatsForLabel.setVisibility(View.GONE);

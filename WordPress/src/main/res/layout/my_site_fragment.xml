@@ -193,7 +193,7 @@
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:src="@drawable/ic_more_vert_white_24dp"
-                            android:tint="@color/grey_darken_20" >
+                            android:tint="@color/neutral_500" >
                         </ImageView>
 
                     </RelativeLayout>

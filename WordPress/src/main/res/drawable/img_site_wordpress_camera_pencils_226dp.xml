@@ -51,7 +51,7 @@
     </path>
 
     <path
-        android:fillColor="@color/grey_darken_20"
+        android:fillColor="@color/neutral_500"
         android:pathData="M173.3,20.4c-10.1,0.8-20.3,0.7-30.4,0.8l-30.4,0.1l-30.4-0.1c-10.1,0-20.3,0-30.4-0.8v-0.5 c10.1-0.8,20.3-0.7,30.4-0.8l30.4-0.1l30.4,0.1c10.1,0,20.3,0,30.4,0.8V20.4z" >
     </path>
 
