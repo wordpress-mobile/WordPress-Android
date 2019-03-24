@@ -11,6 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
@@ -106,7 +107,13 @@ class PostListMainViewModel @Inject constructor(
         val selection: AuthorFilterSelection = when (position) {
             AuthorFilterSelection.ME.ordinal -> AuthorFilterSelection.ME
             AuthorFilterSelection.EVERYONE.ordinal -> AuthorFilterSelection.EVERYONE
-            else -> throw IllegalArgumentException("Unhandled author filter selection position")
+            else -> {
+                if (BuildConfig.DEBUG) {
+                    throw IllegalArgumentException("Unhandled author filter selection position")
+                } else {
+                    AuthorFilterSelection.EVERYONE
+                }
+            }
         }
 
         _authorFilterSelection.value = selection
