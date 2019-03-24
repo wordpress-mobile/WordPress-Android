@@ -1211,7 +1211,7 @@ public class ReaderPostDetailFragment extends Fragment
                 excerptFooter.setVisibility(View.VISIBLE);
 
                 String blogName = "<font color='" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color
-                        .reader_hyperlink) + "'>" + mPost.getBlogName() + "</font>";
+                        .link_reader) + "'>" + mPost.getBlogName() + "</font>";
                 String linkText = String.format(WordPress.getContext().
                         getString(R.string.reader_excerpt_link), blogName);
 

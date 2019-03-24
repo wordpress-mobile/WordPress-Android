@@ -45,7 +45,7 @@
             android:id="@+id/text_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/reader_hyperlink"
+            android:textColor="@color/link_reader"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
             tools:text="text_header_author_name" />
@@ -54,7 +54,7 @@
             android:id="@+id/text_header_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/reader_hyperlink"
+            android:textColor="@color/link_reader"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_header_blog_name" />
 

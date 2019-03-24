@@ -39,7 +39,7 @@ class ReaderResourceVars {
         mFeaturedImageHeightPx = resources.getDimensionPixelSize(R.dimen.reader_featured_image_height);
         mMarginMediumPx = resources.getDimensionPixelSize(R.dimen.margin_medium);
 
-        mLinkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
+        mLinkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.link_reader);
         mGreyMediumDarkStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_600);
         mGreyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_0);
         mGreyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_0);

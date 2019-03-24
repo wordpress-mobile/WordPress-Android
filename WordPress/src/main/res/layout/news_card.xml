@@ -70,7 +70,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_toStartOf="@+id/news_image"
             android:maxLines="1"
-            android:textColor="@color/reader_hyperlink"
+            android:textColor="@color/link_reader"
             tools:text="Read more"/>
 
     </RelativeLayout>

@@ -660,7 +660,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             };
             imgAvatar.setOnClickListener(authorListener);
             txtName.setOnClickListener(authorListener);
-            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.reader_hyperlink));
+            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.link_reader));
         } else {
             txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.neutral_600));
         }
@@ -700,7 +700,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // display "on [Post Title]..."
         if (isHyperlink) {
             String html = getString(R.string.on)
-                          + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color.reader_hyperlink)
+                          + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color.link_reader)
                           + ">"
                           + postTitle.trim()
                           + "</font>";

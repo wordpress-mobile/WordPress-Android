@@ -64,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:maxLines="1"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/reader_hyperlink"
+                    android:textColor="@color/link_reader"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="text_blog_nametext_blog_name text_blog_name"
                     style="@style/ReaderTextView" >

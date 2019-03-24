@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/reader_hyperlink"
+            android:textColor="@color/link_reader"
             android:textSize="@dimen/text_sz_small"
             tools:text="text_url" />
 
