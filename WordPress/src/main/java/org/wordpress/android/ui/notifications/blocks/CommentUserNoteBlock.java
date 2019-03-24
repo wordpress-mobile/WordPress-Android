@@ -133,9 +133,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         if (mCommentStatus == CommentStatus.UNAPPROVED) {
             if (hasCommentNestingLevel()) {
                 paddingStart = mIndentedLeftPadding;
-                view.setBackgroundResource(R.drawable.bg_rectangle_unapproved_warning_white);
+                view.setBackgroundResource(R.drawable.bg_rectangle_warning_0_warning_white);
             } else {
-                view.setBackgroundResource(R.drawable.bg_rectangle_unapproved_warning);
+                view.setBackgroundResource(R.drawable.bg_rectangle_warning_0_warning);
             }
 
             noteBlockHolder.mDividerView.setVisibility(View.INVISIBLE);

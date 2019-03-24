@@ -70,7 +70,6 @@
     <!-- Comment Status -->
 
     <!-- Notification Status -->
-    <color name="notification_status_unapproved_background">@color/warning_0</color>
 
     <!-- NUX -->
     <color name="nux_grey_button">@color/neutral_100</color>

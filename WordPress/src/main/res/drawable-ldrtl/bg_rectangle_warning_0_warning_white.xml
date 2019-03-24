@@ -2,15 +2,21 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+    <item
+        android:right="@dimen/margin_extra_large">
+        <shape android:shape="rectangle">
             <solid android:color="@color/warning" />
             <padding
                 android:bottom="1dp"
-                android:left="4dp" />
+                android:right="20dp" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/notification_status_unapproved_background" />
+            <solid android:color="@color/warning_0" />
         </shape>
     </item>
 </layer-list>
