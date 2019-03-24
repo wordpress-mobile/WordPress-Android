@@ -822,7 +822,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // customize list dividers
         //noinspection deprecation
-        prefList.setDivider(res.getDrawable(R.drawable.preferences_divider));
+        prefList.setDivider(res.getDrawable(R.drawable.bg_rectangle_divider));
         prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);

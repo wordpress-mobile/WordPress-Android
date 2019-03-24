@@ -9,7 +9,7 @@
             android:shape="rectangle">
 
             <solid
-                android:color="@color/site_settings_pref_divider_color" />
+                android:color="@color/divider" />
 
         </shape>
 

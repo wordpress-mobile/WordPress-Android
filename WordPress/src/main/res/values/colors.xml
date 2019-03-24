@@ -88,7 +88,6 @@
     <!-- Notifications -->
 
     <!-- Site Settings -->
-    <color name="site_settings_pref_divider_color">@color/divider</color>
 
     <!-- Themes -->
     <color name="theme_price">@color/success</color>
