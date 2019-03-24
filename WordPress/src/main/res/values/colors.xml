@@ -68,7 +68,6 @@
     <color name="link_reader">@color/primary</color>
 
     <!-- Comment Status -->
-    <color name="comment_status_spam">@color/error</color>
 
     <!-- Notification Status -->
     <color name="notification_status_unapproved">@color/warning</color>

@@ -913,12 +913,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 break;
             case SPAM:
                 statusTextResId = R.string.comment_status_spam;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.comment_status_spam);
+                statusColor = ContextCompat.getColor(getActivity(), R.color.error);
                 break;
             case TRASH:
             default:
                 statusTextResId = R.string.comment_status_trash;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.comment_status_spam);
+                statusColor = ContextCompat.getColor(getActivity(), R.color.error);
                 break;
         }
 
