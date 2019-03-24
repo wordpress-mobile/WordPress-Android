@@ -26,7 +26,7 @@ class DayViewHolder(parent: ViewGroup) : ViewHolder(
             INVISIBLE -> android.R.color.transparent
             VERY_LOW -> R.color.neutral_100
             LOW -> R.color.stats_activity_low
-            MEDIUM -> R.color.stats_medium_activity
+            MEDIUM -> R.color.stats_activity_medium
             HIGH -> R.color.stats_high_activity
             VERY_HIGH -> R.color.neutral_700
         }
