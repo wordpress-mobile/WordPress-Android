@@ -8,7 +8,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/header_text"
-        android:background="@color/default_background"
+        android:background="@color/background_default"
         android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

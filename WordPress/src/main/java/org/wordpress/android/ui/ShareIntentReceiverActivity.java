@@ -85,7 +85,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         super.onResume();
         // keep setBackground in the onResume, otherwise the transition between activities is visible to the user when
         // sharing text with an account with one visible site
-        findViewById(R.id.main_view).setBackgroundResource(R.color.default_background);
+        findViewById(R.id.main_view).setBackgroundResource(R.color.background_default);
     }
 
     private void refreshContent() {

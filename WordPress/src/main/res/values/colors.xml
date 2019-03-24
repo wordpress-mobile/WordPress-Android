@@ -5,11 +5,11 @@
     tools:ignore="UnusedResources">
 
     <!-- APPLICATION -->
-    <color name="default_background">@color/neutral_0</color>
+    <color name="background_default">@color/neutral_0</color>
+    <color name="background_snackbar">@color/neutral_800</color>
     <color name="jetpack">#00be28</color>
     <color name="link_reader">@color/primary</color>
     <color name="link_stats">@color/accent</color>
-    <color name="snackbar_background">@color/neutral_800</color>
     <color name="stats_activity_high">@color/primary_dark</color>
     <color name="stats_activity_low">@color/primary_light</color>
     <color name="stats_activity_medium">@color/primary</color>
