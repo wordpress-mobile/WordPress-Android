@@ -67,9 +67,9 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             Switch switchControl = getSwitch((ViewGroup) view);
             if (switchControl != null) {
                 switchControl.setThumbTintList(ContextCompat.getColorStateList(this.getContext(),
-                        R.color.dialog_compound_button_thumb));
+                        R.color.primary_400_gray_200_gray_400_selector));
                 switchControl.setTrackTintList(ContextCompat.getColorStateList(this.getContext(),
-                        R.color.dialog_compound_button_track));
+                        R.color.primary_400_gray_900_gray_500_selector));
             }
         }
 

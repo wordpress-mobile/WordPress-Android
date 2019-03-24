@@ -529,7 +529,7 @@
     </style>
 
     <style name="SwitchBlueMedium">
-        <item name="colorControlActivated">@color/switch_tint</item>
+        <item name="colorControlActivated">@color/primary_400</item>
     </style>
 
     <!--Post Settings Styles-->

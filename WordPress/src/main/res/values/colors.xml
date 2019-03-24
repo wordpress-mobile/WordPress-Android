@@ -98,7 +98,6 @@
 
     <!-- Quick Start -->
 
-    <color name="switch_tint">@color/primary_400</color>
     <color name="jetpack_green">#00be28</color>
 
     <!-- Pages -->

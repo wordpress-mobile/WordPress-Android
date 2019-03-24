@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:buttonTint="@color/dialog_compound_button_thumb" >
+        android:buttonTint="@color/primary_400_gray_200_gray_400_selector" >
     </RadioButton>
 
     <TextView
