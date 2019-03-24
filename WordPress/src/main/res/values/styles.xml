@@ -221,7 +221,7 @@
 
     <!-- NUX Styles -->
     <style name="WordPress.NUXPrimaryButton">
-        <item name="android:textColor">@color/nux_primary_button</item>
+        <item name="android:textColor">@color/white_neutral_100_selector</item>
         <item name="android:layout_height">@dimen/nux_main_button_height</item>
         <item name="android:layout_marginStart">4dp</item>
         <item name="android:layout_marginEnd">4dp</item>
@@ -234,7 +234,7 @@
     <style name="WordPress.NUXGreyButtonNoBg">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@drawable/nux_flat_button_grey_text_selector</item>
+        <item name="android:textColor">@color/neutral_100_neutral_0_selector</item>
     </style>
 
     <style name="WordPress.NUXEditText">
