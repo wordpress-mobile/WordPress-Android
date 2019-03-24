@@ -95,7 +95,6 @@
     <!-- TODO: consolidate divider colors -->
 
     <!-- Login -->
-    <color name="login_background_color">@color/neutral_0</color>
 
     <!-- Quick Start -->
     <color name="quickstart_focus_inner_circle">@color/primary</color>
