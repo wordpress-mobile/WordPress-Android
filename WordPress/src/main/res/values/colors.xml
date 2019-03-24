@@ -98,7 +98,7 @@
 
     <!-- Quick Start -->
 
-    <color name="jetpack_green">#00be28</color>
+    <color name="jetpack">#00be28</color>
 
     <!-- Pages -->
     <color name="page_item_tag_background">@color/warning_0</color>
