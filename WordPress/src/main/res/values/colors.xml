@@ -84,7 +84,6 @@
     <!-- Misc -->
 
     <!--Me-->
-    <color name="me_divider">@color/divider</color>
 
     <!-- Notifications -->
     <color name="notifications_settings_divider_color">@color/divider</color>

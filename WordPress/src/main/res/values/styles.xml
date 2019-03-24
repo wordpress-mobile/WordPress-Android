@@ -377,7 +377,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@color/me_divider</item>
+        <item name="android:background">@color/divider</item>
         <item name="android:layout_marginEnd" >@dimen/content_margin</item>
         <item name="android:layout_marginStart" >@dimen/content_margin</item>
     </style>
@@ -413,7 +413,7 @@
     <style name="MyProfileDividerView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/me_divider</item>
+        <item name="android:background">@color/divider</item>
     </style>
 
     <!--Quick Start-->
