@@ -79,7 +79,7 @@
     <!-- Editor -->
     <color name="image_options_label">@color/neutral_100</color>
     <!-- copied from private support lib resource: color/design_snackbar_background_color -->
-    <color name="snackbar_background_color">@color/neutral_800</color>
+    <color name="snackbar_background">@color/neutral_800</color>
 
     <!-- Misc -->
     <color name="pressed_wordpress">@color/primary_50</color>
