@@ -5,5 +5,6 @@ import org.wordpress.android.ui.utils.UiString
 data class SiteCreationSearchInputUiState(
     val hint: UiString,
     val showProgress: Boolean,
-    val showClearButton: Boolean
+    val showClearButton: Boolean,
+    val showDivider: Boolean
 )

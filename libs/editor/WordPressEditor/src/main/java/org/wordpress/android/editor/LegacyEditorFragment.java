@@ -1211,6 +1211,16 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     public void setContentPlaceholder(CharSequence text) { }
 
     @Override
+    public boolean showSavingProgressDialogIfNeeded() {
+        return false;
+    }
+
+    @Override
+    public boolean hideSavingProgressDialog() {
+        return false;
+    }
+
+    @Override
     public boolean isActionInProgress() {
         return false;
     }
