@@ -442,7 +442,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         }
 
         GraphViewSeries mCurrentSeriesOnScreen = new GraphViewSeries(views);
-        mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
+        mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.primary);
         mCurrentSeriesOnScreen.getStyle().highlightColor =
                 getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
         mCurrentSeriesOnScreen.getStyle().outerhighlightColor =

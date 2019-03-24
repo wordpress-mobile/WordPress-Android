@@ -449,7 +449,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.removeAllSeries();
 
         GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
-        mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
+        mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.primary);
         mainSeriesOnScreen.getStyle().outerColor = getResources().getColor(R.color.grey_lighten_30_translucent_50);
         mainSeriesOnScreen.getStyle().highlightColor =
                 getResources().getColor(R.color.stats_bar_graph_main_series_highlight);

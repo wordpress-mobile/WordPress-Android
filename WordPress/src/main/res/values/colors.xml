@@ -60,7 +60,6 @@
 
     <!-- Stats -->
     <color name="link_stats">@color/accent</color>
-    <color name="stats_bar_graph_main_series">@color/primary</color>
     <color name="stats_bar_graph_main_series_highlight">@color/accent</color>
     <color name="stats_bar_graph_outer_highlight">@color/accent_100</color> <!-- 10% Opacity on orange_jazzy #f0821e -->
     <color name="stats_bar_graph_secondary_series">@color/primary_dark</color>
