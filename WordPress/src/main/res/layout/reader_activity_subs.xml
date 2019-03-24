@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
             android:background="@color/primary"
-            app:tabIndicatorColor="@color/tab_indicator" />
+            app:tabIndicatorColor="@android:color/white" />
     </android.support.design.widget.AppBarLayout>
 
     <org.wordpress.android.widgets.WPViewPager

@@ -23,7 +23,7 @@
         android:layout_below="@+id/toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        app:tabIndicatorColor="@color/tab_indicator"
+        app:tabIndicatorColor="@android:color/white"
         app:tabMode="scrollable" >
     </android.support.design.widget.TabLayout>
 
