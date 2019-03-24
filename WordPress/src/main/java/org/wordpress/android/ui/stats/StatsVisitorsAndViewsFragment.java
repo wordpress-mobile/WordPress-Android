@@ -454,7 +454,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mainSeriesOnScreen.getStyle().highlightColor =
                 getResources().getColor(R.color.accent);
         mainSeriesOnScreen.getStyle().outerhighlightColor =
-                getResources().getColor(R.color.stats_bar_graph_outer_highlight);
+                getResources().getColor(R.color.accent_100);
         mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
         mGraphView.addSeries(mainSeriesOnScreen);
 

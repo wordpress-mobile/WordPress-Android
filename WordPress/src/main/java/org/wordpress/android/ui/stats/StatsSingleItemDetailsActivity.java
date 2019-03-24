@@ -446,7 +446,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mCurrentSeriesOnScreen.getStyle().highlightColor =
                 getResources().getColor(R.color.accent);
         mCurrentSeriesOnScreen.getStyle().outerhighlightColor =
-                getResources().getColor(R.color.stats_bar_graph_outer_highlight);
+                getResources().getColor(R.color.accent_100);
         mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(this, 5);
 
         StatsBarGraph mGraphView;
