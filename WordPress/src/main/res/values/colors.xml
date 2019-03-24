@@ -65,7 +65,6 @@
     <color name="stats_activity_high">@color/primary_dark</color>
 
     <!-- Reader  -->
-    <color name="reader_following">@color/success</color>
     <color name="reader_hyperlink">@color/primary</color>
     <color name="reader_notifications_off">@color/success</color>
     <color name="reader_notifications_on">@color/neutral_800</color>

@@ -72,7 +72,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
                 break;
             case ITEM_UNFOLLOW:
                 textRes = R.string.reader_btn_unfollow;
-                colorRes = R.color.reader_following;
+                colorRes = R.color.success;
                 iconRes = R.drawable.ic_reader_following_white_24dp;
                 break;
             case ITEM_BLOCK:
