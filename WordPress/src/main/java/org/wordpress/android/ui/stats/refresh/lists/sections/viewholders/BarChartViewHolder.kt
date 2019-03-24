@@ -203,7 +203,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.stats_bar_chart_gradient_start_color
+                        R.color.primary_50
                 ), ContextCompat.getColor(
                 context,
                 android.R.color.transparent
