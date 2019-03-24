@@ -146,7 +146,7 @@
                     android:id="@+id/stats_checkbox_visitors"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/stats_visitors_and_views_legend_background_secondary"
+                    android:drawableStart="@drawable/bg_rectangle_primary_dark_radius_card_12dp"
                     android:drawablePadding="@dimen/margin_medium"
                     android:textSize="@dimen/text_sz_small"
                     android:text="@string/stats_visitors"
