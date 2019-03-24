@@ -5,7 +5,7 @@
     android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/nux_background"
+    android:background="@color/primary"
     android:fillViewport="true">
 
     <android.support.design.widget.AppBarLayout
