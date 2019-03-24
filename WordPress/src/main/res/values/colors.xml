@@ -86,7 +86,6 @@
     <!--Me-->
 
     <!-- Notifications -->
-    <color name="notifications_settings_divider_color">@color/divider</color>
 
     <!-- Site Settings -->
     <color name="site_settings_pref_divider_color">@color/divider</color>
