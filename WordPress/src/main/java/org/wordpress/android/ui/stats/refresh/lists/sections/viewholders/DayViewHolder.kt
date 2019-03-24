@@ -27,7 +27,7 @@ class DayViewHolder(parent: ViewGroup) : ViewHolder(
             VERY_LOW -> R.color.neutral_100
             LOW -> R.color.stats_activity_low
             MEDIUM -> R.color.stats_activity_medium
-            HIGH -> R.color.stats_high_activity
+            HIGH -> R.color.stats_activity_high
             VERY_HIGH -> R.color.neutral_700
         }
         itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, color))

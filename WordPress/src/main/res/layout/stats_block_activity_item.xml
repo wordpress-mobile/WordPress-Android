@@ -103,7 +103,7 @@
     <View
         android:id="@+id/high_box"
         style="@style/StatsActivityBox"
-        android:background="@color/stats_high_activity"
+        android:background="@color/stats_activity_high"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/very_high_box"
         app:layout_constraintHorizontal_bias="0.5"
