@@ -35,7 +35,7 @@ class DiffView : AppCompatTextView {
                         ColorUnderlineSpan(
                                 ContextCompat.getColor(
                                         context,
-                                        R.color.revision_diff_add_action_underline
+                                        R.color.primary
                                 )
                         ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
