@@ -82,7 +82,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
                 break;
             case ITEM_NOTIFICATIONS_OFF:
                 textRes = R.string.reader_btn_notifications_off;
-                colorRes = R.color.reader_notifications_off;
+                colorRes = R.color.success;
                 iconRes = R.drawable.ic_bell_white_24dp;
                 break;
             case ITEM_NOTIFICATIONS_ON:
