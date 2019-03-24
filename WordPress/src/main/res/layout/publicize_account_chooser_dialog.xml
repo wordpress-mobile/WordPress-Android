@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/publicize_divider_height"
             android:layout_gravity="center_vertical"
-            android:background="@color/reader_divider_grey"
+            android:background="@color/divider"
             android:layout_marginStart="@dimen/publicize_default_margin"/>
 
     </LinearLayout>

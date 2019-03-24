@@ -14,7 +14,7 @@
 
     <View
         android:id="@+id/divider_footer"
-        android:background="@color/reader_divider_grey"
+        android:background="@color/divider"
         android:layout_height="1dp"
         android:layout_width="match_parent" >
     </View>

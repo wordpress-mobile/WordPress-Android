@@ -53,7 +53,7 @@
                 <View
                     android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="@color/reader_divider_grey" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/customize"
@@ -83,7 +83,7 @@
                 <View
                     android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="@color/reader_divider_grey" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/details"
@@ -113,7 +113,7 @@
                 <View
                     android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="@color/reader_divider_grey" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/support"
