@@ -82,7 +82,6 @@
     <color name="snackbar_background">@color/neutral_800</color>
 
     <!-- Misc -->
-    <color name="dialog_button_text">@color/primary_400</color>
 
     <!--Me-->
     <color name="me_divider">@color/divider</color>
