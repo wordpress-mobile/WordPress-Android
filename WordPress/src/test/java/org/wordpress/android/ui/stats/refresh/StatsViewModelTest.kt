@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
@@ -51,7 +51,6 @@ class StatsViewModelTest : BaseUnitTest() {
                 statsSectionManager,
                 analyticsTracker,
                 networkUtilsWrapper,
-                resourceProvider,
                 statsSiteProvider
         )
         whenever(statsSectionManager.getSelectedSection()).thenReturn(INSIGHTS)
@@ -97,25 +96,5 @@ class StatsViewModelTest : BaseUnitTest() {
 
         verify(statsSectionManager).setSelectedSection(YEARS)
         verify(analyticsTracker).track(STATS_PERIOD_YEARS_ACCESSED)
-    }
-
-    @Test
-    fun `updates date selector on insights screen`() {
-        viewModel.onSectionSelected(INSIGHTS)
-
-        verify(baseListUseCase).updateDateSelector(null)
-    }
-
-    @Test
-    fun `updates date selector on date change`() {
-        val statsGranularity = StatsGranularity.DAYS
-
-        whenever(statsSectionManager.getSelectedStatsGranularity()).thenReturn(statsGranularity)
-
-        viewModel.onSectionSelected(DAYS)
-
-        viewModel.onSelectedDateChange(statsGranularity)
-
-        verify(baseListUseCase).updateDateSelector(StatsGranularity.DAYS)
     }
 }

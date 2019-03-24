@@ -815,6 +815,7 @@
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
     <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Site not loaded yet</string>
+    <string name="showing_stats_for">Showing stats for:</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
@@ -1019,6 +1020,7 @@
     <string name="stats_insights_create_post">Create post</string>
     <string name="stats_insights_share_post">Share post</string>
     <string name="stats_insights_view_more">View more</string>
+    <string name="stats_insights_load_more" tools:ignore="UnusedResources">Load more</string>
     <string name="stats_insights_facebook">Facebook</string>
     <string name="stats_insights_twitter">Twitter</string>
     <string name="stats_insights_tumblr">Tumblr</string>
@@ -1027,6 +1029,13 @@
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
+
+    <!-- Stats post detail -->
+    <string name="stats_detail_months_and_years">Months and Years</string>
+    <string name="stats_months_and_years_period_label">Period</string>
+    <string name="stats_months_and_years_views_label">Views</string>
+    <string name="stats_detail_average_views_per_day">Avg. Views Per Day</string>
+    <string name="stats_detail_recent_weeks">Recent Weeks</string>
 
     <string name="stats_posts_and_pages">Posts and Pages</string>
     <string name="stats_referrers">Referrers</string>
@@ -1908,9 +1917,8 @@
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Install plugin</string>
     <string name="plugin_install_custom_domain_required_dialog_message">To install plugins, you need to have a custom domain associated with your site.</string>
-    <string name="plugin_install_custom_domain_required_no_credits_message">To install plugins, you need to have a custom domain associated with your site.\n\nYou can purchase domain by visiting https://wordpress.com/domains/add/</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Register domain</string>
-    <string name="plugin_check_domain_credits_progress_dialog_message">Checking domain credits…</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Checking domain credits</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Install plugin</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute. During this time you won’t be able to make changes to your site.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Install</string>
