@@ -15,7 +15,6 @@
     <color name="stats_activity_medium">@color/primary</color>
     <color name="status_bar">@color/primary_dark</color>
     <color name="status_bar_action_mode">@color/neutral</color>
-    <color name="tab_background">@color/primary</color>
     <color name="tab_indicator">@color/white</color>
 
     <!-- STANDARD -->

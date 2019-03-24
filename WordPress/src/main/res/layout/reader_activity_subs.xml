@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
-            android:background="@color/tab_background"
+            android:background="@color/primary"
             app:tabIndicatorColor="@color/tab_indicator" />
     </android.support.design.widget.AppBarLayout>
 
