@@ -90,7 +90,6 @@
     <!-- Site Settings -->
 
     <!-- Themes -->
-    <color name="theme_price">@color/success</color>
     <color name="theme_active">@color/primary_50</color>
 
     <!-- dividers -->
