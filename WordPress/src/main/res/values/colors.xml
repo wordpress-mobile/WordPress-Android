@@ -60,7 +60,7 @@
 
     <!-- Stats -->
     <color name="link_stats">@color/accent</color>
-    <color name="stats_low_activity">@color/primary_light</color>
+    <color name="stats_activity_low">@color/primary_light</color>
     <color name="stats_medium_activity">@color/primary</color>
     <color name="stats_high_activity">@color/primary_dark</color>
 
