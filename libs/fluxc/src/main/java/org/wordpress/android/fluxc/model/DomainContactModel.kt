@@ -1,7 +1,12 @@
 package org.wordpress.android.fluxc.model
 
+import android.annotation.SuppressLint
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
+@SuppressLint("ParcelCreator")
 class DomainContactModel(
     @SerializedName("first_name")
     val firstName: String?,
@@ -21,4 +26,4 @@ class DomainContactModel(
     val email: String?,
     val phone: String?,
     val fax: String?
-)
+) : Parcelable
