@@ -104,7 +104,6 @@
     <color name="page_item_tag_background">@color/warning_0</color>
 
     <!-- Revisions -->
-    <color name="revision_diff_add_action_background">@color/primary_0</color>
 
     <!-- SEMANTIC -->
     <color name="accent">@color/hot_pink_500</color>

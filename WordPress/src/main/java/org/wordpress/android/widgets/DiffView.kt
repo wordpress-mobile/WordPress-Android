@@ -43,7 +43,7 @@ class DiffView : AppCompatTextView {
                         BackgroundColorSpan(
                                 ContextCompat.getColor(
                                         context,
-                                        R.color.revision_diff_add_action_background
+                                        R.color.primary_0
                                 )
                         ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
