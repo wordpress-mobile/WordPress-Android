@@ -905,11 +905,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         switch (commentStatus) {
             case APPROVED:
                 statusTextResId = R.string.comment_status_approved;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.notification_status_unapproved_dark);
+                statusColor = ContextCompat.getColor(getActivity(), R.color.warning_600);
                 break;
             case UNAPPROVED:
                 statusTextResId = R.string.comment_status_unapproved;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.notification_status_unapproved_dark);
+                statusColor = ContextCompat.getColor(getActivity(), R.color.warning_600);
                 break;
             case SPAM:
                 statusTextResId = R.string.comment_status_spam;
