@@ -36,6 +36,7 @@ import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
@@ -66,7 +67,6 @@ import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
-import org.wordpress.android.ui.domainregister.suggestionslist.DomainSuggestionsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
@@ -405,6 +405,12 @@ public class ActivityLauncher {
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, slug);
             context.startActivity(intent);
         }
+    }
+
+    public static void viewDomainRegistrationActivity(Activity activity, SiteModel site) {
+        Intent intent = new Intent(activity, DomainRegistrationActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {
@@ -773,11 +779,5 @@ public class ActivityLauncher {
         } else if (url.startsWith("https") || url.startsWith("http")) {
             WPWebViewActivity.openURL(context, url);
         }
-    }
-
-    public static void viewDomainSuggestionsActivity(Activity activity, SiteModel site) {
-        Intent intent = new Intent(activity, DomainSuggestionsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        activity.startActivity(intent);
     }
 }

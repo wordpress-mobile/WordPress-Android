@@ -26,7 +26,7 @@
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_search_grey_24dp"
+                app:srcCompat="@drawable/ic_search_white_24dp"
                 app:tint="@color/grey_text_min"/>
 
             <ProgressBar

@@ -557,7 +557,7 @@
 
         <!--Domain Registration-->
         <activity
-            android:name=".ui.domainregister.suggestionslist.DomainSuggestionsActivity"
+            android:name=".ui.domains.DomainRegistrationActivity"
             android:label="@string/register_domain"
             android:theme="@style/DomainRegistrationTheme"/>
 

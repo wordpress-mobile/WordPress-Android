@@ -1,9 +1,10 @@
-package org.wordpress.android.ui.domainregister.suggestionslist
+package org.wordpress.android.ui.domains
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
@@ -11,18 +12,24 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.domain_suggestions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.viewmodel.domainregister.DomainSuggestionsViewModel
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainSuggestionsViewModel
+
+    companion object {
+        fun newInstance(): DomainSuggestionsFragment {
+            return DomainSuggestionsFragment()
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.domain_suggestions_fragment, container, false)
@@ -45,8 +52,14 @@ class DomainSuggestionsFragment : Fragment() {
         domainSuggestionsList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         domainSuggestionsList.setEmptyView(actionableEmptyView)
         chooseDomainButton.setOnClickListener {
-            // TODO Implement Activity navigation
-            ToastUtils.showToast(activity, "Still under development.")
+            val selectedDomain = viewModel.selectedSuggestion.value
+
+            (activity as DomainRegistrationActivity).onDomainSelected(
+                    DomainProductDetails(
+                            selectedDomain!!.product_id,
+                            selectedDomain.domain_name
+                    )
+            )
         }
         domainSearchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -85,3 +98,10 @@ class DomainSuggestionsFragment : Fragment() {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
     }
 }
+
+@Parcelize
+data class DomainProductDetails(
+    val productId: String,
+    val domainName: String
+) : Parcelable
+

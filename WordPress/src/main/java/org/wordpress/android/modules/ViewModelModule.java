@@ -182,6 +182,7 @@ abstract class ViewModelModule {
     abstract ViewModel plansViewModel(PlansViewModel viewModel);
 
     @Binds
+    @IntoMap
     @ViewModelKey(DomainSuggestionsViewModel.class)
     abstract ViewModel domainSuggestionsViewModel(DomainSuggestionsViewModel viewModel);
 

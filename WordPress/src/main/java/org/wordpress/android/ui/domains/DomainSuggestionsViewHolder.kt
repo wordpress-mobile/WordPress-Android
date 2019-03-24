@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.domainregister.suggestionslist
+package org.wordpress.android.ui.domains
 
 import android.support.v7.widget.AppCompatRadioButton
 import android.support.v7.widget.AppCompatTextView

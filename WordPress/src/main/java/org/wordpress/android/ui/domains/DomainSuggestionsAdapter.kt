@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.domainregister.suggestionslist
+package org.wordpress.android.ui.domains
 
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
@@ -11,7 +11,10 @@ class DomainSuggestionsAdapter(
     var selectedPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DomainSuggestionsViewHolder {
-        return DomainSuggestionsViewHolder(parent, this::onDomainSuggestionSelected)
+        return DomainSuggestionsViewHolder(
+                parent,
+                this::onDomainSuggestionSelected
+        )
     }
 
     override fun getItemCount(): Int {
