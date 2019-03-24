@@ -4,23 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="UnusedResources">
 
+    <!-- APPLICATION -->
     <color name="default_background">@color/neutral_0</color>
+    <color name="jetpack">#00be28</color>
+    <color name="link_reader">@color/primary</color>
+    <color name="link_stats">@color/accent</color>
+    <color name="snackbar_background">@color/neutral_800</color>
+    <color name="stats_activity_high">@color/primary_dark</color>
+    <color name="stats_activity_low">@color/primary_light</color>
+    <color name="stats_activity_medium">@color/primary</color>
+    <color name="status_bar">@color/primary_dark</color>
+    <color name="status_bar_action_mode">@color/neutral</color>
+    <color name="tab_background">@color/primary</color>
+    <color name="tab_indicator">@color/white</color>
+
+    <!-- STANDARD -->
     <color name="black_translucent_40">#66000000</color>
     <color name="black_translucent_50">#80000000</color>
     <color name="grey_lighten_30_translucent_50">#80e9eff3</color> <!-- Use for old Stats.  Will be removed soon. -->
     <color name="white_translucent_40">#66ffffff</color>
     <color name="white_translucent_65">#a6ffffff</color>
-    <color name="status_bar">@color/primary_dark</color>
-    <color name="status_bar_action_mode">@color/neutral</color>
-    <color name="tab_background">@color/primary</color>
-    <color name="tab_indicator">@color/white</color>
-    <color name="link_stats">@color/accent</color>
-    <color name="stats_activity_low">@color/primary_light</color>
-    <color name="stats_activity_medium">@color/primary</color>
-    <color name="stats_activity_high">@color/primary_dark</color>
-    <color name="link_reader">@color/primary</color>
-    <color name="snackbar_background">@color/neutral_800</color>
-    <color name="jetpack">#00be28</color>
 
     <!-- SEMANTIC -->
     <color name="accent">@color/hot_pink_500</color>
