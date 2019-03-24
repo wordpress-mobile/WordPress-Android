@@ -66,7 +66,6 @@
 
     <!-- Reader  -->
     <color name="link_reader">@color/primary</color>
-    <color name="filtered_list_suggestions">@color/neutral_0</color>
     <color name="reader_accent_material_dark">@color/accent</color>
 
     <!-- Comment Status -->
