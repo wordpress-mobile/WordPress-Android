@@ -171,7 +171,7 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
     <style name="MediaSettings.Divider">
-        <item name="android:background">@color/divider_grey</item>
+        <item name="android:background">@color/divider</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>

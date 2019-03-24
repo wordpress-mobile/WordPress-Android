@@ -28,7 +28,7 @@
         android:textColor="@color/neutral_400" />
 
     <View
-        android:background="@color/divider_grey"
+        android:background="@color/divider"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@+id/list_editor_header_text"
         android:layout_height="@dimen/list_divider_height"

@@ -93,7 +93,6 @@
 
     <!-- dividers -->
     <!-- TODO: consolidate divider colors -->
-    <color name="divider_grey">@color/divider</color>
 
     <!-- Login -->
     <color name="login_background_color">@color/neutral_0</color>
