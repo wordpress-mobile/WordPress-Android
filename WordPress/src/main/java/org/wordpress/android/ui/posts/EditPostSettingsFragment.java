@@ -71,6 +71,7 @@ import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -724,6 +725,8 @@ public class EditPostSettingsFragment extends Fragment {
             // The other option was to make it published immediately but, let the user actively do that rather than
             // having the app be smart about it - we don't want to accidentally publish a post.
             updatePostStatus(PostStatus.DRAFT.toString());
+            ToastUtils.showToast(getActivity(),
+                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
         }
         updatePublishDateTextView();
         updateSaveButton();
