@@ -718,6 +718,12 @@ public class EditPostSettingsFragment extends Fragment {
             // is by running into the if case above. So, if they're updating the date again by calling
             // `updatePublishDate()`, get it back to DRAFT.
             updatePostStatus(PostStatus.DRAFT.toString());
+        } else if (PostStatus.fromPost(getPost()) == PostStatus.SCHEDULED
+                   && !PostUtils.isPublishDateInTheFuture(getPost())) {
+            // if this is an SCHEDULED post and the user is trying to Back-date it now, let's update it to DRAFT.
+            // The other option was to make it published immediately but, let the user actively do that rather than
+            // having the app be smart about it - we don't want to accidentally publish a post.
+            updatePostStatus(PostStatus.DRAFT.toString());
         }
         updatePublishDateTextView();
         updateSaveButton();
