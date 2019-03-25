@@ -3936,7 +3936,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(title),
                 getString(description),
                 getString(button),
-                R.drawable.img_publish_button_124dp,
+                R.drawable.img_illustration_hand_checkmark_button_124dp,
                 getString(R.string.keep_editing),
                 getString(R.string.async_promo_link));
 
