@@ -47,12 +47,11 @@ public class LoginPrologueAnimationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_intro_template_view, container, false);
-        rootView.setBackgroundColor(
-                getResources().getColor(mLightBackground ? R.color.primary_300 : R.color.primary_400));
+            rootView.setBackgroundColor(getResources().getColor(mLightBackground ? R.color.primary : R.color.primary));
 
         TextView promoText = (TextView) rootView.findViewById(R.id.promo_text);
         promoText.setText(mPromoText);
-        promoText.setTextColor(getResources().getColor(mLightBackground ? R.color.primary_700 : android.R.color.white));
+        promoText.setTextColor(getResources().getColor(mLightBackground ? R.color.white : R.color.white));
 
         mLottieAnimationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
         mLottieAnimationView.setAnimation(mAnimationFilename, LottieAnimationView.CacheStrategy.Weak);
