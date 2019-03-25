@@ -32,7 +32,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.image.ImageType.MULTI_USER_AVATAR_GREY_BACKGROUND
-import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -55,30 +54,14 @@ class PostListMainViewModel @Inject constructor(
 
     private lateinit var site: SiteModel
 
+    private val _viewState = MutableLiveData<PostListMainViewState>()
+    val viewState: LiveData<PostListMainViewState> = _viewState
+
     private val _postListAction = SingleLiveEvent<PostListAction>()
     val postListAction: LiveData<PostListAction> = _postListAction
 
-    private val _isFabVisible = MutableLiveData<Boolean>()
-    val isFabVisible: LiveData<Boolean> = _isFabVisible
-
-    private val _isAuthorFilterSelectionVisible = MutableLiveData<Boolean>()
-    val isAuthorFilterSelectionVisible: LiveData<Boolean> = _isAuthorFilterSelectionVisible
-
-    private val _authorFilterSelection = MutableLiveData<AuthorFilterSelection>()
-    val authorFilterSelection: LiveData<AuthorFilterSelection> = _authorFilterSelection
-
-    val filterAuthorListItems: LiveData<List<AuthorFilterListItemUIState>> = _authorFilterSelection.map { selection ->
-        AuthorFilterSelection.values().map mapEnumValues@{ value ->
-            @ColorRes val backgroundColorRes: Int =
-                    if (selection == value) R.color.grey_lighten_30_translucent_50
-                    else R.color.transparent
-
-            return@mapEnumValues when (value) {
-                ME -> AuthorFilterListItemUIState.Me(accountStore.account?.avatarUrl, backgroundColorRes)
-                EVERYONE -> AuthorFilterListItemUIState.Everyone(backgroundColorRes)
-            }
-        }
-    }
+    private val _updatePostsPager = SingleLiveEvent<AuthorFilterSelection>()
+    val updatePostsPager = _updatePostsPager
 
     private val _selectTab = SingleLiveEvent<Int>()
     val selectTab = _selectTab as LiveData<Int>
@@ -92,8 +75,15 @@ class PostListMainViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
 
-        _isAuthorFilterSelectionVisible.value = site.isWPCom
-        _authorFilterSelection.value = prefs.postListAuthorSelection
+        val authorFilterSelection: AuthorFilterSelection = prefs.postListAuthorSelection
+
+        _updatePostsPager.value = authorFilterSelection
+        _viewState.value = PostListMainViewState.Idle(
+                isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
+                isAuthorFilterVisible = site.isWPCom,
+                authorFilterSelection = authorFilterSelection,
+                authorFilterItems = getAuthorFilterItems(authorFilterSelection)
+        )
     }
 
     override fun onCleared() {
@@ -118,13 +108,13 @@ class PostListMainViewModel @Inject constructor(
             }
         }
 
-        _authorFilterSelection.value = selection
+        updateViewState(authorFilterSelection = selection, authorFilterItems = getAuthorFilterItems(selection))
         prefs.postListAuthorSelection = selection
     }
 
     fun onTabChanged(position: Int) {
         val currentPage = POST_LIST_PAGES[position]
-        _isFabVisible.value = FAB_VISIBLE_POST_LIST_PAGES.contains(currentPage)
+        updateViewState(isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(currentPage))
     }
 
     fun showTargetPost(targetPostId: Int) {
@@ -143,6 +133,70 @@ class PostListMainViewModel @Inject constructor(
                 _scrollToLocalPostId.value = postModel.id
             }
         }
+    }
+
+    private fun getAuthorFilterItems(selection: AuthorFilterSelection): List<AuthorFilterListItemUIState> {
+        return AuthorFilterSelection.values().map { value ->
+            @ColorRes val backgroundColorRes: Int =
+                    if (selection == value) R.color.grey_lighten_30_translucent_50
+                    else R.color.transparent
+
+            when (value) {
+                ME -> AuthorFilterListItemUIState.Me(accountStore.account?.avatarUrl, backgroundColorRes)
+                EVERYONE -> AuthorFilterListItemUIState.Everyone(backgroundColorRes)
+            }
+        }
+    }
+
+    /**
+     * Only the non-null variables will be changed in the current state
+     */
+    private fun updateViewState(
+        isFabVisible: Boolean? = null,
+        isAuthorFilterVisible: Boolean? = null,
+        authorFilterSelection: AuthorFilterSelection? = null,
+        authorFilterItems: List<AuthorFilterListItemUIState>? = null
+    ) {
+        IllegalArgumentException().printStackTrace()
+        val currentState = viewState.value
+
+        if (currentState == null) {
+            if (BuildConfig.DEBUG) {
+                throw IllegalStateException("updateViewState should not be called before the initial state is set")
+            }
+
+            return
+        }
+
+        _viewState.value = PostListMainViewState.Idle(
+                isFabVisible ?: currentState.isFabVisible,
+                isAuthorFilterVisible ?: currentState.isAuthorFilterVisible,
+                authorFilterSelection ?: currentState.authorFilterSelection,
+                authorFilterItems ?: currentState.authorFilterItems
+        )
+
+        if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
+            _updatePostsPager.value = authorFilterSelection
+        }
+    }
+
+    sealed class PostListMainViewState(
+        val isFabVisible: Boolean,
+        val isAuthorFilterVisible: Boolean,
+        val authorFilterSelection: AuthorFilterSelection,
+        val authorFilterItems: List<AuthorFilterListItemUIState>
+    ) {
+        class Idle(
+            isFabVisible: Boolean,
+            isAuthorFilterVisible: Boolean,
+            authorFilterSelection: AuthorFilterSelection,
+            authorFilterItems: List<AuthorFilterListItemUIState>
+        ) : PostListMainViewState(
+                isFabVisible,
+                isAuthorFilterVisible,
+                authorFilterSelection,
+                authorFilterItems
+        )
     }
 
     sealed class AuthorFilterListItemUIState(

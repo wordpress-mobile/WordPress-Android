@@ -57,6 +57,8 @@ class PostsListActivity : AppCompatActivity(),
     private val currentFragment: PostListFragment?
         get() = postsPagerAdapter.getItemAtPosition(pager.currentItem)
 
+    private var updatingUI = false
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleManager.setLocale(newBase))
     }
@@ -132,6 +134,8 @@ class PostsListActivity : AppCompatActivity(),
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {
+                if (updatingUI) return
+
                 viewModel.onTabChanged(position)
             }
 
@@ -144,44 +148,38 @@ class PostsListActivity : AppCompatActivity(),
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListMainViewModel::class.java)
         viewModel.start(site)
+
+        viewModel.viewState.observe(this, Observer { state ->
+            state?.let {
+                if (state.isFabVisible) {
+                    fab.show()
+                } else {
+                    fab.hide()
+                }
+
+                authorSelection.visibility = if (state.isAuthorFilterVisible) View.VISIBLE else View.GONE
+                authorSelection.setSelection(state.authorFilterSelection.ordinal)
+                authorSelectionAdapter.updateItems(state.authorFilterItems)
+            }
+        })
+
         viewModel.postListAction.observe(this, Observer { postListAction ->
             postListAction?.let { action ->
                 handlePostListAction(this@PostsListActivity, action)
             }
         })
-        viewModel.isFabVisible.observe(this, Observer { show ->
-            show?.let {
-                if (show) {
-                    fab.show()
-                } else {
-                    fab.hide()
-                }
-            }
-        })
-
-        viewModel.isAuthorFilterSelectionVisible.observe(this, Observer { visible ->
-            visible?.let {
-                authorSelection.visibility = if (visible) View.VISIBLE else View.GONE
-            }
-        })
-
-        viewModel.authorFilterSelection.observe(this, Observer { authorFilter ->
+        viewModel.updatePostsPager.observe(this, Observer { authorFilter ->
             authorFilter?.let {
-                authorSelection.setSelection(authorFilter.ordinal)
+                updatingUI = true
 
                 val currentItem: Int = pager.currentItem
                 postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
                 pager.adapter = postsPagerAdapter
                 pager.currentItem = currentItem
+
+                updatingUI = false
             }
         })
-
-        viewModel.filterAuthorListItems.observe(this, Observer { items ->
-            items?.let {
-                authorSelectionAdapter.updateItems(items)
-            }
-        })
-
         viewModel.selectTab.observe(this, Observer { tabIndex ->
             tabIndex?.let {
                 tabLayout.getTabAt(tabIndex)?.select()
