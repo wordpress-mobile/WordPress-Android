@@ -15,6 +15,7 @@ import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -725,8 +726,9 @@ public class EditPostSettingsFragment extends Fragment {
             // The other option was to make it published immediately but, let the user actively do that rather than
             // having the app be smart about it - we don't want to accidentally publish a post.
             updatePostStatus(PostStatus.DRAFT.toString());
+            // show toast only once, when time is shown
             ToastUtils.showToast(getActivity(),
-                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
+                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT, Gravity.TOP);
         }
         updatePublishDateTextView();
         updateSaveButton();
