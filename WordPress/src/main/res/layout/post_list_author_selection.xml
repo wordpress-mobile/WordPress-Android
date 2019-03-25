@@ -7,9 +7,11 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/post_list_author_selection_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/margin_medium"
-        tools:src="@drawable/ic_multiple_users_white_24dp"/>
+        android:layout_width="@dimen/posts_list_spinner_avatar_size"
+        android:layout_height="@dimen/posts_list_spinner_avatar_size"
+        android:layout_gravity="center"
+        android:background="@drawable/post_list_author_background"
+        android:padding="@dimen/posts_list_spinner_avatar_padding"
+        tools:src="@drawable/bg_oval_grey_multiple_users_white_40dp"/>
 </FrameLayout>
 

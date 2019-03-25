@@ -31,10 +31,8 @@
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/post_list_author_selection"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="@dimen/tab_height"
+                android:layout_width="@dimen/posts_list_spinner_width"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/margin_medium"
-                android:layout_marginStart="@dimen/margin_medium"
                 android:padding="0dp"/>
 
             <android.support.design.widget.TabLayout
