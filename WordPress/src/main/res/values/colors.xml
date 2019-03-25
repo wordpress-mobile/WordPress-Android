@@ -14,13 +14,6 @@
     <color name="status_bar">@color/primary_dark</color>
     <color name="status_bar_action_mode">@color/neutral</color>
 
-    <!-- STANDARD -->
-    <color name="black_translucent_40">#66000000</color>
-    <color name="black_translucent_50">#80000000</color>
-    <color name="grey_lighten_30_translucent_50">#80e9eff3</color> <!-- Use for old Stats.  Will be removed soon. -->
-    <color name="white_translucent_40">#66ffffff</color>
-    <color name="white_translucent_65">#a6ffffff</color>
-
     <!-- SEMANTIC -->
     <color name="accent">@color/hot_pink_500</color>
     <color name="accent_0">@color/hot_pink_0</color>
@@ -285,5 +278,12 @@
     <color name="yellow_700">#9e8132</color>
     <color name="yellow_800">#826b32</color>
     <color name="yellow_900">#675631</color>
+
+    <!-- TRANSLUCENT -->
+    <color name="black_translucent_40">#66000000</color>
+    <color name="black_translucent_50">#80000000</color>
+    <color name="grey_lighten_30_translucent_50">#80e9eff3</color> <!-- Use for old Stats.  Will be removed soon. -->
+    <color name="white_translucent_40">#66ffffff</color>
+    <color name="white_translucent_65">#a6ffffff</color>
 
 </resources>
