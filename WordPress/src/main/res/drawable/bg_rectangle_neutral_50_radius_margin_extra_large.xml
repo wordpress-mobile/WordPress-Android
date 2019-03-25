@@ -5,11 +5,11 @@
     android:shape="rectangle">
 
     <solid
-        android:color="@color/neutral_0">
+        android:color="@color/neutral_50">
     </solid>
 
     <corners
-        android:radius="2dp">
+        android:radius="@dimen/margin_extra_large">
     </corners>
 
 </shape>

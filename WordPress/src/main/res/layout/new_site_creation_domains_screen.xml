@@ -64,7 +64,7 @@
             android:layout_height="@dimen/new_site_creation_domains_create_site_button_height"
             android:layout_gravity="end"
             android:layout_margin="@dimen/margin_extra_large"
-            android:background="@drawable/wp_blue_medium_extra_small_rounded_bg"
+            android:background="@drawable/bg_rectangle_primary_radius_margin_extra_small"
             android:fontFamily="sans-serif-medium"
             android:paddingEnd="@dimen/margin_medium"
             android:paddingStart="@dimen/margin_medium"
