@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.insights_management_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
 import javax.inject.Inject
 
 class InsightsManagementFragment : DaggerFragment() {
@@ -39,6 +40,8 @@ class InsightsManagementFragment : DaggerFragment() {
     private fun initializeViewModels(activity: FragmentActivity) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(InsightsManagementViewModel::class.java)
         setupObservers(activity)
+
+        viewModel.start()
     }
 
     private fun setupObservers(activity: FragmentActivity) {
@@ -54,5 +57,22 @@ class InsightsManagementFragment : DaggerFragment() {
                 }
             }
         })
+
+        viewModel.removedInsights.observe(this, Observer {
+            it?.let { items ->
+                updateRemovedInsights(items)
+            }
+        })
+    }
+
+    private fun updateRemovedInsights(insights: List<InsightModel>) {
+        val adapter: InsightsManagementAdapter
+        if (removedInsights.adapter == null) {
+            adapter = InsightsManagementAdapter()
+            removedInsights.adapter = adapter
+        } else {
+            adapter = removedInsights.adapter as InsightsManagementAdapter
+        }
+        adapter.submitList(insights)
     }
 }
