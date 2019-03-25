@@ -74,7 +74,7 @@
     </style>
 
     <style name="DropDownListView.Light.WordPress" parent="Widget.AppCompat.ListView.DropDown">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@android:color/white</item>
         <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
         <item name="android:fadeScrollbars">false</item>
         <item name="android:scrollbarThumbVertical">@drawable/bg_rectangle_black_translucent_50_3dp</item>
@@ -139,7 +139,7 @@
     </style>
 
     <style name="Toolbar.Subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -196,17 +196,17 @@
     </style>
 
     <style name="WhiteButton" parent="Widget.AppCompat.Button">
-        <item name="colorButtonNormal">@color/white</item>
+        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <style name="WordPress.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/white</item>
+        <item name="colorButtonNormal">@android:color/white</item>
         <item name="android:textColor">@color/neutral_700</item>
     </style>
 
     <style name="WordPress.Button.Primary" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/primary_400</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="WordPress.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
@@ -238,7 +238,7 @@
     </style>
 
     <style name="WordPress.NUXEditText">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@android:color/white</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColor">#444444</item>
         <item name="android:textColorHint">#AAAAAA</item>
@@ -251,7 +251,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">24dp</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/nux_title_font_size</item>
         <item name="android:lineSpacingExtra">-4sp</item>
     </style>
@@ -815,7 +815,7 @@
         <item name="android:layout_height">@dimen/new_site_creation_preview_ok_button_height</item>
         <item name="android:background">@color/primary_400</item>
         <item name="android:text">@string/dialog_button_ok</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="SitePreviewSkeletonView">

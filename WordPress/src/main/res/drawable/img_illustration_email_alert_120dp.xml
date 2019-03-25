@@ -8,17 +8,17 @@
     android:viewportWidth="160.0">
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M96.5,22.1c-9.3,0 -15,2.6 -16.9,6.2s-4.4,48.9 -1.3,50.3c3.1,1.4 25.9,4.1 29.6,1.2c3.8,-2.9 9.4,-38.4 3.6,-47.8C105.8,22.6 99.4,22.1 96.5,22.1z">
     </path>
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M51.8,116.7l-1,35.3l22.8,0.2l-0.5,-35.9z">
     </path>
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M119.1,115.9l4.9,37.9c0,0 7.9,1.8 12.1,-2.3c4.2,-4.1 7.5,-11.5 8,-15.6s-0.7,-20.5 -1.3,-23.7C142.2,109 119.1,115.9 119.1,115.9z">
     </path>
 
@@ -28,7 +28,7 @@
     </path>
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M20.1,151.5L118.2,151.5">
     </path>
 
@@ -38,7 +38,7 @@
     </path>
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M136.1,151.5L153.6,151.5">
     </path>
 
@@ -48,7 +48,7 @@
     </path>
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M95.2,121.1H79.2l-2.2,-29.4c-0.1,-1.5 1.1,-2.8 2.6,-2.8h15.1c1.5,0 2.7,1.3 2.6,2.8L95.2,121.1z">
     </path>
 
@@ -113,7 +113,7 @@
     </path>
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M128.1,154.3c-19.2,0 -26.5,-32.1 -26.5,-32.1s-3.4,-0.6 -6.8,-2.8c-3,-2 -3.4,-6.2 -3.4,-6.2s-4.6,-0.4 -8.5,0.6c-1.3,0.3 -1.7,-0.6 -2.3,-2.3c-0.6,-1.7 0.6,-3.9 3.4,-4.5c10,-5.6 12.7,-1.7 14.7,0c4.5,3.9 26.5,21.4 26.5,21.4">
     </path>
 
@@ -193,7 +193,7 @@
     </path>
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M7,16.6l20.5,12.4l21.6,-13.2">
     </path>
 
@@ -258,12 +258,12 @@
     </path>
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M50.5,5.7c4.7,0 8.5,3.8 8.5,8.5s-3.8,8.5 -8.5,8.5c-4.7,0 -8.5,-3.8 -8.5,-8.5S45.8,5.7 50.5,5.7M50.5,4.2c-5.5,0 -10,4.5 -10,10s4.5,10 10,10s10,-4.5 10,-10S56,4.2 50.5,4.2L50.5,4.2z">
     </path>
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M49.4,17.8c0,-0.3 0.1,-0.6 0.3,-0.7s0.4,-0.3 0.8,-0.3c0.3,0 0.6,0.1 0.8,0.3s0.3,0.4 0.3,0.7c0,0.3 -0.1,0.6 -0.3,0.7s-0.4,0.3 -0.8,0.3c-0.3,0 -0.6,-0.1 -0.8,-0.3S49.4,18.1 49.4,17.8zM51.1,15.8h-1.4l-0.3,-5.7h2L51.1,15.8z">
     </path>
 
