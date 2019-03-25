@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -30,6 +29,9 @@ import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
+import org.wordpress.android.util.image.ImageType.MULTI_USER_AVATAR_GREY_BACKGROUND
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -145,18 +147,21 @@ class PostListMainViewModel @Inject constructor(
 
     sealed class AuthorFilterListItemUIState(
         val text: UiString,
-        @DrawableRes val iconRes: Int,
+        val avatarUrl: String?,
+        val imageType: ImageType,
         @ColorRes val dropDownBackground: Int
     ) {
         class Everyone(@ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
                 text = UiStringRes(R.string.post_list_author_everyone),
-                iconRes = R.drawable.ic_multiple_users_white_24dp,
+                avatarUrl = null,
+                imageType = MULTI_USER_AVATAR_GREY_BACKGROUND,
                 dropDownBackground = dropDownBackground
         )
 
-        class Me(val avatarUrl: String?, @ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
+        class Me(avatarUrl: String?, @ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
                 text = UiStringRes(R.string.post_list_author_me),
-                iconRes = R.drawable.ic_user_circle_grey_24dp,
+                avatarUrl = avatarUrl,
+                imageType = AVATAR_WITH_BACKGROUND,
                 dropDownBackground = dropDownBackground
         )
     }

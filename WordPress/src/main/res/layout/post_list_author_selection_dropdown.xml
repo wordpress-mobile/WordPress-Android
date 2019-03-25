@@ -16,7 +16,7 @@
         android:layout_width="@dimen/tab_height"
         android:layout_height="@dimen/tab_height"
         android:importantForAccessibility="no"
-        tools:padding="12dp"
+        android:padding="@dimen/margin_medium"
         tools:src="@drawable/ic_multiple_users_white_24dp"
         tools:tint="@color/grey_darken_20"/>
 

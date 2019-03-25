@@ -2,9 +2,7 @@ package org.wordpress.android.ui.posts.adapters
 
 import android.content.Context
 import android.database.DataSetObserver
-import android.support.annotation.ColorRes
 import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.AppCompatTextView
 import android.view.LayoutInflater
@@ -16,14 +14,10 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.PostListMainViewModel.AuthorFilterListItemUIState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import java.lang.ref.WeakReference
 import javax.inject.Inject
-
-@ColorRes private const val ICON_TINT_RES = R.color.grey_darken_20
 
 class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
     @Inject lateinit var imageManager: ImageManager
@@ -116,43 +110,19 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
         }
     }
 
-    open class NormalViewHolder(protected val itemView: View) {
+    private open class NormalViewHolder(protected val itemView: View) {
         protected val image: AppCompatImageView = itemView.findViewById(R.id.post_list_author_selection_image)
 
         @CallSuper
         open fun bind(state: AuthorFilterListItemUIState, imageManager: ImageManager, uiHelpers: UiHelpers) {
-            val context = itemView.context
-            val avatarUrl: String? = (state as? AuthorFilterListItemUIState.Me)?.avatarUrl
+            val avatarSize = image.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
+            val url = GravatarUtils.fixGravatarUrl(state.avatarUrl, avatarSize)
 
-            val padding: Int
-            if (avatarUrl != null) {
-                padding = DisplayUtils.dpToPx(context, 8)
-
-                val avatarSize = image.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
-                val url = GravatarUtils.fixGravatarUrl(avatarUrl, avatarSize)
-                imageManager.loadIntoCircle(
-                        image, AVATAR_WITHOUT_BACKGROUND, url, tintFallbackAndPlaceholder = ICON_TINT_RES
-                )
-            } else {
-                padding = DisplayUtils.dpToPx(context, 12)
-
-                val drawable = ContextCompat.getDrawable(context, state.iconRes)?.apply {
-                    mutate()
-                    DrawableCompat.setTint(this, ContextCompat.getColor(context, ICON_TINT_RES))
-                }
-
-                if (drawable != null) {
-                    imageManager.load(image, drawable)
-                } else {
-                    imageManager.cancelRequestAndClearImageView(image)
-                }
-            }
-
-            image.setPaddingRelative(padding, padding, padding, padding)
+            imageManager.loadIntoCircle(image, state.imageType, url)
         }
     }
 
-    class DropdownViewHolder(itemView: View) : NormalViewHolder(itemView) {
+    private class DropdownViewHolder(itemView: View) : NormalViewHolder(itemView) {
         private val text: AppCompatTextView = itemView.findViewById(R.id.post_list_author_selection_text)
 
         override fun bind(state: AuthorFilterListItemUIState, imageManager: ImageManager, uiHelpers: UiHelpers) {

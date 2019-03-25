@@ -5,11 +5,8 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.content.res.AppCompatResources
 import android.text.TextUtils
 import android.widget.ImageView
@@ -87,15 +84,14 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         imageType: ImageType,
         imgUrl: String,
         requestListener: RequestListener<Drawable>? = null,
-        version: Int? = null,
-        @ColorRes tintFallbackAndPlaceholder: Int? = null
+        version: Int? = null
     ) {
         val context = imageView.context
         if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(imgUrl)
-                .addFallback(context, imageType, tintFallbackAndPlaceholder)
-                .addPlaceholder(context, imageType, tintFallbackAndPlaceholder)
+                .addFallback(context, imageType)
+                .addPlaceholder(context, imageType)
                 .circleCrop()
                 .attachRequestListener(requestListener)
                 .addSignature(version)
@@ -244,43 +240,21 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         }
     }
 
-    private fun <T : Any> GlideRequest<T>.addPlaceholder(
-        context: Context,
-        imageType: ImageType,
-        @ColorRes tint: Int? = null
-    ): GlideRequest<T> {
+    private fun <T : Any> GlideRequest<T>.addPlaceholder(context: Context, imageType: ImageType): GlideRequest<T> {
         val placeholderImageRes = placeholderManager.getPlaceholderResource(imageType)
         return if (placeholderImageRes == null) {
             this
         } else {
-            var drawable = loadDrawable(context, placeholderImageRes)
-
-            if (drawable != null && tint != null) {
-                drawable = drawable.mutate()
-                DrawableCompat.setTint(drawable, ContextCompat.getColor(context, tint))
-            }
-
-            this.placeholder(drawable)
+            this.placeholder(loadDrawable(context, placeholderImageRes))
         }
     }
 
-    private fun <T : Any> GlideRequest<T>.addFallback(
-        context: Context,
-        imageType: ImageType,
-        @ColorRes tint: Int? = null
-    ): GlideRequest<T> {
+    private fun <T : Any> GlideRequest<T>.addFallback(context: Context, imageType: ImageType): GlideRequest<T> {
         val errorImageRes = placeholderManager.getErrorResource(imageType)
         return if (errorImageRes == null) {
             this
         } else {
-            var drawable = loadDrawable(context, errorImageRes)
-
-            if (drawable != null && tint != null) {
-                drawable = drawable.mutate()
-                DrawableCompat.setTint(drawable, ContextCompat.getColor(context, tint))
-            }
-
-            this.error(drawable)
+            this.error(loadDrawable(context, errorImageRes))
         }
     }
 

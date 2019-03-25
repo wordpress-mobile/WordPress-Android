@@ -9,8 +9,7 @@
         android:id="@+id/post_list_author_selection_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/post_list_author_background"
-        tools:padding="12dp"
+        android:padding="@dimen/margin_medium"
         tools:src="@drawable/ic_multiple_users_white_24dp"/>
 </FrameLayout>
 
