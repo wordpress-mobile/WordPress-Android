@@ -592,7 +592,7 @@
         android:layout_width="match_parent"
         android:visibility="gone"
         app:aevButton="@string/my_site_add_new_site"
-        app:aevImage="@drawable/img_site_wordpress_camera_pencils_226dp"
+        app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
         app:aevSubtitle="@string/my_site_create_new_site"
         app:aevTitle="@string/my_site_create_new_site_title" >
     </org.wordpress.android.ui.ActionableEmptyView>

@@ -296,7 +296,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     private void configureImage(boolean hasFailure) {
         mImageView.setImageResource(hasFailure ? R.drawable.img_illustration_site_error_camera_pencils_226dp
-                : R.drawable.img_site_wordpress_camera_pencils_226dp);
+                : R.drawable.img_illustration_site_wordpress_camera_pencils_226dp);
     }
 
     private void handleFailure(final SiteCreationState failedState) {
