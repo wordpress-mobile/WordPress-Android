@@ -3,7 +3,6 @@ package org.wordpress.android.ui.utils
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
-import android.text.Spannable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -23,39 +22,32 @@ class UiHelpers @Inject constructor() {
     }
 
     fun setTextOrHide(view: TextView, uiString: UiString?) {
-        view.visibility = if (uiString == null) View.GONE else View.VISIBLE
-        uiString?.let {
-            view.text = getTextOfUiString(view.context, uiString)
+        val text = if (uiString != null) {
+            getTextOfUiString(view.context, uiString)
+        } else {
+            null
         }
+        setTextOrHide(view, text)
     }
 
     fun setTextOrHide(view: TextView, @StringRes resId: Int?) {
-        val uiString = if (resId != null) {
-            UiStringRes(resId)
+        val text = if (resId != null) {
+            view.context.getString(resId)
         } else {
             null
         }
-        setTextOrHide(view, uiString)
+        setTextOrHide(view, text)
     }
 
-    fun setTextOrHide(view: TextView, text: String?) {
-        val uiString = if (text != null) {
-            UiStringText(text)
-        } else {
-            null
-        }
-        setTextOrHide(view, uiString)
-    }
-
-    fun setTextOrHide(view: TextView, text: Spannable?) {
-        view.visibility = if (text == null) View.GONE else View.VISIBLE
+    fun setTextOrHide(view: TextView, text: CharSequence?) {
+        updateVisibility(view, text != null)
         text?.let {
             view.text = text
         }
     }
 
     fun setImageOrHide(imageView: ImageView, @DrawableRes resId: Int?) {
-        imageView.visibility = if (resId == null) View.GONE else View.VISIBLE
+        updateVisibility(imageView, resId != null)
         resId?.let {
             imageView.setImageResource(resId)
         }
