@@ -14,7 +14,7 @@
         android:contentDescription="@string/cancel_new_site_wizard_content_description"
         android:padding="@dimen/margin_extra_large"
         android:src="@drawable/ic_close_white_24dp"
-        android:tint="@color/wp_blue"
+        android:tint="@color/primary"
         android:visibility="gone"/>
 
     <org.wordpress.android.widgets.WPTextView

@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         app:tabGravity="center"
-        app:tabIndicatorColor="@color/wp_blue"
-        app:tabSelectedTextColor="@color/wp_blue"
+        app:tabIndicatorColor="@color/primary"
+        app:tabSelectedTextColor="@color/primary"
         app:tabPaddingStart="@dimen/margin_extra_large"
         app:tabPaddingEnd="@dimen/margin_extra_large"
         app:tabTextColor="@color/neutral_500"/>

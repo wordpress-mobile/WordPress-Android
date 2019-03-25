@@ -58,7 +58,7 @@ sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @La
 
         private fun addRetryCompoundDrawable() {
             val drawable = itemView.context.getDrawable(drawable.retry_icon)
-            drawable.setTint(ContextCompat.getColor(itemView.context, color.wp_blue))
+            drawable.setTint(ContextCompat.getColor(itemView.context, color.primary))
             retry.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         }
 
