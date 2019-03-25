@@ -15,7 +15,6 @@ import android.widget.ProgressBar
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction
@@ -46,10 +45,10 @@ class PostListItemViewHolder(
 
     fun onBind(item: PostListItemUiState) {
         showFeaturedImage(item.data.imageUrl)
-        setTextOrHide(tvTitle, item.data.title)
-        setTextOrHide(tvExcerpt, item.data.excerpt)
-        setTextOrHide(tvDateAndAuthor, item.data.dateAndAuthor)
-        setTextOrHide(tvStatusLabels, item.data.statusLabels)
+        uiHelpers.setTextOrHide(tvTitle, item.data.title)
+        uiHelpers.setTextOrHide(tvExcerpt, item.data.excerpt)
+        uiHelpers.setTextOrHide(tvDateAndAuthor, item.data.dateAndAuthor)
+        uiHelpers.setTextOrHide(tvStatusLabels, item.data.statusLabels)
         if (item.data.statusLabelsColor != null) {
             tvStatusLabels.setTextColor(ContextCompat.getColor(tvStatusLabels.context, item.data.statusLabelsColor))
         }
@@ -120,13 +119,6 @@ class PostListItemViewHolder(
                 ivImageFeatured.visibility = View.GONE
                 config.imageManager.cancelRequestAndClearImageView(ivImageFeatured)
             }
-        }
-    }
-
-    private fun setTextOrHide(view: WPTextView, text: UiString?) {
-        uiHelpers.updateVisibility(view, text != null)
-        text?.let {
-            view.text = uiHelpers.getTextOfUiString(itemView.context, it)
         }
     }
 }

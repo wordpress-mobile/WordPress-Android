@@ -20,6 +20,7 @@ import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsContentUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsErrorUiState
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -36,6 +37,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment() {
 
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var uiHelpers: UiHelpers
 
     private lateinit var helpClickedListener: OnHelpClickedListener
     private lateinit var segmentsScreenListener: SegmentsScreenListener
@@ -113,15 +115,8 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment() {
     }
 
     private fun updateErrorLayout(errorUiStateState: SegmentsErrorUiState) {
-        setTextOrHide(errorTitle, errorUiStateState.titleResId)
-        setTextOrHide(errorSubtitle, errorUiStateState.subtitleResId)
-    }
-
-    private fun setTextOrHide(textView: TextView, resId: Int?) {
-        textView.visibility = if (resId == null) View.GONE else View.VISIBLE
-        resId?.let {
-            textView.text = resources.getString(resId)
-        }
+        uiHelpers.setTextOrHide(errorTitle, errorUiStateState.titleResId)
+        uiHelpers.setTextOrHide(errorSubtitle, errorUiStateState.subtitleResId)
     }
 
     private fun initRetryButton(rootView: ViewGroup) {
