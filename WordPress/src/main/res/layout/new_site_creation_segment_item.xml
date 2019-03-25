@@ -22,7 +22,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
-        tools:srcCompat="@drawable/ic_add_grey_24dp"/>
+        tools:src="@drawable/ic_add_white_24dp"
+        tools:tint="@color/neutral_700"/>
 
     <TextView
         android:id="@+id/title"
