@@ -579,7 +579,7 @@ public class MySiteFragment extends Fragment implements
                 mQuickStartGrowTitle.setPaintFlags(
                         mQuickStartGrowTitle.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
-                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_grey_multiple_users_white_40dp);
+                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_neutral_300_multiple_users_white_40dp);
                 mQuickStartGrowTitle.setEnabled(false);
                 mQuickStartGrowTitle.setPaintFlags(
                         mQuickStartGrowTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
