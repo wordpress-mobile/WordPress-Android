@@ -73,7 +73,7 @@ class QuickStartUtils {
                 Html.fromHtml(formattedMessage)
             }
 
-            val highlightColor = ContextCompat.getColor(context, R.color.primary_300)
+            val highlightColor = ContextCompat.getColor(context, R.color.accent_300)
 
             val mutableSpannedMessage = SpannableStringBuilder(spannedMessage)
             val foregroundColorSpan = mutableSpannedMessage
