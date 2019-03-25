@@ -285,9 +285,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         String noticonCharacter = note.getNoticonCharacter();
         noteViewHolder.mNoteIcon.setText(noticonCharacter);
         if (commentStatus == CommentStatus.UNAPPROVED) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_white);
         } else if (isUnread) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_400_stroke_neutral_0);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_400_stroke_primary_50);
         } else {
             noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_200_stroke_white);
         }

@@ -4,6 +4,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
+    <stroke
+        android:color="@android:color/white"
+        android:width="2dp">
+    </stroke>
+
     <solid
         android:color="@color/warning">
     </solid>
