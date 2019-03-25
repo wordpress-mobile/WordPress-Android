@@ -181,7 +181,7 @@
                         android:layout_centerVertical="true"
                         android:importantForAccessibility="no"
                         android:scaleType="centerInside"
-                        android:src="@drawable/img_type_portfolio_80dp"/>
+                        android:src="@drawable/img_illustration_site_media_camera_pencils_80dp"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
