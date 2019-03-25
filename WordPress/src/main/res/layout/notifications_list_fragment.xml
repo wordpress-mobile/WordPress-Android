@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <org.wordpress.android.widgets.WPViewPager
+        android:id="@+id/view_pager"
+        android:layout_below="@+id/app_bar"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    </org.wordpress.android.widgets.WPViewPager>
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:background="@color/white"
+        android:elevation="@dimen/appbar_elevation"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_main"
+            android:background="@color/color_primary"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:background="@color/color_primary"
+            android:layout_gravity="start"
+            android:layout_height="@dimen/tab_height"
+            android:layout_width="match_parent"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/white"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@color/white"
+            app:theme="@style/Base.Widget.Design.TabLayout">
+        </android.support.design.widget.TabLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/connect_jetpack"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/toolbar_height"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            tools:ignore="UselessParent">
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:contentDescription="@string/content_description_person_reading_device_notification"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/img_illustration_notifications_152dp">
+                </ImageView>
+
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/JetpackConnectionText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:maxWidth="@dimen/jetpack_text_width"
+                    android:text="@string/notifications_jetpack_connection_setup_info"
+                    android:textAlignment="center"
+                    app:fixWidowWords="true">
+                </org.wordpress.android.widgets.WPTextView>
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/jetpack_setup"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_extra_large"
+                    android:layout_width="wrap_content"
+                    android:text="@string/stats_jetpack_connection_setup"
+                    android:theme="@style/JetpackConnectionButton">
+                </android.support.v7.widget.AppCompatButton>
+
+                <TextView
+                    android:id="@+id/jetpack_terms_and_conditions"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_extra_large"
+                    android:layout_width="@dimen/jetpack_terms_and_conditions_width"
+                    android:text="@string/stats_jetpack_connection_terms_and_conditions"
+                    android:textAlignment="center"
+                    style="@style/JetpackTermsAndConditionsButton">
+                </TextView>
+
+                <Button
+                    android:id="@+id/jetpack_faq"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/stats_jetpack_connection_faq"
+                    style="@style/JetpackFaqButton">
+                </Button>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

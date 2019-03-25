@@ -195,7 +195,6 @@ Language: es_CO
     <string name="draft_uploaded">Borrador subido</string>
     <string name="report_bug">Informar de fallo</string>
     <string name="video_quality">Calidad del vídeo</string>
-    <string name="permission_location">Ubicación</string>
     <string name="permission_camera">Cámara</string>
     <string name="permission_storage">Almacenamiento</string>
     <string name="button_edit_permissions">Editar permisos</string>
@@ -315,9 +314,6 @@ Language: es_CO
     <string name="xmlrpc_post_blocked_error">No se pudo conectar. Su alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con su sitio. Póngase en contacto con su alojamiento para solucionar este problema.</string>
     <string name="reader_hint_search_followed_sites">Busca en los sitios que sigues</string>
     <string name="visual_editor_disabled">El editor visual se ha desactivado</string>
-    <string name="preference_editor_visual">Visual</string>
-    <string name="preference_editor_legacy">Heredado</string>
-    <string name="preference_editor_type">Definir el tipo de editor</string>
     <string name="pending_draft_one_generic">No dejes el trabajo a medias; \"%1$s\" está pendiente de publicarse.</string>
     <string name="pending_draft_one_month">No dejes el trabajo a medias; \"%1$s\" está pendiente de publicarse.</string>
     <string name="pending_draft_one_week_2">\"%1$s\" se ha guardado como borrador. Acuérdate de publicarla.</string>
@@ -368,7 +364,6 @@ Language: es_CO
     <string name="alignment_none">Ninguna</string>
     <string name="site_settings_list_editor_action_mode_title">Seleccionado %1$d</string>
     <string name="error_fetch_users_list">No se pudieron recuperar los usuarios del sitio</string>
-    <string name="plans_manage">Gestiona tu plan en\nWordPress.com/plans</string>
     <string name="title_email_follower">Correo electrónico del seguidor</string>
     <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Recuperando usuarios…</string>
@@ -452,7 +447,6 @@ Language: es_CO
     <string name="new_editor_reflection_error">Editor visual no compatible con tu dispositivo. Se ha\ndesactivado automáticamente</string>
     <string name="stats_insights_latest_post_no_title">(sin título)</string>
     <string name="capture_or_pick_photo">Captura o elige imagen</string>
-    <string name="plans_loading_error">No se pueden cargar los planes</string>
     <string name="plans">Planes</string>
     <string name="plan">Plan</string>
     <string name="export_your_content_message">Tus entradas, páginas y ajustes te serán enviadas por correo electrónico a %s.</string>
@@ -689,7 +683,6 @@ Language: es_CO
     <string name="reader_label_gap_marker">Cargar más entradas</string>
     <string name="notifications_no_search_results">Ningún sitio coincide con \"%s\"</string>
     <string name="search_sites">Buscar sitios</string>
-    <string name="notifications_empty_action_all">¡Actívate! Comentario en entradas de blogs que sigues.</string>
     <string name="stats_widget_error_jetpack_no_blogid">Accede a las estadísticas de la aplicación e intenta agregar un widget más tarde</string>
     <string name="stats_widget_error_readd_widget">Elimina el widget y vuelve a agregarlo</string>
     <string name="stats_widget_error_no_visible_blog">No se pudo acceder a las estadísticas sin un blog visible</string>

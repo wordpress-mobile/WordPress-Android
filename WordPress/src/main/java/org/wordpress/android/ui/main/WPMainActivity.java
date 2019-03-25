@@ -101,6 +101,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.List;
@@ -221,6 +222,7 @@ public class WPMainActivity extends AppCompatActivity implements
         mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
         registeNewsItemObserver();
+        boolean canShowAppRatingPrompt = savedInstanceState != null;
 
         if (savedInstanceState == null) {
             if (!AppPrefs.isInstallationReferrerObtained()) {
@@ -273,6 +275,8 @@ public class WPMainActivity extends AppCompatActivity implements
                         && getIntent().getExtras().getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
                         JetpackConnectionWebViewActivity.startJetpackConnectionFlow(this, NOTIFICATIONS,
                                 (SiteModel) getIntent().getSerializableExtra(SITE), mAccountStore.hasAccessToken());
+                    } else {
+                        canShowAppRatingPrompt = true;
                     }
                 }
             } else {
@@ -300,9 +304,11 @@ public class WPMainActivity extends AppCompatActivity implements
             UpdateTokenPayload payload = new UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
+            canShowAppRatingPrompt = false;
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                     getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
+            canShowAppRatingPrompt = false;
             ActivityLauncher.showSignupEpilogue(this,
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
@@ -314,6 +320,10 @@ public class WPMainActivity extends AppCompatActivity implements
             // Register for Cloud messaging
             GCMRegistrationIntentService.enqueueWork(this,
                     new Intent(this, GCMRegistrationIntentService.class));
+        }
+
+        if (canShowAppRatingPrompt) {
+            AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
     }
 

@@ -24,6 +24,7 @@ import android.widget.ListAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.RtlUtils;
 
@@ -171,8 +172,8 @@ class StatsUIHelper {
             final ImageView chevron = groupView.findViewById(R.id.stats_list_cell_chevron);
             if (chevron != null) {
                 chevron.clearAnimation();
-                chevron.setImageResource(R.drawable.ic_chevron_right_white_24dp);
-                chevron.setImageTintList(ColorStateList.valueOf(ctx.getResources().getColor(R.color.blue_wordpress)));
+                ColorUtils.INSTANCE.setImageResourceWithTint(chevron, R.drawable.ic_chevron_right_white_24dp,
+                        R.color.blue_wordpress);
             }
 
             // add children if this group is expanded

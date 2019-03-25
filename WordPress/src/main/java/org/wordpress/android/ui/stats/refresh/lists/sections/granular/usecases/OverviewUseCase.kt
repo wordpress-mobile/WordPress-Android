@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
@@ -12,11 +12,11 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
@@ -25,13 +25,14 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 15
+private const val ITEMS_TO_LOAD = 15
 
 class OverviewUseCase
 constructor(
     private val statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val selectedDateProvider: SelectedDateProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -51,30 +52,39 @@ constructor(
                     ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views, isFirst = true)
             )
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = visitsAndViewsStore.getVisits(
-                site,
-                selectedDateProvider.getCurrentDate(),
-                statsGranularity
+    override suspend fun loadCachedData(): VisitsAndViewsModel? {
+        return visitsAndViewsStore.getVisits(
+                statsSiteProvider.siteModel,
+                statsGranularity,
+                LimitMode.All,
+                selectedDateProvider.getCurrentDate()
         )
-        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
-                site,
-                PAGE_SIZE,
-                selectedDateProvider.getCurrentDate(),
+                statsSiteProvider.siteModel,
                 statsGranularity,
+                LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDateProvider.getCurrentDate(),
                 forced
         )
         val model = response.model
         val error = response.error
 
-        when {
-            error != null -> onError(error.message ?: error.type.name)
-            model != null -> onModel(model)
-            else -> onEmpty()
+        return when {
+            error != null -> {
+                selectedDateProvider.dateLoadingFailed(statsGranularity)
+                State.Error(error.message ?: error.type.name)
+            }
+            model != null && model.dates.isNotEmpty() -> {
+                selectedDateProvider.dateLoadingSucceeded(statsGranularity)
+                State.Data(model)
+            }
+            else -> {
+                selectedDateProvider.dateLoadingSucceeded(statsGranularity)
+                State.Empty()
+            }
         }
     }
 
@@ -94,10 +104,8 @@ constructor(
             val index = availableDates.indexOf(selectedDate)
 
             selectedDateProvider.selectDate(
-                    SelectedDate(
-                            index,
-                            availableDates
-                    ),
+                    index,
+                    availableDates,
                     statsGranularity
             )
             val shiftedIndex = index + domainModel.dates.size - visibleBarCount
@@ -118,6 +126,7 @@ constructor(
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
         } else {
+            selectedDateProvider.dateLoadingFailed(statsGranularity)
             AppLog.e(T.STATS, "There is no data to be shown in the overview block")
         }
         return items
@@ -148,17 +157,19 @@ constructor(
     class OverviewUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter,
         private val overviewMapper: OverviewMapper,
         private val visitsAndViewsStore: VisitsAndViewsStore,
         private val analyticsTracker: AnalyticsTrackerWrapper
-    ) : UseCaseFactory {
-        override fun build(granularity: StatsGranularity) =
+    ) : GranularUseCaseFactory {
+        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 OverviewUseCase(
                         granularity,
                         visitsAndViewsStore,
                         selectedDateProvider,
+                        statsSiteProvider,
                         statsDateFormatter,
                         overviewMapper,
                         mainDispatcher,

@@ -10,25 +10,24 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
-import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 
 class TodayStatsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var insightsStore: TodayInsightsStore
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: TodayStatsUseCase
     private val views = 10
@@ -39,51 +38,33 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = TodayStatsUseCase(
                 Dispatchers.Unconfined,
-                insightsStore
+                insightsStore,
+                statsSiteProvider
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
 
     @Test
-    fun `maps full stats item to UI model`() = test {
+    fun `maps stats item to UI model`() = test {
         val forced = false
         val refresh = true
+        val model = VisitsModel("2018-10-02", views, visitors, likes, 0, comments, 0)
+        whenever(insightsStore.getTodayInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnStatsFetched(
-                        VisitsModel("2018-10-02", views, visitors, likes, 0, comments, 0)
+                        model
                 )
         )
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(5)
-            assertTitle(this.items[0])
-            assertViews(this.items[1], showDivider = true)
-            assertVisitors(this.items[2], showDivider = true)
-            assertLikes(this.items[3], showDivider = true)
-            assertComments(this.items[4], showDivider = false)
-        }
-    }
-
-    @Test
-    fun `maps partial stats item to UI model`() = test {
-        val forced = false
-        val refresh = true
-        whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
-                OnStatsFetched(
-                        VisitsModel("2018-10-02", 0, visitors, likes, 0, 0, 0)
-                )
-        )
-
-        val result = loadTodayStats(refresh, forced)
-
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(3)
-            assertTitle(this.items[0])
-            assertVisitors(this.items[1], showDivider = true)
-            assertLikes(this.items[2], showDivider = false)
+        assertThat(result.type).isEqualTo(InsightsTypes.TODAY_STATS)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(3)
+            assertTitle(this[0])
+            assertViewsAndVisitors(this[1])
+            assertLikesAndComments(this[2])
         }
     }
 
@@ -99,11 +80,11 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(Empty())
+        assertThat(result.type).isEqualTo(InsightsTypes.TODAY_STATS)
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
         }
     }
 
@@ -120,10 +101,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -131,46 +109,28 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         assertThat((item as Title).textResource).isEqualTo(R.string.stats_insights_today_stats)
     }
 
-    private fun assertViews(blockListItem: BlockListItem, showDivider: Boolean = false) {
-        assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
-        val item = blockListItem as ListItemWithIcon
-        assertThat(item.textResource).isEqualTo(R.string.stats_views)
-        assertThat(item.showDivider).isEqualTo(showDivider)
-        assertThat(item.icon).isEqualTo(R.drawable.ic_visible_on_white_24dp)
-        assertThat(item.value).isEqualTo(views.toString())
+    private fun assertViewsAndVisitors(blockListItem: BlockListItem) {
+        assertThat(blockListItem.type).isEqualTo(QUICK_SCAN_ITEM)
+        val item = blockListItem as QuickScanItem
+        assertThat(item.leftColumn.label).isEqualTo(R.string.stats_views)
+        assertThat(item.leftColumn.value).isEqualTo(views.toString())
+        assertThat(item.rightColumn.label).isEqualTo(R.string.stats_visitors)
+        assertThat(item.rightColumn.value).isEqualTo(visitors.toString())
     }
 
-    private fun assertVisitors(blockListItem: BlockListItem, showDivider: Boolean = false) {
-        assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
-        val item = blockListItem as ListItemWithIcon
-        assertThat(item.textResource).isEqualTo(R.string.stats_visitors)
-        assertThat(item.showDivider).isEqualTo(showDivider)
-        assertThat(item.icon).isEqualTo(R.drawable.ic_user_white_24dp)
-        assertThat(item.value).isEqualTo(visitors.toString())
+    private fun assertLikesAndComments(blockListItem: BlockListItem) {
+        assertThat(blockListItem.type).isEqualTo(QUICK_SCAN_ITEM)
+        val item = blockListItem as QuickScanItem
+        assertThat(item.leftColumn.label).isEqualTo(R.string.stats_likes)
+        assertThat(item.leftColumn.value).isEqualTo(likes.toString())
+        assertThat(item.rightColumn.label).isEqualTo(R.string.stats_comments)
+        assertThat(item.rightColumn.value).isEqualTo(comments.toString())
     }
 
-    private fun assertLikes(blockListItem: BlockListItem, showDivider: Boolean = false) {
-        assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
-        val item = blockListItem as ListItemWithIcon
-        assertThat(item.textResource).isEqualTo(R.string.stats_likes)
-        assertThat(item.showDivider).isEqualTo(showDivider)
-        assertThat(item.icon).isEqualTo(R.drawable.ic_star_white_24dp)
-        assertThat(item.value).isEqualTo(likes.toString())
-    }
-
-    private fun assertComments(blockListItem: BlockListItem, showDivider: Boolean = false) {
-        assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
-        val item = blockListItem as ListItemWithIcon
-        assertThat(item.textResource).isEqualTo(R.string.stats_comments)
-        assertThat(item.showDivider).isEqualTo(showDivider)
-        assertThat(item.icon).isEqualTo(R.drawable.ic_comment_white_24dp)
-        assertThat(item.value).isEqualTo(comments.toString())
-    }
-
-    private suspend fun loadTodayStats(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadTodayStats(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }

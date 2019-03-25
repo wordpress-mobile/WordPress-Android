@@ -1,4 +1,5 @@
-* Improved Quick Start design and flows.
-* Added a date selector to switch time periods in Stats.
-* Small visual tweaks in the Stats pages.
-* Unused location permissions have been removed.
+* The editor now opens faster for large posts.
+* Now, new posts are created as drafts to make sure they won’t be published accidentally.
+* A new section in stats shows your site’s posting activity.
+* Fixed a bug where headings inserted in the block editor would appear without formatting.
+* Updated the notification screen’s design.

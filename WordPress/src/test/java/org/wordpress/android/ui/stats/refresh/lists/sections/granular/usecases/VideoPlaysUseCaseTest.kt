@@ -9,19 +9,19 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel.VideoPlays
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.VideoPlaysStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
@@ -32,15 +32,19 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
-private const val pageSize = 6
+private const val ITEMS_TO_LOAD = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
+private val limitMode = Top(ITEMS_TO_LOAD)
 
 class VideoPlaysUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: VideoPlaysStore
+    @Mock lateinit var siteModelProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
@@ -52,17 +56,35 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
                 statsGranularity,
                 Dispatchers.Unconfined,
                 store,
+                siteModelProvider,
                 selectedDateProvider,
-                tracker
+                tracker,
+                BLOCK
         )
+        whenever(siteModelProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
+        whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
+                SelectedDate(
+                        0,
+                        listOf(selectedDate)
+                )
+        )
     }
 
     @Test
     fun `maps video plays to UI model`() = test {
         val forced = false
         val model = VideoPlaysModel(10, 15, listOf(videoPlay), false)
-        whenever(store.fetchVideoPlays(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
+        whenever(
+                store.getVideoPlays(
+                        site,
+                        statsGranularity,
+                        limitMode,
+                        selectedDate
+                )
+        ).thenReturn(model)
+        whenever(store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate,
+                forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -70,11 +92,12 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertTitle(this.items[0])
-            assertHeader(this.items[1])
-            assertItem(this.items[2], videoPlay.title, videoPlay.plays)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertTitle(this[0])
+            assertHeader(this[1])
+            assertItem(this[2], videoPlay.title, videoPlay.plays)
         }
     }
 
@@ -83,7 +106,15 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = VideoPlaysModel(10, 15, listOf(videoPlay), true)
         whenever(
-                store.fetchVideoPlays(site, pageSize, statsGranularity, selectedDate, forced)
+                store.getVideoPlays(
+                        site,
+                        statsGranularity,
+                        limitMode,
+                        selectedDate
+                )
+        ).thenReturn(model)
+        whenever(
+                store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         model
@@ -91,13 +122,14 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(4)
-            assertTitle(this.items[0])
-            assertHeader(this.items[1])
-            assertItem(this.items[2], videoPlay.title, videoPlay.plays)
-            assertLink(this.items[3])
+        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertHeader(this[1])
+            assertItem(this[2], videoPlay.title, videoPlay.plays)
+            assertLink(this[3])
         }
     }
 
@@ -105,18 +137,19 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     fun `maps empty video plays to UI model`() = test {
         val forced = false
         whenever(
-                store.fetchVideoPlays(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(VideoPlaysModel(0, 0, listOf(), false))
         )
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
+        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        result.stateData!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
+            assertThat(this[1]).isEqualTo(BlockListItem.Empty(R.string.stats_no_data_for_period))
         }
     }
 
@@ -125,7 +158,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(
-                store.fetchVideoPlays(site, pageSize, statsGranularity, selectedDate, forced)
+                store.fetchVideoPlays(site, statsGranularity, limitMode, selectedDate, forced)
         ).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
@@ -134,10 +167,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -170,10 +200,10 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
     }
 
-    private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }

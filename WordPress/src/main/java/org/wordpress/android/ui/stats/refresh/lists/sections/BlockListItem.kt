@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
@@ -14,7 +15,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -43,10 +47,16 @@ sealed class BlockListItem(val type: Type) {
         HEADER,
         MAP,
         EXPANDABLE_ITEM,
-        DIVIDER
+        DIVIDER,
+        LOADING_ITEM,
+        ACTIVITY_ITEM,
+        REFERRED_ITEM,
+        QUICK_SCAN_ITEM
     }
 
     data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
+
+    data class ReferredItem(@StringRes val label: Int, val itemTitle: String) : BlockListItem(REFERRED_ITEM)
 
     data class ValueItem(
         val value: String,
@@ -76,19 +86,34 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
         val showDivider: Boolean = true,
+        val textStyle: TextStyle = TextStyle.NORMAL,
         val navigationAction: NavigationAction? = null
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
 
         enum class IconStyle {
-            NORMAL, AVATAR
+            NORMAL, AVATAR, EMPTY_SPACE
         }
+
+        enum class TextStyle {
+            NORMAL, LIGHT
+        }
+    }
+
+    data class QuickScanItem(val leftColumn: Column, val rightColumn: Column) : BlockListItem(QUICK_SCAN_ITEM) {
+        data class Column(@StringRes val label: Int, val value: String, val tooltip: String? = null)
     }
 
     data class Information(val text: String) : BlockListItem(INFO)
 
-    data class Text(val text: String, val links: List<Clickable>? = null) : BlockListItem(TEXT) {
+    data class Text(
+        val text: String? = null,
+        val textResource: Int? = null,
+        val links: List<Clickable>? = null,
+        val isLast: Boolean = false
+    ) :
+            BlockListItem(TEXT) {
         data class Clickable(
             val link: String,
             val navigationAction: NavigationAction
@@ -151,6 +176,18 @@ sealed class BlockListItem(val type: Type) {
     data class MapItem(val mapData: String, @StringRes val label: Int) : BlockListItem(MAP)
 
     object Divider : BlockListItem(DIVIDER)
+
+    data class LoadingItem(val loadMore: () -> Unit, val isLoading: Boolean = false) : BlockListItem(LOADING_ITEM)
+
+    data class ActivityItem(val blocks: List<Block>) : BlockListItem(ACTIVITY_ITEM) {
+        data class Block(val label: String, val boxes: List<Box>)
+        enum class Box {
+            INVISIBLE, VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
+        }
+
+        override val itemId: Int
+            get() = blocks.fold(0) { acc, block -> acc + block.label.hashCode() }
+    }
 
     interface NavigationAction {
         fun click()

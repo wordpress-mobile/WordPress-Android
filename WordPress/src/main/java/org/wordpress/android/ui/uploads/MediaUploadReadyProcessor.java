@@ -20,7 +20,7 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
             boolean showNewEditor = AppPrefs.isVisualEditorEnabled();
             boolean showGutenbergEditor = AppPrefs.isGutenbergEditorEnabled();
 
-            if (showGutenbergEditor) {
+            if (showGutenbergEditor && PostUtils.contentContainsGutenbergBlocks(post.getContent())) {
                 post.setContent(
                         PostUtils.replaceMediaFileWithUrlInGutenbergPost(post.getContent(), localMediaId, mediaFile));
             } else if (showAztecEditor) {

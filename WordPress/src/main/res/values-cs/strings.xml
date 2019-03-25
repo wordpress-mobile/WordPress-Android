@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-12-22 20:23:03+0000
+Translation-Revision-Date: 2019-03-08 10:07:14+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
-    <string name="site_settings_enable_gutenberg">Povolit Gutenberg</string>
     <string name="change_password_dialog_hint">Heslo musí mít alespoň 6 znaků. Pro zvýšení bezpečnosti použijte kombinaci malých a velkých písmen a speciálních znaků ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password">Změnit heslo</string>
     <string name="support_identity_input_dialog_name_label">Jméno</string>
@@ -15,12 +14,6 @@ Language: cs_CZ
     <string name="history_detail_title">Revize</string>
     <string name="history_detail_button_previous">Zpět</string>
     <string name="history_detail_button_next">Další</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Zjistit více</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Příště již nezobrazovat</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Upravit stránku</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Upravit příspěvek</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Pracujeme na úplně novém WordPress editoru. Stále můžete stránku upravovat, ale doporučujeme ji před zveřejněním zkontrolovat v náhledu.</string>
-    <string name="dialog_gutenberg_compatibility_message">Pracujeme na úplně novém WordPress editoru. Stále můžete příspěvek upravovat, ale doporučujeme ho před zveřejněním zkontrolovat v náhledu.</string>
     <string name="media_space_used">Použito %1$s</string>
     <string name="enter_wpcom_or_jetpack_site">Zadejte adresu WordPress.com stránky nebo stránky s Jetpack pluginem</string>
     <string name="history_loading_revision">Načítám revizi</string>
@@ -77,24 +70,16 @@ Language: cs_CZ
     <string name="set_parent">Nastavit nadřazenou stránku</string>
     <string name="dismiss">schovat</string>
     <string name="quick_start_focus_point_description">kliknout zde</string>
-    <string name="quick_start_sites">Rychlý start</string>
     <string name="quick_start_list_create_site_title">Vytvořit stránku</string>
-    <string name="quick_start_list_complete_title">Rychlý start dokončen, gratulujeme!</string>
-    <string name="quick_start_list_complete_subtitle">Dobrý pocit odškrtnout něco ze seznamu, co?</string>
     <string name="quick_start_dialog_view_site_title">Zobrazit stránku</string>
     <string name="quick_start_dialog_view_site_message_short">Klikněte na %1$s Zobrazit web %2$s pro zobrazení náhledu.</string>
-    <string name="quick_start_dialog_view_site_message">Zobrazte náhled pro kontrolu, jak uvidí stránku ostatní</string>
-    <string name="quick_start_dialog_skip_title">Přeskočit Rychlý start</string>
-    <string name="quick_start_dialog_skip_message">Rychlý start je průvodce základním nastavením stránky. Určitě chcete průvodce přeskočit?</string>
     <string name="quick_start_dialog_share_site_title">Sdílení stránky</string>
-    <string name="quick_start_dialog_share_site_message_short_sharing">Klikněte na %1$s Sdílení %2$s</string>
-    <string name="quick_start_dialog_share_site_message_short_connections">Propojte se sociální sítí klikem na položku v sekci %1$s Připojení %2$s </string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Klikněte na %1$s Sdílení %2$s</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">Propojte se sociální sítí klikem na položku v sekci %1$s Připojení %2$s </string>
     <string name="quick_start_dialog_share_site_message">Propojte se socialní sítí - příspěvky se budou automaticky sdílet.</string>
     <string name="quick_start_dialog_publish_post_title">Zveřejnit příspěvek</string>
     <string name="quick_start_dialog_publish_post_message_short">Klikněte na %1$s Vytvořit příspěvek %2$s</string>
-    <string name="quick_start_dialog_publish_post_message">Je to tady! Vytvořte koncept a zveřejněte první příspěvek.</string>
     <string name="quick_start_dialog_need_help_title">Chcete pomoci se základním nastavením?</string>
-    <string name="quick_start_dialog_need_help_message">Rychlý start slouží k seznámení se základními kroky nastavení stránky.</string>
     <string name="quick_start_dialog_need_help_button_positive">Ano</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
     <string name="quick_start_dialog_need_help_button_negative">Ne</string>
@@ -105,18 +90,12 @@ Language: cs_CZ
     <string name="quick_start_dialog_customize_site_title">Přizpůsobte si stránku</string>
     <string name="quick_start_dialog_customize_site_message_short_themes">Klikněte na %1$s Šablony %2$s</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">Klikněte na %1$s Přizpůsobit %2$s</string>
-    <string name="quick_start_dialog_customize_site_message">Přizpůsobte si stránku - upravte barvy, fonty(písmo) a obrázky.</string>
-    <string name="quick_start_dialog_continue_setup_title">Pokračovat s nastavováním</string>
-    <string name="quick_start_dialog_continue_setup_message">Je čas stránku dotáhnout do konce! Náš seznam kroků vám s tím pomůže.</string>
     <string name="quick_start_dialog_choose_theme_title">Volba šablony</string>
-    <string name="quick_start_dialog_choose_theme_message_short">Klikněte na %1$s Šablony %2$s a prozkoumejte možnosti </string>
+    <string name="quick_start_dialog_browse_themes_message_short">Klikněte na %1$s Šablony %2$s a prozkoumejte možnosti </string>
     <string name="quick_start_dialog_choose_theme_message">Prozkoumejte seznam šablon a nejděte tu co se hodí nejvíce.</string>
-    <string name="quick_start_button_skip_positive">Přeskočit</string>
-    <string name="quick_start_button_skip_negative"> Zrušit</string>
-    <string name="quick_start_button_skip">Přeskočit vše</string>
     <string name="quick_start_button_negative_short">Zrušit</string>
     <string name="quick_start_button_negative">Né teď</string>
-    <string name="content_description_done">Hotovo</string>
+    <string name="content_description_more">Hotovo</string>
     <string name="install_jetpack">Instalovat Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -476,7 +455,7 @@ Language: cs_CZ
     <string name="signup_epilogue_hint_username">Uživatelské jméno</string>
     <string name="signup_epilogue_hint_password_detail">Vždy se můžete přihlásit pomocí magického odkazu, jako je ten, který jste právě používali, ale pokud chcete, můžete také nastavit heslo.</string>
     <string name="signup_epilogue_hint_password">Heslo (volitelné)</string>
-    <string name="signup_epilogue_hint_display">Zobrazit jméno</string>
+    <string name="signup_epilogue_hint_display">Zobrazované jméno</string>
     <string name="signup_epilogue_heading">Nový účet</string>
     <string name="signup_epilogue_error_button_positive">Opakovat</string>
     <string name="signup_epilogue_error_button_negative">Zpět</string>
@@ -808,7 +787,6 @@ Language: cs_CZ
     <string name="draft_uploaded">Koncept byl nahrán</string>
     <string name="report_bug">Nahlásit chybu</string>
     <string name="video_quality">Kvalita videa</string>
-    <string name="permission_location">Poloha</string>
     <string name="permission_camera">Foťák</string>
     <string name="permission_storage">Úložiště</string>
     <string name="button_edit_permissions">Upravit oprávnění</string>
@@ -929,9 +907,6 @@ Language: cs_CZ
     <string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
     <string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
     <string name="visual_editor_disabled">Vizuální editor zakázán</string>
-    <string name="preference_editor_visual">Vizuální</string>
-    <string name="preference_editor_legacy">Odkaz</string>
-    <string name="preference_editor_type">Nastavit typ editoru</string>
     <string name="pending_draft_one_generic">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_month">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' zůstává konceptem. Nezapomeňte ho publikovat!</string>
@@ -982,7 +957,6 @@ Language: cs_CZ
     <string name="alignment_none">Žádné</string>
     <string name="site_settings_list_editor_action_mode_title">Vybraný %1$d</string>
     <string name="error_fetch_users_list">Nelze načíst uživatele webu</string>
-    <string name="plans_manage">Spravuj svůj plán na\nWordPress.com/plans</string>
     <string name="title_email_follower">Email fanouška</string>
     <string name="title_follower">Fanoušek</string>
     <string name="people_fetching">Načítání uživatelů…</string>
@@ -1068,7 +1042,6 @@ Language: cs_CZ
     <string name="new_editor_reflection_error">Vizuální editor není kompatibilní s vaším zařízením.\n        Proto byl automaticky zakázán.</string>
     <string name="stats_insights_latest_post_no_title">(žádný nadpis)</string>
     <string name="capture_or_pick_photo">Vyfoťte nebo vyberte fotku</string>
-    <string name="plans_loading_error">Plány se nepodařilo načíst</string>
     <string name="plans">Plány</string>
     <string name="plan">Plán</string>
     <string name="export_your_content_message">Vaše příspěvky, stránky a nastavení budou zaslány na %s.</string>
@@ -1379,7 +1352,6 @@ Language: cs_CZ
     <string name="stats_insights_most_popular_hour">Nejoblíbenější hodina</string>
     <string name="stats_insights_most_popular_day">Nejoblíbenější den</string>
     <string name="stats_insights_today">Dnešní statistika</string>
-    <string name="stats_insights_popular">Nejoblíbenější den a hodina</string>
     <string name="stats_insights_all_time">Všechny příspěvky, zobrazení a návštěvníci</string>
     <string name="stats_insights">Přehledy</string>
     <string name="stats_sign_in_jetpack_different_com_account">Chcete-li zobrazit statistiky, přihlaste se do účtu WordPress.com, který jste použili pro připojení Jetpack.</string>
