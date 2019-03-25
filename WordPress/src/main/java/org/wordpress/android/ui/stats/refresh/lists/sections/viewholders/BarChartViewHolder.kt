@@ -89,7 +89,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         )
         val lightGreyColor = ContextCompat.getColor(
                 context,
-                color.wp_grey_lighten_30
+                color.neutral_50
         )
         axisLeft.apply {
             valueFormatter = object : LargeValueFormatter() {
