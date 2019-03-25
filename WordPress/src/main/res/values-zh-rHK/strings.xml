@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-08 10:54:08+0000
+Translation-Revision-Date: 2019-03-21 11:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="app_rating_rate_never">不用了，謝謝</string>
+    <string name="app_rating_rate_later">稍後再做</string>
+    <string name="app_rating_rate_now">立即評分</string>
+    <string name="app_rating_message">很高興再次與你見面！如果你喜歡我們的應用程式，歡迎前往 Google Play 商店幫忙評分。</string>
+    <string name="app_rating_title">享受 WordPress 使用體驗嗎？</string>
+    <string name="editor_post_converted_back_to_draft">貼文已重新轉換為草稿</string>
+    <string name="stats_insights_posting_activity">張貼活動</string>
+    <string name="stats_site_not_loaded_yet">尚未載入網站</string>
+    <string name="stats_more_posts">更多文章</string>
+    <string name="stats_fewer_posts">較少文章</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">移除內容</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">向下移動區塊</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">向上移動區塊</string>
