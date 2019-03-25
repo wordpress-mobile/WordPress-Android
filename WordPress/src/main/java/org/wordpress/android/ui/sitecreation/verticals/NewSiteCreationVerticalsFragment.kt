@@ -168,10 +168,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment() {
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_VERTICALS)
         })
-        viewModel.onInputFocusRequested.observe(this, Observer {
-            searchInputWithHeader.requestInputFocus()
-            searchInputWithHeader.showKeyboard()
-        })
         viewModel.start(segmentId)
     }
 
@@ -206,11 +202,8 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment() {
     }
 
     override fun getScreenTitle(): String {
-        val arguments = arguments
-        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
-            throw IllegalStateException("Required argument screen title is missing.")
-        }
-        return arguments.getString(EXTRA_SCREEN_TITLE)
+        return arguments?.getString(EXTRA_SCREEN_TITLE)
+                ?: throw IllegalStateException("Required argument screen title is missing.")
     }
 
     companion object {

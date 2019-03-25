@@ -47,7 +47,6 @@ Language: da_DK
     <string name="people_dropdown_item_team">Gruppe</string>
     <string name="plan">Plan</string>
     <string name="plans">Planer</string>
-    <string name="plans_loading_error">Kunne ikke hente planer</string>
     <string name="export_your_content">Eksporter dit indhold</string>
     <string name="exporting_content_progress">Eksporterer indhold…</string>
     <string name="show_purchases">Vis køb</string>

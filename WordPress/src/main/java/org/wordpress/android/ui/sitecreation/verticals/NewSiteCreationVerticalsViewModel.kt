@@ -82,9 +82,6 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
-    private val _onInputFocusRequested = SingleLiveEvent<Unit>()
-    val onInputFocusRequested: LiveData<Unit> = _onInputFocusRequested
-
     init {
         dispatcher.register(fetchVerticalsUseCase)
         dispatcher.register(fetchSegmentPromptUseCase)
@@ -140,8 +137,6 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             tracker.trackVerticalsViewed()
             segmentPrompt = event.prompt!!
             updateUiStateToContent("", ListState.Ready(emptyList()))
-            // Show the keyboard
-            _onInputFocusRequested.call()
         }
     }
 
@@ -231,6 +226,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                         searchInputUiState = createSearchInputUiState(
                                 query,
                                 showProgress = state is Loading,
+                                showDivider = !state.data.isEmpty(),
                                 hint = segmentPrompt.hint
                         ),
                         items = createSuggestionsUiStates(
@@ -276,14 +272,13 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                     VerticalsCustomModelUiState(
                             model.verticalId,
                             model.name,
-                            R.string.new_site_creation_verticals_custom_subtitle,
-                            showDivider = index != lastItemIndex
+                            R.string.new_site_creation_verticals_custom_subtitle
                     )
                 } else {
                     VerticalsModelUiState(
                             model.verticalId,
                             model.name,
-                            showDivider = index != lastItemIndex
+                            showDivider = index == lastItemIndex - 1 && data[lastItemIndex].isUserInputVertical
                     )
                 }
                 itemUiState.onItemTapped = onItemTapped
@@ -310,12 +305,14 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private fun createSearchInputUiState(
         query: String,
         showProgress: Boolean,
+        showDivider: Boolean,
         hint: String
     ): SiteCreationSearchInputUiState {
         return SiteCreationSearchInputUiState(
                 UiStringText(hint),
                 showProgress,
-                showClearButton = !StringUtils.isEmpty(query)
+                showClearButton = !StringUtils.isEmpty(query),
+                showDivider = showDivider
         )
     }
 
@@ -369,8 +366,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         data class VerticalsCustomModelUiState(
             val id: String,
             val title: String,
-            @StringRes val subTitleResId: Int,
-            val showDivider: Boolean
+            @StringRes val subTitleResId: Int
         ) : VerticalsListItemUiState()
 
         data class VerticalsFetchSuggestionsErrorUiState(

@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -42,6 +43,7 @@ public class JetpackConnectionResultActivity extends AppCompatActivity {
     private String mReason;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
 
     @Override

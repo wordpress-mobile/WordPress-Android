@@ -330,6 +330,7 @@
 
     <style name="MySiteListHeader">
         <item name="android:ellipsize">end</item>
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_height">wrap_content</item>
@@ -488,6 +489,7 @@
     </style>
 
     <style name="QuickStartTypeTitle">
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -498,6 +500,7 @@
     </style>
 
     <style name="QuickStartTypeSubtitle">
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -791,14 +794,40 @@
     </style>
 
     <!--Site Preview -->
-    <style name="SitePreviewTitle">
-        <item name="android:layout_width">wrap_content</item>
+    <style name="SiteCreationHeaderLinearLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:text">@string/new_site_creation_preview_title</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="SiteCreationHeaderBaseTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="SiteCreationHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/wp_grey_dark</item>
+    </style>
+
+    <style name="SiteCreationHeaderSubtitle" parent="SiteCreationHeaderBaseTextStyle">
+        <item name="android:textColor">@color/wp_grey_darken_20</item>
+    </style>
+
+    <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderTitle">
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
+        <item name="android:text">@string/new_site_creation_preview_title</item>
+    </style>
+
+    <style name="SiteCreationPreviewHeaderSubtitle" parent="SiteCreationHeaderSubtitle">
+        <item name="android:text">@string/new_site_creation_preview_subtitle</item>
     </style>
 
     <style name="SitePreviewOkButton">

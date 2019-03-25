@@ -1,7 +1,6 @@
 package org.wordpress.android.widgets
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
@@ -11,6 +10,7 @@ import android.widget.TextView
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.ColorUtils
 
 /*
  * buttons in footer of post cards
@@ -83,8 +83,7 @@ class PostListButton : LinearLayout {
 
     private fun loadResourcesForButtonType(buttonType: PostListButtonType) {
         val color = ContextCompat.getColor(context, buttonType.colorResId)
-        imageView.setImageResource(buttonType.iconResId)
-        imageView.imageTintList = ColorStateList.valueOf(color)
+        ColorUtils.setImageResourceWithTint(imageView, buttonType.iconResId, buttonType.colorResId)
         textView.setText(buttonType.textResId)
         textView.setTextColor(color)
     }
