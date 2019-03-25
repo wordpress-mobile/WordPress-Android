@@ -20,7 +20,7 @@
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:lineSpacingMultiplier="1.1"
-        android:textColor="@color/wp_grey_dark"
+        android:textColor="@color/neutral_800"
         android:textSize="@dimen/text_sz_large"
         app:fixWidowWords="true"
         tools:text="What's the focus of your business?"/>

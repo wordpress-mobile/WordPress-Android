@@ -41,7 +41,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:lineSpacingMultiplier="1.1"
                     android:text="@string/new_site_creation_site_info_header_title"
-                    android:textColor="@color/wp_grey_dark"
+                    android:textColor="@color/neutral_800"
                     android:textSize="@dimen/text_sz_large"
                     />
 
@@ -78,7 +78,7 @@
                     android:inputType="text"
                     android:singleLine="true"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/wp_grey_dark">
+                    android:textColor="@color/neutral_800">
                 </android.support.design.widget.TextInputEditText>
             </android.support.design.widget.TextInputLayout>
 
@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/wp_grey"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/wp_grey_dark">
+                    android:textColor="@color/neutral_800">
                 </android.support.design.widget.TextInputEditText>
             </android.support.design.widget.TextInputLayout>
 

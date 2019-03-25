@@ -261,7 +261,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
     ): Spannable {
         val spannableTitle = SpannableString(url)
         spannableTitle.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(context, R.color.wp_grey_dark)),
+                ForegroundColorSpan(ContextCompat.getColor(context, R.color.neutral_800)),
                 subdomainSpan.first,
                 subdomainSpan.second,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
