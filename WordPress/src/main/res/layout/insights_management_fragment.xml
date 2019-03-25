@@ -2,7 +2,32 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_darken_20"
+        android:textSize="@dimen/text_sz_large"
+        android:gravity="center_horizontal"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_medium_large"
+        android:text="@string/stats_insights_management_title"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_darken_20"
+        android:textSize="@dimen/text_sz_medium"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_medium_large"
+        android:paddingTop="@dimen/margin_large"
+        android:paddingBottom="@dimen/margin_large"
+        android:text="@string/stats_insights_add_insights_header"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/removedInsights"
@@ -11,4 +36,5 @@
         android:clipToPadding="false"
         android:scrollbars="none"
         />
+
 </LinearLayout>
