@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -102,6 +103,7 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
+        metadata.setGutenbergEnabled(AppPrefs.isGutenbergDefaultForNewPosts());
 
         AnalyticsTracker.refreshMetadata(metadata);
     }
@@ -123,6 +125,7 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(1);
         metadata.setUsername(username);
         metadata.setEmail(email);
+        metadata.setGutenbergEnabled(AppPrefs.isGutenbergDefaultForNewPosts());
         AnalyticsTracker.refreshMetadata(metadata);
     }
 

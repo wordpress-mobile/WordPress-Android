@@ -10,27 +10,26 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
-import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.math.roundToInt
 
 class MostPopularInsightsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var insightsStore: MostPopularInsightsStore
+    @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dateUtils: DateUtils
     @Mock lateinit var resourceProvider: ResourceProvider
@@ -46,9 +45,11 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         useCase = MostPopularInsightsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
+                statsSiteProvider,
                 dateUtils,
                 resourceProvider
         )
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(dateUtils.getWeekDay(day)).thenReturn(dayString)
 
         whenever(dateUtils.getHour(hour)).thenReturn(hourString)
@@ -72,20 +73,21 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     fun `maps full most popular insights to UI model`() = test {
         val forced = false
         val refresh = true
+        val model = InsightsMostPopularModel(0, day, hour, highestDayPercent, highestHourPercent)
+        whenever(insightsStore.getMostPopularInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchMostPopularInsights(site, forced)).thenReturn(
                 OnStatsFetched(
-                        InsightsMostPopularModel(0, day, hour, highestDayPercent, highestHourPercent)
+                        model
                 )
         )
 
         val result = loadMostPopularInsights(refresh, forced)
 
-        assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(3)
-            assertTitle(this.items[0])
-            assertDay(this.items[1])
-            assertHour(this.items[2])
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
+            assertDayAndHour(this[1])
         }
     }
 
@@ -102,10 +104,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
 
         val result = loadMostPopularInsights(refresh, forced)
 
-        assertThat(result.type).isEqualTo(ERROR)
-        (result as Error).apply {
-            assertThat(this.errorMessage).isEqualTo(message)
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
@@ -113,28 +112,21 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         assertThat((item as Title).textResource).isEqualTo(R.string.stats_insights_popular)
     }
 
-    private fun assertDay(blockListItem: BlockListItem) {
-        assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
-        val item = blockListItem as ListItemWithIcon
-        assertThat(item.icon).isEqualTo(R.drawable.ic_calendar_white_24dp)
-        assertThat(item.text).isEqualTo(dayString)
-        assertThat(item.showDivider).isEqualTo(true)
-        assertThat(item.value).isEqualTo("${highestDayPercent.roundToInt()}% of views")
+    private fun assertDayAndHour(blockListItem: BlockListItem) {
+        assertThat(blockListItem.type).isEqualTo(QUICK_SCAN_ITEM)
+        val item = blockListItem as QuickScanItem
+        assertThat(item.leftColumn.label).isEqualTo(R.string.stats_insights_best_day)
+        assertThat(item.leftColumn.value).isEqualTo(dayString)
+        assertThat(item.leftColumn.tooltip).isEqualTo("${highestDayPercent.roundToInt()}% of views")
+        assertThat(item.rightColumn.label).isEqualTo(R.string.stats_insights_best_hour)
+        assertThat(item.rightColumn.value).isEqualTo(hourString)
+        assertThat(item.rightColumn.tooltip).isEqualTo("${highestHourPercent.roundToInt()}% of views")
     }
 
-    private fun assertHour(blockListItem: BlockListItem) {
-        assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
-        val item = blockListItem as ListItemWithIcon
-        assertThat(item.icon).isEqualTo(R.drawable.ic_time_white_24dp)
-        assertThat(item.text).isEqualTo(hourString)
-        assertThat(item.showDivider).isEqualTo(false)
-        assertThat(item.value).isEqualTo("${highestHourPercent.roundToInt()}% of views")
-    }
-
-    private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): StatsBlock {
-        var result: StatsBlock? = null
+    private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): UseCaseModel {
+        var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        useCase.fetch(refresh, forced)
         return checkNotNull(result)
     }
 }

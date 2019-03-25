@@ -1127,6 +1127,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public boolean showSavingProgressDialogIfNeeded() {
+        return false;
+    }
+
+    @Override
+    public boolean hideSavingProgressDialog() {
+        return false;
+    }
+
+    @Override
     public void onMediaUploadReattached(String localId, float currentProgress) {
         // no op (no reattachment in Visual Editor)
     }

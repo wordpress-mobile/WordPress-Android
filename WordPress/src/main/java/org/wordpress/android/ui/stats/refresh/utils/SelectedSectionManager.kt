@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import javax.inject.Inject
 
@@ -15,7 +16,8 @@ const val SELECTED_SECTION_KEY = "SELECTED_STATS_SECTION_KEY"
 class SelectedSectionManager
 @Inject constructor(private val sharedPrefs: SharedPreferences) {
     fun getSelectedSection(): StatsSection {
-        return StatsSection.valueOf(sharedPrefs.getString(SELECTED_SECTION_KEY, StatsSection.INSIGHTS.name))
+        val value = sharedPrefs.getString(SELECTED_SECTION_KEY, StatsSection.INSIGHTS.name)
+        return value?.let { StatsSection.valueOf(value) } ?: StatsSection.INSIGHTS
     }
 
     fun getSelectedStatsGranularity(): StatsGranularity? {
@@ -29,7 +31,7 @@ class SelectedSectionManager
 
 fun StatsSection.toStatsGranularity(): StatsGranularity? {
     return when (this) {
-        INSIGHTS -> null
+        DETAIL, INSIGHTS -> null
         StatsSection.DAYS -> DAYS
         StatsSection.WEEKS -> WEEKS
         StatsSection.MONTHS -> MONTHS

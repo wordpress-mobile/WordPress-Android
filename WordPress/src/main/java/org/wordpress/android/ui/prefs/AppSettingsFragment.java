@@ -307,6 +307,8 @@ public class AppSettingsFragment extends PreferenceFragment
                                          getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
         } else if (preference == mGutenbergDefaultForNewPosts) {
             AppPrefs.setGutenbergDefaultForNewPosts((Boolean) newValue);
+            // we need to refresh metadata as gutenberg_enabled is now part of the user data
+            AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
         }

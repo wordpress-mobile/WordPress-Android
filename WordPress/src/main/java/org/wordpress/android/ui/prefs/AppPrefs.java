@@ -643,6 +643,7 @@ public class AppPrefs {
     }
 
     public static void setGutenbergDefaultForNewPosts(boolean defaultForNewPosts) {
+        AnalyticsTracker.track(defaultForNewPosts ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED);
         setBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, defaultForNewPosts);
     }
 
