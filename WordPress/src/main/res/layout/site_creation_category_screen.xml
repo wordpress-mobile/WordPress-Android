@@ -127,7 +127,7 @@
                         android:layout_centerVertical="true"
                         android:importantForAccessibility="no"
                         android:scaleType="centerInside"
-                        android:src="@drawable/img_type_website_80dp"/>
+                        android:src="@drawable/img_illustration_site_website_cards_80dp"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
