@@ -713,6 +713,11 @@ public class EditPostSettingsFragment extends Fragment {
         // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
         if (PostStatus.fromPost(getPost()) == PostStatus.DRAFT && PostUtils.isPublishDateInTheFuture(getPost())) {
             updatePostStatus(PostStatus.PUBLISHED.toString());
+        } else if (PostStatus.fromPost(getPost()) == PostStatus.PUBLISHED && getPost().isLocalDraft()) {
+            // if user was changing dates for a local draft (not saved yet), only way to have it set to PUBLISH
+            // is by running into the if case above. So, if they're updating the date again by calling
+            // `updatePublishDate()`, get it back to DRAFT.
+            updatePostStatus(PostStatus.DRAFT.toString());
         }
         updatePublishDateTextView();
         updateSaveButton();
