@@ -3,6 +3,7 @@ package org.wordpress.android.ui.utils
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.text.Spannable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -35,6 +36,22 @@ class UiHelpers @Inject constructor() {
             null
         }
         setTextOrHide(view, uiString)
+    }
+
+    fun setTextOrHide(view: TextView, text: String?) {
+        val uiString = if (text != null) {
+            UiStringText(text)
+        } else {
+            null
+        }
+        setTextOrHide(view, uiString)
+    }
+
+    fun setTextOrHide(view: TextView, text: Spannable?) {
+        view.visibility = if (text == null) View.GONE else View.VISIBLE
+        text?.let {
+            view.text = text
+        }
     }
 
     fun setImageOrHide(imageView: ImageView, @DrawableRes resId: Int?) {
