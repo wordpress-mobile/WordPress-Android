@@ -1,4 +1,4 @@
-* You can now swipe between tabs in the Notifications screen.
-* We have made some design improvements to the new site creation process.
-* Several changes to Stats including improving how stats for your posts are displayed and visual updates to the other Stats screens.
-* Now sharing pictures to WordPress opens the Block editor.
+* Navigating notifications: now you can swipe between tabs.
+* Design details: seemingly-small visual tweaks make site creation smoother.
+* Clearer data: changes and visual updates to Stats make most stats easier to understand.
+* Speedy posting: sharing pictures to WordPress automatically opens the Block editor.
