@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+        android:id="@+id/notifications_refresh"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/notifications_list"
+            android:clipToPadding="false"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:paddingEnd="@dimen/notifications_content_margin"
+            android:paddingStart="@dimen/notifications_content_margin"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="outsideOverlay"
+            tools:listitem="@layout/notifications_list_item">
+        </android.support.v7.widget.RecyclerView>
+
+    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        app:aevButton="@string/posts_empty_list_button"
+        app:aevImage="@drawable/img_illustration_notifications_152dp"
+        app:aevSubtitle="@string/notifications_empty_action_unread"
+        app:aevTitle="@string/notifications_empty_unread"
+        tools:visibility="visible">
+    </org.wordpress.android.ui.ActionableEmptyView>
+
+    <LinearLayout
+        android:id="@+id/layout_new_notificatons"
+        android:background="@drawable/bg_rectangle_rounded_primary_dark_ripple_primary_50"
+        android:elevation="@dimen/message_bar_elevation"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_medium_large"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingStart="@dimen/margin_extra_medium_large"
+        android:paddingEnd="@dimen/margin_extra_medium_large"
+        android:paddingTop="@dimen/margin_large"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/notifications_label_new_notifications"
+            android:textColor="@color/grey_lighten_30"
+            android:textSize="@dimen/text_sz_large">
+        </org.wordpress.android.widgets.WPTextView>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/notifications_label_new_notifications_subtitle"
+            android:textColor="@color/grey_lighten_30"
+            android:textSize="@dimen/text_sz_small">
+        </org.wordpress.android.widgets.WPTextView>
+
+    </LinearLayout>
+
+</RelativeLayout>
