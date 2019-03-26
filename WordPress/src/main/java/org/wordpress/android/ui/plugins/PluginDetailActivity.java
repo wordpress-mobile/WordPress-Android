@@ -264,6 +264,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlansFetched(OnPlansFetched event) {
+        if (mCheckingDomainCreditsProgressDialog == null || !mCheckingDomainCreditsProgressDialog.isShowing()) {
+            AppLog.e(T.PLANS, "User cancelled domain credit checking. Ignoring the result.");
+            return;
+        }
+
         cancelDomainCreditsCheckProgressDialog();
 
         if (event.isError()) {
@@ -875,7 +880,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void showDomainCreditsCheckProgressDialog() {
         if (mCheckingDomainCreditsProgressDialog == null) {
             mCheckingDomainCreditsProgressDialog = new ProgressDialog(this);
-            mCheckingDomainCreditsProgressDialog.setCancelable(false);
+            mCheckingDomainCreditsProgressDialog.setCancelable(true);
             mCheckingDomainCreditsProgressDialog.setIndeterminate(true);
 
             mCheckingDomainCreditsProgressDialog
