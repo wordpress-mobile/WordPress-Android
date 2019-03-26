@@ -317,7 +317,6 @@ public class PluginDetailActivity extends AppCompatActivity {
                     });
 
             builder.setCancelable(true);
-            builder.create();
             return builder.create();
         }
     }
