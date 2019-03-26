@@ -324,6 +324,14 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void checkSmartLockPasswordAndStartLogin() {
+        checkSmartLockPassword();
+
+        if (mSmartLockHelperState == SmartLockHelperState.FINISHED) {
+            startLogin();
+        }
+    }
+
+    private void checkSmartLockPassword() {
         if (mSmartLockHelperState == SmartLockHelperState.NOT_TRIGGERED) {
             if (initSmartLockHelperConnection()) {
                 mSmartLockHelperState = SmartLockHelperState.TRIGGER_FILL_IN_ON_CONNECT;
@@ -331,10 +339,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 // just shortcircuit the attempt to use SmartLockHelper
                 mSmartLockHelperState = SmartLockHelperState.FINISHED;
             }
-        }
-
-        if (mSmartLockHelperState == SmartLockHelperState.FINISHED) {
-            startLogin();
         }
     }
 
@@ -431,6 +435,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void gotWpcomEmail(String email) {
+        checkSmartLockPassword();
         if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
                     email, AuthEmailPayloadScheme.WORDPRESS, mIsJetpackConnect,
