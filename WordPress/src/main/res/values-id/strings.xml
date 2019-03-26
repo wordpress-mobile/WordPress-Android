@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-05 12:54:07+0000
+Translation-Revision-Date: 2019-03-20 06:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="app_rating_rate_never">Tidak, terima kasih</string>
+    <string name="app_rating_rate_later">Nanti</string>
+    <string name="app_rating_rate_now">Beri penilaian sekarang</string>
+    <string name="app_rating_message">Senang bertemu Anda lagi! Jika Anda suka aplikasi ini, kami menantikan penilaian Anda di Google Play Store.</string>
+    <string name="app_rating_title">Suka WordPress?</string>
+    <string name="editor_post_converted_back_to_draft">Pos dikembalikan ke format konsep</string>
+    <string name="stats_insights_posting_activity">Aktivitas Posting</string>
+    <string name="stats_site_not_loaded_yet">Situs belum dimuat</string>
+    <string name="stats_more_posts">Pos lebih banyak</string>
+    <string name="stats_fewer_posts">Pos lebih sedikit</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Hapus konten</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Turunkan blok</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Naikkan blok</string>

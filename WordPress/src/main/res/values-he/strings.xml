@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-05 17:54:06+0000
+Translation-Revision-Date: 2019-03-20 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="app_rating_rate_never">לא תודה</string>
+    <string name="app_rating_rate_later">מאוחר יותר</string>
+    <string name="app_rating_rate_now">לדרג כעת</string>
+    <string name="app_rating_message">שמחים לראות אותך שוב! אם אהבת את האפליקציה, נשמח לראות את הדירוג שלך בחנות Google Play.</string>
+    <string name="app_rating_title">מרוצה מ-WordPress?</string>
+    <string name="editor_post_converted_back_to_draft">הפוסט הומר בחזרה למצב טיוטה</string>
+    <string name="stats_insights_posting_activity">פעילות פרסום</string>
+    <string name="stats_site_not_loaded_yet">האתר עדיין לא נטען</string>
+    <string name="stats_more_posts">פוסטים נוספים</string>
+    <string name="stats_fewer_posts">פחות פוסטים</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">להסיר את התוכן</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">להזיז את הבלוק למטה</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">להזיז את הבלוק למעלה</string>
@@ -103,8 +113,8 @@ Language: he_IL
     <string name="site_creation_error_generic_title">הייתה בעיה</string>
     <string name="new_site_creation_verticals_custom_subtitle">קטגוריה מותאמת אישית</string>
     <string name="new_site_creation_button_skip">דילוג</string>
-    <string name="new_site_creation_tag_line_description">התיאור הקצר הוא שורה קצרה של מלל שמוצגת ישירות מתחת לכותרת.</string>
-    <string name="new_site_creation_tag_line_hint">תיאור קצר</string>
+    <string name="new_site_creation_tag_line_description">תיאור האתר הוא שורה קצרה של מלל שמוצגת ישירות מתחת לכותרת.</string>
+    <string name="new_site_creation_tag_line_hint">תיאור האתר</string>
     <string name="new_site_creation_site_title_hint">שם האתר</string>
     <string name="new_site_creation_site_info_header_subtitle">יש לספק פרטים על האתר שאותו ברצונך ליצור.</string>
     <string name="new_site_creation_site_info_header_title">מידע בסיסי</string>
@@ -265,6 +275,7 @@ Language: he_IL
     <string name="dismiss">בטל</string>
     <string name="quick_start_focus_point_description">יש להקיש כאן</string>
     <string name="quick_start_list_create_site_title">יצירת האתר שלך</string>
+    <string name="quick_start_list_create_site_subtitle">הפעל את האתר שלך.</string>
     <string name="quick_start_dialog_view_site_title">הצגת האתר שלך</string>
     <string name="quick_start_dialog_view_site_message_short">יש להקיש על %1$sהצגת האתר%2$s כדי להציג את האתר שלך בתצוגה מקדימה</string>
     <string name="quick_start_dialog_share_site_title">שיתוף האתר שלך</string>
@@ -272,7 +283,9 @@ Language: he_IL
     <string name="quick_start_dialog_publish_post_title">פרסום פוסט</string>
     <string name="quick_start_dialog_publish_post_message_short">יש להקיש על %1$sיצירת פוסט%2$s כדי ליצור פוסט חדש</string>
     <string name="quick_start_dialog_need_help_title">נדרשת לך עזרה כדי לצאת לדרך?</string>
+    <string name="quick_start_dialog_need_help_button_positive">אשר</string>
     <string name="quick_start_dialog_need_help_button_neutral">לעולם לא</string>
+    <string name="quick_start_dialog_need_help_button_negative">לא תודה</string>
     <string name="quick_start_dialog_follow_sites_title">מעקב אחר אתרים אחרים</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">יש להקיש על %1$sחיפוש%2$s כדי למצוא אתרים בתחומי עניין דומים</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">יש להקיש על %1$sReader%2$s כדי להמשיך</string>
@@ -284,6 +297,7 @@ Language: he_IL
     <string name="quick_start_button_positive">מעבר אל</string>
     <string name="quick_start_button_negative_short">ביטול</string>
     <string name="quick_start_button_negative">לא עכשיו</string>
+    <string name="content_description_more">עוד</string>
     <string name="my_site_create_new_site_title">אין לך עוד אתרים</string>
     <string name="reader_empty_followed_tags_title">אין תגיות במעקב</string>
     <string name="reader_empty_followed_tags_subtitle">ניתן להוסיף כאן תגיות כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
@@ -629,13 +643,13 @@ Language: he_IL
     <string name="site_creation_creating_fetching_info">מאחזר את פרטי האתר…</string>
     <string name="site_creation_creating_laying_foundation">מניח את יסודות האתר…</string>
     <string name="site_creation_empty_site_title">יש להזין את כותרת האתר</string>
-    <string name="site_creation_tagline_helper">התיאור הקצר הוא שורה קצרה של מלל שמוצגת ישירות מתחת לכותרת ברוב ערכות העיצוב; מנועי החיפוש משתמשים בשורה בתור תיאור האתר.</string>
+    <string name="site_creation_tagline_helper">תיאור האתר הוא שורה קצרה של מלל שמוצגת ישירות מתחת לכותרת ברוב ערכות העיצוב; מנועי החיפוש משתמשים בשורה בתור תיאור האתר.</string>
     <string name="site_creation_tagline_hint">תיאור קצר של האתר (לא חובה)</string>
     <string name="site_creation_title_hint">כותרת האתר</string>
     <string name="site_creation_domain_finish_button">יצירת אתר</string>
     <string name="site_creation_domain_keywords_hint">יש להקליד מילת מפתח לרעיונות נוספים</string>
     <string name="site_creation_label_domain_selection_title">שלב 4 מתוך 4</string>
-    <string name="site_creation_label_site_details">יש לרשום תיאור על מה שברצונך ליצור. מהם הכותרת והתיאור קצר?</string>
+    <string name="site_creation_label_site_details">נשמח לפרטים נוספים אודות האתר. מהם הכותרת ותיאור האתר?</string>
     <string name="site_creation_label_site_details_title">שלב 3 מתוך 4</string>
     <string name="site_creation_label_theme_loading">יש להמתין לטעינה של ערכות העיצוב</string>
     <string name="site_creation_label_theme_selection">להתחיל מהר עם אחת מערכות העיצוב הפופולריות שלנו. לאחר שיצרת את האתר שלך, אפשר לעיין במאות הערכות הנוספות ולבחור אחרת.</string>
@@ -1342,6 +1356,7 @@ Language: he_IL
     <string name="detail_approve_manual">אישור ידני דרוש לתגובות מכולם.</string>
     <string name="days_quantity_other">%d ימים</string>
     <string name="days_quantity_one">יום אחד</string>
+    <string name="web_address">כתובת URL</string>
     <string name="primary_site">אתר ראשי</string>
     <string name="pending_email_change_snackbar">יש ללחוץ על הקישור לאימות באימייל שנשלח לכתובת %1$s כדי לאשר את כתובתך החדשה</string>
     <string name="editor_toast_uploading_please_wait">מתבצעת כרגע העלאת מדיה על-ידך. יש להמתין להשלמת הפעולה.</string>
