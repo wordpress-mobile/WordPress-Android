@@ -133,5 +133,7 @@
     <string name="retry_failed_upload_remove">Remove</string>
     <string name="retry_failed_upload_retry_all">Retry all</string>
 
+    <string name="long_post_dlg_saving">Saving</string>
+
 
 </resources>

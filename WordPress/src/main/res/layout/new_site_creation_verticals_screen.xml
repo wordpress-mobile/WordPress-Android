@@ -35,7 +35,7 @@
 
         <include
             android:id="@+id/search_input_layout"
-            layout="@layout/new_site_creation_verticals_search_input_item"
+            layout="@layout/new_site_creation_search_input_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/recycler_view"
@@ -43,20 +43,18 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header_layout"
-            app:layout_constraintVertical_bias="0.0"
-            app:layout_goneMarginTop="@dimen/margin_extra_medium_large"/>
+            app:layout_constraintVertical_bias="0.0"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/margin_extra_large"
+            android:importantForAccessibility="no"
             android:scrollbars="vertical"
             app:layout_constraintBottom_toTopOf="@+id/site_info_skip_or_next_button_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            android:importantForAccessibility="no"
             app:layout_constraintTop_toBottomOf="@+id/search_input_layout"/>
 
         <include

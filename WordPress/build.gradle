@@ -47,8 +47,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "12.0"
-        versionCode 695
+        versionName "12.1-rc-1"
+        versionCode 696
         minSdkVersion 21
         targetSdkVersion 26
 
@@ -61,9 +61,9 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
-        buildConfigField "boolean", "REVISIONS_ENABLED", "false"
         buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "true"
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
+        buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "false"
     }
 
     flavorDimensions "buildType"
@@ -82,6 +82,7 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "true"
         }
     }
 
@@ -122,8 +123,6 @@ android {
 androidExtensions {
     experimental = true
 }
-// enable kotlin coroutines
-kotlin { experimental { coroutines "enable" } }
 
 dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
@@ -175,7 +174,7 @@ dependencies {
     implementation 'com.squareup.okio:okio:1.14.0'
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.airbnb.android:lottie:2.0.0-rc2'
-    implementation 'com.facebook.shimmer:shimmer:0.3.0'
+    implementation 'com.facebook.shimmer:shimmer:0.4.0'
 
     implementation ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'

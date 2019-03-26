@@ -815,6 +815,7 @@
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
     <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Site not loaded yet</string>
+    <string name="showing_stats_for">Showing stats for:</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
@@ -998,14 +999,16 @@
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
+    <string name="stats_insights_best_day">Best Day</string>
+    <string name="stats_insights_best_hour">Best Hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
-    <string name="stats_insights_today_stats">Today\'s Stats</string>
+    <string name="stats_insights_today_stats">Today</string>
 
     <!-- Stats refreshed insights -->
-    <string name="stats_insights_all_time_stats">All Time Stats</string>
+    <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
     <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
@@ -1013,6 +1016,7 @@
     <string name="stats_insights_create_post">Create post</string>
     <string name="stats_insights_share_post">Share post</string>
     <string name="stats_insights_view_more">View more</string>
+    <string name="stats_insights_load_more" tools:ignore="UnusedResources">Load more</string>
     <string name="stats_insights_facebook">Facebook</string>
     <string name="stats_insights_twitter">Twitter</string>
     <string name="stats_insights_tumblr">Tumblr</string>
@@ -1021,6 +1025,13 @@
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
+
+    <!-- Stats post detail -->
+    <string name="stats_detail_months_and_years">Months and Years</string>
+    <string name="stats_months_and_years_period_label">Period</string>
+    <string name="stats_months_and_years_views_label">Views</string>
+    <string name="stats_detail_average_views_per_day">Avg. Views Per Day</string>
+    <string name="stats_detail_recent_weeks">Recent Weeks</string>
 
     <string name="stats_posts_and_pages">Posts and Pages</string>
     <string name="stats_referrers">Referrers</string>
@@ -1235,6 +1246,11 @@
     <string name="publish_date">Publish</string>
     <string name="immediately">Immediately</string>
     <string name="now">Now</string>
+    <string name="scheduled_for">Scheduled for: %s</string>
+    <string name="published_on">Published on: %s</string>
+    <string name="schedule_for">Schedule for: %s</string>
+    <string name="publish_on">Publish on: %s</string>
+
 
     <!-- location -->
     <string name="post_settings_location">Location</string>
@@ -2492,6 +2508,7 @@
     <string name="new_site_creation_screen_title_general">Create Site</string>
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
+    <string name="new_site_creation_preview_subtitle">You\'ll be able to customise look and feel of your site later</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>

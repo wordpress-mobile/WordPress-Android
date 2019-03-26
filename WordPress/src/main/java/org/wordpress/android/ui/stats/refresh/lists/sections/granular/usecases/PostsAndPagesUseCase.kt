@@ -5,6 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.PAGE
@@ -15,8 +16,10 @@ import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_HOME_PAGE
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_POST
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -25,8 +28,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -35,16 +38,18 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val PAGE_SIZE = 6
+private const val BLOCK_ITEM_COUNT = 6
+private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class PostsAndPagesUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore,
-    selectedDateProvider: SelectedDateProvider,
     statsSiteProvider: StatsSiteProvider,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    selectedDateProvider: SelectedDateProvider,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<PostAndPageViewsModel>(
         POSTS_AND_PAGES,
         mainDispatcher,
@@ -52,14 +57,16 @@ constructor(
         statsSiteProvider,
         statsGranularity
 ) {
+    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
+
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_posts_and_pages))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): PostAndPageViewsModel? {
         return postsAndPageViewsStore.getPostAndPageViews(
                 site,
                 statsGranularity,
-                selectedDate,
-                PAGE_SIZE
+                LimitMode.Top(itemsToLoad),
+                selectedDate
         )
     }
 
@@ -70,8 +77,8 @@ constructor(
     ): State<PostAndPageViewsModel> {
         val response = postsAndPageViewsStore.fetchPostAndPageViews(
                 site,
-                PAGE_SIZE,
                 statsGranularity,
+                LimitMode.Top(itemsToLoad),
                 selectedDate,
                 forced
         )
@@ -87,7 +94,10 @@ constructor(
 
     override fun buildUiModel(domainModel: PostAndPageViewsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(string.stats_posts_and_pages))
+
+        if (useCaseMode == BLOCK) {
+            items.add(Title(string.stats_posts_and_pages))
+        }
 
         if (domainModel.views.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
@@ -109,7 +119,7 @@ constructor(
                         )
                 )
             })
-            if (domainModel.hasMore) {
+            if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,
@@ -126,8 +136,7 @@ constructor(
         navigateTo(
                 ViewPostsAndPages(
                         statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date(),
-                        statsSiteProvider.siteModel
+                        selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
                 )
         )
     }
@@ -140,11 +149,10 @@ constructor(
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, statsGranularity)
         navigateTo(
                 ViewPostDetailStats(
-                        postId = params.postId.toString(),
+                        postId = params.postId,
                         postTitle = params.postTitle,
                         postUrl = params.postUrl,
-                        postType = type,
-                        siteId = statsSiteProvider.siteModel.siteId
+                        postType = type
                 )
         )
     }
@@ -163,15 +171,16 @@ constructor(
         private val selectedDateProvider: SelectedDateProvider,
         private val statsSiteProvider: StatsSiteProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper
-    ) : UseCaseFactory {
-        override fun build(granularity: StatsGranularity) =
+    ) : GranularUseCaseFactory {
+        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 PostsAndPagesUseCase(
                         granularity,
                         mainDispatcher,
                         postsAndPageViewsStore,
-                        selectedDateProvider,
                         statsSiteProvider,
-                        analyticsTracker
+                        selectedDateProvider,
+                        analyticsTracker,
+                        useCaseMode
                 )
     }
 }
