@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 61;
+        return 62;
     }
 
     @Override
@@ -478,6 +478,12 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,TIME_STAMP INTEGER,"
                         + "REQUESTED_ITEMS INTEGER)");
                 oldVersion++;
+            case 61:
+                db.execSQL("DROP TABLE StatsRequest");
+                db.execSQL(
+                        "CREATE TABLE StatsRequest (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,TIME_STAMP "
+                        + "INTEGER,REQUESTED_ITEMS INTEGER)");
         }
         db.setTransactionSuccessful();
         db.endTransaction();
