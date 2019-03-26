@@ -12,8 +12,11 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -24,6 +27,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashlyticsUtils
@@ -43,12 +47,17 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
 
+    private lateinit var authorSelectionAdapter: AuthorSelectionAdapter
+    private lateinit var authorSelection: AppCompatSpinner
+
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var pager: ViewPager
     private lateinit var fab: FloatingActionButton
 
     private val currentFragment: PostListFragment?
         get() = postsPagerAdapter.getItemAtPosition(pager.currentItem)
+
+    private var updatingUI = false
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleManager.setLocale(newBase))
@@ -101,12 +110,19 @@ class PostsListActivity : AppCompatActivity(),
     }
 
     private fun setupContent() {
+        authorSelection = findViewById(R.id.post_list_author_selection)
+        authorSelectionAdapter = AuthorSelectionAdapter(this)
+        authorSelection.adapter = authorSelectionAdapter
+
+        authorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                viewModel.updateAuthorFilterSelection(position)
+            }
+        }
+
         pager = findViewById(R.id.postPager)
-        postsPagerAdapter = PostsPagerAdapter(
-                POST_LIST_PAGES, site,
-                supportFragmentManager
-        )
-        pager.adapter = postsPagerAdapter
 
         // Just a safety measure - there shouldn't by any existing listeners since this method is called just once.
         pager.clearOnPageChangeListeners()
@@ -118,6 +134,8 @@ class PostsListActivity : AppCompatActivity(),
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {
+                if (updatingUI) return
+
                 viewModel.onTabChanged(position)
             }
 
@@ -130,18 +148,36 @@ class PostsListActivity : AppCompatActivity(),
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListMainViewModel::class.java)
         viewModel.start(site)
+
+        viewModel.viewState.observe(this, Observer { state ->
+            state?.let {
+                if (state.isFabVisible) {
+                    fab.show()
+                } else {
+                    fab.hide()
+                }
+
+                authorSelection.visibility = if (state.isAuthorFilterVisible) View.VISIBLE else View.GONE
+                authorSelection.setSelection(state.authorFilterSelection.ordinal)
+                authorSelectionAdapter.updateItems(state.authorFilterItems)
+            }
+        })
+
         viewModel.postListAction.observe(this, Observer { postListAction ->
             postListAction?.let { action ->
                 handlePostListAction(this@PostsListActivity, action)
             }
         })
-        viewModel.isFabVisible.observe(this, Observer { show ->
-            show?.let {
-                if (show) {
-                    fab.show()
-                } else {
-                    fab.hide()
-                }
+        viewModel.updatePostsPager.observe(this, Observer { authorFilter ->
+            authorFilter?.let {
+                updatingUI = true
+
+                val currentItem: Int = pager.currentItem
+                postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
+                pager.adapter = postsPagerAdapter
+                pager.currentItem = currentItem
+
+                updatingUI = false
             }
         })
         viewModel.selectTab.observe(this, Observer { tabIndex ->

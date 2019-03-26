@@ -363,6 +363,12 @@
     <dimen name="post_list_row_skeleton_view_date_width">80dp</dimen>
     <dimen name="post_list_row_skeleton_view_date_height">@dimen/margin_extra_large</dimen>
 
+    <!--posts list-->
+    <dimen name="posts_list_spinner_width">56dp</dimen>
+    <dimen name="posts_list_spinner_avatar_size">30dp</dimen>
+    <dimen name="posts_list_spinner_avatar_padding">1dp</dimen>
+    <dimen name="posts_list_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
+
     <!--site creation-->
     <dimen name="site_creation_segments_icon_size">24dp</dimen>
     <dimen name="site_creation_segments_list_divider_start_margin">72dp</dimen>
