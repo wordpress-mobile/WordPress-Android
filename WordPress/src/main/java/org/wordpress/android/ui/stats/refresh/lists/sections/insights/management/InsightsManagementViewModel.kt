@@ -4,7 +4,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import androidx.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
@@ -14,7 +16,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.ScopedViewModel
-import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -24,8 +25,10 @@ class InsightsManagementViewModel @Inject constructor(
     private val statsStore: StatsStore
 ) : ScopedViewModel(mainDispatcher) {
     private val _removedInsights = MutableLiveData<List<InsightModel>>()
-    val removedInsights: LiveData<List<InsightModel>>
-        get() = _removedInsights
+    val removedInsights: LiveData<List<InsightModel>> = _removedInsights
+
+    private val _addedInsights = MutableLiveData<List<InsightModel>>()
+    val addedInsights: LiveData<List<InsightModel>> = _addedInsights
 
     private val mutableSnackbarMessage = MutableLiveData<Int>()
 
@@ -34,13 +37,19 @@ class InsightsManagementViewModel @Inject constructor(
     }
 
     fun start() {
-        loadRemovedInsights()
+        loadInsights()
     }
 
-    fun loadRemovedInsights() {
+    private fun loadInsights() {
         launch {
             val model = statsStore.getInsightsManagementModel(siteProvider.siteModel)
-            _removedInsights.value = model.removedTypes.map { InsightModel(it) }
+            _addedInsights.value = model.addedTypes
+                    .filter { it != FOLLOWER_TOTALS && it != ANNUAL_SITE_STATS }
+                    .map { InsightModel(it, true) }
+
+            _removedInsights.value = model.removedTypes
+                    .filter { it != FOLLOWER_TOTALS && it != ANNUAL_SITE_STATS }
+                    .map { InsightModel(it, false) }
         }
     }
 
@@ -48,7 +57,7 @@ class InsightsManagementViewModel @Inject constructor(
         mutableSnackbarMessage.value = null
     }
 
-    class InsightModel(insightsTypes: InsightsTypes) {
+    class InsightModel(insightsTypes: InsightsTypes, val isAdded: Boolean) {
         @StringRes val name: Int = when (insightsTypes) {
             LATEST_POST_SUMMARY -> R.string.stats_insights_latest_post_summary
             MOST_POPULAR_DAY_AND_HOUR -> R.string.stats_insights_popular

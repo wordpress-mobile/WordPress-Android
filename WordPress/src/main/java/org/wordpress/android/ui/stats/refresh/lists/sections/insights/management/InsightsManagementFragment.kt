@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ class InsightsManagementFragment : DaggerFragment() {
 
     private fun initializeViews() {
         removedInsights.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        addedInsights.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,19 +62,21 @@ class InsightsManagementFragment : DaggerFragment() {
 
         viewModel.removedInsights.observe(this, Observer {
             it?.let { items ->
-                updateRemovedInsights(items)
+                updateInsights(items, removedInsights)
+            }
+        })
+
+        viewModel.addedInsights.observe(this, Observer {
+            it?.let { items ->
+                updateInsights(items, addedInsights)
             }
         })
     }
 
-    private fun updateRemovedInsights(insights: List<InsightModel>) {
-        val adapter: InsightsManagementAdapter
-        if (removedInsights.adapter == null) {
-            adapter = InsightsManagementAdapter()
-            removedInsights.adapter = adapter
-        } else {
-            adapter = removedInsights.adapter as InsightsManagementAdapter
+    private fun updateInsights(insights: List<InsightModel>, recyclerView: RecyclerView) {
+        if (recyclerView.adapter == null) {
+            recyclerView.adapter = InsightsManagementAdapter()
         }
-        adapter.submitList(insights)
+        (recyclerView.adapter as InsightsManagementAdapter).submitList(insights)
     }
 }
