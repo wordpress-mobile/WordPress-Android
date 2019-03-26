@@ -158,7 +158,6 @@ public class PluginDetailActivity extends AppCompatActivity {
     protected boolean mIsShowingRemovePluginConfirmationDialog;
     protected boolean mIsShowingInstallFirstPluginConfirmationDialog;
     protected boolean mIsShowingAutomatedTransferProgress;
-    protected boolean mIsShowingDomainCreditCheckProgress;
 
     // These flags reflects the UI state
     protected boolean mIsActive;
@@ -202,6 +201,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
+        boolean isShowingDomainCreditCheckProgress = false;
+
         if (savedInstanceState == null) {
             mIsActive = mPlugin.isActive();
             mIsAutoUpdateEnabled = mPlugin.isAutoUpdateEnabled();
@@ -220,7 +221,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                     .getBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG);
             mIsShowingAutomatedTransferProgress = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS);
-            mIsShowingDomainCreditCheckProgress = savedInstanceState
+            isShowingDomainCreditCheckProgress = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS);
         }
 
@@ -251,7 +252,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             confirmInstallPluginForAutomatedTransfer();
         }
 
-        if (mIsShowingDomainCreditCheckProgress) {
+        if (isShowingDomainCreditCheckProgress) {
             showDomainCreditsCheckProgressDialog();
         }
 
@@ -331,9 +332,10 @@ public class PluginDetailActivity extends AppCompatActivity {
     protected void onDestroy() {
         // Even though the progress dialog will be destroyed, when it's re-created sometimes the spinner
         // would get stuck. This seems to be helping with that.
-        if (mRemovePluginProgressDialog != null && mRemovePluginProgressDialog.isShowing()) {
-            mRemovePluginProgressDialog.cancel();
-        }
+        cancelRemovePluginProgressDialog();
+
+        cancelDomainCreditsCheckProgressDialog();
+
         mDispatcher.unregister(this);
         super.onDestroy();
     }
@@ -385,7 +387,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG,
                 mIsShowingInstallFirstPluginConfirmationDialog);
         outState.putBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS, mIsShowingAutomatedTransferProgress);
-        outState.putBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS, mIsShowingDomainCreditCheckProgress);
+        outState.putBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS,
+                mCheckingDomainCreditsProgressDialog != null & mCheckingDomainCreditsProgressDialog.isShowing());
     }
 
     // UI Helpers
