@@ -80,7 +80,7 @@ class PostListMainViewModel @Inject constructor(
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState.Idle(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
-                isAuthorFilterVisible = site.isWPCom,
+                isAuthorFilterVisible = site.isUsingWpComRestApi,
                 authorFilterSelection = authorFilterSelection,
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection)
         )

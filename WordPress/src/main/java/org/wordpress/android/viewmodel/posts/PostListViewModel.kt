@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.AuthorFilter
 import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
@@ -32,6 +33,7 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
@@ -47,6 +49,8 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
@@ -112,6 +116,7 @@ class PostListViewModel @Inject constructor(
     private val uploadStore: UploadStore,
     private val mediaStore: MediaStore,
     private val postStore: PostStore,
+    private val accountStore: AccountStore,
     private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     connectionStatus: LiveData<ConnectionStatus>
@@ -317,8 +322,14 @@ class PostListViewModel @Inject constructor(
         }
         this.site = site
         this.postListType = postListType
+
         this.listDescriptor = if (site.isUsingWpComRestApi) {
-            PostListDescriptorForRestSite(site = site, statusList = postListType.postStatuses)
+            val author: AuthorFilter = when (authorFilter) {
+                ME -> AuthorFilter.SpecificAuthor(accountStore.account.userId)
+                EVERYONE -> AuthorFilter.Everyone
+            }
+
+            PostListDescriptorForRestSite(site = site, statusList = postListType.postStatuses, author = author)
         } else {
             PostListDescriptorForXmlRpcSite(site = site, statusList = postListType.postStatuses)
         }
