@@ -15,6 +15,7 @@ import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,6 +72,7 @@ import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -709,11 +711,28 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updatePublishDate(Calendar calendar) {
         getPost().setDateCreated(DateTimeUtils.iso8601FromDate(calendar.getTime()));
-        // Posts that are scheduled have a `future` date for REST but their status should be set to `published` as
-        // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
-        if (!PostUtils.shouldPublishImmediately(getPost())) {
-            updatePostStatus(PostStatus.PUBLISHED.toString());
+        PostStatus initialPostStatus = PostStatus.fromPost(getPost());
+        boolean isPublishDateInTheFuture = PostUtils.isPublishDateInTheFuture(getPost());
+        PostStatus finalPostStatus = initialPostStatus;
+        if (initialPostStatus == PostStatus.DRAFT && isPublishDateInTheFuture) {
+            // Posts that are scheduled have a `future` date for REST but their status should be set to `published` as
+            // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
+            finalPostStatus = PostStatus.PUBLISHED;
+        } else if (initialPostStatus == PostStatus.PUBLISHED && getPost().isLocalDraft()) {
+            // if user was changing dates for a local draft (not saved yet), only way to have it set to PUBLISH
+            // is by running into the if case above. So, if they're updating the date again by calling
+            // `updatePublishDate()`, get it back to DRAFT.
+            finalPostStatus = PostStatus.DRAFT;
+        } else if (initialPostStatus == PostStatus.SCHEDULED && !isPublishDateInTheFuture) {
+            // if this is a SCHEDULED post and the user is trying to Back-date it now, let's update it to DRAFT.
+            // The other option was to make it published immediately but, let the user actively do that rather than
+            // having the app be smart about it - we don't want to accidentally publish a post.
+            finalPostStatus = PostStatus.DRAFT;
+            // show toast only once, when time is shown
+            ToastUtils.showToast(getActivity(),
+                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT, Gravity.TOP);
         }
+        updatePostStatus(finalPostStatus.toString());
         updatePublishDateTextView();
         updateSaveButton();
     }
@@ -723,17 +742,34 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         PostModel postModel = getPost();
-        if (PostUtils.shouldPublishImmediately(postModel)) {
-            mPublishDateTextView.setText(R.string.immediately);
-        } else {
-            String dateCreated = postModel.getDateCreated();
-            if (!TextUtils.isEmpty(dateCreated)) {
-                String formattedDate = DateUtils.formatDateTime(getActivity(),
-                                                                DateTimeUtils.timestampFromIso8601Millis(dateCreated),
-                                                                getDateTimeFlags());
-                mPublishDateTextView.setText(formattedDate);
+        String labelToUse;
+        String dateCreated = postModel.getDateCreated();
+        if (!TextUtils.isEmpty(dateCreated)) {
+            String formattedDate = DateUtils.formatDateTime(getActivity(),
+                    DateTimeUtils.timestampFromIso8601Millis(dateCreated),
+                    getDateTimeFlags());
+
+            PostStatus status = PostStatus.fromPost(postModel);
+            if (status == PostStatus.SCHEDULED) {
+                labelToUse = getString(R.string.scheduled_for, formattedDate);
+            } else if (status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE) {
+                labelToUse = getString(R.string.published_on, formattedDate);
+            } else if (postModel.isLocalDraft() && PostUtils.shouldPublishImmediately(postModel)) {
+                // only show Publish "Immediate" label if it's a local draft. If it's also saved online,
+                // then show the back-date appropriately.
+                labelToUse = getString(R.string.immediately);
+            } else if (PostUtils.isPublishDateInTheFuture(postModel)) {
+                labelToUse = getString(R.string.schedule_for, formattedDate);
+            } else {
+                labelToUse = getString(R.string.publish_on, formattedDate);
             }
+        } else if (PostUtils.shouldPublishImmediatelyOptionBeAvailable(postModel)) {
+            labelToUse = getString(R.string.immediately);
+        } else {
+            // TODO: What should the label be if there is no specific date and this is not a DRAFT?
+            labelToUse = "";
         }
+        mPublishDateTextView.setText(labelToUse);
     }
 
     private void updateCategoriesTextView() {
@@ -888,9 +924,6 @@ public class EditPostSettingsFragment extends Fragment {
 
     private Calendar getCurrentPublishDateAsCalendar() {
         PostModel postModel = getPost();
-        if (PostUtils.shouldPublishImmediately(postModel)) {
-            return Calendar.getInstance();
-        }
         Calendar calendar = Calendar.getInstance();
         String dateCreated = postModel.getDateCreated();
         // Set the currently selected time if available
