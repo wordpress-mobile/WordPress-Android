@@ -341,7 +341,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             notificationManager.createNotificationChannel(normalChannel);
 
 
-            // Create the IMPORTANT channel (used for 2fa auth)
+            // Create the IMPORTANT channel (used for 2fa auth, for example)
             NotificationChannel importantChannel = new NotificationChannel(
                     getString(R.string.notification_channel_important_id),
                     getString(R.string.notification_channel_important_title), NotificationManager.IMPORTANCE_HIGH);
@@ -512,7 +512,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         }
 
         if (!event.isError() && mAccountStore.hasAccessToken()) {
-            // previously the reader database resets on logout but this meant losing saved posts
+            // previously we reset the reader database on logout but this meant losing saved posts
             // so now we only reset it when the user id changes
             if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
                 long thisUserId = mAccountStore.getAccount().getUserId();
