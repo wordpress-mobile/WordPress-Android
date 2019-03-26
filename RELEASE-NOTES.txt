@@ -1,3 +1,7 @@
+12.2
+-----
+* Fixed minor issue with Google SmartLock
+
 12.1
 -----
 * Design improvements for the new site creation flow
