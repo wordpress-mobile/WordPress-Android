@@ -284,7 +284,6 @@ public class PostUtils {
     static boolean isPublishDateInTheFuture(PostModel postModel) {
         Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
         Date now = new Date();
-        // Publish immediately for posts that don't have any date set yet and drafts with publish dates in the past
         return pubDate != null && pubDate.after(now);
     }
 
