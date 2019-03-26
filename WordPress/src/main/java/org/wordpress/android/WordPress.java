@@ -183,7 +183,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     };
 
     /**
-     * Delete expired stats cache
+     * Delete stats cache that is already expired
      */
     public static RateLimitedTask sDeleteExpiredStats = new RateLimitedTask(SECONDS_BETWEEN_DELETE_STATS) {
         protected boolean run() {
@@ -221,15 +221,15 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
-        // Initialize WellSql
+        // Init WellSql
         WellSql.init(new WellSqlConfig(getApplicationContext()));
 
-        // Initialize Dagger
+        // Init Dagger
         initDaggerComponent();
         component().inject(this);
         mDispatcher.register(this);
 
-        // Initialize static fields from dagger injected singletons, for legacy Actions and Utilities
+        // Init static fields from dagger injected singletons, for legacy Actions and Utilities
         sRequestQueue = mRequestQueue;
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
@@ -283,7 +283,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
         // with memory usage and the use of Configuration). More information: http://bit.ly/2H1KTQo
-        // Note: Android < 21 will crash if removed
+        // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // verify media is sanitized
@@ -292,7 +292,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // remove expired lists
         mDispatcher.dispatch(ListActionBuilder.newRemoveExpiredListsAction(new RemoveExpiredListsPayload()));
 
-        // setup the Credentials Client so it can be cleaned on wpcom logout
+        // setup the Credentials Client so we can clean it up on wpcom logout
         mCredentialsClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
@@ -334,8 +334,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             NotificationChannel normalChannel = new NotificationChannel(
                     getString(R.string.notification_channel_normal_id),
                     getString(R.string.notification_channel_general_title), NotificationManager.IMPORTANCE_DEFAULT);
-            // Register the channel with the system
-            // Do not change the importance or other notification behaviors after this
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
             NotificationManager notificationManager = (NotificationManager) getSystemService(
                     NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(normalChannel);
@@ -345,16 +345,16 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             NotificationChannel importantChannel = new NotificationChannel(
                     getString(R.string.notification_channel_important_id),
                     getString(R.string.notification_channel_important_title), NotificationManager.IMPORTANCE_HIGH);
-            // Register the channel with the system
-            // Do not change the importance or other notification behaviors after this
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
             notificationManager.createNotificationChannel(importantChannel);
 
             // Create the REMINDER channel (used for various reminders, like Quick Start, etc.)
             NotificationChannel reminderChannel = new NotificationChannel(
                     getString(R.string.notification_channel_reminder_id),
                     getString(R.string.notification_channel_reminder_title), NotificationManager.IMPORTANCE_LOW);
-            // Register the channel with the system
-            // Do not change the importance or other notification behaviors after this
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
             notificationManager.createNotificationChannel(reminderChannel);
 
             // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
@@ -365,8 +365,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             transientChannel.setSound(null, null);
             transientChannel.enableVibration(false);
             transientChannel.enableLights(false);
-            // Register the channel with the system
-            // Do not change the importance or other notification behaviors after this
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
             notificationManager.createNotificationChannel(transientChannel);
         }
     }
@@ -395,13 +395,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     /**
-     * Application.onCreate is called before any activity, service, or receiver.
-     * Application.onCreate can be called while the app is in background by a sticky service or a receiver,
-     * so Application.onCreate should not be making network request
+     * Application.onCreate is called before any activity, service, or receiver - it can be called while the app
+     * is in background by a sticky service or a receiver, so we don't want Application.onCreate to make network request
      * or other heavy tasks.
      * <p>
      * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
-     * screen for the first time. Heavy calls will be on first activity startup instead of app startup.
+     * screen for the first time. This allows us to have heavy calls on first activity startup instead of app startup.
      */
     public void deferredInit() {
         AppLog.i(T.UTILS, "Deferred Initialisation");
@@ -514,7 +513,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         if (!event.isError() && mAccountStore.hasAccessToken()) {
             // previously the reader database resets on logout but this meant losing saved posts
-            // now the reader database only resets when the user id changes
+            // so now we only reset it when the user id changes
             if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
                 long thisUserId = mAccountStore.getAccount().getUserId();
                 long lastUserId = AppPrefs.getLastUsedUserId();
