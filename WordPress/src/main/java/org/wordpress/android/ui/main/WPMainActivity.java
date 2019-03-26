@@ -523,11 +523,7 @@ public class WPMainActivity extends AppCompatActivity implements
         // if no specific post id passed, show the list
         if (postId == 0) {
             // show list
-            if (isPage) {
-                ActivityLauncher.viewCurrentBlogPages(this, getSelectedSite());
-            } else {
-                ActivityLauncher.viewCurrentBlogPosts(this, getSelectedSite());
-            }
+            ActivityLauncher.viewCurrentBlogPages(this, getSelectedSite());
         } else {
             PostModel post = mPostStore.getPostByLocalPostId(postId);
             ActivityLauncher.editPostOrPageForResult(this, getSelectedSite(), post);
