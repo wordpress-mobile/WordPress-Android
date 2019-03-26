@@ -711,12 +711,12 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updatePublishDate(Calendar calendar) {
         getPost().setDateCreated(DateTimeUtils.iso8601FromDate(calendar.getTime()));
-        // Posts that are scheduled have a `future` date for REST but their status should be set to `published` as
-        // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
         PostStatus initialPostStatus = PostStatus.fromPost(getPost());
         boolean isPublishDateInTheFuture = PostUtils.isPublishDateInTheFuture(getPost());
         PostStatus finalPostStatus = initialPostStatus;
         if (initialPostStatus == PostStatus.DRAFT && isPublishDateInTheFuture) {
+            // Posts that are scheduled have a `future` date for REST but their status should be set to `published` as
+            // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
             finalPostStatus = PostStatus.PUBLISHED;
         } else if (initialPostStatus == PostStatus.PUBLISHED && getPost().isLocalDraft()) {
             // if user was changing dates for a local draft (not saved yet), only way to have it set to PUBLISH
