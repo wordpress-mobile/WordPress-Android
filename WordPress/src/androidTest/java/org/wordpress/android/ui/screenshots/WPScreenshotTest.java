@@ -35,6 +35,9 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDis
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
 import static org.wordpress.android.support.WPSupportUtils.waitForSwipeRefreshLayoutToStopReloading;
+import static org.wordpress.android.test.BuildConfig.SCREENSHOT_LOGINPASSWORD;
+import static org.wordpress.android.test.BuildConfig.SCREENSHOT_LOGINUSERNAME;
+
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class WPScreenshotTest extends BaseTest {
@@ -56,11 +59,50 @@ public class WPScreenshotTest extends BaseTest {
         // Never show the Gutenberg dialog when opening a post
         AppPrefs.setGutenbergInformativeDialogDisabled(true);
 
+        tmpWPLogin();
         editBlogPost();
         manageMedia();
         navigateStats();
         navigateNotifications();
-        wpLogout();
+        tmpWpLogout();
+    }
+
+    private void tmpWPLogin() {
+        // If we're already logged in, log out before starting
+        if (!isElementDisplayed(R.id.login_button)) {
+            this.tmpWpLogout();
+        }
+
+        // Login Prologue – We want to log in, not sign up
+        // See LoginPrologueFragment
+        clickOn(R.id.login_button);
+
+        // Email Address Screen – Fill it in and click "Next"
+        // See LoginEmailFragment
+        populateTextField(R.id.input, SCREENSHOT_LOGINUSERNAME);
+        clickOn(R.id.primary_button);
+
+        // Receive Magic Link or Enter Password Screen – Choose "Enter Password"
+        // See LoginMagicLinkRequestFragment
+        clickOn(R.id.login_enter_password);
+
+        // Password Screen – Fill it in and click "Next"
+        // See LoginEmailPasswordFragment
+        populateTextField(R.id.input, SCREENSHOT_LOGINPASSWORD);
+        clickOn(R.id.primary_button);
+
+        // Login Confirmation Screen – Click "Continue"
+        // See LoginEpilogueFragment
+        clickOn(R.id.primary_button);
+    }
+
+    private void tmpWpLogout() {
+        // Click on the "Me" tab in the nav, then choose "Log Out"
+        clickOn(R.id.nav_me);
+        scrollToThenClickOn(R.id.row_logout);
+
+        // Confirm that we want to log out
+        clickOn(android.R.id.button1);
     }
 
     private void editBlogPost() {
