@@ -189,7 +189,7 @@ class PostListMainViewModel @Inject constructor(
         @ColorRes val dropDownBackground: Int
     ) {
         class Everyone(@ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
-                AuthorFilterSelection.EVERYONE.id,
+                id = AuthorFilterSelection.EVERYONE.id,
                 text = UiStringRes(R.string.post_list_author_everyone),
                 avatarUrl = null,
                 imageType = MULTI_USER_AVATAR_GREY_BACKGROUND,
@@ -197,7 +197,7 @@ class PostListMainViewModel @Inject constructor(
         )
 
         class Me(avatarUrl: String?, @ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
-                AuthorFilterSelection.ME.id,
+                id = AuthorFilterSelection.ME.id,
                 text = UiStringRes(R.string.post_list_author_me),
                 avatarUrl = avatarUrl,
                 imageType = AVATAR_WITH_BACKGROUND,
