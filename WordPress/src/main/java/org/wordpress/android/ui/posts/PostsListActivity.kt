@@ -118,7 +118,7 @@ class PostsListActivity : AppCompatActivity(),
             override fun onNothingSelected(parent: AdapterView<*>) {}
 
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                viewModel.updateAuthorFilterSelection(authorSelectionAdapter.getItemId(position))
+                viewModel.updateAuthorFilterSelection(id)
             }
         }
 
