@@ -64,17 +64,11 @@ class InsightsManagementFragment : DaggerFragment() {
         viewModel.start()
     }
 
-    private fun setupObservers(activity: FragmentActivity) {
+    private fun setupObservers() {
+        val view = insightsManagementScrollView
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
-            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
-            if (holder != null && parent != null) {
-                if (holder.buttonTitleRes == null) {
-                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
-                } else {
-                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
-                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
-                    snackbar.show()
-                }
+            if (holder != null && view != null) {
+                Snackbar.make(view, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
             }
         })
 
