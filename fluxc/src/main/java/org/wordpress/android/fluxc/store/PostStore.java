@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoveAllPosts;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -438,7 +439,7 @@ public class PostStore extends Store {
     /**
      * Returns the local posts for the given post list descriptor.
      */
-    public List<PostModel> getLocalPostsForDescriptor(PostListDescriptor postListDescriptor) {
+    public @NonNull List<LocalId> getLocalPostIdsForDescriptor(PostListDescriptor postListDescriptor) {
         String searchQuery = null;
         if (postListDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) postListDescriptor;
@@ -473,7 +474,7 @@ public class PostStore extends Store {
         } else {
             order = SelectQuery.ORDER_DESCENDING;
         }
-        return PostSqlUtils.getLocalPostsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
+        return PostSqlUtils.getLocalPostIdsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
     }
 
     /**
