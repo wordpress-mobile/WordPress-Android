@@ -33,7 +33,8 @@ class InternalPagedListDataStore<LD: ListDescriptor, ID, T>(
      * Since [InternalPagedListDataStore] takes a snapshot of the identifiers for the list when it's created, this
      * value will be valid and unchanged during the lifecycle of this instance.
      */
-    val totalSize: Int = itemIdentifiers.size
+    val totalSize: Int
+        get() = itemIdentifiers.size
 
     /**
      * Returns the list of items [T] by propagating the call to [ListItemDataStoreInterface]
@@ -46,8 +47,10 @@ class InternalPagedListDataStore<LD: ListDescriptor, ID, T>(
      * internal [itemIdentifiers].
      */
     private fun getItemIds(startPosition: Int, endPosition: Int): List<ID> {
-        if (startPosition < 0 || endPosition < 0 || startPosition > endPosition || endPosition >= totalSize) {
-            throw IllegalArgumentException("Illegal start or end position")
+        if (startPosition < 0 || endPosition < 0 || startPosition > endPosition || endPosition > totalSize) {
+            throw IllegalArgumentException(
+                    "Illegal start($startPosition) or end($endPosition) position for totalSize($totalSize)"
+            )
         }
 
         return itemIdentifiers.subList(startPosition, endPosition)

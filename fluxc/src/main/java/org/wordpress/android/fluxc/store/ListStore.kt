@@ -78,14 +78,15 @@ class ListStore @Inject constructor(
      * @return A [PagedListWrapper] that provides all the necessary information to consume a list such as its data,
      * whether the first page is being fetched, whether there are any errors etc. in `LiveData` format.
      */
+    // TODO: Cleanup this method. I am not sure what that cleanup means, but it's hard to track what's going on here.
     fun <LD: ListDescriptor, ID, T> getList(
         listDescriptor: LD,
         dataStore: ListItemDataStoreInterface<LD, ID, T>,
         lifecycle: Lifecycle
     ): PagedListWrapper<T> {
         // Helper functions
-        val remoteItemIds = getListItems(listDescriptor).map { RemoteId(value = it) }
-        val isListFullyFetched = getListState(listDescriptor) == FETCHED
+        val getRemoteItemIds = { getListItems(listDescriptor).map { RemoteId(value = it) } }
+        val getIsListFullyFetched = { getListState(listDescriptor) == FETCHED }
         val fetchFirstPage = {
             handleFetchList(listDescriptor, false) { offset ->
                 dataStore.fetchList(listDescriptor, offset)
@@ -98,8 +99,8 @@ class ListStore @Inject constructor(
                 createDataStore = {
                     InternalPagedListDataStore(
                             listDescriptor = listDescriptor,
-                            remoteItemIds = remoteItemIds,
-                            isListFullyFetched = isListFullyFetched,
+                            remoteItemIds = getRemoteItemIds(),
+                            isListFullyFetched = getIsListFullyFetched(),
                             itemDataStore = dataStore
                     )
                 })
