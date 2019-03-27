@@ -15,6 +15,7 @@ import org.wordpress.android.util.image.ImageManager
 
 class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHolder>() {
     private var items: List<StatsBlock> = listOf()
+
     fun update(newItems: List<StatsBlock>) {
         val diffResult = DiffUtil.calculateDiff(
                 StatsBlockDiffCallback(
@@ -23,7 +24,6 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
                 )
         )
         items = newItems
-
         diffResult.dispatchUpdatesTo(this)
     }
 
