@@ -9,10 +9,10 @@ import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataSto
  *
  * @param createDataStore A function that creates an instance of [InternalPagedListDataStore].
  */
-class PagedListFactory<T>(
-    private val createDataStore: () -> InternalPagedListDataStore<T>
+class PagedListFactory<LD: ListDescriptor, ID, T>(
+    private val createDataStore: () -> InternalPagedListDataStore<LD, ID, T>
 ) : DataSource.Factory<Int, T>() {
-    private var currentSource: PagedListPositionalDataSource<T>? = null
+    private var currentSource: PagedListPositionalDataSource<LD, ID, T>? = null
 
     override fun create(): DataSource<Int, T> {
         val source = PagedListPositionalDataSource(dataStore = createDataStore.invoke())
@@ -30,8 +30,8 @@ class PagedListFactory<T>(
  *
  * @param dataStore Describes how to take certain actions such as fetching list for the item type [T].
  */
-private class PagedListPositionalDataSource<T>(
-    private val dataStore: InternalPagedListDataStore<T>
+private class PagedListPositionalDataSource<LD: ListDescriptor, ID, T>(
+    private val dataStore: InternalPagedListDataStore<LD, ID, T>
 ) : PositionalDataSource<T>() {
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
         val startPosition = computeInitialLoadPosition(params, dataStore.totalSize)
