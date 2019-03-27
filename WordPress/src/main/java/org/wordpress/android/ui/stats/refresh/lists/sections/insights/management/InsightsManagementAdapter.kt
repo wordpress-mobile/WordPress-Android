@@ -63,7 +63,7 @@ class InsightModelDiffCallback(
     private val newList: List<InsightModel>
 ) : Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition] == newList[oldItemPosition]
+        return oldList[oldItemPosition].insightsTypes == newList[newItemPosition].insightsTypes
     }
 
     override fun getOldListSize(): Int = oldList.size
@@ -71,6 +71,6 @@ class InsightModelDiffCallback(
     override fun getNewListSize(): Int = newList.size
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].name == newList[oldItemPosition].name
+        return oldList[oldItemPosition] == newList[newItemPosition]
     }
 }
