@@ -1032,6 +1032,7 @@
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
     <string name="stats_insights_add_insights_header">Add Insights</string>
     <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
+    <string name="stats_insights_saved_message">Insights have been saved</string>
 
     <!-- Stats post detail -->
     <string name="stats_detail_months_and_years">Months and Years</string>

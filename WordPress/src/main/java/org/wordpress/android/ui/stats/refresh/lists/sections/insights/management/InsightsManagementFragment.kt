@@ -15,6 +15,9 @@ import kotlinx.android.synthetic.main.insights_management_fragment.*
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
 import javax.inject.Inject
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import org.wordpress.android.R
 
 class InsightsManagementFragment : DaggerFragment() {
@@ -23,7 +26,21 @@ class InsightsManagementFragment : DaggerFragment() {
     private lateinit var addedInsightsTouchHelper: ItemTouchHelper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.insights_management_fragment, container, false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater?.inflate(R.menu.menu_insights_management, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.save_insights) {
+            viewModel.onSaveInsights()
+        }
+        return true
     }
 
     private fun initializeViews() {

@@ -4,10 +4,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import androidx.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.stats.InsightTypesModel
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.*
@@ -53,11 +52,22 @@ class InsightsManagementViewModel @Inject constructor(
         }
     }
 
+    fun onSaveInsights() {
+        launch {
+            val addedTypes = addedInsights.value?.map { it.insightsTypes } ?: emptyList()
+            val removedTypes = removedInsights.value?.map { it.insightsTypes } ?: emptyList()
+            val model = InsightTypesModel(addedTypes, removedTypes + FOLLOWER_TOTALS + ANNUAL_SITE_STATS)
+            statsStore.updateTypes(siteProvider.siteModel, model)
+
+            mutableSnackbarMessage.value = R.string.stats_insights_saved_message
+        }
+    }
+
     override fun onCleared() {
         mutableSnackbarMessage.value = null
     }
 
-    class InsightModel(insightsTypes: InsightsTypes, val isAdded: Boolean) {
+    class InsightModel(val insightsTypes: InsightsTypes, val isAdded: Boolean) {
         @StringRes val name: Int = when (insightsTypes) {
             LATEST_POST_SUMMARY -> R.string.stats_insights_latest_post_summary
             MOST_POPULAR_DAY_AND_HOUR -> R.string.stats_insights_popular
