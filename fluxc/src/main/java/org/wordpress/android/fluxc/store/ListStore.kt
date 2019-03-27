@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_ALL_LISTS
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_EXPIRED_LISTS
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
@@ -23,9 +24,9 @@ import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.ListState.FETCHED
 import org.wordpress.android.fluxc.model.list.PagedListFactory
-import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
-import org.wordpress.android.fluxc.model.list.datastore.ListDataStoreInterface
+import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataStore
+import org.wordpress.android.fluxc.model.list.datastore.ListItemDataStoreInterface
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
@@ -70,26 +71,21 @@ class ListStore @Inject constructor(
      * This is the function that'll be used to consume lists.
      *
      * @param listDescriptor Describes which list will be consumed
-     * @param dataStore Describes how to take certain actions such as fetching list for the item type [T].
+     * @param dataStore Describes how to take certain actions such as fetching a list for the item type [T].
      * @param lifecycle The lifecycle of the client that'll be consuming this list. It's used to make sure everything
      * is cleaned up properly once the client is destroyed.
-     * @param transform A transform function from the actual item type [T], to the resulting item type [R]. In many
-     * cases there are a lot of expensive calculations that needs to be made before an item can be used. This function
-     * provides a way to do that during the pagination step in a background thread, so the clients won't need to
-     * worry about these expensive operations.
      *
      * @return A [PagedListWrapper] that provides all the necessary information to consume a list such as its data,
      * whether the first page is being fetched, whether there are any errors etc. in `LiveData` format.
      */
-    fun <T, R> getList(
-        listDescriptor: ListDescriptor,
-        dataStore: ListDataStoreInterface<T>,
-        lifecycle: Lifecycle,
-        transform: (T) -> R
-    ): PagedListWrapper<R> {
+    fun <LD: ListDescriptor, ID, T> getList(
+        listDescriptor: LD,
+        dataStore: ListItemDataStoreInterface<LD, ID, T>,
+        lifecycle: Lifecycle
+    ): PagedListWrapper<T> {
         // Helper functions
-        val getList = { descriptor: ListDescriptor -> getListItems(descriptor) }
-        val isListFullyFetched = { descriptor: ListDescriptor -> getListState(descriptor) == FETCHED }
+        val remoteItemIds = getListItems(listDescriptor).map { RemoteId(value = it) }
+        val isListFullyFetched = getListState(listDescriptor) == FETCHED
         val fetchFirstPage = {
             handleFetchList(listDescriptor, false) { offset ->
                 dataStore.fetchList(listDescriptor, offset)
@@ -98,9 +94,17 @@ class ListStore @Inject constructor(
         val isEmpty = { getListItemsCount(listDescriptor) == 0L }
 
         // Create the PagedList
-        val factory = PagedListFactory(dataStore, listDescriptor, getList, isListFullyFetched, transform)
-        val callback = object : BoundaryCallback<PagedListItemType<R>>() {
-            override fun onItemAtEndLoaded(itemAtEnd: PagedListItemType<R>) {
+        val factory = PagedListFactory(
+                createDataStore = {
+                    InternalPagedListDataStore(
+                            listDescriptor = listDescriptor,
+                            remoteItemIds = remoteItemIds,
+                            isListFullyFetched = isListFullyFetched,
+                            itemDataStore = dataStore
+                    )
+                })
+        val callback = object : BoundaryCallback<T>() {
+            override fun onItemAtEndLoaded(itemAtEnd: T) {
                 // Load more items if we are near the end of list
                 handleFetchList(listDescriptor, true) { offset ->
                     dataStore.fetchList(listDescriptor, offset)
@@ -113,7 +117,7 @@ class ListStore @Inject constructor(
                 .setInitialLoadSizeHint(listDescriptor.config.initialLoadSize)
                 .setPageSize(listDescriptor.config.dbPageSize)
                 .build()
-        val listData = LivePagedListBuilder<Int, PagedListItemType<R>>(factory, pagedListConfig)
+        val listData = LivePagedListBuilder<Int, T>(factory, pagedListConfig)
                 .setBoundaryCallback(callback).build()
         return PagedListWrapper(
                 data = listData,
