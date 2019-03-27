@@ -266,17 +266,16 @@ public class PluginDetailActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlansFetched(OnPlansFetched event) {
         if (mCheckingDomainCreditsProgressDialog == null || !mCheckingDomainCreditsProgressDialog.isShowing()) {
-            AppLog.v(T.PLANS, "User cancelled domain credit checking. Ignoring the result.");
+            AppLog.w(T.PLANS, "User cancelled domain credit checking. Ignoring the result.");
             return;
         }
 
         cancelDomainCreditsCheckProgressDialog();
-
         if (event.isError()) {
-            String errorMessage = event.error.type + " - " + event.error.message;
             AppLog.e(T.PLANS, PluginDetailActivity.class.getSimpleName() + ".onPlansFetched: "
-                              + errorMessage);
-            Snackbar.make(mContainer, errorMessage, AccessibilityUtils.getSnackbarDuration(this)).show();
+                              + event.error.type + " - " + event.error.message);
+            Snackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error),
+                    AccessibilityUtils.getSnackbarDuration(this)).show();
         } else {
             // This should not happen
             if (event.plans == null) {
@@ -284,7 +283,8 @@ public class PluginDetailActivity extends AppCompatActivity {
                 if (BuildConfig.DEBUG) {
                     throw new IllegalStateException(errorMessage);
                 }
-                Snackbar.make(mContainer, errorMessage, AccessibilityUtils.getSnackbarDuration(this)).show();
+                Snackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error),
+                        AccessibilityUtils.getSnackbarDuration(this)).show();
                 AppLog.e(T.PLANS, errorMessage);
                 return;
             }
@@ -402,7 +402,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 mIsShowingInstallFirstPluginConfirmationDialog);
         outState.putBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS, mIsShowingAutomatedTransferProgress);
         outState.putBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS,
-                mCheckingDomainCreditsProgressDialog != null & mCheckingDomainCreditsProgressDialog.isShowing());
+                mCheckingDomainCreditsProgressDialog != null && mCheckingDomainCreditsProgressDialog.isShowing());
     }
 
     // UI Helpers

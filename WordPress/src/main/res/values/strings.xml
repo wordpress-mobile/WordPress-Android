@@ -1915,6 +1915,7 @@
     <string name="plugin_install_custom_domain_required_dialog_message">To install plugins, you need to have a custom domain associated with your site.</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Register domain</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Checking domain credits</string>
+    <string name="plugin_check_domain_credit_error">Failed to check available domain credits</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Install plugin</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute. During this time you won’t be able to make changes to your site.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Install</string>
