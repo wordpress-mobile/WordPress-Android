@@ -57,7 +57,15 @@ class PostsListActivity : AppCompatActivity(),
     private val currentFragment: PostListFragment?
         get() = postsPagerAdapter.getItemAtPosition(pager.currentItem)
 
-    private var updatingUI = false
+    private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+
+        override fun onPageSelected(position: Int) {
+            viewModel.onTabChanged(position)
+        }
+
+        override fun onPageScrollStateChanged(state: Int) {}
+    }
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleManager.setLocale(newBase))
@@ -130,17 +138,7 @@ class PostsListActivity : AppCompatActivity(),
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
         // this method call needs to be below `clearOnPageChangeListeners` as it internally adds an OnPageChangeListener
         tabLayout.setupWithViewPager(pager)
-        pager.addOnPageChangeListener(object : OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-
-            override fun onPageSelected(position: Int) {
-                if (updatingUI) return
-
-                viewModel.onTabChanged(position)
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {}
-        })
+        pager.addOnPageChangeListener(onPageChangeListener)
         fab = findViewById(R.id.fab_button)
         fab.setOnClickListener { viewModel.newPost() }
     }
@@ -173,14 +171,14 @@ class PostsListActivity : AppCompatActivity(),
         })
         viewModel.updatePostsPager.observe(this, Observer { authorFilter ->
             authorFilter?.let {
-                updatingUI = true
+                pager.removeOnPageChangeListener(onPageChangeListener)
 
                 val currentItem: Int = pager.currentItem
                 postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
                 pager.adapter = postsPagerAdapter
                 pager.currentItem = currentItem
 
-                updatingUI = false
+                pager.addOnPageChangeListener(onPageChangeListener)
             }
         })
         viewModel.selectTab.observe(this, Observer { tabIndex ->
