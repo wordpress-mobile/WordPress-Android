@@ -708,7 +708,6 @@ public class WellSqlConfig extends DefaultWellConfig {
                     break;
                 case 62:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
-                    db.execSQL("DROP TABLE IF EXISTS WCProductSettingsModel");
                     db.execSQL("CREATE TABLE WCProductSettingsModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "LOCAL_SITE_ID INTEGER,"
                                + "WEIGHT_UNIT TEXT NOT NULL,"
