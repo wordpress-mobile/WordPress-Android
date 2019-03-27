@@ -35,6 +35,7 @@
     <!-- WordPress.com Colors                 -->
     <!-- wordpress.com/design-handbook/colors -->
     <!-- Blues -->
+    <color name="transparent_blue_wordpress">#000087be</color>
     <color name="blue_wordpress">#0087be</color>
     <color name="blue_light">#78dcfa</color>
     <color name="blue_medium">#00aadc</color>
