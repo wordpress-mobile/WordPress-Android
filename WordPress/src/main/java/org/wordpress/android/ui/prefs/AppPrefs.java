@@ -836,8 +836,8 @@ public class AppPrefs {
     }
 
     @NonNull public static AuthorFilterSelection getAuthorFilterSelection() {
-        int prefString = getInt(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, AuthorFilterSelection.EVERYONE.getId());
-        return AuthorFilterSelection.fromId(prefString, AuthorFilterSelection.EVERYONE);
+        int prefInt = getInt(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, AuthorFilterSelection.getDefaultValue().getId());
+        return AuthorFilterSelection.fromId(prefInt);
     }
 
     public static void setAuthorFilterSelection(@NonNull AuthorFilterSelection selection) {

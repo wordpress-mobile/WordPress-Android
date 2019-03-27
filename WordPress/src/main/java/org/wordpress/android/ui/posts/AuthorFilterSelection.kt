@@ -5,8 +5,11 @@ enum class AuthorFilterSelection(val id: Int) {
 
     companion object {
         @JvmStatic
-        fun fromId(id: Int, default: AuthorFilterSelection): AuthorFilterSelection {
-            return values().firstOrNull { it.id == id } ?: default
+        val defaultValue = EVERYONE
+
+        @JvmStatic
+        fun fromId(id: Int): AuthorFilterSelection {
+            return values().firstOrNull { it.id == id } ?: defaultValue
         }
     }
 }
