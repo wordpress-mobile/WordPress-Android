@@ -96,14 +96,9 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
     }
 
     override fun registerDataSetObserver(observer: DataSetObserver) {
-        for (alreadyAdded in observers) {
-            if (observer == alreadyAdded.get()) {
-                // No need to add since it is already added
-                return
-            }
+        if (!observers.mapNotNull { it.get() }.contains(observer)) {
+            observers.add(WeakReference(observer))
         }
-
-        observers.add(WeakReference(observer))
     }
 
     fun updateItems(newItems: List<AuthorFilterListItemUIState>) {
