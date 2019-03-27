@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -265,19 +266,26 @@ public class PluginDetailActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlansFetched(OnPlansFetched event) {
         if (mCheckingDomainCreditsProgressDialog == null || !mCheckingDomainCreditsProgressDialog.isShowing()) {
-            AppLog.e(T.PLANS, "User cancelled domain credit checking. Ignoring the result.");
+            AppLog.v(T.PLANS, "User cancelled domain credit checking. Ignoring the result.");
             return;
         }
 
         cancelDomainCreditsCheckProgressDialog();
 
         if (event.isError()) {
+            String errorMessage = event.error.type + " - " + event.error.message;
             AppLog.e(T.PLANS, PluginDetailActivity.class.getSimpleName() + ".onPlansFetched: "
-                              + event.error.type + " - " + event.error.message);
+                              + errorMessage);
+            Snackbar.make(mContainer, errorMessage, AccessibilityUtils.getSnackbarDuration(this)).show();
         } else {
             // This should not happen
             if (event.plans == null) {
-                AppLog.e(T.PLANS, "Fetched user plans are null.");
+                String errorMessage = "Failed to fetch user Plans. The result is null.";
+                if (BuildConfig.DEBUG) {
+                    throw new IllegalStateException(errorMessage);
+                }
+                Snackbar.make(mContainer, errorMessage, AccessibilityUtils.getSnackbarDuration(this)).show();
+                AppLog.e(T.PLANS, errorMessage);
                 return;
             }
 
@@ -329,8 +337,9 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void showDomainRegistrationDialog() {
         DialogFragment dialogFragment = new DomainRegistrationPromptDialog();
-        dialogFragment.show(getSupportFragmentManager(),
-                DomainRegistrationPromptDialog.DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(dialogFragment, DomainRegistrationPromptDialog.DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG);
+        ft.commitAllowingStateLoss();
     }
 
     @Override
