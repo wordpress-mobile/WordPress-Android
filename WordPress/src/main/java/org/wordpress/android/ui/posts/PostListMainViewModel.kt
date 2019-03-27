@@ -157,7 +157,6 @@ class PostListMainViewModel @Inject constructor(
         authorFilterSelection: AuthorFilterSelection? = null,
         authorFilterItems: List<AuthorFilterListItemUIState>? = null
     ) {
-        IllegalArgumentException().printStackTrace()
         val currentState = viewState.value
 
         if (currentState == null) {
