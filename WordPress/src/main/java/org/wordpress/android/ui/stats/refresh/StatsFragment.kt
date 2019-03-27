@@ -58,14 +58,8 @@ class StatsFragment : DaggerFragment() {
 
     private var restorePreviousSearch = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-
         return inflater.inflate(R.layout.stats_fragment, container, false)
     }
 
