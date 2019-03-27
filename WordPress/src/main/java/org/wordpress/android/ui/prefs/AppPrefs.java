@@ -216,11 +216,15 @@ public class AppPrefs {
     }
 
     private static long getLong(PrefKey key) {
+        return getLong(key, 0);
+    }
+
+    private static long getLong(PrefKey key, long defaultValue) {
         try {
             String value = getString(key);
             return Long.parseLong(value);
         } catch (NumberFormatException e) {
-            return 0;
+            return defaultValue;
         }
     }
 
@@ -836,11 +840,11 @@ public class AppPrefs {
     }
 
     @NonNull public static AuthorFilterSelection getAuthorFilterSelection() {
-        int prefInt = getInt(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, AuthorFilterSelection.getDefaultValue().getId());
-        return AuthorFilterSelection.fromId(prefInt);
+        long id = getLong(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, AuthorFilterSelection.getDefaultValue().getId());
+        return AuthorFilterSelection.fromId(id);
     }
 
     public static void setAuthorFilterSelection(@NonNull AuthorFilterSelection selection) {
-        setInt(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, selection.getId());
+        setLong(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, selection.getId());
     }
 }

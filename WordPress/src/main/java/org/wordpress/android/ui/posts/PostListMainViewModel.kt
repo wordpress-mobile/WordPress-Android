@@ -95,7 +95,7 @@ class PostListMainViewModel @Inject constructor(
         _postListAction.postValue(PostListAction.NewPost(site))
     }
 
-    fun updateAuthorFilterSelection(selectionId: Int) {
+    fun updateAuthorFilterSelection(selectionId: Long) {
         val selection = AuthorFilterSelection.fromId(selectionId)
 
         updateViewStateTriggerPagerChange(
@@ -182,7 +182,7 @@ class PostListMainViewModel @Inject constructor(
     )
 
     sealed class AuthorFilterListItemUIState(
-        val id: Int,
+        val id: Long,
         val text: UiString,
         val avatarUrl: String?,
         val imageType: ImageType,

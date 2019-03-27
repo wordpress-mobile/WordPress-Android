@@ -53,7 +53,7 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
 
     override fun getItem(position: Int): AuthorFilterListItemUIState = items[position]
 
-    override fun getItemId(position: Int): Long = items[position].id.toLong()
+    override fun getItemId(position: Int): Long = items[position].id
 
     override fun getItemViewType(position: Int): Int = 0
 
