@@ -18,11 +18,15 @@ class InsightsManagementViewHolder(
     private val title: TextView = itemView.findViewById(R.id.itemTitle)
     private val managementButton: ImageButton = itemView.findViewById(R.id.insightsManagementItemButton)
     private val dragAndDropButton: View = itemView.findViewById(R.id.dragAndDropItemButton)
-    fun bind(insightModel: InsightModel): Boolean {
+
+    fun bind(insightModel: InsightModel, onButtonClicked: (InsightModel) -> Unit): Boolean {
         title.setText(insightModel.name)
 
         val buttonImage = if (insightModel.isAdded) R.drawable.ic_remove_circle else R.drawable.ic_add_circle
         managementButton.setImageResource(buttonImage)
+        managementButton.setOnClickListener {
+            onButtonClicked(insightModel)
+        }
 
         if (insightModel.isAdded) {
             dragAndDropButton.setOnTouchListener { _, event ->

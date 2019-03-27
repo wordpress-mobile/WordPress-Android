@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
-import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -85,7 +84,7 @@ class InsightsManagementFragment : DaggerFragment() {
 
     private fun updateRemovedInsights(insights: List<InsightModel>) {
         if (removedInsights.adapter == null) {
-            removedInsights.adapter = InsightsManagementAdapter()
+            removedInsights.adapter = InsightsManagementAdapter({ item -> viewModel.onItemButtonClicked(item) })
         }
         val adapter = removedInsights.adapter as InsightsManagementAdapter
         adapter.update(insights)
@@ -95,6 +94,7 @@ class InsightsManagementFragment : DaggerFragment() {
         var adapter = addedInsights.adapter as? InsightsManagementAdapter
         if (adapter == null) {
             adapter = InsightsManagementAdapter(
+                    { item -> viewModel.onItemButtonClicked(item) },
                     { viewHolder -> addedInsightsTouchHelper.startDrag(viewHolder) },
                     { list -> viewModel.onAddedItemsUpdated(list) }
             )
