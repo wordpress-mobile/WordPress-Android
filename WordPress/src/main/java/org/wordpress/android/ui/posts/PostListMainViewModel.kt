@@ -98,13 +98,16 @@ class PostListMainViewModel @Inject constructor(
     fun updateAuthorFilterSelection(selectionId: Int) {
         val selection = AuthorFilterSelection.fromId(selectionId)
 
-        updateViewState(authorFilterSelection = selection, authorFilterItems = getAuthorFilterItems(selection))
+        updateViewStateTriggerPagerChange(
+                authorFilterSelection = selection,
+                authorFilterItems = getAuthorFilterItems(selection)
+        )
         prefs.postListAuthorSelection = selection
     }
 
     fun onTabChanged(position: Int) {
         val currentPage = POST_LIST_PAGES[position]
-        updateViewState(isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(currentPage))
+        updateViewStateTriggerPagerChange(isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(currentPage))
     }
 
     fun showTargetPost(targetPostId: Int) {
@@ -141,7 +144,7 @@ class PostListMainViewModel @Inject constructor(
     /**
      * Only the non-null variables will be changed in the current state
      */
-    private fun updateViewState(
+    private fun updateViewStateTriggerPagerChange(
         isFabVisible: Boolean? = null,
         isAuthorFilterVisible: Boolean? = null,
         authorFilterSelection: AuthorFilterSelection? = null,
@@ -151,7 +154,9 @@ class PostListMainViewModel @Inject constructor(
 
         if (currentState == null) {
             if (BuildConfig.DEBUG) {
-                throw IllegalStateException("updateViewState should not be called before the initial state is set")
+                throw IllegalStateException(
+                        "updateViewStateTriggerPagerChange should not be called before the initial state is set"
+                )
             }
 
             return
