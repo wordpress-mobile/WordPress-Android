@@ -10,7 +10,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
@@ -150,16 +149,8 @@ class PostListMainViewModel @Inject constructor(
         authorFilterSelection: AuthorFilterSelection? = null,
         authorFilterItems: List<AuthorFilterListItemUIState>? = null
     ) {
-        val currentState = viewState.value
-
-        if (currentState == null) {
-            if (BuildConfig.DEBUG) {
-                throw IllegalStateException(
-                        "updateViewStateTriggerPagerChange should not be called before the initial state is set"
-                )
-            }
-
-            return
+        val currentState = requireNotNull(viewState.value) {
+            "updateViewStateTriggerPagerChange should not be called before the initial state is set"
         }
 
         _viewState.value = PostListMainViewState(
