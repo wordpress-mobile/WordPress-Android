@@ -1,7 +1,11 @@
 package org.wordpress.android.editor;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
@@ -47,12 +51,20 @@ public class GutenbergContainerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mWPAndroidGlueCode = new WPAndroidGlueCode();
+        mWPAndroidGlueCode.onCreate(getContext());
+
+        // clear the content initialization flag since a new ReactRootView has been created;
+        mHasReceivedAnyContent = false;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         boolean isNewPost = getArguments() != null && getArguments().getBoolean(ARG_IS_NEW_POST);
         String localeString = getArguments().getString(ARG_LOCALE);
         Bundle translations = getArguments().getBundle(ARG_TRANSLATIONS);
 
-        mWPAndroidGlueCode = new WPAndroidGlueCode();
-        mWPAndroidGlueCode.onCreate(getContext());
         mWPAndroidGlueCode.onCreateView(
                 getContext(),
                 mHtmlModeEnabled,
@@ -63,8 +75,7 @@ public class GutenbergContainerFragment extends Fragment {
                 localeString,
                 translations);
 
-        // clear the content initialization flag since a new ReactRootView has been created;
-        mHasReceivedAnyContent = false;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
