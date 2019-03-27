@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -7,18 +8,18 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.insights_management_fragment.*
+import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
 import javax.inject.Inject
-import android.support.v7.widget.helper.ItemTouchHelper
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import org.wordpress.android.R
 
 class InsightsManagementFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -51,16 +52,13 @@ class InsightsManagementFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
-
         initializeViews()
-        initializeViewModels(nonNullActivity)
+        initializeViewModels(requireActivity())
     }
 
     private fun initializeViewModels(activity: FragmentActivity) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(InsightsManagementViewModel::class.java)
-        setupObservers(activity)
-
+        setupObservers()
         viewModel.start()
     }
 
@@ -96,7 +94,10 @@ class InsightsManagementFragment : DaggerFragment() {
     private fun updateAddedInsights(insights: List<InsightModel>) {
         var adapter = addedInsights.adapter as? InsightsManagementAdapter
         if (adapter == null) {
-            adapter = InsightsManagementAdapter { viewHolder -> addedInsightsTouchHelper.startDrag(viewHolder) }
+            adapter = InsightsManagementAdapter(
+                    { viewHolder -> addedInsightsTouchHelper.startDrag(viewHolder) },
+                    { list -> viewModel.onAddedItemsUpdated(list) }
+            )
             addedInsights.adapter = adapter
 
             val callback = ItemTouchHelperCallback(adapter)

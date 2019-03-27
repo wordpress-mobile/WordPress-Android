@@ -9,7 +9,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 import java.util.Collections
 
 class InsightsManagementAdapter(
-    private val onStartDrag: ((viewHolder: ViewHolder) -> Unit)? = null
+    private val onStartDrag: ((viewHolder: ViewHolder) -> Unit)? = null,
+    private val ondDragFinished: ((List<InsightModel>) -> Unit)? = null
 ) : Adapter<InsightsManagementViewHolder>(), ItemTouchHelperAdapter {
     private var items = ArrayList<InsightModel>()
 
@@ -21,7 +22,7 @@ class InsightsManagementAdapter(
         holder.bind(items[position])
     }
 
-    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+    override fun onItemMoved(fromPosition: Int, toPosition: Int) {
         if (fromPosition < toPosition) {
             for (i in fromPosition until toPosition) {
                 Collections.swap(items, i, i + 1)
@@ -32,6 +33,10 @@ class InsightsManagementAdapter(
             }
         }
         notifyItemMoved(fromPosition, toPosition)
+    }
+
+    override fun onDragFinished() {
+        ondDragFinished?.invoke(items)
     }
 
     override fun getItemCount(): Int = items.size
@@ -49,7 +54,8 @@ class InsightsManagementAdapter(
 }
 
 interface ItemTouchHelperAdapter {
-    fun onItemMove(fromPosition: Int, toPosition: Int)
+    fun onItemMoved(fromPosition: Int, toPosition: Int)
+    fun onDragFinished()
 }
 
 class InsightModelDiffCallback(

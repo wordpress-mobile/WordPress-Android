@@ -12,6 +12,8 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.*
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
+import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -20,6 +22,7 @@ import javax.inject.Named
 
 class InsightsManagementViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(INSIGHTS_USE_CASE) val insightsUseCase: BaseListUseCase,
     private val siteProvider: StatsSiteProvider,
     private val statsStore: StatsStore
 ) : ScopedViewModel(mainDispatcher) {
@@ -60,7 +63,13 @@ class InsightsManagementViewModel @Inject constructor(
             statsStore.updateTypes(siteProvider.siteModel, model)
 
             mutableSnackbarMessage.value = R.string.stats_insights_saved_message
+
+            insightsUseCase.refreshData()
         }
+    }
+
+    fun onAddedItemsUpdated(items: List<InsightModel>) {
+        _addedInsights.value = items
     }
 
     override fun onCleared() {

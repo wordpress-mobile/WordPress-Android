@@ -19,10 +19,16 @@ class ItemTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) : Ite
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: ViewHolder, target: ViewHolder): Boolean {
-        adapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+        adapter.onItemMoved(viewHolder.adapterPosition, target.adapterPosition)
         return true
     }
 
     override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
+    }
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+
+        adapter.onDragFinished()
     }
 }
