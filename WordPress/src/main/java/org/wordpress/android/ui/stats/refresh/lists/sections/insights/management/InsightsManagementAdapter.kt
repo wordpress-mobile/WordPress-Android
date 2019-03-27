@@ -1,23 +1,70 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
-import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.util.DiffUtil
+import android.support.v7.util.DiffUtil.Callback
+import android.support.v7.widget.RecyclerView.Adapter
+import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
+import java.util.Collections
 
-class InsightsManagementAdapter : ListAdapter<InsightModel, InsightsManagementViewHolder>(DIFF_CALLBACK) {
-    companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<InsightModel>() {
-            override fun areItemsTheSame(m1: InsightModel, m2: InsightModel): Boolean = m1.name == m2.name
-            override fun areContentsTheSame(m1: InsightModel, m2: InsightModel): Boolean = m1 == m2
-        }
-    }
+class InsightsManagementAdapter(
+    private val onStartDrag: ((viewHolder: ViewHolder) -> Unit)? = null
+) : Adapter<InsightsManagementViewHolder>(), ItemTouchHelperAdapter {
+    private var items = ArrayList<InsightModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, itemType: Int): InsightsManagementViewHolder {
-        return InsightsManagementViewHolder(parent)
+        return InsightsManagementViewHolder(parent, onStartDrag)
     }
 
     override fun onBindViewHolder(holder: InsightsManagementViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(items[position])
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        if (fromPosition < toPosition) {
+            for (i in fromPosition until toPosition) {
+                Collections.swap(items, i, i + 1)
+            }
+        } else {
+            for (i in fromPosition downTo toPosition + 1) {
+                Collections.swap(items, i, i - 1)
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    fun update(newItems: List<InsightModel>) {
+        if (newItems.size >= items.size) {
+            val diffResult = DiffUtil.calculateDiff(InsightModelDiffCallback(items, newItems))
+            items = ArrayList(newItems)
+            diffResult.dispatchUpdatesTo(this)
+        } else {
+            items = ArrayList(newItems)
+            notifyDataSetChanged()
+        }
+    }
+}
+
+interface ItemTouchHelperAdapter {
+    fun onItemMove(fromPosition: Int, toPosition: Int)
+}
+
+class InsightModelDiffCallback(
+    private val oldList: List<InsightModel>,
+    private val newList: List<InsightModel>
+) : Callback() {
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition] == newList[oldItemPosition]
+    }
+
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].name == newList[oldItemPosition].name
     }
 }

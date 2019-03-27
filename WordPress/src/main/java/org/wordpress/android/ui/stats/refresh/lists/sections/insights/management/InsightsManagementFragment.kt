@@ -7,19 +7,20 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.insights_management_fragment.*
-import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
 import javax.inject.Inject
+import android.support.v7.widget.helper.ItemTouchHelper
+import org.wordpress.android.R
 
 class InsightsManagementFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: InsightsManagementViewModel
+    private lateinit var addedInsightsTouchHelper: ItemTouchHelper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.insights_management_fragment, container, false)
@@ -62,21 +63,35 @@ class InsightsManagementFragment : DaggerFragment() {
 
         viewModel.removedInsights.observe(this, Observer {
             it?.let { items ->
-                updateInsights(items, removedInsights)
+                updateRemovedInsights(items)
             }
         })
 
         viewModel.addedInsights.observe(this, Observer {
             it?.let { items ->
-                updateInsights(items, addedInsights)
+                updateAddedInsights(items)
             }
         })
     }
 
-    private fun updateInsights(insights: List<InsightModel>, recyclerView: RecyclerView) {
-        if (recyclerView.adapter == null) {
-            recyclerView.adapter = InsightsManagementAdapter()
+    private fun updateRemovedInsights(insights: List<InsightModel>) {
+        if (removedInsights.adapter == null) {
+            removedInsights.adapter = InsightsManagementAdapter()
         }
-        (recyclerView.adapter as InsightsManagementAdapter).submitList(insights)
+        val adapter = removedInsights.adapter as InsightsManagementAdapter
+        adapter.update(insights)
+    }
+
+    private fun updateAddedInsights(insights: List<InsightModel>) {
+        var adapter = addedInsights.adapter as? InsightsManagementAdapter
+        if (adapter == null) {
+            adapter = InsightsManagementAdapter { viewHolder -> addedInsightsTouchHelper.startDrag(viewHolder) }
+            addedInsights.adapter = adapter
+
+            val callback = ItemTouchHelperCallback(adapter)
+            addedInsightsTouchHelper = ItemTouchHelper(callback)
+            addedInsightsTouchHelper.attachToRecyclerView(addedInsights)
+        }
+        adapter.update(insights)
     }
 }
