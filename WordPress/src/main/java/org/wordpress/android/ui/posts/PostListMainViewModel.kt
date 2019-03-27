@@ -78,7 +78,7 @@ class PostListMainViewModel @Inject constructor(
         val authorFilterSelection: AuthorFilterSelection = prefs.postListAuthorSelection
 
         _updatePostsPager.value = authorFilterSelection
-        _viewState.value = PostListMainViewState.Idle(
+        _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
                 isAuthorFilterVisible = site.isUsingWpComRestApi,
                 authorFilterSelection = authorFilterSelection,
@@ -162,7 +162,7 @@ class PostListMainViewModel @Inject constructor(
             return
         }
 
-        _viewState.value = PostListMainViewState.Idle(
+        _viewState.value = PostListMainViewState(
                 isFabVisible ?: currentState.isFabVisible,
                 isAuthorFilterVisible ?: currentState.isAuthorFilterVisible,
                 authorFilterSelection ?: currentState.authorFilterSelection,
@@ -174,24 +174,12 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
-    sealed class PostListMainViewState(
+    class PostListMainViewState(
         val isFabVisible: Boolean,
         val isAuthorFilterVisible: Boolean,
         val authorFilterSelection: AuthorFilterSelection,
         val authorFilterItems: List<AuthorFilterListItemUIState>
-    ) {
-        class Idle(
-            isFabVisible: Boolean,
-            isAuthorFilterVisible: Boolean,
-            authorFilterSelection: AuthorFilterSelection,
-            authorFilterItems: List<AuthorFilterListItemUIState>
-        ) : PostListMainViewState(
-                isFabVisible,
-                isAuthorFilterVisible,
-                authorFilterSelection,
-                authorFilterItems
-        )
-    }
+    )
 
     sealed class AuthorFilterListItemUIState(
         val id: Int,
