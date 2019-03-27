@@ -95,18 +95,8 @@ class PostListMainViewModel @Inject constructor(
         _postListAction.postValue(PostListAction.NewPost(site))
     }
 
-    fun updateAuthorFilterSelection(position: Int) {
-        val selection: AuthorFilterSelection = when (position) {
-            AuthorFilterSelection.ME.ordinal -> AuthorFilterSelection.ME
-            AuthorFilterSelection.EVERYONE.ordinal -> AuthorFilterSelection.EVERYONE
-            else -> {
-                if (BuildConfig.DEBUG) {
-                    throw IllegalArgumentException("Unhandled author filter selection position")
-                } else {
-                    AuthorFilterSelection.EVERYONE
-                }
-            }
-        }
+    fun updateAuthorFilterSelection(selectionId: Int) {
+        val selection = AuthorFilterSelection.fromId(selectionId)
 
         updateViewState(authorFilterSelection = selection, authorFilterItems = getAuthorFilterItems(selection))
         prefs.postListAuthorSelection = selection
@@ -199,12 +189,14 @@ class PostListMainViewModel @Inject constructor(
     }
 
     sealed class AuthorFilterListItemUIState(
+        val id: Int,
         val text: UiString,
         val avatarUrl: String?,
         val imageType: ImageType,
         @ColorRes val dropDownBackground: Int
     ) {
         class Everyone(@ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
+                AuthorFilterSelection.EVERYONE.id,
                 text = UiStringRes(R.string.post_list_author_everyone),
                 avatarUrl = null,
                 imageType = MULTI_USER_AVATAR_GREY_BACKGROUND,
@@ -212,6 +204,7 @@ class PostListMainViewModel @Inject constructor(
         )
 
         class Me(avatarUrl: String?, @ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
+                AuthorFilterSelection.ME.id,
                 text = UiStringRes(R.string.post_list_author_me),
                 avatarUrl = avatarUrl,
                 imageType = AVATAR_WITH_BACKGROUND,

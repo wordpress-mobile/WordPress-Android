@@ -12,6 +12,7 @@ import android.widget.SpinnerAdapter
 import androidx.annotation.CallSuper
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListMainViewModel.AuthorFilterListItemUIState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.GravatarUtils
@@ -52,9 +53,19 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
 
     override fun getItem(position: Int): AuthorFilterListItemUIState = items[position]
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemId(position: Int): Long = items[position].id.toLong()
 
     override fun getItemViewType(position: Int): Int = 0
+
+    fun getIndexOfSelection(selection: AuthorFilterSelection): Int? {
+        for ((index, item) in items.withIndex()) {
+            if (item.id == selection.id) {
+                return index
+            }
+        }
+
+        return null
+    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view: View? = convertView
@@ -75,7 +86,7 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
     }
 
     override fun getViewTypeCount(): Int = 1
-    override fun hasStableIds(): Boolean = false
+    override fun hasStableIds(): Boolean = true
     override fun isEmpty(): Boolean = false
 
     fun notifyDataSetChanged() {

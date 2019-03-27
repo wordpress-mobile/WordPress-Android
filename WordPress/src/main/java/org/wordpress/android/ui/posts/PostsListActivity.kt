@@ -118,7 +118,7 @@ class PostsListActivity : AppCompatActivity(),
             override fun onNothingSelected(parent: AdapterView<*>) {}
 
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                viewModel.updateAuthorFilterSelection(position)
+                viewModel.updateAuthorFilterSelection(authorSelectionAdapter.getItemId(position).toInt())
             }
         }
 
@@ -158,8 +158,11 @@ class PostsListActivity : AppCompatActivity(),
                 }
 
                 authorSelection.visibility = if (state.isAuthorFilterVisible) View.VISIBLE else View.GONE
-                authorSelection.setSelection(state.authorFilterSelection.ordinal)
                 authorSelectionAdapter.updateItems(state.authorFilterItems)
+
+                authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
+                    authorSelection.setSelection(selectionIndex)
+                }
             }
         })
 
