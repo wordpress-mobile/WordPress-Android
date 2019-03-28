@@ -68,7 +68,8 @@ class InternalPagedListDataStoreTest {
     fun `getItemsInRange propagates the call to getItemsAndFetchIfNecessary correctly`() {
         val internalDataStore = createInternalPagedListDataStore(dataStore = mockItemDataStore)
 
-        internalDataStore.getItemsInRange(any(), any())
+        val (startPosition, endPosition) = testStartAndEndPosition
+        internalDataStore.getItemsInRange(startPosition, endPosition)
 
         verify(mockItemDataStore).getItemsAndFetchIfNecessary(eq(testListDescriptor), any())
     }
