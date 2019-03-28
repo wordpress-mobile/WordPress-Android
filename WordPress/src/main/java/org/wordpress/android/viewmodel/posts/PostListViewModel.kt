@@ -34,7 +34,7 @@ import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.ListError
-import org.wordpress.android.fluxc.store.ListStore.ListErrorType
+import org.wordpress.android.fluxc.store.ListStore.ListErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
@@ -319,12 +319,7 @@ class PostListViewModel @Inject constructor(
     init {
         connectionStatus.distinct().observe(this, Observer {
             isNetworkAvailable = it?.isConnected == true
-            val connectionAvailableAfterError = isNetworkAvailable &&
-                    pagedListWrapper.isFetchingFirstPage.value != true &&
-                    pagedListWrapper.listError.value?.type == ListErrorType.GENERIC_ERROR
-            if (connectionAvailableAfterError) {
-                fetchFirstPage()
-            }
+            retryOnConnectionAvailableAfterError()
         })
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
@@ -376,6 +371,16 @@ class PostListViewModel @Inject constructor(
 
     fun newPost() {
         _postListAction.postValue(PostListAction.NewPost(site))
+    }
+
+    private fun retryOnConnectionAvailableAfterError() {
+        val connectionAvailableAfterError = isNetworkAvailable &&
+                pagedListWrapper.isFetchingFirstPage.value != true &&
+                pagedListWrapper.listError.value?.type == GENERIC_ERROR
+
+        if (connectionAvailableAfterError) {
+            fetchFirstPage()
+        }
     }
 
     // Private List Actions
