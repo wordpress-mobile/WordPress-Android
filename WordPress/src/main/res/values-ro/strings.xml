@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-26 20:47:40+0000
+Translation-Revision-Date: 2019-03-18 19:41:05+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="app_rating_rate_never">Nu, mulțumesc</string>
+    <string name="app_rating_rate_later">Mai târziu</string>
+    <string name="app_rating_rate_now">Evaluează acum</string>
+    <string name="app_rating_message">Ne bucurăm să te revedem! Dacă apreciezi aplicația, ne-ar plăcea s-o evaluezi în Magazinul Google Play.</string>
+    <string name="app_rating_title">Îți place WordPress?</string>
+    <string name="editor_post_converted_back_to_draft">Articolul a fost convertit înapoi la ciornă</string>
+    <string name="stats_insights_posting_activity">Activitate de publicare</string>
+    <string name="stats_site_not_loaded_yet">Sit neîncărcat încă</string>
+    <string name="stats_more_posts">Mai multe articole</string>
+    <string name="stats_fewer_posts">Mai puține articole</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Înlătură conținutul</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Mută blocul în jos</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Mută blocul în sus</string>
@@ -1524,7 +1534,7 @@ Language: ro
     <string name="theme_no_search_result_found">Regret, nicio temă găsită.</string>
     <string name="reader_label_gap_marker">Încarcă mai multe articole</string>
     <string name="notifications_no_search_results">Niciun site nu s-a potrivit cu \'%s\'</string>
-    <string name="search_sites">Căutare situri</string>
+    <string name="search_sites">Caută situri</string>
     <string name="notifications_empty_view_reader">Du-te la Cititor</string>
     <string name="notifications_empty_action_followers_likes">Remarcă-te: comentează la articolele pe care le-ai citit</string>
     <string name="notifications_empty_action_comments">Alătură-te unei conversații: comentează la articolele din blogurile pe care le urmărești</string>

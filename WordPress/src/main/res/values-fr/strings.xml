@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-26 18:24:21+0000
+Translation-Revision-Date: 2019-03-12 12:19:32+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="app_rating_rate_never">Non merci</string>
+    <string name="app_rating_rate_later">Plus tard</string>
+    <string name="app_rating_rate_now">Évaluer maintenant</string>
+    <string name="app_rating_message">Ravi de vous revoir! Si vous creusez l\'application, nous aimerions une évaluation sur le Google Play Store.</string>
+    <string name="app_rating_title">Vous aimez WordPress ?</string>
+    <string name="editor_post_converted_back_to_draft">Article reconverti en brouillon</string>
+    <string name="stats_insights_posting_activity">Activité de publication</string>
+    <string name="stats_site_not_loaded_yet">Site non encore chargé</string>
+    <string name="stats_more_posts">Plus d’articles</string>
+    <string name="stats_fewer_posts">Moins d’articles</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Retirer le contenu</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Descendre le bloc</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Monter le bloc</string>

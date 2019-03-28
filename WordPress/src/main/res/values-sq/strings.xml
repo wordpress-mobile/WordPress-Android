@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-01 10:00:28+0000
+Translation-Revision-Date: 2019-03-13 14:51:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="app_rating_rate_never">Jo, faleminderit</string>
+    <string name="app_rating_rate_later">Më vonë</string>
+    <string name="app_rating_rate_now">Vlerësojeni tani</string>
+    <string name="app_rating_message">Na bëhet qejfi t’ju rishohim! Nëse jua ka ënda aplikacionin, do të na pëlqente të vlerësim te Google Play Store.</string>
+    <string name="app_rating_title">Ju pëlqen WordPress-i?</string>
+    <string name="editor_post_converted_back_to_draft">Postimi i shndërrua sërish në skicë</string>
+    <string name="stats_insights_posting_activity">Veprimtari Postimi</string>
+    <string name="stats_site_not_loaded_yet">Sajt ende i pangarkuar</string>
+    <string name="stats_more_posts">Më tepër postime</string>
+    <string name="stats_fewer_posts">Më pak postime</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Hiqe lëndën</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Zbriteni bllokun poshtë</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Ngjiteni bllokun sipër</string>

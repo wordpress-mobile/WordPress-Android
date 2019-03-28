@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-26 18:39:36+0000
+Translation-Revision-Date: 2019-03-23 10:29:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="app_rating_rate_never">Nej tack</string>
+    <string name="app_rating_rate_later">Senare</string>
+    <string name="app_rating_rate_now">Betygsätt nu</string>
+    <string name="app_rating_message">Kul att se dig igen! Om du gillar appen vore det härligt om du kunde betygsätta den i Google Play-butiken.</string>
+    <string name="app_rating_title">Gillar du WordPress?</string>
+    <string name="editor_post_converted_back_to_draft">Inlägget har konverterats tillbaka till ett utkast</string>
+    <string name="stats_insights_posting_activity">Publiceringsaktivitet</string>
+    <string name="stats_site_not_loaded_yet">Webbplatsen har inte laddats klart</string>
+    <string name="stats_more_posts">Fler inlägg</string>
+    <string name="stats_fewer_posts">Färre inlägg</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Ta bort innehåll</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Flytta block nedåt</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Flytta block uppåt</string>
@@ -1325,7 +1335,7 @@ Language: sv_SE
     <string name="post_format_gallery">Galleri</string>
     <string name="post_format_chat">Chatt</string>
     <string name="post_format_audio">Ljud</string>
-    <string name="post_format_aside">Notering</string>
+    <string name="post_format_aside">Notis</string>
     <string name="notif_events">Information om kurser och evenemang på WordPress.com (online och fysiska möten).</string>
     <string name="notif_surveys">Möjligheter att delta i WordPress.coms studier och undersökningar.</string>
     <string name="notif_tips">Tips för att få ut så mycket som möjligt av WordPress.com.</string>

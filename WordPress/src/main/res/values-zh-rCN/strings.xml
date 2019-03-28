@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-06 12:54:08+0000
+Translation-Revision-Date: 2019-03-20 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="stats_insights_posting_activity">文章发布活动</string>
+    <string name="stats_site_not_loaded_yet">站点尚未加载</string>
+    <string name="stats_more_posts">更多文章</string>
+    <string name="stats_fewer_posts">更少文章</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">删除内容</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">向下移动区块</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">向上移动区块</string>
