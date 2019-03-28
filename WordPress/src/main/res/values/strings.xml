@@ -1005,14 +1005,16 @@
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
+    <string name="stats_insights_best_day">Best Day</string>
+    <string name="stats_insights_best_hour">Best Hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
-    <string name="stats_insights_today_stats">Today\'s Stats</string>
+    <string name="stats_insights_today_stats">Today</string>
 
     <!-- Stats refreshed insights -->
-    <string name="stats_insights_all_time_stats">All Time Stats</string>
+    <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
     <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
@@ -1250,6 +1252,11 @@
     <string name="publish_date">Publish</string>
     <string name="immediately">Immediately</string>
     <string name="now">Now</string>
+    <string name="scheduled_for">Scheduled for: %s</string>
+    <string name="published_on">Published on: %s</string>
+    <string name="schedule_for">Schedule for: %s</string>
+    <string name="publish_on">Publish on: %s</string>
+
 
     <!-- location -->
     <string name="post_settings_location">Location</string>
@@ -1919,6 +1926,7 @@
     <string name="plugin_install_custom_domain_required_dialog_message">To install plugins, you need to have a custom domain associated with your site.</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Register domain</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Checking domain credits</string>
+    <string name="plugin_check_domain_credit_error">Failed to check available domain credits</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Install plugin</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute. During this time you won’t be able to make changes to your site.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Install</string>
@@ -2511,6 +2519,7 @@
     <string name="new_site_creation_screen_title_general">Create Site</string>
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
+    <string name="new_site_creation_preview_subtitle">You\'ll be able to customise look and feel of your site later</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>

@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -158,7 +159,6 @@ public class PluginDetailActivity extends AppCompatActivity {
     protected boolean mIsShowingRemovePluginConfirmationDialog;
     protected boolean mIsShowingInstallFirstPluginConfirmationDialog;
     protected boolean mIsShowingAutomatedTransferProgress;
-    protected boolean mIsShowingDomainCreditCheckProgress;
 
     // These flags reflects the UI state
     protected boolean mIsActive;
@@ -202,6 +202,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
+        boolean isShowingDomainCreditCheckProgress = false;
+
         if (savedInstanceState == null) {
             mIsActive = mPlugin.isActive();
             mIsAutoUpdateEnabled = mPlugin.isAutoUpdateEnabled();
@@ -220,7 +222,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                     .getBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG);
             mIsShowingAutomatedTransferProgress = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS);
-            mIsShowingDomainCreditCheckProgress = savedInstanceState
+            isShowingDomainCreditCheckProgress = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS);
         }
 
@@ -251,7 +253,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             confirmInstallPluginForAutomatedTransfer();
         }
 
-        if (mIsShowingDomainCreditCheckProgress) {
+        if (isShowingDomainCreditCheckProgress) {
             showDomainCreditsCheckProgressDialog();
         }
 
@@ -263,15 +265,27 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlansFetched(OnPlansFetched event) {
-        cancelDomainCreditsCheckProgressDialog();
+        if (mCheckingDomainCreditsProgressDialog == null || !mCheckingDomainCreditsProgressDialog.isShowing()) {
+            AppLog.w(T.PLANS, "User cancelled domain credit checking. Ignoring the result.");
+            return;
+        }
 
+        cancelDomainCreditsCheckProgressDialog();
         if (event.isError()) {
             AppLog.e(T.PLANS, PluginDetailActivity.class.getSimpleName() + ".onPlansFetched: "
                               + event.error.type + " - " + event.error.message);
+            Snackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error),
+                    AccessibilityUtils.getSnackbarDuration(this)).show();
         } else {
             // This should not happen
             if (event.plans == null) {
-                AppLog.e(T.PLANS, "Fetched user plans are null.");
+                String errorMessage = "Failed to fetch user Plans. The result is null.";
+                if (BuildConfig.DEBUG) {
+                    throw new IllegalStateException(errorMessage);
+                }
+                Snackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error),
+                        AccessibilityUtils.getSnackbarDuration(this)).show();
+                AppLog.e(T.PLANS, errorMessage);
                 return;
             }
 
@@ -317,24 +331,25 @@ public class PluginDetailActivity extends AppCompatActivity {
                     });
 
             builder.setCancelable(true);
-            builder.create();
             return builder.create();
         }
     }
 
     private void showDomainRegistrationDialog() {
         DialogFragment dialogFragment = new DomainRegistrationPromptDialog();
-        dialogFragment.show(getSupportFragmentManager(),
-                DomainRegistrationPromptDialog.DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(dialogFragment, DomainRegistrationPromptDialog.DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG);
+        ft.commitAllowingStateLoss();
     }
 
     @Override
     protected void onDestroy() {
         // Even though the progress dialog will be destroyed, when it's re-created sometimes the spinner
         // would get stuck. This seems to be helping with that.
-        if (mRemovePluginProgressDialog != null && mRemovePluginProgressDialog.isShowing()) {
-            mRemovePluginProgressDialog.cancel();
-        }
+        cancelRemovePluginProgressDialog();
+
+        cancelDomainCreditsCheckProgressDialog();
+
         mDispatcher.unregister(this);
         super.onDestroy();
     }
@@ -386,7 +401,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG,
                 mIsShowingInstallFirstPluginConfirmationDialog);
         outState.putBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS, mIsShowingAutomatedTransferProgress);
-        outState.putBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS, mIsShowingDomainCreditCheckProgress);
+        outState.putBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS,
+                mCheckingDomainCreditsProgressDialog != null && mCheckingDomainCreditsProgressDialog.isShowing());
     }
 
     // UI Helpers
@@ -873,7 +889,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void showDomainCreditsCheckProgressDialog() {
         if (mCheckingDomainCreditsProgressDialog == null) {
             mCheckingDomainCreditsProgressDialog = new ProgressDialog(this);
-            mCheckingDomainCreditsProgressDialog.setCancelable(false);
+            mCheckingDomainCreditsProgressDialog.setCancelable(true);
             mCheckingDomainCreditsProgressDialog.setIndeterminate(true);
 
             mCheckingDomainCreditsProgressDialog

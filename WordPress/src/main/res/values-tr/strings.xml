@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-05 11:54:07+0000
+Translation-Revision-Date: 2019-03-17 21:29:19+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="app_rating_rate_never">Hayır teşekkürler</string>
+    <string name="app_rating_rate_later">Sonra</string>
+    <string name="app_rating_rate_now">Şimdi puanla</string>
+    <string name="app_rating_message">Seni tekrar görmek güzel! Eğer uygulamayı sonuna kadar kullandıysan, Google Play mağazasında bir derecelendirmeye bayılırız.</string>
+    <string name="app_rating_title">WordPress hoşunuza gitti mi?</string>
+    <string name="editor_post_converted_back_to_draft">Yazı taslağa geri dönderildi</string>
+    <string name="stats_insights_posting_activity">Yazma etkinliği</string>
+    <string name="stats_site_not_loaded_yet">Site henüz yüklenmedi</string>
+    <string name="stats_more_posts">Daha çok yazı</string>
+    <string name="stats_fewer_posts">Daha az yazı</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">İçeriği kaldır</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Bloku aşağı taşı</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Bloku yukarı taşı</string>
