@@ -184,13 +184,12 @@ class PostsListActivity : AppCompatActivity(),
         })
         viewModel.updatePostsPager.observe(this, Observer { authorFilter ->
             authorFilter?.let {
-                pager.removeOnPageChangeListener(onPageChangeListener)
-
                 val currentItem: Int = pager.currentItem
                 postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
                 pager.adapter = postsPagerAdapter
-                pager.currentItem = currentItem
 
+                pager.removeOnPageChangeListener(onPageChangeListener)
+                pager.currentItem = currentItem
                 pager.addOnPageChangeListener(onPageChangeListener)
             }
         })
