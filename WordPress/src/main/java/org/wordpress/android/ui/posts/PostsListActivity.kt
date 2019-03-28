@@ -17,7 +17,6 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -49,6 +48,9 @@ class PostsListActivity : AppCompatActivity(),
 
     private lateinit var authorSelectionAdapter: AuthorSelectionAdapter
     private lateinit var authorSelection: AppCompatSpinner
+
+    private lateinit var tabLayout: TabLayout
+    private lateinit var tabLayoutFadingEdge: View
 
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var pager: ViewPager
@@ -119,6 +121,8 @@ class PostsListActivity : AppCompatActivity(),
 
     private fun setupContent() {
         authorSelection = findViewById(R.id.post_list_author_selection)
+        tabLayoutFadingEdge = findViewById(R.id.post_list_tab_layout_fading_edge)
+
         authorSelectionAdapter = AuthorSelectionAdapter(this)
         authorSelection.adapter = authorSelectionAdapter
 
@@ -135,7 +139,7 @@ class PostsListActivity : AppCompatActivity(),
         // Just a safety measure - there shouldn't by any existing listeners since this method is called just once.
         pager.clearOnPageChangeListeners()
 
-        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        tabLayout = findViewById(R.id.tabLayout)
         // this method call needs to be below `clearOnPageChangeListeners` as it internally adds an OnPageChangeListener
         tabLayout.setupWithViewPager(pager)
         pager.addOnPageChangeListener(onPageChangeListener)
@@ -155,7 +159,16 @@ class PostsListActivity : AppCompatActivity(),
                     fab.hide()
                 }
 
-                authorSelection.visibility = if (state.isAuthorFilterVisible) View.VISIBLE else View.GONE
+                val authorSelectionVisibility = if (state.isAuthorFilterVisible) View.VISIBLE else View.GONE
+                authorSelection.visibility = authorSelectionVisibility
+                tabLayoutFadingEdge.visibility = authorSelectionVisibility
+
+                val tabLayoutPaddingEnd =
+                        if (state.isAuthorFilterVisible)
+                            resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
+                        else 0
+                tabLayout.setPaddingRelative(0, 0, tabLayoutPaddingEnd, 0)
+
                 authorSelectionAdapter.updateItems(state.authorFilterItems)
 
                 authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
