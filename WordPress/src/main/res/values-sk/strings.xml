@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-02 20:28:58+0000
+Translation-Revision-Date: 2019-03-22 15:38:45+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
 -->
 <resources>
+    <string name="app_rating_rate_never">Nie, ďakujem</string>
+    <string name="app_rating_rate_later">Neskôr</string>
+    <string name="app_rating_rate_now">Ohodnotiť teraz</string>
+    <string name="stats_more_posts">Viac príspevkov</string>
+    <string name="stats_fewer_posts">Menej príspevkov</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Odstrániť obsah</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Posunúť blok nižšie</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Posunúť blok vyššie</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">VLOŽTE BLOK TU</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Nepodporované</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Vložte URL adresu</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">VYBERTE OBRÁZOK</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Začnite písať…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Odstrániť odkaz</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Pridať URL adresu</string>
+    <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
+    <string name="quick_start_sites_type_subtitle">%1$d z %2$d kompletné</string>
+    <string name="quick_start_sites">Ďalšie kroky</string>
+    <string name="quick_start_complete_tasks_header">Kompletné (%d)</string>
+    <string name="quick_start_dialog_create_page_title">Vytvoriť novú stránku</string>
+    <string name="quick_start_dialog_browse_themes_title">Prehľadávať témy</string>
+    <string name="quick_start_remove_next_steps_menu_title">Odstrániť toto</string>
+    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Vytvárate novú webovú stránku</string>
     <string name="notification_new_site_creation_failed">Nastal problém</string>
     <string name="notification_new_site_creation_title">Vytvoriť webovú stránku</string>
@@ -23,6 +47,7 @@ Language: sk
     <string name="site_creation_fetch_suggestions_error_no_connection">Žiadne spojenie</string>
     <string name="new_site_creation_preview_title">Vaša webová stránka bola vytvorená!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
+    <string name="new_site_creation_screen_title_general">Vytvoriť webovú stránku</string>
     <string name="snackbar_conflict_undo">Vrátiť späť</string>
     <string name="stats_no_data_for_period">Žiadne dáta pre toto obdobie</string>
     <string name="preference_strip_image_location">Odstrániť lokáciu z médiá</string>
@@ -154,7 +179,9 @@ Language: sk
     <string name="quick_start_dialog_publish_post_title">Zverejniť článok</string>
     <string name="quick_start_dialog_publish_post_message_short">Ťuknite %1$s Create Post %2$s a vytvorte nový článok.</string>
     <string name="quick_start_dialog_need_help_title">Chcete pomôcť na začiatku?</string>
+    <string name="quick_start_dialog_need_help_button_positive">Akceptovať</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nie, ďakujem</string>
     <string name="quick_start_dialog_follow_sites_title">Sledovať iné webové stránky</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Ťuknite %1$s Search %2$s , aby ste našli webové stránky s podobnými záujmami.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Ťuknite %1$s Reader %2$s, keď chcete pokračovať.</string>
@@ -166,6 +193,7 @@ Language: sk
     <string name="quick_start_button_positive">Ísť</string>
     <string name="quick_start_button_negative_short">Zrušiť</string>
     <string name="quick_start_button_negative">Teraz nie</string>
+    <string name="content_description_more">Viac</string>
     <string name="my_site_create_new_site_title">Nemáte žiadne webové stránky</string>
     <string name="reader_empty_followed_tags_title">Žiadne sledované značky</string>
     <string name="reader_empty_followed_tags_subtitle">Pridajte značky a nájdite články o témach, ktoré vás zaujímajú.</string>
