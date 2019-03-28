@@ -15,6 +15,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.ADDED
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.REMOVED
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -48,11 +50,11 @@ class InsightsManagementViewModel @Inject constructor(
             val model = statsStore.getInsightsManagementModel(siteProvider.siteModel)
             _addedInsights.value = model.addedTypes
                     .filter { it != FOLLOWER_TOTALS && it != ANNUAL_SITE_STATS }
-                    .map { InsightModel(it, true) }
+                    .map { InsightModel(it, ADDED) }
 
             _removedInsights.value = model.removedTypes
                     .filter { it != FOLLOWER_TOTALS && it != ANNUAL_SITE_STATS }
-                    .map { InsightModel(it, false) }
+                    .map { InsightModel(it, REMOVED) }
         }
     }
 
@@ -75,13 +77,12 @@ class InsightsManagementViewModel @Inject constructor(
 
     fun onItemButtonClicked(insight: InsightModel) {
         launch {
-            delay(500)
-            if (insight.isAdded) {
+            if (insight.type == ADDED) {
                 _addedInsights.value = _addedInsights.value?.filter { it != insight }
-                _removedInsights.value = _removedInsights.value?.let { it + insight.copy(isAdded = false) }
+                _removedInsights.value = _removedInsights.value?.let { it + insight.copy(type = REMOVED) }
             } else {
                 _removedInsights.value = _removedInsights.value?.filter { it != insight }
-                _addedInsights.value = _addedInsights.value?.let { it + insight.copy(isAdded = true) }
+                _addedInsights.value = _addedInsights.value?.let { it + insight.copy(type = ADDED) }
             }
         }
     }
@@ -90,7 +91,7 @@ class InsightsManagementViewModel @Inject constructor(
         mutableSnackbarMessage.value = null
     }
 
-    data class InsightModel(val insightsTypes: InsightsTypes, val isAdded: Boolean) {
+    data class InsightModel(val insightsTypes: InsightsTypes, val type: Type) {
         @StringRes val name: Int = when (insightsTypes) {
             LATEST_POST_SUMMARY -> R.string.stats_insights_latest_post_summary
             MOST_POPULAR_DAY_AND_HOUR -> R.string.stats_insights_popular
@@ -102,6 +103,11 @@ class InsightsManagementViewModel @Inject constructor(
             POSTING_ACTIVITY -> R.string.stats_insights_posting_activity
             PUBLICIZE -> R.string.stats_view_publicize
             else -> R.string.unknown
+        }
+
+        enum class Type {
+            ADDED,
+            REMOVED
         }
     }
 }

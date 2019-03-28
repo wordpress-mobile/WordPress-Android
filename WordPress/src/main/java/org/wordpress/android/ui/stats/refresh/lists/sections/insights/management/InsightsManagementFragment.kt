@@ -84,7 +84,11 @@ class InsightsManagementFragment : DaggerFragment() {
 
     private fun updateRemovedInsights(insights: List<InsightModel>) {
         if (removedInsights.adapter == null) {
-            removedInsights.adapter = InsightsManagementAdapter({ item -> viewModel.onItemButtonClicked(item) })
+            removedInsights.adapter = InsightsManagementAdapter(
+                    { item -> viewModel.onItemButtonClicked(item) },
+                    { viewHolder -> addedInsightsTouchHelper.startDrag(viewHolder) },
+                    { list -> viewModel.onAddedItemsUpdated(list) }
+            )
         }
         val adapter = removedInsights.adapter as InsightsManagementAdapter
         adapter.update(insights)

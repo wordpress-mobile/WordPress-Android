@@ -6,21 +6,31 @@ import android.support.v7.widget.RecyclerView.Adapter
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.ADDED
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.REMOVED
 import java.util.Collections
 
 class InsightsManagementAdapter(
     private val onItemButtonClicked: (InsightModel) -> Unit,
-    private val onDragStarted: ((viewHolder: ViewHolder) -> Unit)? = null,
-    private val onDragFinished: ((List<InsightModel>) -> Unit)? = null
+    private val onDragStarted: (viewHolder: ViewHolder) -> Unit,
+    private val onDragFinished: (List<InsightModel>) -> Unit
 ) : Adapter<InsightsManagementViewHolder>(), ItemTouchHelperAdapter {
     private var items = ArrayList<InsightModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, itemType: Int): InsightsManagementViewHolder {
-        return InsightsManagementViewHolder(parent, onDragStarted)
+        val type = InsightModel.Type.values()[itemType]
+        return when (type) {
+            ADDED -> AddedInsightViewHolder(parent, onDragStarted, onItemButtonClicked)
+            REMOVED -> RemovedInsightViewHolder(parent, onItemButtonClicked)
+        }
     }
 
     override fun onBindViewHolder(holder: InsightsManagementViewHolder, position: Int) {
-        holder.bind(items[position], onItemButtonClicked)
+        holder.bind(items[position])
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return items[position].type.ordinal
     }
 
     override fun onItemMoved(fromPosition: Int, toPosition: Int) {
@@ -37,20 +47,17 @@ class InsightsManagementAdapter(
     }
 
     override fun onDragFinished() {
-        onDragFinished?.invoke(items)
+        onDragFinished.invoke(items)
     }
 
     override fun getItemCount(): Int = items.size
 
+
+
     fun update(newItems: List<InsightModel>) {
-        if (newItems.size >= items.size) {
-            val diffResult = DiffUtil.calculateDiff(InsightModelDiffCallback(items, newItems))
-            items = ArrayList(newItems)
-            diffResult.dispatchUpdatesTo(this)
-        } else {
-            items = ArrayList(newItems)
-            notifyDataSetChanged()
-        }
+        val diffResult = DiffUtil.calculateDiff(InsightModelDiffCallback(items, newItems))
+        items = ArrayList(newItems)
+        diffResult.dispatchUpdatesTo(this)
     }
 }
 
