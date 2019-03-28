@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/input"
+        style="@style/Theme.AppCompat.Light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/clear_all_layout"
+        android:background="@color/white"
+        android:drawablePadding="@dimen/new_site_creation_verticals_search_input_text_padding"
+        android:imeOptions="actionSearch"
+        android:importantForAutofill="noExcludeDescendants"
+        android:inputType="text"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_large"
+        android:singleLine="true"
+        android:textAlignment="viewStart"
+        android:textColor="@color/grey_dark"
+        android:textColorHint="@color/grey"
+        tools:hint="@string/site_creation_domain_keywords_hint"
+        tools:ignore="RtlSymmetry"
+        tools:targetApi="o">
+    </EditText>
+
+    <FrameLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@color/white">
+
+        <ProgressBar
+            android:layout_width="@dimen/site_creation_verticals_search_progress_size"
+            android:layout_height="@dimen/site_creation_verticals_search_progress_size"
+            android:layout_marginStart="@dimen/margin_large"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/clear_all_layout"
+        android:layout_width="@dimen/site_creation_verticals_clear_search_clickable_area_width"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/input"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/input"
+        android:gravity="center">
+
+        <View
+            android:id="@+id/clear_all_btn"
+            android:layout_width="@dimen/site_creation_verticals_clear_search_icon_size"
+            android:layout_height="@dimen/site_creation_verticals_clear_search_icon_size"
+            android:background="@drawable/ic_close_white_24dp"
+            android:contentDescription="@string/new_site_creation_clear_all_content_description"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignBottom="@+id/input"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:background="@color/wp_grey_lighten_30"
+        android:visibility="gone"/>
+</RelativeLayout>

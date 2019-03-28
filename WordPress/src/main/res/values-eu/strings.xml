@@ -36,7 +36,6 @@ Language: eu_ES
     <string name="alignment_left">Ezkerrera</string>
     <string name="alignment_right">Eskuinera</string>
     <string name="error_fetch_users_list">Ezin izan dira guneko erabiltzaileak eskuratu</string>
-    <string name="plans_manage">Kudeatu zure plana\nWordPress.com/plans orrialdean</string>
     <string name="title_follower">Jarraitzailea</string>
     <string name="title_email_follower">E-posta jarraitzailea</string>
     <string name="people_fetching">Erabiltzaileak eskuratzen…</string>
@@ -101,7 +100,6 @@ Language: eu_ES
     <string name="enter_your_password_instead">Sartu zure pasahitza ordez</string>
     <string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
     <string name="stats_insights_latest_post_no_title">(izenbururik gabe)</string>
-    <string name="plans_loading_error">Ezin izan dira planak kargatu</string>
     <string name="plan">Plana</string>
     <string name="plans">Planak</string>
     <string name="export_your_content_message">Zure bidalketak, orrialdeak eta ezarpenak e-posta bidez bidaliko zaizkizu %s helbidera.</string>

@@ -22,20 +22,12 @@ class UiHelpers @Inject constructor() {
     }
 
     fun setTextOrHide(view: TextView, uiString: UiString?) {
-        val text = if (uiString != null) {
-            getTextOfUiString(view.context, uiString)
-        } else {
-            null
-        }
+        val text = uiString?.let { getTextOfUiString(view.context, uiString) }
         setTextOrHide(view, text)
     }
 
     fun setTextOrHide(view: TextView, @StringRes resId: Int?) {
-        val text = if (resId != null) {
-            view.context.getString(resId)
-        } else {
-            null
-        }
+        val text = resId?.let { view.context.getString(resId) }
         setTextOrHide(view, text)
     }
 

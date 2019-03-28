@@ -17,15 +17,7 @@ Language: bg
     <string name="history_detail_button_next">Следващ</string>
     <string name="history_detail_button_previous">Предишен</string>
     <string name="history_detail_title">Проверка</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Обратно</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Да не се показва отново</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Научете повече</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Редактиране на страница</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Редактиране на публикация</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Работим по чисто нов редактор на WordPress. Все още можете да редактирате тази страница, но препоръчваме да я прегледате преди публикуването.</string>
-    <string name="dialog_gutenberg_compatibility_title">Преди да продължите</string>
     <string name="media_space_used">%1$s използвани</string>
-    <string name="dialog_gutenberg_compatibility_message">Работим по чисто нов редактор на WordPress. Все още можете да редактирате тази публикация, но препоръчваме да я прегледате преди публикуването й.</string>
     <string name="history_loading_revision">Зареждане на редакцията</string>
     <string name="history_loaded_revision">Редакцията е заредена</string>
     <string name="history_load_dialog_button_positive">Зареждане</string>
@@ -71,10 +63,8 @@ Language: bg
     <string name="page_moved_to_trash">Страницата е преместена в кошчето</string>
     <string name="page_moved_to_scheduled">Насрочено е публикуване на страницата</string>
     <string name="quick_start_focus_point_description">докоснете тук</string>
-    <string name="quick_start_sites">Бързо начало</string>
     <string name="quick_start_list_create_site_title">Създайте своя сайт</string>
     <string name="quick_start_dialog_share_site_title">Споделете сайта си</string>
-    <string name="quick_start_dialog_publish_post_message">Време е! Започнете и публикувайте първата си публикация.</string>
     <string name="quick_start_dialog_need_help_title">Искате ли малко помощ, за да започнете?</string>
     <string name="login_error_suffix">\nЗащо не пробвате с друг профил?</string>
     <string name="login_error_generic">Възникна проблем при опит за връзка с Google профила.</string>
@@ -199,7 +189,6 @@ Language: bg
     <string name="draft_uploaded">Черновата е качена</string>
     <string name="video_quality">Качество на видеото</string>
     <string name="report_bug">Докладване на бъг</string>
-    <string name="permission_location">Място </string>
     <string name="permission_camera">Камера</string>
     <string name="permission_storage">Съхранение</string>
     <string name="button_edit_permissions">Редактиране на разрешенията</string>
@@ -289,7 +278,6 @@ Language: bg
     <string name="retry">Отново</string>
     <string name="confirm">Потвърждение</string>
     <string name="visual_editor_disabled">Визуален редактор изключен</string>
-    <string name="preference_editor_visual">Визуален</string>
     <string name="pending_draft_one_week_2">\'%1$s\' все още е чернова. Не забравяйте да го публикувате.</string>
     <string name="pending_draft_one_week_1">Вашата чернова \'%1$s\' ви очаква да я публикувате!</string>
     <string name="reader_photo_by">Снимка от %s</string>
@@ -336,7 +324,6 @@ Language: bg
     <string name="alignment_right">Дясно</string>
     <string name="site_settings_list_editor_action_mode_title">Избрано %1$d</string>
     <string name="error_fetch_users_list">Неуспешно извикване на потребителите</string>
-    <string name="plans_manage">Управление на плана ви\nWordPress.com/plans</string>
     <string name="title_follower">Последовател</string>
     <string name="title_email_follower">Абонат</string>
     <string name="people_fetching">Търсене на потребителите…</string>
@@ -420,7 +407,6 @@ Language: bg
     <string name="new_editor_reflection_error">Визуалният редактор не е съвместим с устройството ви. \n        Беше изключен автоматично.</string>
     <string name="stats_insights_latest_post_no_title">(без заглавие)</string>
     <string name="capture_or_pick_photo">Заснемане или избор на снимка</string>
-    <string name="plans_loading_error">Неуспешно зареждане на плановете</string>
     <string name="plan">План</string>
     <string name="plans">Планове</string>
     <string name="export_your_content_message">Публикациите, страниците и настройките ви ще ви бъдат изпратени по имейл на %s.</string>
@@ -657,7 +643,6 @@ Language: bg
     <string name="reader_label_gap_marker">Зареждане на още публикации</string>
     <string name="notifications_no_search_results">Нито един сайт няма \'%s\'</string>
     <string name="search_sites">Търсене в сайтовете</string>
-    <string name="notifications_empty_action_all">Бъдете активни! Коментирайте публикации на следените от вас блогове.</string>
     <string name="stats_widget_error_jetpack_no_blogid">Пробвайте да достъпите статистическите данните в приложението, и по-късно опитайте да добавите джаджата.</string>
     <string name="stats_widget_error_readd_widget">Джаджата трябва да бъде премахната и добавена отново.</string>
     <string name="stats_widget_error_no_visible_blog">Данните не са достъпни без видим блог.</string>

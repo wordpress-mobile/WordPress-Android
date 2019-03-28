@@ -1,4 +1,4 @@
-* Improved Quick Start design and flows.
-* Added a date selector to switch time periods in Stats.
-* Small visual tweaks in the Stats pages.
-* Unused location permissions have been removed.
+* Navigating notifications: now you can swipe between tabs.
+* Design details: seemingly-small visual tweaks make site creation smoother.
+* Clearer data: changes and visual updates to Stats make most stats easier to understand.
+* Speedy posting: sharing pictures to WordPress automatically opens the Block editor.

@@ -21,6 +21,7 @@ import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
 import android.widget.TextView
 import com.facebook.shimmer.ShimmerFrameLayout
+import kotlinx.android.synthetic.main.new_site_creation_preview_header_item.*
 import kotlinx.android.synthetic.main.new_site_creation_preview_screen_default.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -296,11 +297,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
     }
 
     override fun getScreenTitle(): String {
-        val arguments = arguments
-        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
-            throw IllegalStateException("Required argument screen title is missing.")
-        }
-        return arguments.getString(EXTRA_SCREEN_TITLE)
+        return arguments?.getString(EXTRA_SCREEN_TITLE)
+                ?: throw IllegalStateException("Required argument screen title is missing.")
     }
 
     private fun animateContentTransition() {

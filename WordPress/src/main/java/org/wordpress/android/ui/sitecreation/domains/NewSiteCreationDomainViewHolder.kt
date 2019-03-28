@@ -4,7 +4,6 @@ import android.support.annotation.LayoutRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
@@ -24,7 +23,6 @@ sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @La
     ) : NewSiteCreationDomainViewHolder(parentView, R.layout.new_site_creation_domains_item) {
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val suggestion = itemView.findViewById<RadioButton>(R.id.domain_suggestion)
-        private val divider = itemView.findViewById<View>(R.id.divider)
         private var onDomainSelected: (() -> Unit)? = null
 
         init {
@@ -42,7 +40,6 @@ sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @La
             onDomainSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             suggestion.text = uiState.name
             suggestion.isChecked = uiState.checked
-            divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
         }
     }
 

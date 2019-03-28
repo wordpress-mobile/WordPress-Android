@@ -150,11 +150,8 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment() {
     }
 
     override fun getScreenTitle(): String {
-        val arguments = arguments
-        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
-            throw IllegalStateException("Required argument screen title is missing.")
-        }
-        return arguments.getString(EXTRA_SCREEN_TITLE)
+        return arguments?.getString(EXTRA_SCREEN_TITLE)
+                ?: throw IllegalStateException("Required argument screen title is missing.")
     }
 
     companion object {

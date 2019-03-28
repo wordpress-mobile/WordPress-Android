@@ -6,7 +6,7 @@ set -eu
 function cleanup {
   cat "$LOGFILE"
 }
-trap cleanup EXIT
+trap cleanup ERR
 
 # This script defines some shared functions that are used by the build-apk* set.
 

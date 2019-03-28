@@ -14,9 +14,12 @@ buildscript {
     }
 }
 
+plugins {
+  id 'com.gradle.build-scan' version '1.16'
+}
+
 apply plugin: 'com.automattic.android.fetchstyle'
 
-project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
 
 allprojects {
@@ -62,13 +65,6 @@ allprojects {
 }
 
 subprojects {
-    project.plugins.whenPluginAdded { plugin ->
-        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        }
-    }
 
     configurations {
         ktlint
@@ -89,8 +85,24 @@ subprojects {
         classpath = configurations.ktlint
         args "-F", "src/**/*.kt"
     }
+
+    task ciktlint(type: JavaExec) {
+        main = "com.github.shyiko.ktlint.Main"
+        classpath = configurations.ktlint
+        args "src/**/*.kt", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
+    }
+}
+
+buildScan {
+    // Always run Gradle scan on CI builds
+    if (System.getenv('CI')) {
+        licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+        licenseAgree = 'yes'
+        tag 'CI'
+        publishAlways()
+    }
 }
 
 ext {
-    fluxCVersion = '758e870799948a9b4efa16fd76c180eb7353983c'
+    fluxCVersion = '7b5f25c60a5defd7b98717e762f4d4788b5eb34c'
 }

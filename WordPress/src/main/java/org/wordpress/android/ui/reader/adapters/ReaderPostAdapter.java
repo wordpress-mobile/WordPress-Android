@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -60,6 +58,7 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -419,9 +418,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPost post = getItem(position);
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
-        Drawable drawable = context.getResources().getDrawable(R.drawable.ic_undo_white_24dp);
-        DrawableCompat.setTint(drawable, context.getResources().getColor(R.color.blue_medium));
-        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
+        Drawable drawable =
+                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp, R.color.blue_medium);
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
