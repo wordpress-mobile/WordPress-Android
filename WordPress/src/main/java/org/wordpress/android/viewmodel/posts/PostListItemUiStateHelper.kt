@@ -122,7 +122,6 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
 
         val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
 
-
         when {
             isError && uploadStatus.uploadError != null -> {
                 getErrorLabel(uploadStatus.uploadError)?.let { labels.add(it) }
@@ -178,8 +177,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
         val isProgressInfo = uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload ||
                 uploadStatus.hasInProgressMediaUpload || uploadStatus.isUploading
-        val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
-                || hasUnhandledConflicts
+        val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
+                hasUnhandledConflicts
 
         return when {
             isError -> ERROR_COLOR
