@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 62;
+        return 63;
     }
 
     @Override
@@ -481,6 +481,18 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 61:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                db.execSQL("DROP TABLE StatsRequest");
+                db.execSQL(
+                        "CREATE TABLE StatsRequest (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,TIME_STAMP "
+                        + "INTEGER,REQUESTED_ITEMS INTEGER)");
+                oldVersion++;
+            case 62:
+                db.execSQL("DROP TABLE StatsRequest");
+                db.execSQL(
+                        "CREATE TABLE StatsRequest (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,TIME_STAMP "
+                        + "INTEGER,REQUESTED_ITEMS INTEGER)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
