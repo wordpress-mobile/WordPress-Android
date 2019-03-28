@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.PopupMenu
 import android.widget.ProgressBar
+import org.apache.commons.lang3.StringUtils
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
@@ -24,6 +25,8 @@ import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
 import org.wordpress.android.viewmodel.posts.PostListItemUiState
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
+
+private const val STATUS_LABEL_DELIMITER = " · "
 
 class PostListItemViewHolder(
     @LayoutRes layout: Int,
@@ -49,7 +52,8 @@ class PostListItemViewHolder(
         setTextOrHide(tvTitle, item.data.title)
         setTextOrHide(tvExcerpt, item.data.excerpt)
         setTextOrHide(tvDateAndAuthor, item.data.dateAndAuthor)
-        setTextOrHide(tvStatusLabels, item.data.statusLabels)
+        uiHelpers.updateVisibility(tvStatusLabels, item.data.statusLabels.isNotEmpty())
+        updateStatusLabels(tvStatusLabels, item.data.statusLabels)
         if (item.data.statusLabelsColor != null) {
             tvStatusLabels.setTextColor(ContextCompat.getColor(tvStatusLabels.context, item.data.statusLabelsColor))
         }
@@ -60,6 +64,13 @@ class PostListItemViewHolder(
         actionButtons.forEachIndexed { index, button ->
             updateMenuItem(button, item.actions.getOrNull(index))
         }
+    }
+
+    private fun updateStatusLabels(view: WPTextView, statusLabels: List<UiString>) {
+        view.text = StringUtils.join(
+                statusLabels.map { uiHelpers.getTextOfUiString(view.context, it) },
+                STATUS_LABEL_DELIMITER
+        )
     }
 
     private fun updateMenuItem(postListButton: PostListButton, action: PostListItemAction?) {
