@@ -80,7 +80,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -317,7 +316,7 @@ class PostListViewModel @Inject constructor(
     // Lifecycle
 
     init {
-        connectionStatus.distinct().observe(this, Observer {
+        connectionStatus.observe(this, Observer {
             isNetworkAvailable = it?.isConnected == true
             retryOnConnectionAvailableAfterError()
         })
