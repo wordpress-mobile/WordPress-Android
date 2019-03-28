@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.ListError
+import org.wordpress.android.fluxc.store.ListStore.ListErrorType
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
@@ -79,6 +80,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -315,8 +317,14 @@ class PostListViewModel @Inject constructor(
     // Lifecycle
 
     init {
-        connectionStatus.observe(this, Observer {
+        connectionStatus.distinct().observe(this, Observer {
             isNetworkAvailable = it?.isConnected == true
+            val connectionAvailableAfterError = isNetworkAvailable &&
+                    pagedListWrapper.isFetchingFirstPage.value != true &&
+                    pagedListWrapper.listError.value?.type == ListErrorType.GENERIC_ERROR
+            if (connectionAvailableAfterError) {
+                fetchFirstPage()
+            }
         })
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
