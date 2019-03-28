@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -68,13 +67,6 @@ class InsightsManagementFragment : DaggerFragment() {
     }
 
     private fun setupObservers() {
-        val view = insightsManagementScrollView
-        viewModel.showSnackbarMessage.observe(this, Observer { holder ->
-            if (holder != null && view != null) {
-                Snackbar.make(view, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
-            }
-        })
-
         viewModel.removedInsights.observe(this, Observer {
             it?.let { items ->
                 updateRemovedInsights(items)
@@ -98,6 +90,10 @@ class InsightsManagementFragment : DaggerFragment() {
                 }
             }
         })
+
+        viewModel.closeInsightsManagement.observe(this, Observer {
+            requireActivity().finish()
+        })
     }
 
     private fun updateRemovedInsights(insights: List<InsightModel>) {
@@ -105,7 +101,7 @@ class InsightsManagementFragment : DaggerFragment() {
             removedInsights.adapter = InsightsManagementAdapter(
                     { item -> viewModel.onItemButtonClicked(item) },
                     { viewHolder -> addedInsightsTouchHelper.startDrag(viewHolder) },
-                    { list -> viewModel.onAddedItemsUpdated(list) }
+                    { list -> viewModel.onAddedInsightsReordered(list) }
             )
         }
         val adapter = removedInsights.adapter as InsightsManagementAdapter
@@ -118,7 +114,7 @@ class InsightsManagementFragment : DaggerFragment() {
             adapter = InsightsManagementAdapter(
                     { item -> viewModel.onItemButtonClicked(item) },
                     { viewHolder -> addedInsightsTouchHelper.startDrag(viewHolder) },
-                    { list -> viewModel.onAddedItemsUpdated(list) }
+                    { list -> viewModel.onAddedInsightsReordered(list) }
             )
             addedInsights.adapter = adapter
 

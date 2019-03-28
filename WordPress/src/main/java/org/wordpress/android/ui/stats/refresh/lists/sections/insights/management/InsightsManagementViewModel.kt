@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import androidx.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightTypesModel
@@ -12,14 +11,13 @@ import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.*
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.ADDED
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.REMOVED
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,11 +33,8 @@ class InsightsManagementViewModel @Inject constructor(
     private val _addedInsights = MutableLiveData<List<InsightModel>>()
     val addedInsights: LiveData<List<InsightModel>> = _addedInsights
 
-    private val mutableSnackbarMessage = MutableLiveData<Int>()
-
-    val showSnackbarMessage: LiveData<SnackbarMessageHolder> = mutableSnackbarMessage.map {
-        SnackbarMessageHolder(it)
-    }
+    private val _closeInsightsManagement = SingleLiveEvent<Unit>()
+    val closeInsightsManagement: LiveData<Unit> = _closeInsightsManagement
 
     fun start() {
         loadInsights()
@@ -65,13 +60,12 @@ class InsightsManagementViewModel @Inject constructor(
             val model = InsightTypesModel(addedTypes, removedTypes + FOLLOWER_TOTALS + ANNUAL_SITE_STATS)
             statsStore.updateTypes(siteProvider.siteModel, model)
 
-            mutableSnackbarMessage.value = R.string.stats_insights_saved_message
-
             insightsUseCase.refreshData()
+            _closeInsightsManagement.call()
         }
     }
 
-    fun onAddedItemsUpdated(items: List<InsightModel>) {
+    fun onAddedInsightsReordered(items: List<InsightModel>) {
         _addedInsights.value = items
     }
 
@@ -85,10 +79,6 @@ class InsightsManagementViewModel @Inject constructor(
                 _addedInsights.value = _addedInsights.value?.let { it + insight.copy(type = ADDED) }
             }
         }
-    }
-
-    override fun onCleared() {
-        mutableSnackbarMessage.value = null
     }
 
     data class InsightModel(val insightsTypes: InsightsTypes, val type: Type) {
