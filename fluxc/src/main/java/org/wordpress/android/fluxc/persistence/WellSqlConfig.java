@@ -494,6 +494,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,TIME_STAMP "
                         + "INTEGER,REQUESTED_ITEMS INTEGER)");
                 oldVersion++;
+            case 62:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -713,6 +717,13 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "CROSS_SELL_IDS TEXT NOT NULL,"
                                + "UPSELL_IDS TEXT NOT NULL,"
                                + "VARIATIONS TEXT NOT NULL)");
+                    break;
+                case 62:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCProductSettingsModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "WEIGHT_UNIT TEXT NOT NULL,"
+                               + "DIMENSION_UNIT TEXT NOT NULL)");
                     break;
             }
         }
