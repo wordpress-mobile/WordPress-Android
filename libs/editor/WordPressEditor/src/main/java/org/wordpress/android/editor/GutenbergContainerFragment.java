@@ -53,9 +53,6 @@ public class GutenbergContainerFragment extends Fragment {
 
         mWPAndroidGlueCode = new WPAndroidGlueCode();
         mWPAndroidGlueCode.onCreate(getContext());
-
-        // clear the content initialization flag since a new ReactRootView has been created;
-        mHasReceivedAnyContent = false;
     }
 
     @Nullable
@@ -75,6 +72,9 @@ public class GutenbergContainerFragment extends Fragment {
                 isNewPost,
                 localeString,
                 translations);
+
+        // clear the content initialization flag since a new ReactRootView has been created;
+        mHasReceivedAnyContent = false;
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
