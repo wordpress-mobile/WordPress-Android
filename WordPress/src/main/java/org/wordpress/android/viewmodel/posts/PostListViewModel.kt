@@ -34,7 +34,6 @@ import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.ListError
-import org.wordpress.android.fluxc.store.ListStore.ListErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
@@ -84,6 +83,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
+import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState.RefreshError
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
@@ -318,7 +318,7 @@ class PostListViewModel @Inject constructor(
     init {
         connectionStatus.observe(this, Observer {
             isNetworkAvailable = it?.isConnected == true
-            retryOnConnectionAvailableAfterError()
+            retryOnConnectionAvailableAfterRefreshError()
         })
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
@@ -372,13 +372,11 @@ class PostListViewModel @Inject constructor(
         _postListAction.postValue(PostListAction.NewPost(site))
     }
 
-    private fun retryOnConnectionAvailableAfterError() {
-        val connectionAvailableAfterError = isNetworkAvailable &&
-                pagedListWrapper.isFetchingFirstPage.value != true &&
-                pagedListWrapper.listError.value?.type == GENERIC_ERROR
-        val listIsEmpty = pagedListWrapper.isEmpty.value == true
+    private fun retryOnConnectionAvailableAfterRefreshError() {
+        val connectionAvailableAfterRefreshError = isNetworkAvailable &&
+                emptyViewState.value is RefreshError
 
-        if (connectionAvailableAfterError && listIsEmpty) {
+        if (connectionAvailableAfterRefreshError) {
             fetchFirstPage()
         }
     }
