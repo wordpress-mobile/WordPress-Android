@@ -376,8 +376,9 @@ class PostListViewModel @Inject constructor(
         val connectionAvailableAfterError = isNetworkAvailable &&
                 pagedListWrapper.isFetchingFirstPage.value != true &&
                 pagedListWrapper.listError.value?.type == GENERIC_ERROR
+        val listIsEmpty = pagedListWrapper.isEmpty.value == true
 
-        if (connectionAvailableAfterError) {
+        if (connectionAvailableAfterError && listIsEmpty) {
             fetchFirstPage()
         }
     }
