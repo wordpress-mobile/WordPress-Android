@@ -1,70 +1,75 @@
 package org.wordpress.android.fluxc.model.list.datastore
 
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
-import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
-import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import org.wordpress.android.fluxc.model.list.datastore.PostListItemIdentifier.EndListIndicator
+import org.wordpress.android.fluxc.model.list.datastore.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.fluxc.model.list.datastore.PostListItemIdentifier.RemotePostId
 
-// This is used for a temporary solution for preventing duplicate fetch requests for posts. This workaround should
-// be moved in a later minor rework of how we fetch individual posts for the paged list.
-private data class SitePostId(val localSiteId: Int, val remotePostId: Long)
+// TODO: Move this file to WPAndroid
+
+sealed class PostListItemIdentifier {
+    data class LocalPostId(val id: LocalId) : PostListItemIdentifier()
+    data class RemotePostId(val id: RemoteId) : PostListItemIdentifier()
+    object EndListIndicator : PostListItemIdentifier()
+}
 
 class PostListDataStore(
-    private val dispatcher: Dispatcher,
-    private val postStore: PostStore,
-    private val site: SiteModel?,
-    private val performGetItemIdsToHide: ((ListDescriptor) -> List<Pair<Int?, Long?>>)? = null
-) : ListDataStoreInterface<PostModel> {
-    private val fetchingSet = HashSet<SitePostId>()
+    private val postListDataStoreHelper: PostListDataStoreHelper,
+    private val performGetItemIdsToHide: ((ListDescriptor) -> Set<PostListItemIdentifier>)? = null
+) : ListItemDataStoreInterface<PostListDescriptor, PostListItemIdentifier, PostModel> {
+    override fun fetchList(listDescriptor: PostListDescriptor, offset: Long) {
+        postListDataStoreHelper.fetchList(postListDescriptor = listDescriptor, offset = offset)
+    }
 
-    override fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long) {
-        site?.let {
-            val sitePostId = SitePostId(localSiteId = it.id, remotePostId = remoteItemId)
-            // Only fetch the post if there is no request going on
-            if (!fetchingSet.contains(sitePostId)) {
-                fetchingSet.add(sitePostId)
+    override fun getItemIdentifiers(
+        listDescriptor: PostListDescriptor,
+        remoteItemIds: List<RemoteId>,
+        isListFullyFetched: Boolean
+    ): List<PostListItemIdentifier> {
+        val localItems = postListDataStoreHelper.getLocalPostIdsForDescriptor(listDescriptor)
+                .map { LocalPostId(id = it) }
+        val remoteItems = remoteItemIds.map { RemotePostId(id = it) }
+        val actualItems = localItems + remoteItems
 
-                val postToFetch = PostModel()
-                postToFetch.remotePostId = remoteItemId
-                val payload = RemotePostPayload(postToFetch, it)
-                dispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload))
+        val endListItem = if (isListFullyFetched && actualItems.isNotEmpty()) listOf(EndListIndicator) else emptyList()
+        val itemsToHide = getItemIdsToHide(listDescriptor)
+        // We only want to show the end list indicator if the list is fully fetched and it's not empty
+        return (actualItems + endListItem).filter { !itemsToHide.contains(it) }
+    }
+
+    override fun getItemsAndFetchIfNecessary(
+        listDescriptor: PostListDescriptor,
+        itemIdentifiers: List<PostListItemIdentifier>
+    ): List<PostModel> {
+        val localOrRemoteIds = itemIdentifiers.mapNotNull { identifier ->
+            when (identifier) {
+                is LocalPostId -> identifier.id
+                is RemotePostId -> identifier.id
+                else -> null
             }
         }
-    }
+        val postMap = postListDataStoreHelper.getPosts(listDescriptor.site, localOrRemoteIds)
+        // TODO: If the post is null the key has to be a `RemoteId` but what's to best way to ensure that?
+        val postsToFetch = postMap.filter { it.value == null && it.key is RemoteId }.map { it.key as RemoteId }
+        postListDataStoreHelper.fetchPosts(listDescriptor.site, postsToFetch)
 
-    override fun fetchList(listDescriptor: ListDescriptor, offset: Long) {
-        if (listDescriptor is PostListDescriptor) {
-            val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
-            dispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))
-        }
-    }
-
-    override fun localItems(listDescriptor: ListDescriptor): List<PostModel> {
-        if (listDescriptor is PostListDescriptor) {
-            val localPostIdsToHide = getItemIdsToHide(listDescriptor).mapNotNull { it.first }
-            return postStore.getLocalPostsForDescriptor(listDescriptor).filter { !localPostIdsToHide.contains(it.id) }
-        }
-        return emptyList()
-    }
-
-    override fun getItemByRemoteId(listDescriptor: ListDescriptor, remoteItemId: Long): PostModel? {
-        if (listDescriptor is PostListDescriptor) {
-            val post = postStore.getPostByRemotePostId(remoteItemId, site)
-            if (post != null) {
-                val sitePostId = SitePostId(localSiteId = listDescriptor.site.id, remotePostId = remoteItemId)
-                fetchingSet.remove(sitePostId)
+        return itemIdentifiers.map { identifier ->
+            when (identifier) {
+                is LocalPostId -> postMap[identifier.id]
+                is RemotePostId -> postMap[identifier.id]
+                is EndListIndicator -> null
             }
-            return post
+        }.map {
+            // TODO: We should do an actual transformation of the identifiers when this is moved to WPAndroid
+            it!!
         }
-        return null
     }
 
-    override fun getItemIdsToHide(listDescriptor: ListDescriptor): List<Pair<Int?, Long?>> {
-        return performGetItemIdsToHide?.invoke(listDescriptor) ?: emptyList()
+    private fun getItemIdsToHide(postListDescriptor: PostListDescriptor): Set<PostListItemIdentifier> {
+        return performGetItemIdsToHide?.invoke(postListDescriptor) ?: emptySet()
     }
 }
