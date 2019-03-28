@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.model.list.ListDescriptor
  * [ID] represents the identifier for the type [T]
  * [T] represents the end result type that'll be used by `PagedList`.
  */
-class InternalPagedListDataStore<LD: ListDescriptor, ID, T>(
+class InternalPagedListDataStore<LD : ListDescriptor, ID, T>(
     private val listDescriptor: LD,
     remoteItemIds: List<RemoteId>,
     isListFullyFetched: Boolean,
