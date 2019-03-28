@@ -177,8 +177,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     ): Int? {
         val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
         val isProgressInfo = uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload ||
-                uploadStatus.hasInProgressMediaUpload || uploadStatus.isUploading || hasUnhandledConflicts
+                uploadStatus.hasInProgressMediaUpload || uploadStatus.isUploading
         val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
+                || hasUnhandledConflicts
 
         return when {
             isError -> ERROR_COLOR
