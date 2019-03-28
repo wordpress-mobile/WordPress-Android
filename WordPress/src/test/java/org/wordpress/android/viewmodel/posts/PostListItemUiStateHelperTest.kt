@@ -7,15 +7,25 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.store.MediaStore.MediaError
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.widgets.PostListButtonType
 
 private const val FORMATTER_DATE = "January 1st, 1:35pm"
+
+// statuses are hardcoded in PostStatus.java
+private const val POST_STATE_PUBLISH = "publish"
+private const val POST_STATE_PRIVATE = "private"
+private const val POST_STATE_PENDING = "pending"
 
 @RunWith(MockitoJUnitRunner::class)
 class PostListItemUiStateHelperTest {
@@ -74,6 +84,108 @@ class PostListItemUiStateHelperTest {
     fun `label has progress color when uploading post`() {
         val state = createPostListItemUiState(unhandledConflicts = true)
         assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+    }
+
+    @Test
+    fun `private label shown for private posts`() {
+        val state = createPostListItemUiState(post = createPostModel(status = POST_STATE_PRIVATE))
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_status_post_private))
+    }
+
+    @Test
+    fun `pending review label shown for posts pending review`() {
+        val state = createPostListItemUiState(post = createPostModel(status = POST_STATE_PENDING))
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_status_pending_review))
+    }
+
+    @Test
+    fun `local draft label shown for local posts`() {
+        val state = createPostListItemUiState(post = createPostModel(isLocalDraft = true))
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.local_draft))
+    }
+
+    @Test
+    fun `locally changed label shown for locally changed posts`() {
+        val state = createPostListItemUiState(post = createPostModel(isLocallyChanged = true))
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.local_changes))
+    }
+
+    @Test
+    fun `version conflict label shown for posts with version conflict`() {
+        val state = createPostListItemUiState(unhandledConflicts = true)
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.local_post_is_conflicted))
+    }
+
+    @Test
+    fun `uploading post label shown when the post is being uploaded`() {
+        val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploading = true))
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_uploading))
+    }
+
+    @Test
+    fun `uploading media label shown when the post's media is being uploaded`() {
+        val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasInProgressMediaUpload = true))
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.uploading_media))
+    }
+
+    @Test
+    fun `queued post label shown when the post has pending media uploads`() {
+        val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasPendingMediaUpload = true))
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_queued))
+    }
+
+    @Test
+    fun `queued post label shown when the post is queued for upload`() {
+        val state = createPostListItemUiState(uploadStatus = createUploadStatus(isQueued = true))
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_queued))
+    }
+
+    @Test
+    fun `error uploading media label shown when the media upload fails`() {
+        val state = createPostListItemUiState(
+                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+        )
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.error_media_recover_post))
+    }
+
+    @Test
+    fun `error uploading post label shown when the post upload fails`() {
+        val errorMsg = "testing error message"
+        val state = createPostListItemUiState(
+                uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR, errorMsg)))
+        )
+        assertThat(state.data.statusLabels).contains(UiStringText(errorMsg))
+    }
+
+    @Test
+    fun `error label has precedence over info labels`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE),
+                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+        )
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.error_media_recover_post))
+        assertThat(state.data.statusLabels.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `multiple info labels are being shown together`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE)
+        )
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.local_changes))
+        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_status_post_private))
+    }
+
+    private fun createPostModel(
+        status: String = POST_STATE_PUBLISH,
+        isLocalDraft: Boolean = false,
+        isLocallyChanged: Boolean = false
+    ): PostModel {
+        val post = PostModel()
+        post.status = status
+        post.setIsLocalDraft(isLocalDraft)
+        post.setIsLocallyChanged(isLocallyChanged)
+        return post
     }
 
     private fun createPostListItemUiState(
