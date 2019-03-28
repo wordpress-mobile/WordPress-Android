@@ -50,25 +50,14 @@ class StatsStore
     private val coroutineContext: CoroutineContext,
     private val insightTypesSqlUtils: InsightTypesSqlUtils
 ) {
-    private val defaultList = listOf(LATEST_POST_SUMMARY, TODAY_STATS, ALL_TIME_STATS, POSTING_ACTIVITY)
-
     suspend fun getInsights(site: SiteModel): List<InsightsTypes> = withContext(coroutineContext) {
-        val cachedData = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
-
-        return@withContext if (cachedData.isNotEmpty()) {
-            cachedData
-        } else {
-            defaultList
-        }
+        return@withContext insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
     }
 
     suspend fun getInsightsManagementModel(site: SiteModel) = withContext(coroutineContext) {
-        val cachedData = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
-        return@withContext if (cachedData.isNotEmpty()) {
-            InsightTypesModel(cachedData, insightTypesSqlUtils.selectRemovedItemsOrderedByStatus(site))
-        } else {
-            InsightTypesModel(defaultList, InsightsTypes.values().filter { !defaultList.contains(it) })
-        }
+        val addedInsights = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
+        val removedInsights = insightTypesSqlUtils.selectRemovedItemsOrderedByStatus(site)
+        return@withContext InsightTypesModel(addedInsights, removedInsights)
     }
 
     suspend fun updateTypes(site: SiteModel, model: InsightTypesModel) = withContext(coroutineContext) {
