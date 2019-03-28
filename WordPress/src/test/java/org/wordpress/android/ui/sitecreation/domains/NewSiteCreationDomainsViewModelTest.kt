@@ -3,7 +3,6 @@ package org.wordpress.android.ui.sitecreation.domains
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.firstValue
-import com.nhaarman.mockitokotlin2.lastValue
 import com.nhaarman.mockitokotlin2.secondValue
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -28,7 +27,6 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode
 import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -52,7 +50,6 @@ class NewSiteCreationDomainsViewModelTest {
     @Mock private lateinit var createSiteBtnObserver: Observer<String>
     @Mock private lateinit var clearBtnObserver: Observer<Unit>
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
-    @Mock private lateinit var onInputFocusRequestedObserver: Observer<RequestFocusMode>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
 
     private lateinit var viewModel: NewSiteCreationDomainsViewModel
@@ -71,7 +68,6 @@ class NewSiteCreationDomainsViewModelTest {
         viewModel.createSiteBtnClicked.observeForever(createSiteBtnObserver)
         viewModel.clearBtnClicked.observeForever(clearBtnObserver)
         viewModel.onHelpClicked.observeForever(onHelpClickedObserver)
-        viewModel.onInputFocusRequested.observeForever(onInputFocusRequestedObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
@@ -222,39 +218,6 @@ class NewSiteCreationDomainsViewModelTest {
         val captor = ArgumentCaptor.forClass(String::class.java)
         verify(createSiteBtnObserver, times(1)).onChanged(captor.capture())
         assertThat(captor.firstValue, Is(domainName))
-    }
-
-    /**
-     * Verifies the input focus is requested when the VM is started with a non-empty site title.
-     */
-    @Test
-    fun verifyInputFocusRequestedAfterVMStartedWithNonEmptyTitle() = testWithSuccessResponse {
-        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-        val captor = ArgumentCaptor.forClass(RequestFocusMode::class.java)
-        verify(onInputFocusRequestedObserver, times(1)).onChanged(captor.capture())
-        assertThat(captor.lastValue, Is(RequestFocusMode.FOCUS_ONLY))
-    }
-
-    /**
-     * Verifies the input focus and keyboard is requested when the VM is started with an empty site title.
-     */
-    @Test
-    fun verifyInputFocusAndKeyboardRequestedAfterVMStartedWithEmptyTitle() = testWithSuccessResponse {
-        viewModel.start("")
-        val captor = ArgumentCaptor.forClass(RequestFocusMode::class.java)
-        verify(onInputFocusRequestedObserver, times(1)).onChanged(captor.capture())
-        assertThat(captor.lastValue, Is(RequestFocusMode.FOCUS_AND_KEYBOARD))
-    }
-
-    /**
-     * Verifies the input focus and keyboard is requested when the VM is started with null site title.
-     */
-    @Test
-    fun verifyInputFocusAndKeyboardRequestedAfterVMStartedWithNullTitle() = testWithSuccessResponse {
-        viewModel.start(null)
-        val captor = ArgumentCaptor.forClass(RequestFocusMode::class.java)
-        verify(onInputFocusRequestedObserver, times(1)).onChanged(captor.capture())
-        assertThat(captor.lastValue, Is(RequestFocusMode.FOCUS_AND_KEYBOARD))
     }
 
     /**

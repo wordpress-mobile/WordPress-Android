@@ -7,7 +7,8 @@
                                              android:layout_height="wrap_content"
                                              android:background="@color/white"
                                              android:foreground="?selectableItemBackground"
-                                             android:minHeight="@dimen/one_line_list_item_height">
+                                             android:minHeight="@dimen/one_line_list_item_height"
+                                             tools:ignore="UnusedAttribute">
 
     <TextView
         android:id="@+id/suggestion"
@@ -32,7 +33,8 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="@dimen/site_creation_verticals_list_divider_start_margin"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:background="@color/wp_grey_lighten_30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

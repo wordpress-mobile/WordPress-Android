@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-06 08:54:08+0000
+Translation-Revision-Date: 2019-03-20 10:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="app_rating_rate_never">評価しない</string>
+    <string name="app_rating_rate_later">後で評価する</string>
+    <string name="app_rating_rate_now">今すぐ評価する</string>
+    <string name="app_rating_message">ご利用ありがとうございます。アプリをご利用いただきありがとうございます。Google Play ストアでの評価をお願いいたします。</string>
+    <string name="app_rating_title">WordPress の感想をお聞かせください</string>
+    <string name="editor_post_converted_back_to_draft">下書きに戻した投稿</string>
+    <string name="stats_insights_posting_activity">投稿アクティビティ</string>
+    <string name="stats_site_not_loaded_yet">まだ読み込まれていないサイト</string>
+    <string name="stats_more_posts">表示する投稿数を増やす</string>
+    <string name="stats_fewer_posts">表示する投稿数を減らす</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">コンテンツを削除</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">ブロックを下へ移動</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">ブロックを上へ移動</string>

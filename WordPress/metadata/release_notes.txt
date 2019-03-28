@@ -1,5 +1,4 @@
-* The editor now opens faster for large posts.
-* Now, new posts are created as drafts to make sure they won’t be published accidentally.
-* A new section in stats shows your site’s posting activity.
-* Fixed a bug where headings inserted in the block editor would appear without formatting.
-* Updated the notification screen’s design.
+* Navigating notifications: now you can swipe between tabs.
+* Design details: seemingly-small visual tweaks make site creation smoother.
+* Clearer data: changes and visual updates to Stats make most stats easier to understand.
+* Speedy posting: sharing pictures to WordPress automatically opens the Block editor.
