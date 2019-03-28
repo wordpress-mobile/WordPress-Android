@@ -74,6 +74,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                                 uploadStatus = uploadStatus,
                                 hasUnhandledConflicts = unhandledConflicts
                         ),
+                        statusLabelsDelimiter = UiStringRes(R.string.multiple_status_label_delimiter),
                         showProgress = shouldShowProgress(uploadStatus = uploadStatus),
                         showOverlay = shouldShowOverlay(uploadStatus = uploadStatus)
                 ),

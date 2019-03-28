@@ -26,8 +26,6 @@ import org.wordpress.android.viewmodel.posts.PostListItemUiState
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 
-private const val STATUS_LABEL_DELIMITER = " · "
-
 class PostListItemViewHolder(
     @LayoutRes layout: Int,
     parentView: ViewGroup,
@@ -53,7 +51,7 @@ class PostListItemViewHolder(
         setTextOrHide(tvExcerpt, item.data.excerpt)
         setTextOrHide(tvDateAndAuthor, item.data.dateAndAuthor)
         uiHelpers.updateVisibility(tvStatusLabels, item.data.statusLabels.isNotEmpty())
-        updateStatusLabels(tvStatusLabels, item.data.statusLabels)
+        updateStatusLabels(tvStatusLabels, item.data.statusLabels, item.data.statusLabelsDelimiter)
         if (item.data.statusLabelsColor != null) {
             tvStatusLabels.setTextColor(ContextCompat.getColor(tvStatusLabels.context, item.data.statusLabelsColor))
         }
@@ -66,10 +64,10 @@ class PostListItemViewHolder(
         }
     }
 
-    private fun updateStatusLabels(view: WPTextView, statusLabels: List<UiString>) {
+    private fun updateStatusLabels(view: WPTextView, statusLabels: List<UiString>, delimiter: UiString) {
         view.text = StringUtils.join(
                 statusLabels.map { uiHelpers.getTextOfUiString(view.context, it) },
-                STATUS_LABEL_DELIMITER
+                uiHelpers.getTextOfUiString(view.context, delimiter)
         )
     }
 
