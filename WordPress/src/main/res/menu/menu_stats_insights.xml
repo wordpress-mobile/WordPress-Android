@@ -4,5 +4,5 @@
     <item
         android:id="@+id/manage_insights"
         app:showAsAction="always"
-        android:title="@string/manage_insights"/>
+        android:title="@string/stats_menu_manage_insights_button"/>
 </menu>
