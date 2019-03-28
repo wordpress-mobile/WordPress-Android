@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.model.list.ListDescriptor
  * [ID] represents the identifier for the type [T]
  * [T] represents the end result type that'll be used by `PagedList`.
  */
-interface ListItemDataStoreInterface<LD: ListDescriptor, ID, T> {
+interface ListItemDataStoreInterface<LD : ListDescriptor, ID, T> {
     /**
      * Should return a list of items [T] for the given [ListDescriptor] and the list of identifiers [ID] that
      * will be provided by [getItemIdentifiers]. It should also fetch the missing items if necessary.

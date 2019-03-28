@@ -79,7 +79,7 @@ class ListStore @Inject constructor(
      * whether the first page is being fetched, whether there are any errors etc. in `LiveData` format.
      */
     // TODO: Cleanup this method. I am not sure what that cleanup means, but it's hard to track what's going on here.
-    fun <LD: ListDescriptor, ID, T> getList(
+    fun <LD : ListDescriptor, ID, T> getList(
         listDescriptor: LD,
         dataStore: ListItemDataStoreInterface<LD, ID, T>,
         lifecycle: Lifecycle
