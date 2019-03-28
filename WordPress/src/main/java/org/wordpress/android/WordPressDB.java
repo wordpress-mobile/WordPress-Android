@@ -25,7 +25,7 @@ public class WordPressDB {
     private static final int DATABASE_VERSION = 66;
 
 
-    // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
+    // Warning renaming DATABASE_NAME could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
     private static final String NOTES_TABLE = "notes";
     private static final String THEMES_TABLE = "themes";
