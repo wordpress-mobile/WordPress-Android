@@ -16,9 +16,10 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.insights_management_fragment.*
-import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
 import javax.inject.Inject
+import android.animation.LayoutTransition
+import org.wordpress.android.R
 
 class InsightsManagementFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -44,8 +45,13 @@ class InsightsManagementFragment : DaggerFragment() {
     }
 
     private fun initializeViews() {
-        removedInsights.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        addedInsights.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        removedInsights.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+        addedInsights.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+
+        val transition = LayoutTransition()
+        transition.disableTransitionType(LayoutTransition.DISAPPEARING)
+        transition.enableTransitionType(LayoutTransition.CHANGING)
+        insightsManagementContainer.layoutTransition = transition
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,12 +78,24 @@ class InsightsManagementFragment : DaggerFragment() {
         viewModel.removedInsights.observe(this, Observer {
             it?.let { items ->
                 updateRemovedInsights(items)
+
+                if (items.isEmpty()) {
+                    addInsightsHeader.visibility = View.GONE
+                } else {
+                    addInsightsHeader.visibility = View.VISIBLE
+                }
             }
         })
 
         viewModel.addedInsights.observe(this, Observer {
             it?.let { items ->
                 updateAddedInsights(items)
+
+                if (items.isEmpty()) {
+                    addedInsightsInfo.visibility = View.GONE
+                } else {
+                    addedInsightsInfo.visibility = View.VISIBLE
+                }
             }
         })
     }
