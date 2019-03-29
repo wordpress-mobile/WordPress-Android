@@ -97,7 +97,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
         mColorRead = context.getResources().getColor(android.R.color.white);
-        mColorUnread = context.getResources().getColor(R.color.primary_50);
+        mColorUnread = context.getResources().getColor(R.color.background_notification_unread);
         mTextIndentSize = context.getResources().getDimensionPixelSize(R.dimen.notifications_text_indent_sz);
     }
 
@@ -287,7 +287,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         if (commentStatus == CommentStatus.UNAPPROVED) {
             noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_white);
         } else if (isUnread) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_400_stroke_primary_50);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_400_stroke_notification_unread);
         } else {
             noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_200_stroke_white);
         }
