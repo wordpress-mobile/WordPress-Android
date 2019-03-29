@@ -11,7 +11,7 @@
     <color name="stats_activity_high">@color/primary_dark</color>
     <color name="stats_activity_low">@color/primary_light</color>
     <color name="stats_activity_medium">@color/primary</color>
-    <color name="status_bar">@color/primary_dark</color>
+    <color name="status_bar">@color/primary</color>
     <color name="status_bar_action_mode">@color/neutral</color>
 
     <!-- SEMANTIC -->
