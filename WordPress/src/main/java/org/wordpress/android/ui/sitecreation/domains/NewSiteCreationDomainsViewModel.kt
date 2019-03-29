@@ -56,6 +56,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
     private var isStarted = false
+    private var segmentId by Delegates.notNull<Long>()
 
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
@@ -86,10 +87,11 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         dispatcher.unregister(fetchDomainsUseCase)
     }
 
-    fun start(siteTitle: String?) {
+    fun start(siteTitle: String?, segmentId: Long) {
         if (isStarted) {
             return
         }
+        this.segmentId = segmentId
         isStarted = true
         tracker.trackDomainsAccessed()
         // isNullOrBlank not smart-casting for some reason..
@@ -140,7 +142,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
-                val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value)
+                val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value, segmentId)
                 withContext(mainDispatcher) {
                     onDomainsFetched(query, onSuggestedDomains)
                 }
