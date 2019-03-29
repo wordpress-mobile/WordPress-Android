@@ -40,9 +40,6 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
     private val _uiState: MutableLiveData<SiteInfoUiState> = MutableLiveData()
     val uiState: LiveData<SiteInfoUiState> = _uiState
 
-    private val _onTitleInputFocusRequested = SingleLiveEvent<Unit>()
-    val onTitleInputFocusRequested: LiveData<Unit> = _onTitleInputFocusRequested
-
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
@@ -62,8 +59,6 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
         }
         isStarted = true
         tracker.trackBasicInformationViewed()
-        // Show keyboard
-        _onTitleInputFocusRequested.call()
     }
 
     fun onHelpClicked() {

@@ -1,6 +1,7 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,6 +40,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
@@ -80,6 +82,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private boolean mIsNewPost;
 
     private boolean mEditorDidMount;
+
+    private ProgressDialog mSavingContentProgressDialog;
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
@@ -233,6 +237,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override public void onCancelUploadForMediaClicked(int mediaId) {
                         showCancelMediaUploadDialog(mediaId);
                     }
+
+                    @Override public void onCancelUploadForMediaDueToDeletedBlock(int mediaId) {
+                        cancelMediaUploadForDeletedBlock(mediaId);
+                    }
                 },
                 new OnReattachQueryListener() {
                     @Override
@@ -255,8 +263,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             }
                         });
                     }
-                }
-            );
+                }, new OnAuthHeaderRequestedListener() {
+                    @Override public String onAuthHeaderRequested(String url) {
+                        return mEditorFragmentListener.onAuthHeaderRequested(url);
+                    }
+                });
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
@@ -334,6 +345,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
                 CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
             mEditorFragmentListener.onCapturePhotoClicked();
+        }
+    }
+
+    private void cancelMediaUploadForDeletedBlock(int localMediaId) {
+        if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
+            // first make sure to signal deletion
+            mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
+            // second also perform a media upload cancel action, through the onMediaUploadCancelClicked interface
+            mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
+            mUploadingMediaProgressMax.remove(localMediaId);
+        } else {
+            // upload has already finished by the time the user deleted the block, so no op
         }
     }
 
@@ -645,6 +668,40 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setContentPlaceholder(CharSequence placeholderText) {
+    }
+
+    // Getting the content from the HTML editor can take time and the UI seems to be unresponsive.
+    // Show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
+    @Override
+    public boolean showSavingProgressDialogIfNeeded() {
+        if (!isAdded()) {
+            return false;
+        }
+
+        if (!mHtmlModeEnabled) return false;
+
+        if (mSavingContentProgressDialog != null && mSavingContentProgressDialog.isShowing()) {
+            // Already on the screen? no need to show it again.
+            return true;
+        }
+
+        if (mSavingContentProgressDialog == null) {
+            mSavingContentProgressDialog = new ProgressDialog(getActivity());
+            mSavingContentProgressDialog.setCancelable(false);
+            mSavingContentProgressDialog.setIndeterminate(true);
+            mSavingContentProgressDialog.setMessage(getActivity().getString(R.string.long_post_dlg_saving));
+        }
+        mSavingContentProgressDialog.show();
+       return true;
+    }
+
+    @Override
+    public boolean hideSavingProgressDialog() {
+        if (mSavingContentProgressDialog != null && mSavingContentProgressDialog.isShowing()) {
+            mSavingContentProgressDialog.dismiss();
+            return true;
+        }
+        return false;
     }
 
     @Override

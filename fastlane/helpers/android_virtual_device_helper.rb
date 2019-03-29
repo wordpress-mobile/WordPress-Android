@@ -58,6 +58,12 @@ module Fastlane
         Fastlane::Actions::AdbDevicesAction.run(adb_path: AndroidVirtualDevicePathHelper.adb_path)
       end
 
+      def self.adb_emulators
+        adb_devices.select do |device|
+            device.serial.include? "emulator"
+        end
+      end
+
       def self.boot_completed?
         adb(command: "shell getprop sys.boot_completed").to_i == 1
       end
@@ -136,7 +142,7 @@ module Fastlane
 
       def shutdown_all_devices
         UI.message("Shutting down all emulators")
-        AndroidVirtualDevicesAdbHelper.adb_devices.each do |device|
+        AndroidVirtualDevicesAdbHelper.adb_emulators.each do |device|
           AndroidVirtualDevicesAdbHelper.shutdown_device(device.serial)
         end
         wait_for_no_devices
@@ -147,8 +153,8 @@ module Fastlane
       def wait_for_no_devices
         begin
           Timeout::timeout(SHUTDOWN_TIMEOUT) do
-            next if AndroidVirtualDevicesAdbHelper.adb_devices.empty?
-            until AndroidVirtualDevicesAdbHelper.adb_devices.empty?
+            next if AndroidVirtualDevicesAdbHelper.adb_emulators.empty?
+            until AndroidVirtualDevicesAdbHelper.adb_emulators.empty?
               sleep(SHUTDOWN_WAIT)
             end
           end
