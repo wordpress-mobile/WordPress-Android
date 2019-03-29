@@ -1,5 +1,6 @@
 12.2
 -----
+* Updated color scheme to Classic Bright
 
 12.1
 -----
