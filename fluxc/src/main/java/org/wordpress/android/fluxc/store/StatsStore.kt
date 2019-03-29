@@ -54,7 +54,7 @@ class StatsStore
 
     suspend fun getInsights(site: SiteModel): List<InsightsTypes> = withContext(coroutineContext) {
         val addedInsights = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
-        val removedInsights = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
+        val removedInsights = insightTypesSqlUtils.selectRemovedItemsOrderedByStatus(site)
 
         return@withContext if (addedInsights.isEmpty() && removedInsights.isEmpty()) {
             defaultList
@@ -65,7 +65,7 @@ class StatsStore
 
     suspend fun getInsightsManagementModel(site: SiteModel) = withContext(coroutineContext) {
         val addedInsights = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
-        val removedInsights = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
+        val removedInsights = insightTypesSqlUtils.selectRemovedItemsOrderedByStatus(site)
 
         return@withContext if (addedInsights.isEmpty() && removedInsights.isEmpty()) {
             InsightTypesModel(defaultList, InsightsTypes.values().filter { !defaultList.contains(it) })
