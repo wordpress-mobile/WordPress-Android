@@ -824,7 +824,7 @@
     </style>
 
     <style name="SiteCreationHeaderSubtitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:textColor">@color/wp_grey_darken_20</item>
+        <item name="android:textColor">@color/text_subtle</item>
     </style>
 
     <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderTitle">
