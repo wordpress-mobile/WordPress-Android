@@ -227,7 +227,7 @@ public class AppSettingsFragment extends PreferenceFragment
                             .showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
                     break;
                 case SETTINGS_POST_ERROR:
-                    ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
+                    ToastUtils.showToast(getActivity(), event.error.message, ToastUtils.Duration.LONG);
                     break;
             }
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {

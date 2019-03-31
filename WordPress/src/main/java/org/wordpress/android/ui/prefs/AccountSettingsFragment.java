@@ -296,10 +296,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                                 ToastUtils.Duration.LONG);
                         break;
                     case SETTINGS_POST_ERROR:
-                        ToastUtils.showToast(getActivity(), R.string.error_post_account_settings,
+                        //Use event.error's message instead as it contains the information directly from the WP server API
+                        ToastUtils.showToast(getActivity(),event.error.message,
                                 ToastUtils.Duration.LONG);
-                        // we optimistically show the email change snackbar, if that request fails, we should
-                        // remove the snackbar
                         checkIfEmailChangeIsPending();
                         break;
                 }

@@ -10,7 +10,7 @@ android_config: &android_config
 copy_gradle_properties: &copy_gradle_properties
   run:
     name: Setup gradle.properties
-    command: cp gradle.properties-example gradle.properties && cp libs/login/gradle.properties-example libs/login/gradle.properties
+    command: cp gradle.properties gradle.properties && cp libs/login/gradle.properties libs/login/gradle.properties
 
 orbs:
   android: wordpress-mobile/android@0.0.19

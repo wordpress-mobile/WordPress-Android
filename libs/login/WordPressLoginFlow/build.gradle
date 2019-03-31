@@ -78,7 +78,7 @@ android.buildTypes.all { buildType ->
         gradleProperties.load(new FileInputStream(propertiesFile))
     } else {
         // Load defaults
-        gradleProperties.load(new FileInputStream(file("../gradle.properties-example")))
+        gradleProperties.load(new FileInputStream(file("../gradle.properties")))
     }
     gradleProperties.any { property ->
         if (property.key.toLowerCase().startsWith("wp.")) {

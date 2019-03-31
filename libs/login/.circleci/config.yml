@@ -8,7 +8,7 @@ commands:
     steps:
       - run:
           name: Setup gradle.properties
-          command: cp gradle.properties-example gradle.properties
+          command: cp gradle.properties gradle.properties
 
 jobs:
   Lint:
