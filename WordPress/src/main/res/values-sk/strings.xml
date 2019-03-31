@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-02 20:28:58+0000
+Translation-Revision-Date: 2019-03-22 15:38:45+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
 -->
 <resources>
+    <string name="app_rating_rate_never">Nie, ďakujem</string>
+    <string name="app_rating_rate_later">Neskôr</string>
+    <string name="app_rating_rate_now">Ohodnotiť teraz</string>
+    <string name="stats_more_posts">Viac príspevkov</string>
+    <string name="stats_fewer_posts">Menej príspevkov</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Odstrániť obsah</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Posunúť blok nižšie</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Posunúť blok vyššie</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">VLOŽTE BLOK TU</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Nepodporované</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Vložte URL adresu</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">VYBERTE OBRÁZOK</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Začnite písať…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Odstrániť odkaz</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Pridať URL adresu</string>
+    <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
+    <string name="quick_start_sites_type_subtitle">%1$d z %2$d kompletné</string>
+    <string name="quick_start_sites">Ďalšie kroky</string>
+    <string name="quick_start_complete_tasks_header">Kompletné (%d)</string>
+    <string name="quick_start_dialog_create_page_title">Vytvoriť novú stránku</string>
+    <string name="quick_start_dialog_browse_themes_title">Prehľadávať témy</string>
+    <string name="quick_start_remove_next_steps_menu_title">Odstrániť toto</string>
+    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Vytvárate novú webovú stránku</string>
     <string name="notification_new_site_creation_failed">Nastal problém</string>
     <string name="notification_new_site_creation_title">Vytvoriť webovú stránku</string>
@@ -23,6 +47,7 @@ Language: sk
     <string name="site_creation_fetch_suggestions_error_no_connection">Žiadne spojenie</string>
     <string name="new_site_creation_preview_title">Vaša webová stránka bola vytvorená!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
+    <string name="new_site_creation_screen_title_general">Vytvoriť webovú stránku</string>
     <string name="snackbar_conflict_undo">Vrátiť späť</string>
     <string name="stats_no_data_for_period">Žiadne dáta pre toto obdobie</string>
     <string name="preference_strip_image_location">Odstrániť lokáciu z médiá</string>
@@ -75,9 +100,6 @@ Language: sk
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_no_data_yet">Zatiaľ žiadne dáta</string>
     <string name="menu_debug">Menu ladenia</string>
-    <string name="preference_experimental">*TESTOVACIE*</string>
-    <string name="site_settings_enable_gutenberg_summary">Toto je stále len testovacia verzia Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">Povoliť Gutenberg</string>
     <string name="change_password_dialog_message">Prebieha zmena hesla…</string>
     <string name="change_password_dialog_hint">Vaše heslo by malo obsahovať aspoň 6 znakov. Aby bolo silnejšie, použite veľké a malé písmena, čísla a symboly ako ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Heslo úspešne zmenené</string>
@@ -89,14 +111,6 @@ Language: sk
     <string name="history_detail_title">Revízia</string>
     <string name="history_detail_button_previous">Predchádzajúce</string>
     <string name="history_detail_button_next">Ďalej</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Dozvedieť sa viac </string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Znovu nezobrazovať</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Späť</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Upraviť stránku</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Upraviť článok</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Pracujeme na úplne novom editore WordPress. Stále môžete upraviť túto stránku, no odporúčame vám zobraziť jej ukážku pred zverejnením. </string>
-    <string name="dialog_gutenberg_compatibility_message">Pracujeme na úplne novom editore WordPress. Stále môžete upraviť tento článok, no odporúčame vám zobraziť jeho ukážku pred zverejnením.</string>
-    <string name="dialog_gutenberg_compatibility_title">Skôr než budete pokračovať</string>
     <string name="media_space_used">%1$s použité</string>
     <string name="enter_wpcom_or_jetpack_site">Zadajte WordPress.com alebo samo-hostovanú WordPress webovú stránku pripojenú s Jetpack.</string>
     <string name="history_loading_revision">Načítavanie verzie </string>
@@ -165,7 +179,9 @@ Language: sk
     <string name="quick_start_dialog_publish_post_title">Zverejniť článok</string>
     <string name="quick_start_dialog_publish_post_message_short">Ťuknite %1$s Create Post %2$s a vytvorte nový článok.</string>
     <string name="quick_start_dialog_need_help_title">Chcete pomôcť na začiatku?</string>
+    <string name="quick_start_dialog_need_help_button_positive">Akceptovať</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nie, ďakujem</string>
     <string name="quick_start_dialog_follow_sites_title">Sledovať iné webové stránky</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Ťuknite %1$s Search %2$s , aby ste našli webové stránky s podobnými záujmami.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Ťuknite %1$s Reader %2$s, keď chcete pokračovať.</string>
@@ -177,6 +193,7 @@ Language: sk
     <string name="quick_start_button_positive">Ísť</string>
     <string name="quick_start_button_negative_short">Zrušiť</string>
     <string name="quick_start_button_negative">Teraz nie</string>
+    <string name="content_description_more">Viac</string>
     <string name="my_site_create_new_site_title">Nemáte žiadne webové stránky</string>
     <string name="reader_empty_followed_tags_title">Žiadne sledované značky</string>
     <string name="reader_empty_followed_tags_subtitle">Pridajte značky a nájdite články o témach, ktoré vás zaujímajú.</string>
@@ -1028,9 +1045,6 @@ Language: sk
     <string name="xmlrpc_post_blocked_error">Nemožno pripojiť. Váš hostiteľ blokuje žiadosti ČLÁNOK. Aplikácia potrebuje to potrebuje na komunikáciu s vašou webovou stránkou. Kontaktujte hostiteľa, aby vyriešil tento problém.</string>
     <string name="reader_hint_search_followed_sites">Hľadajte sledované webové stránky</string>
     <string name="visual_editor_disabled">Zablokovaný vizuálny editor</string>
-    <string name="preference_editor_visual">Vizuál</string>
-    <string name="preference_editor_legacy">Staršia verzia</string>
-    <string name="preference_editor_type">Nastaviť typ editora</string>
     <string name="pending_draft_one_generic">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_month">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_week_2">%1$s\' zostáva ako koncept. Pripomenúť na zverjnenie!</string>
@@ -1081,7 +1095,6 @@ Language: sk
     <string name="alignment_none">Žiadne</string>
     <string name="site_settings_list_editor_action_mode_title">Vybraná %1$d</string>
     <string name="error_fetch_users_list">Nepodarilo sa získať používateľov webovej stránky</string>
-    <string name="plans_manage">Organizujte svoj plán na WordPress.com/plans</string>
     <string name="title_email_follower">Email odberateľa</string>
     <string name="title_follower">Odberateľ</string>
     <string name="people_fetching">Načítavanie používateľov….</string>
@@ -1167,7 +1180,6 @@ Language: sk
     <string name="new_editor_reflection_error">Vizuálny editor nie je kompatibilný s vašim zariadením. Bol automaticky zablokovaný.</string>
     <string name="stats_insights_latest_post_no_title">(žiadny nadpis)</string>
     <string name="capture_or_pick_photo">Odfoť alebo vyber fotku</string>
-    <string name="plans_loading_error">Nemožno nahrať plány</string>
     <string name="plans">Paušály</string>
     <string name="plan">Paušál</string>
     <string name="export_your_content_message">Tvoj článok, webová stránka a nastavenia budú zaslané emailom na %s.</string>

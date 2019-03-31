@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-19 22:41:24+0000
+Translation-Revision-Date: 2019-03-19 18:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="app_rating_rate_never">No, grazie</string>
+    <string name="app_rating_rate_later">Più tardi</string>
+    <string name="app_rating_rate_now">Valuta ora</string>
+    <string name="app_rating_message">È un piacere rivederti. Se apprezzi l\'app, ci piacerebbe ricevere una valutazione sul Google Play Store.</string>
+    <string name="app_rating_title">Ti piace WordPress?</string>
+    <string name="editor_post_converted_back_to_draft">Articolo riconvertito in bozza</string>
+    <string name="stats_insights_posting_activity">Attività di pubblicazione</string>
+    <string name="stats_site_not_loaded_yet">Sito non ancora caricato</string>
+    <string name="stats_more_posts">Più articoli</string>
+    <string name="stats_fewer_posts">Meno articoli</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Rimuovi contenuto</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Sposta blocco giù</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Sposta blocco su</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">AGGIUNGI BLOCCO QUI</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Non supportato</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Tipo blocco non supportato.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Blocco non supportato</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Incolla URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">SCEGLI IMMAGINE</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Inserimento file multimediali non riuscito.\nTocca per ulteriori opzioni.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Cancella tutte le impostazioni</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Testo Alt</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Libreria multimediale WordPress</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Scatta una foto</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Scegli da dispositivo</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Inizia a scrivere…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Rimuovi link</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Aggiungi testo del link</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Testo del link</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Aggiungi URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link inserito</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Potresti perdere i tuoi progressi. Desideri uscire?</string>
+    <string name="plans_loading_error_with_cache_button">Visualizza piani in ogni caso</string>
+    <string name="plans_loading_error_with_cache_subtitle">Per visualizzare i Piani è richiesta una connessione Internet, pertanto i dettagli potrebbero non essere aggiornati.</string>
+    <string name="plans_loading_error_no_cache_subtitle">È necessaria una connessione Internet per visualizzare i Piani</string>
+    <string name="plans_loading_error_no_plans_subtitle">Al momento non è possibile caricare i Piani. Riprova più tardi.</string>
+    <string name="plans_loading_error_no_plans_title">Impossibile caricare i Piani</string>
+    <string name="plans_loading_error_network_title">Nessuna connessione</string>
+    <string name="menu_switch_to_gutenberg_editor">Passa all\'editor a blocchi</string>
+    <string name="menu_switch_to_aztec_editor">Passa all\'editor classico.</string>
+    <string name="stats_loading_block_error">Si è verificato un problema con il caricamento dei dati. Aggiorna la pagina per riprovare.</string>
+    <string name="stats_loading_error">Dati non caricati</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Modifica i nuovi articoli e pagine con l’editor a blocchi</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">Usa editor a blocchi</string>
+    <string name="dialog_gutenberg_informative_description_page">Questa pagina è stata creata nell’editor a blocchi, pertanto l’abbiamo abilitata anche su questo Articolo.\n Torna a Classic in qualsiasi momento toccando  ⋮  nella barra superiore.</string>
+    <string name="dialog_gutenberg_informative_description_post">Questo articolo è stato creato nell’editor a blocchi, pertanto lo abbiamo abilitato anche su questo Articolo.\n Torna a Classic in qualsiasi momento toccando  ⋮  nella barra superiore.</string>
+    <string name="dialog_gutenberg_informative_title">Editor a blocchi abilitato</string>
+    <string name="exit">esci</string>
     <string name="quick_start_sites">Passi successivi</string>
     <string name="quick_start_dialog_view_site_message">Goditi il tuo prodotto finito.</string>
     <string name="quick_start_dialog_upload_icon_title">Carica un\'icona del sito</string>
@@ -139,9 +187,6 @@ Language: it
     <string name="stats_empty_insights_title">Nessun insight aggiunto</string>
     <string name="stats_no_data_yet">Nessun dato</string>
     <string name="menu_debug">Menu di debug</string>
-    <string name="preference_experimental">*SPERIMENTALE*</string>
-    <string name="site_settings_enable_gutenberg_summary">Questa è ancora una versione sperimentale di Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">Abilita Gutenberg</string>
     <string name="change_password_dialog_message">Sto modificando la password…</string>
     <string name="change_password_dialog_hint">La password deve contenere almeno sei caratteri. Per renderla sicura, usa lettere maiuscole e minuscole, numeri e simboli come ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">La password è stata cambiata con successo</string>
@@ -153,14 +198,6 @@ Language: it
     <string name="history_detail_title">Revisione</string>
     <string name="history_detail_button_previous">Precedente</string>
     <string name="history_detail_button_next">Prossimo</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Per saperne di più</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Non mostrare più</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Torna indietro</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Modifica pagina</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Modifica articolo</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Stiamo lavorando al nuovissimo editor di WordPress. Puoi ancora modificare questa pagina, ma ti consigliamo di visualizzarla in anteprima prima della sua pubblicazione.</string>
-    <string name="dialog_gutenberg_compatibility_message">Stiamo lavorando al nuovissimo editor di WordPress. Puoi ancora modificare questo articolo, ma ti consigliamo di visualizzare l\'anteprima prima della pubblicazione.</string>
-    <string name="dialog_gutenberg_compatibility_title">Prima di continuare</string>
     <string name="media_space_used">%1$s usato</string>
     <string name="enter_wpcom_or_jetpack_site">Inserisci un sito WordPress ospitato su WordPress.com o auto gestito connesso con Jetpack</string>
     <string name="history_loading_revision">Caricamento della revisione</string>
@@ -370,7 +407,7 @@ Language: it
     <string name="third_party_policy_learn_more_caption">Utilizziamo altri strumenti di tracciamento, compresi alcuni di terzi. Leggi le informazioni sugli strumenti e come controllarli.</string>
     <string name="third_party_policy_learn_more_header">Informativa sulla privacy di terze parti</string>
     <string name="privacy_policy_learn_more_caption">Queste informazioni ci aiutano a migliorare i prodotti, offrire proposte di marketing più pertinenti, personalizzare l’esperienza WordPress.com e molto altro, come indicato nel dettaglio nella nostra informativa sulla privacy.</string>
-    <string name="privacy_policy_learn_more_header">Informativa sulla privacy</string>
+    <string name="privacy_policy_learn_more_header">Privacy Policy</string>
     <string name="cookie_policy_learn_more_caption">Condividi informazioni con il nostro strumento di analisi relativamente al tuo uso dei servizi mentre sei connesso con il tuo account WordPress.com.</string>
     <string name="cookie_policy_learn_more_header">Informativa sui cookie</string>
     <string name="preference_privacy_settings">Impostazioni della privacy</string>
@@ -1092,9 +1129,6 @@ Language: it
     <string name="xmlrpc_post_blocked_error">Non è possibile connettersi. Il tuo host sta bloccando le richieste POST ma queste sono necessarie al corretto funzionamento dell\'app\n per comunicare con il tuo sito. Contatta il tuo fornitore del servizio di hosting per risolvere questo problema.</string>
     <string name="reader_hint_search_followed_sites">Ricerca nei siti che segui</string>
     <string name="visual_editor_disabled">Editor visuale disabilitato</string>
-    <string name="preference_editor_visual">Visuale</string>
-    <string name="preference_editor_legacy">Testuale</string>
-    <string name="preference_editor_type">Imposta il tipo di editor</string>
     <string name="pending_draft_one_generic">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
     <string name="pending_draft_one_month">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' rimane una bozza. Ricordati di pubblicarlo!</string>
@@ -1145,7 +1179,6 @@ Language: it
     <string name="alignment_none">Nessuno</string>
     <string name="site_settings_list_editor_action_mode_title">Selezionato %1$d</string>
     <string name="error_fetch_users_list">Non è possibile recuperare gli utenti del sito</string>
-    <string name="plans_manage">Gestisci il tuo piano su\nWordPress.com/plans</string>
     <string name="title_email_follower">Email al follower</string>
     <string name="title_follower">Follower</string>
     <string name="people_fetching">Recupero utenti in corso…</string>
@@ -1231,7 +1264,6 @@ Language: it
     <string name="new_editor_reflection_error">L\'editor visuale non è compatibile con il tuo device. &amp;Egrave; stato automaticamente disabilitato.</string>
     <string name="stats_insights_latest_post_no_title">(nessun titolo)</string>
     <string name="capture_or_pick_photo">Catturare o selezionare una foto</string>
-    <string name="plans_loading_error">Non è stato possibile caricare i piani</string>
     <string name="plans">Piani</string>
     <string name="plan">Piano</string>
     <string name="export_your_content_message">I tuoi articoli, pagine e impostazioni ti saranno inviate via email all\'indirizzo %s.</string>
@@ -1741,7 +1773,7 @@ Language: it
     <string name="wordpress_blog">Blog di WordPress</string>
     <string name="image_settings">Impostazioni immagini</string>
     <string name="local_changes">Modifiche locali</string>
-    <string name="privacy_policy">Informativa sulla privacy</string>
+    <string name="privacy_policy">Privacy policy</string>
     <string name="new_media">Nuovo supporto</string>
     <string name="new_post">Nuovo articolo</string>
     <string name="notifications_empty_all">Nessuna notifica… per ora.</string>
@@ -1760,15 +1792,15 @@ Language: it
     <string name="sure_to_cancel_edit_comment">Annullare la modifica a questo commento?</string>
     <string name="saving_changes">Salvataggio delle modifiche in corso</string>
     <string name="hint_comment_content">Commento</string>
-    <string name="trash">Cestina</string>
+    <string name="trash">Elimina</string>
     <string name="trash_no">Non cestinare</string>
-    <string name="trash_yes">Cestina</string>
+    <string name="trash_yes">Elimina</string>
     <string name="dlg_confirm_trash_comments">Inviare al cestino?</string>
     <string name="dlg_trashing_comments">Invio al cestino in corso</string>
     <string name="dlg_spamming_comments">Contrassegno come spam in corso</string>
     <string name="dlg_unapproving_comments">Rimozione dell\'approvazione in corso</string>
     <string name="dlg_approving_comments">Approvazione in corso</string>
-    <string name="mnu_comment_trash">Cestina</string>
+    <string name="mnu_comment_trash">Elimina</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Rimuovi approvazione</string>
     <string name="mnu_comment_approve">Approva</string>

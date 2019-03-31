@@ -109,21 +109,22 @@ fun <S, T, U, V> merge(
     sourceA: LiveData<S>,
     sourceB: LiveData<T>,
     sourceC: LiveData<U>,
+    distinct: Boolean = false,
     merger: (S?, T?, U?) -> V
 ): MediatorLiveData<V> {
     val mediator = MediatorLiveData<Triple<S?, T?, U?>>()
     mediator.addSource(sourceA) {
-        if (mediator.value?.first != it) {
+        if (mediator.value?.first != it || !distinct) {
             mediator.value = Triple(it, mediator.value?.second, mediator.value?.third)
         }
     }
     mediator.addSource(sourceB) {
-        if (mediator.value?.second != it) {
+        if (mediator.value?.second != it || !distinct) {
             mediator.value = Triple(mediator.value?.first, it, mediator.value?.third)
         }
     }
     mediator.addSource(sourceC) {
-        if (mediator.value?.third != it) {
+        if (mediator.value?.third != it || !distinct) {
             mediator.value = Triple(mediator.value?.first, mediator.value?.second, it)
         }
     }
@@ -161,6 +162,16 @@ fun <T, U> LiveData<T>.map(mapper: (T) -> U?): MediatorLiveData<U> {
     val result = MediatorLiveData<U>()
     result.addSource(this) { x -> result.value = x?.let { mapper(x) } }
     return result
+}
+
+/**
+ * Calls the specified function [block] with `this` value as its receiver and returns new instance of LiveData.
+ */
+fun <T> LiveData<T>.perform(block: LiveData<T>.(T) -> Unit): LiveData<T> {
+    return Transformations.map(this) {
+        block(it)
+        return@map it
+    }
 }
 
 /**

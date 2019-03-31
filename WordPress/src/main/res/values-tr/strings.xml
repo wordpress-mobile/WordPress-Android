@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-23 00:34:29+0000
+Translation-Revision-Date: 2019-03-17 21:29:19+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="app_rating_rate_never">Hayır teşekkürler</string>
+    <string name="app_rating_rate_later">Sonra</string>
+    <string name="app_rating_rate_now">Şimdi puanla</string>
+    <string name="app_rating_message">Seni tekrar görmek güzel! Eğer uygulamayı sonuna kadar kullandıysan, Google Play mağazasında bir derecelendirmeye bayılırız.</string>
+    <string name="app_rating_title">WordPress hoşunuza gitti mi?</string>
+    <string name="editor_post_converted_back_to_draft">Yazı taslağa geri dönderildi</string>
+    <string name="stats_insights_posting_activity">Yazma etkinliği</string>
+    <string name="stats_site_not_loaded_yet">Site henüz yüklenmedi</string>
+    <string name="stats_more_posts">Daha çok yazı</string>
+    <string name="stats_fewer_posts">Daha az yazı</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">İçeriği kaldır</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Bloku aşağı taşı</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Bloku yukarı taşı</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">BURAYA BLOK EKLE</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Desteklenmiyor</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Desteklenmeyen blok türü.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Desteklenmeyen Blok</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL\'yi Yapıştır</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">GÖRSEL SEÇ</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Medya eklenemedi.\nLütfen seçenekler için dokunun.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280"> Tüm Ayarları Temizle</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alternatif Metin</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress Ortam Kitaplığı</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Fotoğraf Çek</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Cihazdan seç</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Yazmaya başlayın…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Bağlantıyı Kaldır</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Bağlantı Metni Ekle</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Bağlantı metni</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">URL Ekle</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Bağlantı eklendi</string>
+    <string name="new_site_creation_preview_back_pressed_warning">İlerleme durumunuzu kaybedebilirsiniz. Çıkış yapmak istediğinizden emin misiniz?</string>
+    <string name="plans_loading_error_with_cache_button">Yine de Paketleri Görüntüle</string>
+    <string name="plans_loading_error_with_cache_subtitle">Paketleri görüntüleyebilmek için etkin bir internet bağlantısı gerekmektedir, bu nedenle ayrıntılar güncel olmayabilir.</string>
+    <string name="plans_loading_error_no_cache_subtitle">Paketleri görüntüleyebilmek için etkin bir internet bağlantısı gerekmektedir.</string>
+    <string name="plans_loading_error_no_plans_subtitle">Şu anda Paketleri yükleyemiyoruz. Lütfen daha sonra tekrar deneyin.</string>
+    <string name="plans_loading_error_no_plans_title">Paketler Yüklenemiyor</string>
+    <string name="plans_loading_error_network_title">Bağlantı yok</string>
+    <string name="menu_switch_to_gutenberg_editor">Blok Düzenleyicisine Geç</string>
+    <string name="menu_switch_to_aztec_editor">Klasik Düzenleyiciye Geç</string>
+    <string name="stats_loading_block_error">Verileriniz yüklenirken bir sorun oluştu, sayfanızı yenileyip tekrar deneyin.</string>
+    <string name="stats_loading_error">Veriler yüklenmedi</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Blog düzenleyicisi ile yeni gönderileri ve sayfaları düzenleyin</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">Blok Düzenleyicisini Kullan</string>
+    <string name="dialog_gutenberg_informative_description_page">Bu sayfa ilk olarak Blok Düzenleyicisinde oluşturulduğundan bunu bu Sayfada da etkinleştirdik.\n Üstteki çubukta  ⋮  üzerine dokunarak istediğiniz zaman Klasik\'e geri dönebilirsiniz.</string>
+    <string name="dialog_gutenberg_informative_description_post">Bu gönderi ilk olarak Blok Düzenleyicisinde oluşturulduğundan bunu bu Gönderide de etkinleştirdik.\n Üstteki çubukta  ⋮  üzerine dokunarak istediğiniz zaman Klasik\'e geri dönebilirsiniz.</string>
+    <string name="dialog_gutenberg_informative_title">Blok Düzenleyicisi Etkinleştirildi</string>
+    <string name="exit">çıkış</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d tamamlandı</string>
     <string name="quick_start_sites_type_grow">Kitlenizi Genişletin</string>
     <string name="quick_start_sites_type_customize">Sitenizi Özelleştirin</string>
@@ -159,9 +207,6 @@ Language: tr
     <string name="stats_empty_insights_title">Henüz içgörü eklenmedi</string>
     <string name="stats_no_data_yet">Henüz veri yok</string>
     <string name="menu_debug">Hata ayıklama menüsü</string>
-    <string name="preference_experimental">*DENEYSEL*</string>
-    <string name="site_settings_enable_gutenberg_summary">Bu hala Gutenberg\'ün deneysel bir sürümü.</string>
-    <string name="site_settings_enable_gutenberg">Gutenberg\'ü etkinleştir</string>
     <string name="change_password_dialog_message">Parola değiştiriliyor…</string>
     <string name="change_password_dialog_hint">Parolanız en az altı karakter uzunluğunda olmalı. Daha güçlü olması için küçük harf, büyük harf, numaralar ve ! \" ? $ % ^ &amp; ) gibi semboller kullanın.</string>
     <string name="change_password_confirmation">Parola başarıyla değiştirildi</string>
@@ -173,14 +218,6 @@ Language: tr
     <string name="history_detail_title">Sürüm</string>
     <string name="history_detail_button_previous">Önceki</string>
     <string name="history_detail_button_next">Sonraki</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Daha fazla öğren</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Bir daha gösterme</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Geri git</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Sayfayı düzenle</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Yazıyı düzenle</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Yepyeni bir WordPress düzenleyicisi üzerinde çalışıyoruz. Bu sayfayı hala düzenleyebilirsiniz ama yayımlamadan önce ön izleme yapmanızı öneririz.</string>
-    <string name="dialog_gutenberg_compatibility_message">Yepyeni bir WordPress düzenleyicisi üzerinde çalışıyoruz. Bu yazıyı hala düzenleyebilirsiniz ama yayımlamadan önce ön izleme yapmanızı öneririz.</string>
-    <string name="dialog_gutenberg_compatibility_title">Devam etmeden önce</string>
     <string name="media_space_used">%1$s kullanıldı</string>
     <string name="enter_wpcom_or_jetpack_site">Lütfen WordPress.com veya Jetpack bağlantılı kullanıcı tarafından barındırılan WordPress sitesi girin</string>
     <string name="history_loading_revision">Revizyon yükleniyor</string>
@@ -1120,9 +1157,6 @@ Language: tr
     <string name="xmlrpc_post_blocked_error">Bağlanılamıyor. Sunucunuz POST isteklerini engelliyor ve uygulama sitenizle\n    iletişim kurmak için buna ihtiyaç duyuyor. Bu problemi gidermek için servis sağlayıcınızla iletişime geçin.</string>
     <string name="reader_hint_search_followed_sites">Takip edilen siteleri ara</string>
     <string name="visual_editor_disabled">Görsel editör etkisizleştirildi</string>
-    <string name="preference_editor_visual">Görsel</string>
-    <string name="preference_editor_legacy">Eski</string>
-    <string name="preference_editor_type">Metin düzenleyici tipi</string>
     <string name="pending_draft_one_generic">Asılı bırakmayın! \'%1$s\' yayınlanmayı bekliyor.</string>
     <string name="pending_draft_one_month">Asılı bırakmayın! \'%1$s\' yayınlanmayı bekliyor.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' bir taslak olarak kaldı. Yayınlamayı unutmayın!</string>
@@ -1173,7 +1207,6 @@ Language: tr
     <string name="alignment_none">Hiçbiri</string>
     <string name="site_settings_list_editor_action_mode_title">%1$d seçildi</string>
     <string name="error_fetch_users_list">Site kullanıcıları getirilemedi</string>
-    <string name="plans_manage">Planınızı yönetin:\nWordPress.com/plans</string>
     <string name="title_email_follower">E-posta takipçisi</string>
     <string name="title_follower">Takipçi</string>
     <string name="people_fetching">Kullanıcılar getiriliyor…</string>
@@ -1259,7 +1292,6 @@ Language: tr
     <string name="new_editor_reflection_error">Görsel düzenleyici cihazınız ile uyumsuz. Otomatik\n olarak etkisizleştirildi.</string>
     <string name="stats_insights_latest_post_no_title">(başlıksız)</string>
     <string name="capture_or_pick_photo">Fotoğraf seç ya da yakala</string>
-    <string name="plans_loading_error">Planlar yüklenemiyor</string>
     <string name="plans">Planlar</string>
     <string name="plan">Plan</string>
     <string name="export_your_content_message">Yazılarınız, sayfalarınız ve ayarlarınız size %s adresine e-posta ile gönderilecek.</string>

@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-15 09:12:34+0000
+Translation-Revision-Date: 2019-03-13 14:51:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="app_rating_rate_never">Jo, faleminderit</string>
+    <string name="app_rating_rate_later">Më vonë</string>
+    <string name="app_rating_rate_now">Vlerësojeni tani</string>
+    <string name="app_rating_message">Na bëhet qejfi t’ju rishohim! Nëse jua ka ënda aplikacionin, do të na pëlqente të vlerësim te Google Play Store.</string>
+    <string name="app_rating_title">Ju pëlqen WordPress-i?</string>
+    <string name="editor_post_converted_back_to_draft">Postimi i shndërrua sërish në skicë</string>
+    <string name="stats_insights_posting_activity">Veprimtari Postimi</string>
+    <string name="stats_site_not_loaded_yet">Sajt ende i pangarkuar</string>
+    <string name="stats_more_posts">Më tepër postime</string>
+    <string name="stats_fewer_posts">Më pak postime</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Hiqe lëndën</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Zbriteni bllokun poshtë</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Ngjiteni bllokun sipër</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">SHTONI KËTU NJË BLLOK LËNDE</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">I pambuluar</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Lloj blloku i pambuluar.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Bllok i Pambuluar</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Hidhni URL-në</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ZGJIDHNI FIGURË</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Dështoi në futje mediash.\nJu lutemi, prekeni për mundësi.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Pastro Krejt Rregullimet</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Tekst Alternativ</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Mediatekë WordPress</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Bëni një Foto</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Zgjedhje nga pajisja ime</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Filloni të shkruani…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Hiqe Lidhjen</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Shtoni Tekst Lidhjeje</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Tekst Lidhjeje</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Shtoni URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Lidhja u fut</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Mund të humbi sa keni bërë. Jeni i sigurt se doni të dilet?</string>
+    <string name="plans_loading_error_with_cache_button">Shihini Planet, Sido Qoftë</string>
+    <string name="plans_loading_error_with_cache_subtitle">Që të shihni Planet, lypset lidhje në internet, kështu që hollësitë mund të jenë të vjetruara.</string>
+    <string name="plans_loading_error_no_cache_subtitle">Që të shihni Planet, lypset një lidhje internet.</string>
+    <string name="plans_loading_error_no_plans_subtitle">S’i ngarkojmë dot Planet tani. Ju lutemi, riprovoni më vonë.</string>
+    <string name="plans_loading_error_no_plans_title">S’arrihet të ngarkohen Planet</string>
+    <string name="plans_loading_error_network_title">S\'ka lidhje</string>
+    <string name="menu_switch_to_gutenberg_editor">Kaloni nën Përpunuesin Me Blloqe</string>
+    <string name="menu_switch_to_aztec_editor">Kalo nën Përpunuesin Klasik</string>
+    <string name="stats_loading_block_error">Pati një problem në ngarkimin e të dhënave tuaja, rifreskoni faqen dhe riprovoni.</string>
+    <string name="stats_loading_error">S’u ngarkuan të dhëna</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Përpunoni postime dhe faqe të reja me përpunuesin me blloqe</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">Përdorni Përpunuesin Me Blloqe</string>
+    <string name="dialog_gutenberg_informative_description_page">Kjo faqe qe krijuar së pari nën Përpunuesin Me Blloqe, ndaj e kemi aktivizuar në këtë Faqe.\n        Hidhuni te Klasiku kur të doni, duke prekur  ⋮  te shtylla e epërme.</string>
+    <string name="dialog_gutenberg_informative_description_post">Ky postim qe krijuar së pari nën Përpunuesin Me Blloqe, ndaj e kemi aktivizuar në këtë Faqe.\n        Hidhuni te Klasiku kur të doni, duke prekur  ⋮  te shtylla e epërme.</string>
+    <string name="dialog_gutenberg_informative_title">Përpunuesi Pamor i Aktivizuar</string>
+    <string name="exit">dalje</string>
     <string name="quick_start_sites_type_subtitle">%1$d e %2$d e plotësuar</string>
     <string name="quick_start_sites_type_grow">Shtoni Publikun Tuaj</string>
     <string name="quick_start_sites_type_customize">Përshtatni Sajtin Tuaj</string>
@@ -159,9 +207,6 @@ Language: sq_AL
     <string name="stats_empty_insights_title">S’janë shtuar ende tendenca</string>
     <string name="stats_no_data_yet">Ende pa të dhëna</string>
     <string name="menu_debug">Diagnostikoni Menunë</string>
-    <string name="preference_experimental">*EKSPERIMENTALE*</string>
-    <string name="site_settings_enable_gutenberg_summary">Ky është ende një version eksperimental i Gutenberg-ut</string>
-    <string name="site_settings_enable_gutenberg">Aktivizoje Gutenberg-un</string>
     <string name="change_password_dialog_message">Po ndryshohen fjalëkalimet…</string>
     <string name="change_password_dialog_hint">Fjalëkalimi juaj duhet të jetë e pakta gjashtë shenja i gjatë. Për ta bërë më të fuqishëm, përdorni shkronja me të mëdha dhe me të vogla, numra, dhe simbole të tilla si ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Fjalëkalimi u ndryshua me sukses</string>
@@ -173,14 +218,6 @@ Language: sq_AL
     <string name="history_detail_title">Rishikim</string>
     <string name="history_detail_button_previous">I mëparshmi</string>
     <string name="history_detail_button_next">Pasuesi</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Mësoni më tepër</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Mos e shfaq sërish</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Kthehuni Mbrapsht</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Përpunoni Faqen</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Përpunoni Postimin</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Po punojmë për një përpunues të ri fringo WordPress. Mundeni ende ta përpunoni këtë faqe, por këshillojmë t’i bëni një paraparje përpara se ta botoni.</string>
-    <string name="dialog_gutenberg_compatibility_message">Po punojmë për një përpunues të ri fringo WordPress. Mundeni ende ta përpunoni këtë postim, por këshillojmë t’i bëni një paraparje përpara se ta botoni.</string>
-    <string name="dialog_gutenberg_compatibility_title">Përpara se të vazhdoni</string>
     <string name="media_space_used">%1$s të përdorura</string>
     <string name="enter_wpcom_or_jetpack_site">Ju lutemi, jepni një sajt WordPress.com ose një WordPress që e strehoni diku dhe që është i lidhur me Jetpack-un</string>
     <string name="history_loading_revision">Po ngarkohet rishikimi</string>
@@ -242,7 +279,7 @@ Language: sq_AL
     <string name="dismiss">hidhe tej</string>
     <string name="quick_start_focus_point_description">prekeni këtu</string>
     <string name="quick_start_list_create_site_title">Krijoni sajtin tuaj</string>
-    <string name="quick_start_list_create_site_subtitle">Krijojeni dhe vëreni në punë sajtin tuaj</string>
+    <string name="quick_start_list_create_site_subtitle">Krijojeni dhe vëreni në punë sajtin tuaj.</string>
     <string name="quick_start_dialog_view_site_title">Shihni sajtin tuaj</string>
     <string name="quick_start_dialog_view_site_message_short">Prekni %1$s Shihni Sajtin %2$s që të shihni si do të dukej sajti juaj</string>
     <string name="quick_start_dialog_share_site_title">Ndajeni sajtin tuaj me të tjerë</string>
@@ -1120,9 +1157,6 @@ Language: sq_AL
     <string name="xmlrpc_post_blocked_error">S’u bë dot lidhja. Strehuesi juaj i bllokon kërkesat POST, dhe aplikacionit\n        i duhen që të mund të komunikojë me sajtin tuaj. Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
     <string name="reader_hint_search_followed_sites">Kërkoni te sajtet vijues</string>
     <string name="visual_editor_disabled">Përpunuesi Pamor i çaktivizuar</string>
-    <string name="preference_editor_visual">Pamor</string>
-    <string name="preference_editor_legacy">I dikurshëm</string>
-    <string name="preference_editor_type">Caktoni lloj përpunuesi</string>
     <string name="pending_draft_one_generic">Mos e lini varur! \'%1$s\' është në pritje të botimit.</string>
     <string name="pending_draft_one_month">Mos e lini varur! \'%1$s\' është në pritje të botimit.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' mbetet skicë. Mos harroni ta botoni!</string>
@@ -1173,7 +1207,6 @@ Language: sq_AL
     <string name="alignment_none">Pa drejtim</string>
     <string name="site_settings_list_editor_action_mode_title">U përzgjodh %1$d</string>
     <string name="error_fetch_users_list">S’u morën dot përdorues të sajtit</string>
-    <string name="plans_manage">Administroni planin tuaj te\nWordPress.com/plans</string>
     <string name="title_email_follower">Ndjekës Me Email</string>
     <string name="title_follower">Ndjekës</string>
     <string name="people_fetching">Po sillen përdoruesit…</string>
@@ -1259,7 +1292,6 @@ Language: sq_AL
     <string name="new_editor_reflection_error">Përpunuesi pamor s’është i përputhshëm me pajisjen tuaj.\n        U çaktivizua vetvetiu.</string>
     <string name="stats_insights_latest_post_no_title">(pa titull)</string>
     <string name="capture_or_pick_photo">Bëni ose përzgjidhni foto</string>
-    <string name="plans_loading_error">S’arrihet të ngarkohen planet</string>
     <string name="plans">Plane</string>
     <string name="plan">Plan</string>
     <string name="export_your_content_message">Postimet, faqet dhe rregullimet tuaja do t’ju dërgohen me email te %s.</string>

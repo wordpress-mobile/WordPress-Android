@@ -1,3 +1,4 @@
-* A new, smart site-creation process starts you off with a personalized, already-customized website
-* Markup lovers rejoice; <em> is now the default markup for italic in the editor.
-* Fixes! Sometimes the “My Site” screen didn’t look right in right-to-left languages, or posts showed up as scheduled even after they were published — no more.
+* Navigating notifications: now you can swipe between tabs.
+* Design details: seemingly-small visual tweaks make site creation smoother.
+* Clearer data: changes and visual updates to Stats make most stats easier to understand.
+* Speedy posting: sharing pictures to WordPress automatically opens the Block editor.

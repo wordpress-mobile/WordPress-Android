@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-15 06:02:21+0000
+Translation-Revision-Date: 2019-03-12 12:11:23+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="app_rating_rate_never">لا، شكرًا</string>
+    <string name="app_rating_rate_later">لاحقًا</string>
+    <string name="app_rating_rate_now">التقييم الآن</string>
+    <string name="app_rating_message">جميل أن نراك مرة أخرى! إذا راجعت التطبيق، فيسعدنا تقييمك لنا على متجر Google Play.</string>
+    <string name="app_rating_title">مستمتع بـ ووردبريس؟</string>
+    <string name="editor_post_converted_back_to_draft">تم تحويل المقالة مرة أخرى إلى مسودّة</string>
+    <string name="stats_insights_posting_activity">نشاط النشر</string>
+    <string name="stats_site_not_loaded_yet">الموقع لم يتم تحميله بعد</string>
+    <string name="stats_more_posts">مقالات أكثر</string>
+    <string name="stats_fewer_posts">مقالات أقل</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">إزالة المحتوى</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">تحريك المكوّن لأسفل</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">تحريك المكوّن لأعلى</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">إضافة مكوّن هنا</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">غير مدعوم</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">نوع المكوّن غير مدعوم.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">مكوّن غير مدعوم</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">لصق الرابط</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">اختيار صورة</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">فشلت عملية إدراج وسائط.\nيرجى النقر على الخيارات.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">مسح كل الإعدادات</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">النص البديل</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">مكتبة وسائط ووردبريس</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">التقاط صورة</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">الاختيار من الجهاز</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">البدء بالكتابة…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">إزالة الرابط</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">إضافة نصّ للرابط</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">نص الرابط</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">إضافة رابط</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">تمّ إدراج الرابط</string>
+    <string name="new_site_creation_preview_back_pressed_warning">قد تفقد التغييرات التي تجريها. هل أنت متأكد أنك تريد الخروج؟</string>
+    <string name="plans_loading_error_with_cache_button">استعراض الخطط على أية حال</string>
+    <string name="plans_loading_error_with_cache_subtitle">الاتصال بالانترنت مطلوب لاستعراض الخطط، لذلك قد تكون التفاصيل قديمة وغير محدثة.</string>
+    <string name="plans_loading_error_no_cache_subtitle">لاتصال بالانترنت مطلوب لاستعراض الخطط.</string>
+    <string name="plans_loading_error_no_plans_subtitle">لا يمكننا تحميل الخطط في الوقت الحالي. يرجى المحاولة في وقت لاحق.</string>
+    <string name="plans_loading_error_no_plans_title">لا يمكن تحميل الخطط</string>
+    <string name="plans_loading_error_network_title">لا يوجد اتصال</string>
+    <string name="menu_switch_to_gutenberg_editor">التبديل إلى مُحرر المكوّنات</string>
+    <string name="menu_switch_to_aztec_editor">التبديل إلى المحرر التقليدي</string>
+    <string name="stats_loading_block_error">حدثت مشكلة أثناء تحميل بياناتك، يرجى تحديث الصفحة لإعادة المحاولة.</string>
+    <string name="stats_loading_error">لم يتم تحميل البيانات</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">تحرير المقالات والصفحات الجديدة باستخدام مُحرر المكوّنات</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">استخدام مُحرر المكوّنات</string>
+    <string name="dialog_gutenberg_informative_description_page">هذه الصفحة تم إنشاؤها بالأصل في محرر المكوّنات، لذلك قمنا بتمكين المحرر لهذه الصفحة.\n        التبديل للعودة إلى المحرر التقليدي في أي وقت من خلال النقر على ⋮ بالشريط العلوي.</string>
+    <string name="dialog_gutenberg_informative_description_post">هذه المقالة تم إنشاؤها بالأصل في محرر المكوّنات، لذلك قمنا بتمكين المحرر لهذه المقالة.\n        التبديل للعودة إلى المحرر التقليدي في أي وقت من خلال النقر على ⋮ بالشريط العلوي.</string>
+    <string name="dialog_gutenberg_informative_title">تم تمكين محرر المكوّنات</string>
+    <string name="exit">خروج</string>
     <string name="quick_start_sites_type_subtitle">تم استكمال %1$d من %2$d</string>
     <string name="quick_start_sites_type_grow">زيادة جمهورك</string>
     <string name="quick_start_sites_type_customize">تخصيص موقعك</string>
@@ -159,9 +207,6 @@ Language: ar
     <string name="stats_empty_insights_title">لم تتم إضافة رى حتى الآن</string>
     <string name="stats_no_data_yet">لا توجد بيانات حتى الآن</string>
     <string name="menu_debug">قائمة تصحيح الأخطاء</string>
-    <string name="preference_experimental">*تجريبي*</string>
-    <string name="site_settings_enable_gutenberg_summary">لا يزال هذا إصدارًا تجريبيًّا من Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">تمكين Gutenberg</string>
     <string name="change_password_dialog_message">جارٍ تغيير كلمة المرور…</string>
     <string name="change_password_dialog_hint">ينبغي ألا يقل طول كلمة المرور الخاصة بك عن ستة أحرف. ولجعل كلمة المرور أقوى، استخدم أحرفًا كبيرة وصغيرة وأرقامًا ورموزًا مثل ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">تم تغيير كلمة المرور بنجاح</string>
@@ -173,14 +218,6 @@ Language: ar
     <string name="history_detail_title">مراجعة</string>
     <string name="history_detail_button_previous">السابق</string>
     <string name="history_detail_button_next">التالي</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">تعرف على المزيد</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">عدم الإظهار مرة أخرى</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">الرجوع إلى الخلف</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">تحرير الصفحة</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">تحرير المقالة</string>
-    <string name="dialog_gutenberg_compatibility_message_page">نحن نعمل على محرر وردبرس الجديد تمامًا. لا يزال بإمكانك تحرير هذه الصفحة، ولكننا نوصي بمعاينتها قبل النشر.</string>
-    <string name="dialog_gutenberg_compatibility_message">نحن نعمل على محرر وردبرس الجديد تمامًا. لا يزال بإمكانك تحرير هذه المقالة، ولكننا نوصي بمعاينتها قبل النشر.</string>
-    <string name="dialog_gutenberg_compatibility_title">قبل المتابعة</string>
     <string name="media_space_used">تم استخدام %1$s</string>
     <string name="enter_wpcom_or_jetpack_site">يرجى إدخال موقع وردبرس.كوم أو موقع وردبرس مُستضاف ذاتيًّا ومتصل بـ Jetpack</string>
     <string name="history_loading_revision">جارٍ تحميل المراجعة</string>
@@ -649,7 +686,7 @@ Language: ar
     <string name="username_changer_error_none">لم يتم اقتراح أسماء مستخدمين من %1$s%2$s%3$s. يُرجى إدخال المزيد من الأحرف أو الأرقام للحصول على اقتراحات.</string>
     <string name="username_changer_error_generic">حدث خطأ أثناء استرداد اقتراحات اسم المستخدم.</string>
     <string name="username_changer_dismiss_message">هل ترغب في تجاهل تغيير اسم المستخدم؟</string>
-    <string name="username_changer_dismiss_button_positive">إلغاء</string>
+    <string name="username_changer_dismiss_button_positive">تجاهل</string>
     <string name="username_changer_action">حفظ</string>
     <string name="content_description_add_avatar">إضافة صورة رمزية</string>
     <string name="signup_with_google_button">تسجيل الدخول باستخدام Google</string>
@@ -1120,9 +1157,6 @@ Language: ar
     <string name="xmlrpc_post_blocked_error">تعذر الاتصال. يقوم المضيف الخاص بك بحظر طلبات POST، ويحتاج التطبيق إليها\n للاتصال بموقعك. يُرجى الاتصال بالمضيف لحل هذه المشكلة.</string>
     <string name="reader_hint_search_followed_sites">بحث في المواقع التي تتم متابعتها</string>
     <string name="visual_editor_disabled">تم تعطيل المحرر المرئي</string>
-    <string name="preference_editor_visual">مرئي</string>
-    <string name="preference_editor_legacy">قديم</string>
-    <string name="preference_editor_type">تعيين نوع المحرر</string>
     <string name="pending_draft_one_generic">لا تتركه معلقًا! \"%1$s\" بانتظار النشر.</string>
     <string name="pending_draft_one_month">لا تتركه معلقًا! \"%1$s\" بانتظار النشر.</string>
     <string name="pending_draft_one_week_2">يبقى \"%1$s\" كمسودة. تذكّر أن تنشرها!</string>
@@ -1173,7 +1207,6 @@ Language: ar
     <string name="alignment_none">لا شيء</string>
     <string name="site_settings_list_editor_action_mode_title">تم تحديد %1$d</string>
     <string name="error_fetch_users_list">تعذر استرداد مستخدمي الموقع</string>
-    <string name="plans_manage">إدارة باقتك على\nWordPress.com/plans</string>
     <string name="title_email_follower">المتابع عبر البريد الإلكتروني</string>
     <string name="title_follower">المتابع</string>
     <string name="people_fetching">جارٍ إحضار المستخدمين…</string>
@@ -1259,7 +1292,6 @@ Language: ar
     <string name="new_editor_reflection_error">المحرر المرئي غير متوافق مع جهازك. كان\n معطلاً تلقائيًا.</string>
     <string name="stats_insights_latest_post_no_title">(بلا عنوان)</string>
     <string name="capture_or_pick_photo">التقاط صورة أو تحديدها</string>
-    <string name="plans_loading_error">تعذر تحميل الخطط</string>
     <string name="plans">الخطط</string>
     <string name="plan">خطة</string>
     <string name="export_your_content_message">سيتم إرسال مقالاتك وصفحاتك وإعداداتك إليك عبر البريد الإلكتروني على %s.</string>
@@ -1365,7 +1397,7 @@ Language: ar
     <string name="site_settings_unknown_language_code_error">Sprachcode nicht erkannt</string>
     <string name="site_settings_threading_dialog_description">Zulassen, dass Kommentare in Threads verschachtelt werden.</string>
     <string name="site_settings_threading_dialog_header">Verschachteln bis zu</string>
-    <string name="disabled">معطّلة</string>
+    <string name="disabled">معطّل</string>
     <string name="search">بحث</string>
     <string name="remove">إزالة</string>
     <string name="site_settings_image_original_size">الحجم الأصلي</string>

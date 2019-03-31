@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-18 16:36:08+0000
+Translation-Revision-Date: 2019-03-12 10:09:09+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="app_rating_rate_never">Нет, спасибо</string>
+    <string name="app_rating_rate_later">Позже</string>
+    <string name="app_rating_rate_now">Оценить сейчас</string>
+    <string name="app_rating_message">Рады видеть вас снова! Если вы пользуетесь приложением, то будет отлично если вы оцените его в магазине Google Play.</string>
+    <string name="app_rating_title">Нравится WordPress?</string>
+    <string name="editor_post_converted_back_to_draft">Запись переведена назад в черновики</string>
+    <string name="stats_insights_posting_activity">Активность публикации</string>
+    <string name="stats_site_not_loaded_yet">Сайт еще не загружен</string>
+    <string name="stats_more_posts">Больше записей</string>
+    <string name="stats_fewer_posts">Меньше записей</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Удалить содержимое</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Переместить блок ниже</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Переместить блок выше</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">ДОБАВЬТЕ БЛОК ЗДЕСЬ</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Не поддерживается</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Неподдерживаемый тип блока.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Неподдерживаемый блок</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Вставить URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ВЫБЕРИТЕ ИЗОБРАЖЕНИЕ</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Невозможно вставить медиафайл.\nНажмите для выбора вариантов.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Очистить все настройки</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Текст атрибута alt</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Медиатека WordPress</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Сделать фото</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Выбрать с устройства</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Начните писать…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Удалить ссылку</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Добавить текст ссылки</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Текст ссылки</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Добавить URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Ссылка вставлена</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Вы можете потерять ваш прогресс, вы точно хотите выйти?</string>
+    <string name="plans_loading_error_with_cache_button">Всё равно посмотреть тарифы</string>
+    <string name="plans_loading_error_with_cache_subtitle">Для просмотра тарифов требуется подключение к Интернет, данные могут быть неактуальны.</string>
+    <string name="plans_loading_error_no_cache_subtitle">Для просмотра тарифов требуется подключение к Интернет.</string>
+    <string name="plans_loading_error_no_plans_subtitle">Невозможно было загрузить тарифы. Пожалуйста, попробуйте позже.</string>
+    <string name="plans_loading_error_no_plans_title">Невозможно загрузить тарифы</string>
+    <string name="plans_loading_error_network_title">Нет подключения</string>
+    <string name="menu_switch_to_gutenberg_editor">Переключиться на редактор блоков</string>
+    <string name="menu_switch_to_aztec_editor">Переключиться на классический редактор</string>
+    <string name="stats_loading_block_error">Возникла проблема загрузки данных, обновите страницу, чтобы попробовать снова.</string>
+    <string name="stats_loading_error">Данные не загружены</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Редактировать новые записи и страницы в редакторе блоков</string>
+    <string name="site_settings_gutenberg_default_for_new_posts">Использовать редактор блоков</string>
+    <string name="dialog_gutenberg_informative_description_page">Эта страница была изначально создана в редакторе блоков, так что мы включили его для неё.\nВы можете переключиться на классический редактор в любое время нажав⋮на верхней панели. </string>
+    <string name="dialog_gutenberg_informative_description_post">Эта запись была изначально создана в редакторе блоков, так что мы включили его для неё.\nВы можете переключиться на классический редактор в любое время нажав⋮на верхней панели.</string>
+    <string name="dialog_gutenberg_informative_title">Редактор блоков включен</string>
+    <string name="exit">выход</string>
     <string name="quick_start_sites_type_subtitle">Готово %1$d из %2$d</string>
     <string name="quick_start_sites_type_grow">Привлекайте аудиторию</string>
     <string name="quick_start_sites_type_customize">Настроить ваш сайт</string>
@@ -159,9 +207,6 @@ Language: ru
     <string name="stats_empty_insights_title">Еще нет статистики</string>
     <string name="stats_no_data_yet">Пока нет данных</string>
     <string name="menu_debug">Меню отладки</string>
-    <string name="preference_experimental">* ЭКСПЕРИМЕНТ *</string>
-    <string name="site_settings_enable_gutenberg_summary">Это пока еще экспериментальная версия Gutenberg</string>
-    <string name="site_settings_enable_gutenberg">Включить редактор блоков</string>
     <string name="change_password_dialog_message">Смена пароля…</string>
     <string name="change_password_dialog_hint">Ваш пароль должен быть не менее шести символов. Для усиления пароля используйте верхний и нижний регистры, числа и символы типа ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Пароль успешно изменен</string>
@@ -173,14 +218,6 @@ Language: ru
     <string name="history_detail_title">Редакция</string>
     <string name="history_detail_button_previous">Предыдущая</string>
     <string name="history_detail_button_next">Следующая</string>
-    <string name="dialog_gutenberg_compatibility_learn_more">Узнать больше</string>
-    <string name="dialog_gutenberg_compatibility_dont_show_again">Больше не показывать</string>
-    <string name="dialog_gutenberg_compatibility_no_go_back">Назад</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_page">Редактировать страницу</string>
-    <string name="dialog_gutenberg_compatibility_yes_edit_post">Редактировать запись</string>
-    <string name="dialog_gutenberg_compatibility_message_page">Мы работаем над новым редактором WordPress. Вы всё еще можете редактировать эту страницу, но мы рекомендуем предварительно посмотреть её перед публикацией</string>
-    <string name="dialog_gutenberg_compatibility_message">Мы работаем над новым редактором WordPress. Вы всё еще можете редактировать эту запись, но мы рекомендуем предварительно посмотреть её перед публикацией.</string>
-    <string name="dialog_gutenberg_compatibility_title">Перед тем, как вы продолжите </string>
     <string name="media_space_used">Использовано места: %1$s</string>
     <string name="enter_wpcom_or_jetpack_site">Пожалуйста введите сайт WordPress.com или с подключенным Jetpack</string>
     <string name="history_loading_revision">Загрузка редакции</string>
@@ -1120,9 +1157,6 @@ Language: ru
     <string name="xmlrpc_post_blocked_error">Не удалось подключиться. Ваш хостинг-провайдер блокирует запросы POST, которые нужны приложению\n для обмена данными с вашим сайтом. Свяжитесь с хостинг-провайдером, чтобы решить эту проблему.</string>
     <string name="reader_hint_search_followed_sites">Искать на веб-сайтах, на которые вы подписаны</string>
     <string name="visual_editor_disabled">Визуальный редактор отключен</string>
-    <string name="preference_editor_visual">Визуальный</string>
-    <string name="preference_editor_legacy">Предыдущая версия</string>
-    <string name="preference_editor_type">Выбрать тип редактора</string>
     <string name="pending_draft_one_generic">Не бросайте эту запись! Запись «%1$s» должна увидеть свет.</string>
     <string name="pending_draft_one_month">Не бросайте эту запись! Запись «%1$s» должна увидеть свет.</string>
     <string name="pending_draft_one_week_2">Запись «%1$s» остаётся в черновиках. Не забудьте опубликовать её!</string>
@@ -1173,7 +1207,6 @@ Language: ru
     <string name="alignment_none">Нет</string>
     <string name="site_settings_list_editor_action_mode_title">Выбрано %1$d</string>
     <string name="error_fetch_users_list">Не удалось получить список пользователей сайта</string>
-    <string name="plans_manage">Управление тарифными планами:\nwordpress.com/plans</string>
     <string name="title_email_follower">Подписчик по электронной почте</string>
     <string name="title_follower">Читатель</string>
     <string name="people_fetching">Получение списка пользователей…</string>
@@ -1259,7 +1292,6 @@ Language: ru
     <string name="new_editor_reflection_error">Визуальный редактор не поддерживается на вашем устройстве. Он был\n автоматически отключен.</string>
     <string name="stats_insights_latest_post_no_title">(без заголовка)</string>
     <string name="capture_or_pick_photo">Сделайте снимок или выберите фото</string>
-    <string name="plans_loading_error">Не удалось загрузить тарифные планы</string>
     <string name="plans">Тарифные планы</string>
     <string name="plan">Тарифный план</string>
     <string name="export_your_content_message">Ваши записи, страницы и настройки будут отправлены вам по электронной почте %s.</string>
