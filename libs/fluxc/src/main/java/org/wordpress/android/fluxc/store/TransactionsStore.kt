@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CartResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.GENERIC_ERROR
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -83,16 +83,16 @@ class TransactionsStore @Inject constructor(
         }
     }
 
-    private suspend fun redeemCartUsingCredits(payload: RedeemShoppingCartPayload): OnCartRedeemed {
+    private suspend fun redeemCartUsingCredits(payload: RedeemShoppingCartPayload): OnShoppingCartRedeemed {
         val cartRedeemedPayload = transactionsRestClient.redeemCartUsingCredits(
                 payload.cartDetails,
                 payload.domainContactModel
         )
 
         return if (!cartRedeemedPayload.isError) {
-            OnCartRedeemed(cartRedeemedPayload.success)
+            OnShoppingCartRedeemed(cartRedeemedPayload.success)
         } else {
-            OnCartRedeemed(
+            OnShoppingCartRedeemed(
                     RedeemShoppingCartError(GENERIC_ERROR, cartRedeemedPayload.error.message)
             )
         }
@@ -113,14 +113,14 @@ class TransactionsStore @Inject constructor(
     }
 
     data class OnShoppingCartCreated(
-        val cartDetails: CartResponse? = null
+        val cartDetails: CreateShoppingCartResponse? = null
     ) : Store.OnChanged<CreateShoppingCartError>() {
         constructor(error: CreateShoppingCartError) : this() {
             this.error = error
         }
     }
 
-    data class OnCartRedeemed(val success: Boolean = false) : Store.OnChanged<RedeemShoppingCartError>() {
+    data class OnShoppingCartRedeemed(val success: Boolean = false) : Store.OnChanged<RedeemShoppingCartError>() {
         constructor(error: RedeemShoppingCartError) : this() {
             this.error = error
         }
@@ -136,7 +136,7 @@ class TransactionsStore @Inject constructor(
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class RedeemShoppingCartPayload(
-        val cartDetails: CartResponse,
+        val cartDetails: CreateShoppingCartResponse,
         val domainContactModel: DomainContactModel
     ) : Payload<BaseRequest.BaseNetworkError>()
 
@@ -145,7 +145,7 @@ class TransactionsStore @Inject constructor(
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class CreatedShoppingCartPayload(
-        val cartDetails: CartResponse? = null
+        val cartDetails: CreateShoppingCartResponse? = null
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class RedeemedShoppingCartPayload(
