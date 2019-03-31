@@ -77,7 +77,7 @@ constructor(
                 this,
                 url,
                 params,
-                CartResponse::class.java
+                CreateShoppingCartResponse::class.java
         )
         return when (response) {
             is Success -> {
@@ -92,7 +92,7 @@ constructor(
     }
 
     suspend fun redeemCartUsingCredits(
-        cartResponse: CartResponse,
+        cartResponse: CreateShoppingCartResponse,
         domainContactInformation: DomainContactModel
     ): RedeemedShoppingCartPayload {
         val url = WPCOMREST.me.transactions.urlV1_1
@@ -111,7 +111,7 @@ constructor(
                 this,
                 url,
                 params,
-                CartResponse::class.java
+                CreateShoppingCartResponse::class.java
         )
         return when (response) {
             is Success -> {
@@ -127,7 +127,7 @@ constructor(
 
     private data class PrivacyExtra(val privacy: Boolean)
 
-    data class CartResponse(
+    data class CreateShoppingCartResponse(
         val blog_id: Int,
         val cart_key: String?,
         val products: List<Product>?
