@@ -1,0 +1,50 @@
+[
+  {
+    "tracking_id": "19b28e4151dc5b4ae1c27294ede241f9",
+    "tracking_provider": "USPS",
+    "tracking_link": "https:\/\/tools.usps.com\/go\/TrackConfirmAction_input?qtc_tLabels1=11122233344466666",
+    "tracking_number": "11122233344466666",
+    "date_shipped": "2019-02-19",
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v2\/orders\/2670\/shipment-trackings\/19b28e4151dc5b4ae1c27294ede241f9"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v2\/orders\/2670\/shipment-trackings"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v2\/orders\/2670"
+        }
+      ]
+    }
+  },
+  {
+    "tracking_id": "f2b65a93c13268462525ba77c80e993f",
+    "tracking_provider": "FedEx Sameday",
+    "tracking_link": "https:\/\/www.fedexsameday.com\/fdx_dotracking_ua.aspx?tracknum=4444222333444",
+    "tracking_number": "4444222333444",
+    "date_shipped": "2019-03-19",
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v2\/orders\/2670\/shipment-trackings\/f2b65a93c13268462525ba77c80e993f"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v2\/orders\/2670\/shipment-trackings"
+        }
+      ],
+      "up": [
+        {
+          "href": "https:\/\/testwooshop.mystagingwebsite.com\/wp-json\/wc\/v2\/orders\/2670"
+        }
+      ]
+    }
+  }
+]
