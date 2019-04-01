@@ -52,8 +52,6 @@ class InsightsManagementAdapter(
 
     override fun getItemCount(): Int = items.size
 
-
-
     fun update(newItems: List<InsightModel>) {
         val diffResult = DiffUtil.calculateDiff(InsightModelDiffCallback(items, newItems))
         items = ArrayList(newItems)
