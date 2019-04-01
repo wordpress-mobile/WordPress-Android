@@ -12,7 +12,6 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.PopupMenu
 import android.widget.ProgressBar
-import org.apache.commons.lang3.StringUtils
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
@@ -65,10 +64,8 @@ class PostListItemViewHolder(
     }
 
     private fun updateStatusLabels(view: WPTextView, statusLabels: List<UiString>, delimiter: UiString) {
-        view.text = StringUtils.join(
-                statusLabels.map { uiHelpers.getTextOfUiString(view.context, it) },
-                uiHelpers.getTextOfUiString(view.context, delimiter)
-        )
+        val separator = uiHelpers.getTextOfUiString(view.context, delimiter)
+        view.text = statusLabels.joinToString(separator) { uiHelpers.getTextOfUiString(view.context, it) }
     }
 
     private fun updateMenuItem(postListButton: PostListButton, action: PostListItemAction?) {
