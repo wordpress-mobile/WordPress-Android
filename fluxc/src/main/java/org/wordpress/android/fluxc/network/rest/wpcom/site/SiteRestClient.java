@@ -397,15 +397,24 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void suggestDomains(@NonNull final String query, final boolean onlyWordpressCom,
-                               final boolean includeWordpressCom, final boolean includeDotBlogSubdomain,
-                               final int quantity, final boolean includeVendorDot) {
+    public void suggestDomains(@NonNull final String query, final Boolean onlyWordpressCom,
+                               final Boolean includeWordpressCom, final Boolean includeDotBlogSubdomain,
+                               final Long segmentId, final int quantity, final boolean includeVendorDot) {
         String url = WPCOMREST.domains.suggestions.getUrlV1_1();
         Map<String, String> params = new HashMap<>(4);
         params.put("query", query);
-        params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom)); // CHECKSTYLE IGNORE
-        params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
-        params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
+        if (onlyWordpressCom != null) {
+            params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom)); // CHECKSTYLE IGNORE
+        }
+        if (includeWordpressCom != null) {
+            params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
+        }
+        if (includeDotBlogSubdomain != null) {
+            params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
+        }
+        if (segmentId != null) {
+            params.put("segment_id", String.valueOf(segmentId));
+        }
         params.put("quantity", String.valueOf(quantity));
         if (includeVendorDot) {
             params.put("vendor", "dot");
