@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.store.PostStore.PostError
@@ -22,10 +23,9 @@ import org.wordpress.android.widgets.PostListButtonType
 
 private const val FORMATTER_DATE = "January 1st, 1:35pm"
 
-// statuses are hardcoded in PostStatus.java
-private const val POST_STATE_PUBLISH = "publish"
-private const val POST_STATE_PRIVATE = "private"
-private const val POST_STATE_PENDING = "pending"
+private val POST_STATE_PUBLISH = PostStatus.PUBLISHED.toString()
+private val POST_STATE_PRIVATE = PostStatus.PRIVATE.toString()
+private val POST_STATE_PENDING = PostStatus.PENDING.toString()
 
 @RunWith(MockitoJUnitRunner::class)
 class PostListItemUiStateHelperTest {
