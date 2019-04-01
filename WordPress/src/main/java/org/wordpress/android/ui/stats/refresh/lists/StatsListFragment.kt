@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_date_selector.*
+import kotlinx.android.synthetic.main.stats_empty_view.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
@@ -88,6 +89,10 @@ class StatsListFragment : DaggerFragment() {
                 )
         )
 
+        statsEmptyView.button.setOnClickListener {
+            viewModel.onEmptyInsightsButtonClicked()
+        }
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1) && dy != 0) {
@@ -102,6 +107,10 @@ class StatsListFragment : DaggerFragment() {
 
         previousDateButton.setOnClickListener {
             viewModel.onPreviousDateSelected()
+        }
+
+        statsErrorView.button.setOnClickListener {
+            viewModel.onRetryClick()
         }
     }
 
@@ -204,6 +213,7 @@ class StatsListFragment : DaggerFragment() {
         } else {
             adapter = recyclerView.adapter as StatsBlockAdapter
         }
+
         val layoutManager = recyclerView?.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()
         adapter.update(statsState)

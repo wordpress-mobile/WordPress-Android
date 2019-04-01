@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.MONTH_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.WEEK_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.YEAR_STATS_USE_CASE
@@ -26,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
+import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -38,7 +41,7 @@ abstract class StatsListViewModel(
     private val statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dateSelector: StatsDateSelector,
-    private val popupMenuHandler: ItemPopupMenuHandler? = null
+    popupMenuHandler: ItemPopupMenuHandler? = null
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
     private var isInitialized = false
@@ -54,7 +57,8 @@ abstract class StatsListViewModel(
 
     val selectedDate = dateSelector.selectedDate
 
-    val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
+    private val _navigationTarget = MutableLiveData<NavigationTarget>()
+    val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(statsUseCase.navigationTarget, _navigationTarget)
 
     val listSelected = statsUseCase.listSelected
 
@@ -108,6 +112,10 @@ abstract class StatsListViewModel(
         dateSelector.updateDateSelector()
     }
 
+    fun onEmptyInsightsButtonClicked() {
+        _navigationTarget.value = ViewInsightsManagement()
+    }
+
     fun start() {
         if (!isInitialized) {
             isInitialized = true
@@ -122,6 +130,7 @@ abstract class StatsListViewModel(
     sealed class UiModel {
         data class Success(val data: List<StatsBlock>) : UiModel()
         class Error(val message: Int = R.string.stats_loading_error) : UiModel()
+        object Empty : UiModel()
     }
 
     fun onTypeMoved() {

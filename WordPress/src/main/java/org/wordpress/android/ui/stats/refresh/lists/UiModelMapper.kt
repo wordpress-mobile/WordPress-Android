@@ -73,33 +73,37 @@ class UiModelMapper
                 }
         val overviewHasData = useCaseModels.any { it.type == overViewType && it.data != null }
         return if (!allFailing) {
-            UiModel.Success(useCaseModels.mapNotNull { useCaseModel ->
-                if ((useCaseModel.type == overViewType) && useCaseModel.data != null) {
-                    StatsBlock.Success(useCaseModel.type, useCaseModel.data)
-                } else {
-                    when (useCaseModel.state) {
-                        SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
-                        ERROR -> useCaseModel.stateData?.let {
-                            StatsBlock.Error(
-                                    useCaseModel.type,
-                                    useCaseModel.stateData
-                            )
-                        }
-                        LOADING -> useCaseModel.stateData?.let {
-                            StatsBlock.Loading(
-                                    useCaseModel.type,
-                                    useCaseModel.stateData
-                            )
-                        }
-                        EMPTY -> useCaseModel.stateData?.let {
-                            StatsBlock.EmptyBlock(
-                                    useCaseModel.type,
-                                    useCaseModel.stateData
-                            )
+            if (useCaseModels.isNotEmpty()) {
+                UiModel.Success(useCaseModels.mapNotNull { useCaseModel ->
+                    if ((useCaseModel.type == overViewType) && useCaseModel.data != null) {
+                        StatsBlock.Success(useCaseModel.type, useCaseModel.data)
+                    } else {
+                        when (useCaseModel.state) {
+                            SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
+                            ERROR -> useCaseModel.stateData?.let {
+                                StatsBlock.Error(
+                                        useCaseModel.type,
+                                        useCaseModel.stateData
+                                )
+                            }
+                            LOADING -> useCaseModel.stateData?.let {
+                                StatsBlock.Loading(
+                                        useCaseModel.type,
+                                        useCaseModel.stateData
+                                )
+                            }
+                            EMPTY -> useCaseModel.stateData?.let {
+                                StatsBlock.EmptyBlock(
+                                        useCaseModel.type,
+                                        useCaseModel.stateData
+                                )
+                            }
                         }
                     }
-                }
-            })
+                })
+            } else {
+                UiModel.Empty
+            }
         } else if (overviewHasData) {
             showError(getErrorMessage())
             UiModel.Success(useCaseModels.mapNotNull { useCaseModel ->
