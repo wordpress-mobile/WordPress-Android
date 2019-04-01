@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 61;
+        return 65;
     }
 
     @Override
@@ -478,6 +478,30 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,TIME_STAMP INTEGER,"
                         + "REQUESTED_ITEMS INTEGER)");
                 oldVersion++;
+            case 61:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                db.execSQL("DROP TABLE StatsRequest");
+                db.execSQL(
+                        "CREATE TABLE StatsRequest (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,TIME_STAMP "
+                        + "INTEGER,REQUESTED_ITEMS INTEGER)");
+                oldVersion++;
+            case 62:
+                db.execSQL("DROP TABLE StatsRequest");
+                db.execSQL(
+                        "CREATE TABLE StatsRequest (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT,POST_ID INTEGER,TIME_STAMP "
+                        + "INTEGER,REQUESTED_ITEMS INTEGER)");
+                oldVersion++;
+            case 63:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 64:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -638,6 +662,84 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "WIDTH TEXT NOT NULL,"
                                + "HEIGHT TEXT NOT NULL,"
                                + "ATTRIBUTES TEXT NOT NULL)");
+                    break;
+                case 61:
+                    db.execSQL("DROP TABLE IF EXISTS WCProductModel");
+                    db.execSQL("CREATE TABLE WCProductModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "REMOTE_PRODUCT_ID INTEGER,"
+                               + "NAME TEXT NOT NULL,"
+                               + "SLUG TEXT NOT NULL,"
+                               + "PERMALINK TEXT NOT NULL,"
+                               + "DATE_CREATED TEXT NOT NULL,"
+                               + "DATE_MODIFIED TEXT NOT NULL,"
+                               + "TYPE TEXT NOT NULL,"
+                               + "STATUS TEXT NOT NULL,"
+                               + "FEATURED INTEGER,"
+                               + "CATALOG_VISIBILITY TEXT NOT NULL,"
+                               + "DESCRIPTION TEXT NOT NULL,"
+                               + "SHORT_DESCRIPTION TEXT NOT NULL,"
+                               + "SKU TEXT NOT NULL,"
+                               + "PRICE TEXT NOT NULL,"
+                               + "REGULAR_PRICE TEXT NOT NULL,"
+                               + "SALE_PRICE TEXT NOT NULL,"
+                               + "ON_SALE INTEGER,"
+                               + "TOTAL_SALES INTEGER,"
+                               + "VIRTUAL INTEGER,"
+                               + "DOWNLOADABLE INTEGER,"
+                               + "DOWNLOAD_LIMIT INTEGER,"
+                               + "DOWNLOAD_EXPIRY INTEGER,"
+                               + "DOWNLOADS TEXT NOT NULL,"
+                               + "EXTERNAL_URL TEXT NOT NULL,"
+                               + "TAX_STATUS TEXT NOT NULL,"
+                               + "TAX_CLASS TEXT NOT NULL,"
+                               + "MANAGE_STOCK INTEGER,"
+                               + "STOCK_QUANTITY INTEGER,"
+                               + "STOCK_STATUS TEXT NOT NULL,"
+                               + "BACKORDERS TEXT NOT NULL,"
+                               + "BACKORDERS_ALLOWED INTEGER,"
+                               + "BACKORDERED INTEGER,"
+                               + "SOLD_INDIVIDUALLY INTEGER,"
+                               + "WEIGHT TEXT NOT NULL,"
+                               + "LENGTH TEXT NOT NULL,"
+                               + "WIDTH TEXT NOT NULL,"
+                               + "HEIGHT TEXT NOT NULL,"
+                               + "SHIPPING_REQUIRED INTEGER,"
+                               + "SHIPPING_TAXABLE INTEGER,"
+                               + "SHIPPING_CLASS TEXT NOT NULL,"
+                               + "SHIPPING_CLASS_ID INTEGER,"
+                               + "REVIEWS_ALLOWED INTEGER,"
+                               + "AVERAGE_RATING TEXT NOT NULL,"
+                               + "RATING_COUNT INTEGER,"
+                               + "PARENT_ID INTEGER,"
+                               + "PURCHASE_NOTE TEXT NOT NULL,"
+                               + "CATEGORIES TEXT NOT NULL,"
+                               + "TAGS TEXT NOT NULL,"
+                               + "IMAGES TEXT NOT NULL,"
+                               + "ATTRIBUTES TEXT NOT NULL,"
+                               + "RELATED_IDS TEXT NOT NULL,"
+                               + "CROSS_SELL_IDS TEXT NOT NULL,"
+                               + "UPSELL_IDS TEXT NOT NULL,"
+                               + "VARIATIONS TEXT NOT NULL)");
+                    break;
+                case 63:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCProductSettingsModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "WEIGHT_UNIT TEXT NOT NULL,"
+                               + "DIMENSION_UNIT TEXT NOT NULL)");
+                    break;
+                case 64:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCOrderShipmentTrackingModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "LOCAL_ORDER_ID INTEGER,"
+                               + "REMOTE_TRACKING_ID TEXT NOT NULL,"
+                               + "TRACKING_NUMBER TEXT NOT NULL,"
+                               + "TRACKING_PROVIDER TEXT NOT NULL,"
+                               + "TRACKING_LINK TEXT NOT NULL,"
+                               + "DATE_SHIPPED TEXT NOT NULL)");
+                    break;
             }
         }
     }
