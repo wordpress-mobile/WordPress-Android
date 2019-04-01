@@ -15,10 +15,12 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.insights_management_fragment.*
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
 import javax.inject.Inject
 import android.animation.LayoutTransition
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
+import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.widgets.RecyclerItemDecoration
 
 class InsightsManagementFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -46,6 +48,9 @@ class InsightsManagementFragment : DaggerFragment() {
     private fun initializeViews() {
         removedInsights.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         addedInsights.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+
+        removedInsights.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
+        addedInsights.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
 
         val transition = LayoutTransition()
         transition.disableTransitionType(LayoutTransition.DISAPPEARING)
