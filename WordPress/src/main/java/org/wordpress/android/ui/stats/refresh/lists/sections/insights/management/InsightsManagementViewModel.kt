@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.*
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.ADDED
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.REMOVED
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -60,7 +61,9 @@ class InsightsManagementViewModel @Inject constructor(
             val model = InsightTypesModel(addedTypes, removedTypes + FOLLOWER_TOTALS + ANNUAL_SITE_STATS)
             statsStore.updateTypes(siteProvider.siteModel, model)
 
-            insightsUseCase.refreshData()
+            launch {
+                insightsUseCase.refreshData()
+            }
             _closeInsightsManagement.call()
         }
     }
@@ -73,7 +76,7 @@ class InsightsManagementViewModel @Inject constructor(
         launch {
             if (insight.type == ADDED) {
                 _addedInsights.value = _addedInsights.value?.filter { it != insight }
-                _removedInsights.value = _removedInsights.value?.let { it + insight.copy(type = REMOVED) }
+                _removedInsights.value = _removedInsights.value?.let { it + insight.copy(type = Type.REMOVED) }
             } else {
                 _removedInsights.value = _removedInsights.value?.filter { it != insight }
                 _addedInsights.value = _addedInsights.value?.let { it + insight.copy(type = ADDED) }
@@ -88,7 +91,7 @@ class InsightsManagementViewModel @Inject constructor(
             ALL_TIME_STATS -> R.string.stats_insights_all_time_stats
             TAGS_AND_CATEGORIES -> R.string.stats_insights_tags_and_categories
             COMMENTS -> R.string.stats_comments
-            FOLLOWERS ->  R.string.stats_view_followers
+            FOLLOWERS -> R.string.stats_view_followers
             TODAY_STATS -> R.string.stats_insights_today
             POSTING_ACTIVITY -> R.string.stats_insights_posting_activity
             PUBLICIZE -> R.string.stats_view_publicize
