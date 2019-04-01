@@ -159,7 +159,7 @@ class StatsListFragment : DaggerFragment() {
                     is UiModel.Empty -> {
                         recyclerView.visibility = View.GONE
                         statsEmptyView.visibility = View.VISIBLE
-                        statsEmptyView.visibility = View.GONE
+                        statsErrorView.visibility = View.GONE
                     }
                 }
             }

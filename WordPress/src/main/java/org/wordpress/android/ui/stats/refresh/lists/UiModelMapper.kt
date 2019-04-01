@@ -17,40 +17,44 @@ import javax.inject.Inject
 class UiModelMapper
 @Inject constructor(private val networkUtilsWrapper: NetworkUtilsWrapper) {
     fun mapInsights(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
-        val allFailing = useCaseModels.isNotEmpty() && useCaseModels.fold(true) { acc, useCaseModel ->
-            acc && useCaseModel.state == ERROR
-        }
-        val allFailingWithoutData = useCaseModels.isNotEmpty() && useCaseModels.fold(true) { acc, useCaseModel ->
-            acc && useCaseModel.state == ERROR && useCaseModel.data == null
-        }
-        return if (!allFailing && !allFailingWithoutData) {
-            UiModel.Success(useCaseModels.map { useCaseModel ->
-                when (useCaseModel.state) {
-                    SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
-                    ERROR -> StatsBlock.Error(
+        if (useCaseModels.isNotEmpty()) {
+            val allFailing = useCaseModels.fold(true) { acc, useCaseModel ->
+                acc && useCaseModel.state == ERROR
+            }
+            val allFailingWithoutData = useCaseModels.isNotEmpty() && useCaseModels.fold(true) { acc, useCaseModel ->
+                acc && useCaseModel.state == ERROR && useCaseModel.data == null
+            }
+            return if (!allFailing && !allFailingWithoutData) {
+                UiModel.Success(useCaseModels.map { useCaseModel ->
+                    when (useCaseModel.state) {
+                        SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
+                        ERROR -> StatsBlock.Error(
+                                useCaseModel.type,
+                                useCaseModel.stateData ?: useCaseModel.data ?: listOf()
+                        )
+                        LOADING -> StatsBlock.Loading(
+                                useCaseModel.type,
+                                useCaseModel.stateData ?: useCaseModel.data ?: listOf()
+                        )
+                        EMPTY -> StatsBlock.EmptyBlock(
+                                useCaseModel.type,
+                                useCaseModel.stateData ?: useCaseModel.data ?: listOf()
+                        )
+                    }
+                })
+            } else if (!allFailingWithoutData) {
+                showError(getErrorMessage())
+                UiModel.Success(useCaseModels.map { useCaseModel ->
+                    Error(
                             useCaseModel.type,
-                            useCaseModel.stateData ?: useCaseModel.data ?: listOf()
+                            useCaseModel.data ?: useCaseModel.stateData ?: listOf()
                     )
-                    LOADING -> StatsBlock.Loading(
-                            useCaseModel.type,
-                            useCaseModel.stateData ?: useCaseModel.data ?: listOf()
-                    )
-                    EMPTY -> StatsBlock.EmptyBlock(
-                            useCaseModel.type,
-                            useCaseModel.stateData ?: useCaseModel.data ?: listOf()
-                    )
-                }
-            })
-        } else if (!allFailingWithoutData) {
-            showError(getErrorMessage())
-            UiModel.Success(useCaseModels.map { useCaseModel ->
-                Error(
-                        useCaseModel.type,
-                        useCaseModel.data ?: useCaseModel.stateData ?: listOf()
-                )
-            })
+                })
+            } else {
+                UiModel.Error(getErrorMessage())
+            }
         } else {
-            UiModel.Error(getErrorMessage())
+            return UiModel.Empty
         }
     }
 

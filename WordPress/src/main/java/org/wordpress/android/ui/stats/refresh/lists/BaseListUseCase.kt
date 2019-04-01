@@ -14,7 +14,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.DistinctMutableLiveData
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.distinct
@@ -33,7 +32,7 @@ class BaseListUseCase(
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
-    private val statsTypes = DistinctMutableLiveData<List<StatsTypes>>(listOf())
+    private val statsTypes = MutableLiveData<List<StatsTypes>>()
     val data: MediatorLiveData<UiModel> = mergeNotNull(statsTypes, blockListData) { types, map ->
         types.mapNotNull {
             if (map.containsKey(it)) {
@@ -98,7 +97,6 @@ class BaseListUseCase(
 
     fun onCleared() {
         mutableSnackbarMessage.value = null
-        statsTypes.clear()
         blockListData.value = null
         useCases.forEach { it.clear() }
         data.value = null
