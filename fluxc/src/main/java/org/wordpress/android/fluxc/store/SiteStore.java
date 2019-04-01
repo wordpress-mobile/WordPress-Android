@@ -131,10 +131,11 @@ public class SiteStore extends Store {
     }
 
     public static class SuggestDomainsPayload extends Payload<BaseNetworkError> {
-        public String query;
-        public boolean onlyWordpressCom;
-        public boolean includeWordpressCom;
-        public boolean includeDotBlogSubdomain;
+        @NonNull public String query;
+        @Nullable public Boolean onlyWordpressCom;
+        @Nullable public Boolean includeWordpressCom;
+        @Nullable public Boolean includeDotBlogSubdomain;
+        @Nullable public Long segmentId;
         public int quantity;
         public boolean includeVendorDot;
         public SuggestDomainsPayload(@NonNull String query, boolean onlyWordpressCom, boolean includeWordpressCom,
@@ -143,6 +144,13 @@ public class SiteStore extends Store {
             this.onlyWordpressCom = onlyWordpressCom;
             this.includeWordpressCom = includeWordpressCom;
             this.includeDotBlogSubdomain = includeDotBlogSubdomain;
+            this.quantity = quantity;
+            this.includeVendorDot = includeVendorDot;
+        }
+
+        public SuggestDomainsPayload(@NonNull String query, long segmentId, int quantity, boolean includeVendorDot) {
+            this.query = query;
+            this.segmentId = segmentId;
             this.quantity = quantity;
             this.includeVendorDot = includeVendorDot;
         }
@@ -1578,7 +1586,7 @@ public class SiteStore extends Store {
 
     private void suggestDomains(SuggestDomainsPayload payload) {
         mSiteRestClient.suggestDomains(payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
-                payload.includeDotBlogSubdomain, payload.quantity, payload.includeVendorDot);
+                payload.includeDotBlogSubdomain, payload.segmentId, payload.quantity, payload.includeVendorDot);
     }
 
     private void handleSuggestedDomains(SuggestDomainsResponsePayload payload) {
