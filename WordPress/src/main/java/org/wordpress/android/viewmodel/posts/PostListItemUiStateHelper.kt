@@ -158,9 +158,11 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                     uploadError.postError
             )
             else -> {
-                AppLog.e(POSTS, "MediaError and postError are both null.")
+                val errorMsg = "MediaError and postError are both null."
                 if (BuildConfig.DEBUG) {
-                    throw IllegalStateException()
+                    throw IllegalStateException(errorMsg)
+                } else {
+                    AppLog.e(POSTS, errorMsg)
                 }
                 UiStringRes(R.string.error_generic)
             }
