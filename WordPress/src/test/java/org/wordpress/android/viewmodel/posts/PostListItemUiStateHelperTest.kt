@@ -163,13 +163,13 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `error label has precedence over info labels`() {
+    fun `given a mix of info and error statuses, only the error status is shown`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE),
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
         )
         assertThat(state.data.statusLabels).contains(UiStringRes(R.string.error_media_recover_post))
-        assertThat(state.data.statusLabels.size).isEqualTo(1)
+        assertThat(state.data.statusLabels).hasSize(1)
     }
 
     @Test
