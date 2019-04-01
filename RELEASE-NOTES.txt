@@ -1,6 +1,8 @@
 12.2
 -----
 
+* New Insights Management for selecting the most relevant stats
+
 12.1
 -----
 * Design improvements for the new site creation flow
