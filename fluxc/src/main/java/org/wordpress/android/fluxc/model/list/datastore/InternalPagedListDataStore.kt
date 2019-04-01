@@ -38,6 +38,9 @@ class InternalPagedListDataStore<LD : ListDescriptor, ID, T>(
 
     /**
      * Returns the list of items [T] by propagating the call to [ListItemDataStoreInterface]
+     *
+     * @param startPosition Start position that's inclusive
+     * @param endPosition End position that's exclusive
      */
     fun getItemsInRange(startPosition: Int, endPosition: Int): List<T> =
             itemDataStore.getItemsAndFetchIfNecessary(listDescriptor, getItemIds(startPosition, endPosition))
