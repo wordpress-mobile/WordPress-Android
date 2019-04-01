@@ -96,11 +96,11 @@ class StatsListFragment : DaggerFragment() {
             }
         })
 
-        select_next_date.setOnClickListener {
+        nextDateButton.setOnClickListener {
             viewModel.onNextDateSelected()
         }
 
-        select_previous_date.setOnClickListener {
+        previousDateButton.setOnClickListener {
             viewModel.onPreviousDateSelected()
         }
     }
@@ -144,10 +144,13 @@ class StatsListFragment : DaggerFragment() {
                     }
                     is UiModel.Error -> {
                         recyclerView.visibility = View.GONE
-                        actionable_error_view.visibility = View.VISIBLE
-                        actionable_error_view.button.setOnClickListener {
-                            viewModel.onRetryClick()
-                        }
+                        statsErrorView.visibility = View.VISIBLE
+                        statsEmptyView.visibility = View.GONE
+                    }
+                    is UiModel.Empty -> {
+                        recyclerView.visibility = View.GONE
+                        statsEmptyView.visibility = View.VISIBLE
+                        statsEmptyView.visibility = View.GONE
                     }
                 }
             }
@@ -158,14 +161,14 @@ class StatsListFragment : DaggerFragment() {
             if (date_selection_toolbar.visibility != dateSelectorVisibility) {
                 date_selection_toolbar.visibility = dateSelectorVisibility
             }
-            selected_date.text = dateSelectorUiModel?.date ?: ""
+            selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
             val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (select_previous_date.isEnabled != enablePreviousButton) {
-                select_previous_date.isEnabled = enablePreviousButton
+            if (previousDateButton.isEnabled != enablePreviousButton) {
+                previousDateButton.isEnabled = enablePreviousButton
             }
             val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (select_next_date.isEnabled != enableNextButton) {
-                select_next_date.isEnabled = enableNextButton
+            if (nextDateButton.isEnabled != enableNextButton) {
+                nextDateButton.isEnabled = enableNextButton
             }
         })
 
@@ -191,7 +194,9 @@ class StatsListFragment : DaggerFragment() {
 
     private fun updateInsights(statsState: List<StatsBlock>) {
         recyclerView.visibility = View.VISIBLE
-        actionable_error_view.visibility = View.GONE
+        statsErrorView.visibility = View.GONE
+        statsEmptyView.visibility = View.GONE
+
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
             adapter = StatsBlockAdapter(imageManager)

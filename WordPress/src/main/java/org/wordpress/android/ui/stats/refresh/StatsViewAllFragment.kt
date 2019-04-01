@@ -80,7 +80,7 @@ class StatsViewAllFragment : DaggerFragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViews(savedInstanceState: Bundle?) {
+        private fun initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
@@ -94,10 +94,10 @@ class StatsViewAllFragment : DaggerFragment() {
             viewModel.onPullToRefresh()
         }
 
-        select_next_date.setOnClickListener {
+        nextDateButton.setOnClickListener {
             viewModel.onNextDateSelected()
         }
-        select_previous_date.setOnClickListener {
+        previousDateButton.setOnClickListener {
             viewModel.onPreviousDateSelected()
         }
     }
@@ -162,8 +162,8 @@ class StatsViewAllFragment : DaggerFragment() {
             if (it != null) {
                 recyclerView.visibility = if (it is StatsBlock.Success) View.VISIBLE else View.GONE
                 loadingContainer.visibility = if (it is StatsBlock.Loading) View.VISIBLE else View.GONE
-                actionable_error_view.visibility = if (it is StatsBlock.Error) View.VISIBLE else View.GONE
-                actionable_empty_view.visibility = if (it is StatsBlock.EmptyBlock) View.VISIBLE else View.GONE
+                statsErrorView.visibility = if (it is StatsBlock.Error) View.VISIBLE else View.GONE
+                statsEmptyView.visibility = if (it is StatsBlock.EmptyBlock) View.VISIBLE else View.GONE
                 when (it) {
                     is StatsBlock.Success -> {
                         loadData(recyclerView, prepareLayout(it.data, it.type))
@@ -172,7 +172,7 @@ class StatsViewAllFragment : DaggerFragment() {
                         loadData(loadingRecyclerView, prepareLayout(it.data, it.type))
                     }
                     is StatsBlock.Error -> {
-                        actionable_error_view.button.setOnClickListener {
+                        statsErrorView.button.setOnClickListener {
                             viewModel.onRetryClick()
                         }
                     }
@@ -190,14 +190,14 @@ class StatsViewAllFragment : DaggerFragment() {
             if (date_selection_toolbar.visibility != dateSelectorVisibility) {
                 date_selection_toolbar.visibility = dateSelectorVisibility
             }
-            selected_date.text = dateSelectorUiModel?.date ?: ""
+            selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
             val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (select_previous_date.isEnabled != enablePreviousButton) {
-                select_previous_date.isEnabled = enablePreviousButton
+            if (previousDateButton.isEnabled != enablePreviousButton) {
+                previousDateButton.isEnabled = enablePreviousButton
             }
             val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (select_next_date.isEnabled != enableNextButton) {
-                select_next_date.isEnabled = enableNextButton
+            if (nextDateButton.isEnabled != enableNextButton) {
+                nextDateButton.isEnabled = enableNextButton
             }
         })
 
