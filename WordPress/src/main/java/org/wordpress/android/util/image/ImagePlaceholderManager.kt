@@ -20,6 +20,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.UNKNOWN -> R.drawable.ic_notice_white_24dp
             ImageType.VIDEO -> R.color.grey_lighten_30
             ImageType.ICON -> R.drawable.bg_grey_lighten_30_with_radius
+            ImageType.MULTI_USER_AVATAR_GREY_BACKGROUND -> R.drawable.bg_oval_grey_multiple_users_white_40dp
         }
     }
 
@@ -37,6 +38,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.UNKNOWN -> R.drawable.legacy_dashicon_format_image_big_grey
             ImageType.VIDEO -> R.color.grey_light
             ImageType.ICON -> R.drawable.bg_grey_light_with_radius
+            ImageType.MULTI_USER_AVATAR_GREY_BACKGROUND -> R.drawable.bg_oval_grey_multiple_users_white_40dp
         }
     }
 }

@@ -3,23 +3,34 @@ package org.wordpress.android.ui.posts
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.support.annotation.ColorRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
+import org.wordpress.android.util.image.ImageType.MULTI_USER_AVATAR_GREY_BACKGROUND
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -31,6 +42,8 @@ val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 
 class PostListMainViewModel @Inject constructor(
     private val postStore: PostStore,
+    private val accountStore: AccountStore,
+    private val prefs: AppPrefsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
@@ -40,11 +53,14 @@ class PostListMainViewModel @Inject constructor(
 
     private lateinit var site: SiteModel
 
+    private val _viewState = MutableLiveData<PostListMainViewState>()
+    val viewState: LiveData<PostListMainViewState> = _viewState
+
     private val _postListAction = SingleLiveEvent<PostListAction>()
     val postListAction: LiveData<PostListAction> = _postListAction
 
-    private val _isFabVisible = MutableLiveData<Boolean>()
-    val isFabVisible: LiveData<Boolean> = _isFabVisible
+    private val _updatePostsPager = SingleLiveEvent<AuthorFilterSelection>()
+    val updatePostsPager = _updatePostsPager
 
     private val _selectTab = SingleLiveEvent<Int>()
     val selectTab = _selectTab as LiveData<Int>
@@ -57,6 +73,16 @@ class PostListMainViewModel @Inject constructor(
 
     fun start(site: SiteModel) {
         this.site = site
+
+        val authorFilterSelection: AuthorFilterSelection = prefs.postListAuthorSelection
+
+        _updatePostsPager.value = authorFilterSelection
+        _viewState.value = PostListMainViewState(
+                isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
+                isAuthorFilterVisible = site.isUsingWpComRestApi,
+                authorFilterSelection = authorFilterSelection,
+                authorFilterItems = getAuthorFilterItems(authorFilterSelection)
+        )
     }
 
     override fun onCleared() {
@@ -68,9 +94,19 @@ class PostListMainViewModel @Inject constructor(
         _postListAction.postValue(PostListAction.NewPost(site))
     }
 
+    fun updateAuthorFilterSelection(selectionId: Long) {
+        val selection = AuthorFilterSelection.fromId(selectionId)
+
+        updateViewStateTriggerPagerChange(
+                authorFilterSelection = selection,
+                authorFilterItems = getAuthorFilterItems(selection)
+        )
+        prefs.postListAuthorSelection = selection
+    }
+
     fun onTabChanged(position: Int) {
         val currentPage = POST_LIST_PAGES[position]
-        _isFabVisible.value = FAB_VISIBLE_POST_LIST_PAGES.contains(currentPage)
+        updateViewStateTriggerPagerChange(isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(currentPage))
     }
 
     fun showTargetPost(targetPostId: Int) {
@@ -89,5 +125,74 @@ class PostListMainViewModel @Inject constructor(
                 _scrollToLocalPostId.value = postModel.id
             }
         }
+    }
+
+    private fun getAuthorFilterItems(selection: AuthorFilterSelection): List<AuthorFilterListItemUIState> {
+        return AuthorFilterSelection.values().map { value ->
+            @ColorRes val backgroundColorRes: Int =
+                    if (selection == value) R.color.grey_lighten_30_translucent_50
+                    else R.color.transparent
+
+            when (value) {
+                ME -> AuthorFilterListItemUIState.Me(accountStore.account?.avatarUrl, backgroundColorRes)
+                EVERYONE -> AuthorFilterListItemUIState.Everyone(backgroundColorRes)
+            }
+        }
+    }
+
+    /**
+     * Only the non-null variables will be changed in the current state
+     */
+    private fun updateViewStateTriggerPagerChange(
+        isFabVisible: Boolean? = null,
+        isAuthorFilterVisible: Boolean? = null,
+        authorFilterSelection: AuthorFilterSelection? = null,
+        authorFilterItems: List<AuthorFilterListItemUIState>? = null
+    ) {
+        val currentState = requireNotNull(viewState.value) {
+            "updateViewStateTriggerPagerChange should not be called before the initial state is set"
+        }
+
+        _viewState.value = PostListMainViewState(
+                isFabVisible ?: currentState.isFabVisible,
+                isAuthorFilterVisible ?: currentState.isAuthorFilterVisible,
+                authorFilterSelection ?: currentState.authorFilterSelection,
+                authorFilterItems ?: currentState.authorFilterItems
+        )
+
+        if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
+            _updatePostsPager.value = authorFilterSelection
+        }
+    }
+
+    class PostListMainViewState(
+        val isFabVisible: Boolean,
+        val isAuthorFilterVisible: Boolean,
+        val authorFilterSelection: AuthorFilterSelection,
+        val authorFilterItems: List<AuthorFilterListItemUIState>
+    )
+
+    sealed class AuthorFilterListItemUIState(
+        val id: Long,
+        val text: UiString,
+        val avatarUrl: String?,
+        val imageType: ImageType,
+        @ColorRes val dropDownBackground: Int
+    ) {
+        class Everyone(@ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
+                id = AuthorFilterSelection.EVERYONE.id,
+                text = UiStringRes(R.string.post_list_author_everyone),
+                avatarUrl = null,
+                imageType = MULTI_USER_AVATAR_GREY_BACKGROUND,
+                dropDownBackground = dropDownBackground
+        )
+
+        class Me(avatarUrl: String?, @ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
+                id = AuthorFilterSelection.ME.id,
+                text = UiStringRes(R.string.post_list_author_me),
+                avatarUrl = avatarUrl,
+                imageType = AVATAR_WITH_BACKGROUND,
+                dropDownBackground = dropDownBackground
+        )
     }
 }
