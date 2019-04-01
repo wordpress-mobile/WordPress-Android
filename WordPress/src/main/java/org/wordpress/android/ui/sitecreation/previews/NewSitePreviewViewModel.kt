@@ -120,7 +120,7 @@ class NewSitePreviewViewModel @Inject constructor(
                         verticalId,
                         siteTitle,
                         siteTagLine,
-                        urlUtils.extractSubDomain(urlWithoutScheme)
+                        urlWithoutScheme
                 )
                 _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)
             }
