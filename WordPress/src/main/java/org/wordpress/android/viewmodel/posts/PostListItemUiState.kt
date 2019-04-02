@@ -18,7 +18,8 @@ data class PostListItemUiStateData(
     val imageUrl: String?,
     val dateAndAuthor: UiString?,
     @ColorRes val statusLabelsColor: Int?,
-    val statusLabels: UiString?,
+    val statusLabels: List<UiString>,
+    val statusLabelsDelimiter: UiString,
     val showProgress: Boolean,
     val showOverlay: Boolean
 )

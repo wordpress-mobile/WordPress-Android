@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.posts
 
 import android.support.annotation.ColorRes
 import org.apache.commons.text.StringEscapeUtils
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -73,6 +74,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                                 uploadStatus = uploadStatus,
                                 hasUnhandledConflicts = unhandledConflicts
                         ),
+                        statusLabelsDelimiter = UiStringRes(R.string.multiple_status_label_delimiter),
                         showProgress = shouldShowProgress(uploadStatus = uploadStatus),
                         showOverlay = shouldShowOverlay(uploadStatus = uploadStatus)
                 ),
@@ -115,21 +117,37 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         isLocallyChanged: Boolean,
         uploadStatus: PostListItemUploadStatus,
         hasUnhandledConflicts: Boolean
-    ): UiString? {
+    ): List<UiString> {
+        val labels: MutableList<UiString> = ArrayList()
+
         val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
 
-        return when {
-            isError && uploadStatus.uploadError != null -> getErrorLabel(uploadStatus.uploadError)
-            uploadStatus.isUploading -> UiStringRes(string.post_uploading)
-            uploadStatus.hasInProgressMediaUpload -> UiStringRes(string.uploading_media)
-            uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload -> UiStringRes(string.post_queued)
-            hasUnhandledConflicts -> UiStringRes(string.local_post_is_conflicted)
-            isLocalDraft -> UiStringRes(string.local_draft)
-            isLocallyChanged -> UiStringRes(string.local_changes)
-            postStatus == PRIVATE -> UiStringRes(string.post_status_post_private)
-            postStatus == PENDING -> UiStringRes(string.post_status_pending_review)
-            else -> null // do not show any label
+        when {
+            isError && uploadStatus.uploadError != null -> {
+                getErrorLabel(uploadStatus.uploadError)?.let { labels.add(it) }
+            }
+            uploadStatus.isUploading -> labels.add(UiStringRes(string.post_uploading))
+            uploadStatus.hasInProgressMediaUpload -> labels.add(UiStringRes(string.uploading_media))
+            uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload -> labels.add(UiStringRes(string.post_queued))
+            hasUnhandledConflicts -> labels.add(UiStringRes(string.local_post_is_conflicted))
         }
+
+        // we want to show either single error/progress label or 0-n info labels.
+        if (labels.isEmpty()) {
+            if (isLocalDraft) {
+                labels.add(UiStringRes(string.local_draft))
+            }
+            if (isLocallyChanged) {
+                labels.add(UiStringRes(string.local_changes))
+            }
+            if (postStatus == PRIVATE) {
+                labels.add(UiStringRes(string.post_status_post_private))
+            }
+            if (postStatus == PENDING) {
+                labels.add(UiStringRes(string.post_status_pending_review))
+            }
+        }
+        return labels
     }
 
     private fun getErrorLabel(uploadError: UploadError): UiString? {
@@ -140,8 +158,13 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                     uploadError.postError
             )
             else -> {
-                AppLog.e(POSTS, "MediaError and postError are both null.")
-                null
+                val errorMsg = "MediaError and postError are both null."
+                if (BuildConfig.DEBUG) {
+                    throw IllegalStateException(errorMsg)
+                } else {
+                    AppLog.e(POSTS, errorMsg)
+                }
+                UiStringRes(R.string.error_generic)
             }
         }
     }
@@ -153,9 +176,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         uploadStatus: PostListItemUploadStatus,
         hasUnhandledConflicts: Boolean
     ): Int? {
-        val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
+        val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload ||
+                hasUnhandledConflicts
         val isProgressInfo = uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload ||
-                uploadStatus.hasInProgressMediaUpload || uploadStatus.isUploading || hasUnhandledConflicts
+                uploadStatus.hasInProgressMediaUpload || uploadStatus.isUploading
         val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
 
         return when {
