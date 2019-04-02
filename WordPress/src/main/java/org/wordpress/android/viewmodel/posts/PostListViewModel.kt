@@ -87,9 +87,10 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
+import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
+import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState.RefreshError
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
@@ -230,11 +231,16 @@ class PostListViewModel @Inject constructor(
         return if (error.type == PERMISSION_ERROR) {
             PostListEmptyUiState.PermissionsError
         } else {
-            if (networkUtilsWrapper.isNetworkAvailable()) {
-                PostListEmptyUiState.RefreshError(UiStringRes(R.string.error_refresh_posts))
+            val errorText = if (networkUtilsWrapper.isNetworkAvailable()) {
+                UiStringRes(R.string.error_refresh_posts)
             } else {
-                PostListEmptyUiState.RefreshError(UiStringRes(R.string.no_network_message))
+                UiStringRes(R.string.no_network_message)
             }
+            PostListEmptyUiState.RefreshError(
+                    errorText,
+                    UiStringRes(R.string.retry),
+                    this::fetchFirstPage
+            )
         }
     }
 
@@ -284,9 +290,15 @@ class PostListViewModel @Inject constructor(
                 imgResId = R.drawable.img_illustration_posts_75dp
         )
 
-        class RefreshError(title: UiString) : PostListEmptyUiState(
+        class RefreshError(
+            title: UiString,
+            buttonText: UiString? = null,
+            onButtonClick: (() -> Unit)? = null
+        ) : PostListEmptyUiState(
                 title = title,
-                imgResId = R.drawable.img_illustration_posts_75dp
+                imgResId = R.drawable.img_illustration_empty_results_216dp,
+                buttonText = buttonText,
+                onButtonClick = onButtonClick
         )
 
         object PermissionsError : PostListEmptyUiState(
@@ -304,6 +316,7 @@ class PostListViewModel @Inject constructor(
     init {
         connectionStatus.observe(this, Observer {
             isNetworkAvailable = it?.isConnected == true
+            retryOnConnectionAvailableAfterRefreshError()
         })
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
@@ -361,6 +374,15 @@ class PostListViewModel @Inject constructor(
 
     fun newPost() {
         _postListAction.postValue(PostListAction.NewPost(site))
+    }
+
+    private fun retryOnConnectionAvailableAfterRefreshError() {
+        val connectionAvailableAfterRefreshError = isNetworkAvailable &&
+                emptyViewState.value is RefreshError
+
+        if (connectionAvailableAfterRefreshError) {
+            fetchFirstPage()
+        }
     }
 
     // Private List Actions
