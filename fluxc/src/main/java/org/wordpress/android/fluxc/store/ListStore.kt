@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store
 
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedList.BoundaryCallback
@@ -78,33 +79,49 @@ class ListStore @Inject constructor(
      * @return A [PagedListWrapper] that provides all the necessary information to consume a list such as its data,
      * whether the first page is being fetched, whether there are any errors etc. in `LiveData` format.
      */
-    // TODO: Cleanup this method. I am not sure what that cleanup means, but it's hard to track what's going on here.
     fun <LD : ListDescriptor, ID, T> getList(
         listDescriptor: LD,
         dataStore: ListItemDataStoreInterface<LD, ID, T>,
         lifecycle: Lifecycle
     ): PagedListWrapper<T> {
-        // Helper functions
-        val getRemoteItemIds = { getListItems(listDescriptor).map { RemoteId(value = it) } }
-        val getIsListFullyFetched = { getListState(listDescriptor) == FETCHED }
-        val fetchFirstPage = {
-            handleFetchList(listDescriptor, false) { offset ->
-                dataStore.fetchList(listDescriptor, offset)
-            }
-        }
-        val isEmpty = { getListItemsCount(listDescriptor) == 0L }
+        val factory = createPagedListFactory(listDescriptor, dataStore)
+        val pagedListData = createPagedListLiveData(
+                listDescriptor = listDescriptor,
+                dataStore = dataStore,
+                pagedListFactory = factory
+        )
+        return PagedListWrapper(
+                data = pagedListData,
+                dispatcher = mDispatcher,
+                listDescriptor = listDescriptor,
+                lifecycle = lifecycle,
+                refresh = {
+                    handleFetchList(listDescriptor, false) { offset ->
+                        dataStore.fetchList(listDescriptor, offset)
+                    }
+                },
+                invalidate = factory::invalidate,
+                isListEmpty = {
+                    getListItemsCount(listDescriptor) == 0L
+                }
+        )
+    }
 
-        // Create the PagedList
-        val factory = PagedListFactory(
-                createDataStore = {
-                    InternalPagedListDataStore(
-                            listDescriptor = listDescriptor,
-                            remoteItemIds = getRemoteItemIds(),
-                            isListFullyFetched = getIsListFullyFetched(),
-                            itemDataStore = dataStore
-                    )
-                })
-        val callback = object : BoundaryCallback<T>() {
+    /**
+     * A helper function that creates a [PagedList] [LiveData] for the given [listDescriptor], [dataStore] and the
+     * [PagedListFactory].
+     */
+    private fun <LD : ListDescriptor, ID, T> createPagedListLiveData(
+        listDescriptor: LD,
+        dataStore: ListItemDataStoreInterface<LD, ID, T>,
+        pagedListFactory: PagedListFactory<LD, ID, T>
+    ): LiveData<PagedList<T>> {
+        val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setInitialLoadSizeHint(listDescriptor.config.initialLoadSize)
+                .setPageSize(listDescriptor.config.dbPageSize)
+                .build()
+        val boundaryCallback = object : BoundaryCallback<T>() {
             override fun onItemAtEndLoaded(itemAtEnd: T) {
                 // Load more items if we are near the end of list
                 handleFetchList(listDescriptor, true) { offset ->
@@ -113,22 +130,28 @@ class ListStore @Inject constructor(
                 super.onItemAtEndLoaded(itemAtEnd)
             }
         }
-        val pagedListConfig = PagedList.Config.Builder()
-                .setEnablePlaceholders(true)
-                .setInitialLoadSizeHint(listDescriptor.config.initialLoadSize)
-                .setPageSize(listDescriptor.config.dbPageSize)
-                .build()
-        val listData = LivePagedListBuilder<Int, T>(factory, pagedListConfig)
-                .setBoundaryCallback(callback).build()
-        return PagedListWrapper(
-                data = listData,
-                dispatcher = mDispatcher,
-                listDescriptor = listDescriptor,
-                lifecycle = lifecycle,
-                refresh = fetchFirstPage,
-                invalidate = factory::invalidate,
-                isListEmpty = isEmpty
-        )
+        return LivePagedListBuilder<Int, T>(pagedListFactory, pagedListConfig)
+                .setBoundaryCallback(boundaryCallback).build()
+    }
+
+    /**
+     * A helper function that creates a [PagedListFactory] for the given [listDescriptor] and [dataStore].
+     */
+    private fun <LD : ListDescriptor, ID, T> createPagedListFactory(
+        listDescriptor: LD,
+        dataStore: ListItemDataStoreInterface<LD, ID, T>
+    ): PagedListFactory<LD, ID, T> {
+        val getRemoteItemIds = { getListItems(listDescriptor).map { RemoteId(value = it) } }
+        val getIsListFullyFetched = { getListState(listDescriptor) == FETCHED }
+        return PagedListFactory(
+                createDataStore = {
+                    InternalPagedListDataStore(
+                            listDescriptor = listDescriptor,
+                            remoteItemIds = getRemoteItemIds(),
+                            isListFullyFetched = getIsListFullyFetched(),
+                            itemDataStore = dataStore
+                    )
+                })
     }
 
     /**
