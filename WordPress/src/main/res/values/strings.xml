@@ -255,7 +255,7 @@
     <string name="posts_scheduled_empty">You don\'t have any scheduled posts</string>
     <string name="posts_draft_empty">You don\'t have any draft posts</string>
     <string name="posts_trashed_empty">You don\'t have any binned posts</string>
-    <string name="multiple_status_label_delimiter" translatable="false"> · </string>
+    <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
 
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
