@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -32,6 +33,7 @@ import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.image.ImageType.MULTI_USER_AVATAR_GREY_BACKGROUND
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -65,8 +67,8 @@ class PostListMainViewModel @Inject constructor(
     private val _selectTab = SingleLiveEvent<Int>()
     val selectTab = _selectTab as LiveData<Int>
 
-    private val _scrollToLocalPostId = SingleLiveEvent<Int>()
-    val scrollToLocalPostId = _scrollToLocalPostId as LiveData<Int>
+    private val _scrollToLocalPostId = SingleLiveEvent<LocalPostId>()
+    val scrollToLocalPostId = _scrollToLocalPostId as LiveData<LocalPostId>
 
     private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
@@ -122,7 +124,7 @@ class PostListMainViewModel @Inject constructor(
                 withContext(bgDispatcher) {
                     delay(SCROLL_TO_DELAY)
                 }
-                _scrollToLocalPostId.value = postModel.id
+                _scrollToLocalPostId.value = LocalPostId(LocalId(postModel.id))
             }
         }
     }
