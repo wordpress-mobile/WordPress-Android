@@ -24,6 +24,8 @@ import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import kotlinx.android.synthetic.main.stats_view_all_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
@@ -74,6 +76,9 @@ class StatsViewAllFragment : DaggerFragment() {
                         StatsAbstractFragment.ARGS_TIMEFRAME,
                         intent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME)
                 )
+            }
+            if (intent.hasExtra(WordPress.SITE)) {
+                outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
             }
         }
 
@@ -132,10 +137,22 @@ class StatsViewAllFragment : DaggerFragment() {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         }
 
+        val site = if (savedInstanceState == null) {
+            val nonNullIntent = checkNotNull(activity.intent)
+            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
+        } else {
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
+        }
+
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
         setupObservers(activity)
-        viewModel.start()
+
+        if (site != null) {
+            viewModel.start(site)
+        } else {
+            viewModel.start()
+        }
     }
 
     private fun setupObservers(activity: FragmentActivity) {
