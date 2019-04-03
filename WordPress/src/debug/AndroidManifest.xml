@@ -8,7 +8,10 @@
         tools:replace="android:name,android:supportsRtl"
         android:name=".WordPressDebug"
         android:supportsRtl="true"
-        />
+        >
+
+        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+    </application>
 
     <!-- 
         The below permissions are required by Fastlane for taking screenshots.
