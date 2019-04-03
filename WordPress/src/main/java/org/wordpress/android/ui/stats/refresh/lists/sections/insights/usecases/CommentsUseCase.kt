@@ -16,6 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -74,15 +75,17 @@ class CommentsUseCase
         if (model.authors.isNotEmpty() || model.posts.isNotEmpty()) {
             items.add(
                     TabsItem(
-                            listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),
+                            listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages, R.string.stats_comments_totals),
                             uiState
                     ) { selectedTabPosition -> onUiState(selectedTabPosition) }
             )
 
             if (uiState == 0) {
                 items.addAll(buildAuthorsTab(model.authors))
-            } else {
+            } else if (uiState == 1){
                 items.addAll(buildPostsTab(model.posts))
+            } else if (uiState == 2){
+                items.addAll(buildTotalsTab(model.posts))
             }
 
             if (model.hasMoreAuthors && uiState == 0 || model.hasMorePosts && uiState == 1) {
@@ -129,6 +132,19 @@ class CommentsUseCase
                         index < posts.size - 1
                 )
             })
+        } else {
+            mutableItems.add(Empty())
+        }
+        return mutableItems
+    }
+
+    private fun buildTotalsTab(posts: List<CommentsModel.Post>): List<BlockListItem> {
+        val mutableItems = mutableListOf<BlockListItem>()
+        val totalComments = posts.mapIndexed { index, post -> post.comments }.sum()
+        if (posts.isNotEmpty()) {
+            mutableItems.add(
+                    Information( "Total Comments : " + totalComments)
+            )
         } else {
             mutableItems.add(Empty())
         }
