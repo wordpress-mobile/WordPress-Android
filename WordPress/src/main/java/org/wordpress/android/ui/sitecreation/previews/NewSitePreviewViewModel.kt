@@ -33,6 +33,9 @@ import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceStat
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
+import org.wordpress.android.ui.sitecreation.usecases.isWordPressComSubDomain
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -120,7 +123,7 @@ class NewSitePreviewViewModel @Inject constructor(
                         verticalId,
                         siteTitle,
                         siteTagLine,
-                        urlUtils.extractSubDomain(urlWithoutScheme)
+                        urlWithoutScheme
                 )
                 _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)
             }
@@ -230,7 +233,12 @@ class NewSitePreviewViewModel @Inject constructor(
             }
         }
         // Load the newly created site in the webview
-        _preloadPreview.postValue(urlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true))
+        val urlToLoad = urlUtils.addUrlSchemeIfNeeded(
+                url = urlWithoutScheme,
+                addHttps = isWordPressComSubDomain(urlWithoutScheme)
+        )
+        AppLog.v(T.SITE_CREATION, "Site preview will load for url: $urlToLoad")
+        _preloadPreview.postValue(urlToLoad)
     }
 
     fun onUrlLoaded() {

@@ -758,7 +758,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         if (!mIsConfigChange && (mRestartEditorOption == RestartEditorOptions.NO_RESTART)) {
-            mPostEditorAnalyticsSession.end();
+            if (mPostEditorAnalyticsSession != null) {
+                mPostEditorAnalyticsSession.end();
+            }
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);

@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
+import org.wordpress.android.util.UrlUtilsWrapper
 
 private val DUMMY_SITE_DATA: NewSiteCreationServiceData = NewSiteCreationServiceData(
         123,
@@ -37,14 +38,15 @@ class CreateSiteUseCaseTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var store: SiteStore
+    @Mock private lateinit var dispatcher: Dispatcher
+    @Mock private lateinit var store: SiteStore
+    @Mock private lateinit var urlUtilsWrapper: UrlUtilsWrapper
     private lateinit var useCase: CreateSiteUseCase
     private lateinit var event: OnNewSiteCreated
 
     @Before
     fun setUp() {
-        useCase = CreateSiteUseCase(dispatcher, store)
+        useCase = CreateSiteUseCase(dispatcher, store, urlUtilsWrapper)
         event = OnNewSiteCreated()
         event.newSiteRemoteId = 123
     }
