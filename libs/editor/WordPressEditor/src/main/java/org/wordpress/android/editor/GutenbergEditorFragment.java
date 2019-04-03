@@ -59,6 +59,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         IHistoryListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
+    private static final String KEY_TITLE_BEFORE_CONFIG_CHANGES = "KEY_TITLE_BEFORE_CONFIG_CHANGES";
+    private static final String KEY_CONTENT_BEFORE_CONFIG_CHANGES = "KEY_CONTENT_BEFORE_CONFIG_CHANGES";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
 
@@ -85,8 +87,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ProgressDialog mSavingContentProgressDialog;
 
-    private String mTitleAfterConfigChanged = null;
-    private String mContentAfterConfigChanged = null;
+    private String mTitleBeforeConfigChanged = null;
+    private String mContentBeforeConfigChanged = null;
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
@@ -205,6 +207,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (savedInstanceState != null) {
             mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED);
             mEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT);
+            mTitleBeforeConfigChanged = savedInstanceState.getString(KEY_TITLE_BEFORE_CONFIG_CHANGES, null);
+            mContentBeforeConfigChanged = savedInstanceState.getString(KEY_CONTENT_BEFORE_CONFIG_CHANGES, null);
         }
     }
 
@@ -263,13 +267,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             @Override
                             public void run() {
                                 setEditorProgressBarVisibility(!mEditorDidMount);
-                                if (mTitleAfterConfigChanged != null) {
-                                    setTitle(mTitleAfterConfigChanged);
-                                    mTitleAfterConfigChanged = null;
+                                if (mTitleBeforeConfigChanged != null) {
+                                    setTitle(mTitleBeforeConfigChanged);
+                                    mTitleBeforeConfigChanged = null;
                                 }
-                                if (mContentAfterConfigChanged != null) {
-                                    setContent(mContentAfterConfigChanged);
-                                    mContentAfterConfigChanged = null;
+                                if (mContentBeforeConfigChanged != null) {
+                                    setContent(mContentBeforeConfigChanged);
+                                    mContentBeforeConfigChanged = null;
                                 }
                             }
                         });
@@ -463,6 +467,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
+        outState.putString(KEY_TITLE_BEFORE_CONFIG_CHANGES, mTitleBeforeConfigChanged);
+        outState.putString(KEY_CONTENT_BEFORE_CONFIG_CHANGES, mContentBeforeConfigChanged);
     }
 
     @Override
@@ -787,10 +793,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     // Save a temporary copy of the content in GB mobile, and restore it when the editor is refreshed
-    // Note: History, block focused, and caret position is lost after this call!
+    // Note: History, block focused, scroll and caret position are lost after this call!
     public void updateEditorContentAndReload(String title, String content) {
-        mContentAfterConfigChanged = content;
-        mTitleAfterConfigChanged = title;
+        mContentBeforeConfigChanged = content;
+        mTitleBeforeConfigChanged = title;
         // set this to false otherwise the spinning dialog is not shown
         mEditorDidMount = false;
         setEditorProgressBarVisibility(mEditorDidMount);
