@@ -304,7 +304,10 @@ public class PostSqlUtils {
     public static List<LocalId> getLocalPostIdsForFilter(SiteModel site, boolean isPage, String searchQuery,
                                                          String orderBy, @Order int order) {
         ConditionClauseBuilder<SelectQuery<PostModel>> clauseBuilder =
-                WellSql.select(PostModel.class).where().beginGroup()
+                WellSql.select(PostModel.class)
+                       // We only need the local ids
+                       .columns(PostModelTable.ID)
+                       .where().beginGroup()
                        .equals(PostModelTable.IS_LOCAL_DRAFT, true)
                        .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
                        .equals(PostModelTable.IS_PAGE, isPage)
@@ -313,7 +316,10 @@ public class PostSqlUtils {
             clauseBuilder = clauseBuilder.beginGroup().contains(PostModelTable.TITLE, searchQuery).or()
                                          .contains(PostModelTable.CONTENT, searchQuery).endGroup();
         }
-        // TODO: We should only query the id and return that instead
+        /*
+         * Remember that, since we are only querying the `PostModelTable.ID` column, the rest of the fields for the
+         * post won't be there which is exactly what we want.
+         */
         List<PostModel> localPosts = clauseBuilder.endWhere().orderBy(orderBy, order).getAsModel();
         List<LocalId> localPostIds = new ArrayList<>();
         for (PostModel post : localPosts) {
