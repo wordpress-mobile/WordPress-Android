@@ -146,6 +146,10 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.clearMediaFileURL(mediaId);
     }
 
+    /**
+     * Recreate the react application and context.
+     * See: https://github.com/facebook/react-native/blob/master/ReactAndroid/src/main/java/com/facebook/react/ReactInstanceManager.java#L350
+     */
     public void recreateReactContextInBackground() {
         mWPAndroidGlueCode.recreateReactContextInBackground();
     }

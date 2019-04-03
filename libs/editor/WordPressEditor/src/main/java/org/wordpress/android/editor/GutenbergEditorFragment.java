@@ -85,6 +85,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ProgressDialog mSavingContentProgressDialog;
 
+    private String titleAfterConfigChanged = null;
+    private String contentAfterConfigChanged = null;
+
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
                                                       boolean isNewPost,
@@ -260,6 +263,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             @Override
                             public void run() {
                                 setEditorProgressBarVisibility(!mEditorDidMount);
+                                if (titleAfterConfigChanged != null) {
+                                    setTitle(titleAfterConfigChanged);
+                                    titleAfterConfigChanged = null;
+                                }
+                                if (contentAfterConfigChanged != null) {
+                                    setContent(contentAfterConfigChanged);
+                                    contentAfterConfigChanged = null;
+                                }
                             }
                         });
                     }
@@ -775,7 +786,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return true;
     }
 
-    public void recreateReactContextInBackground() {
+    // Save a temporary copy of the content in GB mobile, and restore it when the editor is refreshed
+    // Note: History, block focused, and caret position is lost after this call!
+    public void updateEditorContentAndReload(String title, String content) {
+        contentAfterConfigChanged = content;
+        titleAfterConfigChanged = title;
+        // set this to false otherwise the spinning dialog is not shown
+        mEditorDidMount = false;
+        setEditorProgressBarVisibility(mEditorDidMount);
         mRetainedGutenbergContainerFragment.recreateReactContextInBackground();
     }
 }

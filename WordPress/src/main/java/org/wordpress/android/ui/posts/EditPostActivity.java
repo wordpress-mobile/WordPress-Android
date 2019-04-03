@@ -837,9 +837,21 @@ public class EditPostActivity extends AppCompatActivity implements
 
 
         if (newConfig.fontScale != mConfigurationFontSize && (mEditorFragment instanceof GutenbergEditorFragment)) {
+            // Configuration has changed: Save the new fontScale and update the GB editor fragment(s).
+            // We can't rely on the Android and RN font scaling system, since we're using GB mobile in a retained fragment,
+            // and the configuration changed code is not called automatically.
+            // `setRetainInstance(true)` was set here
+            // https://github.com/wordpress-mobile/WordPress-Android/pull/9030/files#diff-02f567e707c1df878dfea548cfec3da7R111
+            // in order to fix a couple of issues: history lost, and device rotation issues.
             GutenbergEditorFragment gbFragment = (GutenbergEditorFragment) mEditorFragment;
+            try {
+                updatePostObject(true);
+            } catch (EditorFragmentNotAddedException e) {
+                AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+                return;
+            }
             mConfigurationFontSize = newConfig.fontScale;
-            gbFragment.recreateReactContextInBackground();
+            gbFragment.updateEditorContentAndReload(mPost.getTitle(), mPost.getContent());
         }
 
         // resize the photo picker if the user rotated the device
