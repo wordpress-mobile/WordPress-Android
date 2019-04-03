@@ -289,6 +289,15 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab,
+                                                  SiteModel site) {
+        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
+        intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
     public static void viewAllInsightsStats(Context context, StatsViewType statsType) {
         Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
