@@ -62,23 +62,23 @@ class PostListDataStore(
             when (identifier) {
                 is LocalPostId -> identifier.id
                 is RemotePostId -> identifier.id
-                // We only care about local and remote posts
+                // We are creating a list of local and remote ids, so other type of identifiers don't matter
                 EndListIndicatorIdentifier -> null
             }
         }
-        val postMap = postStore.getPostsByLocalOrRemotePostIds(localOrRemoteIds, listDescriptor.site)
-        /*
-         * Although unlikely it's possible that a local post is after we got the identifier for it, so the postMap
-         * having a null value for a LocalPostId is a valid case. However, this is not something we'll need to handle
-         * as it'll be removed in the next refresh of the list which should happen almost immediately.
-         *
-         * We simply acknowledge this case here and ignore it.
-         */
-        val postsToFetch = postMap.filter { it.value == null && it.key is RemoteId }.map { it.key as RemoteId }
-        fetchPosts(listDescriptor.site, postsToFetch)
 
-        val transformFromNullablePost = { localOrRemoteId: LocalOrRemoteId ->
-            val post = postMap[localOrRemoteId]
+        val postList = postStore.getPostsByLocalOrRemotePostIds(localOrRemoteIds, listDescriptor.site)
+
+        // Convert the post list into 2 maps with local and remote ids as keys
+        val localPostMap = postList.associateBy { LocalId(it.id) }
+        val remotePostMap = postList.filter { it.remotePostId != 0L }.associateBy { RemoteId(it.remotePostId) }
+
+        // Fetch the missing posts
+        val remoteIdsToFetch: List<RemoteId> = localOrRemoteIds.mapNotNull { it as? RemoteId }
+                .filter { !remotePostMap.containsKey(it) }
+        fetchPosts(listDescriptor.site, remoteIdsToFetch)
+
+        val transformFromNullablePost = { localOrRemoteId: LocalOrRemoteId, post: PostModel? ->
             if (post == null) {
                 LoadingItem(localOrRemoteId)
             } else {
@@ -87,8 +87,8 @@ class PostListDataStore(
         }
         return itemIdentifiers.map { identifier ->
             when (identifier) {
-                is LocalPostId -> transformFromNullablePost(identifier.id)
-                is RemotePostId -> transformFromNullablePost(identifier.id)
+                is LocalPostId -> transformFromNullablePost(identifier.id, localPostMap[identifier.id])
+                is RemotePostId -> transformFromNullablePost(identifier.id, remotePostMap[identifier.id])
                 EndListIndicatorIdentifier -> EndListIndicatorItem
             }
         }
