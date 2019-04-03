@@ -18,6 +18,8 @@ public class GutenbergContainerFragment extends Fragment {
     private static final String ARG_LOCALE = "param_locale";
     private static final String ARG_TRANSLATIONS = "param_translations";
 
+    private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
+
     private boolean mHtmlModeEnabled;
     private boolean mHasReceivedAnyContent;
 
@@ -52,6 +54,10 @@ public class GutenbergContainerFragment extends Fragment {
         boolean isNewPost = getArguments() != null && getArguments().getBoolean(ARG_IS_NEW_POST);
         String localeString = getArguments().getString(ARG_LOCALE);
         Bundle translations = getArguments().getBundle(ARG_TRANSLATIONS);
+
+        if (savedInstanceState != null) {
+            mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED);
+        }
 
         mWPAndroidGlueCode = new WPAndroidGlueCode();
         mWPAndroidGlueCode.onCreate(getContext());
@@ -88,6 +94,11 @@ public class GutenbergContainerFragment extends Fragment {
         super.onDestroy();
 
         mWPAndroidGlueCode.onDestroy(getActivity());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
     }
 
     public void setTitle(String title) {
