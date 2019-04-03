@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.persistence;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -11,7 +12,9 @@ import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.SelectQuery.Order;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.wordpress.android.fluxc.model.LocalOrRemoteId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
@@ -130,6 +133,31 @@ public class PostSqlUtils {
                           .getAsModel();
         }
         return Collections.emptyList();
+    }
+
+    public static List<PostModel> getPostsByLocalOrRemotePostIds(@NonNull List<LocalOrRemoteId> localOrRemoteIds,
+                                                                 int localSiteId) {
+        if (localOrRemoteIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Integer> localIds = new ArrayList<>();
+        List<Long> remoteIds = new ArrayList<>();
+        for (LocalOrRemoteId localOrRemoteId : localOrRemoteIds) {
+            if (localOrRemoteId instanceof LocalId) {
+                localIds.add(((LocalId) localOrRemoteId).getValue());
+            } else if (localOrRemoteId instanceof RemoteId) {
+                remoteIds.add(((RemoteId) localOrRemoteId).getValue());
+            }
+        }
+        ConditionClauseBuilder<SelectQuery<PostModel>> whereQuery =
+                WellSql.select(PostModel.class).where().equals(PostModelTable.LOCAL_SITE_ID, localSiteId);
+        if (!localIds.isEmpty()) {
+            whereQuery = whereQuery.isIn(PostModelTable.ID, localIds);
+        }
+        if (!remoteIds.isEmpty()) {
+            whereQuery = whereQuery.isIn(PostModelTable.REMOTE_POST_ID, remoteIds);
+        }
+        return whereQuery.endWhere().getAsModel();
     }
 
     public static PostModel insertPostForResult(PostModel post) {
