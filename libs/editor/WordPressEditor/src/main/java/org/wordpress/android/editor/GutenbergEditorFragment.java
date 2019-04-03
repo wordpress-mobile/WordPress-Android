@@ -774,4 +774,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         return true;
     }
+
+    public void recreateReactContextInBackground() {
+        mRetainedGutenbergContainerFragment.recreateReactContextInBackground();
+    }
 }

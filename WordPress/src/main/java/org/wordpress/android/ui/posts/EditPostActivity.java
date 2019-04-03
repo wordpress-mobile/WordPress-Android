@@ -342,6 +342,8 @@ public class EditPostActivity extends AppCompatActivity implements
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
+    private float mConfigurationFontSize;
+
     private boolean isModernEditor() {
         return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
     }
@@ -587,6 +589,8 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         });
 
+        mConfigurationFontSize = getResources().getConfiguration().fontScale;
+
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
@@ -801,6 +805,7 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putParcelable(STATE_KEY_REVISION, mRevision);
+        outState.putFloat("mConfigurationFontSize", mConfigurationFontSize);
 
         outState.putSerializable(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
         mIsConfigChange = true; // don't call sessionData.end() in onDestroy() if this is an Android config change
@@ -822,11 +827,20 @@ public class EditPostActivity extends AppCompatActivity implements
         if (savedInstanceState.getBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
             showPhotoPicker();
         }
+
+        mConfigurationFontSize = savedInstanceState.getFloat("mConfigurationFontSize", 0f);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
+
+        if (newConfig.fontScale != mConfigurationFontSize && (mEditorFragment instanceof GutenbergEditorFragment)) {
+            GutenbergEditorFragment gbFragment = (GutenbergEditorFragment) mEditorFragment;
+            mConfigurationFontSize = newConfig.fontScale;
+            gbFragment.recreateReactContextInBackground();
+        }
 
         // resize the photo picker if the user rotated the device
         int orientation = newConfig.orientation;
