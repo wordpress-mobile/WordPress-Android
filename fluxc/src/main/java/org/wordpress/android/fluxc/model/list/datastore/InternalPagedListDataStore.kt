@@ -50,10 +50,8 @@ class InternalPagedListDataStore<LD : ListDescriptor, ID, T>(
      * internal [itemIdentifiers].
      */
     private fun getItemIds(startPosition: Int, endPosition: Int): List<ID> {
-        if (startPosition < 0 || endPosition < 0 || startPosition > endPosition || endPosition > totalSize) {
-            throw IllegalArgumentException(
-                    "Illegal start($startPosition) or end($endPosition) position for totalSize($totalSize)"
-            )
+        require(startPosition >= 0 && endPosition >= 0 && startPosition <= endPosition && endPosition <= totalSize) {
+            "Illegal start($startPosition) or end($endPosition) position for totalSize($totalSize)"
         }
 
         return itemIdentifiers.subList(startPosition, endPosition)
