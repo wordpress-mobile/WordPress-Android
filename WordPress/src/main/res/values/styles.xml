@@ -85,6 +85,7 @@
 
     <style name="DropDownNav.WordPress" parent="android:Widget.Material.Light.Spinner">
         <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
+        <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
     </style>
 
     <style name="FilteredRecyclerViewSpinner.WordPress" parent="DropDownNav.WordPress">
