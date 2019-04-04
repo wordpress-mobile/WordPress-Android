@@ -96,7 +96,7 @@ class ListStore @Inject constructor(
                 listDescriptor = listDescriptor,
                 lifecycle = lifecycle,
                 refresh = {
-                    handleFetchList(listDescriptor, false) { offset ->
+                    handleFetchList(listDescriptor, loadMore = false) { offset ->
                         dataStore.fetchList(listDescriptor, offset)
                     }
                 },
@@ -124,7 +124,7 @@ class ListStore @Inject constructor(
         val boundaryCallback = object : BoundaryCallback<T>() {
             override fun onItemAtEndLoaded(itemAtEnd: T) {
                 // Load more items if we are near the end of list
-                handleFetchList(listDescriptor, true) { offset ->
+                handleFetchList(listDescriptor, loadMore = true) { offset ->
                     dataStore.fetchList(listDescriptor, offset)
                 }
                 super.onItemAtEndLoaded(itemAtEnd)
