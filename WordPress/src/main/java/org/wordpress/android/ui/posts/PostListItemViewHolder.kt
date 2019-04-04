@@ -46,9 +46,9 @@ class PostListItemViewHolder(
 
     fun onBind(item: PostListItemUiState) {
         showFeaturedImage(item.data.imageUrl)
-        setTextOrHide(tvTitle, item.data.title)
-        setTextOrHide(tvExcerpt, item.data.excerpt)
-        setTextOrHide(tvDateAndAuthor, item.data.dateAndAuthor)
+        uiHelpers.setTextOrHide(tvTitle, item.data.title)
+        uiHelpers.setTextOrHide(tvExcerpt, item.data.excerpt)
+        uiHelpers.setTextOrHide(tvDateAndAuthor, item.data.dateAndAuthor)
         uiHelpers.updateVisibility(tvStatusLabels, item.data.statusLabels.isNotEmpty())
         updateStatusLabels(tvStatusLabels, item.data.statusLabels, item.data.statusLabelsDelimiter)
         if (item.data.statusLabelsColor != null) {
@@ -126,13 +126,6 @@ class PostListItemViewHolder(
                 ivImageFeatured.visibility = View.GONE
                 config.imageManager.cancelRequestAndClearImageView(ivImageFeatured)
             }
-        }
-    }
-
-    private fun setTextOrHide(view: WPTextView, text: UiString?) {
-        uiHelpers.updateVisibility(view, text != null)
-        text?.let {
-            view.text = uiHelpers.getTextOfUiString(itemView.context, it)
         }
     }
 }

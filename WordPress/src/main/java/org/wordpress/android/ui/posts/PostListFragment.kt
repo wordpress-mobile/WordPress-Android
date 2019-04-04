@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.DrawableRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -15,9 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -269,8 +266,8 @@ class PostListFragment : Fragment() {
         actionableEmptyView?.let { emptyView ->
             if (state.emptyViewVisible) {
                 emptyView.visibility = View.VISIBLE
-                setTextOrHide(emptyView.title, state.title)
-                setImageOrHide(emptyView.image, state.imgResId)
+                uiHelpers.setTextOrHide(emptyView.title, state.title)
+                uiHelpers.setImageOrHide(emptyView.image, state.imgResId)
                 setupButtonOrHide(emptyView.button, state.buttonText, state.onButtonClick)
             } else {
                 emptyView.visibility = View.GONE
@@ -283,22 +280,8 @@ class PostListFragment : Fragment() {
         text: UiString?,
         onButtonClick: (() -> Unit)?
     ) {
-        setTextOrHide(buttonView, text)
+        uiHelpers.setTextOrHide(buttonView, text)
         buttonView.setOnClickListener { onButtonClick?.invoke() }
-    }
-
-    private fun setImageOrHide(imageView: ImageView, @DrawableRes resId: Int?) {
-        imageView.visibility = if (resId == null) View.GONE else View.VISIBLE
-        resId?.let {
-            imageView.setImageResource(resId)
-        }
-    }
-
-    private fun setTextOrHide(textView: TextView, text: UiString?) {
-        textView.visibility = if (text == null) View.GONE else View.VISIBLE
-        text?.let {
-            textView.text = uiHelpers.getTextOfUiString(nonNullActivity, text)
-        }
     }
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
