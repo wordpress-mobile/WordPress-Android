@@ -35,7 +35,7 @@ class PostListItemViewHolder(
     private val tvTitle: WPTextView = itemView.findViewById(R.id.title)
     private val tvExcerpt: WPTextView = itemView.findViewById(R.id.excerpt)
     private val tvDateAndAuthor: WPTextView = itemView.findViewById(R.id.date_and_author)
-    private val tvStatusLabels: WPTextView = itemView.findViewById(R.id.status_labels)
+    private val statusesLabelTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
     private val pbProgress: ProgressBar = itemView.findViewById(R.id.progress)
     private val flDisabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
     private val actionButtons: List<PostListButton> = listOf(
@@ -49,10 +49,10 @@ class PostListItemViewHolder(
         setTextOrHide(tvTitle, item.data.title)
         setTextOrHide(tvExcerpt, item.data.excerpt)
         setTextOrHide(tvDateAndAuthor, item.data.dateAndAuthor)
-        uiHelpers.updateVisibility(tvStatusLabels, item.data.statusLabels.isNotEmpty())
-        updateStatusLabels(tvStatusLabels, item.data.statusLabels, item.data.statusLabelsDelimiter)
-        if (item.data.statusLabelsColor != null) {
-            tvStatusLabels.setTextColor(ContextCompat.getColor(tvStatusLabels.context, item.data.statusLabelsColor))
+        uiHelpers.updateVisibility(statusesLabelTextView, item.data.statuses.isNotEmpty())
+        updateStatusesLabel(statusesLabelTextView, item.data.statuses, item.data.statusesDelimiter)
+        if (item.data.statusesColor != null) {
+            statusesLabelTextView.setTextColor(ContextCompat.getColor(statusesLabelTextView.context, item.data.statusesColor))
         }
         uiHelpers.updateVisibility(pbProgress, item.data.showProgress)
         uiHelpers.updateVisibility(flDisabledOverlay, item.data.showOverlay)
@@ -63,9 +63,9 @@ class PostListItemViewHolder(
         }
     }
 
-    private fun updateStatusLabels(view: WPTextView, statusLabels: List<UiString>, delimiter: UiString) {
+    private fun updateStatusesLabel(view: WPTextView, statuses: List<UiString>, delimiter: UiString) {
         val separator = uiHelpers.getTextOfUiString(view.context, delimiter)
-        view.text = statusLabels.joinToString(separator) { uiHelpers.getTextOfUiString(view.context, it) }
+        view.text = statuses.joinToString(separator) { uiHelpers.getTextOfUiString(view.context, it) }
     }
 
     private fun updateMenuItem(postListButton: PostListButton, action: PostListItemAction?) {
