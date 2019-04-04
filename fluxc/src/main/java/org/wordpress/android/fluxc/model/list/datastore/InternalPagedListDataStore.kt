@@ -48,9 +48,12 @@ class InternalPagedListDataStore<LD : ListDescriptor, ID, T>(
     /**
      * Helper function that returns the list of identifiers [ID] for the given start and end positions using the
      * internal [itemIdentifiers].
+     *
+     * @param startPosition Start position that's inclusive
+     * @param endPosition End position that's exclusive
      */
     private fun getItemIds(startPosition: Int, endPosition: Int): List<ID> {
-        require(startPosition >= 0 && endPosition >= 0 && startPosition <= endPosition && endPosition <= totalSize) {
+        require(startPosition in 0..endPosition && endPosition <= totalSize) {
             "Illegal start($startPosition) or end($endPosition) position for totalSize($totalSize)"
         }
 
