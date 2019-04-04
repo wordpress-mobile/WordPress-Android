@@ -5,7 +5,7 @@
     android:shape="oval" >
 
     <solid
-        android:color="@color/gray_100" >
+        android:color="@color/background_shortcut" >
     </solid>
 
     <size
