@@ -40,7 +40,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -107,7 +107,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
     private void disableFilteredRecyclerViewToolbar() {
         // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
         // occupied space, as otherwise expected
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         if (appBarLayout != null) {
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
             lp.height = 0;
@@ -115,7 +115,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
         }
 
         // disabling any CoordinatorLayout behavior for scrolling
-        Toolbar toolbarWithSpinner = (Toolbar) findViewById(R.id.toolbar_with_spinner);
+        Toolbar toolbarWithSpinner = findViewById(R.id.toolbar_with_spinner);
         if (toolbarWithSpinner != null) {
             AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) toolbarWithSpinner.getLayoutParams();
             p.setScrollFlags(0);
