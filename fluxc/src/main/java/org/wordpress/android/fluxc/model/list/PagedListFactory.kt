@@ -9,12 +9,12 @@ import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataSto
  *
  * @param createDataStore A function that creates an instance of [InternalPagedListDataStore].
  */
-class PagedListFactory<LD : ListDescriptor, ID, T>(
-    private val createDataStore: () -> InternalPagedListDataStore<LD, ID, T>
-) : DataSource.Factory<Int, T>() {
-    private var currentSource: PagedListPositionalDataSource<LD, ID, T>? = null
+class PagedListFactory<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM>(
+    private val createDataStore: () -> InternalPagedListDataStore<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>
+) : DataSource.Factory<Int, LIST_ITEM>() {
+    private var currentSource: PagedListPositionalDataSource<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>? = null
 
-    override fun create(): DataSource<Int, T> {
+    override fun create(): DataSource<Int, LIST_ITEM> {
         val source = PagedListPositionalDataSource(dataStore = createDataStore.invoke())
         currentSource = source
         return source
@@ -26,14 +26,14 @@ class PagedListFactory<LD : ListDescriptor, ID, T>(
 }
 
 /**
- * A positional data source for [T].
+ * A positional data source for [LIST_ITEM].
  *
- * @param dataStore Describes how to take certain actions such as fetching list for the item type [T].
+ * @param dataStore Describes how to take certain actions such as fetching list for the item type [LIST_ITEM].
  */
-private class PagedListPositionalDataSource<LD : ListDescriptor, ID, T>(
-    private val dataStore: InternalPagedListDataStore<LD, ID, T>
-) : PositionalDataSource<T>() {
-    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
+private class PagedListPositionalDataSource<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM>(
+    private val dataStore: InternalPagedListDataStore<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>
+) : PositionalDataSource<LIST_ITEM>() {
+    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<LIST_ITEM>) {
         val totalSize = dataStore.totalSize
         val startPosition = computeInitialLoadPosition(params, totalSize)
         val loadSize = computeInitialLoadSize(params, startPosition, totalSize)
@@ -45,12 +45,12 @@ private class PagedListPositionalDataSource<LD : ListDescriptor, ID, T>(
         }
     }
 
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {
+    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<LIST_ITEM>) {
         val items = loadRangeInternal(params.startPosition, params.loadSize)
         callback.onResult(items)
     }
 
-    private fun loadRangeInternal(startPosition: Int, loadSize: Int): List<T> {
+    private fun loadRangeInternal(startPosition: Int, loadSize: Int): List<LIST_ITEM> {
         val endPosition = startPosition + loadSize
         if (startPosition == endPosition) {
             return emptyList()
