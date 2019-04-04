@@ -48,7 +48,8 @@ class PostListItemViewHolder(
         uiHelpers.setTextOrHide(tvTitle, item.data.title)
         uiHelpers.setTextOrHide(tvExcerpt, item.data.excerpt)
         uiHelpers.setTextOrHide(tvDateAndAuthor, item.data.dateAndAuthor)
-        uiHelpers.setTextOrHide(tvStatusLabels, item.data.statusLabels)
+        uiHelpers.updateVisibility(tvStatusLabels, item.data.statusLabels.isNotEmpty())
+        updateStatusLabels(tvStatusLabels, item.data.statusLabels, item.data.statusLabelsDelimiter)
         if (item.data.statusLabelsColor != null) {
             tvStatusLabels.setTextColor(ContextCompat.getColor(tvStatusLabels.context, item.data.statusLabelsColor))
         }
@@ -59,6 +60,11 @@ class PostListItemViewHolder(
         actionButtons.forEachIndexed { index, button ->
             updateMenuItem(button, item.actions.getOrNull(index))
         }
+    }
+
+    private fun updateStatusLabels(view: WPTextView, statusLabels: List<UiString>, delimiter: UiString) {
+        val separator = uiHelpers.getTextOfUiString(view.context, delimiter)
+        view.text = statusLabels.joinToString(separator) { uiHelpers.getTextOfUiString(view.context, it) }
     }
 
     private fun updateMenuItem(postListButton: PostListButton, action: PostListItemAction?) {

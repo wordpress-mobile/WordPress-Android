@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.AuthorFilter
 import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
@@ -32,6 +33,7 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
@@ -46,6 +48,9 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
@@ -83,6 +88,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
+import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState.RefreshError
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
@@ -111,6 +117,7 @@ class PostListViewModel @Inject constructor(
     private val uploadStore: UploadStore,
     private val mediaStore: MediaStore,
     private val postStore: PostStore,
+    private val accountStore: AccountStore,
     private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     connectionStatus: LiveData<ConnectionStatus>
@@ -232,11 +239,16 @@ class PostListViewModel @Inject constructor(
         return if (error.type == PERMISSION_ERROR) {
             PostListEmptyUiState.PermissionsError
         } else {
-            if (networkUtilsWrapper.isNetworkAvailable()) {
-                PostListEmptyUiState.RefreshError(UiStringRes(R.string.error_refresh_posts))
+            val errorText = if (networkUtilsWrapper.isNetworkAvailable()) {
+                UiStringRes(R.string.error_refresh_posts)
             } else {
-                PostListEmptyUiState.RefreshError(UiStringRes(R.string.no_network_message))
+                UiStringRes(R.string.no_network_message)
             }
+            PostListEmptyUiState.RefreshError(
+                    errorText,
+                    UiStringRes(R.string.retry),
+                    this::fetchFirstPage
+            )
         }
     }
 
@@ -286,9 +298,15 @@ class PostListViewModel @Inject constructor(
                 imgResId = R.drawable.img_illustration_posts_75dp
         )
 
-        class RefreshError(title: UiString) : PostListEmptyUiState(
+        class RefreshError(
+            title: UiString,
+            buttonText: UiString? = null,
+            onButtonClick: (() -> Unit)? = null
+        ) : PostListEmptyUiState(
                 title = title,
-                imgResId = R.drawable.img_illustration_posts_75dp
+                imgResId = R.drawable.img_illustration_empty_results_216dp,
+                buttonText = buttonText,
+                onButtonClick = onButtonClick
         )
 
         object PermissionsError : PostListEmptyUiState(
@@ -306,18 +324,25 @@ class PostListViewModel @Inject constructor(
     init {
         connectionStatus.observe(this, Observer {
             isNetworkAvailable = it?.isConnected == true
+            retryOnConnectionAvailableAfterRefreshError()
         })
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel, postListType: PostListType) {
+    fun start(site: SiteModel, authorFilter: AuthorFilterSelection, postListType: PostListType) {
         if (isStarted) {
             return
         }
         this.site = site
         this.postListType = postListType
+
         this.listDescriptor = if (site.isUsingWpComRestApi) {
-            PostListDescriptorForRestSite(site = site, statusList = postListType.postStatuses)
+            val author: AuthorFilter = when (authorFilter) {
+                ME -> AuthorFilter.SpecificAuthor(accountStore.account.userId)
+                EVERYONE -> AuthorFilter.Everyone
+            }
+
+            PostListDescriptorForRestSite(site = site, statusList = postListType.postStatuses, author = author)
         } else {
             PostListDescriptorForXmlRpcSite(site = site, statusList = postListType.postStatuses)
         }
@@ -357,6 +382,15 @@ class PostListViewModel @Inject constructor(
 
     fun newPost() {
         _postListAction.postValue(PostListAction.NewPost(site))
+    }
+
+    private fun retryOnConnectionAvailableAfterRefreshError() {
+        val connectionAvailableAfterRefreshError = isNetworkAvailable &&
+                emptyViewState.value is RefreshError
+
+        if (connectionAvailableAfterRefreshError) {
+            fetchFirstPage()
+        }
     }
 
     // Private List Actions
