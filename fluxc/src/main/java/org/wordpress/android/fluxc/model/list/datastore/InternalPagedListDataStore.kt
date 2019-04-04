@@ -4,11 +4,20 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 
 /**
- * An internal class that plays the middle man between `PagedListFactory` and [ListItemDataStoreInterface] by extracting
- * the common logic.
+ * This component plays the middle man between the `PositionalDataSource` and [ListItemDataStoreInterface]
+ * implementation. Whenever a list is invalidated, meaning it needs to be refreshed, a new instance will be created
+ * just like `PositionalDataSource`.
  *
- * It takes a snapshot of the identifiers for the list when it's created and propagates the calls from the PagedList
- * data source to [ListItemDataStoreInterface] using these identifiers.
+ * We first ask the [ListItemDataStoreInterface] for the identifiers of each row and cache them in memory as soon as
+ * a new instance is created. This is necessary because `PositionalDataSource` works with immutable values and does the
+ * heavy lifting by caching the items in memory as they are loaded, however it still needs a consistent list of
+ * identifiers for each index to represent.
+ *
+ * After the identifiers are cached, whenever `PositionalDataSource` asks for a range of items, they'll be converted
+ * to identifiers and propagated to [ListItemDataStoreInterface].
+ *
+ * Most importantly, by separating this component, we are able to keep a single instance of [ListItemDataStoreInterface]
+ * and hide the requirement for identifiers needing to be cached from it.
  */
 class InternalPagedListDataStore<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM>(
     private val listDescriptor: LIST_DESCRIPTOR,
