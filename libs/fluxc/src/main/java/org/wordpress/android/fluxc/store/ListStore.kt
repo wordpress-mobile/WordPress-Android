@@ -72,18 +72,18 @@ class ListStore @Inject constructor(
      * This is the function that'll be used to consume lists.
      *
      * @param listDescriptor Describes which list will be consumed
-     * @param dataStore Describes how to take certain actions such as fetching a list for the item type [T].
+     * @param dataStore Describes how to take certain actions such as fetching a list for the item type [LIST_ITEM].
      * @param lifecycle The lifecycle of the client that'll be consuming this list. It's used to make sure everything
      * is cleaned up properly once the client is destroyed.
      *
      * @return A [PagedListWrapper] that provides all the necessary information to consume a list such as its data,
      * whether the first page is being fetched, whether there are any errors etc. in `LiveData` format.
      */
-    fun <LD : ListDescriptor, ID, T> getList(
-        listDescriptor: LD,
-        dataStore: ListItemDataStoreInterface<LD, ID, T>,
+    fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> getList(
+        listDescriptor: LIST_DESCRIPTOR,
+        dataStore: ListItemDataStoreInterface<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>,
         lifecycle: Lifecycle
-    ): PagedListWrapper<T> {
+    ): PagedListWrapper<LIST_ITEM> {
         val factory = createPagedListFactory(listDescriptor, dataStore)
         val pagedListData = createPagedListLiveData(
                 listDescriptor = listDescriptor,
@@ -108,21 +108,21 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * A helper function that creates a [PagedList] [LiveData] for the given [listDescriptor], [dataStore] and the
+     * A helper function that creates a [PagedList] [LiveData] for the given [LIST_DESCRIPTOR], [dataStore] and the
      * [PagedListFactory].
      */
-    private fun <LD : ListDescriptor, ID, T> createPagedListLiveData(
-        listDescriptor: LD,
-        dataStore: ListItemDataStoreInterface<LD, ID, T>,
-        pagedListFactory: PagedListFactory<LD, ID, T>
-    ): LiveData<PagedList<T>> {
+    private fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> createPagedListLiveData(
+        listDescriptor: LIST_DESCRIPTOR,
+        dataStore: ListItemDataStoreInterface<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>,
+        pagedListFactory: PagedListFactory<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>
+    ): LiveData<PagedList<LIST_ITEM>> {
         val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
                 .setInitialLoadSizeHint(listDescriptor.config.initialLoadSize)
                 .setPageSize(listDescriptor.config.dbPageSize)
                 .build()
-        val boundaryCallback = object : BoundaryCallback<T>() {
-            override fun onItemAtEndLoaded(itemAtEnd: T) {
+        val boundaryCallback = object : BoundaryCallback<LIST_ITEM>() {
+            override fun onItemAtEndLoaded(itemAtEnd: LIST_ITEM) {
                 // Load more items if we are near the end of list
                 handleFetchList(listDescriptor, loadMore = true) { offset ->
                     dataStore.fetchList(listDescriptor, offset)
@@ -130,17 +130,17 @@ class ListStore @Inject constructor(
                 super.onItemAtEndLoaded(itemAtEnd)
             }
         }
-        return LivePagedListBuilder<Int, T>(pagedListFactory, pagedListConfig)
+        return LivePagedListBuilder<Int, LIST_ITEM>(pagedListFactory, pagedListConfig)
                 .setBoundaryCallback(boundaryCallback).build()
     }
 
     /**
-     * A helper function that creates a [PagedListFactory] for the given [listDescriptor] and [dataStore].
+     * A helper function that creates a [PagedListFactory] for the given [LIST_DESCRIPTOR] and [dataStore].
      */
-    private fun <LD : ListDescriptor, ID, T> createPagedListFactory(
-        listDescriptor: LD,
-        dataStore: ListItemDataStoreInterface<LD, ID, T>
-    ): PagedListFactory<LD, ID, T> {
+    private fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> createPagedListFactory(
+        listDescriptor: LIST_DESCRIPTOR,
+        dataStore: ListItemDataStoreInterface<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>
+    ): PagedListFactory<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM> {
         val getRemoteItemIds = { getListItems(listDescriptor).map { RemoteId(value = it) } }
         val getIsListFullyFetched = { getListState(listDescriptor) == FETCHED }
         return PagedListFactory(
