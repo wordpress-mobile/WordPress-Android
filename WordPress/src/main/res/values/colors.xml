@@ -17,6 +17,12 @@
     <color name="status_bar">@color/primary</color>
     <color name="status_bar_action_mode">@color/neutral</color>
 
+    <!-- LOGIN -->
+    <color name="login_background_color">@color/background_default</color>
+    <color name="login_edit_text_color_control_activated">@color/primary_300</color>
+    <color name="login_edit_text_color_control_highlight">@color/neutral_100</color>
+    <color name="login_theme_accent_color">@color/accent</color>
+
     <!-- SEMANTIC -->
     <color name="accent">@color/hot_pink_500</color>
     <color name="accent_0">@color/hot_pink_0</color>
