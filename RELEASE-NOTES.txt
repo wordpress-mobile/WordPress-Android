@@ -1,5 +1,6 @@
 12.2
 -----
+* Added an action to share sites in the Reader
 * Adds support for .blog subdomains for the new site creation flow
 
 12.1
