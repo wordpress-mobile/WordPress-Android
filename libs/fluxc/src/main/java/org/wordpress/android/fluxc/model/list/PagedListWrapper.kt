@@ -6,6 +6,8 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.paging.PagedList
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -13,6 +15,7 @@ import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
+import kotlin.coroutines.CoroutineContext
 
 /**
  * This is a wrapper class to consume lists from `ListStore`.
@@ -32,7 +35,8 @@ class PagedListWrapper<T>(
     private val lifecycle: Lifecycle,
     private val refresh: () -> Unit,
     private val invalidate: () -> Unit,
-    private val isListEmpty: () -> Boolean
+    private val isListEmpty: () -> Boolean,
+    private val coroutineContext: CoroutineContext
 ) : LifecycleObserver {
     private val _isFetchingFirstPage = MutableLiveData<Boolean>()
     val isFetchingFirstPage: LiveData<Boolean> = _isFetchingFirstPage
@@ -72,7 +76,9 @@ class PagedListWrapper<T>(
      * A method to be used by clients to refresh the first page of a list from network.
      */
     fun fetchFirstPage() {
-        refresh()
+        GlobalScope.launch(coroutineContext) {
+            refresh()
+        }
     }
 
     /**
@@ -132,6 +138,8 @@ class PagedListWrapper<T>(
      * A helper function that checks and post if a list is empty.
      */
     private fun updateIsEmpty() {
-        _isEmpty.postValue(isListEmpty())
+        GlobalScope.launch(coroutineContext) {
+            _isEmpty.postValue(isListEmpty())
+        }
     }
 }
