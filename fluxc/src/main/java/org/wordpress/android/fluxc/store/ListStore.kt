@@ -5,6 +5,8 @@ import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedList.BoundaryCallback
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -36,6 +38,7 @@ import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.CoroutineContext
 
 // How long a list should stay in DB if it hasn't been updated
 const val DEFAULT_EXPIRATION_DURATION = 1000L * 60 * 60 * 24 * 7
@@ -49,6 +52,7 @@ const val DEFAULT_EXPIRATION_DURATION = 1000L * 60 * 60 * 24 * 7
 class ListStore @Inject constructor(
     private val listSqlUtils: ListSqlUtils,
     private val listItemSqlUtils: ListItemSqlUtils,
+    private val coroutineContext: CoroutineContext,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -103,7 +107,8 @@ class ListStore @Inject constructor(
                 invalidate = factory::invalidate,
                 isListEmpty = {
                     getListItemsCount(listDescriptor) == 0L
-                }
+                },
+                coroutineContext = coroutineContext
         )
     }
 
@@ -124,8 +129,10 @@ class ListStore @Inject constructor(
         val boundaryCallback = object : BoundaryCallback<T>() {
             override fun onItemAtEndLoaded(itemAtEnd: T) {
                 // Load more items if we are near the end of list
-                handleFetchList(listDescriptor, true) { offset ->
-                    dataStore.fetchList(listDescriptor, offset)
+                GlobalScope.launch(coroutineContext) {
+                    handleFetchList(listDescriptor, true) { offset ->
+                        dataStore.fetchList(listDescriptor, offset)
+                    }
                 }
                 super.onItemAtEndLoaded(itemAtEnd)
             }
