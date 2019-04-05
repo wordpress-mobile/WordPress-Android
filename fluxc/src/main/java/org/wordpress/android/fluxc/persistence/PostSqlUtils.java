@@ -135,8 +135,8 @@ public class PostSqlUtils {
         return Collections.emptyList();
     }
 
-    public static List<PostModel> getPostsByLocalOrRemotePostIds(@NonNull List<LocalOrRemoteId> localOrRemoteIds,
-                                                                 int localSiteId) {
+    public static List<PostModel> getPostsByLocalOrRemotePostIds(
+            @NonNull List<? extends LocalOrRemoteId> localOrRemoteIds, int localSiteId) {
         if (localOrRemoteIds.isEmpty()) {
             return Collections.emptyList();
         }
