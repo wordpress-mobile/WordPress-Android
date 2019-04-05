@@ -5,13 +5,13 @@ import org.wordpress.android.fluxc.model.list.ListConfig
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListDescriptorUniqueIdentifier
-import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataStore
+import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataSource
 import org.wordpress.android.fluxc.model.list.datastore.ListItemDataStoreInterface
 
 internal typealias TestListIdentifier = Long
 internal typealias TestPagedListResultType = String
-internal typealias TestInternalPagedListDataStore =
-        InternalPagedListDataStore<TestListDescriptor, TestListIdentifier, TestPagedListResultType>
+internal typealias TestInternalPagedListDataSource =
+        InternalPagedListDataSource<TestListDescriptor, TestListIdentifier, TestPagedListResultType>
 internal typealias TestListItemDataStore =
         ListItemDataStoreInterface<TestListDescriptor, TestListIdentifier, TestPagedListResultType>
 
