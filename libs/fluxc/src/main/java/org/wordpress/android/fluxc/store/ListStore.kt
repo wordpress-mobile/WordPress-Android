@@ -108,7 +108,7 @@ class ListStore @Inject constructor(
                 isListEmpty = {
                     getListItemsCount(listDescriptor) == 0L
                 },
-                coroutineContext = coroutineContext
+                parentCoroutineContext = coroutineContext
         )
     }
 
