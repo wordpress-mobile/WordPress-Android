@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoveAllPosts;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -406,20 +405,12 @@ public class PostStore extends Store {
         }
     }
 
-    public Map<LocalOrRemoteId, PostModel> getPostsByLocalOrRemotePostIds(List<LocalOrRemoteId> localOrRemoteIds,
-                                                                          SiteModel site) {
-        // TODO: This should run a single query, this solution is only temporary
-        Map<LocalOrRemoteId, PostModel> postMap = new HashMap<>();
-        for (LocalOrRemoteId localOrRemoteId : localOrRemoteIds) {
-            PostModel postModel = null;
-            if (localOrRemoteId instanceof LocalId) {
-                postModel = getPostByLocalPostId(((LocalId) localOrRemoteId).getValue());
-            } else if (localOrRemoteId instanceof RemoteId) {
-                postModel = getPostByRemotePostId(((RemoteId) localOrRemoteId).getValue(), site);
-            }
-            postMap.put(localOrRemoteId, postModel);
+    public List<PostModel> getPostsByLocalOrRemotePostIds(List<? extends LocalOrRemoteId> localOrRemoteIds,
+                                                          SiteModel site) {
+        if (localOrRemoteIds == null || site == null) {
+            return Collections.emptyList();
         }
-        return postMap;
+        return PostSqlUtils.getPostsByLocalOrRemotePostIds(localOrRemoteIds, site.getId());
     }
 
     /**
