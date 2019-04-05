@@ -46,11 +46,11 @@ class PostListItemDataSource(
         val remoteItems = remoteItemIds.map { RemotePostId(id = it) }
         val actualItems = localItems + remoteItems
 
+        // We only want to show the end list indicator if the list is fully fetched and it's not empty
         val endListItem = if (isListFullyFetched && actualItems.isNotEmpty()) {
             listOf(EndListIndicatorIdentifier)
         } else emptyList()
         val itemsToHide = getItemIdsToHide(listDescriptor)
-        // We only want to show the end list indicator if the list is fully fetched and it's not empty
         return (actualItems + endListItem).filter { !itemsToHide.contains(it) }
     }
 
@@ -73,26 +73,34 @@ class PostListItemDataSource(
         val localPostMap = postList.associateBy { LocalId(it.id) }
         val remotePostMap = postList.filter { it.remotePostId != 0L }.associateBy { RemoteId(it.remotePostId) }
 
-        // Fetch the missing posts
-        val remoteIdsToFetch: List<RemoteId> = localOrRemoteIds.mapNotNull { it as? RemoteId }
-                .filter { !remotePostMap.containsKey(it) }
-        fetchPosts(listDescriptor.site, remoteIdsToFetch)
+        fetchMissingRemotePosts(listDescriptor.site, localOrRemoteIds, remotePostMap)
 
-        val transformFromNullablePost = { localOrRemoteId: LocalOrRemoteId, post: PostModel? ->
-            if (post == null) {
-                LoadingItem(localOrRemoteId)
-            } else {
-                transform(post)
-            }
-        }
         return itemIdentifiers.map { identifier ->
             when (identifier) {
-                is LocalPostId -> transformFromNullablePost(identifier.id, localPostMap[identifier.id])
-                is RemotePostId -> transformFromNullablePost(identifier.id, remotePostMap[identifier.id])
+                is LocalPostId -> transformToPostListItemType(identifier.id, localPostMap[identifier.id])
+                is RemotePostId -> transformToPostListItemType(identifier.id, remotePostMap[identifier.id])
                 EndListIndicatorIdentifier -> EndListIndicatorItem
             }
         }
     }
+
+    private fun fetchMissingRemotePosts(
+        site: SiteModel,
+        localOrRemoteIds: List<LocalOrRemoteId>,
+        remotePostMap: Map<RemoteId, PostModel>
+    ) {
+        val remoteIdsToFetch: List<RemoteId> = localOrRemoteIds.mapNotNull { it as? RemoteId }
+                .filter { !remotePostMap.containsKey(it) }
+        fetchPosts(site, remoteIdsToFetch)
+    }
+
+    private fun transformToPostListItemType(localOrRemoteId: LocalOrRemoteId, post: PostModel?): PostListItemType =
+            if (post == null) {
+                // If the post is not in cache, that means we'll be loading it
+                LoadingItem(localOrRemoteId)
+            } else {
+                transform(post)
+            }
 
     private fun getItemIdsToHide(postListDescriptor: PostListDescriptor): Set<PostListItemIdentifier> {
         return performGetItemIdsToHide.invoke(postListDescriptor)?.let { setOf(it.first, it.second) } ?: emptySet()
