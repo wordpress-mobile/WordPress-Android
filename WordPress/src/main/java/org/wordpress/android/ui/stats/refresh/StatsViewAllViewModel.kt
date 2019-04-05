@@ -60,12 +60,11 @@ class StatsViewAllViewModel(
 
     val toolbarHasShadow = dateSelectorData.map { !it.isVisible }
 
-    fun start(site: SiteModel) {
-        statsSiteProvider.start(site)
-        start()
-    }
+    fun start(site: SiteModel? = null) {
+        if (site != null) {
+            statsSiteProvider.start(site)
+        }
 
-    fun start() {
         launch {
             loadData(refresh = false, forced = false)
             dateSelector.updateDateSelector()
