@@ -8,8 +8,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
-import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataStore
-import org.wordpress.android.fluxc.model.list.datastore.ListItemDataStoreInterface
+import org.wordpress.android.fluxc.model.list.datasource.InternalPagedListDataSource
+import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
 import kotlin.test.assertEquals
 
 private const val NUMBER_OF_ITEMS = 71
@@ -17,10 +17,10 @@ private const val IS_LIST_FULLY_FETCHED = false
 private val testListDescriptor = TestListDescriptor()
 private val testStartAndEndPosition = Pair(5, 10)
 
-class InternalPagedListDataStoreTest {
+class InternalPagedListDataSourceTest {
     private val remoteItemIds = mock<List<RemoteId>>()
     private val mockIdentifiers = mock<List<TestListIdentifier>>()
-    private val mockItemDataStore = mock<ListItemDataStoreInterface<TestListDescriptor, TestListIdentifier, String>>()
+    private val mockItemDataSource = mock<ListItemDataSourceInterface<TestListDescriptor, TestListIdentifier, String>>()
 
     @Before
     fun setup() {
@@ -30,7 +30,7 @@ class InternalPagedListDataStoreTest {
         whenever(mockIdentifiers.subList(any(), any())).thenReturn(mockSublist)
 
         whenever(
-                mockItemDataStore.getItemIdentifiers(
+                mockItemDataSource.getItemIdentifiers(
                         listDescriptor = testListDescriptor,
                         remoteItemIds = remoteItemIds,
                         isListFullyFetched = IS_LIST_FULLY_FETCHED
@@ -39,58 +39,58 @@ class InternalPagedListDataStoreTest {
     }
 
     /**
-     * Tests that item identifiers are cached when a new instance of [InternalPagedListDataStore] is created.
+     * Tests that item identifiers are cached when a new instance of [InternalPagedListDataSource] is created.
      *
      * Caching the item identifiers is how we ensure that this component will provide consistent data to
      * `PositionalDataSource` so it's very important that we have this test. Since we don't have access to
-     * `InternalPagedListDataStore.itemIdentifiers` private property, we have to test the internal implementation
+     * `InternalPagedListDataSource.itemIdentifiers` private property, we have to test the internal implementation
      * which is more likely to break. However, in this specific case, we DO want the test to break if the internal
      * implementation changes.
      */
     @Test
     fun `init calls getItemIdentifiers`() {
-        createInternalPagedListDataStore(mockItemDataStore)
+        createInternalPagedListDataSource(mockItemDataSource)
 
-        verify(mockItemDataStore).getItemIdentifiers(eq(testListDescriptor), any(), any())
+        verify(mockItemDataSource).getItemIdentifiers(eq(testListDescriptor), any(), any())
     }
 
     @Test
     fun `total size uses getItemIdentifiers' size`() {
-        val internalDataStore = createInternalPagedListDataStore(mockItemDataStore)
+        val internalDataSource = createInternalPagedListDataSource(mockItemDataSource)
         assertEquals(
-                NUMBER_OF_ITEMS, internalDataStore.totalSize, "InternalPagedListDataStore should not change the" +
-                "number of items in a list and should propagate that to its ListItemDataStoreInterface"
+                NUMBER_OF_ITEMS, internalDataSource.totalSize, "InternalPagedListDataSource should not change the" +
+                "number of items in a list and should propagate that to its ListItemDataSourceInterface"
         )
     }
 
     @Test
     fun `getItemsInRange creates the correct sublist of the identifiers`() {
-        val internalDataStore = createInternalPagedListDataStore(mockItemDataStore)
+        val internalDataSource = createInternalPagedListDataSource(mockItemDataSource)
 
         val (startPosition, endPosition) = testStartAndEndPosition
-        internalDataStore.getItemsInRange(startPosition, endPosition)
+        internalDataSource.getItemsInRange(startPosition, endPosition)
 
         verify(mockIdentifiers).subList(startPosition, endPosition)
     }
 
     @Test
     fun `getItemsInRange propagates the call to getItemsAndFetchIfNecessary correctly`() {
-        val internalDataStore = createInternalPagedListDataStore(dataStore = mockItemDataStore)
+        val internalDataSource = createInternalPagedListDataSource(dataSource = mockItemDataSource)
 
         val (startPosition, endPosition) = testStartAndEndPosition
-        internalDataStore.getItemsInRange(startPosition, endPosition)
+        internalDataSource.getItemsInRange(startPosition, endPosition)
 
-        verify(mockItemDataStore).getItemsAndFetchIfNecessary(eq(testListDescriptor), any())
+        verify(mockItemDataSource).getItemsAndFetchIfNecessary(eq(testListDescriptor), any())
     }
 
-    private fun createInternalPagedListDataStore(
-        dataStore: TestListItemDataStore
-    ): TestInternalPagedListDataStore {
-        return InternalPagedListDataStore(
+    private fun createInternalPagedListDataSource(
+        dataSource: TestListItemDataSource
+    ): TestInternalPagedListDataSource {
+        return InternalPagedListDataSource(
                 listDescriptor = testListDescriptor,
                 remoteItemIds = remoteItemIds,
                 isListFullyFetched = IS_LIST_FULLY_FETCHED,
-                itemDataStore = dataStore
+                itemDataSource = dataSource
         )
     }
 }

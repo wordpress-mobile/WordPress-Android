@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.model.list.datastore
+package org.wordpress.android.fluxc.model.list.datasource
 
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.list.ListDescriptor
@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.model.list.ListDescriptor
 /**
  * An interface used to tell how to take certain actions to manage a `PagedList`.
  */
-interface ListItemDataStoreInterface<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> {
+interface ListItemDataSourceInterface<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> {
     /**
      * Should return a list [LIST_ITEM]s for the given [LIST_DESCRIPTOR] and the list [ITEM_IDENTIFIER]s that will be
      * provided by [getItemIdentifiers].
