@@ -177,7 +177,7 @@ class PostListViewModel @Inject constructor(
                 dispatcher = dispatcher,
                 postStore = postStore,
                 performGetItemIdsToHide = performGetItemIdsToHide,
-                transform = this::transformPostModelToNewPostListItem
+                transform = this::transformPostModelToPostListItemUiState
         )
         listStore.getList(listDescriptor, dataSource, lifecycle)
     }
@@ -866,7 +866,7 @@ class PostListViewModel @Inject constructor(
         }?.index
     }
 
-    private fun transformPostModelToNewPostListItem(post: PostModel) =
+    private fun transformPostModelToPostListItemUiState(post: PostModel) =
             listItemUiStateHelper.createPostListItemUiState(
                     post = post,
                     uploadStatus = getUploadStatus(post),
