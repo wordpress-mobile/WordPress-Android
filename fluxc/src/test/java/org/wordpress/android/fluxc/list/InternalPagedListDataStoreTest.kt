@@ -38,6 +38,15 @@ class InternalPagedListDataStoreTest {
         ).thenReturn(mockIdentifiers)
     }
 
+    /**
+     * Tests that item identifiers are cached when a new instance of [InternalPagedListDataStore] is created.
+     *
+     * Caching the item identifiers is how we ensure that this component will provide consistent data to
+     * `PositionalDataSource` so it's very important that we have this test. Since we don't have access to
+     * `InternalPagedListDataStore.itemIdentifiers` private property, we have to test the internal implementation
+     * which is more likely to break. However, in this specific case, we DO want the test to break if the internal
+     * implementation changes.
+     */
     @Test
     fun `init calls getItemIdentifiers`() {
         createInternalPagedListDataStore(mockItemDataStore)
