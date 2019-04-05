@@ -48,7 +48,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `label has error color on upload error`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(uploadError = createGenericError()))
-        assertThat(state.data.statusLabelsColor).isEqualTo(ERROR_COLOR)
+        assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
     }
 
     @Test
@@ -59,90 +59,90 @@ class PostListItemUiStateHelperTest {
                         hasInProgressMediaUpload = true
                 )
         )
-        assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
     fun `label has progress color when post queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isQueued = true))
-        assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
     fun `label has progress color when media queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasPendingMediaUpload = true))
-        assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
     fun `label has progress color when uploading media`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasInProgressMediaUpload = true))
-        assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     @Test
     fun `label has progress color when uploading post`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploading = true))
-        assertThat(state.data.statusLabelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
     fun `label has error color on version conflict`() {
         val state = createPostListItemUiState(unhandledConflicts = true)
-        assertThat(state.data.statusLabelsColor).isEqualTo(ERROR_COLOR)
+        assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
     }
 
     @Test
     fun `private label shown for private posts`() {
         val state = createPostListItemUiState(post = createPostModel(status = POST_STATE_PRIVATE))
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_status_post_private))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_post_private))
     }
 
     @Test
     fun `pending review label shown for posts pending review`() {
         val state = createPostListItemUiState(post = createPostModel(status = POST_STATE_PENDING))
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_status_pending_review))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_pending_review))
     }
 
     @Test
     fun `local draft label shown for local posts`() {
         val state = createPostListItemUiState(post = createPostModel(isLocalDraft = true))
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.local_draft))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_draft))
     }
 
     @Test
     fun `locally changed label shown for locally changed posts`() {
         val state = createPostListItemUiState(post = createPostModel(isLocallyChanged = true))
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.local_changes))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_changes))
     }
 
     @Test
     fun `version conflict label shown for posts with version conflict`() {
         val state = createPostListItemUiState(unhandledConflicts = true)
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.local_post_is_conflicted))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_post_is_conflicted))
     }
 
     @Test
     fun `uploading post label shown when the post is being uploaded`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploading = true))
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_uploading))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_uploading))
     }
 
     @Test
     fun `uploading media label shown when the post's media is being uploaded`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasInProgressMediaUpload = true))
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.uploading_media))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.uploading_media))
     }
 
     @Test
     fun `queued post label shown when the post has pending media uploads`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasPendingMediaUpload = true))
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_queued))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_queued))
     }
 
     @Test
     fun `queued post label shown when the post is queued for upload`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isQueued = true))
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_queued))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_queued))
     }
 
     @Test
@@ -150,7 +150,7 @@ class PostListItemUiStateHelperTest {
         val state = createPostListItemUiState(
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
         )
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.error_media_recover_post))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_media_recover_post))
     }
 
     @Test
@@ -159,7 +159,7 @@ class PostListItemUiStateHelperTest {
         val state = createPostListItemUiState(
                 uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR, errorMsg)))
         )
-        assertThat(state.data.statusLabels).contains(UiStringText(errorMsg))
+        assertThat(state.data.statuses).contains(UiStringText(errorMsg))
     }
 
     @Test
@@ -168,8 +168,8 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE),
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
         )
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.error_media_recover_post))
-        assertThat(state.data.statusLabels).hasSize(1)
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_media_recover_post))
+        assertThat(state.data.statuses).hasSize(1)
     }
 
     @Test
@@ -177,8 +177,8 @@ class PostListItemUiStateHelperTest {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE)
         )
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.local_changes))
-        assertThat(state.data.statusLabels).contains(UiStringRes(R.string.post_status_post_private))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_changes))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_post_private))
     }
 
     private fun createPostModel(

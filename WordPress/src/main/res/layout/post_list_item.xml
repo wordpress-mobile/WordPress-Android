@@ -86,10 +86,10 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/progress"
+            app:layout_constraintBottom_toTopOf="@+id/upload_progress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/status_labels">
+            app:layout_constraintTop_toBottomOf="@+id/statuses_label">
 
             <org.wordpress.android.widgets.PostListButton
                 android:id="@+id/btn_primary"
@@ -126,7 +126,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/status_labels"
+            android:id="@+id/statuses_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
@@ -144,7 +144,7 @@
             tools:text="Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes "/>
 
         <ProgressBar
-            android:id="@+id/progress"
+            android:id="@+id/upload_progress"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
