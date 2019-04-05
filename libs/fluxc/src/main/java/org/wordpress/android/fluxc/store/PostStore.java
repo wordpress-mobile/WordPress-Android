@@ -22,6 +22,9 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoveAllPosts;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -403,11 +406,27 @@ public class PostStore extends Store {
         }
     }
 
+    public Map<LocalOrRemoteId, PostModel> getPostsByLocalOrRemotePostIds(List<LocalOrRemoteId> localOrRemoteIds,
+                                                                          SiteModel site) {
+        // TODO: This should run a single query, this solution is only temporary
+        Map<LocalOrRemoteId, PostModel> postMap = new HashMap<>();
+        for (LocalOrRemoteId localOrRemoteId : localOrRemoteIds) {
+            PostModel postModel = null;
+            if (localOrRemoteId instanceof LocalId) {
+                postModel = getPostByLocalPostId(((LocalId) localOrRemoteId).getValue());
+            } else if (localOrRemoteId instanceof RemoteId) {
+                postModel = getPostByRemotePostId(((RemoteId) localOrRemoteId).getValue(), site);
+            }
+            postMap.put(localOrRemoteId, postModel);
+        }
+        return postMap;
+    }
+
     /**
      * Given a list of remote IDs for a post and the site to which it belongs, returns the posts as map where the
      * key is the remote post ID and the value is the {@link PostModel}.
      */
-    public Map<Long, PostModel> getPostsByRemotePostIds(List<Long> remoteIds, SiteModel site) {
+    private Map<Long, PostModel> getPostsByRemotePostIds(List<Long> remoteIds, SiteModel site) {
         if (site == null) {
             return Collections.emptyMap();
         }
@@ -438,7 +457,7 @@ public class PostStore extends Store {
     /**
      * Returns the local posts for the given post list descriptor.
      */
-    public List<PostModel> getLocalPostsForDescriptor(PostListDescriptor postListDescriptor) {
+    public @NonNull List<LocalId> getLocalPostIdsForDescriptor(PostListDescriptor postListDescriptor) {
         String searchQuery = null;
         if (postListDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) postListDescriptor;
@@ -473,7 +492,7 @@ public class PostStore extends Store {
         } else {
             order = SelectQuery.ORDER_DESCENDING;
         }
-        return PostSqlUtils.getLocalPostsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
+        return PostSqlUtils.getLocalPostIdsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
     }
 
     /**
