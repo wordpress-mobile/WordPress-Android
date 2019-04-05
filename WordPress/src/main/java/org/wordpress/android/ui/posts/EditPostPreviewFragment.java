@@ -16,8 +16,11 @@ import android.webkit.WebView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPWebViewClient;
 
 import javax.inject.Inject;
 
@@ -26,12 +29,15 @@ public class EditPostPreviewFragment extends Fragment {
     private WebView mWebView;
     private int mLocalPostId;
     private LoadPostPreviewTask mLoadTask;
+    private SiteModel mSite;
 
     @Inject PostStore mPostStore;
+    @Inject AccountStore mAccountStore;
 
-    public static EditPostPreviewFragment newInstance(@NonNull PostModel post) {
+    public static EditPostPreviewFragment newInstance(@NonNull PostModel post, SiteModel site) {
         EditPostPreviewFragment fragment = new EditPostPreviewFragment();
         Bundle bundle = new Bundle();
+        bundle.putSerializable(WordPress.SITE, site);
         bundle.putInt(ARG_LOCAL_POST_ID, post.getId());
         fragment.setArguments(bundle);
         return fragment;
@@ -45,6 +51,12 @@ public class EditPostPreviewFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(WordPress.SITE, mSite);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) requireActivity().getApplication()).component().inject(this);
@@ -55,6 +67,8 @@ public class EditPostPreviewFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.edit_post_preview_fragment, container, false);
         mWebView = rootView.findViewById(R.id.post_preview_web_view);
+        WPWebViewClient client = new WPWebViewClient(mSite, mAccountStore.getAccessToken());
+        mWebView.setWebViewClient(client);
         mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {

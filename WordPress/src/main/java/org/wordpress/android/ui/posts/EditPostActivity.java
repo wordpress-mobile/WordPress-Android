@@ -2223,7 +2223,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 3:
                     return HistoryListFragment.Companion.newInstance(mPost, mSite);
                 default:
-                    return EditPostPreviewFragment.newInstance(mPost);
+                    return EditPostPreviewFragment.newInstance(mPost, mSite);
             }
         }
 
