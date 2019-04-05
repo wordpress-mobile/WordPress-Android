@@ -11,11 +11,13 @@ import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.SelectQuery.Order;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -271,7 +273,7 @@ public class PostSqlUtils {
                 .endGroup().endWhere().execute();
     }
 
-    public static List<PostModel> getLocalPostsForFilter(SiteModel site, boolean isPage, String searchQuery,
+    public static List<LocalId> getLocalPostIdsForFilter(SiteModel site, boolean isPage, String searchQuery,
                                                          String orderBy, @Order int order) {
         ConditionClauseBuilder<SelectQuery<PostModel>> clauseBuilder =
                 WellSql.select(PostModel.class).where().beginGroup()
@@ -283,6 +285,12 @@ public class PostSqlUtils {
             clauseBuilder = clauseBuilder.beginGroup().contains(PostModelTable.TITLE, searchQuery).or()
                                          .contains(PostModelTable.CONTENT, searchQuery).endGroup();
         }
-        return clauseBuilder.endWhere().orderBy(orderBy, order).getAsModel();
+        // TODO: We should only query the id and return that instead
+        List<PostModel> localPosts = clauseBuilder.endWhere().orderBy(orderBy, order).getAsModel();
+        List<LocalId> localPostIds = new ArrayList<>();
+        for (PostModel post : localPosts) {
+            localPostIds.add(new LocalId(post.getId()));
+        }
+        return localPostIds;
     }
 }
