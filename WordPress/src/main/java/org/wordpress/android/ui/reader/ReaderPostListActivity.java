@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
@@ -186,6 +188,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
             }
 
             try {
+                AnalyticsTracker.track(Stat.READER_SITE_SHARED);
                 startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
             } catch (ActivityNotFoundException exception) {
                 ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
