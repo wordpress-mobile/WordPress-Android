@@ -80,6 +80,8 @@ public class ReaderPostListActivity extends AppCompatActivity {
                         showListFragmentForBlog(blogId);
                         mSiteId = blogId;
                     }
+                } else {
+                    mSiteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID);
                 }
             } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
                 setTitle(R.string.reader_title_tag_preview);
@@ -139,6 +141,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
         if (getPostListType() == ReaderPostListType.BLOG_PREVIEW
             || getPostListType() == ReaderPostListType.TAG_PREVIEW) {
             outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, getTitle().toString());
+            outState.putLong(ReaderConstants.KEY_SITE_ID, mSiteId);
         }
 
         super.onSaveInstanceState(outState);
