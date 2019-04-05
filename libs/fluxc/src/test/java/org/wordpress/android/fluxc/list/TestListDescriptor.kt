@@ -5,8 +5,8 @@ import org.wordpress.android.fluxc.model.list.ListConfig
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListDescriptorUniqueIdentifier
-import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataSource
-import org.wordpress.android.fluxc.model.list.datastore.ListItemDataSourceInterface
+import org.wordpress.android.fluxc.model.list.datasource.InternalPagedListDataSource
+import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
 
 internal typealias TestListIdentifier = Long
 internal typealias TestPagedListResultType = String

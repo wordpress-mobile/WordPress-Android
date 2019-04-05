@@ -8,8 +8,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
-import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataSource
-import org.wordpress.android.fluxc.model.list.datastore.ListItemDataSourceInterface
+import org.wordpress.android.fluxc.model.list.datasource.InternalPagedListDataSource
+import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
 import kotlin.test.assertEquals
 
 private const val NUMBER_OF_ITEMS = 71
