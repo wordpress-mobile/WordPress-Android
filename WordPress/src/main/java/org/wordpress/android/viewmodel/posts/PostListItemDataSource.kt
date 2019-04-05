@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
-import org.wordpress.android.fluxc.model.list.datastore.ListItemDataStoreInterface
+import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
@@ -25,12 +25,12 @@ sealed class PostListItemIdentifier {
     object EndListIndicatorIdentifier : PostListItemIdentifier()
 }
 
-class PostListDataStore(
+class PostListItemDataSource(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val performGetItemIdsToHide: ((PostListDescriptor) -> Pair<LocalPostId, RemotePostId>?),
     private val transform: ((PostModel) -> PostListItemUiState)
-) : ListItemDataStoreInterface<PostListDescriptor, PostListItemIdentifier, PostListItemType> {
+) : ListItemDataSourceInterface<PostListDescriptor, PostListItemIdentifier, PostListItemType> {
     override fun fetchList(listDescriptor: PostListDescriptor, offset: Long) {
         val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
         dispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))

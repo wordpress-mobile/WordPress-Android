@@ -173,13 +173,13 @@ class PostListViewModel @Inject constructor(
                 postIdToTrash
             } else null
         }
-        val dataStore = PostListDataStore(
+        val dataSource = PostListItemDataSource(
                 dispatcher = dispatcher,
                 postStore = postStore,
                 performGetItemIdsToHide = performGetItemIdsToHide,
                 transform = this::transformPostModelToNewPostListItem
         )
-        listStore.getList(listDescriptor, dataStore, lifecycle)
+        listStore.getList(listDescriptor, dataSource, lifecycle)
     }
 
     val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
