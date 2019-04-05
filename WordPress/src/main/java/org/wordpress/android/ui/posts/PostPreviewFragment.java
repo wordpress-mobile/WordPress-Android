@@ -26,7 +26,6 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
 public class PostPreviewFragment extends Fragment {
-
     private LoadPostPreviewTask mLoadTask;
     private SiteModel mSite;
     private int mLocalPostId;
@@ -56,7 +55,6 @@ public class PostPreviewFragment extends Fragment {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mLocalPostId = savedInstanceState.getInt(EXTRA_POST_LOCAL_ID);
         }
-
     }
 
     @Override
@@ -121,7 +119,6 @@ public class PostPreviewFragment extends Fragment {
 
         @Override
         protected String doInBackground(Void... params) {
-
             if (getActivity() == null) {
                 return null;
             }
