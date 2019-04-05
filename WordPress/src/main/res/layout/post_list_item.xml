@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/progress"
+            app:layout_constraintBottom_toTopOf="@+id/upload_progress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/statuses_label">
@@ -144,7 +144,7 @@
             tools:text="Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes "/>
 
         <ProgressBar
-            android:id="@+id/progress"
+            android:id="@+id/upload_progress"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

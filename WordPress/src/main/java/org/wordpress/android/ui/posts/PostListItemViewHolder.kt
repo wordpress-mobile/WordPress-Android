@@ -36,7 +36,7 @@ class PostListItemViewHolder(
     private val excerptTextView: WPTextView = itemView.findViewById(R.id.excerpt)
     private val dateAndAuthorTextView: WPTextView = itemView.findViewById(R.id.date_and_author)
     private val statusesLabelTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
-    private val progressProgressBar: ProgressBar = itemView.findViewById(R.id.progress)
+    private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
     private val actionButtons: List<PostListButton> = listOf(
             itemView.findViewById(R.id.btn_primary),
@@ -52,9 +52,14 @@ class PostListItemViewHolder(
         uiHelpers.updateVisibility(statusesLabelTextView, item.data.statuses.isNotEmpty())
         updateStatusesLabel(statusesLabelTextView, item.data.statuses, item.data.statusesDelimiter)
         if (item.data.statusesColor != null) {
-            statusesLabelTextView.setTextColor(ContextCompat.getColor(statusesLabelTextView.context, item.data.statusesColor))
+            statusesLabelTextView.setTextColor(
+                    ContextCompat.getColor(
+                            statusesLabelTextView.context,
+                            item.data.statusesColor
+                    )
+            )
         }
-        uiHelpers.updateVisibility(progressProgressBar, item.data.showProgress)
+        uiHelpers.updateVisibility(uploadProgressBar, item.data.showProgress)
         uiHelpers.updateVisibility(disabledOverlay, item.data.showOverlay)
         itemView.setOnClickListener { item.onSelected.invoke() }
 
