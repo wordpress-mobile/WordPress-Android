@@ -136,7 +136,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment() {
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_DOMAINS)
         })
-        viewModel.start(getSiteTitleFromArguments())
+        viewModel.start(getSiteTitleFromArguments(), getSegmentIdFromArguments())
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
@@ -151,14 +151,22 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment() {
         return arguments?.getString(EXTRA_SITE_TITLE)
     }
 
+    private fun getSegmentIdFromArguments(): Long {
+        return requireNotNull(arguments?.getLong(EXTRA_SEGMENT_ID)) {
+            "SegmentId is missing. Have you created the fragment using NewSiteCreationDomainsFragment.newInstance(..)?"
+        }
+    }
+
     companion object {
         const val TAG = "site_creation_domains_fragment_tag"
         const val EXTRA_SITE_TITLE = "extra_site_title"
+        private const val EXTRA_SEGMENT_ID = "extra_segment_id"
 
-        fun newInstance(screenTitle: String, siteTitle: String?): NewSiteCreationDomainsFragment {
+        fun newInstance(screenTitle: String, siteTitle: String?, segmentId: Long): NewSiteCreationDomainsFragment {
             val fragment = NewSiteCreationDomainsFragment()
             val bundle = Bundle()
             bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
             siteTitle?.let { bundle.putString(EXTRA_SITE_TITLE, siteTitle) }
             fragment.arguments = bundle
             return fragment

@@ -4,6 +4,7 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.firstValue
 import com.nhaarman.mockitokotlin2.secondValue
+import com.nhaarman.mockitokotlin2.thirdValue
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -34,6 +35,7 @@ import org.hamcrest.CoreMatchers.`is` as Is
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private const val ERROR_RESULT_FETCH_QUERY = "error_result_query"
+private const val SEGMENT_ID = 123L
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair("multi_result_query", MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE)
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = Pair("empty_result_query", 0)
 
@@ -76,7 +78,7 @@ class NewSiteCreationDomainsViewModelTest {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
-            whenever(fetchDomainsUseCase.fetchDomains(queryResultSizePair.first))
+            whenever(fetchDomainsUseCase.fetchDomains(queryResultSizePair.first, SEGMENT_ID))
                     .thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
             block()
         }
@@ -86,7 +88,7 @@ class NewSiteCreationDomainsViewModelTest {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
-            whenever(fetchDomainsUseCase.fetchDomains(ERROR_RESULT_FETCH_QUERY))
+            whenever(fetchDomainsUseCase.fetchDomains(ERROR_RESULT_FETCH_QUERY, SEGMENT_ID))
                     .thenReturn(createFailedOnSuggestedDomains(ERROR_RESULT_FETCH_QUERY))
             block()
         }
@@ -97,7 +99,7 @@ class NewSiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyEmptyTitleQueryUiState() = testWithSuccessResponse {
-        viewModel.start(null)
+        viewModel.start(null, SEGMENT_ID)
         verifyInitialContentUiState(requireNotNull(viewModel.uiState.value), showProgress = false)
     }
 
@@ -106,7 +108,7 @@ class NewSiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyMultiResultTitleQueryInitialUiState() = testWithSuccessResponse {
-        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first, SEGMENT_ID)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(2)).onChanged(captor.capture())
         verifyInitialContentUiState(requireNotNull(captor.firstValue), showProgress = true)
@@ -118,7 +120,7 @@ class NewSiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyMultiResultTitleQueryUiStateAfterResponse() = testWithSuccessResponse {
-        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first, SEGMENT_ID)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(2)).onChanged(captor.capture())
         verifyVisibleItemsContentUiState(captor.secondValue)
@@ -129,7 +131,7 @@ class NewSiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyErrorResultTitleQueryUiStateAfterResponse() = testWithErrorResponse {
-        viewModel.start(ERROR_RESULT_FETCH_QUERY)
+        viewModel.start(ERROR_RESULT_FETCH_QUERY, SEGMENT_ID)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(2)).onChanged(captor.capture())
         verifyInitialContentUiState(captor.secondValue)
@@ -140,10 +142,11 @@ class NewSiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyNonEmptyUpdateQueryInitialUiState() = testWithSuccessResponse {
+        viewModel.start(null, SEGMENT_ID)
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
-        verifyInitialContentUiState(captor.firstValue, showProgress = true, showClearButton = true)
+        verify(uiStateObserver, times(3)).onChanged(captor.capture())
+        verifyInitialContentUiState(captor.secondValue, showProgress = true, showClearButton = true)
     }
 
     /**
@@ -152,11 +155,12 @@ class NewSiteCreationDomainsViewModelTest {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithEmptyResults() =
             testWithSuccessResponse(queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY) {
+                viewModel.start(null, SEGMENT_ID)
                 viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-                verify(uiStateObserver, times(2)).onChanged(captor.capture())
+                verify(uiStateObserver, times(3)).onChanged(captor.capture())
                 verifyEmptyItemsContentUiState(
-                        captor.secondValue,
+                        captor.thirdValue,
                         showClearButton = true
                 )
             }
@@ -166,10 +170,11 @@ class NewSiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithMultipleResults() = testWithSuccessResponse {
+        viewModel.start(null, SEGMENT_ID)
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
-        verifyVisibleItemsContentUiState(captor.secondValue, showClearButton = true)
+        verify(uiStateObserver, times(3)).onChanged(captor.capture())
+        verifyVisibleItemsContentUiState(captor.thirdValue, showClearButton = true)
     }
 
     /**
@@ -177,12 +182,13 @@ class NewSiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = testWithErrorResponse {
+        viewModel.start(null, SEGMENT_ID)
         viewModel.updateQuery(ERROR_RESULT_FETCH_QUERY)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
-        verifyVisibleItemsContentUiState(captor.secondValue, showClearButton = true, numberOfItems = 1)
+        verify(uiStateObserver, times(3)).onChanged(captor.capture())
+        verifyVisibleItemsContentUiState(captor.thirdValue, showClearButton = true, numberOfItems = 1)
         assertThat(
-                captor.secondValue.contentState.items[0],
+                captor.thirdValue.contentState.items[0],
                 instanceOf(DomainsFetchSuggestionsErrorUiState::class.java)
         )
     }
