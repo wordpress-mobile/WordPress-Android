@@ -170,8 +170,7 @@ public class PostPreviewActivity extends AppCompatActivity implements
         if (!isFinishing()) {
             PostPreviewFragment fragment = getPreviewFragment();
             if (fragment != null) {
-                fragment.setPost(mPost);
-                fragment.refreshPreview();
+                fragment.loadPost();
             }
         }
     }

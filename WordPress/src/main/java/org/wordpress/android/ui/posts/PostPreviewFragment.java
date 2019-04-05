@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.WebView;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -17,7 +19,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPWebViewClient;
 
 import javax.inject.Inject;
@@ -25,8 +26,10 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
 public class PostPreviewFragment extends Fragment {
+
+    private LoadPostPreviewTask mLoadTask;
     private SiteModel mSite;
-    private PostModel mPost;
+    private int mLocalPostId;
     private WebView mWebView;
 
     @Inject AccountStore mAccountStore;
@@ -46,21 +49,20 @@ public class PostPreviewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        int localPostId;
         if (savedInstanceState == null) {
             mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-            localPostId = getArguments().getInt(EXTRA_POST_LOCAL_ID);
+            mLocalPostId = getArguments().getInt(EXTRA_POST_LOCAL_ID);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            localPostId = savedInstanceState.getInt(EXTRA_POST_LOCAL_ID);
+            mLocalPostId = savedInstanceState.getInt(EXTRA_POST_LOCAL_ID);
         }
-        mPost = mPostStore.getPostByLocalPostId(localPostId);
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(EXTRA_POST_LOCAL_ID, mPost.getId());
+        outState.putSerializable(EXTRA_POST_LOCAL_ID, mLocalPostId);
         super.onSaveInstanceState(outState);
     }
 
@@ -68,54 +70,80 @@ public class PostPreviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_preview_fragment, container, false);
 
-        mWebView = (WebView) view.findViewById(R.id.webView);
+        mWebView = view.findViewById(R.id.webView);
         WPWebViewClient client = new WPWebViewClient(mSite, mAccountStore.getAccessToken());
         mWebView.setWebViewClient(client);
+        mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (getActivity() != null) {
+                    loadPost();
+                }
+                mWebView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
 
         return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        refreshPreview();
+    public void onResume() {
+        super.onResume();
+
+        if (getActivity() != null && !mWebView.isLayoutRequested()) {
+            loadPost();
+        }
     }
 
-    public void setPost(PostModel post) {
-        mPost = post;
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mLoadTask != null) {
+            mLoadTask.cancel(true);
+            mLoadTask = null;
+        }
     }
 
-    void refreshPreview() {
-        if (!isAdded()) {
-            return;
+    void loadPost() {
+        // cancel the previous load so we can load the new post
+        if (mLoadTask != null) {
+            mLoadTask.cancel(true);
         }
 
-        new Thread() {
-            @Override
-            public void run() {
-                final String htmlContent = formatPostContentForWebView(getActivity(), mPost);
+        mLoadTask = new LoadPostPreviewTask();
+        mLoadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isAdded()) {
-                            return;
-                        }
+    // Load post content in the background
+    private class LoadPostPreviewTask extends AsyncTask<Void, Void, String> {
+        private PostModel mPost;
 
-                        if (htmlContent != null) {
-                            mWebView.loadDataWithBaseURL(
-                                    "file:///android_asset/",
-                                    htmlContent,
-                                    "text/html",
-                                    "utf-8",
-                                    null);
-                        } else {
-                            ToastUtils.showToast(getActivity(), R.string.post_not_found);
-                        }
-                    }
-                });
+        @Override
+        protected String doInBackground(Void... params) {
+
+            if (getActivity() == null) {
+                return null;
             }
-        }.start();
+
+            mPost = mPostStore.getPostByLocalPostId(mLocalPostId);
+            if (mPost == null) {
+                return null;
+            }
+
+
+            return formatPostContentForWebView(getActivity(), mPost);
+        }
+
+        @Override
+        protected void onPostExecute(String content) {
+            if (mPost != null && content != null) {
+                mWebView.loadDataWithBaseURL("file:///android_asset/", content,
+                        "text/html", "utf-8", null);
+            }
+
+            mLoadTask = null;
+        }
     }
 
     private String formatPostContentForWebView(Context context, PostModel post) {

@@ -303,7 +303,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
-    private EditPostPreviewFragment mEditPostPreviewFragment;
+    private PostPreviewFragment mEditPostPreviewFragment;
 
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
@@ -2225,7 +2225,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 3:
                     return HistoryListFragment.Companion.newInstance(mPost, mSite);
                 default:
-                    return EditPostPreviewFragment.newInstance(mPost);
+                    return PostPreviewFragment.newInstance(mSite, mPost);
             }
         }
 
@@ -2264,7 +2264,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
                     break;
                 case 2:
-                    mEditPostPreviewFragment = (EditPostPreviewFragment) fragment;
+                    mEditPostPreviewFragment = (PostPreviewFragment) fragment;
                     break;
             }
             return fragment;
