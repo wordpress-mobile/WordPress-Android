@@ -91,7 +91,7 @@ class StatsViewAllViewModel(
             if (statsSiteProvider.hasLoadedSite()) {
                 useCase.fetch(refresh, forced)
             } else {
-                mutableSnackbarMessage.value = R.string.stats_site_not_loaded_yet
+                mutableSnackbarMessage.postValue(R.string.stats_site_not_loaded_yet)
             }
         }
     }
