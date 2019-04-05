@@ -41,6 +41,7 @@ public class EditPostPreviewFragment extends Fragment {
     public void setArguments(Bundle args) {
         super.setArguments(args);
         mLocalPostId = args.getInt(ARG_LOCAL_POST_ID);
+        mSite = (SiteModel) args.getSerializable(WordPress.SITE);
     }
 
     @Override
