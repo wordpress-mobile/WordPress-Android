@@ -26,7 +26,7 @@ import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.ListState.FETCHED
 import org.wordpress.android.fluxc.model.list.PagedListFactory
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
-import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataStore
+import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataSource
 import org.wordpress.android.fluxc.model.list.datastore.ListItemDataStoreInterface
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
@@ -144,8 +144,8 @@ class ListStore @Inject constructor(
         val getRemoteItemIds = { getListItems(listDescriptor).map { RemoteId(value = it) } }
         val getIsListFullyFetched = { getListState(listDescriptor) == FETCHED }
         return PagedListFactory(
-                createDataStore = {
-                    InternalPagedListDataStore(
+                createDataSource = {
+                    InternalPagedListDataSource(
                             listDescriptor = listDescriptor,
                             remoteItemIds = getRemoteItemIds(),
                             isListFullyFetched = getIsListFullyFetched(),

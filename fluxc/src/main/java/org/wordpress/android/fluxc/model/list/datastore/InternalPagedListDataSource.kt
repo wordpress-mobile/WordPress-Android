@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.model.list.ListDescriptor
  * Most importantly, by separating this component, we are able to keep a single instance of [ListItemDataStoreInterface]
  * and hide the requirement for identifiers needing to be cached from it.
  */
-class InternalPagedListDataStore<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM>(
+class InternalPagedListDataSource<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM>(
     private val listDescriptor: LIST_DESCRIPTOR,
     remoteItemIds: List<RemoteId>,
     isListFullyFetched: Boolean,
@@ -35,7 +35,7 @@ class InternalPagedListDataStore<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFI
     /**
      * Number of items the list contains.
      *
-     * Since [InternalPagedListDataStore] takes a snapshot of the identifiers for the list when it's created, this
+     * Since [InternalPagedListDataSource] takes a snapshot of the identifiers for the list when it's created, this
      * value will be valid and unchanged during the lifecycle of this instance.
      */
     val totalSize: Int
