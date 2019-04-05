@@ -6,14 +6,14 @@ import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListDescriptorUniqueIdentifier
 import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataSource
-import org.wordpress.android.fluxc.model.list.datastore.ListItemDataStoreInterface
+import org.wordpress.android.fluxc.model.list.datastore.ListItemDataSourceInterface
 
 internal typealias TestListIdentifier = Long
 internal typealias TestPagedListResultType = String
 internal typealias TestInternalPagedListDataSource =
         InternalPagedListDataSource<TestListDescriptor, TestListIdentifier, TestPagedListResultType>
-internal typealias TestListItemDataStore =
-        ListItemDataStoreInterface<TestListDescriptor, TestListIdentifier, TestPagedListResultType>
+internal typealias TestListItemDataSource =
+        ListItemDataSourceInterface<TestListDescriptor, TestListIdentifier, TestPagedListResultType>
 
 internal class TestListDescriptor(
     override val uniqueIdentifier: ListDescriptorUniqueIdentifier = mock(),
