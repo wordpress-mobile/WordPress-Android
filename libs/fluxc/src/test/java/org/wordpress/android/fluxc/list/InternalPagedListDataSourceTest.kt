@@ -9,7 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataSource
-import org.wordpress.android.fluxc.model.list.datastore.ListItemDataStoreInterface
+import org.wordpress.android.fluxc.model.list.datastore.ListItemDataSourceInterface
 import kotlin.test.assertEquals
 
 private const val NUMBER_OF_ITEMS = 71
@@ -20,7 +20,7 @@ private val testStartAndEndPosition = Pair(5, 10)
 class InternalPagedListDataSourceTest {
     private val remoteItemIds = mock<List<RemoteId>>()
     private val mockIdentifiers = mock<List<TestListIdentifier>>()
-    private val mockItemDataStore = mock<ListItemDataStoreInterface<TestListDescriptor, TestListIdentifier, String>>()
+    private val mockItemDataSource = mock<ListItemDataSourceInterface<TestListDescriptor, TestListIdentifier, String>>()
 
     @Before
     fun setup() {
@@ -30,7 +30,7 @@ class InternalPagedListDataSourceTest {
         whenever(mockIdentifiers.subList(any(), any())).thenReturn(mockSublist)
 
         whenever(
-                mockItemDataStore.getItemIdentifiers(
+                mockItemDataSource.getItemIdentifiers(
                         listDescriptor = testListDescriptor,
                         remoteItemIds = remoteItemIds,
                         isListFullyFetched = IS_LIST_FULLY_FETCHED
@@ -49,48 +49,48 @@ class InternalPagedListDataSourceTest {
      */
     @Test
     fun `init calls getItemIdentifiers`() {
-        createInternalPagedListDataSource(mockItemDataStore)
+        createInternalPagedListDataSource(mockItemDataSource)
 
-        verify(mockItemDataStore).getItemIdentifiers(eq(testListDescriptor), any(), any())
+        verify(mockItemDataSource).getItemIdentifiers(eq(testListDescriptor), any(), any())
     }
 
     @Test
     fun `total size uses getItemIdentifiers' size`() {
-        val internalDataStore = createInternalPagedListDataSource(mockItemDataStore)
+        val internalDataSource = createInternalPagedListDataSource(mockItemDataSource)
         assertEquals(
-                NUMBER_OF_ITEMS, internalDataStore.totalSize, "InternalPagedListDataSource should not change the" +
-                "number of items in a list and should propagate that to its ListItemDataStoreInterface"
+                NUMBER_OF_ITEMS, internalDataSource.totalSize, "InternalPagedListDataSource should not change the" +
+                "number of items in a list and should propagate that to its ListItemDataSourceInterface"
         )
     }
 
     @Test
     fun `getItemsInRange creates the correct sublist of the identifiers`() {
-        val internalDataStore = createInternalPagedListDataSource(mockItemDataStore)
+        val internalDataSource = createInternalPagedListDataSource(mockItemDataSource)
 
         val (startPosition, endPosition) = testStartAndEndPosition
-        internalDataStore.getItemsInRange(startPosition, endPosition)
+        internalDataSource.getItemsInRange(startPosition, endPosition)
 
         verify(mockIdentifiers).subList(startPosition, endPosition)
     }
 
     @Test
     fun `getItemsInRange propagates the call to getItemsAndFetchIfNecessary correctly`() {
-        val internalDataStore = createInternalPagedListDataSource(dataStore = mockItemDataStore)
+        val internalDataSource = createInternalPagedListDataSource(dataSource = mockItemDataSource)
 
         val (startPosition, endPosition) = testStartAndEndPosition
-        internalDataStore.getItemsInRange(startPosition, endPosition)
+        internalDataSource.getItemsInRange(startPosition, endPosition)
 
-        verify(mockItemDataStore).getItemsAndFetchIfNecessary(eq(testListDescriptor), any())
+        verify(mockItemDataSource).getItemsAndFetchIfNecessary(eq(testListDescriptor), any())
     }
 
     private fun createInternalPagedListDataSource(
-        dataStore: TestListItemDataStore
+        dataSource: TestListItemDataSource
     ): TestInternalPagedListDataSource {
         return InternalPagedListDataSource(
                 listDescriptor = testListDescriptor,
                 remoteItemIds = remoteItemIds,
                 isListFullyFetched = IS_LIST_FULLY_FETCHED,
-                itemDataStore = dataStore
+                itemDataSource = dataSource
         )
     }
 }
