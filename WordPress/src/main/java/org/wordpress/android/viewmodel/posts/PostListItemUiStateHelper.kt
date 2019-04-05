@@ -7,6 +7,9 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
@@ -21,6 +24,9 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
+import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
@@ -54,8 +60,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
 
         return PostListItemUiState(
                 data = PostListItemUiStateData(
-                        remotePostId = post.remotePostId,
-                        localPostId = post.id,
+                        remotePostId = RemotePostId(RemoteId(post.remotePostId)),
+                        localPostId = LocalPostId(LocalId(post.id)),
                         title = getTitle(post = post),
                         excerpt = getExcerpt(post = post),
                         imageUrl = featuredImageUrl,
@@ -88,7 +94,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) }
                 ),
                 onSelected = {
-                    onAction.invoke(post, BUTTON_EDIT, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
+                    onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
                 }
         )
     }

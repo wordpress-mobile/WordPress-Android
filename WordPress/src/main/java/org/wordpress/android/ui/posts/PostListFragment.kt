@@ -36,6 +36,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.posts.PagedPostList
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -296,7 +297,7 @@ class PostListFragment : Fragment() {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
     }
 
-    fun scrollToTargetPost(localPostId: Int) {
+    fun scrollToTargetPost(localPostId: LocalPostId) {
         viewModel.scrollToPost(localPostId)
     }
 

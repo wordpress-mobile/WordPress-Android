@@ -21,17 +21,16 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.AuthorFilter
-import org.wordpress.android.fluxc.model.list.PagedListItemType
-import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
-import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
@@ -88,6 +87,9 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
+import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState.RefreshError
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
@@ -109,7 +111,7 @@ const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
 const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 
-typealias PagedPostList = PagedList<PagedListItemType<PostListItemUiState>>
+typealias PagedPostList = PagedList<PostListItemType>
 
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -135,14 +137,14 @@ class PostListViewModel @Inject constructor(
     private val featuredImageMap = HashMap<Long, String>()
 
     // Keep a reference to the currently being trashed post, so we can hide it during Undo SnackBar
-    private var postIdToTrash: Pair<Int, Long>? = null
+    private var postIdToTrash: Pair<LocalPostId, RemotePostId>? = null
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForTrashDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
     private var originalPostCopyForConflictUndo: PostModel? = null
     private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
-    private var scrollToLocalPostId: Int? = null
+    private var scrollToLocalPostId: LocalPostId? = null
 
     private val _postListAction = SingleLiveEvent<PostListAction>()
     val postListAction: LiveData<PostListAction> = _postListAction
@@ -162,32 +164,22 @@ class PostListViewModel @Inject constructor(
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
 
-    private val pagedListWrapper: PagedListWrapper<PostListItemUiState> by lazy {
+    private val pagedListWrapper: PagedListWrapper<PostListItemType> by lazy {
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
         }
-        val dataStore = PostListDataStore(dispatcher, postStore, site) { descriptor ->
-            if (descriptor is PostListDescriptor && !descriptor.statusList.contains(PostStatus.TRASHED)) {
-                postIdToTrash?.let { listOf(it) } ?: emptyList()
-            } else emptyList()
+        val performGetItemIdsToHide = { postListDescriptor: PostListDescriptor ->
+            if (!postListDescriptor.statusList.contains(PostStatus.TRASHED)) {
+                postIdToTrash
+            } else null
         }
-        listStore.getList(listDescriptor, dataStore, lifecycle) { post ->
-            listItemUiStateHelper.createPostListItemUiState(
-                    post = post,
-                    uploadStatus = getUploadStatus(post),
-                    unhandledConflicts = doesPostHaveUnhandledConflict(post),
-                    capabilitiesToPublish = site.hasCapabilityPublishPosts,
-                    statsSupported = isStatsSupported,
-                    featuredImageUrl = getFeaturedImageUrl(
-                            featuredImageId = post.featuredImageId,
-                            postContent = post.content
-                    ),
-                    formattedDate = PostUtils.getFormattedDate(post)
-            ) { postModel, buttonType, statEvent ->
-                trackAction(buttonType, postModel, statEvent)
-                handlePostButton(buttonType, postModel)
-            }
-        }
+        val dataSource = PostListItemDataSource(
+                dispatcher = dispatcher,
+                postStore = postStore,
+                performGetItemIdsToHide = performGetItemIdsToHide,
+                transform = this::transformPostModelToPostListItemUiState
+        )
+        listStore.getList(listDescriptor, dataSource, lifecycle)
     }
 
     val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
@@ -507,7 +499,7 @@ class PostListViewModel @Inject constructor(
     private fun trashPost(localPostId: Int) {
         // If post doesn't exist, nothing else to do
         val post = postStore.getPostByLocalPostId(localPostId) ?: return
-        postIdToTrash = Pair(post.id, post.remotePostId)
+        postIdToTrash = Pair(LocalPostId(LocalId(post.id)), RemotePostId(RemoteId(post.remotePostId)))
         // Refresh the list so we can immediately hide the post
         pagedListWrapper.invalidateData()
         val undoAction = {
@@ -839,7 +831,7 @@ class PostListViewModel @Inject constructor(
         _snackBarAction.postValue(snackBarHolder)
     }
 
-    fun scrollToPost(localPostId: Int) {
+    fun scrollToPost(localPostId: LocalPostId) {
         val data = pagedListData.value
         if (data != null) {
             updateScrollPosition(data, localPostId)
@@ -857,23 +849,39 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    private fun updateScrollPosition(data: PagedPostList, localPostId: Int) {
+    private fun updateScrollPosition(data: PagedPostList, localPostId: LocalPostId) {
         val position = findItemListPosition(data, localPostId)
         position?.let {
             _scrollToPosition.value = it
         } ?: AppLog.e(AppLog.T.POSTS, "ScrollToPost failed - the post not found.")
     }
 
-    private fun findItemListPosition(data: PagedPostList, localPostId: Int): Int? {
+    private fun findItemListPosition(data: PagedPostList, localPostId: LocalPostId): Int? {
         return data.listIterator().withIndex().asSequence().find { listItem ->
-            if (listItem.value is ReadyItem<PostListItemUiState>) {
-                val readyItem = listItem.value as ReadyItem<PostListItemUiState>
-                readyItem.item.data.localPostId == localPostId
+            if (listItem.value is PostListItemUiState) {
+                (listItem.value as PostListItemUiState).data.localPostId == localPostId
             } else {
                 false
             }
         }?.index
     }
+
+    private fun transformPostModelToPostListItemUiState(post: PostModel) =
+            listItemUiStateHelper.createPostListItemUiState(
+                    post = post,
+                    uploadStatus = getUploadStatus(post),
+                    unhandledConflicts = doesPostHaveUnhandledConflict(post),
+                    capabilitiesToPublish = site.hasCapabilityPublishPosts,
+                    statsSupported = isStatsSupported,
+                    featuredImageUrl = getFeaturedImageUrl(
+                            featuredImageId = post.featuredImageId,
+                            postContent = post.content
+                    ),
+                    formattedDate = PostUtils.getFormattedDate(post)
+            ) { postModel, buttonType, statEvent ->
+                trackAction(buttonType, postModel, statEvent)
+                handlePostButton(buttonType, postModel)
+            }
 
     // Utils
 

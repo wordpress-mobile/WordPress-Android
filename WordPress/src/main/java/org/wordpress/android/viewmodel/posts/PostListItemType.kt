@@ -1,18 +1,27 @@
 package org.wordpress.android.viewmodel.posts
 
 import android.support.annotation.ColorRes
+import org.wordpress.android.fluxc.model.LocalOrRemoteId
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.widgets.PostListButtonType
 
-class PostListItemUiState(
-    val data: PostListItemUiStateData,
-    val actions: List<PostListItemAction>,
-    val onSelected: () -> Unit
-)
+sealed class PostListItemType {
+    // TODO: Can we find a better name for this now that it's a PostListItemType?
+    class PostListItemUiState(
+        val data: PostListItemUiStateData,
+        val actions: List<PostListItemAction>,
+        val onSelected: () -> Unit
+    ) : PostListItemType()
+
+    class LoadingItem(val localOrRemoteId: LocalOrRemoteId) : PostListItemType()
+    object EndListIndicatorItem : PostListItemType()
+}
 
 data class PostListItemUiStateData(
-    val remotePostId: Long,
-    val localPostId: Int,
+    val remotePostId: RemotePostId,
+    val localPostId: LocalPostId,
     val title: UiString?,
     val excerpt: UiString?,
     val imageUrl: String?,
