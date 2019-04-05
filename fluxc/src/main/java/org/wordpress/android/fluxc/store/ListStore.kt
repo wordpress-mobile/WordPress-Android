@@ -26,8 +26,8 @@ import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.ListState.FETCHED
 import org.wordpress.android.fluxc.model.list.PagedListFactory
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
-import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataSource
-import org.wordpress.android.fluxc.model.list.datastore.ListItemDataSourceInterface
+import org.wordpress.android.fluxc.model.list.datasource.InternalPagedListDataSource
+import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange

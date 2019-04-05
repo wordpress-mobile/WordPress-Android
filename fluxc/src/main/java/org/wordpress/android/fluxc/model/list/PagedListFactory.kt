@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.model.list
 
 import android.arch.paging.DataSource
 import android.arch.paging.PositionalDataSource
-import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataSource
+import org.wordpress.android.fluxc.model.list.datasource.InternalPagedListDataSource
 
 /**
  * A [DataSource.Factory] instance for `ListStore` lists.

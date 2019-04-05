@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.model.list.datastore
+package org.wordpress.android.fluxc.model.list.datasource
 
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.list.ListDescriptor
