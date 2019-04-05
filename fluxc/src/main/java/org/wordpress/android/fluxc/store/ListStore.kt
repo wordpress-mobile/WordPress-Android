@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store
 
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedList.BoundaryCallback
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_ALL_LISTS
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_EXPIRED_LISTS
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
@@ -23,9 +25,9 @@ import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.ListState.FETCHED
 import org.wordpress.android.fluxc.model.list.PagedListFactory
-import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
-import org.wordpress.android.fluxc.model.list.datastore.ListDataStoreInterface
+import org.wordpress.android.fluxc.model.list.datastore.InternalPagedListDataStore
+import org.wordpress.android.fluxc.model.list.datastore.ListItemDataStoreInterface
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
@@ -70,60 +72,86 @@ class ListStore @Inject constructor(
      * This is the function that'll be used to consume lists.
      *
      * @param listDescriptor Describes which list will be consumed
-     * @param dataStore Describes how to take certain actions such as fetching list for the item type [T].
+     * @param dataStore Describes how to take certain actions such as fetching a list for the item type [LIST_ITEM].
      * @param lifecycle The lifecycle of the client that'll be consuming this list. It's used to make sure everything
      * is cleaned up properly once the client is destroyed.
-     * @param transform A transform function from the actual item type [T], to the resulting item type [R]. In many
-     * cases there are a lot of expensive calculations that needs to be made before an item can be used. This function
-     * provides a way to do that during the pagination step in a background thread, so the clients won't need to
-     * worry about these expensive operations.
      *
      * @return A [PagedListWrapper] that provides all the necessary information to consume a list such as its data,
      * whether the first page is being fetched, whether there are any errors etc. in `LiveData` format.
      */
-    fun <T, R> getList(
-        listDescriptor: ListDescriptor,
-        dataStore: ListDataStoreInterface<T>,
-        lifecycle: Lifecycle,
-        transform: (T) -> R
-    ): PagedListWrapper<R> {
-        // Helper functions
-        val getList = { descriptor: ListDescriptor -> getListItems(descriptor) }
-        val isListFullyFetched = { descriptor: ListDescriptor -> getListState(descriptor) == FETCHED }
-        val fetchFirstPage = {
-            handleFetchList(listDescriptor, false) { offset ->
-                dataStore.fetchList(listDescriptor, offset)
-            }
-        }
-        val isEmpty = { getListItemsCount(listDescriptor) == 0L }
-
-        // Create the PagedList
-        val factory = PagedListFactory(dataStore, listDescriptor, getList, isListFullyFetched, transform)
-        val callback = object : BoundaryCallback<PagedListItemType<R>>() {
-            override fun onItemAtEndLoaded(itemAtEnd: PagedListItemType<R>) {
-                // Load more items if we are near the end of list
-                handleFetchList(listDescriptor, true) { offset ->
-                    dataStore.fetchList(listDescriptor, offset)
+    fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> getList(
+        listDescriptor: LIST_DESCRIPTOR,
+        dataStore: ListItemDataStoreInterface<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>,
+        lifecycle: Lifecycle
+    ): PagedListWrapper<LIST_ITEM> {
+        val factory = createPagedListFactory(listDescriptor, dataStore)
+        val pagedListData = createPagedListLiveData(
+                listDescriptor = listDescriptor,
+                dataStore = dataStore,
+                pagedListFactory = factory
+        )
+        return PagedListWrapper(
+                data = pagedListData,
+                dispatcher = mDispatcher,
+                listDescriptor = listDescriptor,
+                lifecycle = lifecycle,
+                refresh = {
+                    handleFetchList(listDescriptor, loadMore = false) { offset ->
+                        dataStore.fetchList(listDescriptor, offset)
+                    }
+                },
+                invalidate = factory::invalidate,
+                isListEmpty = {
+                    getListItemsCount(listDescriptor) == 0L
                 }
-                super.onItemAtEndLoaded(itemAtEnd)
-            }
-        }
+        )
+    }
+
+    /**
+     * A helper function that creates a [PagedList] [LiveData] for the given [LIST_DESCRIPTOR], [dataStore] and the
+     * [PagedListFactory].
+     */
+    private fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> createPagedListLiveData(
+        listDescriptor: LIST_DESCRIPTOR,
+        dataStore: ListItemDataStoreInterface<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>,
+        pagedListFactory: PagedListFactory<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>
+    ): LiveData<PagedList<LIST_ITEM>> {
         val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
                 .setInitialLoadSizeHint(listDescriptor.config.initialLoadSize)
                 .setPageSize(listDescriptor.config.dbPageSize)
                 .build()
-        val listData = LivePagedListBuilder<Int, PagedListItemType<R>>(factory, pagedListConfig)
-                .setBoundaryCallback(callback).build()
-        return PagedListWrapper(
-                data = listData,
-                dispatcher = mDispatcher,
-                listDescriptor = listDescriptor,
-                lifecycle = lifecycle,
-                refresh = fetchFirstPage,
-                invalidate = factory::invalidate,
-                isListEmpty = isEmpty
-        )
+        val boundaryCallback = object : BoundaryCallback<LIST_ITEM>() {
+            override fun onItemAtEndLoaded(itemAtEnd: LIST_ITEM) {
+                // Load more items if we are near the end of list
+                handleFetchList(listDescriptor, loadMore = true) { offset ->
+                    dataStore.fetchList(listDescriptor, offset)
+                }
+                super.onItemAtEndLoaded(itemAtEnd)
+            }
+        }
+        return LivePagedListBuilder<Int, LIST_ITEM>(pagedListFactory, pagedListConfig)
+                .setBoundaryCallback(boundaryCallback).build()
+    }
+
+    /**
+     * A helper function that creates a [PagedListFactory] for the given [LIST_DESCRIPTOR] and [dataStore].
+     */
+    private fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> createPagedListFactory(
+        listDescriptor: LIST_DESCRIPTOR,
+        dataStore: ListItemDataStoreInterface<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>
+    ): PagedListFactory<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM> {
+        val getRemoteItemIds = { getListItems(listDescriptor).map { RemoteId(value = it) } }
+        val getIsListFullyFetched = { getListState(listDescriptor) == FETCHED }
+        return PagedListFactory(
+                createDataStore = {
+                    InternalPagedListDataStore(
+                            listDescriptor = listDescriptor,
+                            remoteItemIds = getRemoteItemIds(),
+                            isListFullyFetched = getIsListFullyFetched(),
+                            itemDataStore = dataStore
+                    )
+                })
     }
 
     /**
