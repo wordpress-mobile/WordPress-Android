@@ -31,13 +31,13 @@ class PostListItemViewHolder(
     private val config: PostViewHolderConfig,
     private val uiHelpers: UiHelpers
 ) : RecyclerView.ViewHolder(LayoutInflater.from(parentView.context).inflate(layout, parentView, false)) {
-    private val ivImageFeatured: ImageView = itemView.findViewById(R.id.image_featured)
-    private val tvTitle: WPTextView = itemView.findViewById(R.id.title)
-    private val tvExcerpt: WPTextView = itemView.findViewById(R.id.excerpt)
-    private val tvDateAndAuthor: WPTextView = itemView.findViewById(R.id.date_and_author)
-    private val tvStatusLabels: WPTextView = itemView.findViewById(R.id.status_labels)
-    private val pbProgress: ProgressBar = itemView.findViewById(R.id.progress)
-    private val flDisabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
+    private val featuredImageView: ImageView = itemView.findViewById(R.id.image_featured)
+    private val titleTextView: WPTextView = itemView.findViewById(R.id.title)
+    private val excerptTextView: WPTextView = itemView.findViewById(R.id.excerpt)
+    private val dateAndAuthorTextView: WPTextView = itemView.findViewById(R.id.date_and_author)
+    private val statusesLabelTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
+    private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
+    private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
     private val actionButtons: List<PostListButton> = listOf(
             itemView.findViewById(R.id.btn_primary),
             itemView.findViewById(R.id.btn_secondary),
@@ -46,16 +46,21 @@ class PostListItemViewHolder(
 
     fun onBind(item: PostListItemUiState) {
         showFeaturedImage(item.data.imageUrl)
-        setTextOrHide(tvTitle, item.data.title)
-        setTextOrHide(tvExcerpt, item.data.excerpt)
-        setTextOrHide(tvDateAndAuthor, item.data.dateAndAuthor)
-        uiHelpers.updateVisibility(tvStatusLabels, item.data.statusLabels.isNotEmpty())
-        updateStatusLabels(tvStatusLabels, item.data.statusLabels, item.data.statusLabelsDelimiter)
-        if (item.data.statusLabelsColor != null) {
-            tvStatusLabels.setTextColor(ContextCompat.getColor(tvStatusLabels.context, item.data.statusLabelsColor))
+        uiHelpers.setTextOrHide(titleTextView, item.data.title)
+        uiHelpers.setTextOrHide(excerptTextView, item.data.excerpt)
+        uiHelpers.setTextOrHide(dateAndAuthorTextView, item.data.dateAndAuthor)
+        uiHelpers.updateVisibility(statusesLabelTextView, item.data.statuses.isNotEmpty())
+        updateStatusesLabel(statusesLabelTextView, item.data.statuses, item.data.statusesDelimiter)
+        if (item.data.statusesColor != null) {
+            statusesLabelTextView.setTextColor(
+                    ContextCompat.getColor(
+                            statusesLabelTextView.context,
+                            item.data.statusesColor
+                    )
+            )
         }
-        uiHelpers.updateVisibility(pbProgress, item.data.showProgress)
-        uiHelpers.updateVisibility(flDisabledOverlay, item.data.showOverlay)
+        uiHelpers.updateVisibility(uploadProgressBar, item.data.showProgress)
+        uiHelpers.updateVisibility(disabledOverlay, item.data.showOverlay)
         itemView.setOnClickListener { item.onSelected.invoke() }
 
         actionButtons.forEachIndexed { index, button ->
@@ -63,9 +68,9 @@ class PostListItemViewHolder(
         }
     }
 
-    private fun updateStatusLabels(view: WPTextView, statusLabels: List<UiString>, delimiter: UiString) {
+    private fun updateStatusesLabel(view: WPTextView, statuses: List<UiString>, delimiter: UiString) {
         val separator = uiHelpers.getTextOfUiString(view.context, delimiter)
-        view.text = statusLabels.joinToString(separator) { uiHelpers.getTextOfUiString(view.context, it) }
+        view.text = statuses.joinToString(separator) { uiHelpers.getTextOfUiString(view.context, it) }
     }
 
     private fun updateMenuItem(postListButton: PostListButton, action: PostListItemAction?) {
@@ -107,32 +112,25 @@ class PostListItemViewHolder(
     private fun showFeaturedImage(imageUrl: String?) {
         // TODO move part of this logic to VM
         if (imageUrl == null) {
-            ivImageFeatured.visibility = View.GONE
-            config.imageManager.cancelRequestAndClearImageView(ivImageFeatured)
+            featuredImageView.visibility = View.GONE
+            config.imageManager.cancelRequestAndClearImageView(featuredImageView)
         } else if (imageUrl.startsWith("http")) {
             val photonUrl = ReaderUtils.getResizedImageUrl(
                     imageUrl, config.photonWidth, config.photonHeight, !config.isPhotonCapable
             )
-            ivImageFeatured.visibility = View.VISIBLE
-            config.imageManager.load(ivImageFeatured, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
+            featuredImageView.visibility = View.VISIBLE
+            config.imageManager.load(featuredImageView, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
         } else {
             val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(
-                    ivImageFeatured.context, imageUrl, config.photonWidth
+                    featuredImageView.context, imageUrl, config.photonWidth
             )
             if (bmp != null) {
-                ivImageFeatured.visibility = View.VISIBLE
-                config.imageManager.load(ivImageFeatured, bmp)
+                featuredImageView.visibility = View.VISIBLE
+                config.imageManager.load(featuredImageView, bmp)
             } else {
-                ivImageFeatured.visibility = View.GONE
-                config.imageManager.cancelRequestAndClearImageView(ivImageFeatured)
+                featuredImageView.visibility = View.GONE
+                config.imageManager.cancelRequestAndClearImageView(featuredImageView)
             }
-        }
-    }
-
-    private fun setTextOrHide(view: WPTextView, text: UiString?) {
-        uiHelpers.updateVisibility(view, text != null)
-        text?.let {
-            view.text = uiHelpers.getTextOfUiString(itemView.context, it)
         }
     }
 }

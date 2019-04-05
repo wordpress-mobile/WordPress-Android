@@ -66,21 +66,21 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         excerpt = getExcerpt(post = post),
                         imageUrl = featuredImageUrl,
                         dateAndAuthor = UiStringText(text = formattedDate), // TODO Get name of the author
-                        statusLabels = getStatusLabels(
+                        statuses = getStatuses(
                                 postStatus = postStatus,
                                 isLocalDraft = post.isLocalDraft,
                                 isLocallyChanged = post.isLocallyChanged,
                                 uploadStatus = uploadStatus,
                                 hasUnhandledConflicts = unhandledConflicts
                         ),
-                        statusLabelsColor = getStatusLabelsColor(
+                        statusesColor = getStatusesColor(
                                 postStatus = postStatus,
                                 isLocalDraft = post.isLocalDraft,
                                 isLocallyChanged = post.isLocallyChanged,
                                 uploadStatus = uploadStatus,
                                 hasUnhandledConflicts = unhandledConflicts
                         ),
-                        statusLabelsDelimiter = UiStringRes(R.string.multiple_status_label_delimiter),
+                        statusesDelimiter = UiStringRes(R.string.multiple_status_label_delimiter),
                         showProgress = shouldShowProgress(uploadStatus = uploadStatus),
                         showOverlay = shouldShowOverlay(uploadStatus = uploadStatus)
                 ),
@@ -117,7 +117,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)
     }
 
-    private fun getStatusLabels(
+    private fun getStatuses(
         postStatus: PostStatus,
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
@@ -175,7 +175,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         }
     }
 
-    @ColorRes private fun getStatusLabelsColor(
+    @ColorRes private fun getStatusesColor(
         postStatus: PostStatus,
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
