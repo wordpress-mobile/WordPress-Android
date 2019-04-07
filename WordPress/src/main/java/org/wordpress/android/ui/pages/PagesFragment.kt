@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v7.widget.SearchView
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -23,6 +24,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import de.greenrobot.event.EventBus
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.greenrobot.eventbus.Subscribe
@@ -150,6 +152,15 @@ class PagesFragment : Fragment() {
 
         newPageButton.setOnClickListener {
             viewModel.onNewPageButtonTapped()
+        }
+
+        newPageButton.setOnLongClickListener {
+            if (newPageButton.isHapticFeedbackEnabled) {
+                newPageButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
+
+            Toast.makeText(newPageButton.context, R.string.pages_empty_list_button, Toast.LENGTH_SHORT).show()
+            return@setOnLongClickListener true
         }
 
         pagesPager.addOnPageChangeListener(object : OnPageChangeListener {
