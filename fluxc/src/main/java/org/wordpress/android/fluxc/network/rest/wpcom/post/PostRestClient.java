@@ -236,7 +236,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         deletedPost.setId(post.getId());
                         deletedPost.setLocalSiteId(post.getLocalSiteId());
 
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        RemotePostPayload payload = new RemotePostPayload(deletedPost, site);
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 },

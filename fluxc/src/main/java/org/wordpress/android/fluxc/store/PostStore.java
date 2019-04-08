@@ -682,11 +682,21 @@ public class PostStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ListItemsRemovedPayload listActionPayload = new ListItemsRemovedPayload(
-                    PostListDescriptor.calculateTypeIdentifier(payload.post.getLocalSiteId()),
-                    Collections.singletonList(payload.post.getRemotePostId()));
-            mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(listActionPayload));
-            PostSqlUtils.deletePost(payload.post);
+            // TODO: Let ListStore know that the list needs to be refreshed
+//            ListItemsRemovedPayload listActionPayload = new ListItemsRemovedPayload(
+//                    PostListDescriptor.calculateTypeIdentifier(payload.post.getLocalSiteId()),
+//                    Collections.singletonList(payload.post.getRemotePostId()));
+//            mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(listActionPayload));
+            PostModel postToSave = payload.post;
+            if (!payload.site.isUsingWpComRestApi()) {
+                /*
+                 * XML-RPC delete request doesn't return the updated post, so we need to manually change the status
+                 * and then fetch the post from remote to ensure post is properly synced.
+                 */
+                postToSave.setStatus(PostStatus.TRASHED.toString());
+                mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+            }
+            PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postToSave);
         }
 
         emitChange(event);
@@ -733,6 +743,9 @@ public class PostStore extends Store {
                 updatePost(payload.post, false);
             }
             emitChange(onPostUploaded);
+            return;
+        } else if (payload.origin == PostAction.DELETE_POST) {
+            handleDeletePostCompleted(payload);
             return;
         } else if (payload.origin == PostAction.RESTORE_POST) {
             handleRestorePostCompleted(payload, true);
