@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
 import android.support.v4.app.FragmentActivity
-import android.support.v7.content.res.AppCompatResources
 import android.text.TextUtils
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
@@ -245,7 +244,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         return if (placeholderImageRes == null) {
             this
         } else {
-            this.placeholder(loadDrawable(context, placeholderImageRes))
+            this.placeholder(placeholderImageRes)
         }
     }
 
@@ -254,7 +253,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         return if (errorImageRes == null) {
             this
         } else {
-            this.error(loadDrawable(context, errorImageRes))
+            this.error(errorImageRes)
         }
     }
 
@@ -268,12 +267,6 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
             this.signature(ObjectKey(signature))
         }
     }
-
-    /**
-     * Load drawable using AppCompatResource to prevent the app from crashing when loading vector drawables on api < 21.
-     * May be removed when https://github.com/bumptech/glide/issues/3086 is fixed.
-     */
-    fun loadDrawable(context: Context, imgRes: Int) = AppCompatResources.getDrawable(context, imgRes)
 
     private fun GlideRequest<Drawable>.addThumbnail(
         context: Context,
