@@ -11,6 +11,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -18,6 +19,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.TEST_SCOPE
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListState
@@ -34,6 +36,7 @@ import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 // TODO: It turns out Mockito internally uses `times(1)` when that parameter is missing. Remove this in a subsequent PR
 private fun onlyOnce() = times(1)
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PagedListWrapperTest {
     @get:Rule
@@ -52,7 +55,8 @@ class PagedListWrapperTest {
             lifecycle = lifecycle,
             refresh = mockRefresh,
             invalidate = mockInvalidate,
-            isListEmpty = mockIsListEmpty
+            isListEmpty = mockIsListEmpty,
+            parentCoroutineContext = TEST_SCOPE.coroutineContext
     )
 
     @Test
