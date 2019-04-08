@@ -853,8 +853,8 @@ public class PostStore extends Store {
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
 
-        mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
-                new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(postModel.getLocalSiteId()))));
+        mDispatcher.dispatch(ListActionBuilder
+                .newListRequiresRefreshAction(PostListDescriptor.calculateTypeIdentifier(postModel.getLocalSiteId())));
     }
 
     public void setLocalRevision(RevisionModel model, SiteModel site, PostModel post) {
