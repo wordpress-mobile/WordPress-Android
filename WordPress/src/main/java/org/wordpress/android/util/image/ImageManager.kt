@@ -67,7 +67,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         GlideApp.with(context)
                 .load(imgUrl)
                 .addFallback(imageType)
-                .addPlaceholder(context, imageType)
+                .addPlaceholder(imageType)
                 .applyScaleType(scaleType)
                 .into(imageView)
                 .clearOnDetach()
@@ -90,7 +90,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         GlideApp.with(context)
                 .load(imgUrl)
                 .addFallback(imageType)
-                .addPlaceholder(context, imageType)
+                .addPlaceholder(imageType)
                 .circleCrop()
                 .attachRequestListener(requestListener)
                 .addSignature(version)
@@ -118,7 +118,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         GlideApp.with(context)
                 .load(imgUrl)
                 .addFallback(imageType)
-                .addPlaceholder(context, imageType)
+                .addPlaceholder(imageType)
                 .addThumbnail(context, thumbnailUrl, requestListener)
                 .attachRequestListener(requestListener)
                 .into(imageView)
@@ -180,7 +180,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         GlideApp.with(context)
                 .load(imgUrl)
                 .addFallback(imageType)
-                .addPlaceholder(context, imageType)
+                .addPlaceholder(imageType)
                 .into(viewTarget)
                 .clearOnDetach()
     }
@@ -239,7 +239,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         }
     }
 
-    private fun <T : Any> GlideRequest<T>.addPlaceholder(context: Context, imageType: ImageType): GlideRequest<T> {
+    private fun <T : Any> GlideRequest<T>.addPlaceholder(imageType: ImageType): GlideRequest<T> {
         val placeholderImageRes = placeholderManager.getPlaceholderResource(imageType)
         return if (placeholderImageRes == null) {
             this
