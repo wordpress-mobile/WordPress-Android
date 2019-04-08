@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 
 // TODO: It turns out Mockito internally uses `times(1)` when that parameter is missing. Remove this in a subsequent PR
@@ -160,6 +161,12 @@ class PagedListWrapperTest {
         verify(mockIsListEmpty, times(2)).invoke()
     }
 
+    @Test
+    fun `onListRequiresRefresh invokes refresh`() {
+        triggerOnListRequiresRefresh()
+        verify(mockRefresh).invoke()
+    }
+
     private fun testListStateIsPropagatedCorrectly(listState: ListState, listError: ListError? = null) {
         val pagedListWrapper = createPagedListWrapper()
         val isFetchingFirstPageObserver = mock<Observer<Boolean>>()
@@ -206,5 +213,12 @@ class PagedListWrapperTest {
                 error = error
         )
         pagedListWrapper.onListItemsChanged(event)
+    }
+
+    private fun triggerOnListRequiresRefresh() {
+        val pagedListWrapper = createPagedListWrapper()
+        whenever(mockListDescriptor.typeIdentifier).thenReturn(ListDescriptorTypeIdentifier(0))
+        val event = OnListRequiresRefresh(type = mockListDescriptor.typeIdentifier)
+        pagedListWrapper.onListRequiresRefresh(event)
     }
 }

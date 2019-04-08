@@ -399,7 +399,7 @@ class ListStore @Inject constructor(
      * @property type [ListDescriptorTypeIdentifier] which will tell [ListStore] and the clients which
      * [ListDescriptor]s requires a refresh.
      */
-    class OnListRequiresRefresh(val type: ListDescriptorTypeIdentifier): Store.OnChanged<ListError>()
+    class OnListRequiresRefresh(val type: ListDescriptorTypeIdentifier) : Store.OnChanged<ListError>()
 
     /**
      * This is the payload for [ListAction.LIST_ITEMS_CHANGED].
