@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 import kotlin.coroutines.CoroutineContext
 
@@ -139,6 +140,18 @@ class PagedListWrapper<T>(
         }
         invalidateData()
         updateIsEmpty()
+    }
+
+    /**
+     * Handles the [OnListRequiresRefresh] `ListStore` event. It'll refresh the list if the type of this list matches
+     * the type of list that requires a refresh.
+     */
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onListRequiresRefresh(event: OnListRequiresRefresh) {
+        if (listDescriptor.typeIdentifier == event.type) {
+            fetchFirstPage()
+        }
     }
 
     /**
