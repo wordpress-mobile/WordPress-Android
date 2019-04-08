@@ -217,7 +217,8 @@
                 android:layout_width="wrap_content"
                 android:minHeight="@dimen/reader_button_minimum_height"
                 android:orientation="horizontal"
-                android:paddingEnd="@dimen/margin_medium" >
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium">
 
                 <ImageView
                     android:id="@+id/image_visit_icon"
