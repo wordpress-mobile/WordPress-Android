@@ -73,7 +73,7 @@
     <View
         android:id="@+id/very_low_box"
         style="@style/StatsActivityBox"
-        android:background="@color/grey_lighten_20"
+        android:background="@color/neutral_100"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/low_box"
         app:layout_constraintHorizontal_bias="0.5"
@@ -83,7 +83,7 @@
     <View
         android:id="@+id/low_box"
         style="@style/StatsActivityBox"
-        android:background="@color/stats_low_activity"
+        android:background="@color/stats_activity_low"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/medium_box"
         app:layout_constraintHorizontal_bias="0.5"
@@ -93,7 +93,7 @@
     <View
         android:id="@+id/medium_box"
         style="@style/StatsActivityBox"
-        android:background="@color/stats_medium_activity"
+        android:background="@color/stats_activity_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/high_box"
         app:layout_constraintHorizontal_bias="0.5"
@@ -103,7 +103,7 @@
     <View
         android:id="@+id/high_box"
         style="@style/StatsActivityBox"
-        android:background="@color/stats_high_activity"
+        android:background="@color/stats_activity_high"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/very_high_box"
         app:layout_constraintHorizontal_bias="0.5"
@@ -113,7 +113,7 @@
     <View
         android:id="@+id/very_high_box"
         style="@style/StatsActivityBox"
-        android:background="@color/grey_dark"
+        android:background="@color/neutral_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/more_posts_label"
         app:layout_constraintHorizontal_bias="0.5"

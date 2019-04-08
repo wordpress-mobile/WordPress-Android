@@ -25,7 +25,7 @@
             android:padding="@dimen/start_over_icon_padding"
             android:contentDescription="@null"
             android:layout_gravity="center_vertical"
-            android:tint="@color/grey_darken_30"
+            android:tint="@color/neutral_600"
             android:layout_marginEnd="@dimen/start_over_icon_margin_right"/>
 
         <TextView

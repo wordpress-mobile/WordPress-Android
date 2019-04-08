@@ -8,7 +8,7 @@
         android:id="@+id/layout_post_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:descendantFocusability="blocksDescendants">
 
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
@@ -113,7 +113,7 @@
         android:drawablePadding="@dimen/margin_small"
         android:drawableTop="@drawable/ic_notice_48dp"
         android:gravity="center"
-        android:textColor="@color/grey"
+        android:textColor="@color/neutral_300"
         android:textSize="@dimen/text_sz_extra_large"
         android:visibility="gone"
         tools:text="Error message"

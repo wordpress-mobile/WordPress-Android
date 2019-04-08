@@ -23,12 +23,12 @@ class DayViewHolder(parent: ViewGroup) : ViewHolder(
 ) {
     fun bind(box: Box) {
         val color = when (box) {
-            INVISIBLE -> R.color.transparent
-            VERY_LOW -> R.color.grey_lighten_20
-            LOW -> R.color.stats_low_activity
-            MEDIUM -> R.color.stats_medium_activity
-            HIGH -> R.color.stats_high_activity
-            VERY_HIGH -> R.color.grey_dark
+            INVISIBLE -> android.R.color.transparent
+            VERY_LOW -> R.color.neutral_100
+            LOW -> R.color.stats_activity_low
+            MEDIUM -> R.color.stats_activity_medium
+            HIGH -> R.color.stats_activity_high
+            VERY_HIGH -> R.color.neutral_700
         }
         itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, color))
     }

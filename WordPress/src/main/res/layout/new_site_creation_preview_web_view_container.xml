@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@android:color/white"
     app:cardElevation="@dimen/card_elevation">
 
     <LinearLayout
@@ -16,14 +16,14 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@android:color/white"
             android:elevation="@dimen/card_elevation">
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/wp_grey_lighten_30_rounded_bg"
+                android:background="@drawable/bg_rectangle_neutral_50_radius_margin_extra_large"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large"
@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/wp_grey_darken_20"
+                    android:textColor="@color/neutral_500"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="example.wordpress.com"/>
             </FrameLayout>
@@ -51,7 +51,7 @@
             android:id="@+id/sitePreviewWebViewShimmerLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/wp_grey_lighten_30">
+            android:background="@color/neutral_50">
 
             <include layout="@layout/new_site_creation_preview_skeleton"/>
         </com.facebook.shimmer.ShimmerFrameLayout>

@@ -96,8 +96,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         setHasStableIds(false);
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
-        mColorRead = context.getResources().getColor(R.color.white);
-        mColorUnread = context.getResources().getColor(R.color.grey_light);
+        mColorRead = context.getResources().getColor(android.R.color.white);
+        mColorUnread = context.getResources().getColor(R.color.background_notification_unread);
         mTextIndentSize = context.getResources().getDimensionPixelSize(R.dimen.notifications_text_indent_sz);
     }
 
@@ -285,11 +285,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         String noticonCharacter = note.getNoticonCharacter();
         noteViewHolder.mNoteIcon.setText(noticonCharacter);
         if (commentStatus == CommentStatus.UNAPPROVED) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.shape_oval_orange);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_white);
         } else if (isUnread) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.shape_oval_blue_white_stroke);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_400_stroke_notification_unread);
         } else {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.shape_oval_grey_lighten_10);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_200_stroke_white);
         }
 
         if (isUnread) {

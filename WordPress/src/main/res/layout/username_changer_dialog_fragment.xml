@@ -17,7 +17,7 @@
     </TextView>
 
     <RelativeLayout
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:paddingEnd="@dimen/margin_extra_large"
@@ -31,13 +31,13 @@
             android:layout_width="wrap_content"
             android:paddingBottom="@dimen/margin_extra_large"
             android:paddingTop="@dimen/margin_extra_large"
-            android:tint="@color/grey_lighten_10"
+            android:tint="@color/neutral_200"
             android:src="@drawable/ic_search_white_24dp" >
         </ImageView>
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/username"
-            android:background="@color/white"
+            android:background="@android:color/white"
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:hint="@string/username_changer_hint"
             android:layout_height="wrap_content"
@@ -46,13 +46,13 @@
             android:layout_width="match_parent"
             android:paddingBottom="@dimen/margin_extra_large"
             android:paddingTop="@dimen/margin_extra_large"
-            android:textColorHint="@color/grey_lighten_10"
+            android:textColorHint="@color/neutral_200"
             app:theme="@style/LoginTheme.EditText" >
         </android.support.design.widget.TextInputEditText>
 
         <ProgressBar
             android:id="@+id/progress"
-            android:background="@color/white"
+            android:background="@android:color/white"
             android:layout_centerVertical="true"
             android:layout_height="@dimen/progress_spinner_small"
             android:layout_width="@dimen/progress_spinner_small"
@@ -64,14 +64,14 @@
     </RelativeLayout>
 
     <View
-        android:background="@color/grey_lighten_30"
+        android:background="@color/neutral_0"
         android:layout_height="@dimen/list_divider_height"
         android:layout_width="match_parent" >
     </View>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/suggestions"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:layout_height="fill_parent"
         android:layout_width="match_parent"
         android:scrollbars="vertical" >

@@ -108,7 +108,7 @@
         priority="6"
         summary="Attribute unused on older versions"
         explanation="This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the `minSdkVersion` attribute).&#xA;&#xA;This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.&#xA;&#xA;Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new `&lt;tag>` element in layouts introduced in API 21."
-        errorLine1="                android:drawableTint=&quot;@color/blue_wordpress&quot;"
+        errorLine1="                android:drawableTint=&quot;@color/primary_500&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location
@@ -125,7 +125,7 @@
         priority="6"
         summary="Attribute unused on older versions"
         explanation="This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the `minSdkVersion` attribute).&#xA;&#xA;This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.&#xA;&#xA;Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new `&lt;tag>` element in layouts introduced in API 21."
-        errorLine1="        android:drawableTint=&quot;@color/grey_text_min&quot;"
+        errorLine1="        android:drawableTint=&quot;@color/neutral&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location
@@ -2762,12 +2762,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/nux_background` with a theme that also paints a background (inferred theme is `@style/WordPress_TransparentToolbarTheme`)"
+        message="Possible overdraw: Root element paints background `@color/primary` with a theme that also paints a background (inferred theme is `@style/WordPress_TransparentToolbarTheme`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/nux_background&quot;"
+        errorLine1="    android:background=&quot;@color/primary&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/about_activity.xml"
@@ -2794,12 +2794,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="              android:background=&quot;@color/white&quot;"
+        errorLine1="              android:background=&quot;@android:color/white&quot;"
         errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/comment_action_footer.xml"
@@ -2810,12 +2810,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_light` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_light&quot;>"
+        errorLine1="    android:background=&quot;@color/neutral_0&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/comment_detail_fragment.xml"
@@ -2826,12 +2826,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/CalypsoTheme`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/CalypsoTheme`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/comment_edit_activity.xml"
@@ -2874,12 +2874,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_3` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/snackbar_background` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_3&quot;"
+        errorLine1="    android:background=&quot;@color/snackbar_background&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/dialog_snackbar.xml"
@@ -2890,12 +2890,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;>"
+        errorLine1="    android:background=&quot;@android:color/white&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/edit_post_preview_fragment.xml"
@@ -2986,12 +2986,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../libs/editor/WordPressEditor/src/main/res/layout/fragment_aztec_editor.xml"
@@ -3018,12 +3018,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/gutenberg_warning_dialog.xml"
@@ -3050,12 +3050,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/history_detail_fragment.xml"
@@ -3098,12 +3098,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/blue_medium` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/primary_400` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/blue_medium&quot;"
+        errorLine1="    android:background=&quot;@color/primary_400&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout-land/login_intro_template_view.xml"
@@ -3114,12 +3114,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/blue_medium` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/primary_400` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/blue_medium&quot;"
+        errorLine1="    android:background=&quot;@color/primary_400&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout-sw600dp-land/login_intro_template_view.xml"
@@ -3146,12 +3146,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;>"
+        errorLine1="    android:background=&quot;@android:color/white&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/news_card.xml"
@@ -3162,12 +3162,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/note_block_footer.xml"
@@ -3178,12 +3178,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;>"
+        errorLine1="    android:background=&quot;@android:color/white&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/note_block_user.xml"
@@ -3194,28 +3194,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/default_background` with a theme that also paints a background (inferred theme is `@style/Calypso_NoActionBar_Preferences`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/default_background&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../WordPress/src/main/res/layout/notifications_settings_activity.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        category="Performance"
-        priority="3"
-        summary="Overdraw: Painting regions more than once"
-        explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/people_invite_fragment.xml"
@@ -3226,12 +3210,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/person_detail_fragment.xml"
@@ -3242,12 +3226,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="                android:background=&quot;@color/white&quot;>"
+        errorLine1="                android:background=&quot;@android:color/white&quot;>"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/photo_picker_fragment.xml"
@@ -3274,12 +3258,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/Calypso_NoActionBar`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/Calypso_NoActionBar`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;>"
+        errorLine1="    android:background=&quot;@android:color/white&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/post_preview_activity.xml"
@@ -3290,12 +3274,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/promo_dialog.xml"
@@ -3370,12 +3354,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/Calypso_NoActionBar`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/Calypso_NoActionBar`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;>"
+        errorLine1="    android:background=&quot;@android:color/white&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/reader_activity_subs.xml"
@@ -3386,12 +3370,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_dark` with a theme that also paints a background (inferred theme is `@style/ReaderMediaViewerTheme`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_700` with a theme that also paints a background (inferred theme is `@style/ReaderMediaViewerTheme`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_dark&quot;>"
+        errorLine1="    android:background=&quot;@color/neutral_700&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/reader_activity_video_player.xml"
@@ -3450,12 +3434,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/reader_include_comment_box.xml"
@@ -3466,12 +3450,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/reader_include_post_detail_footer.xml"
@@ -3498,12 +3482,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/reader_listitem_comment.xml"
@@ -3530,12 +3514,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/reader_listitem_user.xml"
@@ -3562,12 +3546,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="             android:background=&quot;@color/white&quot;"
+        errorLine1="             android:background=&quot;@android:color/white&quot;"
         errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/reader_site_search_result.xml"
@@ -3594,12 +3578,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_lighten_30` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_lighten_30&quot;>"
+        errorLine1="    android:background=&quot;@color/neutral_0&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/related_posts_dialog.xml"
@@ -3610,12 +3594,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/CalypsoTheme`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/CalypsoTheme`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;>"
+        errorLine1="    android:background=&quot;@android:color/white&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/select_categories.xml"
@@ -3626,12 +3610,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_lighten_30` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_lighten_30&quot;"
+        errorLine1="    android:background=&quot;@color/neutral_0&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../libs/login/WordPressLoginFlow/src/main/res/layout-land/signup_bottom_sheet_dialog.xml"
@@ -3642,12 +3626,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_lighten_30` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_lighten_30&quot;"
+        errorLine1="    android:background=&quot;@color/neutral_0&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../libs/login/WordPressLoginFlow/src/main/res/layout/signup_bottom_sheet_dialog.xml"
@@ -3658,12 +3642,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_lighten_30` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_lighten_30&quot;"
+        errorLine1="    android:background=&quot;@color/neutral_0&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/site_creation_domain_header.xml"
@@ -3674,12 +3658,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;>"
+        errorLine1="    android:background=&quot;@android:color/white&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/site_creation_domain_input.xml"
@@ -3690,12 +3674,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/site_creation_domain_screen.xml"
@@ -3706,12 +3690,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_lighten_30` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_lighten_30&quot;>"
+        errorLine1="    android:background=&quot;@color/neutral_0&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/site_creation_form_screen.xml"
@@ -3738,12 +3722,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_lighten_30` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_lighten_30&quot;>"
+        errorLine1="    android:background=&quot;@color/neutral_0&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/site_settings_tag_detail_fragment.xml"
@@ -3770,12 +3754,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_lighten_30` with a theme that also paints a background (inferred theme is `@style/CalypsoTheme`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/CalypsoTheme`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_lighten_30&quot;>"
+        errorLine1="    android:background=&quot;@color/neutral_0&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/stats_activity_view_all.xml"
@@ -3786,12 +3770,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_lighten_30` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_lighten_30&quot; />"
+        errorLine1="    android:background=&quot;@color/neutral_0&quot; />"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/stats_insights_header_line.xml"
@@ -3802,12 +3786,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/grey_lighten_30` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/grey_lighten_30&quot; />"
+        errorLine1="    android:background=&quot;@color/neutral_0&quot; />"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/stats_vertical_line.xml"
@@ -3834,12 +3818,12 @@
     <issue
         id="Overdraw"
         severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/blue_wordpress` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
+        message="Possible overdraw: Root element paints background `@color/primary_500` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
         category="Performance"
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/blue_wordpress&quot;"
+        errorLine1="    android:background=&quot;@color/primary_500&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/toolbar_login.xml"

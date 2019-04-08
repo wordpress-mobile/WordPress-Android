@@ -154,9 +154,9 @@ public class PostListButton extends LinearLayout {
     int getTextColorResId(int buttonType) {
         switch (buttonType) {
             case BUTTON_RETRY:
-                return R.color.alert_red;
+                return R.color.error_500;
             default:
-                return R.color.blue_wordpress;
+                return R.color.primary_500;
         }
     }
 }

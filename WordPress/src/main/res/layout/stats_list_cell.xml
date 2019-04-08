@@ -28,7 +28,7 @@
             android:visibility="gone"
             android:contentDescription="@string/open_external_link_desc"
             android:src="@drawable/ic_external_white_24dp"
-            android:tint="@color/blue_wordpress" />
+            android:tint="@color/primary_500" />
 
         <ImageView
             android:id="@+id/stats_list_cell_chevron"
@@ -39,7 +39,7 @@
             android:importantForAccessibility="yes"
             android:contentDescription="@string/stats_list_cell_chevron_expand_desc"
             android:src="@drawable/ic_chevron_right_white_24dp"
-            android:tint="@color/blue_wordpress" />
+            android:tint="@color/primary_500" />
 
         <ImageView
             android:id="@+id/stats_list_cell_image"
@@ -56,7 +56,7 @@
             android:layout_height="@dimen/avatar_sz_small"
             android:layout_marginEnd="@dimen/margin_large"
             android:textSize="@dimen/text_sz_double_extra_large"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:importantForAccessibility="no"
             android:visibility="gone" />
 
@@ -70,9 +70,9 @@
             android:maxLines="3"
             android:gravity="center_vertical|start"
             android:autoLink="none"
-            android:textColor="@color/stats_text_color"
-            android:textColorLink="@color/stats_link_text_color"
-            android:textColorHighlight="@color/transparent"
+            android:textColor="@color/text"
+            android:textColorLink="@color/link_stats"
+            android:textColorHighlight="@android:color/transparent"
             android:textAlignment="viewStart"
             android:textSize="@dimen/text_sz_medium" />
 
@@ -88,7 +88,7 @@
             android:paddingEnd="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:src="@drawable/ic_ellipsis_white_24dp"
-            android:tint="@color/blue_wordpress" />
+            android:tint="@color/primary_500" />
 
         <LinearLayout
             android:id="@+id/stats_list_cell_total_container"
@@ -100,7 +100,7 @@
                 android:id="@+id/stats_list_cell_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/stats_text_color"
+                android:textColor="@color/text"
                 android:textSize="@dimen/text_sz_medium" />
         </LinearLayout>
     </LinearLayout>
@@ -111,7 +111,7 @@
         android:id="@+id/layout_child_container"
         android:orientation="vertical"
         android:visibility="gone"
-        android:background="@color/grey_light"
+        android:background="@color/neutral_0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
