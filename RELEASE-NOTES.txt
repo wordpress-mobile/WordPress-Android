@@ -1,6 +1,6 @@
 12.2
 -----
-
+* Fixed padding of some icons on devices running Android Lollipop
 12.1
 -----
 * Design improvements for the new site creation flow

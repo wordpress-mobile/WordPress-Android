@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<layer-list
-    xmlns:android="http://schemas.android.com/apk/res/android" >
-
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--The layer-list needs to be wrapped in selector otherwise padding
+    is being ignored on API 22 -->
     <item>
+        <layer-list
+            xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <shape
-            android:shape="oval" >
+            <item>
 
-            <solid
-                android:color="@color/grey" >
-            </solid>
+                <shape
+                    android:shape="oval">
 
-            <padding
-                android:bottom="8dp"
-                android:left="8dp"
-                android:right="8dp"
-                android:top="8dp" >
-            </padding>
+                    <solid
+                        android:color="@color/grey">
+                    </solid>
 
-        </shape>
+                    <padding
+                        android:bottom="8dp"
+                        android:left="8dp"
+                        android:right="8dp"
+                        android:top="8dp">
+                    </padding>
 
+                </shape>
+
+            </item>
+
+            <item
+                android:drawable="@drawable/ic_multiple_users_white_24dp">
+            </item>
+
+        </layer-list>
     </item>
-
-    <item
-        android:drawable="@drawable/ic_multiple_users_white_24dp" >
-    </item>
-
-</layer-list>
+</selector>
