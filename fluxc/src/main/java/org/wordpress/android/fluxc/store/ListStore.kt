@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.action.ListAction.FETCHED_LIST_ITEMS
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_CHANGED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
+import org.wordpress.android.fluxc.action.ListAction.LIST_REQUIRES_REFRESH
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_ALL_LISTS
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_EXPIRED_LISTS
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -63,6 +64,7 @@ class ListStore @Inject constructor(
             FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
             LIST_ITEMS_CHANGED -> handleListItemsChanged(action.payload as ListItemsChangedPayload)
             LIST_ITEMS_REMOVED -> handleListItemsRemoved(action.payload as ListItemsRemovedPayload)
+            LIST_REQUIRES_REFRESH -> handleListRequiresRefresh(action.payload as ListDescriptorTypeIdentifier)
             REMOVE_EXPIRED_LISTS -> handleRemoveExpiredLists(action.payload as RemoveExpiredListsPayload)
             REMOVE_ALL_LISTS -> handleRemoveAllLists()
         }
@@ -283,6 +285,16 @@ class ListStore @Inject constructor(
     }
 
     /**
+     * Handles the [ListAction.LIST_REQUIRES_REFRESH] action.
+     *
+     * Whenever a type of list needs to be refreshed, [OnListRequiresRefresh] event will be emitted so the listening
+     * lists can refresh themselves.
+     */
+    private fun handleListRequiresRefresh(typeIdentifier: ListDescriptorTypeIdentifier) {
+        emitChange(OnListRequiresRefresh(type = typeIdentifier))
+    }
+
+    /**
      * Handles the [ListAction.REMOVE_EXPIRED_LISTS] action.
      *
      * It deletes [ListModel]s that hasn't been updated for the given [RemoveExpiredListsPayload.expirationDuration].
@@ -380,6 +392,14 @@ class ListStore @Inject constructor(
             this.error = error
         }
     }
+
+    /**
+     * This is the payload for [ListAction.LIST_REQUIRES_REFRESH].
+     *
+     * @property type [ListDescriptorTypeIdentifier] which will tell [ListStore] and the clients which
+     * [ListDescriptor]s requires a refresh.
+     */
+    class OnListRequiresRefresh(val type: ListDescriptorTypeIdentifier): Store.OnChanged<ListError>()
 
     /**
      * This is the payload for [ListAction.LIST_ITEMS_CHANGED].
