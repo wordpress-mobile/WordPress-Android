@@ -135,8 +135,8 @@ public class PostSqlUtils {
         return Collections.emptyList();
     }
 
-    public static List<PostModel> getPostsByLocalOrRemotePostIds(@NonNull List<LocalOrRemoteId> localOrRemoteIds,
-                                                                 int localSiteId) {
+    public static List<PostModel> getPostsByLocalOrRemotePostIds(
+            @NonNull List<? extends LocalOrRemoteId> localOrRemoteIds, int localSiteId) {
         if (localOrRemoteIds.isEmpty()) {
             return Collections.emptyList();
         }
@@ -150,14 +150,19 @@ public class PostSqlUtils {
             }
         }
         ConditionClauseBuilder<SelectQuery<PostModel>> whereQuery =
-                WellSql.select(PostModel.class).where().equals(PostModelTable.LOCAL_SITE_ID, localSiteId);
-        if (!localIds.isEmpty()) {
+                WellSql.select(PostModel.class).where().equals(PostModelTable.LOCAL_SITE_ID, localSiteId).beginGroup();
+        boolean addIsInLocalIdsCondition = !localIds.isEmpty();
+        if (addIsInLocalIdsCondition) {
             whereQuery = whereQuery.isIn(PostModelTable.ID, localIds);
         }
         if (!remoteIds.isEmpty()) {
+            if (addIsInLocalIdsCondition) {
+                // Add `or` only if we are checking for both local and remote ids
+                whereQuery = whereQuery.or();
+            }
             whereQuery = whereQuery.isIn(PostModelTable.REMOTE_POST_ID, remoteIds);
         }
-        return whereQuery.endWhere().getAsModel();
+        return whereQuery.endGroup().endWhere().getAsModel();
     }
 
     public static PostModel insertPostForResult(PostModel post) {
