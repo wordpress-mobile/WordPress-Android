@@ -1,1 +1,34 @@
+12.3
+-----
 
+12.2
+-----
+* Updated color scheme to Classic Bright
+* Adds support for .blog subdomains for the new site creation flow
+
+12.1
+-----
+* Design improvements for the new site creation flow
+* Refreshed post stats detail screen - opens from the Blog posts/Stats and from Stats/Posts and Pages
+* Added swiping between tabs in Notifications
+* Refreshed View all Stats screens, when digging into stats data
+* Visual update to Today's stats, All-time stats and Most popular stats blocks
+* Now sharing pictures to WordPress opens the Block editor
+* Fixed crash when inserting text right before an Image
+* Now sharing pictures to WordPress opens the block editor
+
+12.0
+-----
+* Faster opening of large posts
+* Updated Notifications with tabs
+* Add Posting activity block to the Stats/Insights
+* Fixed error notifications for failed uploads
+
+11.9
+-----
+* Introduced new site creation wizard
+* Make "<em>" the default markup for italic in the editor
+* Updated Plans with new design
+* Fixed an issue where posts show up as scheduled even after they are published
+* Add Visitors overlay to the Overview block in Stats
+* Change Stats design to flat on smaller devices
