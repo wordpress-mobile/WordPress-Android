@@ -741,9 +741,6 @@ public class PostStore extends Store {
             }
             emitChange(onPostUploaded);
             return;
-        } else if (payload.origin == PostAction.DELETE_POST) {
-            handleDeletePostCompleted(payload);
-            return;
         } else if (payload.origin == PostAction.RESTORE_POST) {
             handleRestorePostCompleted(payload, true);
             return;
