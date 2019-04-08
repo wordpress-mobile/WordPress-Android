@@ -252,8 +252,7 @@ public class UploadUtils {
         }
 
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
-        boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
-                                     || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
+        boolean isFirstTimePublish = PostUtils.isFirstTimePublish(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
         // save the post in the DB so the UploadService will get the latest change
