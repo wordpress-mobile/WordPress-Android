@@ -10,23 +10,23 @@ import org.wordpress.android.fluxc.model.list.PagedListFactory
 
 internal class PagedListFactoryTest {
     @Test
-    fun `create factory triggers create data store`() {
-        val mockCreateDataStore = mock<() -> TestInternalPagedListDataStore>()
-        whenever(mockCreateDataStore.invoke()).thenReturn(mock())
-        val pagedListFactory = PagedListFactory(mockCreateDataStore)
+    fun `create factory triggers create data source`() {
+        val mockCreateDataSource = mock<() -> TestInternalPagedListDataSource>()
+        whenever(mockCreateDataSource.invoke()).thenReturn(mock())
+        val pagedListFactory = PagedListFactory(mockCreateDataSource)
 
         pagedListFactory.create()
 
-        verify(mockCreateDataStore, times(1)).invoke()
+        verify(mockCreateDataSource, times(1)).invoke()
     }
 
     @Test
-    fun `invalidate triggers create data store`() {
-        val mockCreateDataStore = mock<() -> TestInternalPagedListDataStore>()
-        whenever(mockCreateDataStore.invoke()).thenReturn(mock())
+    fun `invalidate triggers create data source`() {
+        val mockCreateDataSource = mock<() -> TestInternalPagedListDataSource>()
+        whenever(mockCreateDataSource.invoke()).thenReturn(mock())
         val invalidatedCallback = mock<InvalidatedCallback>()
 
-        val pagedListFactory = PagedListFactory(mockCreateDataStore)
+        val pagedListFactory = PagedListFactory(mockCreateDataSource)
         val currentSource = pagedListFactory.create()
         currentSource.addInvalidatedCallback(invalidatedCallback)
 
