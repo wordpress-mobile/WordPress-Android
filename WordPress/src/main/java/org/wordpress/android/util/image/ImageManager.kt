@@ -66,7 +66,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(imgUrl)
-                .addFallback(context, imageType)
+                .addFallback(imageType)
                 .addPlaceholder(context, imageType)
                 .applyScaleType(scaleType)
                 .into(imageView)
@@ -89,7 +89,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(imgUrl)
-                .addFallback(context, imageType)
+                .addFallback(imageType)
                 .addPlaceholder(context, imageType)
                 .circleCrop()
                 .attachRequestListener(requestListener)
@@ -117,7 +117,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(imgUrl)
-                .addFallback(context, imageType)
+                .addFallback(imageType)
                 .addPlaceholder(context, imageType)
                 .addThumbnail(context, thumbnailUrl, requestListener)
                 .attachRequestListener(requestListener)
@@ -179,7 +179,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         if (!context.isAvailable()) return
         GlideApp.with(context)
                 .load(imgUrl)
-                .addFallback(context, imageType)
+                .addFallback(imageType)
                 .addPlaceholder(context, imageType)
                 .into(viewTarget)
                 .clearOnDetach()
@@ -248,7 +248,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         }
     }
 
-    private fun <T : Any> GlideRequest<T>.addFallback(context: Context, imageType: ImageType): GlideRequest<T> {
+    private fun <T : Any> GlideRequest<T>.addFallback(imageType: ImageType): GlideRequest<T> {
         val errorImageRes = placeholderManager.getErrorResource(imageType)
         return if (errorImageRes == null) {
             this
