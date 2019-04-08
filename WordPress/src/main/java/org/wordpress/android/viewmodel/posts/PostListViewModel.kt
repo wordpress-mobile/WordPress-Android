@@ -372,6 +372,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    // TODO: Can this be a private method?
     fun newPost() {
         _postListAction.postValue(PostListAction.NewPost(site))
     }
@@ -391,7 +392,9 @@ class PostListViewModel @Inject constructor(
         when (buttonType) {
             BUTTON_EDIT -> editPostButtonAction(site, post)
             BUTTON_RETRY -> _postListAction.postValue(RetryUpload(post))
-            BUTTON_RESTORE -> TODO()
+            BUTTON_RESTORE -> {
+                restorePost(post)
+            }
             BUTTON_SUBMIT, BUTTON_SYNC, BUTTON_PUBLISH -> {
                 showPublishConfirmationDialog(post)
             }
@@ -399,6 +402,7 @@ class PostListViewModel @Inject constructor(
             BUTTON_PREVIEW -> _postListAction.postValue(PreviewPost(site, post))
             BUTTON_STATS -> _postListAction.postValue(ViewStats(site, post))
             BUTTON_TRASH, BUTTON_DELETE -> {
+                // TODO: We should remove the post and not trash it if it's already in trash
                 showTrashConfirmationDialog(post)
             }
             BUTTON_MORE -> {
@@ -473,6 +477,14 @@ class PostListViewModel @Inject constructor(
         localPostIdForPublishDialog = null
     }
 
+    private fun restorePost(post: PostModel) {
+        // TODO: When a post is trashed switching to trashed and then going back to the published posts will show
+        // the removal animation.
+        // TODO: Do we need to hide the post being restored from the trashed post list?
+        dispatcher.dispatch(PostActionBuilder.newRestorePostAction(RemotePostPayload(post, site)))
+    }
+
+    // TODO: This method doesn't seem to be used, we should remove it if it's not necessary
     private fun isGutenbergEnabled(): Boolean {
         return BuildConfig.OFFER_GUTENBERG && AppPrefs.isGutenbergEditorEnabled()
     }
@@ -553,6 +565,11 @@ class PostListViewModel @Inject constructor(
                     _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
                 }
             }
+            is CauseOfOnPostChanged.RestorePost -> {
+                if (event.isError) {
+                    _toastMessage.postValue(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
+                }
+            }
         }
     }
 
@@ -563,6 +580,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    // TODO: Why is this in the MAIN thread?
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
