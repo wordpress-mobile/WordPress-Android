@@ -65,7 +65,6 @@ import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -77,6 +76,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ValidationUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -822,7 +822,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // customize list dividers
         //noinspection deprecation
-        prefList.setDivider(res.getDrawable(R.drawable.preferences_divider));
+        prefList.setDivider(res.getDrawable(R.drawable.bg_rectangle_divider));
         prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);
@@ -831,7 +831,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // remove footer divider bar
         prefList.setFooterDividersEnabled(false);
         //noinspection deprecation
-        prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
+        prefList.setOverscrollFooter(res.getDrawable(android.R.color.transparent));
     }
 
     /**
@@ -1841,7 +1841,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.action_mode_status_bar_tint);
+            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.status_bar_action_mode);
             mActionMode = actionMode;
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.list_editor, menu);
@@ -1850,7 +1850,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.status_bar_tint);
+            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.status_bar);
             getAdapter().removeItemsSelected();
             mActionMode = null;
         }

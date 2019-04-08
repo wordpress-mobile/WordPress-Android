@@ -27,8 +27,6 @@ import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewM
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_AND_KEYBOARD
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_ONLY
 import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationErrorType
 import org.wordpress.android.ui.sitecreation.misc.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationHeaderUiState
@@ -58,6 +56,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
     private var isStarted = false
+    private var segmentId by Delegates.notNull<Long>()
 
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
@@ -79,9 +78,6 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
-    private val _onInputFocusRequested = SingleLiveEvent<RequestFocusMode>()
-    val onInputFocusRequested: LiveData<RequestFocusMode> = _onInputFocusRequested
-
     init {
         dispatcher.register(fetchDomainsUseCase)
     }
@@ -91,19 +87,18 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         dispatcher.unregister(fetchDomainsUseCase)
     }
 
-    fun start(siteTitle: String?) {
+    fun start(siteTitle: String?, segmentId: Long) {
         if (isStarted) {
             return
         }
+        this.segmentId = segmentId
         isStarted = true
         tracker.trackDomainsAccessed()
         // isNullOrBlank not smart-casting for some reason..
         if (siteTitle == null || siteTitle.isBlank()) {
             resetUiState()
-            _onInputFocusRequested.value = FOCUS_AND_KEYBOARD
         } else {
             updateQueryInternal(TitleQuery(siteTitle))
-            _onInputFocusRequested.value = FOCUS_ONLY
         }
     }
 
@@ -147,7 +142,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
-                val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value)
+                val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value, segmentId)
                 withContext(mainDispatcher) {
                     onDomainsFetched(query, onSuggestedDomains)
                 }
@@ -195,7 +190,8 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                         ),
                         searchInputUiState = createSearchInputUiState(
                                 showProgress = state is Loading,
-                                showClearButton = isNonEmptyUserQuery
+                                showClearButton = isNonEmptyUserQuery,
+                                showDivider = !state.data.isEmpty()
                         ),
                         contentState = createDomainsUiContentState(query, state),
                         createSiteButtonContainerVisibility = selectedDomain != null
@@ -243,11 +239,9 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
         } else {
-            val lastItemIndex = data.size - 1
-            data.forEachIndexed { index, domainName ->
+            data.forEach { domainName ->
                 val itemUiState = DomainsModelUiState(
                         domainName,
-                        showDivider = index != lastItemIndex,
                         checked = domainName == selectedDomain
                 )
                 itemUiState.onItemTapped = { setSelectedDomainName(domainName) }
@@ -268,12 +262,14 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
 
     private fun createSearchInputUiState(
         showProgress: Boolean,
-        showClearButton: Boolean
+        showClearButton: Boolean,
+        showDivider: Boolean
     ): SiteCreationSearchInputUiState {
         return SiteCreationSearchInputUiState(
                 hint = UiStringRes(R.string.new_site_creation_search_domain_input_hint),
                 showProgress = showProgress,
-                showClearButton = showClearButton
+                showClearButton = showClearButton,
+                showDivider = showDivider
         )
     }
 
@@ -315,8 +311,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     sealed class DomainsListItemUiState {
         var onItemTapped: (() -> Unit)? = null
 
-        data class DomainsModelUiState(val name: String, val showDivider: Boolean, val checked: Boolean) :
-                DomainsListItemUiState()
+        data class DomainsModelUiState(val name: String, val checked: Boolean) : DomainsListItemUiState()
 
         data class DomainsFetchSuggestionsErrorUiState(
             @StringRes val messageResId: Int,
@@ -337,10 +332,5 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
          * Automatic search initiated for the site title.
          */
         class TitleQuery(value: String) : DomainSuggestionsQuery(value)
-    }
-
-    enum class RequestFocusMode {
-        FOCUS_ONLY,
-        FOCUS_AND_KEYBOARD
     }
 }

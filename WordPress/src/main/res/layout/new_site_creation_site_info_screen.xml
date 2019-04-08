@@ -12,7 +12,9 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:padding="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
         app:layout_constraintBottom_toTopOf="@+id/site_info_skip_or_next_button_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,49 +25,22 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal">
 
-            <LinearLayout
+            <include
                 android:id="@+id/header_container"
-                android:layout_width="match_parent"
+                layout="@layout/new_site_creation_header_item"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/site_info_header_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:lineSpacingMultiplier="1.1"
-                    android:text="@string/new_site_creation_site_info_header_title"
-                    android:textColor="@color/wp_grey_dark"
-                    android:textSize="@dimen/text_sz_large"
-                    />
-
-                <TextView
-                    android:id="@+id/site_info_header_subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_extra_medium_large"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:lineSpacingMultiplier="1.1"
-                    android:text="@string/new_site_creation_site_info_header_subtitle"
-                    android:textColor="@color/wp_grey_darken_20"
-                    android:textSize="@dimen/text_sz_large"/>
-
-            </LinearLayout>
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/site_info_site_title_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
                 android:hint="@string/new_site_creation_site_title_hint"
-                android:textColorHint="@color/wp_grey"
                 android:labelFor="@+id/site_info_site_title"
+                android:textColorHint="@color/neutral_300"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/header_container">
@@ -74,11 +49,11 @@
                     android:id="@+id/site_info_site_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/wp_grey"
+                    android:backgroundTint="@color/neutral_300"
                     android:inputType="text"
                     android:singleLine="true"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/wp_grey_dark">
+                    android:textColor="@color/neutral_800">
                 </android.support.design.widget.TextInputEditText>
             </android.support.design.widget.TextInputLayout>
 
@@ -88,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
                 android:hint="@string/new_site_creation_tag_line_hint"
-                android:textColorHint="@color/wp_grey"
                 android:labelFor="@+id/site_info_tag_line"
+                android:textColorHint="@color/neutral_300"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/site_info_site_title_layout">
@@ -98,9 +73,9 @@
                     android:id="@+id/site_info_tag_line"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/wp_grey"
+                    android:backgroundTint="@color/neutral_300"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/wp_grey_dark">
+                    android:textColor="@color/neutral_800">
                 </android.support.design.widget.TextInputEditText>
             </android.support.design.widget.TextInputLayout>
 
@@ -111,7 +86,7 @@
                 android:layout_marginEnd="@dimen/margin_small"
                 android:layout_marginStart="@dimen/margin_small"
                 android:text="@string/new_site_creation_tag_line_description"
-                android:textColor="@color/wp_grey_darken_20"
+                android:textColor="@color/neutral_500"
                 android:textSize="@dimen/text_sz_medium"
                 app:fixWidowWords="true"
                 app:layout_constraintEnd_toEndOf="parent"

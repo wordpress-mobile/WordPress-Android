@@ -29,26 +29,26 @@
                     android:layout_width="@dimen/post_list_row_skeleton_view_title_width"
                     android:layout_height="@dimen/post_list_row_skeleton_view_title_height"
                     android:layout_marginTop="@dimen/margin_extra_large"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/gray_0"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/post_list_row_skeleton_view_excerpt_height"
                     android:layout_marginTop="@dimen/margin_medium"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/gray_0"/>
 
                 <View
                     android:layout_width="@dimen/post_list_row_skeleton_view_date_width"
                     android:layout_height="@dimen/post_list_row_skeleton_view_date_height"
                     android:layout_marginTop="@dimen/margin_medium"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/gray_0"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                android:background="@color/grey_light"
+                android:background="@color/neutral_0"
                 android:orientation="horizontal">
 
                 <org.wordpress.android.widgets.PostListButton

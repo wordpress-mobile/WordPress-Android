@@ -54,13 +54,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="start"
-                android:background="@color/color_primary"
+                android:background="@color/primary"
                 app:tabContentStart="72dp"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@color/white"
+                app:tabIndicatorColor="@android:color/white"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/white"
+                app:tabSelectedTextColor="@android:color/white"
+                app:tabTextColor="@android:color/white"
                 app:theme="@style/Base.Widget.Design.TabLayout"/>
 
         </android.support.design.widget.AppBarLayout>
@@ -74,7 +74,6 @@
             android:src="@drawable/ic_create_white_24dp"
             android:contentDescription="@string/fab_create_desc"
             app:borderWidth="0dp"
-            app:rippleColor="@color/fab_pressed"
             android:visibility="gone"
             android:layout_marginEnd="@dimen/fab_margin"/>
 

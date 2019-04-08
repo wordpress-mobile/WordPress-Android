@@ -41,8 +41,8 @@ import org.wordpress.android.ui.sitecreation.siteinfo.NewSiteCreationSiteInfoFra
 import org.wordpress.android.ui.sitecreation.siteinfo.SiteInfoScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
 import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
-import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
@@ -159,7 +159,11 @@ class NewSiteCreationActivity : AppCompatActivity(),
                         screenTitle,
                         target.wizardState.segmentId!!
                 )
-            DOMAINS -> NewSiteCreationDomainsFragment.newInstance(screenTitle, target.wizardState.siteTitle)
+            DOMAINS -> NewSiteCreationDomainsFragment.newInstance(
+                    screenTitle,
+                    target.wizardState.siteTitle,
+                    target.wizardState.segmentId!!
+            )
             SITE_INFO -> NewSiteCreationSiteInfoFragment.newInstance(screenTitle)
             SITE_PREVIEW -> NewSiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
         }
@@ -181,15 +185,14 @@ class NewSiteCreationActivity : AppCompatActivity(),
 
     private fun slideInFragment(fragment: Fragment, tag: String) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
         if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
-            fragmentTransaction.addToBackStack(null)
-        } else {
-            fragmentTransaction.setCustomAnimations(
+            // add to back stack and animate all screen except of the first one
+            fragmentTransaction.addToBackStack(null).setCustomAnimations(
                     R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
                     R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
             )
         }
+        fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
         fragmentTransaction.commit()
     }
 

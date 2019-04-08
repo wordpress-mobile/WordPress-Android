@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/site_settings_divider_height"
     android:paddingBottom="@dimen/site_settings_divider_height"
     android:orientation="vertical"
-    android:background="@color/grey_lighten_30">
+    android:background="@color/neutral_0">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,14 +17,14 @@
         android:paddingEnd="@dimen/related_posts_dialog_padding_right"
         android:paddingBottom="@dimen/related_posts_dialog_padding_bottom"
         android:orientation="vertical"
-        android:background="@color/white">
+        android:background="@android:color/white">
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/toggle_related_posts_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/site_settings_rp_switch_title"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_large"
             android:textAlignment="viewStart"
             android:theme="@style/SwitchBlueMedium"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/site_settings_rp_switch_summary"
-            android:textColor="@color/grey_text_min"
+            android:textColor="@color/neutral"
             android:textSize="@dimen/text_sz_small"/>
 
         <CheckBox
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="@color/calypso_title_text"
+            android:textColor="@color/neutral_700_neutral_200_selector"
             android:textSize="@dimen/text_sz_large"
             android:text="@string/site_settings_rp_show_header_title"
             android:textAlignment="viewStart"
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:textColor="@color/calypso_title_text"
+            android:textColor="@color/neutral_700_neutral_200_selector"
             android:textSize="@dimen/text_sz_large"
             android:text="@string/site_settings_rp_show_images_title"
             android:textAlignment="viewStart"
@@ -86,7 +86,7 @@
             android:text="@string/site_settings_rp_preview_header"
             android:textStyle="bold"
             android:textSize="@dimen/text_sz_medium"
-            android:textColor="@color/related_posts_list_header"
+            android:textColor="@color/black_translucent_50_neutral_700_selector"
             android:fontFamily="sans-serif-light" />
 
         <LinearLayout
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_sz_medium"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:text="@string/site_settings_rp_preview1_title"
                 android:fontFamily="sans-serif-light" />
 
@@ -120,7 +120,7 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:text="@string/site_settings_rp_preview1_site" />
 
             <ImageView
@@ -137,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_sz_medium"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:text="@string/site_settings_rp_preview2_title"
                 android:fontFamily="sans-serif-light" />
 
@@ -148,7 +148,7 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:text="@string/site_settings_rp_preview2_site" />
 
             <ImageView
@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_sz_medium"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:text="@string/site_settings_rp_preview3_title"
                 android:fontFamily="sans-serif-light" />
 
@@ -176,7 +176,7 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:text="@string/site_settings_rp_preview3_site"/>
         </LinearLayout>
 

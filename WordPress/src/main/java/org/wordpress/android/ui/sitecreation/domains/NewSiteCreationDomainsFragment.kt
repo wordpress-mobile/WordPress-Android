@@ -17,10 +17,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.RequestFocusMode.FOCUS_AND_KEYBOARD
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
@@ -74,11 +73,8 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment() {
     }
 
     override fun getScreenTitle(): String {
-        val arguments = arguments
-        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
-            throw IllegalStateException("Required argument screen title is missing.")
-        }
-        return arguments.getString(EXTRA_SCREEN_TITLE)
+        return arguments?.getString(EXTRA_SCREEN_TITLE)
+                ?: throw IllegalStateException("Required argument screen title is missing.")
     }
 
     override fun onHelp() {
@@ -140,15 +136,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment() {
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_DOMAINS)
         })
-        viewModel.onInputFocusRequested.observe(this, Observer { requestFocusMode ->
-            requestFocusMode?.let {
-                searchInputWithHeader.requestInputFocus()
-                if (requestFocusMode == FOCUS_AND_KEYBOARD) {
-                    searchInputWithHeader.showKeyboard()
-                }
-            }
-        })
-        viewModel.start(getSiteTitleFromArguments())
+        viewModel.start(getSiteTitleFromArguments(), getSegmentIdFromArguments())
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
@@ -163,14 +151,22 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment() {
         return arguments?.getString(EXTRA_SITE_TITLE)
     }
 
+    private fun getSegmentIdFromArguments(): Long {
+        return requireNotNull(arguments?.getLong(EXTRA_SEGMENT_ID)) {
+            "SegmentId is missing. Have you created the fragment using NewSiteCreationDomainsFragment.newInstance(..)?"
+        }
+    }
+
     companion object {
         const val TAG = "site_creation_domains_fragment_tag"
         const val EXTRA_SITE_TITLE = "extra_site_title"
+        private const val EXTRA_SEGMENT_ID = "extra_segment_id"
 
-        fun newInstance(screenTitle: String, siteTitle: String?): NewSiteCreationDomainsFragment {
+        fun newInstance(screenTitle: String, siteTitle: String?, segmentId: Long): NewSiteCreationDomainsFragment {
             val fragment = NewSiteCreationDomainsFragment()
             val bundle = Bundle()
             bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
             siteTitle?.let { bundle.putString(EXTRA_SITE_TITLE, siteTitle) }
             fragment.arguments = bundle
             return fragment

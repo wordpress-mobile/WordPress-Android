@@ -5,7 +5,7 @@
                                              android:id="@+id/container"
                                              android:layout_width="match_parent"
                                              android:layout_height="wrap_content"
-                                             android:background="@color/white"
+                                             android:background="@android:color/white"
                                              android:foreground="?selectableItemBackground"
                                              android:minHeight="@dimen/one_line_list_item_height"
                                              android:paddingStart="@dimen/margin_large"
@@ -23,22 +23,11 @@
         android:paddingStart="@dimen/new_site_creation_domains_radio_button_padding_start"
         android:paddingTop="@dimen/margin_medium"
         android:textAlignment="viewStart"
-        android:textColor="@color/wp_grey_dark"
+        android:textColor="@color/neutral_800"
         android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlSymmetry"/>
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_divider_height"
-        android:layout_marginStart="@dimen/new_site_creation_domains_divider_padding_start"
-        android:background="@color/wp_grey_lighten_30"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="1.0"/>
 </android.support.constraint.ConstraintLayout>

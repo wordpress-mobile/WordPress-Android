@@ -42,10 +42,10 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         mIsFooter = isFooter;
 
         // Text/background colors
-        mTextColor = context.getResources().getColor(R.color.grey_dark);
-        mBackgroundColor = context.getResources().getColor(R.color.pressed_wordpress);
-        mLinkColor = context.getResources().getColor(R.color.blue_medium);
-        mLightTextColor = context.getResources().getColor(R.color.grey_dark);
+        mTextColor = context.getResources().getColor(R.color.neutral_700);
+        mBackgroundColor = context.getResources().getColor(R.color.primary_50);
+        mLinkColor = context.getResources().getColor(R.color.primary_400);
+        mLightTextColor = context.getResources().getColor(R.color.neutral_700);
 
         processRangeData(range);
     }

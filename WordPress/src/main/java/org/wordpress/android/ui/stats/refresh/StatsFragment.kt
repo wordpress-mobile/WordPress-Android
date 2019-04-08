@@ -75,6 +75,7 @@ class StatsFragment : DaggerFragment() {
     private fun initializeViews(activity: FragmentActivity) {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
+        statsPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
         statsPager.setCurrentItem(viewModel.getSelectedSection().ordinal, false)
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabReselected(tab: Tab?) {

@@ -40,9 +40,6 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
     private val _uiState: MutableLiveData<SiteInfoUiState> = MutableLiveData()
     val uiState: LiveData<SiteInfoUiState> = _uiState
 
-    private val _onTitleInputFocusRequested = SingleLiveEvent<Unit>()
-    val onTitleInputFocusRequested: LiveData<Unit> = _onTitleInputFocusRequested
-
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
@@ -62,8 +59,6 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
         }
         isStarted = true
         tracker.trackBasicInformationViewed()
-        // Show keyboard
-        _onTitleInputFocusRequested.call()
     }
 
     fun onHelpClicked() {
@@ -106,13 +101,13 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
         ) {
             SKIP(
                     text = R.string.new_site_creation_button_skip,
-                    textColor = R.color.wp_grey_dark,
-                    backgroundColor = R.color.white
+                    textColor = R.color.neutral_800,
+                    backgroundColor = android.R.color.white
             ),
             NEXT(
                     text = R.string.next,
-                    textColor = R.color.white,
-                    backgroundColor = R.color.wp_blue_medium
+                    textColor = android.R.color.white,
+                    backgroundColor = R.color.primary_400
             )
         }
 

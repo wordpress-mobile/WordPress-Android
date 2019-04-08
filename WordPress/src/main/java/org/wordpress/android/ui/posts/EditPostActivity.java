@@ -520,13 +520,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
             mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
                                    && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
-
-            // override this if we're being fed media to start a Post for now
-            // EXTRA_INSERT_MEDIA comes from the WP app Media section, and EXTRA_STREAM is what we check
-            // for when receiving content from outside the WP app to be shared there
-            if (getIntent().hasExtra(EXTRA_INSERT_MEDIA) || getIntent().hasExtra(Intent.EXTRA_STREAM)) {
-                mShowGutenbergEditor = false;
-            }
         } else {
             mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENBERG_IS_SHOWN);
         }
@@ -765,7 +758,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         if (!mIsConfigChange && (mRestartEditorOption == RestartEditorOptions.NO_RESTART)) {
-            mPostEditorAnalyticsSession.end();
+            if (mPostEditorAnalyticsSession != null) {
+                mPostEditorAnalyticsSession.end();
+            }
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
@@ -1997,12 +1992,9 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
-        boolean postUpdateSuccessful = updatePostObject();
-        if (!postUpdateSuccessful) {
-            // just return, since the only case updatePostObject() can fail is when the editor
-            // fragment is not added to the activity
-            return;
-        }
+        // Loading the content from the GB HTML editor can take time on long posts.
+        // Let's show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
+        mEditorFragment.showSavingProgressDialogIfNeeded();
 
         // Update post, save to db and publish in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
@@ -2016,6 +2008,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (!postUpdateSuccessful) {
                     // just return, since the only case updatePostObject() can fail is when the editor
                     // fragment is not added to the activity
+                    mEditorFragment.hideSavingProgressDialog();
                     return;
                 }
 
@@ -2024,6 +2017,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 // if post was modified or has unsaved local changes and is publishable, save it
                 saveResult(isPublishable, false, false);
 
+                // Hide the progress dialog now
+                mEditorFragment.hideSavingProgressDialog();
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         // Show an Alert Dialog asking the user if they want to remove all failed media before upload
@@ -2230,7 +2225,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 3:
                     return HistoryListFragment.Companion.newInstance(mPost, mSite);
                 default:
-                    return EditPostPreviewFragment.newInstance(mPost);
+                    return EditPostPreviewFragment.newInstance(mPost, mSite);
             }
         }
 
@@ -2416,7 +2411,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Special actions - these only make sense for empty posts that are going to be populated now
-        if (!mHasSetPostContent) {
+        if (TextUtils.isEmpty(mPost.getContent())) {
             String action = getIntent().getAction();
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 setPostContentFromShareAction();
@@ -3946,7 +3941,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(title),
                 getString(description),
                 getString(button),
-                R.drawable.img_publish_button_124dp,
+                R.drawable.img_illustration_hand_checkmark_button_124dp,
                 getString(R.string.keep_editing),
                 getString(R.string.async_promo_link));
 

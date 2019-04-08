@@ -7,12 +7,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import android.view.accessibility.AccessibilityEvent
 import android.widget.EditText
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.ActivityUtils
 
 class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, onClear: () -> Unit) {
     private val headerLayout = rootView.findViewById<ViewGroup>(R.id.header_layout)
@@ -22,12 +20,13 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
     private val progressBar = rootView.findViewById<View>(R.id.progress_bar)
     private val clearAllButton = rootView.findViewById<View>(R.id.clear_all_btn)
     private val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
+    private val divider = rootView.findViewById<View>(R.id.divider)
 
     var onTextChanged: ((String) -> Unit)? = null
 
     init {
         val context = rootView.context
-        val greyColor = ContextCompat.getColor(context, R.color.grey)
+        val greyColor = ContextCompat.getColor(context, R.color.neutral_300)
 
         val inputDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_search_white_24dp)
         inputDrawable?.setTint(greyColor)
@@ -76,15 +75,6 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
         searchInput.hint = uiHelpers.getTextOfUiString(context, uiState.hint)
         uiHelpers.updateVisibility(progressBar, uiState.showProgress)
         uiHelpers.updateVisibility(clearAllLayout, uiState.showClearButton)
-    }
-
-    fun requestInputFocus() {
-        searchInput.requestFocus()
-        // announce header when the input focus is forced
-        headerLayout.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
-    }
-
-    fun showKeyboard() {
-        ActivityUtils.showKeyboard(searchInput)
+        uiHelpers.updateVisibility(divider, uiState.showDivider)
     }
 }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/wp_grey_lighten_30"
+    android:background="@color/neutral_50"
     android:orientation="vertical">
 
     <include
@@ -32,9 +33,7 @@
             android:paddingEnd="@dimen/margin_large"
             android:paddingStart="@dimen/margin_large">
 
-            <TextView
-                android:id="@+id/sitePreviewTitle"
-                style="@style/SitePreviewTitle"/>
+            <include layout="@layout/new_site_creation_preview_header_item"/>
 
             <Button
                 android:id="@+id/okButton"
