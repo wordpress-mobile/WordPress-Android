@@ -405,7 +405,8 @@ public class PostStore extends Store {
         }
     }
 
-    public List<PostModel> getPostsByLocalOrRemotePostIds(List<LocalOrRemoteId> localOrRemoteIds, SiteModel site) {
+    public List<PostModel> getPostsByLocalOrRemotePostIds(List<? extends LocalOrRemoteId> localOrRemoteIds,
+                                                          SiteModel site) {
         if (localOrRemoteIds == null || site == null) {
             return Collections.emptyList();
         }
