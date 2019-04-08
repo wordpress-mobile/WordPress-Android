@@ -682,11 +682,8 @@ public class PostStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            // TODO: Let ListStore know that the list needs to be refreshed
-//            ListItemsRemovedPayload listActionPayload = new ListItemsRemovedPayload(
-//                    PostListDescriptor.calculateTypeIdentifier(payload.post.getLocalSiteId()),
-//                    Collections.singletonList(payload.post.getRemotePostId()));
-//            mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(listActionPayload));
+            mDispatcher.dispatch(ListActionBuilder.newListRequiresRefreshAction(
+                    PostListDescriptor.calculateTypeIdentifier(payload.post.getLocalSiteId())));
             PostModel postToSave = payload.post;
             if (!payload.site.isUsingWpComRestApi()) {
                 /*
