@@ -29,7 +29,7 @@
                 android:layout_marginEnd="3dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_posts_white_24dp"
-                android:tint="@color/grey_dark" />
+                android:tint="@color/neutral_700" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 style="@style/StatsInsightsLabel"
@@ -45,7 +45,7 @@
         <org.wordpress.android.util.widgets.AutoResizeTextView
             android:id="@+id/stats_all_time_posts"
             style="@style/StatsInsightsValues"
-            android:textColor="@color/grey_darken_30"
+            android:textColor="@color/neutral_600"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -76,7 +76,7 @@
                 android:layout_marginEnd="3dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_visible_on_white_24dp"
-                android:tint="@color/grey_dark" />
+                android:tint="@color/neutral_700" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 style="@style/StatsInsightsLabel"
@@ -92,7 +92,7 @@
         <org.wordpress.android.util.widgets.AutoResizeTextView
             android:id="@+id/stats_all_time_views"
             style="@style/StatsInsightsValues"
-            android:textColor="@color/grey_darken_30"
+            android:textColor="@color/neutral_600"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -123,7 +123,7 @@
                 android:layout_marginEnd="3dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_user_white_24dp"
-                android:tint="@color/grey_dark" />
+                android:tint="@color/neutral_700" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 style="@style/StatsInsightsLabel"
@@ -139,7 +139,7 @@
         <org.wordpress.android.util.widgets.AutoResizeTextView
             android:id="@+id/stats_all_time_visitors"
             style="@style/StatsInsightsValues"
-            android:textColor="@color/grey_darken_30"
+            android:textColor="@color/neutral_600"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -170,11 +170,11 @@
                 android:layout_marginEnd="3dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_trophy_white_24dp"
-                android:tint="@color/alert_yellow" />
+                android:tint="@color/warning_500" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 style="@style/StatsInsightsLabel"
-                android:textColor="@color/alert_yellow"
+                android:textColor="@color/warning_500"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -187,7 +187,7 @@
         <org.wordpress.android.util.widgets.AutoResizeTextView
             android:id="@+id/stats_all_time_bestever"
             style="@style/StatsInsightsValues"
-            android:textColor="@color/grey_darken_30"
+            android:textColor="@color/neutral_600"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -196,7 +196,7 @@
         <org.wordpress.android.util.widgets.AutoResizeTextView
             android:id="@+id/stats_all_time_bestever_date"
             style="@style/StatsInsightsLabel"
-            android:textColor="@color/grey_darken_10"
+            android:textColor="@color/neutral_400"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"

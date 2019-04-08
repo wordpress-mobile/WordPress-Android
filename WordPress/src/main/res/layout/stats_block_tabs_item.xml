@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         app:tabGravity="center"
-        app:tabIndicatorColor="@color/wp_blue"
-        app:tabSelectedTextColor="@color/wp_blue"
+        app:tabIndicatorColor="@color/primary"
+        app:tabSelectedTextColor="@color/primary"
         app:tabPaddingStart="@dimen/margin_extra_large"
         app:tabPaddingEnd="@dimen/margin_extra_large"
-        app:tabTextColor="@color/wp_grey_darken_20"/>
+        app:tabTextColor="@color/neutral_500"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/grey_lighten_30"/>
+        android:background="@color/neutral_0"/>
 </LinearLayout>

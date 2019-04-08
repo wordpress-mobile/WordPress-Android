@@ -704,8 +704,8 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.color_primary));
-        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
+        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.primary));
+        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, android.R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium),
@@ -2220,7 +2220,7 @@ public class ReaderPostListFragment extends Fragment
                                 ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
                             }
                         })
-                .setActionTextColor(getResources().getColor(R.color.color_accent))
+                .setActionTextColor(getResources().getColor(R.color.accent))
                 .show();
     }
 

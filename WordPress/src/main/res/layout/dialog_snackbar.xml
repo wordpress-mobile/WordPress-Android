@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/grey_3"
+    android:background="@color/background_snackbar"
     android:paddingBottom="@dimen/margin_medium">
 
     <RelativeLayout
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif-medium"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_sz_large"
             android:visibility="gone"
             tools:text="Add social media account"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
-            android:textColor="@color/grey_c"
+            android:textColor="@color/neutral_50"
             android:textSize="@dimen/text_sz_medium"
             android:visibility="gone"
             tools:text="Connect your favorite social media services to automatically share new posts with friend"
@@ -61,7 +61,7 @@
             android:fontFamily="sans-serif-medium"
             android:minHeight="@dimen/default_dialog_button_height"
             android:minWidth="@dimen/min_touch_target_sz"
-            android:textColor="@color/color_accent"
+            android:textColor="@color/accent"
             android:visibility="gone"
             tools:text="Yes, let's do it"
             tools:visibility="visible">
@@ -77,7 +77,7 @@
             android:fontFamily="sans-serif-medium"
             android:minHeight="@dimen/default_dialog_button_height"
             android:minWidth="@dimen/min_touch_target_sz"
-            android:textColor="@color/color_accent"
+            android:textColor="@color/accent"
             android:visibility="gone"
             tools:text="Not now"
             tools:visibility="visible">
@@ -92,7 +92,7 @@
             android:fontFamily="sans-serif-medium"
             android:minHeight="@dimen/default_dialog_button_height"
             android:minWidth="@dimen/min_touch_target_sz"
-            android:textColor="@color/color_accent"
+            android:textColor="@color/accent"
             android:visibility="gone"
             tools:text="Never ever"
             tools:visibility="visible">

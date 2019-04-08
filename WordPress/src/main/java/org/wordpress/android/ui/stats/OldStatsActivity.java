@@ -36,7 +36,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -46,6 +45,7 @@ import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -255,7 +255,7 @@ public class OldStatsActivity extends AppCompatActivity
             });
 
             Toolbar spinnerToolbar = findViewById(R.id.toolbar_filter);
-            spinnerToolbar.setBackgroundColor(getResources().getColor(R.color.blue_medium));
+            spinnerToolbar.setBackgroundColor(getResources().getColor(R.color.primary_400));
         }
 
         selectCurrentTimeframeInActionBar();

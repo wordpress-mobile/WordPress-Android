@@ -21,7 +21,7 @@
             android:icon="@drawable/ic_stats_white_24dp"
             android:layout="@layout/wp_preference_layout"
             android:title="@string/preference_collect_information"
-            app:iconTint="@color/grey_text_min"/>
+            app:iconTint="@color/neutral"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/cookie_policy_learn_more_header"
@@ -48,7 +48,7 @@
             android:layout="@layout/wp_preference"
             android:summary="@string/preference_crash_reports_summary"
             android:title="@string/preference_crash_reports"
-            app:iconTint="@color/grey_text_min"/>
+            app:iconTint="@color/neutral"/>
 
     </PreferenceScreen>
 
