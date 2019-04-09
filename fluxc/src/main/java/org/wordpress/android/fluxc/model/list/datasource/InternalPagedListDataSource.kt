@@ -58,7 +58,7 @@ class InternalPagedListDataSource<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIF
      * @param endPosition End position that's exclusive
      */
     private fun getItemIds(startPosition: Int, endPosition: Int): List<ITEM_IDENTIFIER> {
-        require(startPosition in 0..endPosition && endPosition <= totalSize) {
+        require(startPosition in 0 until endPosition && endPosition <= totalSize) {
             "Illegal start($startPosition) or end($endPosition) position for totalSize($totalSize)"
         }
 
