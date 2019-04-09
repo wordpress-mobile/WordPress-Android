@@ -486,8 +486,7 @@ class PostListViewModel @Inject constructor(
                     }
                 },
                 onDismissAction = {
-                    postsBeingTrashedOrRestored.remove(localPostId)
-                    pagedListWrapper.invalidateData()
+                    removeLocalPostIdFromPostsBeingTrashedOrRestored(localPostId)
                 }
         )
         _snackBarAction.postValue(snackBarHolder)
@@ -553,11 +552,15 @@ class PostListViewModel @Inject constructor(
                     }
                 },
                 onDismissAction = {
-                    postsBeingTrashedOrRestored.remove(localPostId)
-                    pagedListWrapper.invalidateData()
+                    removeLocalPostIdFromPostsBeingTrashedOrRestored(localPostId)
                 }
         )
         _snackBarAction.postValue(snackBarHolder)
+    }
+
+    private fun removeLocalPostIdFromPostsBeingTrashedOrRestored(localPostId: LocalId) {
+        postsBeingTrashedOrRestored.remove(localPostId)
+        pagedListWrapper.invalidateData()
     }
 
     // FluxC Events
@@ -583,21 +586,27 @@ class PostListViewModel @Inject constructor(
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {
+                val deletePostCauseOfChange = event.causeOfChange as DeletePost
+                val localPostId = LocalId(deletePostCauseOfChange.localPostId)
                 if (event.isError) {
+                    if (deletePostCauseOfChange.postDeleteActionType == TRASH) {
+                        removeLocalPostIdFromPostsBeingTrashedOrRestored(localPostId)
+                    }
                     _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
                 } else {
-                    val deletePostCauseOfChange = event.causeOfChange as DeletePost
                     // If post is completely removed we don't do anything about it
                     if (deletePostCauseOfChange.postDeleteActionType == TRASH) {
-                        handlePostTrashed(LocalId(deletePostCauseOfChange.localPostId))
+                        handlePostTrashed(localPostId)
                     }
                 }
             }
             is CauseOfOnPostChanged.RestorePost -> {
+                val localPostId = LocalId((event.causeOfChange as RestorePost).localPostId)
                 if (event.isError) {
+                    removeLocalPostIdFromPostsBeingTrashedOrRestored(localPostId)
                     _toastMessage.postValue(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
                 } else {
-                    handlePostRestored(LocalId((event.causeOfChange as RestorePost).localPostId))
+                    handlePostRestored(localPostId)
                 }
             }
         }
