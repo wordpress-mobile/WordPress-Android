@@ -269,7 +269,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         restoredPost.setId(post.getId());
                         restoredPost.setLocalSiteId(post.getLocalSiteId());
 
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        RemotePostPayload payload = new RemotePostPayload(restoredPost, site);
                         mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
                     }
                 },
