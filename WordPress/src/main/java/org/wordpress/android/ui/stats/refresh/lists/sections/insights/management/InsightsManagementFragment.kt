@@ -27,6 +27,8 @@ class InsightsManagementFragment : DaggerFragment() {
     private lateinit var viewModel: InsightsManagementViewModel
     private lateinit var addedInsightsTouchHelper: ItemTouchHelper
 
+    private var menu: Menu? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.insights_management_fragment, container, false)
@@ -36,6 +38,10 @@ class InsightsManagementFragment : DaggerFragment() {
         super.onCreateOptionsMenu(menu, inflater)
 
         inflater?.inflate(R.menu.menu_insights_management, menu)
+        this.menu = menu
+
+        initializeViews()
+        initializeViewModels(requireActivity())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -58,17 +64,11 @@ class InsightsManagementFragment : DaggerFragment() {
         insightsManagementContainer.layoutTransition = transition
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initializeViews()
-        initializeViewModels(requireActivity())
-    }
-
     private fun initializeViewModels(activity: FragmentActivity) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(InsightsManagementViewModel::class.java)
-        setupObservers()
         viewModel.start()
+
+        setupObservers()
     }
 
     private fun setupObservers() {
@@ -98,6 +98,12 @@ class InsightsManagementFragment : DaggerFragment() {
 
         viewModel.closeInsightsManagement.observe(this, Observer {
             requireActivity().finish()
+        })
+
+        viewModel.isMenuVisible.observe(this, Observer { isMenuVisible ->
+            isMenuVisible?.let {
+                menu?.findItem(R.id.save_insights)?.isVisible = isMenuVisible
+            }
         })
     }
 

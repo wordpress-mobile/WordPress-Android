@@ -47,11 +47,15 @@ class InsightsManagementViewModel @Inject constructor(
     private val _closeInsightsManagement = SingleLiveEvent<Unit>()
     val closeInsightsManagement: LiveData<Unit> = _closeInsightsManagement
 
+    private val _isMenuVisible = MutableLiveData<Boolean>()
+    val isMenuVisible: LiveData<Boolean> = _isMenuVisible
+
     private var isInitialized = false
 
     fun start() {
         if (!isInitialized) {
             isInitialized = true
+            _isMenuVisible.value = false
             loadInsights()
         }
     }
@@ -85,6 +89,7 @@ class InsightsManagementViewModel @Inject constructor(
 
     fun onAddedInsightsReordered(items: List<InsightModel>) {
         _addedInsights.value = items
+        _isMenuVisible.value = true
     }
 
     fun onItemButtonClicked(insight: InsightModel) {
@@ -97,6 +102,7 @@ class InsightsManagementViewModel @Inject constructor(
                 _addedInsights.value = _addedInsights.value?.let { it + insight.copy(type = ADDED) }
             }
         }
+        _isMenuVisible.value = true
     }
 
     data class InsightModel(val insightsTypes: InsightsTypes, val type: Type) {
