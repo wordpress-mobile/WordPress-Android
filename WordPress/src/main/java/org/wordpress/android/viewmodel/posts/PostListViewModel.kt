@@ -469,6 +469,11 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun restorePost(post: PostModel) {
+        // We need network connection to restore a post
+        if (!checkNetworkConnection()) {
+            return
+        }
+
         postsBeingTrashedOrRestored.add(LocalId(post.id))
         pagedListWrapper.invalidateData()
         dispatcher.dispatch(PostActionBuilder.newRestorePostAction(RemotePostPayload(post, site)))
@@ -533,6 +538,11 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun trashPost(post: PostModel) {
+        // We need network connection to trash a post
+        if (!checkNetworkConnection()) {
+            return
+        }
+
         postsBeingTrashedOrRestored.add(LocalId(post.id))
         pagedListWrapper.invalidateData()
 
