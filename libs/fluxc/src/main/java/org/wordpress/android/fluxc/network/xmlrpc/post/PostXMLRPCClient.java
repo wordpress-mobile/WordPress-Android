@@ -291,7 +291,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void deletePost(final @NonNull SiteModel site, final @NonNull PostModel post,
+    public void deletePost(final @NonNull PostModel post, final @NonNull SiteModel site,
                            final @NonNull PostDeleteActionType postDeleteActionType) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
