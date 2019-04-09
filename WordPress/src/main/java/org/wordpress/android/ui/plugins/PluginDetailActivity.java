@@ -86,6 +86,7 @@ import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -274,7 +275,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (event.isError()) {
             AppLog.e(T.PLANS, PluginDetailActivity.class.getSimpleName() + ".onPlansFetched: "
                               + event.error.type + " - " + event.error.message);
-            Snackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error),
+            WPSnackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error),
                     AccessibilityUtils.getSnackbarDuration(this)).show();
         } else {
             // This should not happen
@@ -283,7 +284,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 if (BuildConfig.DEBUG) {
                     throw new IllegalStateException(errorMessage);
                 }
-                Snackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error),
+                WPSnackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error),
                         AccessibilityUtils.getSnackbarDuration(this)).show();
                 AppLog.e(T.PLANS, errorMessage);
                 return;
@@ -833,28 +834,28 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void showSuccessfulUpdateSnackbar() {
-        Snackbar.make(mContainer,
+        WPSnackbar.make(mContainer,
                 getString(R.string.plugin_updated_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
                 .show();
     }
 
     private void showSuccessfulInstallSnackbar() {
-        Snackbar.make(mContainer,
+        WPSnackbar.make(mContainer,
                 getString(R.string.plugin_installed_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
                 .show();
     }
 
     private void showSuccessfulPluginRemovedSnackbar() {
-        Snackbar.make(mContainer,
+        WPSnackbar.make(mContainer,
                 getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
                 .show();
     }
 
     private void showUpdateFailedSnackbar() {
-        Snackbar.make(mContainer,
+        WPSnackbar.make(mContainer,
                 getString(R.string.plugin_updated_failed, mPlugin.getDisplayName()),
                 AccessibilityUtils.getSnackbarDuration(this))
                 .setAction(R.string.retry, new View.OnClickListener() {
@@ -867,7 +868,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void showInstallFailedSnackbar() {
-        Snackbar.make(mContainer,
+        WPSnackbar.make(mContainer,
                 getString(R.string.plugin_installed_failed, mPlugin.getDisplayName()),
                 AccessibilityUtils.getSnackbarDuration(this))
                 .setAction(R.string.retry, new View.OnClickListener() {
@@ -880,7 +881,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void showPluginRemoveFailedSnackbar() {
-        Snackbar.make(mContainer,
+        WPSnackbar.make(mContainer,
                 getString(R.string.plugin_remove_failed, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
                 .show();

@@ -167,6 +167,7 @@ import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.util.AztecLog;
@@ -1838,7 +1839,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         refreshEditorContent();
 
-        Snackbar.make(mViewPager, getString(R.string.history_loaded_revision),
+        WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision),
                 AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, 4000))
                 .setAction(getString(R.string.undo), new OnClickListener() {
                     @Override
@@ -3863,7 +3864,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     refreshEditorContent();
 
                     if (mViewPager != null) {
-                        Snackbar.make(mViewPager, getString(R.string.local_changes_discarded),
+                        WPSnackbar.make(mViewPager, getString(R.string.local_changes_discarded),
                                 AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, Snackbar.LENGTH_LONG))
                                 .setAction(getString(R.string.undo), new OnClickListener() {
                                     @Override public void onClick(View view) {
