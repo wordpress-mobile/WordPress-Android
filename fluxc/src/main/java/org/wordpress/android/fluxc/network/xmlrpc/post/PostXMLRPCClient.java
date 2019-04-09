@@ -31,9 +31,11 @@ import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
@@ -289,7 +291,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void deletePost(final PostModel post, final SiteModel site) {
+    public void deletePost(final @NonNull SiteModel site, final @NonNull PostModel post,
+                           final @NonNull PostDeleteActionType postDeleteActionType) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
@@ -300,7 +303,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        // XML-RPC response doesn't contain the deleted post object
+                        DeletedPostPayload payload =
+                                new DeletedPostPayload(post, site, postDeleteActionType, (PostModel) null);
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 },
@@ -309,18 +314,18 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // Possible non-generic errors:
                         // 404 - "Invalid post ID."
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
                         // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
                         // Convert GenericErrorType to PostErrorType where applicable
-                        PostError postError;
+                        PostError deletePostError;
                         switch (error.type) {
                             case AUTHORIZATION_REQUIRED:
-                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                deletePostError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
                                 break;
                             default:
-                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                                deletePostError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
                         }
-                        payload.error = postError;
+                        DeletedPostPayload payload =
+                                new DeletedPostPayload(post, site, postDeleteActionType, deletePostError);
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 });
