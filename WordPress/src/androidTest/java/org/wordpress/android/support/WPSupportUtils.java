@@ -300,7 +300,7 @@ public class WPSupportUtils {
     // a different thread than the UI, the UI sometimes reports completion of an operation before repainting the
     // screen to reflect the change. Delaying by one frame ensures we're not taking a screenshot of a stale UI.
     public static void waitOneFrame() {
-    idleFor(17);
+        idleFor(17);
     }
 
     public static void idleFor(int milliseconds) {

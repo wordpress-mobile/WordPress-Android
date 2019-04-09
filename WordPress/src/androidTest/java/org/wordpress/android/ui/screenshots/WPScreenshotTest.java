@@ -141,9 +141,6 @@ public class WPScreenshotTest extends BaseTest {
         // Wait for the editor to load all images
         idleFor(5000);
 
-        // Click in the post title editor and ensure the caret is at the end of the title editor
-//        focusEditPostTitle();
-
         if (hideKeyboard) {
             Espresso.closeSoftKeyboard();
         }
