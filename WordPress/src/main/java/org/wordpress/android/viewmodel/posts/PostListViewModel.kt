@@ -166,13 +166,9 @@ class PostListViewModel @Inject constructor(
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
         }
-        val performGetItemIdsToHide = { postListDescriptor: PostListDescriptor ->
-            null
-        }
         val dataSource = PostListItemDataSource(
                 dispatcher = dispatcher,
                 postStore = postStore,
-                performGetItemIdsToHide = performGetItemIdsToHide,
                 transform = this::transformPostModelToPostListItemUiState
         )
         listStore.getList(listDescriptor, dataSource, lifecycle)
