@@ -222,6 +222,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
+        if (CrashlyticsUtils.shouldEnableCrashlytics(this)) {
+            Fabric.with(this, new Crashlytics());
+        }
+
         // Init WellSql
         WellSql.init(new WellSqlConfig(getApplicationContext()));
 
@@ -234,10 +238,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         sRequestQueue = mRequestQueue;
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
-
-        if (CrashlyticsUtils.shouldEnableCrashlytics(this)) {
-            Fabric.with(this, new Crashlytics());
-        }
 
         ProfilingUtils.start("App Startup");
         // Enable log recording
