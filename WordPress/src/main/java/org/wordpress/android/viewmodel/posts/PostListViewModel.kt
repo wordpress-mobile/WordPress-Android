@@ -10,6 +10,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import android.content.Intent
 import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import de.greenrobot.event.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -22,7 +23,6 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -31,7 +31,6 @@ import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.ListError
@@ -88,7 +87,6 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
-import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState.RefreshError
 import org.wordpress.android.widgets.PostListButtonType
@@ -136,11 +134,11 @@ class PostListViewModel @Inject constructor(
     private val uploadStatusMap = HashMap<Int, PostListItemUploadStatus>()
     private val featuredImageMap = HashMap<Long, String>()
 
-    // Keep a reference to the currently being trashed post, so we can hide it during Undo SnackBar
-    private var postIdToTrash: Pair<LocalPostId, RemotePostId>? = null
+    // Keep a reference to the post currently being trashed/restored, so we can change it's ui state
+    private var performingActionPostId: LocalId? = null
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForPublishDialog: Int? = null
-    private var localPostIdForTrashDialog: Int? = null
+    private var localPostIdForDeleteDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
     private var originalPostCopyForConflictUndo: PostModel? = null
     private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
@@ -169,9 +167,7 @@ class PostListViewModel @Inject constructor(
             "ListDescriptor needs to be initialized before this is observed!"
         }
         val performGetItemIdsToHide = { postListDescriptor: PostListDescriptor ->
-            if (!postListDescriptor.statusList.contains(PostStatus.TRASHED)) {
-                postIdToTrash
-            } else null
+            null
         }
         val dataSource = PostListItemDataSource(
                 dispatcher = dispatcher,
@@ -401,9 +397,11 @@ class PostListViewModel @Inject constructor(
             BUTTON_VIEW -> _postListAction.postValue(ViewPost(site, post))
             BUTTON_PREVIEW -> _postListAction.postValue(PreviewPost(site, post))
             BUTTON_STATS -> _postListAction.postValue(ViewStats(site, post))
-            BUTTON_TRASH, BUTTON_DELETE -> {
-                // TODO: We should remove the post and not trash it if it's already in trash
-                showTrashConfirmationDialog(post)
+            BUTTON_TRASH -> {
+                trashPost(post)
+            }
+            BUTTON_DELETE -> {
+                showDeletePostConfirmationDialog(post)
             }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
@@ -411,20 +409,15 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    private fun showTrashConfirmationDialog(post: PostModel) {
-        if (postIdToTrash != null) {
-            // We can only handle one trash action at once due to be able to undo
-            return
-        }
+    private fun showDeletePostConfirmationDialog(post: PostModel) {
         // We need network connection to delete a remote post, but not a local draft
         if (!post.isLocalDraft && !checkNetworkConnection()) {
             return
         }
         val messageRes = if (!UploadService.isPostUploadingOrQueued(post)) {
-            if (post.isLocalDraft) {
-                R.string.dialog_confirm_delete_permanently_post
-            } else R.string.dialog_confirm_delete_post
+            R.string.dialog_confirm_delete_permanently_post
         } else {
+            // TODO Can this ever happen? - delete action is disabled when an upload is in progress
             R.string.dialog_confirm_cancel_post_media_uploading
         }
         val dialogHolder = DialogHolder(
@@ -434,7 +427,7 @@ class PostListViewModel @Inject constructor(
                 positiveButton = UiStringRes(R.string.delete),
                 negativeButton = UiStringRes(R.string.cancel)
         )
-        localPostIdForTrashDialog = post.id
+        localPostIdForDeleteDialog = post.id
         _dialogAction.postValue(dialogHolder)
     }
 
@@ -478,9 +471,14 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun restorePost(post: PostModel) {
+        // TODO We could handle more actions if OnPostChanged contained postId
+        // We can only handle one action at once due to be able to undo
+        if (performingActionPostId != null) return
+
+        performingActionPostId = LocalId(post.id)
+        pagedListWrapper.invalidateData()
         // TODO: When a post is trashed switching to trashed and then going back to the published posts will show
-        // the removal animation.
-        // TODO: Do we need to hide the post being restored from the trashed post list?
+        // the removal animation. Comment: If we keep the "progress" ui state, I think it's ok to ingore it
         dispatcher.dispatch(PostActionBuilder.newRestorePostAction(RemotePostPayload(post, site)))
     }
 
@@ -508,34 +506,34 @@ class PostListViewModel @Inject constructor(
         _postListAction.postValue(PostListAction.EditPost(site, post))
     }
 
-    private fun trashPost(localPostId: Int) {
+    private fun deletePost(localPostId: Int) {
         // If post doesn't exist, nothing else to do
         val post = postStore.getPostByLocalPostId(localPostId) ?: return
-        postIdToTrash = Pair(LocalPostId(LocalId(post.id)), RemotePostId(RemoteId(post.remotePostId)))
-        // Refresh the list so we can immediately hide the post
-        pagedListWrapper.invalidateData()
-        val undoAction = {
-            postIdToTrash = null
-            // Refresh the list, so we can re-show the post
-            pagedListWrapper.invalidateData()
-        }
-        val onDismissAction = {
-            // If postIdToTrash is set to `null`, user undid the action
-            if (postIdToTrash != null) {
-                postIdToTrash = null
-                _postUploadAction.postValue(CancelPostAndMediaUpload(post))
-                if (post.isLocalDraft) {
-                    val pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.id)
-                    _postListAction.postValue(DismissPendingNotification(pushId))
-                    dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
-                } else {
-                    dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
-                }
+
+        when {
+            post.isLocalDraft -> {
+                val pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.id)
+                _postListAction.postValue(DismissPendingNotification(pushId))
+                dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
+            }
+            else -> {
+                dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
+                // if a post is already in trash second delete action removes it permanently
+                dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
             }
         }
-        val messageRes = if (post.isLocalDraft) R.string.post_deleted else R.string.post_trashed
-        val snackBarHolder = SnackbarMessageHolder(messageRes, R.string.undo, undoAction, onDismissAction)
-        _snackBarAction.postValue(snackBarHolder)
+    }
+
+    private fun trashPost(post: PostModel) {
+        // TODO We could handle more actions if OnPostChanged contained postId
+        // We can only handle one action at once due to be able to undo
+        if (performingActionPostId != null) return
+
+        performingActionPostId = LocalId(post.id)
+        pagedListWrapper.invalidateData()
+
+        _postUploadAction.postValue(CancelPostAndMediaUpload(post))
+        dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
     }
 
     // FluxC Events
@@ -563,14 +561,56 @@ class PostListViewModel @Inject constructor(
             is CauseOfOnPostChanged.DeletePost -> {
                 if (event.isError) {
                     _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
+                } else {
+                    if (performingActionPostId != null) {
+                        showSnackbarWithUndo(
+                                { post -> restorePost(post) },
+                                R.string.post_trashed,
+                                R.string.post_restoring
+                        )
+                    }
                 }
             }
             is CauseOfOnPostChanged.RestorePost -> {
                 if (event.isError) {
                     _toastMessage.postValue(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
+                } else {
+                    if (performingActionPostId != null) {
+                        showSnackbarWithUndo(
+                                { post -> trashPost(post) },
+                                R.string.post_restored,
+                                R.string.post_trashing
+                        )
+                    }
                 }
             }
         }
+    }
+
+    private fun showSnackbarWithUndo(
+        undo: ((PostModel) -> Unit),
+        @StringRes actionText: Int,
+        @StringRes undoingText: Int
+    ) {
+        val undoAction = {
+            val postId = performingActionPostId?.value
+            if (postId != null) {
+                performingActionPostId = null
+                undo(postStore.getPostByLocalPostId(postId))
+                _snackBarAction.postValue(SnackbarMessageHolder(undoingText))
+            }
+        }
+        val dismissAction = {
+            performingActionPostId = null
+        }
+
+        val snackBarHolder = SnackbarMessageHolder(
+                actionText,
+                R.string.undo,
+                undoAction,
+                dismissAction
+        )
+        _snackBarAction.postValue(snackBarHolder)
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -743,9 +783,9 @@ class PostListViewModel @Inject constructor(
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog?.let {
-                localPostIdForTrashDialog = null
-                trashPost(it)
+            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog?.let {
+                localPostIdForDeleteDialog = null
+                deletePost(it)
             }
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog?.let {
                 localPostIdForPublishDialog = null
@@ -762,7 +802,7 @@ class PostListViewModel @Inject constructor(
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
+            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 updateConflictedPostWithItsLocalVersion(it)
@@ -895,7 +935,8 @@ class PostListViewModel @Inject constructor(
                             featuredImageId = post.featuredImageId,
                             postContent = post.content
                     ),
-                    formattedDate = PostUtils.getFormattedDate(post)
+                    formattedDate = PostUtils.getFormattedDate(post),
+                    performingAction = performingActionPostId?.value == post.id
             ) { postModel, buttonType, statEvent ->
                 trackAction(buttonType, postModel, statEvent)
                 handlePostButton(buttonType, postModel)

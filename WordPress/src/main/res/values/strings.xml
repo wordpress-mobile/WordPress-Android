@@ -441,6 +441,10 @@
     <string name="preview_post">Preview post</string>
     <string name="post_deleted">Post deleted</string>
     <string name="post_trashed">Post sent to trash</string>
+    <string name="post_trashing">Post is being trashed</string>
+    <string name="post_restored">Post restored</string>
+    <string name="post_restoring">Post is being restored</string>
+
     <string name="share_link">Share link</string>
     <string name="view_in_browser">View in browser</string>
     <string name="preview">Preview</string>
