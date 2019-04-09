@@ -226,7 +226,7 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void deletePost(final @NonNull SiteModel site, final @NonNull PostModel post,
+    public void deletePost(final @NonNull PostModel post, final @NonNull SiteModel site,
                            final @NonNull PostDeleteActionType postDeleteActionType) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).delete.getUrlV1_1();
 

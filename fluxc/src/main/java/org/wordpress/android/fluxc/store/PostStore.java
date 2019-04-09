@@ -595,10 +595,10 @@ public class PostStore extends Store {
         PostDeleteActionType postDeleteActionType = PostStatus.fromPost(payload.post) == PostStatus.TRASHED
                 ? PostDeleteActionType.DELETE : PostDeleteActionType.TRASH;
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.deletePost(payload.site, payload.post, postDeleteActionType);
+            mPostRestClient.deletePost(payload.post, payload.site, postDeleteActionType);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.deletePost(payload.site, payload.post, postDeleteActionType);
+            mPostXMLRPCClient.deletePost(payload.post, payload.site, postDeleteActionType);
         }
     }
 
