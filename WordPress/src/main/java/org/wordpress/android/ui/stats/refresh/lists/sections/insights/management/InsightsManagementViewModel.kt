@@ -47,8 +47,13 @@ class InsightsManagementViewModel @Inject constructor(
     private val _closeInsightsManagement = SingleLiveEvent<Unit>()
     val closeInsightsManagement: LiveData<Unit> = _closeInsightsManagement
 
+    private var isInitialized = false
+
     fun start() {
-        loadInsights()
+        if (!isInitialized) {
+            isInitialized = true
+            loadInsights()
+        }
     }
 
     private fun loadInsights() {
