@@ -17,7 +17,7 @@ private const val IS_LIST_FULLY_FETCHED = false
 private val testListDescriptor = TestListDescriptor()
 private val testStartAndEndPosition = Pair(5, 10)
 
-class InternalPagedListDataSourceTest {
+internal class InternalPagedListDataSourceTest {
     private val remoteItemIds = mock<List<RemoteId>>()
     private val mockIdentifiers = mock<List<TestListIdentifier>>()
     private val mockItemDataSource = mock<ListItemDataSourceInterface<TestListDescriptor, TestListIdentifier, String>>()
