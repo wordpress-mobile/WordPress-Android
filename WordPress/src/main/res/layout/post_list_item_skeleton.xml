@@ -48,7 +48,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                android:background="@color/grey_light"
                 android:orientation="horizontal">
 
                 <org.wordpress.android.widgets.PostListButton
@@ -61,11 +60,7 @@
 
                 <org.wordpress.android.widgets.PostListButton
                     style="@style/PostListRowSkeletonButton"
-                    wp:wpPostButtonType="publish"/>
-
-                <org.wordpress.android.widgets.PostListButton
-                    style="@style/PostListRowSkeletonButton"
-                    wp:wpPostButtonType="stats"/>
+                    wp:wpPostButtonType="more"/>
             </LinearLayout>
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>

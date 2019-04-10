@@ -251,6 +251,11 @@
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="posts_empty_list_button">Create a post</string>
     <string name="empty_list_default">This list is empty</string>
+    <string name="posts_published_empty">You haven\'t published any posts yet</string>
+    <string name="posts_scheduled_empty">You don\'t have any scheduled posts</string>
+    <string name="posts_draft_empty">You don\'t have any draft posts</string>
+    <string name="posts_trashed_empty">You don\'t have any binned posts</string>
+    <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
 
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
@@ -266,6 +271,7 @@
     <string name="button_discard">Discard</string>
     <string name="button_discard_changes">Discard Changes</string>
     <string name="button_retry">Retry</string>
+    <string name="button_restore">Restore</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
@@ -1263,8 +1269,6 @@
     <string name="post_status_pending_review">Pending review</string>
     <string name="post_status_draft">Draft</string>
     <string name="post_status_post_private">Private</string>
-    <string name="post_status_scheduled">Scheduled</string>
-    <string name="post_status_trashed">Trashed</string>
     <string-array name="post_settings_statuses" translatable="false">
         <item>@string/post_status_publish_post</item>
         <item>@string/post_status_draft</item>
@@ -2493,6 +2497,16 @@
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
+
+
+    <!-- Posts -->
+    <string name="post_list_author_me">Me</string>
+    <string name="post_list_author_everyone">Everyone</string>
+    <string name="post_list_published">Published</string>
+    <string name="post_list_drafts">Drafts</string>
+    <string name="post_list_scheduled">Scheduled</string>
+    <string name="post_list_trashed">Trashed</string>
+
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->

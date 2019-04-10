@@ -24,6 +24,7 @@ import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.PostsListActivityKt;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
@@ -471,7 +472,6 @@ class PostUploadNotifier {
 
         long notificationId = getNotificationIdForPost(post);
         Intent notificationIntent = getNotificationIntent(post, site, notificationId);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         notificationIntent.setAction(String.valueOf(notificationId));
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
@@ -519,6 +519,7 @@ class PostUploadNotifier {
             notificationIntent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, post.getRemotePostId());
         } else {
             notificationIntent = new Intent(mContext, PostsListActivity.class);
+            notificationIntent.putExtra(PostsListActivityKt.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         }
 
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
