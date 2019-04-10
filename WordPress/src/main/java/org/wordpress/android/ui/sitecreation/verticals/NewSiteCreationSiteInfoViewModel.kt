@@ -107,7 +107,7 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
             NEXT(
                     text = R.string.next,
                     textColor = android.R.color.white,
-                    backgroundColor = R.color.primary_400
+                    backgroundColor = R.color.accent
             )
         }
 
