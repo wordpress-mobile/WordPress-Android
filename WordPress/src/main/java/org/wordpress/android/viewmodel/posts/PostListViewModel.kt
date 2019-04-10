@@ -9,7 +9,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import android.content.Intent
-import android.support.annotation.DrawableRes
 import de.greenrobot.event.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -79,7 +78,6 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.VideoOptimizer
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
@@ -92,9 +90,9 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
+import org.wordpress.android.viewmodel.posts.PostListEmptyUiState.RefreshError
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
-import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState.RefreshError
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
@@ -264,48 +262,6 @@ class PostListViewModel @Inject constructor(
             )
             TRASHED -> PostListEmptyUiState.EmptyList(UiStringRes(R.string.posts_trashed_empty))
         }
-    }
-
-    sealed class PostListEmptyUiState(
-        val title: UiString? = null,
-        @DrawableRes val imgResId: Int? = null,
-        val buttonText: UiString? = null,
-        val onButtonClick: (() -> Unit)? = null,
-        val emptyViewVisible: Boolean = true
-    ) {
-        class EmptyList(
-            title: UiString,
-            buttonText: UiString? = null,
-            onButtonClick: (() -> Unit)? = null
-        ) : PostListEmptyUiState(
-                title = title,
-                imgResId = R.drawable.img_illustration_posts_75dp,
-                buttonText = buttonText,
-                onButtonClick = onButtonClick
-        )
-
-        object DataShown : PostListEmptyUiState(emptyViewVisible = false)
-
-        object Loading : PostListEmptyUiState(
-                title = UiStringRes(R.string.posts_fetching),
-                imgResId = R.drawable.img_illustration_posts_75dp
-        )
-
-        class RefreshError(
-            title: UiString,
-            buttonText: UiString? = null,
-            onButtonClick: (() -> Unit)? = null
-        ) : PostListEmptyUiState(
-                title = title,
-                imgResId = R.drawable.img_illustration_empty_results_216dp,
-                buttonText = buttonText,
-                onButtonClick = onButtonClick
-        )
-
-        object PermissionsError : PostListEmptyUiState(
-                title = UiStringRes(R.string.error_refresh_unauthorized_posts),
-                imgResId = R.drawable.img_illustration_posts_75dp
-        )
     }
 
     private var isNetworkAvailable: Boolean = true
