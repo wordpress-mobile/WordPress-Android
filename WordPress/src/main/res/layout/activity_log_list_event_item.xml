@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_content_container"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
     android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             android:layout_margin="@dimen/activity_log_icon_margin"
             android:layout_width="@dimen/activity_log_icon_size"
             android:padding="@dimen/margin_medium"
-            tools:background="@drawable/shape_oval_grey"
+            tools:background="@drawable/bg_oval_neutral_300"
             tools:src="@drawable/ic_comment_white_24dp" >
         </ImageView>
 
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:padding="@dimen/activity_log_icon_margin"
             android:src="@drawable/ic_history_white_24dp"
-            android:tint="@color/blue_wordpress" >
+            android:tint="@color/primary_500" >
         </ImageButton>
 
         <LinearLayout
@@ -63,7 +63,7 @@
                 android:singleLine="true"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 tools:text="Comment by oguzkocer on Android Studio 3.1 Configuration Issue: I think the bigger problem for me was the lack of make option, so hopefully at least that'll work." >
             </org.wordpress.android.widgets.WPTextView>
 
@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:singleLine="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 tools:text="Comment posted" >
             </org.wordpress.android.widgets.WPTextView>
 

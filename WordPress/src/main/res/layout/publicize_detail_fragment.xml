@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
         android:visibility="gone"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="@dimen/default_cardview_radius"
         tools:visibility="visible" >
 
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:text="@string/connected_accounts_label"
-                android:textColor="@color/blue_wordpress"
+                android:textColor="@color/primary_500"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 android:layout_marginStart="@dimen/margin_extra_large"
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
         android:layout_width="match_parent"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="@dimen/default_cardview_radius" >
 
         <LinearLayout
@@ -69,7 +69,7 @@
                 android:layout_marginBottom="@dimen/margin_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:ellipsize="end"
-                android:textColor="@color/blue_wordpress"
+                android:textColor="@color/primary_500"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 tools:text="text_service"
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:textColor="@color/grey_darken_20"
+                android:textColor="@color/neutral_500"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_description"
                 android:layout_marginEnd="@dimen/margin_extra_large"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_large"
                 android:ellipsize="end"
-                android:textColor="@color/grey_darken_20"
+                android:textColor="@color/neutral_500"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 tools:text="text_description_notice"
@@ -109,7 +109,7 @@
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:ellipsize="end"
                 android:text="@string/learn_more"
-                android:textColor="@color/blue_wordpress"
+                android:textColor="@color/primary_500"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 tools:text="learn_more_button"
@@ -120,7 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_divider_height"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:background="@color/divider_grey" />
+                android:background="@color/divider" />
 
             <org.wordpress.android.ui.publicize.ConnectButton
                 android:id="@+id/button_connect"

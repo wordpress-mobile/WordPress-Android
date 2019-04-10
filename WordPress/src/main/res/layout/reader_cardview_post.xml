@@ -9,7 +9,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:stateListAnimator="@anim/pressed_card"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="@dimen/default_cardview_radius"
     app:cardElevation="@dimen/reader_card_elevation" >
 
@@ -33,10 +33,10 @@
             <ImageView
                 android:id="@+id/image_avatar_or_blavatar"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/margin_large"
-                android:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"
+                android:layout_marginEnd="@dimen/reader_card_avatar_margin_end"
+                android:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
                 android:contentDescription="@string/reader_blavatar_desc"
-                style="@style/ReaderImageView.Avatar" >
+                style="@style/ReaderImageView.Avatar">
             </ImageView>
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
@@ -64,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:maxLines="1"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/reader_hyperlink"
+                    android:textColor="@color/link_reader"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="text_blog_nametext_blog_name text_blog_name"
                     style="@style/ReaderTextView" >
@@ -109,11 +109,11 @@
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="wrap_content"
                 android:maxLines="1"
-                android:shadowColor="@color/grey_dark"
+                android:shadowColor="@color/neutral_700"
                 android:shadowDx="@dimen/reader_photo_title_shadow_offset"
                 android:shadowDy="@dimen/reader_photo_title_shadow_offset"
                 android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"
                 tools:text="text_photo_title" >
             </org.wordpress.android.widgets.WPTextView>
@@ -180,7 +180,7 @@
                 android:background="?android:selectableItemBackground"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/margin_large"
-                android:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
+                android:src="@drawable/bg_rectangle_neutral_100_user_32dp"
                 android:contentDescription="@string/reader_blavatar_desc"
                 style="@style/ReaderImageView.Avatar.Small" >
             </ImageView>
@@ -192,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:maxLines="3"
-                android:textColor="@color/grey"
+                android:textColor="@color/neutral_300"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_attribution"
                 style="@style/ReaderTextView" >
@@ -217,7 +217,8 @@
                 android:layout_width="wrap_content"
                 android:minHeight="@dimen/reader_button_minimum_height"
                 android:orientation="horizontal"
-                android:paddingEnd="@dimen/margin_medium" >
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium">
 
                 <ImageView
                     android:id="@+id/image_visit_icon"
@@ -227,7 +228,7 @@
                     android:layout_marginStart="-2dp"
                     android:layout_width="@dimen/reader_count_icon"
                     android:src="@drawable/ic_external_white_24dp"
-                    android:tint="@color/grey_text_min" >
+                    android:tint="@color/neutral" >
                 </ImageView>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -235,7 +236,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:text="@string/reader_label_visit"
-                    android:textColor="@color/grey_text_min"
+                    android:textColor="@color/neutral"
                     android:textSize="@dimen/text_sz_medium" >
                 </org.wordpress.android.widgets.WPTextView>
 
@@ -259,7 +260,7 @@
                 android:layout_toStartOf="@id/count_comments"
                 android:padding="@dimen/margin_medium"
                 android:src="@drawable/ic_bookmark_outline_bookmark_selector_24dp"
-                android:tint="@color/grey_min_blue_medium_grey_disabled_selector" >
+                android:tint="@color/neutral_primary_400_neutral_400_selector" >
             </ImageView>
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -297,7 +298,7 @@
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
                 android:src="@drawable/ic_ellipsis_white_24dp"
-                android:tint="@color/grey_text_min" >
+                android:tint="@color/neutral" >
             </ImageView>
 
         </RelativeLayout>

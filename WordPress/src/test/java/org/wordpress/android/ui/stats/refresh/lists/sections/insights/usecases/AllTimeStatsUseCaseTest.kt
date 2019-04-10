@@ -127,6 +127,32 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         }
     }
 
+    @Test
+    fun `best day is null when it's empty`() = test {
+        val forced = false
+        val refresh = true
+        val model = InsightsAllTimeModel(1L, null, 1, 0, 0, "", 0)
+        whenever(insightsStore.getAllTimeInsights(site)).thenReturn(model)
+        whenever(
+                insightsStore.fetchAllTimeInsights(
+                        site,
+                        forced
+                )
+        ).thenReturn(OnStatsFetched(model))
+
+        val result = loadAllTimeInsights(refresh, forced)
+
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        val items = result.data!!
+        assertEquals(items.size, 3)
+        assertTrue(items[0] is Title)
+        assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
+        (items[2] as QuickScanItem).apply {
+            assertThat(this.rightColumn.tooltip).isNull()
+        }
+    }
+
     private suspend fun loadAllTimeInsights(refresh: Boolean, forced: Boolean): UseCaseModel {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }

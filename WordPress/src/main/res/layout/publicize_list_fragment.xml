@@ -22,7 +22,7 @@
                 android:id="@+id/card_view"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius" >
 
                 <LinearLayout
@@ -41,7 +41,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_medium"
                         android:text="@string/connections_label"
-                        android:textColor="@color/blue_wordpress"
+                        android:textColor="@color/primary_500"
                         android:textSize="@dimen/text_sz_medium"
                         android:textStyle="bold"/>
 
@@ -50,7 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_large"
                         android:text="@string/connections_description"
-                        android:textColor="@color/grey_text_min"
+                        android:textColor="@color/neutral"
                         android:textSize="@dimen/text_sz_medium"/>
 
                     <org.wordpress.android.ui.reader.views.ReaderRecyclerView
@@ -64,7 +64,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/margin_extra_large"
-                        android:textColor="@color/grey_darken_20"
+                        android:textColor="@color/neutral_500"
                         android:textSize="@dimen/text_sz_extra_large"
                         android:visibility="gone"
                         tools:text="@string/empty_list_default"
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_width="match_parent"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius" >
 
                 <RelativeLayout
@@ -98,7 +98,7 @@
                         android:layout_marginBottom="@dimen/margin_large"
                         android:layout_marginTop="@dimen/margin_large"
                         android:text="@string/sharing_buttons"
-                        android:textColor="@color/blue_wordpress"
+                        android:textColor="@color/primary_500"
                         android:textSize="@dimen/text_sz_medium"
                         android:textStyle="bold"/>
 
@@ -117,7 +117,7 @@
                             android:layout_gravity="center_vertical"
                             android:contentDescription="@null"
                             android:src="@drawable/ic_cog_white_24dp"
-                            android:tint="@color/blue_wordpress"/>
+                            android:tint="@color/primary_500"/>
 
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/text_manage_button"
@@ -126,7 +126,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/margin_extra_large"
                             android:text="@string/manage"
-                            android:textColor="@color/grey_dark"
+                            android:textColor="@color/neutral_700"
                             android:textSize="@dimen/text_sz_large"/>
                     </LinearLayout>
                 </RelativeLayout>

@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:text="@string/sharing_disabled"
-                android:textColor="@color/blue_wordpress"
+                android:textColor="@color/primary_500"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold" />
 
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sharing_disabled_description"
-                android:textColor="@color/grey"
+                android:textColor="@color/neutral_300"
                 android:textSize="@dimen/text_sz_medium" />
 
         </LinearLayout>
@@ -53,7 +53,7 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:cardBackgroundColor="@color/white"
+                card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout
@@ -105,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                card_view:cardBackgroundColor="@color/white"
+                card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout
@@ -138,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                card_view:cardBackgroundColor="@color/white"
+                card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout
@@ -165,7 +165,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                card_view:cardBackgroundColor="@color/white"
+                card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout
