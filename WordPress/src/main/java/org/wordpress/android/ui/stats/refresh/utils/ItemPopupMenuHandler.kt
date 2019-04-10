@@ -48,7 +48,7 @@ class ItemPopupMenuHandler
                 val popup = ListPopupWindow(view.context)
                 val adapter = InsightsMenuAdapter(view.context, showUpAction, showDownAction)
                 popup.setAdapter(adapter)
-                popup.width = view.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
+                popup.width = view.context.resources.getDimensionPixelSize(R.dimen.stats_insights_menu_item_width)
                 popup.anchorView = view
                 popup.isModal = true
                 popup.setOnItemClickListener { _, _, _, id ->

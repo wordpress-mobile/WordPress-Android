@@ -401,6 +401,7 @@
     <dimen name="stats_list_item_left_margin">56dp</dimen>
     <dimen name="stats_activity_spacing">1dp</dimen>
     <dimen name="stats_insights_management_margin">24dp</dimen>
+    <dimen name="stats_insights_menu_item_width">231dp</dimen>
 
     <dimen name="settings_icon_size">24dp</dimen>
 
