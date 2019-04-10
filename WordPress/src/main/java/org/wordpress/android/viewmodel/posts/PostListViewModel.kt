@@ -408,20 +408,10 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun showDeletePostConfirmationDialog(post: PostModel) {
-        // We need network connection to delete a remote post, but not a local draft
-        if (!post.isLocalDraft && !checkNetworkConnection()) {
-            return
-        }
-        val messageRes = if (!UploadService.isPostUploadingOrQueued(post)) {
-            R.string.dialog_confirm_delete_permanently_post
-        } else {
-            // TODO Can this ever happen? - delete action is disabled when an upload is in progress
-            R.string.dialog_confirm_cancel_post_media_uploading
-        }
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_DELETE_POST_DIALOG_TAG,
                 title = UiStringRes(R.string.delete_post),
-                message = UiStringRes(messageRes),
+                message = UiStringRes(R.string.dialog_confirm_delete_permanently_post),
                 positiveButton = UiStringRes(R.string.delete),
                 negativeButton = UiStringRes(R.string.cancel)
         )
