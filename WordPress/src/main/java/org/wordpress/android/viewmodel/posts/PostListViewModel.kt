@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.DeletePost
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemovePost
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RestorePost
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
@@ -43,6 +44,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.DELETE
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.TRASH
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
@@ -52,6 +54,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.CriticalPostActionTracker
+import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.DELETING_POST
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.RESTORING_POST
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST
 import org.wordpress.android.ui.posts.EditPostActivity
@@ -535,6 +538,7 @@ class PostListViewModel @Inject constructor(
     private fun deletePost(localPostId: Int) {
         // If post doesn't exist, nothing else to do
         val post = postStore.getPostByLocalPostId(localPostId) ?: return
+        criticalPostActionTracker.add(LocalId(post.id), DELETING_POST)
 
         when {
             post.isLocalDraft -> {
@@ -545,6 +549,30 @@ class PostListViewModel @Inject constructor(
             else -> {
                 dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
             }
+        }
+    }
+
+    /**
+     * This function handles a post being deleted and removed. Since deleting remote posts will trigger both delete
+     * and remove actions we only want to remove the critical action when the post is actually successfully removed.
+     *
+     * It's possible to separate these into two methods that handles delete and remove. However, the fact that they
+     * follow the same approach and the tricky nature of delete action makes combining the actions like so makes our
+     * expectations clearer.
+     */
+    private fun handlePostDeletedOrRemoved(localPostId: LocalId, isRemoved: Boolean, isError: Boolean) {
+        if (criticalPostActionTracker.get(localPostId) != DELETING_POST) {
+            /*
+             * This is an unexpected action and either it has already been handled or another critical action has
+             * been performed. In either case, safest action is to just ignore it.
+             */
+            return
+        }
+        if (isError) {
+            _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
+        }
+        if (isRemoved) {
+            criticalPostActionTracker.remove(localPostId = localPostId)
         }
     }
 
@@ -614,10 +642,12 @@ class PostListViewModel @Inject constructor(
             }
             is CauseOfOnPostChanged.DeletePost -> {
                 val deletePostCauseOfChange = event.causeOfChange as DeletePost
-                // If post is completely removed we don't do anything about it
-                if (deletePostCauseOfChange.postDeleteActionType == TRASH) {
-                    handlePostTrashed(
-                            localPostId = LocalId(deletePostCauseOfChange.localPostId),
+                val localPostId = LocalId(deletePostCauseOfChange.localPostId)
+                when (deletePostCauseOfChange.postDeleteActionType) {
+                    TRASH -> handlePostTrashed(localPostId = localPostId, isError = event.isError)
+                    DELETE -> handlePostDeletedOrRemoved(
+                            localPostId = localPostId,
+                            isRemoved = false,
                             isError = event.isError
                     )
                 }
@@ -625,6 +655,10 @@ class PostListViewModel @Inject constructor(
             is CauseOfOnPostChanged.RestorePost -> {
                 val localPostId = LocalId((event.causeOfChange as RestorePost).localPostId)
                 handlePostRestored(localPostId = localPostId, isError = event.isError)
+            }
+            is CauseOfOnPostChanged.RemovePost -> {
+                val localPostId = LocalId((event.causeOfChange as RemovePost).localPostId)
+                handlePostDeletedOrRemoved(localPostId = localPostId, isRemoved = true, isError = event.isError)
             }
         }
     }
