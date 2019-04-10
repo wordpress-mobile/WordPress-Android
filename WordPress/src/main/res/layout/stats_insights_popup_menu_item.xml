@@ -12,16 +12,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@null"
-        android:layout_marginEnd="@dimen/margin_large"
-        tools:src="@drawable/ic_reader_follow_white_24dp"
-        tools:tint="@color/reader_follow" />
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        tools:src="@drawable/ic_arrow_up_grey_dark_24dp" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?textAppearanceSmallPopupMenu"
-        tools:text="@string/reader_btn_follow"
-        tools:textColor="@color/reader_follow" />
+        tools:text="@string/stats_menu_remove" />
 
 </LinearLayout>
