@@ -131,7 +131,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
     fun `best day is null when it's empty`() = test {
         val forced = false
         val refresh = true
-        val model = InsightsAllTimeModel(1L, null,  1, 0, 0, "", 0)
+        val model = InsightsAllTimeModel(1L, null, 1, 0, 0, "", 0)
         whenever(insightsStore.getAllTimeInsights(site)).thenReturn(model)
         whenever(
                 insightsStore.fetchAllTimeInsights(
