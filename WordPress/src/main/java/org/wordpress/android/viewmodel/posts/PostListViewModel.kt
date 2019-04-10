@@ -474,7 +474,19 @@ class PostListViewModel @Inject constructor(
         dispatcher.dispatch(PostActionBuilder.newRestorePostAction(RemotePostPayload(post, site)))
     }
 
-    private fun handlePostRestored(localPostId: LocalId) {
+    private fun handlePostRestored(localPostId: LocalId, isError: Boolean) {
+        if (criticalPostActionTracker.get(localPostId) != RESTORING_POST) {
+            /*
+             * This is an unexpected action and either it has already been handled or another critical action has
+             * been performed. In either case, safest action is to just ignore it.
+             */
+            return
+        }
+        if (isError) {
+            criticalPostActionTracker.remove(localPostId = localPostId)
+            _toastMessage.postValue(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
+            return
+        }
         val snackBarHolder = SnackbarMessageHolder(
                 messageRes = R.string.post_restored,
                 buttonTitleRes = R.string.undo,
@@ -544,7 +556,19 @@ class PostListViewModel @Inject constructor(
         dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
     }
 
-    private fun handlePostTrashed(localPostId: LocalId) {
+    private fun handlePostTrashed(localPostId: LocalId, isError: Boolean) {
+        if (criticalPostActionTracker.get(localPostId) != TRASHING_POST) {
+            /*
+             * This is an unexpected action and either it has already been handled or another critical action has
+             * been performed. In either case, safest action is to just ignore it.
+             */
+            return
+        }
+        if (isError) {
+            criticalPostActionTracker.remove(localPostId = localPostId)
+            _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
+            return
+        }
         val snackBarHolder = SnackbarMessageHolder(
                 messageRes = R.string.post_trashed,
                 buttonTitleRes = R.string.undo,
@@ -586,27 +610,17 @@ class PostListViewModel @Inject constructor(
             }
             is CauseOfOnPostChanged.DeletePost -> {
                 val deletePostCauseOfChange = event.causeOfChange as DeletePost
-                val localPostId = LocalId(deletePostCauseOfChange.localPostId)
-                if (event.isError) {
-                    if (deletePostCauseOfChange.postDeleteActionType == TRASH) {
-                        criticalPostActionTracker.remove(localPostId = localPostId)
-                    }
-                    _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
-                } else {
-                    // If post is completely removed we don't do anything about it
-                    if (deletePostCauseOfChange.postDeleteActionType == TRASH) {
-                        handlePostTrashed(localPostId)
-                    }
+                // If post is completely removed we don't do anything about it
+                if (deletePostCauseOfChange.postDeleteActionType == TRASH) {
+                    handlePostTrashed(
+                            localPostId = LocalId(deletePostCauseOfChange.localPostId),
+                            isError = event.isError
+                    )
                 }
             }
             is CauseOfOnPostChanged.RestorePost -> {
                 val localPostId = LocalId((event.causeOfChange as RestorePost).localPostId)
-                if (event.isError) {
-                    criticalPostActionTracker.remove(localPostId = localPostId)
-                    _toastMessage.postValue(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
-                } else {
-                    handlePostRestored(localPostId)
-                }
+                handlePostRestored(localPostId = localPostId, isError = event.isError)
             }
         }
     }
