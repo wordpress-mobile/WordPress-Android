@@ -40,6 +40,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
@@ -262,8 +263,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             }
                         });
                     }
-                }
-            );
+                }, new OnAuthHeaderRequestedListener() {
+                    @Override public String onAuthHeaderRequested(String url) {
+                        return mEditorFragmentListener.onAuthHeaderRequested(url);
+                    }
+                });
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@android:color/white">
 
     <include layout="@layout/toolbar" />
 
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
-        android:background="@color/snackbar_background_color"
+        android:background="@color/background_snackbar"
         tools:visibility="visible"
         android:paddingStart="@dimen/content_margin"
         android:paddingEnd="@dimen/content_margin">
@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_sz_medium"
             tools:text="Explanation of what a local draft is or what local changes are"
             android:layout_marginStart="@dimen/margin_large"
@@ -57,7 +57,7 @@
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/button_discard_changes"
                 android:textAllCaps="true"
-                android:textColor="@color/color_accent"
+                android:textColor="@color/accent"
                 android:textSize="@dimen/text_sz_small"
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"/>
@@ -72,7 +72,7 @@
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/button_publish"
                 android:textAllCaps="true"
-                android:textColor="@color/color_accent"
+                android:textColor="@color/accent"
                 android:textSize="@dimen/text_sz_small"
                 android:paddingEnd="@dimen/margin_large"
                 android:paddingStart="@dimen/margin_large"/>

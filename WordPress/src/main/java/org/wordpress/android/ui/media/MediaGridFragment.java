@@ -791,7 +791,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             inflater.inflate(R.menu.media_multiselect, menu);
             setSwipeToRefreshEnabled(false);
             getAdapter().setInMultiSelect(true);
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.grey_darken_30);
+            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.neutral_600);
             updateActionModeTitle(selectCount);
             return true;
         }
@@ -815,7 +815,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         public void onDestroyActionMode(ActionMode mode) {
             setSwipeToRefreshEnabled(true);
             getAdapter().setInMultiSelect(false);
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar_tint);
+            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar);
             mActionMode = null;
         }
     }

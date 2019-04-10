@@ -14,7 +14,7 @@
         android:contentDescription="@string/cancel_new_site_wizard_content_description"
         android:padding="@dimen/margin_extra_large"
         android:src="@drawable/ic_close_white_24dp"
-        android:tint="@color/wp_blue"
+        android:tint="@color/primary"
         android:visibility="gone"/>
 
     <org.wordpress.android.widgets.WPTextView
@@ -24,7 +24,7 @@
         android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
         android:gravity="center"
-        android:textColor="@color/wp_grey_darken_10"
+        android:textColor="@color/neutral_400"
         android:textSize="@dimen/text_sz_extra_large"
         app:fixWidowWords="true"
         app:layout_constraintBottom_toTopOf="@+id/error_subtitle"
@@ -42,7 +42,7 @@
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
         android:layout_marginTop="@dimen/margin_medium"
         android:gravity="center"
-        android:textColor="@color/wp_grey_dark"
+        android:textColor="@color/neutral_800"
         android:textSize="@dimen/text_sz_large"
         app:fixWidowWords="true"
         app:layout_constraintBottom_toTopOf="@+id/error_retry"
@@ -76,7 +76,7 @@
         android:gravity="center"
         android:text="@string/contact_support"
         android:textAllCaps="true"
-        android:textColor="@color/wp_blue_medium"
+        android:textColor="@color/primary_400"
         android:visibility="gone"
         app:fixWidowWords="true"
         app:layout_constraintBottom_toBottomOf="parent"

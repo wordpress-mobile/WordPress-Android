@@ -1,219 +1,303 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="UnusedResources">
-    <!-- material colors -->
-    <!--
-        colorPrimary            app branding color for the app bar
-        colorPrimaryDark        status bar and contextual app bars
-        colorControlNormal      (unused here) controls in their normal state (spinner arrow, scrollbars, unchecked checkboxes)
-        colorControlActivated   controls in their activated/checked state (search highlight, checked checkboxes)
-        colorControlHighlight   control highlights (ripples, list selectors)
-    -->
-    <color name="color_primary">@color/blue_wordpress</color>
-    <color name="color_primary_dark">@color/status_bar_tint</color>
-    <color name="color_accent">@color/orange_jazzy</color>
-    <color name="color_control_normal">@color/white</color>
-    <color name="color_control_activated">@color/blue_light</color>
-    <color name="color_control_highlight">@color/grey_lighten_20</color>
 
-    <color name="fab_normal">@color/color_accent</color>
-    <color name="fab_pressed">@color/orange_fire</color>
-    <color name="list_selected">@color/blue_light_translucent_80</color>
+    <!-- APPLICATION -->
+    <color name="background_default">@color/neutral_0</color>
+    <color name="background_notification_unread">#e6eff3</color>
+    <color name="background_shortcut">#f5f5f5</color>
+    <color name="background_snackbar">@color/neutral_800</color>
+    <color name="jetpack">#00be28</color>
+    <color name="link_reader">@color/primary</color>
+    <color name="link_stats">@color/accent</color>
+    <color name="stats_activity_high">@color/primary_dark</color>
+    <color name="stats_activity_low">@color/primary_light</color>
+    <color name="stats_activity_medium">@color/primary</color>
+    <color name="status_bar">@color/primary</color>
+    <color name="status_bar_action_mode">@color/neutral</color>
 
-    <!-- Default Colors -->
-    <color name="transparent">#00000000</color>
-    <color name="light_gray">@color/grey_lighten_30</color>
-    <color name="gray">@color/grey_lighten_20</color>
-    <color name="white">#FFFFFF</color>
-    <color name="white_dotorg_back">#F1F1F1</color> <!-- CHECKSTYLE IGNORE -->
-    <!-- note that black should NOT be used for text - use grey_dark instead -->
-    <color name="black">#000000</color>
-    <color name="default_background">@color/grey_lighten_30</color>
+    <!-- LOGIN -->
+    <color name="color_primary">@color/primary</color>
+    <color name="login_background_color">@color/background_default</color>
+    <color name="login_edit_text_color_control_activated">@color/primary_300</color>
+    <color name="login_edit_text_color_control_highlight">@color/neutral_100</color>
+    <color name="login_google_button_text_color">@color/primary</color>
+    <color name="login_secondary_button_text_color">@color/primary</color>
+    <color name="login_theme_accent_color">@color/accent</color>
 
-    <!-- ==================================== -->
-    <!-- WordPress.com Colors                 -->
-    <!-- wordpress.com/design-handbook/colors -->
-    <!-- Blues -->
-    <color name="blue_wordpress">#0087be</color>
-    <color name="blue_light">#78dcfa</color>
-    <color name="blue_medium">#00aadc</color>
-    <color name="blue_dark">#005082</color>
+    <!-- SEMANTIC -->
+    <color name="accent">@color/hot_pink_500</color>
+    <color name="accent_0">@color/hot_pink_0</color>
+    <color name="accent_100">@color/hot_pink_100</color>
+    <color name="accent_200">@color/hot_pink_200</color>
+    <color name="accent_300">@color/hot_pink_300</color>
+    <color name="accent_400">@color/hot_pink_400</color>
+    <color name="accent_50">@color/hot_pink_50</color>
+    <color name="accent_500">@color/hot_pink_500</color>
+    <color name="accent_600">@color/hot_pink_600</color>
+    <color name="accent_700">@color/hot_pink_700</color>
+    <color name="accent_800">@color/hot_pink_800</color>
+    <color name="accent_900">@color/hot_pink_900</color>
+    <color name="accent_dark">@color/hot_pink_700</color>
+    <color name="accent_light">@color/hot_pink_300</color>
+    <color name="divider">@color/gray_50</color>
+    <color name="error">@color/hot_red_500</color>
+    <color name="error_0">@color/hot_red_0</color>
+    <color name="error_100">@color/hot_red_100</color>
+    <color name="error_200">@color/hot_red_200</color>
+    <color name="error_300">@color/hot_red_300</color>
+    <color name="error_400">@color/hot_red_400</color>
+    <color name="error_50">@color/hot_red_50</color>
+    <color name="error_500">@color/hot_red_500</color>
+    <color name="error_600">@color/hot_red_600</color>
+    <color name="error_700">@color/hot_red_700</color>
+    <color name="error_800">@color/hot_red_800</color>
+    <color name="error_900">@color/hot_red_900</color>
+    <color name="error_dark">@color/hot_red_700</color>
+    <color name="error_light">@color/hot_red_300</color>
+    <color name="neutral">@color/gray_500</color>
+    <color name="neutral_0">@color/gray_0</color>
+    <color name="neutral_100">@color/gray_100</color>
+    <color name="neutral_200">@color/gray_200</color>
+    <color name="neutral_300">@color/gray_300</color>
+    <color name="neutral_400">@color/gray_400</color>
+    <color name="neutral_50">@color/gray_50</color>
+    <color name="neutral_500">@color/gray_500</color>
+    <color name="neutral_600">@color/gray_600</color>
+    <color name="neutral_700">@color/gray_700</color>
+    <color name="neutral_800">@color/gray_800</color>
+    <color name="neutral_900">@color/gray_900</color>
+    <color name="primary">@color/blue_500</color>
+    <color name="primary_0">@color/blue_0</color>
+    <color name="primary_100">@color/blue_100</color>
+    <color name="primary_200">@color/blue_200</color>
+    <color name="primary_300">@color/blue_300</color>
+    <color name="primary_400">@color/blue_400</color>
+    <color name="primary_50">@color/blue_50</color>
+    <color name="primary_500">@color/blue_500</color>
+    <color name="primary_600">@color/blue_600</color>
+    <color name="primary_700">@color/blue_700</color>
+    <color name="primary_800">@color/blue_800</color>
+    <color name="primary_900">@color/blue_900</color>
+    <color name="primary_dark">@color/blue_700</color>
+    <color name="primary_light">@color/blue_300</color>
+    <color name="success">@color/hot_green_500</color>
+    <color name="success_0">@color/hot_green_0</color>
+    <color name="success_100">@color/hot_green_100</color>
+    <color name="success_200">@color/hot_green_200</color>
+    <color name="success_300">@color/hot_green_300</color>
+    <color name="success_400">@color/hot_green_400</color>
+    <color name="success_50">@color/hot_green_50</color>
+    <color name="success_500">@color/hot_green_500</color>
+    <color name="success_600">@color/hot_green_600</color>
+    <color name="success_700">@color/hot_green_700</color>
+    <color name="success_800">@color/hot_green_800</color>
+    <color name="success_900">@color/hot_green_900</color>
+    <color name="success_dark">@color/hot_green_700</color>
+    <color name="success_light">@color/hot_green_300</color>
+    <color name="text">@color/gray_800</color>
+    <color name="text_subtle">@color/gray_500</color>
+    <color name="warning">@color/hot_yellow_500</color>
+    <color name="warning_0">@color/hot_yellow_0</color>
+    <color name="warning_100">@color/hot_yellow_100</color>
+    <color name="warning_200">@color/hot_yellow_200</color>
+    <color name="warning_300">@color/hot_yellow_300</color>
+    <color name="warning_400">@color/hot_yellow_400</color>
+    <color name="warning_50">@color/hot_yellow_50</color>
+    <color name="warning_500">@color/hot_yellow_500</color>
+    <color name="warning_600">@color/hot_yellow_600</color>
+    <color name="warning_700">@color/hot_yellow_700</color>
+    <color name="warning_800">@color/hot_yellow_800</color>
+    <color name="warning_900">@color/hot_yellow_900</color>
+    <color name="warning_dark">@color/hot_yellow_700</color>
+    <color name="warning_light">@color/hot_yellow_300</color>
 
-    <!-- Primary Greys -->
-    <color name="grey">#87a6bc</color>
-    <color name="grey_light">#f3f6f8</color>
-    <color name="grey_dark">#2e4453</color>
-    <color name="grey_disabled">@color/grey_darken_10</color>
+    <!-- STUDIO -->
+    <color name="blue_0">#f3f5f6</color>
+    <color name="blue_100">#bbc9d5</color>
+    <color name="blue_200">#95adc1</color>
+    <color name="blue_300">#6f93ad</color>
+    <color name="blue_400">#46799a</color>
+    <color name="blue_50">#d8dee4</color>
+    <color name="blue_500">#016087</color>
+    <color name="blue_600">#204a69</color>
+    <color name="blue_700">#23354b</color>
+    <color name="blue_800">#1d232f</color>
+    <color name="blue_900">#111215</color>
+    <color name="celadon_0">#f3f6f5</color>
+    <color name="celadon_100">#bad1cb</color>
+    <color name="celadon_200">#93bab0</color>
+    <color name="celadon_300">#6da296</color>
+    <color name="celadon_400">#438c7d</color>
+    <color name="celadon_50">#d8e3e0</color>
+    <color name="celadon_500">#007565</color>
+    <color name="celadon_600">#195d52</color>
+    <color name="celadon_700">#20473f</color>
+    <color name="celadon_800">#20312d</color>
+    <color name="celadon_900">#1d1d1d</color>
+    <color name="gray_0">#f6f6f6</color>
+    <color name="gray_100">#ccced0</color>
+    <color name="gray_200">#b0b5b8</color>
+    <color name="gray_300">#969ca1</color>
+    <color name="gray_400">#7c848b</color>
+    <color name="gray_50">#e1e2e2</color>
+    <color name="gray_500">#636d75</color>
+    <color name="gray_600">#50575d</color>
+    <color name="gray_700">#3d4145</color>
+    <color name="gray_800">#2b2d2f</color>
+    <color name="gray_900">#1a1a1a</color>
+    <color name="green_0">#f3f6f1</color>
+    <color name="green_100">#bcd3b5</color>
+    <color name="green_200">#97bc8d</color>
+    <color name="green_300">#73a567</color>
+    <color name="green_400">#4d8e41</color>
+    <color name="green_50">#d8e4d4</color>
+    <color name="green_500">#1d7819</color>
+    <color name="green_600">#1e611e</color>
+    <color name="green_700">#1e4a1e</color>
+    <color name="green_800">#1d341d</color>
+    <color name="green_900">#192019</color>
+    <color name="hot_blue_0">#f5f9ff</color>
+    <color name="hot_blue_100">#c1d7ff</color>
+    <color name="hot_blue_200">#93b6ff</color>
+    <color name="hot_blue_300">#6795fe</color>
+    <color name="hot_blue_400">#3574f8</color>
+    <color name="hot_blue_50">#dbe8ff</color>
+    <color name="hot_blue_500">#005fb7</color>
+    <color name="hot_blue_600">#144b9b</color>
+    <color name="hot_blue_700">#183780</color>
+    <color name="hot_blue_800">#162566</color>
+    <color name="hot_blue_900">#10144d</color>
+    <color name="hot_green_0">#f2fdee</color>
+    <color name="hot_green_100">#c5e6b9</color>
+    <color name="hot_green_200">#9dcf8d</color>
+    <color name="hot_green_300">#73b961</color>
+    <color name="hot_green_400">#44a234</color>
+    <color name="hot_green_50">#daf2d1</color>
+    <color name="hot_green_500">#008a00</color>
+    <color name="hot_green_600">#08720b</color>
+    <color name="hot_green_700">#0d5a10</color>
+    <color name="hot_green_800">#0f4410</color>
+    <color name="hot_green_900">#0f2e0e</color>
+    <color name="hot_orange_0">#fff9eb</color>
+    <color name="hot_orange_100">#fce1b5</color>
+    <color name="hot_orange_200">#fbca8a</color>
+    <color name="hot_orange_300">#fcb161</color>
+    <color name="hot_orange_400">#fd953b</color>
+    <color name="hot_orange_50">#feedcf</color>
+    <color name="hot_orange_500">#f67c00</color>
+    <color name="hot_orange_600">#d9650c</color>
+    <color name="hot_orange_700">#bb4f10</color>
+    <color name="hot_orange_800">#9d3a10</color>
+    <color name="hot_orange_900">#7e280e</color>
+    <color name="hot_pink_0">#fff4fc</color>
+    <color name="hot_pink_100">#ffcaea</color>
+    <color name="hot_pink_200">#ffa2d4</color>
+    <color name="hot_pink_300">#ff76b8</color>
+    <color name="hot_pink_400">#ff3997</color>
+    <color name="hot_pink_50">#ffdff3</color>
+    <color name="hot_pink_500">#d52c82</color>
+    <color name="hot_pink_600">#b7266a</color>
+    <color name="hot_pink_700">#992053</color>
+    <color name="hot_pink_800">#7c1b40</color>
+    <color name="hot_pink_900">#60162e</color>
+    <color name="hot_purple_0">#fff6ff</color>
+    <color name="hot_purple_100">#f0ccf6</color>
+    <color name="hot_purple_200">#dea7ef</color>
+    <color name="hot_purple_300">#c683ea</color>
+    <color name="hot_purple_400">#aa5fe6</color>
+    <color name="hot_purple_50">#f8e1fb</color>
+    <color name="hot_purple_500">#8051b4</color>
+    <color name="hot_purple_600">#673d99</color>
+    <color name="hot_purple_700">#4f2a7e</color>
+    <color name="hot_purple_800">#381865</color>
+    <color name="hot_purple_900">#21064c</color>
+    <color name="hot_red_0">#fff5ed</color>
+    <color name="hot_red_100">#ffcfac</color>
+    <color name="hot_red_200">#ffab78</color>
+    <color name="hot_red_300">#ff8248</color>
+    <color name="hot_red_400">#ff4b1c</color>
+    <color name="hot_red_50">#ffe2cd</color>
+    <color name="hot_red_500">#eb0001</color>
+    <color name="hot_red_600">#cb0c07</color>
+    <color name="hot_red_700">#ac120b</color>
+    <color name="hot_red_800">#8e140c</color>
+    <color name="hot_red_900">#70150c</color>
+    <color name="hot_yellow_0">#fffdeb</color>
+    <color name="hot_yellow_100">#fcf1bd</color>
+    <color name="hot_yellow_200">#fbe697</color>
+    <color name="hot_yellow_300">#fbda70</color>
+    <color name="hot_yellow_400">#fbcd45</color>
+    <color name="hot_yellow_50">#fef7d2</color>
+    <color name="hot_yellow_500">#f6c200</color>
+    <color name="hot_yellow_600">#daaa12</color>
+    <color name="hot_yellow_700">#bd9219</color>
+    <color name="hot_yellow_800">#a17b1c</color>
+    <color name="hot_yellow_900">#86661e</color>
+    <color name="orange_0">#fef7f2</color>
+    <color name="orange_100">#fad2b6</color>
+    <color name="orange_200">#f5ba8f</color>
+    <color name="orange_300">#eda268</color>
+    <color name="orange_400">#e38a40</color>
+    <color name="orange_50">#fce4d5</color>
+    <color name="orange_500">#d7730f</color>
+    <color name="orange_600">#b95e1b</color>
+    <color name="orange_700">#994b1f</color>
+    <color name="orange_800">#79391f</color>
+    <color name="orange_900">#592a1b</color>
+    <color name="pink_0">#fbf4f7</color>
+    <color name="pink_100">#ebc6d5</color>
+    <color name="pink_200">#e1a7bf</color>
+    <color name="pink_300">#d688aa</color>
+    <color name="pink_400">#c96895</color>
+    <color name="pink_50">#f2dee6</color>
+    <color name="pink_500">#bc4681</color>
+    <color name="pink_600">#9b3c69</color>
+    <color name="pink_700">#7b3252</color>
+    <color name="pink_800">#5d283d</color>
+    <color name="pink_900">#3f1f2a</color>
+    <color name="purple_0">#f7f5f8</color>
+    <color name="purple_100">#d4c8de</color>
+    <color name="purple_200">#beabce</color>
+    <color name="purple_300">#a88ebe</color>
+    <color name="purple_400">#9273af</color>
+    <color name="purple_50">#e5deea</color>
+    <color name="purple_500">#7c589f</color>
+    <color name="purple_600">#634581</color>
+    <color name="purple_700">#4b3264</color>
+    <color name="purple_800">#342148</color>
+    <color name="purple_900">#1f112e</color>
+    <color name="red_0">#fdf3f1</color>
+    <color name="red_100">#f8bfb4</color>
+    <color name="red_200">#f19d8d</color>
+    <color name="red_300">#e77a68</color>
+    <color name="red_400">#da5544</color>
+    <color name="red_50">#fadad3</color>
+    <color name="red_500">#ca2622</color>
+    <color name="red_600">#a82620</color>
+    <color name="red_700">#87241d</color>
+    <color name="red_800">#68211a</color>
+    <color name="red_900">#491d17</color>
+    <color name="yellow_0">#fdfaf4</color>
+    <color name="yellow_100">#f7e5c0</color>
+    <color name="yellow_200">#f1d79d</color>
+    <color name="yellow_300">#e9ca7a</color>
+    <color name="yellow_400">#e0bd56</color>
+    <color name="yellow_50">#faf0db</color>
+    <color name="yellow_500">#d6b02c</color>
+    <color name="yellow_600">#ba9830</color>
+    <color name="yellow_700">#9e8132</color>
+    <color name="yellow_800">#826b32</color>
+    <color name="yellow_900">#675631</color>
 
-    <!-- Secondary Greys -->
-    <color name="grey_lighten_30">#e9eff3</color>
-    <color name="grey_lighten_20">#c8d7e1</color>
-    <color name="grey_lighten_10">#a8bece</color>
-    <color name="grey_darken_10">#668eaa</color>
-    <color name="grey_darken_20">#4f748e</color>
-    <color name="grey_darken_30">#3d596d</color>
-
-    <color name="grey_text_min">#537994</color>
-
-    <!-- Standard Greys -->
-    <color name="grey_3">#333333</color>
-    <color name="grey_c">#cccccc</color>
-
-    <!-- Oranges -->
-    <color name="orange_jazzy">#f0821e</color>
-    <color name="orange_fire">#d54e21</color>
-    <color name="orange_active">#f58335</color>
-    <color name="orange_dark_active">#c55b12</color>
-
-    <!-- Alerts -->
-    <color name="alert_yellow">#f0b849</color>
-    <color name="alert_yellow_dark">#d89511</color>
-    <color name="alert_red">#d94f4f</color>
-    <color name="alert_green">#4ab866</color>
-
-    <!-- Translucent -->
+    <!-- TRANSLUCENT -->
+    <color name="black_translucent_20">#33000000</color>
     <color name="black_translucent_40">#66000000</color>
     <color name="black_translucent_50">#80000000</color>
-    <color name="blue_light_translucent_80">#cc78dcfa</color>
-    <color name="grey_dark_translucent_50">#802e4453</color>
-    <color name="grey_dark_translucent_70">#b32e4453</color>
-    <color name="grey_translucent_50">#80888888</color>
-    <color name="grey_lighten_10_translucent_50">#80a8bece</color>
-    <color name="grey_lighten_20_translucent_50">#80c8d7e1</color>
-    <color name="grey_lighten_30_translucent_50">#80e9eff3</color>
+    <color name="grey_lighten_30_translucent_50">#80e9eff3</color> <!-- Use for old Stats.  Will be removed soon. -->
     <color name="white_translucent_40">#66ffffff</color>
-    <color name="white_translucent_60">#99ffffff</color>
     <color name="white_translucent_65">#a6ffffff</color>
-
-    <!-- END WordPress.com Colors -->
-    <!-- ======================== -->
-
-    <!-- Material Design -->
-    <color name="grey_50">#fffafafa</color>
-    <color name="grey_100">#fff5f5f5</color>
-    <color name="grey_200">#ffeeeeee</color>
-    <color name="grey_300">#ffe0e0e0</color>
-    <color name="grey_400">#ffbdbdbd</color>
-    <color name="grey_500">#ff9e9e9e</color>
-    <color name="grey_600">#ff757575</color>
-    <color name="grey_700">#ff616161</color>
-    <color name="grey_800">#ff424242</color>
-    <color name="grey_900">#ff212121</color>
-
-    <!-- App specific colors -->
-    <!-- We could use blue_dark for the status bar color, but to adhere to the material design spec very closely,
-      we're using a shade of blue_wordpress -->
-    <color name="status_bar_tint">#006b98</color>
-    <color name="action_mode_status_bar_tint">#ff517188</color>
-
-    <!-- Media Gallery -->
-    <color name="media_gallery_bg">@color/grey_darken_30</color>
-    <color name="media_gallery_option_selected">@color/grey_dark</color>
-    <color name="media_gallery_option_default">@color/grey_lighten_30</color>
-
-    <!-- Theme Details -->
-    <color name="theme_details_name">@color/grey_dark</color>
-    <color name="theme_details_button">@color/white</color>
-    <color name="theme_details_premium">@color/orange_jazzy</color>
-    <color name="theme_feature_text">@color/grey_dark</color>
-
-    <!-- Tab Strip -->
-    <color name="tab_background">@color/color_primary</color>
-    <color name="tab_text_normal">@color/blue_light</color>
-    <color name="tab_text_selected">@color/white</color>
-    <color name="tab_indicator">@color/white</color>
-
-    <!-- Stats -->
-    <color name="stats_text_color">@color/grey_dark</color>
-    <color name="stats_link_text_color">@color/blue_wordpress</color>
-    <color name="stats_module_content_list_header">@color/grey_text_min</color>
-    <color name="stats_blue_labels">@color/grey_darken_20</color>
-    <color name="stats_bar_graph_main_series">@color/blue_wordpress</color>
-    <color name="stats_bar_graph_main_series_highlight">@color/orange_jazzy</color>
-    <color name="stats_bar_graph_outer_highlight">#1Af0821e</color> <!-- 10% Opacity on orange_jazzy #f0821e -->
-    <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
-    <color name="stats_empty_placeholder_color">@color/grey_lighten_30_translucent_50</color>
-    <color name="stats_bar_chart_gradient_start_color">#260087be</color>
-    <color name="stats_low_activity">#91e2fb</color>
-    <color name="stats_medium_activity">#00bef6</color>
-    <color name="stats_high_activity">#0083a9</color>
-
-    <!-- Reader  -->
-    <color name="reader_divider_grey">@color/grey_lighten_30</color>
-    <color name="reader_follow">@color/blue_medium</color>
-    <color name="reader_following">@color/alert_green</color>
-    <color name="reader_hyperlink">@color/blue_medium</color>
-    <color name="reader_notifications_off">@color/alert_green</color>
-    <color name="reader_notifications_on">@color/grey_dark</color>
-    <color name="filtered_list_suggestions">#f8f8f8</color>
-    <color name="reader_accent_material_dark">@color/material_deep_teal_200</color>
-
-    <!-- Comment Status -->
-    <color name="comment_status_unapproved">@color/orange_jazzy</color>
-    <color name="comment_status_spam">@color/alert_red</color>
-
-    <!-- Notification Status -->
-    <color name="notification_status_unapproved">@color/alert_yellow</color>
-    <color name="notification_status_unapproved_dark">#eeac31</color>
-    <color name="notification_status_unapproved_background">#fef8ee</color>
-
-    <!-- NUX -->
-    <color name="nux_grey_button">@color/grey_lighten_20</color>
-    <color name="nux_alert_bg">@color/grey_dark</color>
-    <color name="nux_background">@color/blue_wordpress</color>
-    <color name="nux_background_org">@color/white_dotorg_back</color> <!-- CHECKSTYLE IGNORE -->
-    <color name="nux_eye_icon_color_closed">@color/grey_lighten_20</color>
-    <color name="nux_eye_icon_color_open">@color/grey_lighten_10</color>
-
-    <!-- Editor -->
-    <color name="image_options_label">@color/grey_lighten_20</color>
-    <!-- copied from private support lib resource: color/design_snackbar_background_color -->
-    <color name="snackbar_background_color">#323232</color>
-
-    <!-- Misc -->
-    <color name="pressed_wordpress">@color/blue_light_translucent_80</color>
-    <color name="background_grey">@color/grey_lighten_30</color>
-    <color name="dialog_button_text">@color/blue_medium</color>
-
-    <!--Me-->
-    <color name="me_divider">#D8E3EA</color>
-
-    <!-- Notifications -->
-    <color name="notifications_settings_divider_color">#d0d5d9</color>
-
-    <!-- Site Settings -->
-    <color name="site_settings_pref_divider_color">#dce1e6</color>
-
-    <!-- Themes -->
-    <color name="theme_price">#4FB769</color>
-    <color name="theme_active">#A9E9FC</color>
-
-    <!-- dividers -->
-    <!-- TODO: consolidate divider colors -->
-    <color name="divider_grey">#D8E3EA</color>
-
-    <!-- Login -->
-    <color name="login_background_color">@color/grey_light</color>
-
-    <!-- Quick Start -->
-    <color name="quickstart_focus_inner_circle">@color/blue_wordpress</color>
-    <color name="quickstart_focus_outer_circle">#7e0087be</color>
-
-    <color name="switch_tint">@color/blue_medium</color>
-    <color name="jetpack_green">#00be28</color>
-
-    <!-- Pages -->
-    <color name="page_item_tag_background">#fbf4e7</color>
-
-    <!-- Revisions -->
-    <color name="revision_diff_del_action_underline">@color/alert_red</color>
-    <color name="revision_diff_del_action_background">#1Ad94f4f</color>
-    <color name="revision_diff_add_action_underline">@color/blue_wordpress</color>
-    <color name="revision_diff_add_action_background">#1A0087BE</color>
-
-    <color name="primary_50">@color/blue_50</color>
-    <color name="blue_50">#d8dee4</color>
-    <color name="pink_500">#bc4681</color>
 
 </resources>
