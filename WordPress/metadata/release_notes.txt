@@ -1,4 +1,3 @@
-* Navigating notifications: now you can swipe between tabs.
-* Design details: seemingly-small visual tweaks make site creation smoother.
-* Clearer data: changes and visual updates to Stats make most stats easier to understand.
-* Speedy posting: sharing pictures to WordPress automatically opens the Block editor.
+* You can now create a site with .blog subdomain directly from the app!
+* Refreshed the color scheme used throughout the app.
+* Fixed a bug where the unread badge would not disappear when swiping between unread notifications on the notifications screen.
