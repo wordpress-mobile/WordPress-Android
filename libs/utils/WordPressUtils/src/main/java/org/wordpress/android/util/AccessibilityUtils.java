@@ -11,7 +11,7 @@ public class AccessibilityUtils {
 
     public static boolean isAccessibilityEnabled(Context ctx) {
         AccessibilityManager am = (AccessibilityManager) ctx.getSystemService(ACCESSIBILITY_SERVICE);
-        return am != null ? am.isEnabled() : false;
+        return am != null && am.isEnabled();
     }
 
     /**
