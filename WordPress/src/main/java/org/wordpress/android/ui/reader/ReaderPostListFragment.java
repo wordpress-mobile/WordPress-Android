@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.design.widget.TabLayout.Tab;
@@ -100,7 +101,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -551,9 +551,8 @@ public class ReaderPostListFragment extends Fragment
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_white_24dp);
 
-            WPDialogSnackbar snackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator),
-                    title, AccessibilityUtils.getSnackbarDuration(requireContext(),
-                            getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+            WPDialogSnackbar snackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator), title,
+                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
 
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
         }
@@ -1196,8 +1195,7 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
             }
         };
-        WPSnackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked),
-                AccessibilityUtils.getSnackbarDuration(getActivity()))
+        WPSnackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener)
                 .show();
     }
@@ -1490,18 +1488,18 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title,
-                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
-                new View.OnClickListener() {
-                    @Override public void onClick(View view) {
-                        AnalyticsTracker
-                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
-                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                        if (getActivity() instanceof WPMainActivity) {
-                            getActivity().overridePendingTransition(0, 0);
+        WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
+                .setAction(R.string.reader_bookmark_snack_btn,
+                    new View.OnClickListener() {
+                        @Override public void onClick(View view) {
+                            AnalyticsTracker
+                                    .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
+                            ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                            if (getActivity() instanceof WPMainActivity) {
+                                getActivity().overridePendingTransition(0, 0);
+                            }
                         }
-                    }
-                })
+                    })
                 .show();
     }
 
@@ -2209,7 +2207,7 @@ public class ReaderPostListFragment extends Fragment
                 : blogName;
 
         WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
+                "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
                         new View.OnClickListener() {
                             @Override public void onClick(View view) {

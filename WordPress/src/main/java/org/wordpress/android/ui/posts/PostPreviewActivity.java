@@ -389,8 +389,7 @@ public class PostPreviewActivity extends AppCompatActivity implements
                     refreshPreview();
 
                     if (mMessageView != null) {
-                        WPSnackbar.make(mMessageView, getString(R.string.local_changes_discarded),
-                                AccessibilityUtils.getSnackbarDuration(PostPreviewActivity.this, Snackbar.LENGTH_LONG))
+                        WPSnackbar.make(mMessageView, getString(R.string.local_changes_discarded), Snackbar.LENGTH_LONG)
                                 .setAction(getString(R.string.undo), new OnClickListener() {
                                     @Override public void onClick(View view) {
                                         AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
