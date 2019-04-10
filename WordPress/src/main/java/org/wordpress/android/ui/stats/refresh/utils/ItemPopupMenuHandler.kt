@@ -40,9 +40,12 @@ class ItemPopupMenuHandler
             withContext(mainDispatcher) {
                 val popup = PopupMenu(view.context, view)
                 val popupMenu = popup.menu
+                showIcons(popup)
+
                 popup.inflate(R.menu.menu_stats_item)
                 popupMenu.findItem(R.id.action_move_up).isVisible = showUpAction
                 popupMenu.findItem(R.id.action_move_down).isVisible = showDownAction
+
                 popup.show()
                 popup.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
@@ -71,6 +74,27 @@ class ItemPopupMenuHandler
                     }
                 }
             }
+        }
+    }
+
+    private fun showIcons(popup: PopupMenu) {
+        try {
+            val fields = popup.javaClass.declaredFields
+            for (field in fields) {
+                if ("mPopup" == field.name) {
+                    field.isAccessible = true
+                    val menuPopupHelper = field.get(popup)
+                    val classPopupHelper = Class.forName(menuPopupHelper.javaClass.name)
+                    val setForceIcons = classPopupHelper.getMethod(
+                            "setForceShowIcon",
+                            Boolean::class.javaPrimitiveType!!
+                    )
+                    setForceIcons.invoke(menuPopupHelper, true)
+                    break
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
