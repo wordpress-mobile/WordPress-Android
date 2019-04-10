@@ -51,6 +51,9 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
+import org.wordpress.android.ui.posts.CriticalPostActionTracker
+import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.RESTORING_POST
+import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
@@ -136,8 +139,11 @@ class PostListViewModel @Inject constructor(
     private val uploadStatusMap = HashMap<Int, PostListItemUploadStatus>()
     private val featuredImageMap = HashMap<Long, String>()
 
-    // Keep a reference to the post currently being trashed/restored, so we can change it's ui state
-    private var postsBeingTrashedOrRestored = HashSet<LocalId>()
+    // TODO: This should be tracked in the main VM
+    private val criticalPostActionTracker = CriticalPostActionTracker(listener = {
+        pagedListWrapper.invalidateData()
+    })
+
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForDeleteDialog: Int? = null
@@ -464,8 +470,7 @@ class PostListViewModel @Inject constructor(
             return
         }
 
-        postsBeingTrashedOrRestored.add(LocalId(post.id))
-        pagedListWrapper.invalidateData()
+        criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = RESTORING_POST)
         dispatcher.dispatch(PostActionBuilder.newRestorePostAction(RemotePostPayload(post, site)))
     }
 
@@ -481,7 +486,7 @@ class PostListViewModel @Inject constructor(
                     }
                 },
                 onDismissAction = {
-                    removeLocalPostIdFromPostsBeingTrashedOrRestored(localPostId)
+                    criticalPostActionTracker.remove(localPostId = localPostId)
                 }
         )
         _snackBarAction.postValue(snackBarHolder)
@@ -533,8 +538,7 @@ class PostListViewModel @Inject constructor(
             return
         }
 
-        postsBeingTrashedOrRestored.add(LocalId(post.id))
-        pagedListWrapper.invalidateData()
+        criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = TRASHING_POST)
 
         _postUploadAction.postValue(CancelPostAndMediaUpload(post))
         dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
@@ -552,15 +556,10 @@ class PostListViewModel @Inject constructor(
                     }
                 },
                 onDismissAction = {
-                    removeLocalPostIdFromPostsBeingTrashedOrRestored(localPostId)
+                    criticalPostActionTracker.remove(localPostId = localPostId)
                 }
         )
         _snackBarAction.postValue(snackBarHolder)
-    }
-
-    private fun removeLocalPostIdFromPostsBeingTrashedOrRestored(localPostId: LocalId) {
-        postsBeingTrashedOrRestored.remove(localPostId)
-        pagedListWrapper.invalidateData()
     }
 
     // FluxC Events
@@ -590,7 +589,7 @@ class PostListViewModel @Inject constructor(
                 val localPostId = LocalId(deletePostCauseOfChange.localPostId)
                 if (event.isError) {
                     if (deletePostCauseOfChange.postDeleteActionType == TRASH) {
-                        removeLocalPostIdFromPostsBeingTrashedOrRestored(localPostId)
+                        criticalPostActionTracker.remove(localPostId = localPostId)
                     }
                     _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
                 } else {
@@ -603,7 +602,7 @@ class PostListViewModel @Inject constructor(
             is CauseOfOnPostChanged.RestorePost -> {
                 val localPostId = LocalId((event.causeOfChange as RestorePost).localPostId)
                 if (event.isError) {
-                    removeLocalPostIdFromPostsBeingTrashedOrRestored(localPostId)
+                    criticalPostActionTracker.remove(localPostId = localPostId)
                     _toastMessage.postValue(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
                 } else {
                     handlePostRestored(localPostId)
@@ -935,7 +934,7 @@ class PostListViewModel @Inject constructor(
                             postContent = post.content
                     ),
                     formattedDate = PostUtils.getFormattedDate(post),
-                    performingAction = postsBeingTrashedOrRestored.contains(LocalId(post.id))
+                    performingCriticalAction = criticalPostActionTracker.contains(LocalId(post.id))
             ) { postModel, buttonType, statEvent ->
                 trackAction(buttonType, postModel, statEvent)
                 handlePostButton(buttonType, postModel)
