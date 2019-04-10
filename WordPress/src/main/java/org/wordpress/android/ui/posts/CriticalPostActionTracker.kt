@@ -34,8 +34,10 @@ class CriticalPostActionTracker(
 
     fun get(localPostId: LocalId): CriticalPostAction? = map[localPostId]
 
-    fun remove(localPostId: LocalId) {
-        map.remove(localPostId)
-        listener.invoke()
+    fun remove(localPostId: LocalId, criticalPostAction: CriticalPostAction) {
+        if (map[localPostId] == criticalPostAction) {
+            map.remove(localPostId)
+            listener.invoke()
+        }
     }
 }

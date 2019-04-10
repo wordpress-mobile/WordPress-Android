@@ -489,8 +489,11 @@ class PostListViewModel @Inject constructor(
              */
             return
         }
+        val removeFromTracker = {
+            criticalPostActionTracker.remove(localPostId = localPostId, criticalPostAction = RESTORING_POST)
+        }
         if (isError) {
-            criticalPostActionTracker.remove(localPostId = localPostId)
+            removeFromTracker.invoke()
             _toastMessage.postValue(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
             return
         }
@@ -500,12 +503,13 @@ class PostListViewModel @Inject constructor(
                 buttonAction = {
                     val post = postStore.getPostByLocalPostId(localPostId.value)
                     if (post != null) {
+                        removeFromTracker.invoke()
                         trashPost(post)
                         _snackBarAction.postValue(SnackbarMessageHolder(R.string.post_trashing))
                     }
                 },
                 onDismissAction = {
-                    criticalPostActionTracker.remove(localPostId = localPostId)
+                    removeFromTracker.invoke()
                 }
         )
         _snackBarAction.postValue(snackBarHolder)
@@ -572,7 +576,7 @@ class PostListViewModel @Inject constructor(
             _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
         }
         if (isRemoved) {
-            criticalPostActionTracker.remove(localPostId = localPostId)
+            criticalPostActionTracker.remove(localPostId = localPostId, criticalPostAction = DELETING_POST)
         }
     }
 
@@ -596,8 +600,11 @@ class PostListViewModel @Inject constructor(
              */
             return
         }
+        val removeFromTracker = {
+            criticalPostActionTracker.remove(localPostId = localPostId, criticalPostAction = TRASHING_POST)
+        }
         if (isError) {
-            criticalPostActionTracker.remove(localPostId = localPostId)
+            removeFromTracker.invoke()
             _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
             return
         }
@@ -607,12 +614,13 @@ class PostListViewModel @Inject constructor(
                 buttonAction = {
                     val post = postStore.getPostByLocalPostId(localPostId.value)
                     if (post != null) {
+                        removeFromTracker.invoke()
                         restorePost(post)
                         _snackBarAction.postValue(SnackbarMessageHolder(R.string.post_restoring))
                     }
                 },
                 onDismissAction = {
-                    criticalPostActionTracker.remove(localPostId = localPostId)
+                    removeFromTracker.invoke()
                 }
         )
         _snackBarAction.postValue(snackBarHolder)
