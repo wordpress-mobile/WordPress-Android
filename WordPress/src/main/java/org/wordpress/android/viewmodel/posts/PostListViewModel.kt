@@ -13,7 +13,6 @@ import android.support.annotation.DrawableRes
 import de.greenrobot.event.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -76,7 +75,6 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -375,8 +373,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    // TODO: Can this be a private method?
-    fun newPost() {
+    private fun newPost() {
         _postListAction.postValue(PostListAction.NewPost(site))
     }
 
@@ -515,11 +512,6 @@ class PostListViewModel @Inject constructor(
         _snackBarAction.postValue(snackBarHolder)
     }
 
-    // TODO: This method doesn't seem to be used, we should remove it if it's not necessary
-    private fun isGutenbergEnabled(): Boolean {
-        return BuildConfig.OFFER_GUTENBERG && AppPrefs.isGutenbergEditorEnabled()
-    }
-
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state.
         if (doesPostHaveUnhandledConflict(post)) {
@@ -628,6 +620,7 @@ class PostListViewModel @Inject constructor(
 
     // FluxC Events
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
         when (event.causeOfChange) {
@@ -671,6 +664,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
@@ -678,8 +672,8 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    // TODO: Why is this in the MAIN thread?
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
             _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
@@ -691,6 +685,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaUploaded(event: OnMediaUploaded) {
         if (event.isError || event.canceled) {
