@@ -54,7 +54,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         statsSupported: Boolean,
         featuredImageUrl: String?,
         formattedDate: String,
-        performingAction: Boolean,
+        // TODO: Add a unit test for performing critical action property
+        performingCriticalAction: Boolean,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
@@ -84,11 +85,11 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         statusesDelimiter = UiStringRes(R.string.multiple_status_label_delimiter),
                         showProgress = shouldShowProgress(
                                 uploadStatus = uploadStatus,
-                                performingAction = performingAction
+                                performingCriticalAction = performingCriticalAction
                         ),
                         showOverlay = shouldShowOverlay(
                                 uploadStatus = uploadStatus,
-                                performingAction = performingAction
+                                performingCriticalAction = performingCriticalAction
                         )
                 ),
                 actions = createActions(
@@ -119,8 +120,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                     ?.let { PostUtils.collapseShortcodes(it) }
                     ?.let { UiStringText(it) }
 
-    private fun shouldShowProgress(uploadStatus: PostListItemUploadStatus, performingAction: Boolean): Boolean {
-        return performingAction || (!uploadStatus.isUploadFailed &&
+    private fun shouldShowProgress(uploadStatus: PostListItemUploadStatus, performingCriticalAction: Boolean): Boolean {
+        return performingCriticalAction || (!uploadStatus.isUploadFailed &&
                 (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload))
     }
 
@@ -203,9 +204,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         }
     }
 
-    private fun shouldShowOverlay(uploadStatus: PostListItemUploadStatus, performingAction: Boolean): Boolean {
+    private fun shouldShowOverlay(uploadStatus: PostListItemUploadStatus, performingCriticalAction: Boolean): Boolean {
         // show overlay when post upload is in progress or (media upload is in progress and the user is not using Aztec)
-        return performingAction ||
+        return performingCriticalAction ||
                 (uploadStatus.isUploading ||
                         (!appPrefsWrapper.isAztecEditorEnabled && uploadStatus.isUploadingOrQueued))
     }
