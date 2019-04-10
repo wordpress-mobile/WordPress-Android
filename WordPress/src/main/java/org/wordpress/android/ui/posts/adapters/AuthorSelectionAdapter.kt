@@ -12,8 +12,8 @@ import android.widget.SpinnerAdapter
 import androidx.annotation.CallSuper
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.posts.PostListMainViewModel.AuthorFilterListItemUIState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.image.ImageManager
