@@ -52,7 +52,7 @@ class StatsDetailFragment : DaggerFragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity) {
-        val siteId = activity.intent?.getIntExtra(WordPress.SITE_ID, 0) ?: 0
+        val siteId = activity.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0
         statsSiteProvider.start(siteId)
 
         val postId = activity.intent?.getLongExtra(POST_ID, 0L)

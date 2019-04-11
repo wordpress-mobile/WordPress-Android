@@ -78,7 +78,7 @@ class StatsViewAllFragment : DaggerFragment() {
                         intent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME)
                 )
             }
-            outState.putInt(WordPress.SITE_ID, intent.getIntExtra(WordPress.SITE_ID, 0))
+            outState.putInt(WordPress.LOCAL_SITE_ID, intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0))
         }
 
         super.onSaveInstanceState(outState)
@@ -134,8 +134,8 @@ class StatsViewAllFragment : DaggerFragment() {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         }
 
-        val siteId = savedInstanceState?.getInt(WordPress.SITE_ID, 0)
-                ?: activity.intent.getIntExtra(WordPress.SITE_ID, 0)
+        val siteId = savedInstanceState?.getInt(WordPress.LOCAL_SITE_ID, 0)
+                ?: activity.intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
         statsSiteProvider.start(siteId)
 
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)

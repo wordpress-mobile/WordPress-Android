@@ -70,7 +70,7 @@ class StatsFragment : DaggerFragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(WordPress.SITE_ID, activity?.intent?.getIntExtra(WordPress.SITE_ID, 0) ?: 0)
+        outState.putInt(WordPress.LOCAL_SITE_ID, activity?.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0)
         super.onSaveInstanceState(outState)
     }
 
@@ -101,7 +101,7 @@ class StatsFragment : DaggerFragment() {
 
         setupObservers(activity)
 
-        val siteId = activity.intent.getIntExtra(WordPress.SITE_ID, 0)
+        val siteId = activity.intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
         statsSiteProvider.start(siteId)
 
         val launchedFrom = activity.intent.getSerializableExtra(ARG_LAUNCHED_FROM)

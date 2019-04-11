@@ -114,7 +114,7 @@ import io.fabric.sdk.android.Fabric;
 public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
         LifecycleObserver {
     public static final String SITE = "SITE";
-    public static final String SITE_ID = "SITE_ID";
+    public static final String LOCAL_SITE_ID = "LOCAL_SITE_ID";
     public static String versionName;
     public static WordPressDB wpDB;
     public static boolean sAppIsInTheBackground = true;
