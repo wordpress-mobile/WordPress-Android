@@ -207,7 +207,6 @@ class PostListViewModel @Inject constructor(
         result
     }
 
-    private var isNetworkAvailable: Boolean = true
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
@@ -215,7 +214,6 @@ class PostListViewModel @Inject constructor(
 
     init {
         connectionStatus.observe(this, Observer {
-            isNetworkAvailable = it?.isConnected == true
             retryOnConnectionAvailableAfterRefreshError()
         })
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
@@ -277,7 +275,7 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun retryOnConnectionAvailableAfterRefreshError() {
-        val connectionAvailableAfterRefreshError = isNetworkAvailable &&
+        val connectionAvailableAfterRefreshError = networkUtilsWrapper.isNetworkAvailable() &&
                 emptyViewState.value is RefreshError
 
         if (connectionAvailableAfterRefreshError) {
@@ -904,7 +902,7 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun checkNetworkConnection(): Boolean =
-            if (isNetworkAvailable) {
+            if (networkUtilsWrapper.isNetworkAvailable()) {
                 true
             } else {
                 _toastMessage.postValue(ToastMessageHolder(R.string.no_network_message, Duration.SHORT))
