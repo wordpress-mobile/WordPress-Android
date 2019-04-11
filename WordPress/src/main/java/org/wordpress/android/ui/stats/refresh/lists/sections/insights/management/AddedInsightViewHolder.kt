@@ -30,9 +30,14 @@ class AddedInsightViewHolder(
         dragAndDropButton.setOnTouchListener { _, event ->
             if (MotionEventCompat.isFromSource(event, MotionEvent.ACTION_DOWN)) {
                 onDragStarted(this)
+                itemView.elevation = 10f
             }
             return@setOnTouchListener true
         }
         dragAndDropButton.visibility = View.VISIBLE
+    }
+
+    fun onDragFinished() {
+        itemView.elevation = 0f
     }
 }

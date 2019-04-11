@@ -29,6 +29,6 @@ class ItemTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) : Ite
     override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
         super.clearView(recyclerView, viewHolder)
 
-        adapter.onDragFinished()
+        adapter.onDragFinished(viewHolder)
     }
 }

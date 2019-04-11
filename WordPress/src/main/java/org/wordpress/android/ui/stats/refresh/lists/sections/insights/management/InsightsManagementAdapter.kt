@@ -46,8 +46,10 @@ class InsightsManagementAdapter(
         notifyItemMoved(fromPosition, toPosition)
     }
 
-    override fun onDragFinished() {
+    override fun onDragFinished(viewHolder: ViewHolder) {
         onDragFinished.invoke(items)
+
+        (viewHolder as? AddedInsightViewHolder)?.onDragFinished()
     }
 
     override fun getItemCount(): Int = items.size
@@ -61,7 +63,7 @@ class InsightsManagementAdapter(
 
 interface ItemTouchHelperAdapter {
     fun onItemMoved(fromPosition: Int, toPosition: Int)
-    fun onDragFinished()
+    fun onDragFinished(viewHolder: ViewHolder)
 }
 
 class InsightModelDiffCallback(
