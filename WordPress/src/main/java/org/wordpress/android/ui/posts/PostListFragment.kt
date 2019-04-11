@@ -11,10 +11,12 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Toast
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
@@ -290,6 +292,14 @@ class PostListFragment : Fragment() {
         // hide the fab so we can animate it
         fabView?.visibility = View.GONE
         fabView?.setOnClickListener { viewModel.newPost() }
+        fabView?.setOnLongClickListener {
+            if (fabView?.isHapticFeedbackEnabled == true) {
+                fabView?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
+
+            Toast.makeText(fabView?.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
+            return@setOnLongClickListener true
+        }
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
             if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
