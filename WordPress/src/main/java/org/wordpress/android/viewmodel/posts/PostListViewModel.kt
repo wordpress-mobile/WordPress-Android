@@ -9,16 +9,9 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import android.content.Intent
-import de.greenrobot.event.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.DeletePost
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemovePost
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RestorePost
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
@@ -32,13 +25,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.DELETE
-import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.TRASH
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -50,16 +37,12 @@ import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListDialogHelper
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUploadAction
-import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
-import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.posts.listenForPostListEvents
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
-import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
@@ -226,10 +209,18 @@ class PostListViewModel @Inject constructor(
             PostListDescriptorForXmlRpcSite(site = site, statusList = postListType.postStatuses)
         }
 
-        // We should register after we have the SiteModel and ListDescriptor set
-        EventBus.getDefault().register(this)
-        dispatcher.register(this)
-
+        listenForPostListEvents(
+                lifecycle = lifecycle,
+                dispatcher = dispatcher,
+                postStore = postStore,
+                site = site,
+                postConflictResolver = postConflictResolver,
+                postActionHandler = postActionHandler,
+                refreshList = { pagedListWrapper.invalidateData() },
+                triggerPostUploadAction = { _postUploadAction.postValue(it) },
+                invalidateUploadStatus = this::invalidateUploadStatusAndPagedListData,
+                invalidateFeaturedMedia = this::invalidateFeaturedMediaAndPagedListData
+        )
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
         fetchFirstPage()
@@ -237,8 +228,6 @@ class PostListViewModel @Inject constructor(
 
     override fun onCleared() {
         lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
-        EventBus.getDefault().unregister(this)
-        dispatcher.unregister(this)
         super.onCleared()
     }
 
@@ -258,139 +247,6 @@ class PostListViewModel @Inject constructor(
 
         if (connectionAvailableAfterRefreshError) {
             fetchFirstPage()
-        }
-    }
-
-    // FluxC Events
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onPostChanged(event: OnPostChanged) {
-        when (event.causeOfChange) {
-            // Fetched post list event will be handled by OnListChanged
-            is CauseOfOnPostChanged.UpdatePost -> {
-                if (event.isError) {
-                    AppLog.e(
-                            T.POSTS,
-                            "Error updating the post with type: ${event.error.type} and message: ${event.error.message}"
-                    )
-                } else {
-                    postConflictResolver.onPostSuccessfullyUpdated()
-                }
-            }
-            is CauseOfOnPostChanged.DeletePost -> {
-                val deletePostCauseOfChange = event.causeOfChange as DeletePost
-                val localPostId = LocalId(deletePostCauseOfChange.localPostId)
-                when (deletePostCauseOfChange.postDeleteActionType) {
-                    TRASH -> postActionHandler.handlePostTrashed(localPostId = localPostId, isError = event.isError)
-                    DELETE -> postActionHandler.handlePostDeletedOrRemoved(
-                            localPostId = localPostId,
-                            isRemoved = false,
-                            isError = event.isError
-                    )
-                }
-            }
-            is CauseOfOnPostChanged.RestorePost -> {
-                val localPostId = LocalId((event.causeOfChange as RestorePost).localPostId)
-                postActionHandler.handlePostRestored(localPostId = localPostId, isError = event.isError)
-            }
-            is CauseOfOnPostChanged.RemovePost -> {
-                val localPostId = LocalId((event.causeOfChange as RemovePost).localPostId)
-                postActionHandler.handlePostDeletedOrRemoved(
-                        localPostId = localPostId,
-                        isRemoved = true,
-                        isError = event.isError
-                )
-            }
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onMediaChanged(event: OnMediaChanged) {
-        if (!event.isError && event.mediaList != null) {
-            invalidateFeaturedMediaAndPagedListData(*event.mediaList.map { it.mediaId }.toLongArray())
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onPostUploaded(event: OnPostUploaded) {
-        if (event.post != null && event.post.localSiteId == site.id) {
-            _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
-            invalidateUploadStatusAndPagedListData(event.post.id)
-            // If a post is successfully uploaded, we need to fetch the list again so it's id is added to ListStore
-            if (!event.isError) {
-                fetchFirstPage()
-            }
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onMediaUploaded(event: OnMediaUploaded) {
-        if (event.isError || event.canceled) {
-            return
-        }
-        if (event.media == null || event.media.localPostId == 0 || site.id != event.media.localSiteId) {
-            // Not interested in media not attached to posts or not belonging to the current site
-            return
-        }
-        invalidateFeaturedMediaAndPagedListData(event.media.mediaId)
-    }
-
-    // EventBus Events
-
-    @Suppress("unused")
-    fun onEventBackgroundThread(event: UploadService.UploadErrorEvent) {
-        EventBus.getDefault().removeStickyEvent(event)
-        if (event.post != null) {
-            _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, true, event.errorMessage))
-        } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            _postUploadAction.postValue(MediaUploadedSnackbar(site, event.mediaModelList, true, event.errorMessage))
-        }
-    }
-
-    @Suppress("unused")
-    fun onEventBackgroundThread(event: UploadService.UploadMediaSuccessEvent) {
-        EventBus.getDefault().removeStickyEvent(event)
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            _postUploadAction.postValue(MediaUploadedSnackbar(site, event.mediaModelList, false, event.successMessage))
-        }
-    }
-
-    /**
-     * Upload started, reload so correct status on uploading post appears
-     */
-    @Suppress("unused")
-    fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
-        if (site.id == event.post.localSiteId) {
-            invalidateUploadStatusAndPagedListData(event.post.id)
-        }
-    }
-
-    /**
-     * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
-     */
-    @Suppress("unused")
-    fun onEventBackgroundThread(event: PostEvents.PostUploadCanceled) {
-        if (site.id == event.post.localSiteId) {
-            invalidateUploadStatusAndPagedListData(event.post.id)
-        }
-    }
-
-    @Suppress("unused")
-    fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
-        invalidateUploadStatusAndPagedListData(event.media.id)
-    }
-
-    @Suppress("unused")
-    fun onEventBackgroundThread(event: UploadService.UploadMediaRetryEvent) {
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            // if there' a Post to which the retried media belongs, clear their status
-            val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
-            // now that we know which Posts to refresh, let's do it
-            invalidateUploadStatusAndPagedListData(*postsToRefresh.map { it.id }.toIntArray())
         }
     }
 
@@ -415,7 +271,7 @@ class PostListViewModel @Inject constructor(
         return null
     }
 
-    private fun invalidateFeaturedMediaAndPagedListData(vararg featuredImageIds: Long) {
+    private fun invalidateFeaturedMediaAndPagedListData(featuredImageIds: List<Long>) {
         featuredImageIds.forEach { featuredImageMap.remove(it) }
         pagedListWrapper.invalidateData()
     }
@@ -439,7 +295,7 @@ class PostListViewModel @Inject constructor(
         return newStatus
     }
 
-    private fun invalidateUploadStatusAndPagedListData(vararg localPostIds: Int) {
+    private fun invalidateUploadStatusAndPagedListData(localPostIds: List<Int>) {
         localPostIds.forEach { uploadStatusMap.remove(it) }
         pagedListWrapper.invalidateData()
     }

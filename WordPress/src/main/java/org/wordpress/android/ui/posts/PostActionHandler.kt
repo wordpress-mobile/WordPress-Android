@@ -40,6 +40,10 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 
+/**
+ * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
+ * you see fit.
+ */
 class PostActionHandler(
     private val dispatcher: Dispatcher,
     private val site: SiteModel,
