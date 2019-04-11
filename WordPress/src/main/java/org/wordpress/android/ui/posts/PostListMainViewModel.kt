@@ -161,5 +161,4 @@ class PostListMainViewModel @Inject constructor(
             _updatePostsPager.value = authorFilterSelection
         }
     }
-
 }

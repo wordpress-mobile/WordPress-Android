@@ -111,5 +111,4 @@ class PostConflictResolver(
         )
         showSnackbar.invoke(snackBarHolder)
     }
-
 }

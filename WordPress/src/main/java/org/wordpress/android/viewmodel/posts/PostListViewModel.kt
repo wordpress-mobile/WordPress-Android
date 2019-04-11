@@ -13,7 +13,6 @@ import de.greenrobot.event.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -69,6 +68,7 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -78,7 +78,6 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -606,35 +605,6 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    private fun trackAction(buttonType: PostListButtonType, postData: PostModel, statsEvent: Stat) {
-        val properties = HashMap<String, Any?>()
-        if (!postData.isLocalDraft) {
-            properties["post_id"] = postData.remotePostId
-        }
-
-        properties["action"] = when (buttonType) {
-            PostListButtonType.BUTTON_EDIT -> {
-                properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils
-                        .contentContainsGutenbergBlocks(postData.content)
-                "edit"
-            }
-            PostListButtonType.BUTTON_RETRY -> "retry"
-            PostListButtonType.BUTTON_SUBMIT -> "submit"
-            PostListButtonType.BUTTON_VIEW -> "view"
-            PostListButtonType.BUTTON_PREVIEW -> "preview"
-            PostListButtonType.BUTTON_STATS -> "stats"
-            PostListButtonType.BUTTON_TRASH -> "trash"
-            PostListButtonType.BUTTON_DELETE -> "delete"
-            PostListButtonType.BUTTON_PUBLISH -> "publish"
-            PostListButtonType.BUTTON_SYNC -> "sync"
-            PostListButtonType.BUTTON_MORE -> "more"
-            PostListButtonType.BUTTON_BACK -> "back"
-            PostListButtonType.BUTTON_RESTORE -> "restore"
-        }
-
-        AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)
-    }
-
     private fun getFeaturedImageUrl(featuredImageId: Long, postContent: String): String? {
         if (featuredImageId == 0L) {
             return ReaderImageScanner(postContent, !SiteUtils.isPhotonCapable(site)).largestImage
@@ -710,7 +680,6 @@ class PostListViewModel @Inject constructor(
         )
     }
 
-
     fun scrollToPost(localPostId: LocalPostId) {
         val data = pagedListData.value
         if (data != null) {
@@ -760,7 +729,7 @@ class PostListViewModel @Inject constructor(
                     formattedDate = PostUtils.getFormattedDate(post),
                     performingCriticalAction = criticalPostActionTracker.contains(LocalId(post.id))
             ) { postModel, buttonType, statEvent ->
-                trackAction(buttonType, postModel, statEvent)
+                trackPostListAction(site, buttonType, postModel, statEvent)
                 handlePostButton(buttonType, postModel)
             }
 
