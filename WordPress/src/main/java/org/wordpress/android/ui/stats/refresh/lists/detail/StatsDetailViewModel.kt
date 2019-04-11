@@ -43,7 +43,6 @@ class StatsDetailViewModel
     val showDateSelector = dateSelector.dateSelectorData
 
     fun init(
-        site: SiteModel,
         postId: Long,
         postType: String,
         postTitle: String,

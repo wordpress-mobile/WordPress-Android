@@ -125,6 +125,7 @@ class StatsViewModel
         super.onCleared()
         _showSnackbarMessage.value = null
         selectedDateProvider.clear()
+        statsSiteProvider.reset()
     }
 
     data class DateSelectorUiModel(

@@ -94,6 +94,7 @@ class StatsViewAllViewModel(
     override fun onCleared() {
         mutableSnackbarMessage.value = null
         useCase.clear()
+        statsSiteProvider.reset()
     }
 
     fun onRetryClick() {
