@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
@@ -60,11 +59,7 @@ class StatsViewAllViewModel(
 
     val toolbarHasShadow = dateSelectorData.map { !it.isVisible }
 
-    fun start(site: SiteModel? = null) {
-        if (site != null) {
-            statsSiteProvider.start(site)
-        }
-
+    fun start() {
         launch {
             loadData(refresh = false, forced = false)
             dateSelector.updateDateSelector()
@@ -98,6 +93,7 @@ class StatsViewAllViewModel(
     override fun onCleared() {
         mutableSnackbarMessage.value = null
         useCase.clear()
+        statsSiteProvider.reset()
     }
 
     fun onRetryClick() {
@@ -122,7 +118,7 @@ class StatsViewAllViewModel(
         refreshData()
     }
 
-    fun refreshData() {
+    private fun refreshData() {
         loadData {
             loadData(refresh = true, forced = true)
         }
