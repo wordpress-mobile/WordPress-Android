@@ -1,5 +1,6 @@
 12.3
 -----
+* Updated primary button color to pink
 
 12.2
 -----
