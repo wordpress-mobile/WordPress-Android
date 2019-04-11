@@ -33,8 +33,6 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
-import org.wordpress.android.fluxc.store.ListStore.ListError
-import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
@@ -63,10 +61,6 @@ import org.wordpress.android.ui.posts.PostListAction.RetryUpload
 import org.wordpress.android.ui.posts.PostListAction.ViewPost
 import org.wordpress.android.ui.posts.PostListAction.ViewStats
 import org.wordpress.android.ui.posts.PostListType
-import org.wordpress.android.ui.posts.PostListType.DRAFTS
-import org.wordpress.android.ui.posts.PostListType.PUBLISHED
-import org.wordpress.android.ui.posts.PostListType.SCHEDULED
-import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
@@ -198,70 +192,19 @@ class PostListViewModel @Inject constructor(
         val result = MediatorLiveData<PostListEmptyUiState>()
         val update = {
             createEmptyUiState(
+                    postListType = postListType,
+                    isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
+                    isFetchingFirstPage = pagedListWrapper.isFetchingFirstPage.value ?: false,
                     isListEmpty = pagedListWrapper.isEmpty.value ?: true,
                     error = pagedListWrapper.listError.value,
-                    isFetchingFirstPage = pagedListWrapper.isFetchingFirstPage.value ?: false
+                    fetchFirstPage = this::fetchFirstPage,
+                    newPost = this::newPost
             )
         }
         result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
         result.addSource(pagedListWrapper.isFetchingFirstPage) { result.value = update() }
         result.addSource(pagedListWrapper.listError) { result.value = update() }
         result
-    }
-
-    private fun createEmptyUiState(
-        isListEmpty: Boolean,
-        error: ListError?,
-        isFetchingFirstPage: Boolean
-    ): PostListEmptyUiState {
-        return if (isListEmpty) {
-            val isLoadingFirstPage = isFetchingFirstPage
-            when {
-                error != null -> createErrorListUiState(error)
-                isLoadingFirstPage -> PostListEmptyUiState.Loading
-                else -> createEmptyListUiState()
-            }
-        } else {
-            PostListEmptyUiState.DataShown
-        }
-    }
-
-    private fun createErrorListUiState(error: ListError): PostListEmptyUiState {
-        return if (error.type == PERMISSION_ERROR) {
-            PostListEmptyUiState.PermissionsError
-        } else {
-            val errorText = if (networkUtilsWrapper.isNetworkAvailable()) {
-                UiStringRes(R.string.error_refresh_posts)
-            } else {
-                UiStringRes(R.string.no_network_message)
-            }
-            PostListEmptyUiState.RefreshError(
-                    errorText,
-                    UiStringRes(R.string.retry),
-                    this::fetchFirstPage
-            )
-        }
-    }
-
-    private fun createEmptyListUiState(): PostListEmptyUiState.EmptyList {
-        return when (postListType) {
-            PUBLISHED -> PostListEmptyUiState.EmptyList(
-                    UiStringRes(R.string.posts_published_empty),
-                    UiStringRes(R.string.posts_empty_list_button),
-                    this::newPost
-            )
-            DRAFTS -> PostListEmptyUiState.EmptyList(
-                    UiStringRes(R.string.posts_draft_empty),
-                    UiStringRes(R.string.posts_empty_list_button),
-                    this::newPost
-            )
-            SCHEDULED -> PostListEmptyUiState.EmptyList(
-                    UiStringRes(R.string.posts_scheduled_empty),
-                    UiStringRes(R.string.posts_empty_list_button),
-                    this::newPost
-            )
-            TRASHED -> PostListEmptyUiState.EmptyList(UiStringRes(R.string.posts_trashed_empty))
-        }
     }
 
     private var isNetworkAvailable: Boolean = true
