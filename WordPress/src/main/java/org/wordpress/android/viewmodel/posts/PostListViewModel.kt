@@ -11,9 +11,7 @@ import android.arch.paging.PagedList
 import android.content.Intent
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
-import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.AuthorFilter
@@ -24,7 +22,6 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -35,13 +32,13 @@ import org.wordpress.android.ui.posts.PostActionHandler
 import org.wordpress.android.ui.posts.PostConflictResolver
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListDialogHelper
+import org.wordpress.android.ui.posts.PostListFeaturedImageTracker
 import org.wordpress.android.ui.posts.PostListType
+import org.wordpress.android.ui.posts.PostListUploadStatusTracker
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.listenForPostListEvents
 import org.wordpress.android.ui.posts.trackPostListAction
-import org.wordpress.android.ui.reader.utils.ReaderImageScanner
-import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -60,8 +57,8 @@ typealias PagedPostList = PagedList<PostListItemType>
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,
-    private val uploadStore: UploadStore,
-    private val mediaStore: MediaStore,
+    uploadStore: UploadStore,
+    mediaStore: MediaStore,
     private val postStore: PostStore,
     private val accountStore: AccountStore,
     private val listItemUiStateHelper: PostListItemUiStateHelper,
@@ -76,9 +73,8 @@ class PostListViewModel @Inject constructor(
     private lateinit var site: SiteModel
     private lateinit var postListType: PostListType
 
-    // Cache upload statuses and featured images for posts for quicker access
-    private val uploadStatusMap = HashMap<Int, PostListItemUploadStatus>()
-    private val featuredImageMap = HashMap<Long, String>()
+    private val uploadStatesTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
+    private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
     private var scrollToLocalPostId: LocalPostId? = null
 
@@ -218,8 +214,14 @@ class PostListViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 refreshList = { pagedListWrapper.invalidateData() },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
-                invalidateUploadStatus = this::invalidateUploadStatusAndPagedListData,
-                invalidateFeaturedMedia = this::invalidateFeaturedMediaAndPagedListData
+                invalidateUploadStatus = {
+                    uploadStatesTracker.invalidateUploadStatus(it)
+                    pagedListWrapper.invalidateData()
+                },
+                invalidateFeaturedMedia = {
+                    featuredImageTracker.invalidateFeaturedMedia(it)
+                    pagedListWrapper.invalidateData()
+                }
         )
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
@@ -241,63 +243,14 @@ class PostListViewModel @Inject constructor(
         postActionHandler.handleEditPostResult(data)
     }
 
-    private fun retryOnConnectionAvailableAfterRefreshError() {
-        val connectionAvailableAfterRefreshError = networkUtilsWrapper.isNetworkAvailable() &&
-                emptyViewState.value is RefreshError
-
-        if (connectionAvailableAfterRefreshError) {
-            fetchFirstPage()
+    fun scrollToPost(localPostId: LocalPostId) {
+        val data = pagedListData.value
+        if (data != null) {
+            updateScrollPosition(data, localPostId)
+        } else {
+            // store the target post id and scroll there when the data is loaded
+            scrollToLocalPostId = localPostId
         }
-    }
-
-    private fun getFeaturedImageUrl(featuredImageId: Long, postContent: String): String? {
-        if (featuredImageId == 0L) {
-            return ReaderImageScanner(postContent, !SiteUtils.isPhotonCapable(site)).largestImage
-        }
-        featuredImageMap[featuredImageId]?.let { return it }
-        mediaStore.getSiteMediaWithId(site, featuredImageId)?.let { media ->
-            // This should be a pretty rare case, but some media seems to be missing url
-            return if (media.url != null) {
-                featuredImageMap[featuredImageId] = media.url
-                media.url
-            } else null
-        }
-        // Media is not in the Store, we need to download it
-        val mediaToDownload = MediaModel()
-        mediaToDownload.mediaId = featuredImageId
-        mediaToDownload.localSiteId = site.id
-        val payload = MediaPayload(site, mediaToDownload)
-        dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
-        return null
-    }
-
-    private fun invalidateFeaturedMediaAndPagedListData(featuredImageIds: List<Long>) {
-        featuredImageIds.forEach { featuredImageMap.remove(it) }
-        pagedListWrapper.invalidateData()
-    }
-
-    private fun getUploadStatus(post: PostModel): PostListItemUploadStatus {
-        uploadStatusMap[post.id]?.let { return it }
-        val uploadError = uploadStore.getUploadErrorForPost(post)
-        val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
-        val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
-        val newStatus = PostListItemUploadStatus(
-                uploadError = uploadError,
-                mediaUploadProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100),
-                isUploading = UploadService.isPostUploading(post),
-                isUploadingOrQueued = isUploadingOrQueued,
-                isQueued = UploadService.isPostQueued(post),
-                isUploadFailed = uploadStore.isFailedPost(post),
-                hasInProgressMediaUpload = hasInProgressMediaUpload,
-                hasPendingMediaUpload = UploadService.hasPendingMediaUploadsForPost(post)
-        )
-        uploadStatusMap[post.id] = newStatus
-        return newStatus
-    }
-
-    private fun invalidateUploadStatusAndPagedListData(localPostIds: List<Int>) {
-        localPostIds.forEach { uploadStatusMap.remove(it) }
-        pagedListWrapper.invalidateData()
     }
 
     // BasicFragmentDialog Events
@@ -325,15 +278,7 @@ class PostListViewModel @Inject constructor(
         )
     }
 
-    fun scrollToPost(localPostId: LocalPostId) {
-        val data = pagedListData.value
-        if (data != null) {
-            updateScrollPosition(data, localPostId)
-        } else {
-            // store the target post id and scroll there when the data is loaded
-            scrollToLocalPostId = localPostId
-        }
-    }
+    // Utils
 
     private fun onDataUpdated(data: PagedPostList) {
         val localPostId = scrollToLocalPostId
@@ -363,11 +308,12 @@ class PostListViewModel @Inject constructor(
     private fun transformPostModelToPostListItemUiState(post: PostModel) =
             listItemUiStateHelper.createPostListItemUiState(
                     post = post,
-                    uploadStatus = getUploadStatus(post),
+                    uploadStatus = uploadStatesTracker.getUploadStatus(post),
                     unhandledConflicts = postConflictResolver.doesPostHaveUnhandledConflict(post),
                     capabilitiesToPublish = site.hasCapabilityPublishPosts,
                     statsSupported = isStatsSupported,
-                    featuredImageUrl = getFeaturedImageUrl(
+                    featuredImageUrl = featuredImageTracker.getFeaturedImageUrl(
+                            site = site,
                             featuredImageId = post.featuredImageId,
                             postContent = post.content
                     ),
@@ -378,7 +324,14 @@ class PostListViewModel @Inject constructor(
                 postActionHandler.handlePostButton(buttonType, postModel)
             }
 
-    // Utils
+    private fun retryOnConnectionAvailableAfterRefreshError() {
+        val connectionAvailableAfterRefreshError = networkUtilsWrapper.isNetworkAvailable() &&
+                emptyViewState.value is RefreshError
+
+        if (connectionAvailableAfterRefreshError) {
+            fetchFirstPage()
+        }
+    }
 
     private fun checkNetworkConnection(): Boolean =
             if (networkUtilsWrapper.isNetworkAvailable()) {
