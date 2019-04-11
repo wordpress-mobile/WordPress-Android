@@ -76,12 +76,12 @@ class PostListMainViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
 
-        val authorFilterSelection: AuthorFilterSelection = prefs.postListAuthorSelection
+        val authorFilterSelection: AuthorFilterSelection = getInitialAuthorFilterSelection()
 
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
-                isAuthorFilterVisible = site.isWPCom && site.hasCapabilityEditOthersPosts,
+                isAuthorFilterVisible = isFilteringByAuthorSupported(),
                 authorFilterSelection = authorFilterSelection,
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection)
         )
@@ -103,7 +103,9 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterSelection = selection,
                 authorFilterItems = getAuthorFilterItems(selection)
         )
-        prefs.postListAuthorSelection = selection
+        if (isFilteringByAuthorSupported()) {
+            prefs.postListAuthorSelection = selection
+        }
     }
 
     fun onTabChanged(position: Int) {
@@ -128,6 +130,24 @@ class PostListMainViewModel @Inject constructor(
             }
         }
     }
+
+    private fun getInitialAuthorFilterSelection(): AuthorFilterSelection {
+        return if (isFilteringByAuthorSupported()) {
+            prefs.postListAuthorSelection
+        } else {
+            AuthorFilterSelection.EVERYONE
+        }
+    }
+
+    /**
+     * Filtering by author is disable on
+     * 1) Self-hosted sites - The XMLRPC api doesn't support filtering by author
+     * 2) Self-hosted JetPack powered sites - we'd need support on the API for filtering by self-hosted user id
+     * 3) Sites on which the user doesn't have permissions to edit posts of other users.
+     *
+     * This behavior is consistent with Calypso as of 11/4/2019.
+     */
+    private fun isFilteringByAuthorSupported() = site.isWPCom && site.hasCapabilityEditOthersPosts
 
     private fun getAuthorFilterItems(selection: AuthorFilterSelection): List<AuthorFilterListItemUIState> {
         return AuthorFilterSelection.values().map { value ->
