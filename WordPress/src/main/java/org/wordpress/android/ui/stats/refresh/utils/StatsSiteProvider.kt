@@ -38,7 +38,6 @@ class StatsSiteProvider
         start(AppPrefs.getSelectedSite())
     }
 
-
     fun clear() {
         if (mutableSiteChanged.value != null) {
             mutableSiteChanged.value = null
