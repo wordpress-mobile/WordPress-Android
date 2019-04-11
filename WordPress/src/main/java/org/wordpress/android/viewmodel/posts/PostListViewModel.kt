@@ -53,6 +53,7 @@ import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostActi
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.RESTORING_POST
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.PostConflictResolver
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
@@ -131,8 +132,6 @@ class PostListViewModel @Inject constructor(
         pagedListWrapper.invalidateData()
     })
 
-    private var originalPostCopyForConflictUndo: PostModel? = null
-    private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
     private var scrollToLocalPostId: LocalPostId? = null
 
     private val _postListAction = SingleLiveEvent<PostListAction>()
@@ -197,12 +196,26 @@ class PostListViewModel @Inject constructor(
         result
     }
 
-    private val postListDialogHelper = PostListDialogHelper(
-            showDialog = { dialogHolder ->
-                _dialogAction.postValue(dialogHolder)
-            },
-            checkNetworkConnection = this::checkNetworkConnection
-    )
+    private val postListDialogHelper: PostListDialogHelper by lazy {
+        PostListDialogHelper(
+                showDialog = { dialogHolder ->
+                    _dialogAction.postValue(dialogHolder)
+                },
+                checkNetworkConnection = this::checkNetworkConnection
+        )
+    }
+
+    private val postConflictResolver: PostConflictResolver by lazy {
+        PostConflictResolver(
+                dispatcher = dispatcher,
+                postStore = postStore,
+                site = site,
+                invalidateList = { pagedListWrapper.invalidateData() },
+                checkNetworkConnection = this::checkNetworkConnection,
+                showSnackbar = { snackbarHolder -> _snackBarAction.postValue(snackbarHolder) },
+                showToast = { toastHolder -> _toastMessage.postValue(toastHolder) }
+        )
+    }
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
@@ -360,7 +373,7 @@ class PostListViewModel @Inject constructor(
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state.
-        if (doesPostHaveUnhandledConflict(post)) {
+        if (postConflictResolver.doesPostHaveUnhandledConflict(post)) {
             postListDialogHelper.showConflictedPostResolutionDialog(post)
             return
         }
@@ -478,13 +491,7 @@ class PostListViewModel @Inject constructor(
                             "Error updating the post with type: ${event.error.type} and message: ${event.error.message}"
                     )
                 } else {
-                    originalPostCopyForConflictUndo?.id?.let {
-                        val updatedPost = postStore.getPostByLocalPostId(it)
-                        // Conflicted post has been successfully updated with its remote version
-                        if (!PostUtils.isPostInConflictWithRemote(updatedPost)) {
-                            conflictedPostUpdatedWithItsRemoteVersion()
-                        }
-                    }
+                    postConflictResolver.onPostSuccessfullyUpdated()
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {
@@ -685,93 +692,24 @@ class PostListViewModel @Inject constructor(
                 instanceTag = instanceTag,
                 deletePost = this::deletePost,
                 publishPost = this::publishPost,
-                updateConflictedPostWithItsRemoteVersion = this::updateConflictedPostWithItsRemoteVersion
+                updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion
         )
     }
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         postListDialogHelper.onNegativeClickedForBasicDialog(
                 instanceTag = instanceTag,
-                updateConflictedPostWithItsLocalVersion = this::updateConflictedPostWithItsLocalVersion
+                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
         )
     }
 
     fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
         postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
                 instanceTag = instanceTag,
-                updateConflictedPostWithItsLocalVersion = this::updateConflictedPostWithItsLocalVersion
+                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
         )
     }
 
-    // Post Conflict Resolution
-
-    private fun updateConflictedPostWithItsRemoteVersion(localPostId: Int) {
-        // We need network connection to load a remote post
-        if (!checkNetworkConnection()) {
-            return
-        }
-
-        val post = postStore.getPostByLocalPostId(localPostId)
-        if (post != null) {
-            originalPostCopyForConflictUndo = post.clone()
-            dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
-            _toastMessage.postValue(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
-        }
-    }
-
-    private fun conflictedPostUpdatedWithItsRemoteVersion() {
-        val undoAction = {
-            // here replace the post with whatever we had before, again
-            if (originalPostCopyForConflictUndo != null) {
-                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
-            }
-        }
-        val onDismissAction = {
-            originalPostCopyForConflictUndo = null
-        }
-        val snackBarHolder = SnackbarMessageHolder(
-                R.string.snackbar_conflict_local_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction
-        )
-        _snackBarAction.postValue(snackBarHolder)
-    }
-
-    private fun updateConflictedPostWithItsLocalVersion(localPostId: Int) {
-        // We need network connection to push local version to remote
-        if (!checkNetworkConnection()) {
-            return
-        }
-
-        // Keep a reference to which post is being updated with the local version so we can avoid showing the conflicted
-        // label during the undo snackBar.
-        localPostIdForFetchingRemoteVersionOfConflictedPost = localPostId
-        pagedListWrapper.invalidateData()
-
-        val post = postStore.getPostByLocalPostId(localPostId) ?: return
-
-        // and now show a snackBar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
-        var isUndoed = false
-        val undoAction = {
-            isUndoed = true
-
-            // Remove the reference for the post being updated and re-show the conflicted label on undo
-            localPostIdForFetchingRemoteVersionOfConflictedPost = null
-            pagedListWrapper.invalidateData()
-        }
-
-        val onDismissAction = {
-            if (!isUndoed) {
-                localPostIdForFetchingRemoteVersionOfConflictedPost = null
-                PostUtils.trackSavePostAnalytics(post, site)
-                dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
-            }
-        }
-        val snackBarHolder = SnackbarMessageHolder(
-                R.string.snackbar_conflict_web_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction
-        )
-        _snackBarAction.postValue(snackBarHolder)
-    }
 
     fun scrollToPost(localPostId: LocalPostId) {
         val data = pagedListData.value
@@ -812,7 +750,7 @@ class PostListViewModel @Inject constructor(
             listItemUiStateHelper.createPostListItemUiState(
                     post = post,
                     uploadStatus = getUploadStatus(post),
-                    unhandledConflicts = doesPostHaveUnhandledConflict(post),
+                    unhandledConflicts = postConflictResolver.doesPostHaveUnhandledConflict(post),
                     capabilitiesToPublish = site.hasCapabilityPublishPosts,
                     statsSupported = isStatsSupported,
                     featuredImageUrl = getFeaturedImageUrl(
@@ -827,13 +765,6 @@ class PostListViewModel @Inject constructor(
             }
 
     // Utils
-
-    private fun doesPostHaveUnhandledConflict(post: PostModel): Boolean {
-        // If we are fetching the remote version of a conflicted post, it means it's already being handled
-        val isFetchingConflictedPost = localPostIdForFetchingRemoteVersionOfConflictedPost != null &&
-                localPostIdForFetchingRemoteVersionOfConflictedPost == post.id
-        return !isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post)
-    }
 
     private fun checkNetworkConnection(): Boolean =
             if (networkUtilsWrapper.isNetworkAvailable()) {

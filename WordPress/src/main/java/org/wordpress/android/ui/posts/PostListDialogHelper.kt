@@ -74,7 +74,7 @@ class PostListDialogHelper(
         instanceTag: String,
         deletePost: (Int) -> Unit,
         publishPost: (Int) -> Unit,
-        updateConflictedPostWithItsRemoteVersion: (Int) -> Unit
+        updateConflictedPostWithRemoteVersion: (Int) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog?.let {
@@ -88,7 +88,7 @@ class PostListDialogHelper(
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 localPostIdForConflictResolutionDialog = null
                 // here load version from remote
-                updateConflictedPostWithItsRemoteVersion(it)
+                updateConflictedPostWithRemoteVersion(it)
             }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
@@ -96,13 +96,13 @@ class PostListDialogHelper(
 
     fun onNegativeClickedForBasicDialog(
         instanceTag: String,
-        updateConflictedPostWithItsLocalVersion: (Int) -> Unit
+        updateConflictedPostWithLocalVersion: (Int) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
-                updateConflictedPostWithItsLocalVersion(it)
+                updateConflictedPostWithLocalVersion(it)
             }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
@@ -110,14 +110,14 @@ class PostListDialogHelper(
 
     fun onDismissByOutsideTouchForBasicDialog(
         instanceTag: String,
-        updateConflictedPostWithItsLocalVersion: (Int) -> Unit
+        updateConflictedPostWithLocalVersion: (Int) -> Unit
     ) {
         // Cancel and outside touch dismiss works the same way for all, except for conflict resolution dialog,
         // for which tapping outside and actively tapping the "edit local" have different meanings
         if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG) {
             onNegativeClickedForBasicDialog(
                     instanceTag = instanceTag,
-                    updateConflictedPostWithItsLocalVersion = updateConflictedPostWithItsLocalVersion
+                    updateConflictedPostWithLocalVersion = updateConflictedPostWithLocalVersion
             )
         }
     }
