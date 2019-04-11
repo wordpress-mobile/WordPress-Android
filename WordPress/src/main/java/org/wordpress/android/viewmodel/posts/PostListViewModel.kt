@@ -13,7 +13,6 @@ import android.support.annotation.DrawableRes
 import de.greenrobot.event.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -21,8 +20,10 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.DeletePost
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemovePost
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RestorePost
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -31,7 +32,6 @@ import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.ListError
@@ -43,6 +43,8 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.DELETE
+import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.TRASH
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
@@ -50,6 +52,10 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
+import org.wordpress.android.ui.posts.CriticalPostActionTracker
+import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.DELETING_POST
+import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.RESTORING_POST
+import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
@@ -69,7 +75,6 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -88,7 +93,6 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
-import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState.RefreshError
 import org.wordpress.android.widgets.PostListButtonType
@@ -136,11 +140,14 @@ class PostListViewModel @Inject constructor(
     private val uploadStatusMap = HashMap<Int, PostListItemUploadStatus>()
     private val featuredImageMap = HashMap<Long, String>()
 
-    // Keep a reference to the currently being trashed post, so we can hide it during Undo SnackBar
-    private var postIdToTrash: Pair<LocalPostId, RemotePostId>? = null
+    // TODO: This should be tracked in the main VM
+    private val criticalPostActionTracker = CriticalPostActionTracker(listener = {
+        pagedListWrapper.invalidateData()
+    })
+
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForPublishDialog: Int? = null
-    private var localPostIdForTrashDialog: Int? = null
+    private var localPostIdForDeleteDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
     private var originalPostCopyForConflictUndo: PostModel? = null
     private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
@@ -168,15 +175,9 @@ class PostListViewModel @Inject constructor(
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
         }
-        val performGetItemIdsToHide = { postListDescriptor: PostListDescriptor ->
-            if (!postListDescriptor.statusList.contains(PostStatus.TRASHED)) {
-                postIdToTrash
-            } else null
-        }
         val dataSource = PostListItemDataSource(
                 dispatcher = dispatcher,
                 postStore = postStore,
-                performGetItemIdsToHide = performGetItemIdsToHide,
                 transform = this::transformPostModelToPostListItemUiState
         )
         listStore.getList(listDescriptor, dataSource, lifecycle)
@@ -372,7 +373,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    fun newPost() {
+    private fun newPost() {
         _postListAction.postValue(PostListAction.NewPost(site))
     }
 
@@ -391,15 +392,20 @@ class PostListViewModel @Inject constructor(
         when (buttonType) {
             BUTTON_EDIT -> editPostButtonAction(site, post)
             BUTTON_RETRY -> _postListAction.postValue(RetryUpload(post))
-            BUTTON_RESTORE -> TODO()
+            BUTTON_RESTORE -> {
+                restorePost(post)
+            }
             BUTTON_SUBMIT, BUTTON_SYNC, BUTTON_PUBLISH -> {
                 showPublishConfirmationDialog(post)
             }
             BUTTON_VIEW -> _postListAction.postValue(ViewPost(site, post))
             BUTTON_PREVIEW -> _postListAction.postValue(PreviewPost(site, post))
             BUTTON_STATS -> _postListAction.postValue(ViewStats(site, post))
-            BUTTON_TRASH, BUTTON_DELETE -> {
-                showTrashConfirmationDialog(post)
+            BUTTON_TRASH -> {
+                trashPost(post)
+            }
+            BUTTON_DELETE -> {
+                showDeletePostConfirmationDialog(post)
             }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
@@ -407,30 +413,19 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    private fun showTrashConfirmationDialog(post: PostModel) {
-        if (postIdToTrash != null) {
-            // We can only handle one trash action at once due to be able to undo
-            return
-        }
+    private fun showDeletePostConfirmationDialog(post: PostModel) {
         // We need network connection to delete a remote post, but not a local draft
         if (!post.isLocalDraft && !checkNetworkConnection()) {
             return
         }
-        val messageRes = if (!UploadService.isPostUploadingOrQueued(post)) {
-            if (post.isLocalDraft) {
-                R.string.dialog_confirm_delete_permanently_post
-            } else R.string.dialog_confirm_delete_post
-        } else {
-            R.string.dialog_confirm_cancel_post_media_uploading
-        }
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_DELETE_POST_DIALOG_TAG,
                 title = UiStringRes(R.string.delete_post),
-                message = UiStringRes(messageRes),
+                message = UiStringRes(R.string.dialog_confirm_delete_permanently_post),
                 positiveButton = UiStringRes(R.string.delete),
                 negativeButton = UiStringRes(R.string.cancel)
         )
-        localPostIdForTrashDialog = post.id
+        localPostIdForDeleteDialog = post.id
         _dialogAction.postValue(dialogHolder)
     }
 
@@ -473,8 +468,48 @@ class PostListViewModel @Inject constructor(
         localPostIdForPublishDialog = null
     }
 
-    private fun isGutenbergEnabled(): Boolean {
-        return BuildConfig.OFFER_GUTENBERG && AppPrefs.isGutenbergEditorEnabled()
+    private fun restorePost(post: PostModel) {
+        // We need network connection to restore a post
+        if (!checkNetworkConnection()) {
+            return
+        }
+
+        criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = RESTORING_POST)
+        dispatcher.dispatch(PostActionBuilder.newRestorePostAction(RemotePostPayload(post, site)))
+    }
+
+    private fun handlePostRestored(localPostId: LocalId, isError: Boolean) {
+        if (criticalPostActionTracker.get(localPostId) != RESTORING_POST) {
+            /*
+             * This is an unexpected action and either it has already been handled or another critical action has
+             * been performed. In either case, safest action is to just ignore it.
+             */
+            return
+        }
+        val removeFromTracker = {
+            criticalPostActionTracker.remove(localPostId = localPostId, criticalPostAction = RESTORING_POST)
+        }
+        if (isError) {
+            removeFromTracker.invoke()
+            _toastMessage.postValue(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
+            return
+        }
+        val snackBarHolder = SnackbarMessageHolder(
+                messageRes = R.string.post_restored,
+                buttonTitleRes = R.string.undo,
+                buttonAction = {
+                    val post = postStore.getPostByLocalPostId(localPostId.value)
+                    if (post != null) {
+                        removeFromTracker.invoke()
+                        trashPost(post)
+                        _snackBarAction.postValue(SnackbarMessageHolder(R.string.post_trashing))
+                    }
+                },
+                onDismissAction = {
+                    removeFromTracker.invoke()
+                }
+        )
+        _snackBarAction.postValue(snackBarHolder)
     }
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
@@ -496,38 +531,96 @@ class PostListViewModel @Inject constructor(
         _postListAction.postValue(PostListAction.EditPost(site, post))
     }
 
-    private fun trashPost(localPostId: Int) {
+    private fun deletePost(localPostId: Int) {
         // If post doesn't exist, nothing else to do
         val post = postStore.getPostByLocalPostId(localPostId) ?: return
-        postIdToTrash = Pair(LocalPostId(LocalId(post.id)), RemotePostId(RemoteId(post.remotePostId)))
-        // Refresh the list so we can immediately hide the post
-        pagedListWrapper.invalidateData()
-        val undoAction = {
-            postIdToTrash = null
-            // Refresh the list, so we can re-show the post
-            pagedListWrapper.invalidateData()
-        }
-        val onDismissAction = {
-            // If postIdToTrash is set to `null`, user undid the action
-            if (postIdToTrash != null) {
-                postIdToTrash = null
-                _postUploadAction.postValue(CancelPostAndMediaUpload(post))
-                if (post.isLocalDraft) {
-                    val pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.id)
-                    _postListAction.postValue(DismissPendingNotification(pushId))
-                    dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
-                } else {
-                    dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
-                }
+        criticalPostActionTracker.add(LocalId(post.id), DELETING_POST)
+
+        when {
+            post.isLocalDraft -> {
+                val pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.id)
+                _postListAction.postValue(DismissPendingNotification(pushId))
+                dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
+            }
+            else -> {
+                dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
             }
         }
-        val messageRes = if (post.isLocalDraft) R.string.post_deleted else R.string.post_trashed
-        val snackBarHolder = SnackbarMessageHolder(messageRes, R.string.undo, undoAction, onDismissAction)
+    }
+
+    /**
+     * This function handles a post being deleted and removed. Since deleting remote posts will trigger both delete
+     * and remove actions we only want to remove the critical action when the post is actually successfully removed.
+     *
+     * It's possible to separate these into two methods that handles delete and remove. However, the fact that they
+     * follow the same approach and the tricky nature of delete action makes combining the actions like so makes our
+     * expectations clearer.
+     */
+    private fun handlePostDeletedOrRemoved(localPostId: LocalId, isRemoved: Boolean, isError: Boolean) {
+        if (criticalPostActionTracker.get(localPostId) != DELETING_POST) {
+            /*
+             * This is an unexpected action and either it has already been handled or another critical action has
+             * been performed. In either case, safest action is to just ignore it.
+             */
+            return
+        }
+        if (isError) {
+            _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
+        }
+        if (isRemoved) {
+            criticalPostActionTracker.remove(localPostId = localPostId, criticalPostAction = DELETING_POST)
+        }
+    }
+
+    private fun trashPost(post: PostModel) {
+        // We need network connection to trash a post
+        if (!checkNetworkConnection()) {
+            return
+        }
+
+        criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = TRASHING_POST)
+
+        _postUploadAction.postValue(CancelPostAndMediaUpload(post))
+        dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
+    }
+
+    private fun handlePostTrashed(localPostId: LocalId, isError: Boolean) {
+        if (criticalPostActionTracker.get(localPostId) != TRASHING_POST) {
+            /*
+             * This is an unexpected action and either it has already been handled or another critical action has
+             * been performed. In either case, safest action is to just ignore it.
+             */
+            return
+        }
+        val removeFromTracker = {
+            criticalPostActionTracker.remove(localPostId = localPostId, criticalPostAction = TRASHING_POST)
+        }
+        if (isError) {
+            removeFromTracker.invoke()
+            _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
+            return
+        }
+        val snackBarHolder = SnackbarMessageHolder(
+                messageRes = R.string.post_trashed,
+                buttonTitleRes = R.string.undo,
+                buttonAction = {
+                    val post = postStore.getPostByLocalPostId(localPostId.value)
+                    if (post != null) {
+                        removeFromTracker.invoke()
+                        restorePost(post)
+                        _snackBarAction.postValue(SnackbarMessageHolder(R.string.post_restoring))
+                    }
+                },
+                onDismissAction = {
+                    removeFromTracker.invoke()
+                }
+        )
         _snackBarAction.postValue(snackBarHolder)
     }
 
     // FluxC Events
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
         when (event.causeOfChange) {
@@ -549,13 +642,29 @@ class PostListViewModel @Inject constructor(
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {
-                if (event.isError) {
-                    _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
+                val deletePostCauseOfChange = event.causeOfChange as DeletePost
+                val localPostId = LocalId(deletePostCauseOfChange.localPostId)
+                when (deletePostCauseOfChange.postDeleteActionType) {
+                    TRASH -> handlePostTrashed(localPostId = localPostId, isError = event.isError)
+                    DELETE -> handlePostDeletedOrRemoved(
+                            localPostId = localPostId,
+                            isRemoved = false,
+                            isError = event.isError
+                    )
                 }
+            }
+            is CauseOfOnPostChanged.RestorePost -> {
+                val localPostId = LocalId((event.causeOfChange as RestorePost).localPostId)
+                handlePostRestored(localPostId = localPostId, isError = event.isError)
+            }
+            is CauseOfOnPostChanged.RemovePost -> {
+                val localPostId = LocalId((event.causeOfChange as RemovePost).localPostId)
+                handlePostDeletedOrRemoved(localPostId = localPostId, isRemoved = true, isError = event.isError)
             }
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
@@ -563,7 +672,8 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
             _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
@@ -575,6 +685,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaUploaded(event: OnMediaUploaded) {
         if (event.isError || event.canceled) {
@@ -725,9 +836,9 @@ class PostListViewModel @Inject constructor(
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog?.let {
-                localPostIdForTrashDialog = null
-                trashPost(it)
+            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog?.let {
+                localPostIdForDeleteDialog = null
+                deletePost(it)
             }
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog?.let {
                 localPostIdForPublishDialog = null
@@ -744,7 +855,7 @@ class PostListViewModel @Inject constructor(
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
+            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 updateConflictedPostWithItsLocalVersion(it)
@@ -877,7 +988,8 @@ class PostListViewModel @Inject constructor(
                             featuredImageId = post.featuredImageId,
                             postContent = post.content
                     ),
-                    formattedDate = PostUtils.getFormattedDate(post)
+                    formattedDate = PostUtils.getFormattedDate(post),
+                    performingCriticalAction = criticalPostActionTracker.contains(LocalId(post.id))
             ) { postModel, buttonType, statEvent ->
                 trackAction(buttonType, postModel, statEvent)
                 handlePostButton(buttonType, postModel)

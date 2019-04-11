@@ -8,7 +8,6 @@ import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.widgets.PostListButtonType
 
 sealed class PostListItemType {
-    // TODO: Can we find a better name for this now that it's a PostListItemType?
     class PostListItemUiState(
         val data: PostListItemUiStateData,
         val actions: List<PostListItemAction>,

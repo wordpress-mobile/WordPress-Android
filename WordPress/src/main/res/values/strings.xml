@@ -317,12 +317,10 @@
     <string name="width">Width</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
     <string name="delete_post">Delete post?</string>
     <string name="delete_page">Delete page?</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
-    <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
     <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
@@ -439,8 +437,11 @@
 
     <!-- post actions -->
     <string name="preview_post">Preview post</string>
-    <string name="post_deleted">Post deleted</string>
     <string name="post_trashed">Post sent to trash</string>
+    <string name="post_trashing">Post is being trashed</string>
+    <string name="post_restored">Post restored</string>
+    <string name="post_restoring">Post is being restored</string>
+
     <string name="share_link">Share link</string>
     <string name="view_in_browser">View in browser</string>
     <string name="preview">Preview</string>
@@ -1434,6 +1435,7 @@
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
     <string name="error_deleting_post">An error occurred while deleting the post</string>
+    <string name="error_restoring_post">An error occurred while restoring the post</string>
 
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
