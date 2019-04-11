@@ -35,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -45,6 +46,7 @@ class StatsViewAllFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var navigator: StatsNavigator
+    @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -77,9 +79,7 @@ class StatsViewAllFragment : DaggerFragment() {
                         intent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME)
                 )
             }
-            if (intent.hasExtra(WordPress.SITE)) {
-                outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
-            }
+            outState.putInt(WordPress.SITE_ID, intent.getIntExtra(WordPress.SITE_ID, 0))
         }
 
         super.onSaveInstanceState(outState)
@@ -124,25 +124,20 @@ class StatsViewAllFragment : DaggerFragment() {
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val type = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
+            activity.intent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
         } else {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
         }
 
         val granularity = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
+            activity.intent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         } else {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         }
 
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-        }
+        val siteId = savedInstanceState?.getInt(WordPress.SITE_ID, 0)
+                ?: activity.intent.getIntExtra(WordPress.SITE_ID, 0)
+        statsSiteProvider.start(siteId)
 
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)

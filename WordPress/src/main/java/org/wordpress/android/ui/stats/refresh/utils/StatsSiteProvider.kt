@@ -22,11 +22,22 @@ class StatsSiteProvider
     val siteChanged: LiveData<OnSiteChanged> = mutableSiteChanged
 
     init {
-        siteStore.getSiteByLocalId(AppPrefs.getSelectedSite())?.let { site ->
-            siteModel = site
-        }
+        reset()
         dispatcher.register(this)
     }
+
+    fun start(siteId: Int) {
+        if (siteId != 0) {
+            siteStore.getSiteByLocalId(siteId)?.let { site ->
+                siteModel = site
+            }
+        }
+    }
+
+    fun reset() {
+        start(AppPrefs.getSelectedSite())
+    }
+
 
     fun clear() {
         if (mutableSiteChanged.value != null) {

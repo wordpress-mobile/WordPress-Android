@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.OldStatsActivity.ARG_DESIRED_TIMEFRAME
 import org.wordpress.android.ui.stats.OldStatsActivity.ARG_LAUNCHED_FROM
 import org.wordpress.android.ui.stats.OldStatsActivity.StatsLaunchedFrom
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
@@ -44,6 +46,7 @@ private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
 class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -67,7 +70,9 @@ class StatsFragment : DaggerFragment() {
         initializeViews(nonNullActivity)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(WordPress.SITE_ID, activity?.intent?.getIntExtra(WordPress.SITE_ID, 0) ?: 0)
+        super.onSaveInstanceState(outState)
     }
 
     private fun initializeViews(activity: FragmentActivity) {
@@ -97,8 +102,8 @@ class StatsFragment : DaggerFragment() {
 
         setupObservers(activity)
 
-        val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-        val nonNullSite = checkNotNull(site)
+        val siteId = activity.intent.getIntExtra(WordPress.SITE_ID, 0)
+        statsSiteProvider.start(siteId)
 
         val launchedFrom = activity.intent.getSerializableExtra(ARG_LAUNCHED_FROM)
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
