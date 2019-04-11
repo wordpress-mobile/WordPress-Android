@@ -123,19 +123,22 @@ class StatsViewAllFragment : DaggerFragment() {
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val type = if (savedInstanceState == null) {
-            activity.intent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
+            val nonNullIntent = checkNotNull(activity.intent)
+            nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
         } else {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
         }
 
         val granularity = if (savedInstanceState == null) {
-            activity.intent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
+            val nonNullIntent = checkNotNull(activity.intent)
+            nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         } else {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         }
 
+        val nonNullIntent = checkNotNull(activity.intent)
         val siteId = savedInstanceState?.getInt(WordPress.LOCAL_SITE_ID, 0)
-                ?: activity.intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
+                ?: nonNullIntent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
         statsSiteProvider.start(siteId)
 
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)

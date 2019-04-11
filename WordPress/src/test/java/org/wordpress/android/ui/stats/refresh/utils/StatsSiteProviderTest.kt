@@ -71,7 +71,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
         statsSiteProvider.start(firstSiteLocalId)
 
         assertThat(statsSiteProvider.siteModel).isEqualTo(firstSite)
-        
+
         statsSiteProvider.reset()
 
         assertThat(statsSiteProvider.siteModel).isEqualTo(selectedSite)

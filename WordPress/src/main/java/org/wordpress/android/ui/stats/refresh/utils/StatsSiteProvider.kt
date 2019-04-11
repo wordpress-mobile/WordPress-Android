@@ -17,7 +17,8 @@ class StatsSiteProvider
 @Inject constructor(
     private val siteStore: SiteStore,
     private val selectedSite: SelectedSiteStorage,
-    dispatcher: Dispatcher) {
+    dispatcher: Dispatcher
+) {
     var siteModel = SiteModel()
         private set
 
