@@ -140,9 +140,9 @@ class PostListMainViewModel @Inject constructor(
     }
 
     /**
-     * Filtering by author is disable on
-     * 1) Self-hosted sites - The XMLRPC api doesn't support filtering by author
-     * 2) Self-hosted JetPack powered sites - we'd need support on the API for filtering by self-hosted user id
+     * Filtering by author is disable on:
+     * 1) Self-hosted sites - The XMLRPC api doesn't support filtering by author.
+     * 2) Self-hosted JetPack powered sites - we'd need support on the API for filtering by self-hosted user id.
      * 3) Sites on which the user doesn't have permissions to edit posts of other users.
      *
      * This behavior is consistent with Calypso as of 11/4/2019.
