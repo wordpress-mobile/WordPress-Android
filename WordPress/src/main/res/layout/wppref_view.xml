@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
-        android:textColor="@color/blue_wordpress"
+        android:textColor="@color/primary_500"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
         android:visibility="gone"
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_large"
             tools:text="text_title"
             android:textAlignment="viewStart"
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_title"
-            android:textColor="@color/grey_text_min"
+            android:textColor="@color/neutral"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_summary"
             android:textAlignment="viewStart"
@@ -69,6 +69,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:background="@color/divider_grey" />
+        android:background="@color/divider" />
 
 </LinearLayout>

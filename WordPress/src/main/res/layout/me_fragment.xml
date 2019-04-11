@@ -58,7 +58,7 @@
                             style="@android:style/Widget.Holo.ProgressBar"
                             android:layout_width="@dimen/avatar_sz_inner_circle"
                             android:layout_height="@dimen/avatar_sz_inner_circle"
-                            android:background="@drawable/shape_oval_translucent"
+                            android:background="@drawable/bg_oval_black_translucent_50"
                             android:layout_gravity="center"
                             android:padding="@dimen/margin_large"
                             android:indeterminate="true"
@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/frame_avatar"
-                    android:textColor="@color/blue_wordpress"
+                    android:textColor="@color/primary_500"
                     android:padding="8dp"
                     android:textAllCaps="true"
                     android:textSize="10sp"
@@ -95,7 +95,7 @@
                         android:ellipsize="end"
                         android:fontFamily="sans-serif-light"
                         android:maxLines="1"
-                        android:textColor="@color/grey_dark"
+                        android:textColor="@color/neutral_700"
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold"
                         tools:text="Full Name" />
@@ -108,7 +108,7 @@
                         android:layout_centerHorizontal="true"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="@color/grey_darken_20"
+                        android:textColor="@color/neutral_500"
                         android:textSize="@dimen/text_sz_medium"
                         tools:text="username" />
                 </RelativeLayout>

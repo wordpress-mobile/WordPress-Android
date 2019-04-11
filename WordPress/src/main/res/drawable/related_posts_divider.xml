@@ -4,10 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@color/grey_lighten_30"
+        android:drawable="@color/neutral_0"
         android:state_enabled="true" />
 
     <item
-        android:drawable="@color/grey_lighten_30" />
+        android:drawable="@color/neutral_0" />
 
 </selector>

@@ -211,15 +211,15 @@ public class UploadUtils {
         Snackbar.make(view, messageRes,
                 AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
                 .setAction(buttonTitleRes, onClickListener).
-                        setActionTextColor(view.getResources().getColor(R.color.blue_medium))
+                        setActionTextColor(view.getResources().getColor(R.color.primary_400))
                 .show();
     }
 
     private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
         Snackbar.make(view, message, AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener).
-                        setActionTextColor(view.getResources().getColor(R.color.blue_medium))
+                .setAction(buttonTitleRes, onClickListener)
+                .setActionTextColor(view.getResources().getColor(R.color.primary_400))
                 .show();
     }
 
@@ -227,7 +227,7 @@ public class UploadUtils {
                                                   View.OnClickListener onClickListener) {
         Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
                 .setAction(buttonTitleRes, onClickListener).
-                        setActionTextColor(view.getResources().getColor(R.color.orange_jazzy))
+                        setActionTextColor(view.getResources().getColor(R.color.accent))
                 .show();
     }
 
@@ -252,8 +252,7 @@ public class UploadUtils {
         }
 
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
-        boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
-                                     || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
+        boolean isFirstTimePublish = PostUtils.isFirstTimePublish(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
         // save the post in the DB so the UploadService will get the latest change

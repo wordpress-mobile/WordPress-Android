@@ -8,7 +8,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/header_text"
-        android:background="@color/background_grey"
+        android:background="@color/background_default"
         android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_large"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-        android:textColor="@color/grey_darken_20"
+        android:textColor="@color/neutral_500"
         android:visibility="gone"
         tools:text="Today"
         tools:visibility="visible" >
@@ -50,18 +50,18 @@
                 android:layout_marginEnd="@dimen/activity_log_icon_margin"
                 android:layout_marginTop="@dimen/margin_small"
                 android:layout_width="@dimen/notifications_avatar_sz"
-                tools:src="@drawable/bg_oval_grey_user_32dp" >
+                tools:src="@drawable/bg_oval_neutral_300_user_32dp" >
             </ImageView>
 
             <org.wordpress.android.widgets.NoticonTextView
                 android:id="@+id/note_icon"
-                android:background="@drawable/shape_oval_blue_white_stroke"
+                android:background="@drawable/bg_oval_primary_400_stroke_notification_unread"
                 android:gravity="center"
                 android:layout_height="@dimen/note_icon_sz"
                 android:layout_marginStart="31dp"
                 android:layout_marginTop="35dp"
                 android:layout_width="@dimen/note_icon_sz"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:textSize="14sp" >
             </org.wordpress.android.widgets.NoticonTextView>
 
@@ -80,7 +80,7 @@
                 android:layout_marginTop="@dimen/margin_extra_small"
                 android:layout_width="wrap_content"
                 android:textAlignment="viewStart"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 android:textSize="@dimen/text_sz_larger" >
             </org.wordpress.android.widgets.NoticonTextView>
 
@@ -92,7 +92,7 @@
                 android:layout_width="fill_parent"
                 android:maxLines="2"
                 android:textAlignment="viewStart"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="Bob Ross commented on your post Happy Trees" >
             </org.wordpress.android.widgets.WPTextView>
@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/note_avatar_container"
             android:layout_width="wrap_content"
-            android:textColor="@color/grey_darken_10"
+            android:textColor="@color/neutral_600"
             android:textSize="@dimen/text_sz_large"
             android:visibility="gone"
             tools:text="What an amazing post!"
@@ -118,7 +118,7 @@
     </RelativeLayout>
 
     <View
-        android:background="@color/grey_lighten_30"
+        android:background="@color/neutral_0"
         android:layout_below="@+id/note_content_container"
         android:layout_height="@dimen/list_divider_height"
         android:layout_width="match_parent" >

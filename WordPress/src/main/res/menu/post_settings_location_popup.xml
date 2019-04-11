@@ -8,14 +8,14 @@
         android:id="@+id/menu_change_location"
         android:icon="@drawable/ic_location_white_24dp"
         android:title="@string/change_location"
-        app:iconTint="@color/grey_600">
+        app:iconTint="@color/gray_600">
     </item>
 
     <item
         android:id="@+id/menu_remove_location"
         android:icon="@drawable/ic_cross_white_24dp"
         android:title="@string/remove_location"
-        app:iconTint="@color/grey_600">
+        app:iconTint="@color/gray_600">
     </item>
 
 </menu>

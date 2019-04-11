@@ -316,8 +316,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
                 if (isEmpty) {
                     actionableEmptyView.title.setText(R.string.stock_media_picker_initial_empty_text);
-                    // Leave span with hard-coded #0087be to override jazzy orange until accent color is blue_wordpress.
-                    String link = "<span style=\"color:#0087be\"><a href='https://pexels.com/'>Pexels</a></span>";
+                    String link = "<a href='https://pexels.com/'>Pexels</a>";
                     Spanned html = Html.fromHtml(getString(R.string.stock_media_picker_initial_empty_subtext, link));
                     actionableEmptyView.subtitle.setText(html);
                     actionableEmptyView.getSubtitle().setMovementMethod(WPLinkMovementMethod.getInstance());

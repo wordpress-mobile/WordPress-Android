@@ -200,6 +200,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                     if (currentNote != null) {
                         setActionBarTitleForNote(currentNote);
                         markNoteAsRead(currentNote);
+                        NotificationsActions.updateSeenTimestamp(currentNote);
                     }
                 }
 

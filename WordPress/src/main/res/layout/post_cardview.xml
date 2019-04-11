@@ -8,7 +8,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:stateListAnimator="@anim/pressed_card"
-                                    card_view:cardBackgroundColor="@color/white"
+                                    card_view:cardBackgroundColor="@android:color/white"
                                     card_view:cardCornerRadius="@dimen/default_cardview_radius"
                                     card_view:cardElevation="@dimen/card_elevation" >
 
@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 android:textSize="@dimen/text_sz_small"
                 android:visibility="gone"
                 tools:text="text_status"
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:orientation="vertical"
-            android:background="@color/grey_light">
+            android:background="@color/neutral_0">
 
             <ProgressBar
                 android:id="@+id/post_upload_progress"

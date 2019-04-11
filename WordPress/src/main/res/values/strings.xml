@@ -1916,6 +1916,11 @@
     <string name="plugin_remove_progress_dialog_message">Removing %s…</string>
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Install plugin</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">To install plugins, you need to have a custom domain associated with your site.</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Register domain</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Checking domain credits</string>
+    <string name="plugin_check_domain_credit_error">Failed to check available domain credits</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Install plugin</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">Installing the first plugin on your site can take up to 1 minute. During this time you won’t be able to make changes to your site.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Install</string>
@@ -2255,7 +2260,7 @@
     <string name="notification_channel_reminder_id" translatable="false">wpandroid_notification_reminder_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
-    <string name="login_notification_channel_id" translatable="false" content_override="true">@string/notification_channel_normal_id</string>
+    <string name="login_notification_channel_id" content_override="true" translatable="false">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
@@ -2544,25 +2549,25 @@
     <string name="app_rating_rate_never">No thanks</string>
 
     <!-- Gutenberg mobile strings -->
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link inserted</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Add URL</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Link Text</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138">Add Link Text</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Remove Link</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Start writing…</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196">Choose from device</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197">Take a Photo</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress Media Library</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alt Text</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Clear All Settings</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Failed to insert media.\nPlease tap for options.</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">CHOOSE IMAGE</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Paste URL</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Unsupported Block</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Unsupported block type.</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Unsupported</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_block_manager_js_285">ADD BLOCK HERE</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Move block up</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Move block down</string>
-    <string tools:ignore="UnusedResources" name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Remove content</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101" tools:ignore="UnusedResources">Link inserted</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214" tools:ignore="UnusedResources">Add URL</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136" tools:ignore="UnusedResources">Link Text</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_138" tools:ignore="UnusedResources">Add Link Text</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152" tools:ignore="UnusedResources">Remove Link</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128" tools:ignore="UnusedResources">Start writing…</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_196" tools:ignore="UnusedResources">Choose from device</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_197" tools:ignore="UnusedResources">Take a Photo</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198" tools:ignore="UnusedResources">WordPress Media Library</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273" tools:ignore="UnusedResources">Alt Text</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280" tools:ignore="UnusedResources">Clear All Settings</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26" tools:ignore="UnusedResources">CHOOSE IMAGE</string>
+    <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27" tools:ignore="UnusedResources">Paste URL</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21" tools:ignore="UnusedResources">Unsupported Block</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23" tools:ignore="UnusedResources">Unsupported block type.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27" tools:ignore="UnusedResources">Unsupported</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48" tools:ignore="UnusedResources">Move block up</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55" tools:ignore="UnusedResources">Move block down</string>
+    <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66" tools:ignore="UnusedResources">Remove content</string>
 </resources>

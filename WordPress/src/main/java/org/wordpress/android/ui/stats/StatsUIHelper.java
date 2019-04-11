@@ -173,7 +173,7 @@ class StatsUIHelper {
             if (chevron != null) {
                 chevron.clearAnimation();
                 ColorUtils.INSTANCE.setImageResourceWithTint(chevron, R.drawable.ic_chevron_right_white_24dp,
-                        R.color.blue_wordpress);
+                        R.color.primary_500);
             }
 
             // add children if this group is expanded
@@ -282,7 +282,7 @@ class StatsUIHelper {
                     : R.drawable.ic_chevron_right_white_24dp);
         }
 
-        chevron.setImageTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.blue_wordpress)));
+        chevron.setImageTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.primary_500)));
     }
 
     private static void showChildViews(ExpandableListAdapter mAdapter, LinearLayout mLinearLayout,

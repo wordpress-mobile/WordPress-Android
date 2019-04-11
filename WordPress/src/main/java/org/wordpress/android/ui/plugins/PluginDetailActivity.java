@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.plugins;
 
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,8 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +22,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,12 +39,14 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
@@ -60,6 +66,7 @@ import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayl
 import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferEligibilityChecked;
 import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferInitiated;
 import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferStatusChecked;
+import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccessibilityUtils;
@@ -108,6 +115,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             = "KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG";
     private static final String KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS
             = "KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS";
+    private static final String KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS
+            = "KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS";
 
     private SiteModel mSite;
     private String mSlug;
@@ -126,6 +135,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private SwitchCompat mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
     private ProgressDialog mAutomatedTransferProgressDialog;
+    private ProgressDialog mCheckingDomainCreditsProgressDialog;
 
     private CardView mWPOrgPluginDetailsContainer;
     private RelativeLayout mRatingsSectionContainer;
@@ -192,6 +202,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
+        boolean isShowingDomainCreditCheckProgress = false;
+
         if (savedInstanceState == null) {
             mIsActive = mPlugin.isActive();
             mIsAutoUpdateEnabled = mPlugin.isAutoUpdateEnabled();
@@ -210,6 +222,8 @@ public class PluginDetailActivity extends AppCompatActivity {
                     .getBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG);
             mIsShowingAutomatedTransferProgress = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS);
+            isShowingDomainCreditCheckProgress = savedInstanceState
+                    .getBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS);
         }
 
         setContentView(R.layout.plugin_detail_activity);
@@ -239,18 +253,103 @@ public class PluginDetailActivity extends AppCompatActivity {
             confirmInstallPluginForAutomatedTransfer();
         }
 
+        if (isShowingDomainCreditCheckProgress) {
+            showDomainCreditsCheckProgressDialog();
+        }
+
         if (mIsShowingAutomatedTransferProgress) {
             showAutomatedTransferProgressDialog();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlansFetched(OnPlansFetched event) {
+        if (mCheckingDomainCreditsProgressDialog == null || !mCheckingDomainCreditsProgressDialog.isShowing()) {
+            AppLog.w(T.PLANS, "User cancelled domain credit checking. Ignoring the result.");
+            return;
+        }
+
+        cancelDomainCreditsCheckProgressDialog();
+        if (event.isError()) {
+            AppLog.e(T.PLANS, PluginDetailActivity.class.getSimpleName() + ".onPlansFetched: "
+                              + event.error.type + " - " + event.error.message);
+            Snackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error),
+                    AccessibilityUtils.getSnackbarDuration(this)).show();
+        } else {
+            // This should not happen
+            if (event.plans == null) {
+                String errorMessage = "Failed to fetch user Plans. The result is null.";
+                if (BuildConfig.DEBUG) {
+                    throw new IllegalStateException(errorMessage);
+                }
+                Snackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error),
+                        AccessibilityUtils.getSnackbarDuration(this)).show();
+                AppLog.e(T.PLANS, errorMessage);
+                return;
+            }
+
+            PlanModel currentPlan = null;
+            for (PlanModel plan : event.plans) {
+                if (plan.isCurrentPlan()) {
+                    currentPlan = plan;
+                    break;
+                }
+            }
+
+            boolean isDomainCreditAvailable = currentPlan != null && currentPlan.getHasDomainCredit();
+            if (isDomainCreditAvailable) {
+                showDomainRegistrationDialog();
+            } else {
+                dispatchInstallPluginAction();
+            }
+        }
+    }
+
+    public static class DomainRegistrationPromptDialog extends DialogFragment {
+        static final String DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG = "DOMAIN_REGISTRATION_PROMPT_DIALOG";
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+            builder.setTitle(R.string.plugin_install_custom_domain_required_dialog_title);
+            builder.setMessage(R.string.plugin_install_custom_domain_required_dialog_message);
+            builder.setPositiveButton(R.string.plugin_install_custom_domain_required_dialog_register_btn,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // TODO navigate to domain registration flow
+                        }
+                    });
+            builder.setNegativeButton(R.string.cancel,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+
+            builder.setCancelable(true);
+            return builder.create();
+        }
+    }
+
+    private void showDomainRegistrationDialog() {
+        DialogFragment dialogFragment = new DomainRegistrationPromptDialog();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(dialogFragment, DomainRegistrationPromptDialog.DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG);
+        ft.commitAllowingStateLoss();
     }
 
     @Override
     protected void onDestroy() {
         // Even though the progress dialog will be destroyed, when it's re-created sometimes the spinner
         // would get stuck. This seems to be helping with that.
-        if (mRemovePluginProgressDialog != null && mRemovePluginProgressDialog.isShowing()) {
-            mRemovePluginProgressDialog.cancel();
-        }
+        cancelRemovePluginProgressDialog();
+
+        cancelDomainCreditsCheckProgressDialog();
+
         mDispatcher.unregister(this);
         super.onDestroy();
     }
@@ -302,6 +401,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putBoolean(KEY_IS_SHOWING_INSTALL_FIRST_PLUGIN_CONFIRMATION_DIALOG,
                 mIsShowingInstallFirstPluginConfirmationDialog);
         outState.putBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS, mIsShowingAutomatedTransferProgress);
+        outState.putBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS,
+                mCheckingDomainCreditsProgressDialog != null && mCheckingDomainCreditsProgressDialog.isShowing());
     }
 
     // UI Helpers
@@ -412,7 +513,12 @@ public class PluginDetailActivity extends AppCompatActivity {
         mInstallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchInstallPluginAction();
+                if (isCustomDomainRequired()) {
+                    showDomainCreditsCheckProgressDialog();
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(mSite));
+                } else {
+                    dispatchInstallPluginAction();
+                }
             }
         });
 
@@ -456,6 +562,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         imgScrim.getLayoutParams().height = toolbarHeight * 2;
 
         refreshViews();
+    }
+
+    private boolean isCustomDomainRequired() {
+        return mSite.getUrl().contains(".wordpress.com") && BuildConfig.DOMAIN_REGISTRATION_ENABLED;
     }
 
     private void refreshViews() {
@@ -508,11 +618,11 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
-            textView.setTextColor(getResources().getColor(R.color.grey_dark));
+            textView.setTextColor(getResources().getColor(R.color.neutral_700));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             textView.setText(Html.fromHtml(htmlText));
         } else {
-            textView.setTextColor(getResources().getColor(R.color.grey_lighten_10));
+            textView.setTextColor(getResources().getColor(R.color.neutral_200));
             textView.setText(R.string.plugin_empty_text);
         }
     }
@@ -774,6 +884,26 @@ public class PluginDetailActivity extends AppCompatActivity {
                 getString(R.string.plugin_remove_failed, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    private void showDomainCreditsCheckProgressDialog() {
+        if (mCheckingDomainCreditsProgressDialog == null) {
+            mCheckingDomainCreditsProgressDialog = new ProgressDialog(this);
+            mCheckingDomainCreditsProgressDialog.setCancelable(true);
+            mCheckingDomainCreditsProgressDialog.setIndeterminate(true);
+
+            mCheckingDomainCreditsProgressDialog
+                    .setMessage(getString(R.string.plugin_check_domain_credits_progress_dialog_message));
+        }
+        if (!mCheckingDomainCreditsProgressDialog.isShowing()) {
+            mCheckingDomainCreditsProgressDialog.show();
+        }
+    }
+
+    private void cancelDomainCreditsCheckProgressDialog() {
+        if (mCheckingDomainCreditsProgressDialog != null && mCheckingDomainCreditsProgressDialog.isShowing()) {
+            mCheckingDomainCreditsProgressDialog.cancel();
+        }
     }
 
     private void showRemovePluginProgressDialog() {
