@@ -9,6 +9,7 @@
 * Refreshed View all Stats screens, when digging into stats data
 * Visual update to Today's stats, All-time stats and Most popular stats blocks
 * Now sharing pictures to WordPress opens the Block editor
+* Fixed crash when inserting text right before an Image
 
 12.0
 -----

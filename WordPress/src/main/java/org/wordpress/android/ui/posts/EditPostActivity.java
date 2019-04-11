@@ -596,9 +596,21 @@ public class EditPostActivity extends AppCompatActivity implements
             mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
             if (mShowAztecEditor) {
-                mMediaMarkedUploadingOnStartIds =
-                        AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
-                Collections.sort(mMediaMarkedUploadingOnStartIds);
+                try {
+                    mMediaMarkedUploadingOnStartIds =
+                            AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+                    Collections.sort(mMediaMarkedUploadingOnStartIds);
+                } catch (NumberFormatException err) {
+                    // see: https://github.com/wordpress-mobile/AztecEditor-Android/issues/805
+                    if (getSite() != null && getSite().isWPCom() && !getSite().isPrivate()
+                            && TextUtils.isEmpty(mPost.getPassword())
+                            && !PostStatus.PRIVATE.toString().equals(mPost.getStatus())) {
+                        AppLog.e(T.EDITOR, "There was an error initializing post object!");
+                        AppLog.e(AppLog.T.EDITOR, "HTML content of the post before the crash:");
+                        AppLog.e(AppLog.T.EDITOR, mPost.getContent());
+                        throw err;
+                    }
+                }
             }
             mIsPage = mPost.isPage();
 
@@ -758,7 +770,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         if (!mIsConfigChange && (mRestartEditorOption == RestartEditorOptions.NO_RESTART)) {
-            mPostEditorAnalyticsSession.end();
+            if (mPostEditorAnalyticsSession != null) {
+                mPostEditorAnalyticsSession.end();
+            }
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
@@ -2223,7 +2237,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 3:
                     return HistoryListFragment.Companion.newInstance(mPost, mSite);
                 default:
-                    return EditPostPreviewFragment.newInstance(mPost);
+                    return EditPostPreviewFragment.newInstance(mPost, mSite);
             }
         }
 
