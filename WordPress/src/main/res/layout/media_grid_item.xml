@@ -34,7 +34,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
-                android:tint="@color/grey_dark"
+                android:tint="@color/neutral_700"
                 tools:src="@drawable/ic_pages_white_24dp"
                 android:contentDescription="@null"
                 />
@@ -46,7 +46,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:textAllCaps="true"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_small"
                 android:textStyle="bold"
                 tools:text="PDF" />
@@ -59,7 +59,7 @@
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
                 android:singleLine="true"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_extra_small"
                 tools:text="filename" />
         </LinearLayout>
@@ -70,7 +70,7 @@
         android:id="@+id/media_grid_item_upload_state_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_dark_translucent_50"
+        android:background="@color/black_translucent_50"
         android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible">
@@ -128,7 +128,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 tools:text="@string/media_upload_state_failed" />
@@ -152,7 +152,7 @@
             android:elevation="4dp"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_sz_small"
             tools:text="5"
             tools:ignore="UnusedAttribute"/>

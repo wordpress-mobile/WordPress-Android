@@ -38,7 +38,7 @@ class EventItemViewHolder(
         if (activity.isButtonVisible) {
             ContextCompat.getDrawable(container.context, activity.buttonIcon.drawable)?.let { buttonIcon ->
                 val wrapDrawable = DrawableCompat.wrap(buttonIcon).mutate()
-                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(container.context, R.color.blue_medium))
+                DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(container.context, R.color.primary_400))
                 actionButton.setImageDrawable(DrawableCompat.unwrap(wrapDrawable))
                 actionButton.visibility = View.VISIBLE
             }

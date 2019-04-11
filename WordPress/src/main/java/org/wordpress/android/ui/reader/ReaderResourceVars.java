@@ -39,10 +39,10 @@ class ReaderResourceVars {
         mFeaturedImageHeightPx = resources.getDimensionPixelSize(R.dimen.reader_featured_image_height);
         mMarginMediumPx = resources.getDimensionPixelSize(R.dimen.margin_medium);
 
-        mLinkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
-        mGreyMediumDarkStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_darken_30);
-        mGreyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
-        mGreyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_lighten_30);
+        mLinkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.link_reader);
+        mGreyMediumDarkStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_600);
+        mGreyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_0);
+        mGreyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.neutral_0);
 
         // full-size image width must take margin into account
         mFullSizeImageWidthPx = displayWidthPx - (detailMarginWidthPx * 2);

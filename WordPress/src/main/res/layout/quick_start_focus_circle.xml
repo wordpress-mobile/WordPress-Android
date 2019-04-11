@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@null"
-        android:src="@drawable/quick_start_focus_outer_circle"/>
+        android:src="@drawable/bg_oval_primary_100"/>
 
     <ImageView
         android:id="@+id/quick_start_focus_inner_circle"
@@ -17,6 +17,6 @@
         android:layout_height="16dp"
         android:layout_centerInParent="true"
         android:contentDescription="@null"
-        android:src="@drawable/quick_start_focus_inner_circle"/>
+        android:src="@drawable/bg_oval_primary"/>
 
 </RelativeLayout>

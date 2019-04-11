@@ -65,9 +65,9 @@ public class DetailListPreference extends ListPreference
         super.onBindView(view);
 
         setupView((TextView) view.findViewById(android.R.id.title),
-                  R.dimen.text_sz_large, R.color.grey_dark, R.color.grey_lighten_10);
+                  R.dimen.text_sz_large, R.color.neutral_700, R.color.neutral_200);
         setupView((TextView) view.findViewById(android.R.id.summary),
-                  R.dimen.text_sz_medium, R.color.grey_text_min, R.color.grey_lighten_10);
+                  R.dimen.text_sz_medium, R.color.neutral, R.color.neutral_200);
     }
 
     @Override
@@ -141,12 +141,12 @@ public class DetailListPreference extends ListPreference
 
         if (positive != null) {
             //noinspection deprecation
-            positive.setTextColor(res.getColor(R.color.blue_medium));
+            positive.setTextColor(res.getColor(R.color.primary_400));
         }
 
         if (negative != null) {
             //noinspection deprecation
-            negative.setTextColor(res.getColor(R.color.blue_medium));
+            negative.setTextColor(res.getColor(R.color.primary_400));
         }
     }
 

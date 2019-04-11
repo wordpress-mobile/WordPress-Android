@@ -1741,9 +1741,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
-                mPost.setStatus(PostStatus.PUBLISHED.toString());
-                mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
-                publishPost();
+                publishPost(PostStatus.fromPost(mPost) == PostStatus.DRAFT);
                 AppRatingDialog.INSTANCE
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
@@ -1752,7 +1750,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mEditorFragment.removeAllFailedMediaUploads();
                 break;
             case ASYNC_PROMO_DIALOG_TAG:
-                publishPost();
+                publishPost(PostStatus.fromPost(mPost) == PostStatus.DRAFT);
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
                 // no op
@@ -1972,6 +1970,10 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void publishPost() {
+        publishPost(false);
+    }
+
+    private void publishPost(final boolean isDraftToPublish) {
         AccountModel account = mAccountStore.getAccount();
         // prompt user to verify e-mail before publishing
         if (!account.getEmailVerified()) {
@@ -2015,6 +2017,12 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 boolean isFirstTimePublish = isFirstTimePublish();
+                if (isDraftToPublish) {
+                    // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
+                    // otherwise we'd have an incorrect value
+                    mPost.setStatus(PostStatus.PUBLISHED.toString());
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
+                }
 
                 boolean postUpdateSuccessful = updatePostObject();
                 if (!postUpdateSuccessful) {
@@ -3953,7 +3961,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(title),
                 getString(description),
                 getString(button),
-                R.drawable.img_publish_button_124dp,
+                R.drawable.img_illustration_hand_checkmark_button_124dp,
                 getString(R.string.keep_editing),
                 getString(R.string.async_promo_link));
 

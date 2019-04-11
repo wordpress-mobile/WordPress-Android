@@ -25,7 +25,7 @@
         android:paddingBottom="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
         android:text="@string/reader_label_gap_marker"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/text_sz_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"/>

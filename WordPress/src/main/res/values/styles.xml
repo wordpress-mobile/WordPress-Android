@@ -3,21 +3,21 @@
 
     <style name="WordPress" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Material theme -->
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorPrimaryDark">@color/color_primary_dark</item>
-        <item name="colorAccent">@color/color_accent</item>
-        <item name="colorControlActivated">@color/color_control_activated</item>
-        <item name="colorControlHighlight">@color/color_control_highlight</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="colorControlActivated">@color/primary_300</item>
+        <item name="colorControlHighlight">@color/neutral_100</item>
 
-        <item name="android:windowBackground">@color/grey_lighten_30</item>
+        <item name="android:windowBackground">@color/background_default</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
-        <item name="android:actionModeBackground">@color/color_primary_dark</item>
+        <item name="android:actionModeBackground">@color/primary_dark</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
-        <item name="android:statusBarColor">@color/status_bar_tint</item>
+        <item name="android:statusBarColor">@color/status_bar</item>
 
         <item name="colorButtonNormal">@color/light_gray</item>
 
@@ -44,16 +44,16 @@
     </style>
 
     <style name="SiteCreation.Heading" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
     </style>
 
     <style name="SiteCreation.Subhead" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
     <style name="SiteCreation.CardTitle" parent="TextAppearance.AppCompat.Subhead">
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
     </style>
 
     <style name="NoDisplay" parent="Theme.AppCompat.Light.NoActionBar">
@@ -74,23 +74,22 @@
     </style>
 
     <style name="DropDownListView.Light.WordPress" parent="Widget.AppCompat.ListView.DropDown">
-        <item name="android:background">@color/white</item>
-        <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
+        <item name="android:background">@android:color/white</item>
         <item name="android:fadeScrollbars">false</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_transparent_black</item>
+        <item name="android:scrollbarThumbVertical">@drawable/bg_rectangle_black_translucent_50_3dp</item>
     </style>
 
     <style name="TabTextStyle.WordPress" parent="android:Widget.Material.ActionBar.TabText">
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
     </style>
 
     <style name="DropDownNav.WordPress" parent="android:Widget.Material.Light.Spinner">
         <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
-        <item name="android:dropDownSelector">@drawable/selectable_background_wordpress</item>
+        <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
     </style>
 
     <style name="FilteredRecyclerViewSpinner.WordPress" parent="DropDownNav.WordPress">
-        <item name="android:background">@color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="FilteredRecyclerViewFilterTextView.WordPress" parent="android:TextAppearance.Widget.TextView">
@@ -129,17 +128,17 @@
     </style>
 
     <style name="Toolbar.Primary" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/color_primary</item>
+        <item name="android:background">@color/primary</item>
         <item name="android:theme">@style/Toolbar.Theme</item>
     </style>
 
     <style name="Toolbar.Secondary" parent="@style/Toolbar.Primary">
-        <item name="android:background">@color/blue_medium</item>
+        <item name="android:background">@color/primary_400</item>
         <item name="contentInsetStart">@dimen/toolbar_content_offset</item>
     </style>
 
     <style name="Toolbar.Subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -162,29 +161,29 @@
     </style>
     <style name="MediaSettings.TextInputTheme" parent="ThemeOverlay.AppCompat.Light">
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/grey_darken_10</item>
+        <item name="android:textColorHint">@color/neutral_400</item>
         <!-- Header color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorControlNormal">@color/grey_text_min</item>
-        <item name="colorControlActivated">@color/blue_wordpress</item>
+        <item name="colorControlNormal">@color/neutral</item>
+        <item name="colorControlActivated">@color/primary_500</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:gravity">start</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
     <style name="MediaSettings.Divider">
-        <item name="android:background">@color/divider_grey</item>
+        <item name="android:background">@color/divider</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
     <style name="MediaSettings.Label">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
     <style name="MediaSettings.Value">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -192,36 +191,36 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:gravity">center_horizontal|center_vertical</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/neutral_400</item>
     </style>
 
     <style name="WhiteButton" parent="Widget.AppCompat.Button">
-        <item name="colorButtonNormal">@color/white</item>
+        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <style name="WordPress.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/white</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="colorButtonNormal">@android:color/white</item>
+        <item name="android:textColor">@color/neutral_700</item>
     </style>
 
     <style name="WordPress.Button.Primary" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/blue_medium</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="colorButtonNormal">@color/primary_400</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="WordPress.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textColor">@color/primary_500</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
     </style>
 
     <style name="WordPress.Button.Grey" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/grey_light</item>
-        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="colorButtonNormal">@color/neutral_0</item>
+        <item name="android:textColor">@color/primary_500</item>
     </style>
 
     <!-- NUX Styles -->
     <style name="WordPress.NUXPrimaryButton">
-        <item name="android:textColor">@color/nux_primary_button</item>
+        <item name="android:textColor">@color/white_neutral_100_selector</item>
         <item name="android:layout_height">@dimen/nux_main_button_height</item>
         <item name="android:layout_marginStart">4dp</item>
         <item name="android:layout_marginEnd">4dp</item>
@@ -234,11 +233,11 @@
     <style name="WordPress.NUXGreyButtonNoBg">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@drawable/nux_flat_button_grey_text_selector</item>
+        <item name="android:textColor">@color/neutral_100_neutral_0_selector</item>
     </style>
 
     <style name="WordPress.NUXEditText">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@android:color/white</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColor">#444444</item>
         <item name="android:textColorHint">#AAAAAA</item>
@@ -251,13 +250,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">24dp</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/nux_title_font_size</item>
         <item name="android:lineSpacingExtra">-4sp</item>
     </style>
 
     <style name="WordPress.EmptyList">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginEnd">16dp</item>
@@ -278,7 +277,7 @@
     </style>
 
     <style name="MySiteListRowIcon">
-        <item name="android:tint">@color/grey_darken_30</item>
+        <item name="android:tint">@color/neutral_600</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -297,7 +296,7 @@
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
@@ -315,7 +314,7 @@
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textColor">@color/neutral_500</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
@@ -325,7 +324,7 @@
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
         <item name="android:layout_width">16dp</item>
         <item name="android:layout_height">16dp</item>
-        <item name="android:tint">@color/grey_darken_30</item>
+        <item name="android:tint">@color/neutral_600</item>
     </style>
 
     <style name="MySiteListHeader">
@@ -338,7 +337,7 @@
         <item name="android:paddingBottom">@dimen/my_site_margin_general</item>
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:paddingTop">@dimen/my_site_margin_general</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/neutral_400</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -352,7 +351,7 @@
     </style>
 
     <style name="MeListRowIcon">
-        <item name="android:tint">@color/grey_darken_30</item>
+        <item name="android:tint">@color/neutral_600</item>
         <item name="android:layout_width">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_gravity">center_vertical</item>
@@ -367,7 +366,7 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:gravity">start</item>
@@ -377,7 +376,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@color/me_divider</item>
+        <item name="android:background">@color/divider</item>
         <item name="android:layout_marginEnd" >@dimen/content_margin</item>
         <item name="android:layout_marginStart" >@dimen/content_margin</item>
     </style>
@@ -399,21 +398,21 @@
     <style name="MyProfileLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="MyProfileText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <style name="MyProfileDividerView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/me_divider</item>
+        <item name="android:background">@color/divider</item>
     </style>
 
     <!--Quick Start-->
@@ -455,14 +454,14 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textColor">@color/neutral_500</item>
         <item name="android:textSize">14sp</item>
     </style>
 
     <style name="QuickStartDivider">
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:background">@color/grey_lighten_30</item>
+        <item name="android:background">@color/neutral_0</item>
         <item name="android:layout_height">@dimen/list_divider_height</item>
         <item name="android:layout_width">match_parent</item>
     </style>
@@ -506,7 +505,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textColor">@color/neutral_500</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -525,11 +524,11 @@
     </style>
 
     <style name="SwitchBlueLight">
-        <item name="colorControlActivated">@color/blue_light</item>
+        <item name="colorControlActivated">@color/primary_300</item>
     </style>
 
     <style name="SwitchBlueMedium">
-        <item name="colorControlActivated">@color/switch_tint</item>
+        <item name="colorControlActivated">@color/primary_400</item>
     </style>
 
     <!--Post Settings Styles-->
@@ -548,7 +547,7 @@
     <style name="PostSettingsSectionHeader">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textColor">@color/primary_500</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
@@ -568,22 +567,22 @@
     <style name="PostSettingsTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="PostSettingsSubtitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_text_min</item>
-        <item name="android:textColorHint">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColorHint">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <style name="PostSettingsDivider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/list_divider_height</item>
-        <item name="android:background">@color/grey_lighten_20</item>
+        <item name="android:background">@color/neutral_100</item>
     </style>
 
     <!--Promo Dialog Styles-->
@@ -591,7 +590,7 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -600,7 +599,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textColor">@color/neutral_500</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -608,7 +607,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textColor">@color/primary_500</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -642,7 +641,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -650,7 +649,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/neutral_400</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -664,7 +663,7 @@
     <style name="PluginCardViewSecondaryElement.ExternalLinkImage" parent="PluginCardViewSecondaryElement">
         <item name="android:layout_width">@dimen/plugin_external_link_image_size</item>
         <item name="android:layout_height">@dimen/plugin_external_link_image_size</item>
-        <item name="android:tint">@color/grey_darken_10</item>
+        <item name="android:tint">@color/neutral_400</item>
         <item name="android:layout_marginEnd">@dimen/margin_medium</item>
     </style>
 
@@ -678,7 +677,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -704,13 +703,13 @@
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/blue_medium</item>
+        <item name="android:textColor">@color/primary_400</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="WPRatingBar.Small" parent="Widget.AppCompat.RatingBar.Small">
-        <item name="android:progressTint">@color/blue_medium</item>
+        <item name="android:progressTint">@color/primary_400</item>
     </style>
 
     <!--Comment Styles-->
@@ -719,7 +718,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 
@@ -741,14 +740,14 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="HelpActivityDivider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/list_divider_height</item>
-        <item name="android:background">@color/grey_lighten_20</item>
+        <item name="android:background">@color/neutral_100</item>
     </style>
 
     <style name="ActionableEmptyStateTitle" parent="TextAppearance.AppCompat">
@@ -757,13 +756,13 @@
         <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
         <item name="android:maxWidth">@dimen/actionable_empty_view_text_maximum_width</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>
 
     <style name="ActionableEmptyStateSubtitle" parent="@style/ActionableEmptyStateTitle">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -780,14 +779,14 @@
     </style>
     <style name="PageListTopLevelItemTextStyle">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:maxLines">1</item>
         <item name="android:textStyle">bold</item>
         <item name="android:ellipsize">end</item>
     </style>
 
     <style name="LinearProgress" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/blue_wordpress</item>
+        <item name="colorAccent">@color/primary_500</item>
     </style>
 
     <!--Post List Skeleton-->
@@ -820,11 +819,11 @@
     <style name="SiteCreationHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">@color/wp_grey_dark</item>
+        <item name="android:textColor">@color/neutral_800</item>
     </style>
 
     <style name="SiteCreationHeaderSubtitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:textColor">@color/wp_grey_darken_20</item>
+        <item name="android:textColor">@color/text_subtle</item>
     </style>
 
     <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderTitle">
@@ -839,14 +838,14 @@
     <style name="SitePreviewOkButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/new_site_creation_preview_ok_button_height</item>
-        <item name="android:background">@color/wp_blue_medium</item>
+        <item name="android:background">@color/primary_400</item>
         <item name="android:text">@string/dialog_button_ok</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="SitePreviewSkeletonView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
-        <item name="android:background">@color/wp_grey_lighten_30</item>
+        <item name="android:background">@color/neutral_0</item>
     </style>
 </resources>

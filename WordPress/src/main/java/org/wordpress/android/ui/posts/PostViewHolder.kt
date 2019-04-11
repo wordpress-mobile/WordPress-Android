@@ -151,7 +151,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
         } else {
             var statusTextResId = 0
             var statusIconResId = 0
-            var statusColorResId = R.color.grey_darken_10
+            var statusColorResId = R.color.neutral_400
             var errorMessage: String? = null
             val uploadError = postAdapterItem.uploadStatus.uploadError
 
@@ -162,7 +162,7 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, false, uploadError.postError)
                 }
                 statusIconResId = R.drawable.ic_cloud_upload_white_24dp
-                statusColorResId = R.color.alert_red
+                statusColorResId = R.color.error_500
             } else if (postAdapterItem.uploadStatus.isUploading) {
                 statusTextResId = R.string.post_uploading
                 statusIconResId = R.drawable.ic_cloud_upload_white_24dp
@@ -176,37 +176,37 @@ class PostViewHolder(private val view: View, private val config: PostViewHolderC
             } else if (postAdapterItem.isConflicted) {
                 statusTextResId = R.string.local_post_is_conflicted
                 statusIconResId = R.drawable.ic_notice_white_24dp
-                statusColorResId = R.color.alert_red
+                statusColorResId = R.color.error_500
             } else if (postAdapterItem.isLocalDraft) {
                 statusTextResId = R.string.local_draft
                 statusIconResId = R.drawable.ic_pages_white_24dp
-                statusColorResId = R.color.alert_yellow_dark
+                statusColorResId = R.color.warning_700
             } else if (postAdapterItem.isLocallyChanged) {
                 statusTextResId = R.string.local_changes
                 statusIconResId = R.drawable.ic_pages_white_24dp
-                statusColorResId = R.color.alert_yellow_dark
+                statusColorResId = R.color.warning_700
             } else {
                 when (postAdapterItem.postStatus) {
                     PostStatus.DRAFT -> {
                         statusTextResId = R.string.post_status_draft
                         statusIconResId = R.drawable.ic_pages_white_24dp
-                        statusColorResId = R.color.alert_yellow_dark
+                        statusColorResId = R.color.warning_700
                     }
                     PostStatus.PRIVATE -> statusTextResId = R.string.post_status_post_private
                     PostStatus.PENDING -> {
                         statusTextResId = R.string.post_status_pending_review
                         statusIconResId = R.drawable.ic_pages_white_24dp
-                        statusColorResId = R.color.alert_yellow_dark
+                        statusColorResId = R.color.warning_700
                     }
                     PostStatus.SCHEDULED -> {
                         statusTextResId = R.string.post_status_scheduled
                         statusIconResId = R.drawable.ic_calendar_white_24dp
-                        statusColorResId = R.color.blue_medium
+                        statusColorResId = R.color.primary_400
                     }
                     PostStatus.TRASHED -> {
                         statusTextResId = R.string.post_status_trashed
                         statusIconResId = R.drawable.ic_pages_white_24dp
-                        statusColorResId = R.color.alert_red
+                        statusColorResId = R.color.error_500
                     }
                     PostStatus.UNKNOWN -> {
                     }

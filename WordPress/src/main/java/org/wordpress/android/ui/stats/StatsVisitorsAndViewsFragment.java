@@ -184,16 +184,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         public void updateBackGroundAndIcon(int currentValue) {
             if (mIsChecked) {
-                mValue.setTextColor(getResources().getColor(R.color.orange_jazzy));
+                mValue.setTextColor(getResources().getColor(R.color.accent));
             } else {
                 if (currentValue == 0) {
-                    mValue.setTextColor(getResources().getColor(R.color.grey_text_min));
+                    mValue.setTextColor(getResources().getColor(R.color.neutral));
                 } else {
-                    mValue.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                    mValue.setTextColor(getResources().getColor(R.color.primary_500));
                 }
             }
 
-            ColorUtils.INSTANCE.setImageResourceWithTint(mIcon, getTabIcon(), R.color.grey_dark);
+            ColorUtils.INSTANCE.setImageResourceWithTint(mIcon, getTabIcon(), R.color.neutral_700);
 
             if (mIsLastItem) {
                 if (mIsChecked) {
@@ -449,12 +449,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.removeAllSeries();
 
         GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
-        mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
+        mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.primary);
         mainSeriesOnScreen.getStyle().outerColor = getResources().getColor(R.color.grey_lighten_30_translucent_50);
         mainSeriesOnScreen.getStyle().highlightColor =
-                getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
+                getResources().getColor(R.color.accent);
         mainSeriesOnScreen.getStyle().outerhighlightColor =
-                getResources().getColor(R.color.stats_bar_graph_outer_highlight);
+                getResources().getColor(R.color.accent_100);
         mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
         mGraphView.addSeries(mainSeriesOnScreen);
 
@@ -462,8 +462,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mIsCheckboxChecked && secondarySeriesItems != null && selectedStatsType == OverviewLabel.VIEWS) {
             GraphViewSeries secondarySeries = new GraphViewSeries(secondarySeriesItems);
             secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
-            secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_secondary_series);
-            secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.orange_fire);
+            secondarySeries.getStyle().color = getResources().getColor(R.color.primary_dark);
+            secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.accent_600);
             mGraphView.addSeries(secondarySeries);
         }
 
@@ -487,7 +487,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
         mGraphView.getGraphViewStyle().setTextSize(
                 getResources().getDimensionPixelOffset(R.dimen.stats_legent_text_size));
-        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.grey_darken_30));
+        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.neutral_600));
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalLabels(horLabels,
                 mainSeriesItems, selectedStatsType));

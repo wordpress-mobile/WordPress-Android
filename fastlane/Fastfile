@@ -91,12 +91,12 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
       play_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.txt",
       play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
 
-      enhanced_app_store_screenshot_1: prj_folder + "/WordPress/metadata/screenshot_1.html",
-      enhanced_app_store_screenshot_2: prj_folder + "/WordPress/metadata/screenshot_2.html",
-      enhanced_app_store_screenshot_3: prj_folder + "/WordPress/metadata/screenshot_3.html",
-      enhanced_app_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.html",
-      enhanced_app_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.html",
-      enhanced_app_store_screenshot_6: prj_folder + "/WordPress/metadata/screenshot_6.html",
+      enhanced_app_store_screenshot_1: prj_folder + "/WordPress/metadata/enhanced_screenshot_1.html",
+      enhanced_app_store_screenshot_2: prj_folder + "/WordPress/metadata/enhanced_screenshot_2.html",
+      enhanced_app_store_screenshot_3: prj_folder + "/WordPress/metadata/enhanced_screenshot_3.html",
+      enhanced_app_store_screenshot_4: prj_folder + "/WordPress/metadata/enhanced_screenshot_4.html",
+      enhanced_app_store_screenshot_5: prj_folder + "/WordPress/metadata/enhanced_screenshot_5.html",
+      enhanced_app_store_screenshot_6: prj_folder + "/WordPress/metadata/enhanced_screenshot_6.html",
     }
 
     android_update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 

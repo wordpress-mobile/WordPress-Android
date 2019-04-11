@@ -136,7 +136,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
 
         TextView moduleTitle = (TextView) getView().findViewById(R.id.stats_module_title);
         moduleTitle.setOnClickListener(mViewsTabOnClickListener);
-        moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+        moduleTitle.setTextColor(getResources().getColor(R.color.link_stats));
 
         // update the tabs and the text now
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
@@ -161,7 +161,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         endIndex = startIndex + postTitle.length() + 1;
 
         Spannable descriptionTextToSpan = new SpannableString(trendLabelFormatted);
-        descriptionTextToSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.stats_link_text_color)),
+        descriptionTextToSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.link_stats)),
                                       startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView trendLabelTextField = ll.findViewById(R.id.stats_post_trend_label);
         trendLabelTextField.setText(descriptionTextToSpan);
@@ -218,19 +218,19 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         value = currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
-            value.setTextColor(getResources().getColor(R.color.grey_text_min));
+            value.setTextColor(getResources().getColor(R.color.neutral));
         } else {
             // Only Views is clickable here.
             // Likes and Comments shouldn't link anywhere because they don't have summaries
             // so their color should be Gray Darken 30 or #3d596d
             if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS) {
-                value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                value.setTextColor(getResources().getColor(R.color.primary_500));
             } else {
-                value.setTextColor(getResources().getColor(R.color.grey_darken_30));
+                value.setTextColor(getResources().getColor(R.color.neutral_600));
             }
         }
         icon = currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
-        ColorUtils.INSTANCE.setImageResourceWithTint(icon, getTabIcon(itemType), R.color.grey_dark);
+        ColorUtils.INSTANCE.setImageResourceWithTint(icon, getTabIcon(itemType), R.color.neutral_700);
 
         if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS) {
             currentTab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_white);
