@@ -59,10 +59,6 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var pager: ViewPager
     private lateinit var fab: FloatingActionButton
 
-    // TODO: Remove this
-    private val currentFragment: PostListFragment?
-        get() = postsPagerAdapter.getItemAtPosition(pager.currentItem)
-
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 

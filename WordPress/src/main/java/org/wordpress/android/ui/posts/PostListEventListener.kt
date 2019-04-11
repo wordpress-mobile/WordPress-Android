@@ -33,9 +33,9 @@ fun listenForPostListEvents(
     dispatcher: Dispatcher,
     postStore: PostStore,
     site: SiteModel,
-    postConflictResolver: PostConflictResolver,
     postActionHandler: PostActionHandler,
-    refreshList: () -> Unit,
+    handlePostUpdatedWithoutError: () -> Unit,
+    handlePostUploadedWithoutError: (LocalId) -> Unit,
     triggerPostUploadAction: (PostUploadAction) -> Unit,
     invalidateUploadStatus: (List<Int>) -> Unit,
     invalidateFeaturedMedia: (List<Long>) -> Unit
@@ -45,9 +45,9 @@ fun listenForPostListEvents(
             dispatcher = dispatcher,
             postStore = postStore,
             site = site,
-            postConflictResolver = postConflictResolver,
             postActionHandler = postActionHandler,
-            refreshList = refreshList,
+            handlePostUpdatedWithoutError = handlePostUpdatedWithoutError,
+            handlePostUploadedWithoutError = handlePostUploadedWithoutError,
             triggerPostUploadAction = triggerPostUploadAction,
             invalidateUploadStatus = invalidateUploadStatus,
             invalidateFeaturedMedia = invalidateFeaturedMedia
@@ -63,9 +63,9 @@ private class PostListEventListener(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val site: SiteModel,
-    private val postConflictResolver: PostConflictResolver,
     private val postActionHandler: PostActionHandler,
-    private val refreshList: () -> Unit,
+    private val handlePostUpdatedWithoutError: () -> Unit,
+    private val handlePostUploadedWithoutError: (LocalId) -> Unit,
     private val triggerPostUploadAction: (PostUploadAction) -> Unit,
     private val invalidateUploadStatus: (List<Int>) -> Unit,
     private val invalidateFeaturedMedia: (List<Long>) -> Unit
@@ -99,7 +99,7 @@ private class PostListEventListener(
                             "Error updating the post with type: ${event.error.type} and message: ${event.error.message}"
                     )
                 } else {
-                    postConflictResolver.onPostSuccessfullyUpdated()
+                    handlePostUpdatedWithoutError.invoke()
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {
@@ -143,9 +143,8 @@ private class PostListEventListener(
         if (event.post != null && event.post.localSiteId == site.id) {
             triggerPostUploadAction.invoke(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
             uploadStatusChanged(event.post.id)
-            // If a post is successfully uploaded, we need to fetch the list again so it's id is added to ListStore
             if (!event.isError) {
-                refreshList.invoke()
+                handlePostUploadedWithoutError.invoke(LocalId(event.post.id))
             }
         }
     }
@@ -207,7 +206,7 @@ private class PostListEventListener(
 
     @Suppress("unused")
     fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
-        uploadStatusChanged(event.media.id)
+        uploadStatusChanged(event.media.localPostId)
     }
 
     @Suppress("unused")
@@ -215,7 +214,6 @@ private class PostListEventListener(
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             // if there' a Post to which the retried media belongs, clear their status
             val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
-            // now that we know which Posts to refresh, let's do it
             uploadStatusChanged(*postsToRefresh.map { it.id }.toIntArray())
         }
     }

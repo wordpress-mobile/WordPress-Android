@@ -11,7 +11,6 @@ import android.arch.paging.PagedList
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.AuthorFilter
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
@@ -20,10 +19,8 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
-import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.util.AppLog

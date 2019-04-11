@@ -150,10 +150,11 @@ class PostListMainViewModel @Inject constructor(
                 dispatcher = dispatcher,
                 postStore = postStore,
                 site = site,
-                postConflictResolver = postConflictResolver,
                 postActionHandler = postActionHandler,
-                // TODO: Do we have to refresh all lists
-                refreshList = this::invalidateAllLists,
+                handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
+                handlePostUploadedWithoutError = {
+                    TODO("Fetch the first page of the lists so their id is added to the ListStore")
+                },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
                 invalidateUploadStatus = {
                     uploadStatusTracker.invalidateUploadStatus(it)

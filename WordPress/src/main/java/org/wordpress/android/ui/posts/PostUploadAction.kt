@@ -88,4 +88,3 @@ fun handleUploadAction(action: PostUploadAction, activity: Activity, snackbarAtt
         }
     }
 }
-
