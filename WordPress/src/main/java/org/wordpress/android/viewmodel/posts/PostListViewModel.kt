@@ -13,7 +13,6 @@ import de.greenrobot.event.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -60,6 +59,7 @@ import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PostListAction.RetryUpload
 import org.wordpress.android.ui.posts.PostListAction.ViewPost
 import org.wordpress.android.ui.posts.PostListAction.ViewStats
+import org.wordpress.android.ui.posts.PostListDialogHelper
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
@@ -72,8 +72,6 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.VideoOptimizer
-import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -102,10 +100,6 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
-
-const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
-const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
-const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 
 typealias PagedPostList = PagedList<PostListItemType>
 
@@ -137,10 +131,6 @@ class PostListViewModel @Inject constructor(
         pagedListWrapper.invalidateData()
     })
 
-    // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
-    private var localPostIdForPublishDialog: Int? = null
-    private var localPostIdForDeleteDialog: Int? = null
-    private var localPostIdForConflictResolutionDialog: Int? = null
     private var originalPostCopyForConflictUndo: PostModel? = null
     private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
     private var scrollToLocalPostId: LocalPostId? = null
@@ -206,6 +196,13 @@ class PostListViewModel @Inject constructor(
         result.addSource(pagedListWrapper.listError) { result.value = update() }
         result
     }
+
+    private val postListDialogHelper = PostListDialogHelper(
+            showDialog = { dialogHolder ->
+                _dialogAction.postValue(dialogHolder)
+            },
+            checkNetworkConnection = this::checkNetworkConnection
+    )
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
@@ -293,7 +290,7 @@ class PostListViewModel @Inject constructor(
                 restorePost(post)
             }
             BUTTON_SUBMIT, BUTTON_SYNC, BUTTON_PUBLISH -> {
-                showPublishConfirmationDialog(post)
+                postListDialogHelper.showPublishConfirmationDialog(post)
             }
             BUTTON_VIEW -> _postListAction.postValue(ViewPost(site, post))
             BUTTON_PREVIEW -> _postListAction.postValue(PreviewPost(site, post))
@@ -302,7 +299,7 @@ class PostListViewModel @Inject constructor(
                 trashPost(post)
             }
             BUTTON_DELETE -> {
-                showDeletePostConfirmationDialog(post)
+                postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
@@ -310,59 +307,11 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    private fun showDeletePostConfirmationDialog(post: PostModel) {
-        // We need network connection to delete a remote post, but not a local draft
-        if (!post.isLocalDraft && !checkNetworkConnection()) {
-            return
-        }
-        val dialogHolder = DialogHolder(
-                tag = CONFIRM_DELETE_POST_DIALOG_TAG,
-                title = UiStringRes(R.string.delete_post),
-                message = UiStringRes(R.string.dialog_confirm_delete_permanently_post),
-                positiveButton = UiStringRes(R.string.delete),
-                negativeButton = UiStringRes(R.string.cancel)
-        )
-        localPostIdForDeleteDialog = post.id
-        _dialogAction.postValue(dialogHolder)
-    }
-
-    private fun showPublishConfirmationDialog(post: PostModel) {
-        if (localPostIdForPublishDialog != null) {
-            // We can only handle one publish dialog at once
-            return
-        }
-        if (!checkNetworkConnection()) {
-            return
-        }
-        val dialogHolder = DialogHolder(
-                tag = CONFIRM_PUBLISH_POST_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_publish_title),
-                message = UiStringRes(string.dialog_confirm_publish_message_post),
-                positiveButton = UiStringRes(R.string.dialog_confirm_publish_yes),
-                negativeButton = UiStringRes(R.string.cancel)
-        )
-        localPostIdForPublishDialog = post.id
-        _dialogAction.postValue(dialogHolder)
-    }
-
-    private fun showConflictedPostResolutionDialog(post: PostModel) {
-        val dialogHolder = DialogHolder(
-                tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
-                message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
-                positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
-                negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
-        )
-        localPostIdForConflictResolutionDialog = post.id
-        _dialogAction.postValue(dialogHolder)
-    }
-
     private fun publishPost(localPostId: Int) {
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
             _postUploadAction.postValue(PublishPost(dispatcher, site, post))
         }
-        localPostIdForPublishDialog = null
     }
 
     private fun restorePost(post: PostModel) {
@@ -412,7 +361,7 @@ class PostListViewModel @Inject constructor(
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state.
         if (doesPostHaveUnhandledConflict(post)) {
-            showConflictedPostResolutionDialog(post)
+            postListDialogHelper.showConflictedPostResolutionDialog(post)
             return
         }
 
@@ -732,41 +681,26 @@ class PostListViewModel @Inject constructor(
     // BasicFragmentDialog Events
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
-        when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog?.let {
-                localPostIdForDeleteDialog = null
-                deletePost(it)
-            }
-            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog?.let {
-                localPostIdForPublishDialog = null
-                publishPost(it)
-            }
-            CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
-                localPostIdForConflictResolutionDialog = null
-                // here load version from remote
-                updateConflictedPostWithItsRemoteVersion(it)
-            }
-            else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
-        }
+        postListDialogHelper.onPositiveClickedForBasicDialog(
+                instanceTag = instanceTag,
+                deletePost = this::deletePost,
+                publishPost = this::publishPost,
+                updateConflictedPostWithItsRemoteVersion = this::updateConflictedPostWithItsRemoteVersion
+        )
     }
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
-        when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog = null
-            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
-            CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
-                updateConflictedPostWithItsLocalVersion(it)
-            }
-            else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
-        }
+        postListDialogHelper.onNegativeClickedForBasicDialog(
+                instanceTag = instanceTag,
+                updateConflictedPostWithItsLocalVersion = this::updateConflictedPostWithItsLocalVersion
+        )
     }
 
     fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
-        // Cancel and outside touch dismiss works the same way for all, except for conflict resolution dialog,
-        // for which tapping outside and actively tapping the "edit local" have different meanings
-        if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG) {
-            onNegativeClickedForBasicDialog(instanceTag)
-        }
+        postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
+                instanceTag = instanceTag,
+                updateConflictedPostWithItsLocalVersion = this::updateConflictedPostWithItsLocalVersion
+        )
     }
 
     // Post Conflict Resolution
