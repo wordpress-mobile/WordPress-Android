@@ -40,13 +40,9 @@ class PostListViewModel @Inject constructor(
     private val listStore: ListStore,
     private val postStore: PostStore,
     private val accountStore: AccountStore,
-    private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     connectionStatus: LiveData<ConnectionStatus>
 ) : ViewModel(), LifecycleOwner {
-    private val isStatsSupported: Boolean by lazy {
-        SiteUtils.isAccessedViaWPComRest(connector.site) && connector.site.hasCapabilityViewStats
-    }
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
     private lateinit var connector: PostListViewModelConnector
@@ -63,7 +59,7 @@ class PostListViewModel @Inject constructor(
         val dataSource = PostListItemDataSource(
                 dispatcher = dispatcher,
                 postStore = postStore,
-                transform = this::transformPostModelToPostListItemUiState
+                transform = connector.transformPostModelToPostListItemUiState
         )
         listStore.getList(listDescriptor, dataSource, lifecycle)
     }
@@ -91,7 +87,7 @@ class PostListViewModel @Inject constructor(
                     isListEmpty = pagedListWrapper.isEmpty.value ?: true,
                     error = pagedListWrapper.listError.value,
                     fetchFirstPage = this::fetchFirstPage,
-                    newPost = connector.postActionHandler::newPost
+                    newPost = { connector::newPost }
             )
         }
         result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
@@ -183,25 +179,6 @@ class PostListViewModel @Inject constructor(
             }
         }?.index
     }
-
-    private fun transformPostModelToPostListItemUiState(post: PostModel) =
-            listItemUiStateHelper.createPostListItemUiState(
-                    post = post,
-                    uploadStatus = connector.uploadStatusTracker.getUploadStatus(post),
-                    unhandledConflicts = connector.postConflictResolver.doesPostHaveUnhandledConflict(post),
-                    capabilitiesToPublish = connector.site.hasCapabilityPublishPosts,
-                    statsSupported = isStatsSupported,
-                    featuredImageUrl = connector.featuredImageTracker.getFeaturedImageUrl(
-                            site = connector.site,
-                            featuredImageId = post.featuredImageId,
-                            postContent = post.content
-                    ),
-                    formattedDate = PostUtils.getFormattedDate(post),
-                    performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id))
-            ) { postModel, buttonType, statEvent ->
-                trackPostListAction(connector.site, buttonType, postModel, statEvent)
-                connector.postActionHandler.handlePostButton(buttonType, postModel)
-            }
 
     private fun retryOnConnectionAvailableAfterRefreshError() {
         val connectionAvailableAfterRefreshError = networkUtilsWrapper.isNetworkAvailable() &&

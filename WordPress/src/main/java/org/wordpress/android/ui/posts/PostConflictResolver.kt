@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.ToastUtils.Duration
@@ -17,8 +16,8 @@ import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
  */
 class PostConflictResolver(
     private val dispatcher: Dispatcher,
-    private val postStore: PostStore,
     private val site: SiteModel,
+    private val getPostByLocalPostId: (Int) -> PostModel?,
     private val invalidateList: () -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
@@ -33,7 +32,7 @@ class PostConflictResolver(
             return
         }
 
-        val post = postStore.getPostByLocalPostId(localPostId)
+        val post = getPostByLocalPostId.invoke(localPostId)
         if (post != null) {
             originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
@@ -52,7 +51,7 @@ class PostConflictResolver(
         localPostIdForFetchingRemoteVersionOfConflictedPost = localPostId
         invalidateList.invoke()
 
-        val post = postStore.getPostByLocalPostId(localPostId) ?: return
+        val post = getPostByLocalPostId.invoke(localPostId) ?: return
 
         // and now show a snackBar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
         var isUndoed = false
@@ -87,7 +86,7 @@ class PostConflictResolver(
 
     fun onPostSuccessfullyUpdated() {
         originalPostCopyForConflictUndo?.id?.let {
-            val updatedPost = postStore.getPostByLocalPostId(it)
+            val updatedPost = getPostByLocalPostId.invoke(it)
             // Conflicted post has been successfully updated with its remote version
             if (!PostUtils.isPostInConflictWithRemote(updatedPost)) {
                 conflictedPostUpdatedWithRemoteVersion()

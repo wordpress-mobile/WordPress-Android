@@ -19,6 +19,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -37,11 +38,13 @@ import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper
 import org.wordpress.android.viewmodel.posts.PostListViewModelConnector
 import javax.inject.Inject
 import javax.inject.Named
@@ -59,6 +62,7 @@ class PostListMainViewModel @Inject constructor(
     mediaStore: MediaStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
+    private val listItemUiStateHelper: PostListItemUiStateHelper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), LifecycleOwner, CoroutineScope {
@@ -111,8 +115,8 @@ class PostListMainViewModel @Inject constructor(
     private val postConflictResolver: PostConflictResolver by lazy {
         PostConflictResolver(
                 dispatcher = dispatcher,
-                postStore = postStore,
                 site = site,
+                getPostByLocalPostId = postStore::getPostByLocalPostId,
                 invalidateList = this::invalidateAllLists,
                 checkNetworkConnection = this::checkNetworkConnection,
                 showSnackbar = { _snackBarMessage.postValue(it) },
@@ -126,7 +130,7 @@ class PostListMainViewModel @Inject constructor(
                 site = site,
                 postStore = postStore,
                 postListDialogHelper = postListDialogHelper,
-                postConflictResolver = postConflictResolver,
+                doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
                 triggerPostListAction = { _postListAction.postValue(it) },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
                 invalidateList = this::invalidateAllLists,
@@ -134,6 +138,10 @@ class PostListMainViewModel @Inject constructor(
                 showSnackbar = { _snackBarMessage.postValue(it) },
                 showToast = { _toastMessage.postValue(it) }
         )
+    }
+
+    private val isStatsSupported: Boolean by lazy {
+        SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
     }
 
     init {
@@ -189,10 +197,8 @@ class PostListMainViewModel @Inject constructor(
                 site = site,
                 postListType = postListType,
                 authorFilter = authorFilter,
-                postActionHandler = postActionHandler,
-                featuredImageTracker = featuredImageTracker,
-                uploadStatusTracker = uploadStatusTracker,
-                postConflictResolver = postConflictResolver
+                newPost = postActionHandler::newPost,
+                transformPostModelToPostListItemUiState = this::transformPostModelToPostListItemUiState
         )
     }
 
@@ -261,6 +267,7 @@ class PostListMainViewModel @Inject constructor(
                 updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
         )
     }
+
     private fun getAuthorFilterItems(selection: AuthorFilterSelection): List<AuthorFilterListItemUIState> {
         return AuthorFilterSelection.values().map { value ->
             @ColorRes val backgroundColorRes: Int =
@@ -311,5 +318,24 @@ class PostListMainViewModel @Inject constructor(
             } else {
                 _toastMessage.postValue(ToastMessageHolder(string.no_network_message, Duration.SHORT))
                 false
+            }
+
+    private fun transformPostModelToPostListItemUiState(post: PostModel) =
+            listItemUiStateHelper.createPostListItemUiState(
+                    post = post,
+                    uploadStatus = uploadStatusTracker.getUploadStatus(post),
+                    unhandledConflicts = postConflictResolver.doesPostHaveUnhandledConflict(post),
+                    capabilitiesToPublish = site.hasCapabilityPublishPosts,
+                    statsSupported = isStatsSupported,
+                    featuredImageUrl = featuredImageTracker.getFeaturedImageUrl(
+                            site = site,
+                            featuredImageId = post.featuredImageId,
+                            postContent = post.content
+                    ),
+                    formattedDate = PostUtils.getFormattedDate(post),
+                    performingCriticalAction = postActionHandler.isPerformingCriticalAction(LocalId(post.id))
+            ) { postModel, buttonType, statEvent ->
+                trackPostListAction(site, buttonType, postModel, statEvent)
+                postActionHandler.handlePostButton(buttonType, postModel)
             }
 }
