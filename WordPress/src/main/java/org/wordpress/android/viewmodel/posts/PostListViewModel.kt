@@ -187,17 +187,6 @@ class PostListViewModel @Inject constructor(
         }?.index
     }
 
-    private val dummyUploadStatus = PostListItemUploadStatus(
-            uploadError = null,
-            mediaUploadProgress = 0,
-            isUploading = false,
-            isUploadingOrQueued = false,
-            isQueued = false,
-            isUploadFailed = false,
-            hasInProgressMediaUpload = false,
-            hasPendingMediaUpload = false
-    )
-
     private fun transformPostModelToPostListItemUiState(post: PostModel) =
             listItemUiStateHelper.createPostListItemUiState(
                     post = post,

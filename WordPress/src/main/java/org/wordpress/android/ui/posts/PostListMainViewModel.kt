@@ -17,8 +17,10 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
@@ -87,7 +89,6 @@ class PostListMainViewModel @Inject constructor(
     private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
 
-    // TODO: Implement toast message in PostListActivity
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
     val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
 
@@ -96,6 +97,44 @@ class PostListMainViewModel @Inject constructor(
 
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
+
+    private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
+    private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
+
+    private val postListDialogHelper: PostListDialogHelper by lazy {
+        PostListDialogHelper(
+                showDialog = { _dialogAction.postValue(it) },
+                checkNetworkConnection = this::checkNetworkConnection
+        )
+    }
+
+    private val postConflictResolver: PostConflictResolver by lazy {
+        PostConflictResolver(
+                dispatcher = dispatcher,
+                postStore = postStore,
+                site = site,
+                invalidateList = this::invalidateAllLists,
+                checkNetworkConnection = this::checkNetworkConnection,
+                showSnackbar = { _snackBarMessage.postValue(it) },
+                showToast = { _toastMessage.postValue(it) }
+        )
+    }
+
+    private val postActionHandler: PostActionHandler by lazy {
+        PostActionHandler(
+                dispatcher = dispatcher,
+                site = site,
+                postStore = postStore,
+                postListDialogHelper = postListDialogHelper,
+                postConflictResolver = postConflictResolver,
+                triggerPostListAction = { _postListAction.postValue(it) },
+                triggerPostUploadAction = { _postUploadAction.postValue(it) },
+                invalidateList = this::invalidateAllLists,
+                checkNetworkConnection = this::checkNetworkConnection,
+                showSnackbar = { _snackBarMessage.postValue(it) },
+                showToast = { _toastMessage.postValue(it) }
+        )
+    }
 
     init {
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
@@ -141,6 +180,21 @@ class PostListMainViewModel @Inject constructor(
         super.onCleared()
     }
 
+    fun getPostListViewModelConnector(
+        authorFilter: AuthorFilterSelection,
+        postListType: PostListType
+    ): PostListViewModelConnector {
+        return PostListViewModelConnector(
+                site = site,
+                postListType = postListType,
+                authorFilter = authorFilter,
+                postActionHandler = postActionHandler,
+                featuredImageTracker = featuredImageTracker,
+                uploadStatusTracker = uploadStatusTracker,
+                postConflictResolver = postConflictResolver
+        )
+    }
+
     fun newPost() {
         postActionHandler.newPost()
     }
@@ -178,6 +232,34 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
+    fun handleEditPostResult(data: Intent?) {
+        postActionHandler.handleEditPostResult(data)
+    }
+
+    // BasicFragmentDialog Events
+
+    fun onPositiveClickedForBasicDialog(instanceTag: String) {
+        postListDialogHelper.onPositiveClickedForBasicDialog(
+                instanceTag = instanceTag,
+                deletePost = postActionHandler::deletePost,
+                publishPost = postActionHandler::publishPost,
+                updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion
+        )
+    }
+
+    fun onNegativeClickedForBasicDialog(instanceTag: String) {
+        postListDialogHelper.onNegativeClickedForBasicDialog(
+                instanceTag = instanceTag,
+                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
+        )
+    }
+
+    fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
+        postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
+                instanceTag = instanceTag,
+                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
+        )
+    }
     private fun getAuthorFilterItems(selection: AuthorFilterSelection): List<AuthorFilterListItemUIState> {
         return AuthorFilterSelection.values().map { value ->
             @ColorRes val backgroundColorRes: Int =
@@ -216,49 +298,10 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
-    /**
-     */
-
-    private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
-    private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
-
-    private val postListDialogHelper: PostListDialogHelper by lazy {
-        PostListDialogHelper(
-                showDialog = { _dialogAction.postValue(it) },
-                checkNetworkConnection = this::checkNetworkConnection
-        )
-    }
-
-    private val postConflictResolver: PostConflictResolver by lazy {
-        PostConflictResolver(
-                dispatcher = dispatcher,
-                postStore = postStore,
-                site = site,
-                invalidateList = this::invalidateAllLists,
-                checkNetworkConnection = this::checkNetworkConnection,
-                showSnackbar = { _snackBarMessage.postValue(it) },
-                showToast = { _toastMessage.postValue(it) }
-        )
-    }
-
-    private val postActionHandler: PostActionHandler by lazy {
-        PostActionHandler(
-                dispatcher = dispatcher,
-                site = site,
-                postStore = postStore,
-                postListDialogHelper = postListDialogHelper,
-                postConflictResolver = postConflictResolver,
-                triggerPostListAction = { _postListAction.postValue(it) },
-                triggerPostUploadAction = { _postUploadAction.postValue(it) },
-                invalidateList = this::invalidateAllLists,
-                checkNetworkConnection = this::checkNetworkConnection,
-                showSnackbar = { _snackBarMessage.postValue(it) },
-                showToast = { _toastMessage.postValue(it) }
-        )
-    }
-
+    // TODO: This might not be the best way to invalidate lists
     private fun invalidateAllLists() {
-//        TODO()
+        val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
+        dispatcher.dispatch(ListActionBuilder.newListRequiresRefreshAction(listTypeIdentifier))
     }
 
     private fun checkNetworkConnection(): Boolean =
@@ -268,52 +311,4 @@ class PostListMainViewModel @Inject constructor(
                 _toastMessage.postValue(ToastMessageHolder(string.no_network_message, Duration.SHORT))
                 false
             }
-
-    fun handleEditPostResult(data: Intent?) {
-        postActionHandler.handleEditPostResult(data)
-    }
-
-    // BasicFragmentDialog Events
-
-    fun onPositiveClickedForBasicDialog(instanceTag: String) {
-        postListDialogHelper.onPositiveClickedForBasicDialog(
-                instanceTag = instanceTag,
-                deletePost = postActionHandler::deletePost,
-                publishPost = postActionHandler::publishPost,
-                updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion
-        )
-    }
-
-    fun onNegativeClickedForBasicDialog(instanceTag: String) {
-        postListDialogHelper.onNegativeClickedForBasicDialog(
-                instanceTag = instanceTag,
-                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
-        )
-    }
-
-    fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
-        postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
-                instanceTag = instanceTag,
-                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
-        )
-    }
-
-    /**
-     *
-     */
-
-    fun getPostListViewModelConnector(
-        authorFilter: AuthorFilterSelection,
-        postListType: PostListType
-    ): PostListViewModelConnector {
-        return PostListViewModelConnector(
-                site = site,
-                postListType = postListType,
-                authorFilter = authorFilter,
-                postActionHandler = postActionHandler,
-                featuredImageTracker = featuredImageTracker,
-                uploadStatusTracker = uploadStatusTracker,
-                postConflictResolver = postConflictResolver
-        )
-    }
 }
