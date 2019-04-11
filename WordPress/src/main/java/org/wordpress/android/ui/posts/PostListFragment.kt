@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.posts
 
-import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -51,7 +51,7 @@ class PostListFragment : Fragment() {
     private var actionableEmptyView: ActionableEmptyView? = null
     private var progressLoadMore: ProgressBar? = null
 
-    private lateinit var nonNullActivity: Activity
+    private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
 
     private val postViewHolderConfig: PostViewHolderConfig by lazy {
@@ -101,9 +101,12 @@ class PostListFragment : Fragment() {
         val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
                 .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
         val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
+        val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+                .get(PostListMainViewModel::class.java)
+
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(site, authorFilter, postListType)
+        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
         viewModel.pagedListData.observe(this, Observer {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })

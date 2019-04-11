@@ -40,6 +40,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.viewmodel.posts.PostListViewModelConnector
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -116,7 +117,7 @@ class PostListMainViewModel @Inject constructor(
                 refreshList = this::invalidateAllLists,
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
                 invalidateUploadStatus = {
-                    uploadStatesTracker.invalidateUploadStatus(it)
+                    uploadStatusTracker.invalidateUploadStatus(it)
                     invalidateAllLists()
                 },
                 invalidateFeaturedMedia = {
@@ -218,7 +219,7 @@ class PostListMainViewModel @Inject constructor(
     /**
      */
 
-    private val uploadStatesTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
+    private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
     private val postListDialogHelper: PostListDialogHelper by lazy {
@@ -257,7 +258,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     private fun invalidateAllLists() {
-        TODO()
+//        TODO()
     }
 
     private fun checkNetworkConnection(): Boolean =
@@ -294,6 +295,25 @@ class PostListMainViewModel @Inject constructor(
         postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
                 instanceTag = instanceTag,
                 updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
+        )
+    }
+
+    /**
+     *
+     */
+
+    fun getPostListViewModelConnector(
+        authorFilter: AuthorFilterSelection,
+        postListType: PostListType
+    ): PostListViewModelConnector {
+        return PostListViewModelConnector(
+                site = site,
+                postListType = postListType,
+                authorFilter = authorFilter,
+                postActionHandler = postActionHandler,
+                featuredImageTracker = featuredImageTracker,
+                uploadStatusTracker = uploadStatusTracker,
+                postConflictResolver = postConflictResolver
         )
     }
 }

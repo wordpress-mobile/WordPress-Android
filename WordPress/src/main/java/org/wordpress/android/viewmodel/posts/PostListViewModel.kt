@@ -9,6 +9,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.AuthorFilter
@@ -47,12 +48,11 @@ class PostListViewModel @Inject constructor(
     connectionStatus: LiveData<ConnectionStatus>
 ) : ViewModel(), LifecycleOwner {
     private val isStatsSupported: Boolean by lazy {
-        SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
+        SiteUtils.isAccessedViaWPComRest(connector.site) && connector.site.hasCapabilityViewStats
     }
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
-    private lateinit var site: SiteModel
-    private lateinit var postListType: PostListType
+    private lateinit var connector: PostListViewModelConnector
 
     private var scrollToLocalPostId: LocalPostId? = null
 
@@ -88,14 +88,13 @@ class PostListViewModel @Inject constructor(
         val result = MediatorLiveData<PostListEmptyUiState>()
         val update = {
             createEmptyUiState(
-                    postListType = postListType,
+                    postListType = connector.postListType,
                     isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
                     isFetchingFirstPage = pagedListWrapper.isFetchingFirstPage.value ?: false,
                     isListEmpty = pagedListWrapper.isEmpty.value ?: true,
                     error = pagedListWrapper.listError.value,
                     fetchFirstPage = this::fetchFirstPage,
-                    // TODO!!!
-                    newPost = {}//postActionHandler::newPost
+                    newPost = connector.postActionHandler::newPost
             )
         }
         result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
@@ -114,22 +113,25 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel, authorFilter: AuthorFilterSelection, postListType: PostListType) {
+    fun start(postListViewModelConnector: PostListViewModelConnector) {
         if (isStarted) {
             return
         }
-        this.site = site
-        this.postListType = postListType
+        connector = postListViewModelConnector
 
-        this.listDescriptor = if (site.isUsingWpComRestApi) {
-            val author: AuthorFilter = when (authorFilter) {
+        this.listDescriptor = if (connector.site.isUsingWpComRestApi) {
+            val author: AuthorFilter = when (postListViewModelConnector.authorFilter) {
                 ME -> AuthorFilter.SpecificAuthor(accountStore.account.userId)
                 EVERYONE -> AuthorFilter.Everyone
             }
 
-            PostListDescriptorForRestSite(site = site, statusList = postListType.postStatuses, author = author)
+            PostListDescriptorForRestSite(
+                    site = connector.site,
+                    statusList = connector.postListType.postStatuses,
+                    author = author
+            )
         } else {
-            PostListDescriptorForXmlRpcSite(site = site, statusList = postListType.postStatuses)
+            PostListDescriptorForXmlRpcSite(site = connector.site, statusList = connector.postListType.postStatuses)
         }
 
         isStarted = true
@@ -197,23 +199,22 @@ class PostListViewModel @Inject constructor(
     )
 
     private fun transformPostModelToPostListItemUiState(post: PostModel) =
-    // TODO!!!
             listItemUiStateHelper.createPostListItemUiState(
                     post = post,
-                    uploadStatus = dummyUploadStatus,//uploadStatesTracker.getUploadStatus(post),
-                    unhandledConflicts = false, //postConflictResolver.doesPostHaveUnhandledConflict(post),
-                    capabilitiesToPublish = site.hasCapabilityPublishPosts,
+                    uploadStatus = connector.uploadStatusTracker.getUploadStatus(post),
+                    unhandledConflicts = connector.postConflictResolver.doesPostHaveUnhandledConflict(post),
+                    capabilitiesToPublish = connector.site.hasCapabilityPublishPosts,
                     statsSupported = isStatsSupported,
-                    featuredImageUrl = null, //featuredImageTracker.getFeaturedImageUrl(
-//                            site = site,
-//                            featuredImageId = post.featuredImageId,
-//                            postContent = post.content
-//                    ),
+                    featuredImageUrl = connector.featuredImageTracker.getFeaturedImageUrl(
+                            site = connector.site,
+                            featuredImageId = post.featuredImageId,
+                            postContent = post.content
+                    ),
                     formattedDate = PostUtils.getFormattedDate(post),
-                    performingCriticalAction = false //postActionHandler.isPerformingCriticalAction(LocalId(post.id))
+                    performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id))
             ) { postModel, buttonType, statEvent ->
-                trackPostListAction(site, buttonType, postModel, statEvent)
-//                postActionHandler.handlePostButton(buttonType, postModel)
+                trackPostListAction(connector.site, buttonType, postModel, statEvent)
+                connector.postActionHandler.handlePostButton(buttonType, postModel)
             }
 
     private fun retryOnConnectionAvailableAfterRefreshError() {
