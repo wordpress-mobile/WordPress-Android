@@ -148,7 +148,7 @@ class StatsViewAllFragment : DaggerFragment() {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
         setupObservers(activity)
 
-        viewModel.start(site)
+        viewModel.start()
     }
 
     private fun setupObservers(activity: FragmentActivity) {

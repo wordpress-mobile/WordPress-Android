@@ -60,20 +60,19 @@ class StatsViewModel
     private val _toolbarHasShadow = MutableLiveData<Boolean>()
     val toolbarHasShadow: LiveData<Boolean> = _toolbarHasShadow
 
-    fun start(site: SiteModel, launchedFromWidget: Boolean, initialSection: StatsSection?) {
+    fun start(launchedFromWidget: Boolean, initialSection: StatsSection?) {
         // Check if VM is not already initialized
         if (!isInitialized) {
-            statsSiteProvider.start(site)
             isInitialized = true
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
 
             _toolbarHasShadow.value = statsSectionManager.getSelectedSection() == INSIGHTS
 
-            analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, site)
+            analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, statsSiteProvider.siteModel)
 
             if (launchedFromWidget) {
-                analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
+                analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
             }
         }
     }
@@ -126,7 +125,6 @@ class StatsViewModel
         super.onCleared()
         _showSnackbarMessage.value = null
         selectedDateProvider.clear()
-        statsSiteProvider.stop()
     }
 
     data class DateSelectorUiModel(

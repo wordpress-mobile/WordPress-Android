@@ -49,7 +49,6 @@ class StatsDetailViewModel
         postTitle: String,
         postUrl: String?
     ) {
-        statsSiteProvider.start(site)
         statsPostProvider.init(postId, postType, postTitle, postUrl)
     }
 

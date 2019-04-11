@@ -21,8 +21,6 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.OldStatsActivity.ARG_DESIRED_TIMEFRAME
 import org.wordpress.android.ui.stats.OldStatsActivity.ARG_LAUNCHED_FROM
 import org.wordpress.android.ui.stats.OldStatsActivity.StatsLaunchedFrom
@@ -106,7 +104,7 @@ class StatsFragment : DaggerFragment() {
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(activity)
 
-        viewModel.start(nonNullSite, launchedFromWidget, initialTimeFrame)
+        viewModel.start(launchedFromWidget, initialTimeFrame)
 
         if (!isFirstStart) {
             restorePreviousSearch = true
