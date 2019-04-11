@@ -27,11 +27,6 @@ import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
-import org.wordpress.android.util.image.ImageType.MULTI_USER_AVATAR_GREY_BACKGROUND
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import javax.inject.Inject
@@ -165,36 +160,5 @@ class PostListMainViewModel @Inject constructor(
         if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
             _updatePostsPager.value = authorFilterSelection
         }
-    }
-
-    class PostListMainViewState(
-        val isFabVisible: Boolean,
-        val isAuthorFilterVisible: Boolean,
-        val authorFilterSelection: AuthorFilterSelection,
-        val authorFilterItems: List<AuthorFilterListItemUIState>
-    )
-
-    sealed class AuthorFilterListItemUIState(
-        val id: Long,
-        val text: UiString,
-        val avatarUrl: String?,
-        val imageType: ImageType,
-        @ColorRes val dropDownBackground: Int
-    ) {
-        class Everyone(@ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
-                id = AuthorFilterSelection.EVERYONE.id,
-                text = UiStringRes(R.string.post_list_author_everyone),
-                avatarUrl = null,
-                imageType = MULTI_USER_AVATAR_GREY_BACKGROUND,
-                dropDownBackground = dropDownBackground
-        )
-
-        class Me(avatarUrl: String?, @ColorRes dropDownBackground: Int) : AuthorFilterListItemUIState(
-                id = AuthorFilterSelection.ME.id,
-                text = UiStringRes(R.string.post_list_author_me),
-                avatarUrl = avatarUrl,
-                imageType = AVATAR_WITH_BACKGROUND,
-                dropDownBackground = dropDownBackground
-        )
     }
 }
