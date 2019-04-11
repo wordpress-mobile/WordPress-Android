@@ -50,6 +50,7 @@ import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.PERMISSION_E
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.REFRESH_ERROR
 import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class PostListFragment : Fragment() {
@@ -189,7 +190,7 @@ class PostListFragment : Fragment() {
         nonNullActivity.findViewById<View>(R.id.coordinator)?.let { parent ->
             val message = getString(holder.messageRes)
             val duration = AccessibilityUtils.getSnackbarDuration(nonNullActivity)
-            val snackbar = Snackbar.make(parent, message, duration)
+            val snackbar = WPSnackbar.make(parent, message, duration)
             if (holder.buttonTitleRes != null) {
                 snackbar.setAction(getString(holder.buttonTitleRes)) {
                     holder.buttonAction()

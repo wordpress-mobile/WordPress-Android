@@ -39,6 +39,7 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.observeEvent
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class StatsViewAllFragment : DaggerFragment() {
@@ -162,9 +163,9 @@ class StatsViewAllFragment : DaggerFragment() {
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
                 if (holder.buttonTitleRes == null) {
-                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                    WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
                 } else {
-                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                    val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
                     snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
                     snackbar.show()
                 }
