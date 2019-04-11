@@ -38,7 +38,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
 
 class StatsViewAllFragment : DaggerFragment() {
@@ -158,15 +157,17 @@ class StatsViewAllFragment : DaggerFragment() {
             }
         })
 
-        viewModel.showSnackbarMessage.observe(this, Observer { holder ->
-            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
-            if (holder != null && parent != null) {
-                if (holder.buttonTitleRes == null) {
-                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
-                } else {
-                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
-                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
-                    snackbar.show()
+        viewModel.showSnackbarMessage.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { holder ->
+                val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+                if (parent != null) {
+                    if (holder.buttonTitleRes == null) {
+                        Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                    } else {
+                        val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                        snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
+                        snackbar.show()
+                    }
                 }
             }
         })
@@ -192,11 +193,11 @@ class StatsViewAllFragment : DaggerFragment() {
                 }
             }
         })
-
-        viewModel.navigationTarget.observeEvent(this) { target ->
-            navigator.navigate(activity, target)
-            return@observeEvent true
-        }
+        viewModel.navigationTarget.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { target ->
+                navigator.navigate(activity, target)
+            }
+        })
 
         viewModel.dateSelectorData.observe(this, Observer { dateSelectorUiModel ->
             val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
@@ -214,15 +215,17 @@ class StatsViewAllFragment : DaggerFragment() {
             }
         })
 
-        viewModel.navigationTarget.observeEvent(this) { target ->
-            navigator.navigate(activity, target)
-            return@observeEvent true
-        }
+        viewModel.navigationTarget.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { target ->
+                navigator.navigate(activity, target)
+            }
+        })
 
-        viewModel.selectedDate.observeEvent(this) {
-            viewModel.onDateChanged()
-            true
-        }
+        viewModel.selectedDate.observe(this, Observer { event ->
+            if (event?.hasBeenHandled == false) {
+                viewModel.onDateChanged()
+            }
+        })
 
         viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
             val elevation = if (hasShadow == true) resources.getDimension(R.dimen.appbar_elevation) else 0f

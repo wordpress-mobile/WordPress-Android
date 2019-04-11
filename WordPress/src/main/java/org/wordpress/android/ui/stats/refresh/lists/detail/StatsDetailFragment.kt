@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
 
 class StatsDetailFragment : DaggerFragment() {
@@ -77,10 +76,11 @@ class StatsDetailFragment : DaggerFragment() {
             }
         })
 
-        viewModel.selectedDateChanged.observeEvent(this) {
-            viewModel.onDateChanged()
-            true
-        }
+        viewModel.selectedDateChanged.observe(this, Observer { event ->
+            if (event?.hasBeenHandled == false) {
+                viewModel.onDateChanged()
+            }
+        })
 
         viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
             val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
