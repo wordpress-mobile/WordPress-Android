@@ -14,7 +14,10 @@ import javax.inject.Singleton
 
 @Singleton
 class StatsSiteProvider
-@Inject constructor(private val siteStore: SiteStore, dispatcher: Dispatcher) {
+@Inject constructor(
+    private val siteStore: SiteStore,
+    private val selectedSite: SelectedSiteStorage,
+    dispatcher: Dispatcher) {
     var siteModel = SiteModel()
         private set
 
@@ -26,16 +29,16 @@ class StatsSiteProvider
         dispatcher.register(this)
     }
 
-    fun start(siteId: Int) {
-        if (siteId != 0) {
-            siteStore.getSiteByLocalId(siteId)?.let { site ->
+    fun start(localSiteId: Int) {
+        if (localSiteId != 0) {
+            siteStore.getSiteByLocalId(localSiteId)?.let { site ->
                 siteModel = site
             }
         }
     }
 
     fun reset() {
-        start(AppPrefs.getSelectedSite())
+        start(selectedSite.currentLocalSiteId)
     }
 
     fun clear() {
@@ -48,9 +51,14 @@ class StatsSiteProvider
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteChanged(event: OnSiteChanged) {
-        siteStore.getSiteByLocalId(AppPrefs.getSelectedSite())?.let { site ->
+        siteStore.getSiteByLocalId(selectedSite.currentLocalSiteId)?.let { site ->
             siteModel = site
             mutableSiteChanged.value = event
         }
+    }
+
+    class SelectedSiteStorage {
+        val currentLocalSiteId
+            get() = AppPrefs.getSelectedSite()
     }
 }
