@@ -15,7 +15,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
@@ -47,9 +46,6 @@ class StatsViewModel
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val _isMenuVisible = MutableLiveData<Boolean>()
-    val isMenuVisible: LiveData<Boolean> = _isMenuVisible
-
     private var isInitialized = false
 
     private val _showSnackbarMessage = mergeNotNull(
@@ -58,9 +54,6 @@ class StatsViewModel
             singleEvent = true
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
-
-    private val _navigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = _navigationTarget
 
     val siteChanged = statsSiteProvider.siteChanged
 
@@ -118,7 +111,6 @@ class StatsViewModel
         listUseCases[statsSection]?.onListSelected()
 
         _toolbarHasShadow.value = statsSection == INSIGHTS
-        _isMenuVisible.value = statsSection == INSIGHTS
 
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
@@ -129,10 +121,6 @@ class StatsViewModel
             DETAIL -> {
             }
         }
-    }
-
-    fun onManageInsightsButtonTapped() {
-        _navigationTarget.value = ViewInsightsManagement()
     }
 
     override fun onCleared() {
