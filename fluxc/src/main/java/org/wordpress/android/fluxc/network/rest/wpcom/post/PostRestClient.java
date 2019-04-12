@@ -37,10 +37,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsRespons
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponsePart;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.RevisionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
+import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
@@ -224,7 +226,8 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void deletePost(final PostModel post, final SiteModel site) {
+    public void deletePost(final @NonNull PostModel post, final @NonNull SiteModel site,
+                           final @NonNull PostDeleteActionType postDeleteActionType) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).delete.getUrlV1_1();
 
         final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
@@ -236,7 +239,8 @@ public class PostRestClient extends BaseWPComRestClient {
                         deletedPost.setId(post.getId());
                         deletedPost.setLocalSiteId(post.getLocalSiteId());
 
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        DeletedPostPayload payload =
+                                new DeletedPostPayload(post, site, postDeleteActionType, deletedPost);
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 },
@@ -244,8 +248,9 @@ public class PostRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 404 unknown_post (invalid post ID)
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
-                        payload.error = new PostError(error.apiError, error.message);
+                        PostError deletePostError = new PostError(error.apiError, error.message);
+                        DeletedPostPayload payload =
+                                new DeletedPostPayload(post, site, postDeleteActionType, deletePostError);
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 }
@@ -269,7 +274,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         restoredPost.setId(post.getId());
                         restoredPost.setLocalSiteId(post.getLocalSiteId());
 
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        RemotePostPayload payload = new RemotePostPayload(restoredPost, site);
                         mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
                     }
                 },
