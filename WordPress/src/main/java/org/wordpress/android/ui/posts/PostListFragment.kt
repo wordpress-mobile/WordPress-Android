@@ -52,6 +52,7 @@ class PostListFragment : Fragment() {
     private var progressLoadMore: ProgressBar? = null
 
     private lateinit var nonNullActivity: FragmentActivity
+    // TODO: We can get rid of SiteModel in the Fragment once we remove the `isPhotonCapable`
     private lateinit var site: SiteModel
 
     private val postViewHolderConfig: PostViewHolderConfig by lazy {

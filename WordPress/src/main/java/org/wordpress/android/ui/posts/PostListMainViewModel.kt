@@ -7,14 +7,12 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
-import android.support.annotation.ColorRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
@@ -173,7 +171,7 @@ class PostListMainViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
                 handlePostUploadedWithoutError = {
-                    TODO("Fetch the first page of the lists so their id is added to the ListStore")
+                    // TODO("Fetch the first page of the lists so their id is added to the ListStore")
                 },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
                 invalidateUploadStatus = {
@@ -192,7 +190,7 @@ class PostListMainViewModel @Inject constructor(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
                 isAuthorFilterVisible = site.isUsingWpComRestApi,
                 authorFilterSelection = authorFilterSelection,
-                authorFilterItems = getAuthorFilterItems(authorFilterSelection)
+                authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
@@ -203,6 +201,7 @@ class PostListMainViewModel @Inject constructor(
         super.onCleared()
     }
 
+    // TODO: We shouldn't need to pass the AuthorFilterSelection to fragments and get it back, we have that info already
     fun getPostListViewModelConnector(
         authorFilter: AuthorFilterSelection,
         postListType: PostListType
@@ -239,7 +238,7 @@ class PostListMainViewModel @Inject constructor(
 
         updateViewStateTriggerPagerChange(
                 authorFilterSelection = selection,
-                authorFilterItems = getAuthorFilterItems(selection)
+                authorFilterItems = getAuthorFilterItems(selection, accountStore.account?.avatarUrl)
         )
         prefs.postListAuthorSelection = selection
     }
@@ -296,19 +295,6 @@ class PostListMainViewModel @Inject constructor(
         )
     }
 
-    private fun getAuthorFilterItems(selection: AuthorFilterSelection): List<AuthorFilterListItemUIState> {
-        return AuthorFilterSelection.values().map { value ->
-            @ColorRes val backgroundColorRes: Int =
-                    if (selection == value) R.color.grey_lighten_30_translucent_50
-                    else R.color.transparent
-
-            when (value) {
-                ME -> AuthorFilterListItemUIState.Me(accountStore.account?.avatarUrl, backgroundColorRes)
-                EVERYONE -> AuthorFilterListItemUIState.Everyone(backgroundColorRes)
-            }
-        }
-    }
-
     /**
      * Only the non-null variables will be changed in the current state
      */
@@ -334,7 +320,6 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
-    // TODO: This might not be the best way to invalidate lists
     private fun invalidateAllLists() {
         val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
         dispatcher.dispatch(ListActionBuilder.newListRequiresRefreshAction(listTypeIdentifier))
