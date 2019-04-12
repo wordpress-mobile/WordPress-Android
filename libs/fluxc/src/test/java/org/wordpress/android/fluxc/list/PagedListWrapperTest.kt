@@ -47,7 +47,6 @@ class PagedListWrapperTest {
     private val mockListDescriptor = mock<ListDescriptor>()
     private val mockRefresh = mock<() -> Unit>()
     private val mockInvalidate = mock<() -> Unit>()
-    private val mockIsListEmpty = mock<() -> Boolean>()
 
     private fun createPagedListWrapper(lifecycle: Lifecycle = mock()) = PagedListWrapper(
             data = MutableLiveData<PagedList<String>>(),
@@ -56,7 +55,6 @@ class PagedListWrapperTest {
             lifecycle = lifecycle,
             refresh = mockRefresh,
             invalidate = mockInvalidate,
-            isListEmpty = mockIsListEmpty,
             parentCoroutineContext = TEST_SCOPE.coroutineContext
     )
 
@@ -68,13 +66,6 @@ class PagedListWrapperTest {
 
         verify(mockDispatcher, onlyOnce()).register(pagedListWrapper)
         verify(mockLifecycle, onlyOnce()).addObserver(pagedListWrapper)
-    }
-
-    @Test
-    fun `isListEmpty is updated in init`() {
-        createPagedListWrapper()
-
-        verify(mockIsListEmpty, onlyOnce()).invoke()
     }
 
     @Test
@@ -142,23 +133,9 @@ class PagedListWrapperTest {
     }
 
     @Test
-    fun `onListChanged invokes updates isEmpty`() {
-        triggerOnListChanged()
-        // PagedListWrapper.init will trigger `isEmpty` once
-        verify(mockIsListEmpty, times(2)).invoke()
-    }
-
-    @Test
     fun `onListItemsChanged invokes invalidate property`() {
         triggerOnListItemsChanged()
         verify(mockInvalidate, onlyOnce()).invoke()
-    }
-
-    @Test
-    fun `onListItemsChanged invokes updates isEmpty`() {
-        triggerOnListItemsChanged()
-        // PagedListWrapper.init will trigger `isEmpty` once
-        verify(mockIsListEmpty, times(2)).invoke()
     }
 
     @Test
