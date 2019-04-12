@@ -1688,6 +1688,7 @@
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>
+    <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -2288,6 +2289,7 @@
     <string name="notification_error_wrong_password">Please double check your password to continue.</string>
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
+    <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
     <string name="change_photo">Change photo</string>
 
     <!-- Content description for accessibility  -->

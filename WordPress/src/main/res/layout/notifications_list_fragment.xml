@@ -17,7 +17,7 @@
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:elevation="@dimen/appbar_elevation"
         android:layout_alignParentTop="true"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_main"
-            android:background="@color/color_primary"
+            android:background="@color/primary"
             android:layout_height="@dimen/toolbar_height"
             android:layout_width="match_parent"
             app:layout_scrollFlags="scroll|enterAlways"
@@ -35,15 +35,15 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
-            android:background="@color/color_primary"
+            android:background="@color/primary"
             android:layout_gravity="start"
             android:layout_height="@dimen/tab_height"
             android:layout_width="match_parent"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/white"
+            app:tabIndicatorColor="@android:color/white"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/white"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@android:color/white"
             app:theme="@style/Base.Widget.Design.TabLayout">
         </android.support.design.widget.TabLayout>
 

@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.design.widget.TabLayout.Tab;
@@ -117,6 +116,7 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPDialogSnackbar;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -704,8 +704,8 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.color_primary));
-        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
+        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.primary));
+        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, android.R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium),
@@ -1196,7 +1196,7 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
             }
         };
-        Snackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked),
+        WPSnackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked),
                 AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(R.string.undo, undoListener)
                 .show();
@@ -1490,7 +1490,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        Snackbar.make(getView(), R.string.reader_bookmark_snack_title,
+        WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title,
                 AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
                 new View.OnClickListener() {
                     @Override public void onClick(View view) {
@@ -2208,7 +2208,7 @@ public class ReaderPostListFragment extends Fragment
                 ? getString(R.string.reader_followed_blog_notifications_this)
                 : blogName;
 
-        Snackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+        WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
                 "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
                         new View.OnClickListener() {
@@ -2220,7 +2220,6 @@ public class ReaderPostListFragment extends Fragment
                                 ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
                             }
                         })
-                .setActionTextColor(getResources().getColor(R.color.color_accent))
                 .show();
     }
 
