@@ -332,7 +332,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             final FollowerModel currentRowData = mList.get(position);
             final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
-            holder.entryTextView.setTextColor(mContext.getResources().getColor(R.color.stats_text_color));
+            holder.entryTextView.setTextColor(mContext.getResources().getColor(R.color.text));
             holder.rowContent.setClickable(false);
 
             final FollowDataModel followData = currentRowData.getFollowData();
@@ -367,7 +367,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     // Open the in-app web browser
                     holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
                 }
-                holder.entryTextView.setTextColor(mContext.getResources().getColor(R.color.stats_link_text_color));
+                holder.entryTextView.setTextColor(mContext.getResources().getColor(R.color.link_stats));
             } else {
                 // Email followers, or wpcom followers with empty URL and no blogID
                 holder.setEntryText(currentRowData.getLabel());

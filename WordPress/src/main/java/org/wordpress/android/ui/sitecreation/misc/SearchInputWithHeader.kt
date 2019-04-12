@@ -26,7 +26,7 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
 
     init {
         val context = rootView.context
-        val greyColor = ContextCompat.getColor(context, R.color.grey)
+        val greyColor = ContextCompat.getColor(context, R.color.neutral_300)
 
         val inputDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_search_white_24dp)
         inputDrawable?.setTint(greyColor)

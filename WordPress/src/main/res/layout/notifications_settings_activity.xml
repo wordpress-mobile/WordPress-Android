@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/default_background"
     android:layout_height="match_parent"
     android:layout_width="match_parent" >
 
@@ -33,7 +32,6 @@
 
     <LinearLayout
         android:id="@+id/fragment_container"
-        android:background="@color/default_background"
         android:layout_below="@id/app_bar_layout"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
@@ -42,7 +40,6 @@
 
     <LinearLayout
         android:id="@+id/notification_settings_disabled_view"
-        android:background="@color/default_background"
         android:clickable="true"
         android:focusable="true"
         android:layout_below="@id/app_bar_layout"
@@ -75,7 +72,7 @@
 
     <LinearLayout
         android:id="@+id/notifications_settings_message_container"
-        android:background="@color/default_background"
+        android:background="@color/background_default"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"

@@ -28,6 +28,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,49 +192,47 @@ public class UploadUtils {
 
     private static void showSnackbarError(View view, String message, int buttonTitleRes,
                                           View.OnClickListener onClickListener) {
-        Snackbar.make(view, message, AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
+        WPSnackbar.make(view, message,
+                AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
     public static void showSnackbarError(View view, String message) {
-        Snackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).show();
+        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).show();
     }
 
     private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
                                      View.OnClickListener onClickListener) {
-        Snackbar.make(view, messageRes,
+        WPSnackbar.make(view, messageRes,
                 AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
     public static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        Snackbar.make(view, messageRes,
+        WPSnackbar.make(view, messageRes,
                 AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener).
-                        setActionTextColor(view.getResources().getColor(R.color.blue_medium))
+                .setAction(buttonTitleRes, onClickListener)
                 .show();
     }
 
     private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        Snackbar.make(view, message, AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener).
-                        setActionTextColor(view.getResources().getColor(R.color.blue_medium))
+        WPSnackbar.make(view, message,
+                AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
+                .setAction(buttonTitleRes, onClickListener)
                 .show();
     }
 
     public static void showSnackbarSuccessActionOrange(View view, int messageRes, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
-                .setAction(buttonTitleRes, onClickListener).
-                        setActionTextColor(view.getResources().getColor(R.color.orange_jazzy))
+        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
+                .setAction(buttonTitleRes, onClickListener)
                 .show();
     }
 
     public static void showSnackbar(View view, int messageRes) {
-        Snackbar.make(view,
-                      messageRes, Snackbar.LENGTH_LONG).show();
+        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).show();
     }
 
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
@@ -252,8 +251,7 @@ public class UploadUtils {
         }
 
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
-        boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
-                                     || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
+        boolean isFirstTimePublish = PostUtils.isFirstTimePublish(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
         // save the post in the DB so the UploadService will get the latest change

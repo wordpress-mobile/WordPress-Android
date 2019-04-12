@@ -39,7 +39,7 @@
                     android:contentDescription="@string/media_settings_image_preview_desc"
                     tools:layout_height="224dp"
                     tools:src="@drawable/ic_audio_white_24dp"
-                    tools:tint="@color/grey" >
+                    tools:tint="@color/neutral_300" >
                 </ImageView>
 
                 <ImageView
@@ -89,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_large"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -112,7 +112,7 @@
                             android:layout_marginBottom="@dimen/margin_large"
                             android:layout_marginStart="@dimen/margin_small"
                             android:text="@string/media_edit_customize_card_caption"
-                            android:textColor="@color/blue_wordpress"
+                            android:textColor="@color/primary_500"
                             android:textSize="@dimen/text_sz_large"
                             android:textStyle="bold" />
 
@@ -202,7 +202,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="top|start"
                                 android:hint="@string/media_edit_link_text"
-                                android:textColorHint="@color/transparent"
+                                android:textColorHint="@android:color/transparent"
                                 android:inputType="textUri"
                                 tools:text="edit_link" />
 
@@ -226,7 +226,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/card1"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -245,7 +245,7 @@
                         android:layout_marginBottom="@dimen/margin_large"
                         android:layout_marginStart="@dimen/margin_small"
                         android:text="@string/media_edit_file_details_card_caption"
-                        android:textColor="@color/blue_wordpress"
+                        android:textColor="@color/primary_500"
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold" />
 
@@ -262,7 +262,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/media_edit_title_text"
-                            android:textColorHint="@color/transparent"
+                            android:textColorHint="@android:color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
                             tools:text="edit_title" />
 
@@ -282,7 +282,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/media_edit_caption_text"
-                            android:textColorHint="@color/transparent"
+                            android:textColorHint="@android:color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
                             tools:text="edit_caption" />
 
@@ -302,7 +302,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/media_edit_alttext_text"
-                            android:textColorHint="@color/transparent"
+                            android:textColorHint="@android:color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
                             tools:text="edit_alt_text" />
 
@@ -323,7 +323,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="top|start"
                             android:hint="@string/media_edit_description_text"
-                            android:textColorHint="@color/transparent"
+                            android:textColorHint="@android:color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
                             android:lines="3"
                             tools:text="edit_description" />
@@ -340,7 +340,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/card2"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -391,7 +391,7 @@
                             android:paddingTop="@dimen/margin_small"
                             android:text="@string/copy"
                             android:textAllCaps="true"
-                            android:textColor="@color/grey_dark"
+                            android:textColor="@color/neutral_700"
                             android:textSize="@dimen/text_sz_medium"
                             android:paddingEnd="@dimen/margin_extra_large"
                             android:paddingStart="@dimen/margin_extra_large"/></RelativeLayout></LinearLayout>
@@ -538,7 +538,7 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:contentDescription="@string/fab_content_description_preview"
         android:visibility="gone"
-        app:backgroundTint="@color/blue_wordpress"
+        app:backgroundTint="@color/accent"
         app:elevation="8dp"
         app:fabSize="normal"
         app:layout_anchor="@id/app_bar_layout"

@@ -91,11 +91,11 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         mInflater = LayoutInflater.from(context);
 
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
-        mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
-        mTextColorHidden = context.getResources().getColor(R.color.grey);
+        mTextColorNormal = context.getResources().getColor(R.color.neutral_700);
+        mTextColorHidden = context.getResources().getColor(R.color.neutral_300);
 
         mSelectedItemBackground =
-                new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20_translucent_50));
+                new ColorDrawable(context.getResources().getColor(R.color.gray_50));
 
         loadSites();
     }

@@ -5,10 +5,10 @@ import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
@@ -25,7 +25,7 @@ import org.wordpress.android.util.mapNullable
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 class StatsViewAllViewModel(
-    mainDispatcher: CoroutineDispatcher,
+    val mainDispatcher: CoroutineDispatcher,
     val bgDispatcher: CoroutineDispatcher,
     val useCase: BaseStatsUseCase<*, *>,
     private val statsSiteProvider: StatsSiteProvider,
@@ -60,7 +60,11 @@ class StatsViewAllViewModel(
 
     val toolbarHasShadow = dateSelectorData.map { !it.isVisible }
 
-    fun start() {
+    fun start(site: SiteModel? = null) {
+        if (site != null) {
+            statsSiteProvider.start(site)
+        }
+
         launch {
             loadData(refresh = false, forced = false)
             dateSelector.updateDateSelector()
@@ -83,7 +87,11 @@ class StatsViewAllViewModel(
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean) {
         withContext(bgDispatcher) {
-            useCase.fetch(refresh, forced)
+            if (statsSiteProvider.hasLoadedSite()) {
+                useCase.fetch(refresh, forced)
+            } else {
+                mutableSnackbarMessage.postValue(R.string.stats_site_not_loaded_yet)
+            }
         }
     }
 
@@ -99,13 +107,13 @@ class StatsViewAllViewModel(
     }
 
     fun onNextDateSelected() {
-        launch(Dispatchers.Default) {
+        launch(mainDispatcher) {
             dateSelector.onNextDateSelected()
         }
     }
 
     fun onPreviousDateSelected() {
-        launch(Dispatchers.Default) {
+        launch(mainDispatcher) {
             dateSelector.onPreviousDateSelected()
         }
     }
@@ -114,13 +122,9 @@ class StatsViewAllViewModel(
         refreshData()
     }
 
-    private fun refreshData() {
-        if (statsSiteProvider.hasLoadedSite()) {
-            loadData {
-                loadData(refresh = true, forced = true)
-            }
-        } else {
-            mutableSnackbarMessage.value = R.string.stats_site_not_loaded_yet
+    fun refreshData() {
+        loadData {
+            loadData(refresh = true, forced = true)
         }
     }
 }

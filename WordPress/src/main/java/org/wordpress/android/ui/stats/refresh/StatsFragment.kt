@@ -43,6 +43,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
 
@@ -164,9 +165,9 @@ class StatsFragment : DaggerFragment() {
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
                 if (holder.buttonTitleRes == null) {
-                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                    WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
                 } else {
-                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                    val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
                     snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
                     snackbar.show()
                 }

@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/wp_grey_darken_10"
+        android:textColor="@color/neutral_400"
         android:textSize="@dimen/text_sz_extra_large"
         android:visibility="gone"
         tools:text="We're creating your new site!"/>
