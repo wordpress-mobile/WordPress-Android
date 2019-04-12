@@ -24,6 +24,7 @@ class AddedInsightViewHolder(
 
         managementButton.setImageResource(R.drawable.ic_remove_circle)
         managementButton.setOnClickListener {
+            managementButton.setOnClickListener(null)
             onButtonClicked(insight)
         }
 
