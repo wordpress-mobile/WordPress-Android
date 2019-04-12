@@ -1,6 +1,7 @@
 12.3
 -----
 * Updated primary button color to pink
+* Redirect to username/password login when WordPress.com reports email login not allowed
 
 12.2
 -----
