@@ -232,9 +232,10 @@ class PostActionHandler(
 
     private fun restorePost(post: PostModel) {
         // We need network connection to restore a post
-        if (checkNetworkConnection.invoke()) {
+        if (!checkNetworkConnection.invoke()) {
             return
         }
+        showSnackbar.invoke(SnackbarMessageHolder(messageRes = R.string.post_restoring))
         criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = RESTORING_POST)
         dispatcher.dispatch(PostActionBuilder.newRestorePostAction(RemotePostPayload(post, site)))
     }
