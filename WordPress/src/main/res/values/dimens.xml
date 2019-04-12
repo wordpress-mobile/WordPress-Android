@@ -26,6 +26,8 @@
 
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
+    <dimen name="snackbar_height_minimum">48dp</dimen>
+    <dimen name="snackbar_radius">4dp</dimen>
 
     <dimen name="media_grid_progress_height">24dp</dimen>
     <dimen name="media_settings_margin_normal">@dimen/margin_extra_large</dimen>
