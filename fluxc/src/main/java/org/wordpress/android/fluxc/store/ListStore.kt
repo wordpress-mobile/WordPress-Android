@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.action.ListAction.FETCHED_LIST_ITEMS
+import org.wordpress.android.fluxc.action.ListAction.LIST_DATA_INVALIDATED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_CHANGED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
 import org.wordpress.android.fluxc.action.ListAction.LIST_REQUIRES_REFRESH
@@ -65,6 +66,7 @@ class ListStore @Inject constructor(
             LIST_ITEMS_CHANGED -> handleListItemsChanged(action.payload as ListItemsChangedPayload)
             LIST_ITEMS_REMOVED -> handleListItemsRemoved(action.payload as ListItemsRemovedPayload)
             LIST_REQUIRES_REFRESH -> handleListRequiresRefresh(action.payload as ListDescriptorTypeIdentifier)
+            LIST_DATA_INVALIDATED -> handleListDataInvalidated(action.payload as ListDescriptorTypeIdentifier)
             REMOVE_EXPIRED_LISTS -> handleRemoveExpiredLists(action.payload as RemoveExpiredListsPayload)
             REMOVE_ALL_LISTS -> handleRemoveAllLists()
         }
@@ -284,6 +286,16 @@ class ListStore @Inject constructor(
     }
 
     /**
+     * Handles the [ListAction.LIST_DATA_INVALIDATED] action.
+     *
+     * Whenever the data of a list is invalidated, [OnListDataInvalidated] event will be emitted so the listening
+     * lists can invalidate their data.
+     */
+    private fun handleListDataInvalidated(typeIdentifier: ListDescriptorTypeIdentifier) {
+        emitChange(OnListDataInvalidated(type = typeIdentifier))
+    }
+
+    /**
      * Handles the [ListAction.REMOVE_EXPIRED_LISTS] action.
      *
      * It deletes [ListModel]s that hasn't been updated for the given [RemoveExpiredListsPayload.expirationDuration].
@@ -383,12 +395,14 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * This is the payload for [ListAction.LIST_REQUIRES_REFRESH].
-     *
-     * @property type [ListDescriptorTypeIdentifier] which will tell [ListStore] and the clients which
-     * [ListDescriptor]s requires a refresh.
+     * The event to be emitted when a list needs to be refresh for a specific [ListDescriptorTypeIdentifier].
      */
     class OnListRequiresRefresh(val type: ListDescriptorTypeIdentifier) : Store.OnChanged<ListError>()
+
+    /**
+     * The event to be emitted when a list's data is invalidated for a specific [ListDescriptorTypeIdentifier].
+     */
+    class OnListDataInvalidated(val type: ListDescriptorTypeIdentifier) : Store.OnChanged<ListError>()
 
     /**
      * This is the payload for [ListAction.LIST_ITEMS_CHANGED].
