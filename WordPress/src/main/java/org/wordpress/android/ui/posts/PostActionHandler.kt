@@ -49,7 +49,7 @@ class PostActionHandler(
     private val site: SiteModel,
     private val postStore: PostStore,
     private val postListDialogHelper: PostListDialogHelper,
-    private val postConflictResolver: PostConflictResolver,
+    private val doesPostHaveUnhandledConflict: (PostModel) -> Boolean,
     private val triggerPostListAction: (PostListAction) -> Unit,
     private val triggerPostUploadAction: (PostUploadAction) -> Unit,
     private val invalidateList: () -> Unit,
@@ -154,7 +154,7 @@ class PostActionHandler(
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state.
-        if (postConflictResolver.doesPostHaveUnhandledConflict(post)) {
+        if (doesPostHaveUnhandledConflict.invoke(post)) {
             postListDialogHelper.showConflictedPostResolutionDialog(post)
             return
         }

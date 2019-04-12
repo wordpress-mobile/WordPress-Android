@@ -2,6 +2,8 @@ package org.wordpress.android.ui.posts
 
 import android.support.annotation.ColorRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.image.ImageType
@@ -37,4 +39,20 @@ sealed class AuthorFilterListItemUIState(
             imageType = AVATAR_WITH_BACKGROUND,
             dropDownBackground = dropDownBackground
     )
+}
+
+fun getAuthorFilterItems(
+    selection: AuthorFilterSelection,
+    avatarUrl: String?
+): List<AuthorFilterListItemUIState> {
+    return AuthorFilterSelection.values().map { value ->
+        @ColorRes val backgroundColorRes: Int =
+                if (selection == value) R.color.grey_lighten_30_translucent_50
+                else R.color.transparent
+
+        when (value) {
+            ME -> AuthorFilterListItemUIState.Me(avatarUrl, backgroundColorRes)
+            EVERYONE -> AuthorFilterListItemUIState.Everyone(backgroundColorRes)
+        }
+    }
 }
