@@ -790,7 +790,6 @@
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="stats_empty_insights_title">No insights added yet</string>
     <string name="stats_manage_insights">Manage Insights</string>
-    <string name="stats_menu_manage_insights_button">Manage</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
