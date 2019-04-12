@@ -167,7 +167,7 @@ class InsightsListViewModel
         if (model is Success && model.data.none { item -> item.type == LOADING }) {
             return@map Success(
                     model.data + listOf(
-                            StatsBlock.Success(
+                            StatsBlock.Control(
                                     LINK_BUTTON,
                                     listOf(
                                             LinkButton(

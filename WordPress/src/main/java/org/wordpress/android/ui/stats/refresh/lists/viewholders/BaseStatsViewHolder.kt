@@ -21,8 +21,6 @@ abstract class BaseStatsViewHolder(
         if (statsTypes == OVERVIEW || statsTypes == LATEST_POST_SUMMARY) {
             val layoutParams = itemView.layoutParams as? StaggeredGridLayoutManager.LayoutParams
             layoutParams?.isFullSpan = true
-        } else if (statsTypes == LINK_BUTTON) {
-            itemView.background = null
         }
     }
 }
