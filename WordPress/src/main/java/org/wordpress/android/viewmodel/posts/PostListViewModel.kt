@@ -8,12 +8,9 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
-import android.content.Intent
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.AuthorFilter
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
@@ -21,32 +18,16 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
-import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
-import org.wordpress.android.ui.posts.PostActionHandler
-import org.wordpress.android.ui.posts.PostConflictResolver
-import org.wordpress.android.ui.posts.PostListAction
-import org.wordpress.android.ui.posts.PostListDialogHelper
-import org.wordpress.android.ui.posts.PostListFeaturedImageTracker
-import org.wordpress.android.ui.posts.PostListType
-import org.wordpress.android.ui.posts.PostListUploadStatusTracker
-import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.posts.listenForPostListEvents
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
-import org.wordpress.android.viewmodel.helpers.DialogHolder
-import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState.RefreshError
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
@@ -57,8 +38,6 @@ typealias PagedPostList = PagedList<PostListItemType>
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,
-    uploadStore: UploadStore,
-    mediaStore: MediaStore,
     private val postStore: PostStore,
     private val accountStore: AccountStore,
     private val listItemUiStateHelper: PostListItemUiStateHelper,
@@ -66,32 +45,13 @@ class PostListViewModel @Inject constructor(
     connectionStatus: LiveData<ConnectionStatus>
 ) : ViewModel(), LifecycleOwner {
     private val isStatsSupported: Boolean by lazy {
-        SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
+        SiteUtils.isAccessedViaWPComRest(connector.site) && connector.site.hasCapabilityViewStats
     }
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
-    private lateinit var site: SiteModel
-    private lateinit var postListType: PostListType
-
-    private val uploadStatesTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
-    private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
+    private lateinit var connector: PostListViewModelConnector
 
     private var scrollToLocalPostId: LocalPostId? = null
-
-    private val _postListAction = SingleLiveEvent<PostListAction>()
-    val postListAction: LiveData<PostListAction> = _postListAction
-
-    private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
-    val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
-
-    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
-    val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
-
-    private val _dialogAction = SingleLiveEvent<DialogHolder>()
-    val dialogAction: LiveData<DialogHolder> = _dialogAction
-
-    private val _snackBarAction = SingleLiveEvent<SnackbarMessageHolder>()
-    val snackBarAction: LiveData<SnackbarMessageHolder> = _snackBarAction
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
@@ -125,13 +85,13 @@ class PostListViewModel @Inject constructor(
         val result = MediatorLiveData<PostListEmptyUiState>()
         val update = {
             createEmptyUiState(
-                    postListType = postListType,
+                    postListType = connector.postListType,
                     isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
                     isFetchingFirstPage = pagedListWrapper.isFetchingFirstPage.value ?: false,
                     isListEmpty = pagedListWrapper.isEmpty.value ?: true,
                     error = pagedListWrapper.listError.value,
                     fetchFirstPage = this::fetchFirstPage,
-                    newPost = postActionHandler::newPost
+                    newPost = connector.postActionHandler::newPost
             )
         }
         result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
@@ -140,45 +100,8 @@ class PostListViewModel @Inject constructor(
         result
     }
 
-    private val postListDialogHelper: PostListDialogHelper by lazy {
-        PostListDialogHelper(
-                showDialog = { _dialogAction.postValue(it) },
-                checkNetworkConnection = this::checkNetworkConnection
-        )
-    }
-
-    private val postConflictResolver: PostConflictResolver by lazy {
-        PostConflictResolver(
-                dispatcher = dispatcher,
-                postStore = postStore,
-                site = site,
-                invalidateList = { pagedListWrapper.invalidateData() },
-                checkNetworkConnection = this::checkNetworkConnection,
-                showSnackbar = { _snackBarAction.postValue(it) },
-                showToast = { _toastMessage.postValue(it) }
-        )
-    }
-
-    private val postActionHandler: PostActionHandler by lazy {
-        PostActionHandler(
-                dispatcher = dispatcher,
-                site = site,
-                postStore = postStore,
-                postListDialogHelper = postListDialogHelper,
-                postConflictResolver = postConflictResolver,
-                triggerPostListAction = { _postListAction.postValue(it) },
-                triggerPostUploadAction = { _postUploadAction.postValue(it) },
-                invalidateList = { pagedListWrapper.invalidateData() },
-                checkNetworkConnection = this::checkNetworkConnection,
-                showSnackbar = { _snackBarAction.postValue(it) },
-                showToast = { _toastMessage.postValue(it) }
-        )
-    }
-
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
-
-    // Lifecycle
 
     init {
         connectionStatus.observe(this, Observer {
@@ -187,42 +110,27 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel, authorFilter: AuthorFilterSelection, postListType: PostListType) {
+    fun start(postListViewModelConnector: PostListViewModelConnector) {
         if (isStarted) {
             return
         }
-        this.site = site
-        this.postListType = postListType
+        connector = postListViewModelConnector
 
-        this.listDescriptor = if (site.isUsingWpComRestApi) {
-            val author: AuthorFilter = when (authorFilter) {
+        this.listDescriptor = if (connector.site.isUsingWpComRestApi) {
+            val author: AuthorFilter = when (postListViewModelConnector.authorFilter) {
                 ME -> AuthorFilter.SpecificAuthor(accountStore.account.userId)
                 EVERYONE -> AuthorFilter.Everyone
             }
 
-            PostListDescriptorForRestSite(site = site, statusList = postListType.postStatuses, author = author)
+            PostListDescriptorForRestSite(
+                    site = connector.site,
+                    statusList = connector.postListType.postStatuses,
+                    author = author
+            )
         } else {
-            PostListDescriptorForXmlRpcSite(site = site, statusList = postListType.postStatuses)
+            PostListDescriptorForXmlRpcSite(site = connector.site, statusList = connector.postListType.postStatuses)
         }
 
-        listenForPostListEvents(
-                lifecycle = lifecycle,
-                dispatcher = dispatcher,
-                postStore = postStore,
-                site = site,
-                postConflictResolver = postConflictResolver,
-                postActionHandler = postActionHandler,
-                refreshList = { pagedListWrapper.invalidateData() },
-                triggerPostUploadAction = { _postUploadAction.postValue(it) },
-                invalidateUploadStatus = {
-                    uploadStatesTracker.invalidateUploadStatus(it)
-                    pagedListWrapper.invalidateData()
-                },
-                invalidateFeaturedMedia = {
-                    featuredImageTracker.invalidateFeaturedMedia(it)
-                    pagedListWrapper.invalidateData()
-                }
-        )
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
         fetchFirstPage()
@@ -239,10 +147,6 @@ class PostListViewModel @Inject constructor(
         pagedListWrapper.fetchFirstPage()
     }
 
-    fun handleEditPostResult(data: Intent?) {
-        postActionHandler.handleEditPostResult(data)
-    }
-
     fun scrollToPost(localPostId: LocalPostId) {
         val data = pagedListData.value
         if (data != null) {
@@ -251,31 +155,6 @@ class PostListViewModel @Inject constructor(
             // store the target post id and scroll there when the data is loaded
             scrollToLocalPostId = localPostId
         }
-    }
-
-    // BasicFragmentDialog Events
-
-    fun onPositiveClickedForBasicDialog(instanceTag: String) {
-        postListDialogHelper.onPositiveClickedForBasicDialog(
-                instanceTag = instanceTag,
-                deletePost = postActionHandler::deletePost,
-                publishPost = postActionHandler::publishPost,
-                updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion
-        )
-    }
-
-    fun onNegativeClickedForBasicDialog(instanceTag: String) {
-        postListDialogHelper.onNegativeClickedForBasicDialog(
-                instanceTag = instanceTag,
-                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
-        )
-    }
-
-    fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
-        postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
-                instanceTag = instanceTag,
-                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
-        )
     }
 
     // Utils
@@ -308,20 +187,19 @@ class PostListViewModel @Inject constructor(
     private fun transformPostModelToPostListItemUiState(post: PostModel) =
             listItemUiStateHelper.createPostListItemUiState(
                     post = post,
-                    uploadStatus = uploadStatesTracker.getUploadStatus(post),
-                    unhandledConflicts = postConflictResolver.doesPostHaveUnhandledConflict(post),
-                    capabilitiesToPublish = site.hasCapabilityPublishPosts,
+                    uploadStatus = connector.getUploadStatus(post),
+                    unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
+                    capabilitiesToPublish = connector.site.hasCapabilityPublishPosts,
                     statsSupported = isStatsSupported,
-                    featuredImageUrl = featuredImageTracker.getFeaturedImageUrl(
-                            site = site,
-                            featuredImageId = post.featuredImageId,
-                            postContent = post.content
+                    featuredImageUrl = connector.getFeaturedImageUrl(
+                            post.featuredImageId,
+                            post.content
                     ),
                     formattedDate = PostUtils.getFormattedDate(post),
-                    performingCriticalAction = postActionHandler.isPerformingCriticalAction(LocalId(post.id))
+                    performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id))
             ) { postModel, buttonType, statEvent ->
-                trackPostListAction(site, buttonType, postModel, statEvent)
-                postActionHandler.handlePostButton(buttonType, postModel)
+                trackPostListAction(connector.site, buttonType, postModel, statEvent)
+                connector.postActionHandler.handlePostButton(buttonType, postModel)
             }
 
     private fun retryOnConnectionAvailableAfterRefreshError() {
@@ -332,12 +210,4 @@ class PostListViewModel @Inject constructor(
             fetchFirstPage()
         }
     }
-
-    private fun checkNetworkConnection(): Boolean =
-            if (networkUtilsWrapper.isNetworkAvailable()) {
-                true
-            } else {
-                _toastMessage.postValue(ToastMessageHolder(R.string.no_network_message, Duration.SHORT))
-                false
-            }
 }

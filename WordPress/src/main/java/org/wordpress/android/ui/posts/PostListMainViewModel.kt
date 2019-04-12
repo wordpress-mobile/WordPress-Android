@@ -1,34 +1,44 @@
 package org.wordpress.android.ui.posts
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.support.annotation.ColorRes
+import android.content.Intent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
-import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.DialogHolder
+import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.viewmodel.posts.PostListViewModelConnector
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -38,12 +48,19 @@ private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS)
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 
 class PostListMainViewModel @Inject constructor(
+    private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val accountStore: AccountStore,
+    uploadStore: UploadStore,
+    mediaStore: MediaStore,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
-) : ViewModel(), CoroutineScope {
+) : ViewModel(), LifecycleOwner, CoroutineScope {
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+
     private val scrollToTargetPostJob: Job = Job()
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + scrollToTargetPostJob
@@ -68,27 +85,116 @@ class PostListMainViewModel @Inject constructor(
     private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
 
+    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
+    val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
+
+    private val _dialogAction = SingleLiveEvent<DialogHolder>()
+    val dialogAction: LiveData<DialogHolder> = _dialogAction
+
+    private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
+    val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
+
+    private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
+    private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
+
+    private val postListDialogHelper: PostListDialogHelper by lazy {
+        PostListDialogHelper(
+                showDialog = { _dialogAction.postValue(it) },
+                checkNetworkConnection = this::checkNetworkConnection
+        )
+    }
+
+    private val postConflictResolver: PostConflictResolver by lazy {
+        PostConflictResolver(
+                dispatcher = dispatcher,
+                site = site,
+                getPostByLocalPostId = postStore::getPostByLocalPostId,
+                invalidateList = this::invalidateAllLists,
+                checkNetworkConnection = this::checkNetworkConnection,
+                showSnackbar = { _snackBarMessage.postValue(it) },
+                showToast = { _toastMessage.postValue(it) }
+        )
+    }
+
+    private val postActionHandler: PostActionHandler by lazy {
+        PostActionHandler(
+                dispatcher = dispatcher,
+                site = site,
+                postStore = postStore,
+                postListDialogHelper = postListDialogHelper,
+                doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
+                triggerPostListAction = { _postListAction.postValue(it) },
+                triggerPostUploadAction = { _postUploadAction.postValue(it) },
+                invalidateList = this::invalidateAllLists,
+                checkNetworkConnection = this::checkNetworkConnection,
+                showSnackbar = { _snackBarMessage.postValue(it) },
+                showToast = { _toastMessage.postValue(it) }
+        )
+    }
+
+    init {
+        lifecycleRegistry.markState(Lifecycle.State.CREATED)
+    }
+
     fun start(site: SiteModel) {
         this.site = site
 
         val authorFilterSelection: AuthorFilterSelection = prefs.postListAuthorSelection
 
+        listenForPostListEvents(
+                lifecycle = lifecycle,
+                dispatcher = dispatcher,
+                postStore = postStore,
+                site = site,
+                postActionHandler = postActionHandler,
+                handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
+                handlePostUploadedWithoutError = {
+                    // TODO("Fetch the first page of the lists so their id is added to the ListStore")
+                },
+                triggerPostUploadAction = { _postUploadAction.postValue(it) },
+                invalidateUploadStatus = {
+                    uploadStatusTracker.invalidateUploadStatus(it)
+                    invalidateAllLists()
+                },
+                invalidateFeaturedMedia = {
+                    featuredImageTracker.invalidateFeaturedMedia(it)
+                    invalidateAllLists()
+                }
+        )
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
                 isAuthorFilterVisible = site.isUsingWpComRestApi,
                 authorFilterSelection = authorFilterSelection,
-                authorFilterItems = getAuthorFilterItems(authorFilterSelection)
+                authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
+        lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
 
     override fun onCleared() {
+        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
         scrollToTargetPostJob.cancel() // cancels all coroutines with the default coroutineContext
         super.onCleared()
     }
 
+    // TODO: We shouldn't need to pass the AuthorFilterSelection to fragments and get it back, we have that info already
+    fun getPostListViewModelConnector(
+        authorFilter: AuthorFilterSelection,
+        postListType: PostListType
+    ): PostListViewModelConnector {
+        return PostListViewModelConnector(
+                site = site,
+                postListType = postListType,
+                authorFilter = authorFilter,
+                postActionHandler = postActionHandler,
+                getUploadStatus = uploadStatusTracker::getUploadStatus,
+                doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
+                getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
+        )
+    }
+
     fun newPost() {
-        _postListAction.postValue(PostListAction.NewPost(site))
+        postActionHandler.newPost()
     }
 
     fun updateAuthorFilterSelection(selectionId: Long) {
@@ -96,7 +202,7 @@ class PostListMainViewModel @Inject constructor(
 
         updateViewStateTriggerPagerChange(
                 authorFilterSelection = selection,
-                authorFilterItems = getAuthorFilterItems(selection)
+                authorFilterItems = getAuthorFilterItems(selection, accountStore.account?.avatarUrl)
         )
         prefs.postListAuthorSelection = selection
     }
@@ -124,17 +230,33 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
-    private fun getAuthorFilterItems(selection: AuthorFilterSelection): List<AuthorFilterListItemUIState> {
-        return AuthorFilterSelection.values().map { value ->
-            @ColorRes val backgroundColorRes: Int =
-                    if (selection == value) R.color.grey_lighten_30_translucent_50
-                    else R.color.transparent
+    fun handleEditPostResult(data: Intent?) {
+        postActionHandler.handleEditPostResult(data)
+    }
 
-            when (value) {
-                ME -> AuthorFilterListItemUIState.Me(accountStore.account?.avatarUrl, backgroundColorRes)
-                EVERYONE -> AuthorFilterListItemUIState.Everyone(backgroundColorRes)
-            }
-        }
+    // BasicFragmentDialog Events
+
+    fun onPositiveClickedForBasicDialog(instanceTag: String) {
+        postListDialogHelper.onPositiveClickedForBasicDialog(
+                instanceTag = instanceTag,
+                deletePost = postActionHandler::deletePost,
+                publishPost = postActionHandler::publishPost,
+                updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion
+        )
+    }
+
+    fun onNegativeClickedForBasicDialog(instanceTag: String) {
+        postListDialogHelper.onNegativeClickedForBasicDialog(
+                instanceTag = instanceTag,
+                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
+        )
+    }
+
+    fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
+        postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
+                instanceTag = instanceTag,
+                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
+        )
     }
 
     /**
@@ -161,4 +283,17 @@ class PostListMainViewModel @Inject constructor(
             _updatePostsPager.value = authorFilterSelection
         }
     }
+
+    private fun invalidateAllLists() {
+        val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
+        dispatcher.dispatch(ListActionBuilder.newListRequiresRefreshAction(listTypeIdentifier))
+    }
+
+    private fun checkNetworkConnection(): Boolean =
+            if (networkUtilsWrapper.isNetworkAvailable()) {
+                true
+            } else {
+                _toastMessage.postValue(ToastMessageHolder(string.no_network_message, Duration.SHORT))
+                false
+            }
 }

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -24,14 +25,16 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityId
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.CrashlyticsUtils
 import org.wordpress.android.util.LocaleManager
 import javax.inject.Inject
 
@@ -57,9 +60,6 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var pager: ViewPager
     private lateinit var fab: FloatingActionButton
-
-    private val currentFragment: PostListFragment?
-        get() = postsPagerAdapter.getItemAtPosition(pager.currentItem)
 
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -214,14 +214,43 @@ class PostsListActivity : AppCompatActivity(),
             }
         })
         viewModel.snackBarMessage.observe(this, Observer {
-            it?.let { uiString ->
-                Snackbar.make(
-                        findViewById(R.id.coordinator),
-                        getString(it.messageRes),
-                        Snackbar.LENGTH_LONG
-                ).show()
+            it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
+        })
+        viewModel.dialogAction.observe(this, Observer {
+            it?.show(this, supportFragmentManager, uiHelpers)
+        })
+        viewModel.toastMessage.observe(this, Observer {
+            it?.show(this)
+        })
+        viewModel.postUploadAction.observe(this, Observer {
+            it?.let { uploadAction ->
+                handleUploadAction(
+                        uploadAction,
+                        this@PostsListActivity,
+                        findViewById(R.id.coordinator)
+                )
             }
         })
+    }
+
+    private fun showSnackBar(holder: SnackbarMessageHolder) {
+        findViewById<View>(R.id.coordinator)?.let { parent ->
+            val message = getString(holder.messageRes)
+            val duration = AccessibilityUtils.getSnackbarDuration(this)
+            val snackBar = Snackbar.make(parent, message, duration)
+            if (holder.buttonTitleRes != null) {
+                snackBar.setAction(getString(holder.buttonTitleRes)) {
+                    holder.buttonAction()
+                }
+            }
+            snackBar.addCallback(object : Snackbar.Callback() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    holder.onDismissAction()
+                    super.onDismissed(transientBottomBar, event)
+                }
+            })
+            snackBar.show()
+        }
     }
 
     private fun loadIntentData(intent: Intent) {
@@ -239,8 +268,18 @@ class PostsListActivity : AppCompatActivity(),
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RequestCodes.EDIT_POST) {
-            currentFragment?.handleEditPostResult(resultCode, data) ?: logFragmentNullError()
+        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK) {
+            if (data != null && EditPostActivity.checkToRestart(data)) {
+                ActivityLauncher.editPostOrPageForResult(
+                        data, this, site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+                )
+
+                // a restart will happen so, no need to continue here
+                return
+            }
+
+            viewModel.handleEditPostResult(data)
         }
     }
 
@@ -260,19 +299,14 @@ class PostsListActivity : AppCompatActivity(),
     // BasicDialogFragment Callbacks
 
     override fun onPositiveClicked(instanceTag: String) {
-        currentFragment?.onPositiveClickedForBasicDialog(instanceTag) ?: logFragmentNullError()
+        viewModel.onPositiveClickedForBasicDialog(instanceTag)
     }
 
     override fun onNegativeClicked(instanceTag: String) {
-        currentFragment?.onNegativeClickedForBasicDialog(instanceTag) ?: logFragmentNullError()
+        viewModel.onNegativeClickedForBasicDialog(instanceTag)
     }
 
     override fun onDismissByOutsideTouch(instanceTag: String) {
-        currentFragment?.onDismissByOutsideTouchForBasicDialog(instanceTag) ?: logFragmentNullError()
-    }
-
-    private fun logFragmentNullError() {
-        AppLog.e(AppLog.T.POSTS, "CurrentFragment should never be null.")
-        CrashlyticsUtils.log("${PostsListActivity::class.java}: CurrentFragment should never be null.")
+        viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
     }
 }
