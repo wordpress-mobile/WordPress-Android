@@ -8,7 +8,7 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -62,10 +62,10 @@ class MostPopularRestClientTest {
 
         val responseModel = restClient.fetchMostPopularInsights(site, false)
 
-        Assertions.assertThat(responseModel.response).isNotNull
-        Assertions.assertThat(responseModel.response).isEqualTo(response)
-        Assertions.assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/insights/")
-        Assertions.assertThat(paramsCaptor.lastValue).isEmpty()
+        assertThat(responseModel.response).isNotNull
+        assertThat(responseModel.response).isEqualTo(response)
+        assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/insights/")
+        assertThat(paramsCaptor.lastValue).isEmpty()
     }
 
     @Test
@@ -83,9 +83,9 @@ class MostPopularRestClientTest {
 
         val responseModel = restClient.fetchMostPopularInsights(site, false)
 
-        Assertions.assertThat(responseModel.error).isNotNull
-        Assertions.assertThat(responseModel.error.type).isEqualTo(API_ERROR)
-        Assertions.assertThat(responseModel.error.message).isEqualTo(errorMessage)
+        assertThat(responseModel.error).isNotNull
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
 
     private suspend fun initMostPopularResponse(
