@@ -50,6 +50,7 @@ class InsightsManagementViewModel @Inject constructor(
     private val _isMenuVisible = MutableLiveData<Boolean>()
     val isMenuVisible: LiveData<Boolean> = _isMenuVisible
 
+    private lateinit var insights: List<InsightModel>
     private var isInitialized = false
 
     fun start() {
@@ -63,20 +64,25 @@ class InsightsManagementViewModel @Inject constructor(
     private fun loadInsights() {
         launch {
             val model = statsStore.getInsightsManagementModel(siteProvider.siteModel)
-            _addedInsights.value = model.addedTypes
-                    .filter { it != FOLLOWER_TOTALS && it != ANNUAL_SITE_STATS }
-                    .map { InsightModel(it, ADDED) }
-
-            _removedInsights.value = model.removedTypes
-                    .filter { it != FOLLOWER_TOTALS && it != ANNUAL_SITE_STATS }
-                    .map { InsightModel(it, REMOVED) }
+            insights = model.addedTypes
+                        .filter { it != FOLLOWER_TOTALS && it != ANNUAL_SITE_STATS }
+                        .map { InsightModel(it, ADDED) } +
+                    model.removedTypes
+                        .filter { it != FOLLOWER_TOTALS && it != ANNUAL_SITE_STATS }
+                        .map { InsightModel(it, REMOVED) }
+            displayInsights()
         }
+    }
+
+    private fun displayInsights() {
+        _addedInsights.value = insights.filter { it.type == ADDED }
+        _removedInsights.value = insights.filter { it.type == REMOVED }
     }
 
     fun onSaveInsights() {
         launch {
-            val addedTypes = addedInsights.value?.map { it.insightsTypes } ?: emptyList()
-            val removedTypes = removedInsights.value?.map { it.insightsTypes } ?: emptyList()
+            val addedTypes = insights.filter { it.type == ADDED }.map { it.insightsTypes }
+            val removedTypes = insights.filter { it.type == REMOVED }.map { it.insightsTypes }
             val model = InsightTypesModel(addedTypes, removedTypes + FOLLOWER_TOTALS + ANNUAL_SITE_STATS)
             statsStore.updateTypes(siteProvider.siteModel, model)
 
@@ -87,25 +93,22 @@ class InsightsManagementViewModel @Inject constructor(
         }
     }
 
-    fun onAddedInsightsReordered(items: List<InsightModel>) {
-        _addedInsights.value = items
+    fun onAddedInsightsReordered(addedInsights: List<InsightModel>) {
+        insights = addedInsights + insights.filter { it.type == REMOVED }
         _isMenuVisible.value = true
     }
 
     fun onItemButtonClicked(insight: InsightModel) {
-        launch {
-            if (insight.type == ADDED) {
-                _addedInsights.value = _addedInsights.value?.filter { it != insight }
-                _removedInsights.value = _removedInsights.value?.let { it + insight.copy(type = Type.REMOVED) }
-            } else {
-                _removedInsights.value = _removedInsights.value?.filter { it != insight }
-                _addedInsights.value = _addedInsights.value?.let { it + insight.copy(type = ADDED) }
-            }
+        if (insight.type == ADDED) {
+            insight.type = REMOVED
+        } else {
+            insight.type = ADDED
         }
+        displayInsights()
         _isMenuVisible.value = true
     }
 
-    data class InsightModel(val insightsTypes: InsightsTypes, val type: Type) {
+    data class InsightModel(val insightsTypes: InsightsTypes, var type: Type) {
         @StringRes val name: Int = when (insightsTypes) {
             LATEST_POST_SUMMARY -> R.string.stats_insights_latest_post_summary
             MOST_POPULAR_DAY_AND_HOUR -> R.string.stats_insights_popular
