@@ -85,7 +85,6 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:contentDescription="@string/fab_create_desc"
         android:src="@drawable/ic_create_white_24dp"
-        app:borderWidth="0dp"
-        app:rippleColor="@color/fab_pressed"/>
+        app:borderWidth="0dp"/>
 
 </android.support.design.widget.CoordinatorLayout>
