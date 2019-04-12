@@ -8,7 +8,6 @@ import android.arch.lifecycle.Observer
 import android.arch.paging.PagedList
 import com.nhaarman.mockitokotlin2.firstValue
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,9 +32,6 @@ import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChan
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
-
-// TODO: It turns out Mockito internally uses `times(1)` when that parameter is missing. Remove this in a subsequent PR
-private fun onlyOnce() = times(1)
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -64,8 +60,8 @@ class PagedListWrapperTest {
 
         val pagedListWrapper = createPagedListWrapper(mockLifecycle)
 
-        verify(mockDispatcher, onlyOnce()).register(pagedListWrapper)
-        verify(mockLifecycle, onlyOnce()).addObserver(pagedListWrapper)
+        verify(mockDispatcher).register(pagedListWrapper)
+        verify(mockLifecycle).addObserver(pagedListWrapper)
     }
 
     @Test
@@ -78,8 +74,8 @@ class PagedListWrapperTest {
         assertThat(lifecycle.observerCount).isEqualTo(1)
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
 
-        verify(mockDispatcher, onlyOnce()).register(pagedListWrapper)
-        verify(mockDispatcher, onlyOnce()).unregister(pagedListWrapper)
+        verify(mockDispatcher).register(pagedListWrapper)
+        verify(mockDispatcher).unregister(pagedListWrapper)
         assertThat(lifecycle.observerCount).isEqualTo(0)
     }
 
@@ -89,7 +85,7 @@ class PagedListWrapperTest {
 
         pagedListWrapper.fetchFirstPage()
 
-        verify(mockRefresh, onlyOnce()).invoke()
+        verify(mockRefresh).invoke()
     }
 
     @Test
@@ -98,7 +94,7 @@ class PagedListWrapperTest {
 
         pagedListWrapper.invalidateData()
 
-        verify(mockInvalidate, onlyOnce()).invoke()
+        verify(mockInvalidate).invoke()
     }
 
     @Test
@@ -129,13 +125,13 @@ class PagedListWrapperTest {
     @Test
     fun `onListChanged invokes invalidate property`() {
         triggerOnListChanged()
-        verify(mockInvalidate, onlyOnce()).invoke()
+        verify(mockInvalidate).invoke()
     }
 
     @Test
     fun `onListItemsChanged invokes invalidate property`() {
         triggerOnListItemsChanged()
-        verify(mockInvalidate, onlyOnce()).invoke()
+        verify(mockInvalidate).invoke()
     }
 
     @Test
@@ -163,7 +159,7 @@ class PagedListWrapperTest {
 
     private inline fun <reified T> captureAndVerifySingleValue(observer: Observer<T>, result: T) {
         val captor = ArgumentCaptor.forClass(T::class.java)
-        verify(observer, onlyOnce()).onChanged(captor.capture())
+        verify(observer).onChanged(captor.capture())
         assertThat(captor.firstValue).isEqualTo(result)
     }
 
