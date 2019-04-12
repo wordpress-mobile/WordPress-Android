@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
-import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel.InsightsTypes.LINK_BUTTON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 
 abstract class BaseStatsViewHolder(
