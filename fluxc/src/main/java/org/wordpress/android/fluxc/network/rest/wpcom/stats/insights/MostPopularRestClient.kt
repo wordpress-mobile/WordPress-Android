@@ -52,9 +52,9 @@ constructor(
         @SerializedName("highest_hour") val highestHour: Int?,
         @SerializedName("highest_day_percent") val highestDayPercent: Double?,
         @SerializedName("highest_hour_percent") val highestHourPercent: Double?,
-        @SerializedName("years") val yearInsights: List<YearInsights>
+        @SerializedName("years") val yearInsightResponses: List<YearInsightsResponse>?
     ) {
-        data class YearInsights(
+        data class YearInsightsResponse(
             @SerializedName("avg_comments") val avgComments: Double?,
             @SerializedName("avg_images") val avgImages: Double?,
             @SerializedName("avg_likes") val avgLikes: Double?,

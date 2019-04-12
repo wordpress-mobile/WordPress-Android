@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostI
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse.PostResponse.Discussion
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse.YearInsights
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse.YearInsightsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse.Streak
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse.Streaks
@@ -43,7 +43,7 @@ const val HIGHEST_DAY_OF_WEEK = 10
 const val HIGHEST_HOUR = 15
 const val HIGHEST_DAY_PERCENT = 2.0
 const val HIGHEST_HOUR_PERCENT = 5.0
-val YEAR_INSIGHT = YearInsights(5.0, 2.0, 1.0, 50.5, 100, 200, 100, 150, 15000, "2019")
+val YEAR_INSIGHT = YearInsightsResponse(5.0, 2.0, 1.0, 50.5, 100, 200, 100, 150, 15000, "2019")
 val MOST_POPULAR_RESPONSE = MostPopularResponse(
         HIGHEST_DAY_OF_WEEK,
         HIGHEST_HOUR,
