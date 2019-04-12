@@ -14,9 +14,11 @@ import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.Toolbar
+import android.view.HapticFeedbackConstants
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -145,6 +147,14 @@ class PostsListActivity : AppCompatActivity(),
         pager.addOnPageChangeListener(onPageChangeListener)
         fab = findViewById(R.id.fab_button)
         fab.setOnClickListener { viewModel.newPost() }
+        fab.setOnLongClickListener {
+            if (fab.isHapticFeedbackEnabled) {
+                fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
+
+            Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
+            return@setOnLongClickListener true
+        }
     }
 
     private fun initViewModel() {
