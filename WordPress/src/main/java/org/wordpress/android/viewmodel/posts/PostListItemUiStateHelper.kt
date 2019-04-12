@@ -38,9 +38,9 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS = 3
-const val ERROR_COLOR = R.color.alert_red
-const val PROGRESS_INFO_COLOR = R.color.wp_grey_darken_20
-const val STATE_INFO_COLOR = R.color.alert_yellow_dark
+const val ERROR_COLOR = R.color.error_500
+const val PROGRESS_INFO_COLOR = R.color.neutral_500
+const val STATE_INFO_COLOR = R.color.warning_700
 
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
