@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/insightsManagementScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/insightsManagementContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:clipChildren="false"
         android:animateLayoutChanges="true">
 
         <TextView
+            android:id="@+id/insightsManagementSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/stats_insights_management_margin"
+            android:gravity="center_horizontal"
+            android:text="@string/stats_insights_management_title"
             android:textColor="@color/grey_darken_20"
             android:textSize="@dimen/text_sz_large"
-            android:gravity="center_horizontal"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/stats_insights_management_margin"
-            android:layout_marginBottom="@dimen/stats_insights_management_margin"
-            android:text="@string/stats_insights_management_title"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/addedInsights"
@@ -33,6 +36,10 @@
             android:nestedScrollingEnabled="false"
             android:translationZ="1dp"
             android:scrollbars="none"
+            android:layout_marginTop="@dimen/stats_insights_management_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/insightsManagementSubtitle"
             tools:listitem="@layout/insights_management_list_item"/>
 
         <TextView
@@ -42,6 +49,9 @@
             android:textColor="@color/grey_darken_20"
             android:textSize="@dimen/text_sz_medium"
             android:layout_margin="@dimen/margin_extra_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addedInsights"
             android:text="@string/stats_insights_management_drag_and_drop_hint"/>
 
         <TextView
@@ -53,8 +63,10 @@
             android:textStyle="bold"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:paddingTop="@dimen/margin_large"
-            android:paddingBottom="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addedInsightsInfo"
             android:text="@string/stats_insights_add_insights_header"/>
 
         <android.support.v7.widget.RecyclerView
@@ -62,9 +74,13 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:nestedScrollingEnabled="false"
+            android:layout_marginTop="@dimen/margin_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addInsightsHeader"
             tools:listitem="@layout/insights_management_list_item"
             />
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </ScrollView>
