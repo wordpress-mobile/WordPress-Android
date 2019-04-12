@@ -19,13 +19,9 @@ import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.list.AuthorFilter
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
-import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
-import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
@@ -45,7 +41,6 @@ import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import org.wordpress.android.viewmodel.posts.PostListItemDataSource
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper
 import org.wordpress.android.viewmodel.posts.PostListViewModelConnector
@@ -61,7 +56,6 @@ class PostListMainViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val accountStore: AccountStore,
-    private val listStore: ListStore,
     uploadStore: UploadStore,
     mediaStore: MediaStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -148,20 +142,14 @@ class PostListMainViewModel @Inject constructor(
         SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
     }
 
-    private val postListItemDataSource: PostListItemDataSource by lazy {
-        PostListItemDataSource(
-            dispatcher = dispatcher,
-            postStore = postStore,
-            transform = this::transformPostModelToPostListItemUiState
-        )
-    }
-
     init {
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
     fun start(site: SiteModel) {
         this.site = site
+
+        val authorFilterSelection: AuthorFilterSelection = prefs.postListAuthorSelection
 
         listenForPostListEvents(
                 lifecycle = lifecycle,
@@ -183,8 +171,6 @@ class PostListMainViewModel @Inject constructor(
                     invalidateAllLists()
                 }
         )
-
-        val authorFilterSelection: AuthorFilterSelection = prefs.postListAuthorSelection
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
@@ -206,26 +192,12 @@ class PostListMainViewModel @Inject constructor(
         authorFilter: AuthorFilterSelection,
         postListType: PostListType
     ): PostListViewModelConnector {
-        val listDescriptor = if (site.isUsingWpComRestApi) {
-            val author: AuthorFilter = when (authorFilter) {
-                ME -> AuthorFilter.SpecificAuthor(accountStore.account.userId)
-                EVERYONE -> AuthorFilter.Everyone
-            }
-
-            PostListDescriptorForRestSite(
-                    site = site,
-                    statusList = postListType.postStatuses,
-                    author = author
-            )
-        } else {
-            PostListDescriptorForXmlRpcSite(site = site, statusList = postListType.postStatuses)
-        }
         return PostListViewModelConnector(
+                site = site,
                 postListType = postListType,
+                authorFilter = authorFilter,
                 newPost = postActionHandler::newPost,
-                createPagedListWrapper = {
-                    listStore.getList(listDescriptor, postListItemDataSource, lifecycle)
-                }
+                transformPostModelToPostListItemUiState = this::transformPostModelToPostListItemUiState
         )
     }
 

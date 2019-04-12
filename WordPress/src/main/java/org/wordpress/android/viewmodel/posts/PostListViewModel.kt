@@ -8,9 +8,24 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.list.AuthorFilter
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
+import org.wordpress.android.fluxc.model.list.PostListDescriptor
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.ListStore
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
+import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState.RefreshError
@@ -21,10 +36,15 @@ import javax.inject.Inject
 typealias PagedPostList = PagedList<PostListItemType>
 
 class PostListViewModel @Inject constructor(
+    private val dispatcher: Dispatcher,
+    private val listStore: ListStore,
+    private val postStore: PostStore,
+    private val accountStore: AccountStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     connectionStatus: LiveData<ConnectionStatus>
 ) : ViewModel(), LifecycleOwner {
     private var isStarted: Boolean = false
+    private var listDescriptor: PostListDescriptor? = null
     private lateinit var connector: PostListViewModelConnector
 
     private var scrollToLocalPostId: LocalPostId? = null
@@ -33,7 +53,15 @@ class PostListViewModel @Inject constructor(
     val scrollToPosition: LiveData<Int> = _scrollToPosition
 
     private val pagedListWrapper: PagedListWrapper<PostListItemType> by lazy {
-        connector.createPagedListWrapper(lifecycle)
+        val listDescriptor = requireNotNull(listDescriptor) {
+            "ListDescriptor needs to be initialized before this is observed!"
+        }
+        val dataSource = PostListItemDataSource(
+                dispatcher = dispatcher,
+                postStore = postStore,
+                transform = connector.transformPostModelToPostListItemUiState
+        )
+        listStore.getList(listDescriptor, dataSource, lifecycle)
     }
 
     val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
@@ -83,6 +111,21 @@ class PostListViewModel @Inject constructor(
             return
         }
         connector = postListViewModelConnector
+
+        this.listDescriptor = if (connector.site.isUsingWpComRestApi) {
+            val author: AuthorFilter = when (postListViewModelConnector.authorFilter) {
+                ME -> AuthorFilter.SpecificAuthor(accountStore.account.userId)
+                EVERYONE -> AuthorFilter.Everyone
+            }
+
+            PostListDescriptorForRestSite(
+                    site = connector.site,
+                    statusList = connector.postListType.postStatuses,
+                    author = author
+            )
+        } else {
+            PostListDescriptorForXmlRpcSite(site = connector.site, statusList = connector.postListType.postStatuses)
+        }
 
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
