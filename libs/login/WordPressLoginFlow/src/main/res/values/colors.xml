@@ -9,7 +9,7 @@
         colorControlHighlight   control highlights (ripples, list selectors)
     -->
     <color name="color_primary">@color/blue_wordpress</color>
-    <color name="color_primary_dark">@color/status_bar_tint</color>
+    <color name="color_primary_dark">@color/status_bar</color>
     <color name="color_accent">@color/orange_jazzy</color>
     <color name="color_control_normal">@color/white</color>
     <color name="color_control_activated">@color/blue_light</color>
@@ -23,7 +23,7 @@
     <color name="white_self_hosted_back">#F1F1F1</color>
     <!-- note that black should NOT be used for text - use grey_dark instead -->
     <color name="black">#000000</color>
-    <color name="default_background">@color/grey_lighten_30</color>
+    <color name="background_default">@color/grey_lighten_30</color>
 
     <!-- ==================================== -->
     <!-- WordPress.com Colors                 -->
@@ -91,8 +91,8 @@
     <!-- App specific colors -->
     <!-- We could use blue_dark for the status bar color, but to adhere to the material design spec very closely,
       we're using a shade of blue_wordpress -->
-    <color name="status_bar_tint">#006b98</color>
-    <color name="action_mode_status_bar_tint">#ff517188</color>
+    <color name="status_bar">#006b98</color>
+    <color name="status_bar_action_mode">#ff517188</color>
 
     <!-- Login -->
     <color name="login_theme_accent_color">@color/blue_medium</color>

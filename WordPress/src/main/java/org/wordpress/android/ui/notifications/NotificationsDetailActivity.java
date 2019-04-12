@@ -200,6 +200,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                     if (currentNote != null) {
                         setActionBarTitleForNote(currentNote);
                         markNoteAsRead(currentNote);
+                        NotificationsActions.updateSeenTimestamp(currentNote);
                     }
                 }
 
@@ -386,7 +387,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         if (rangeType == FormattableRangeType.FOLLOW) {
-            ActivityLauncher.viewAllTabbedInsightsStats(this, StatsViewType.FOLLOWERS, 0);
+            ActivityLauncher.viewAllTabbedInsightsStats(this, StatsViewType.FOLLOWERS, 0, site);
         } else {
             ActivityLauncher.viewBlogStats(this, site);
         }

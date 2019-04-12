@@ -18,18 +18,18 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
-        android:background="@color/tab_background"
+        android:background="@color/primary"
         android:elevation="@dimen/tabs_elevation"
         android:layout_below="@+id/toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        app:tabIndicatorColor="@color/tab_indicator"
+        app:tabIndicatorColor="@android:color/white"
         app:tabMode="scrollable" >
     </android.support.design.widget.TabLayout>
 
     <RelativeLayout
         android:id="@+id/quota_bar"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             android:minHeight="@dimen/quota_bar_text_minimum_height"
             android:textAllCaps="true"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-            android:textColor="@color/grey_text_min"
+            android:textColor="@color/neutral"
             tools:text="19.5% of 3 GB used" >
         </TextView>
 
@@ -54,7 +54,7 @@
 
     <View
         android:id="@+id/quota_divider"
-        android:background="@color/grey_lighten_30"
+        android:background="@color/neutral_0"
         android:layout_above="@+id/quota_bar"
         android:layout_alignWithParentIfMissing="true"
         android:layout_height="@dimen/list_divider_height"

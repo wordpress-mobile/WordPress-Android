@@ -57,7 +57,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -73,7 +73,7 @@
                         android:layout_centerVertical="true"
                         android:importantForAccessibility="no"
                         android:scaleType="centerInside"
-                        android:src="@drawable/img_type_blog_80dp"/>
+                        android:src="@drawable/img_illustration_site_blog_cup_80dp"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -111,7 +111,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -127,7 +127,7 @@
                         android:layout_centerVertical="true"
                         android:importantForAccessibility="no"
                         android:scaleType="centerInside"
-                        android:src="@drawable/img_type_website_80dp"/>
+                        android:src="@drawable/img_illustration_site_website_cards_80dp"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -165,7 +165,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -181,7 +181,7 @@
                         android:layout_centerVertical="true"
                         android:importantForAccessibility="no"
                         android:scaleType="centerInside"
-                        android:src="@drawable/img_type_portfolio_80dp"/>
+                        android:src="@drawable/img_illustration_site_media_camera_pencils_80dp"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"

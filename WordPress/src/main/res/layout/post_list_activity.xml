@@ -40,10 +40,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@color/white"
+                app:tabIndicatorColor="@android:color/white"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/white"
+                app:tabSelectedTextColor="@android:color/white"
+                app:tabTextColor="@android:color/white"
                 app:theme="@style/Base.Widget.Design.TabLayout"
                 tools:paddingEnd="16dp"
                 tools:paddingStart="0dp"/>
@@ -85,7 +85,6 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:contentDescription="@string/fab_create_desc"
         android:src="@drawable/ic_create_white_24dp"
-        app:borderWidth="0dp"
-        app:rippleColor="@color/fab_pressed"/>
+        app:borderWidth="0dp"/>
 
 </android.support.design.widget.CoordinatorLayout>
