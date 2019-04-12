@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
 import javax.inject.Singleton
@@ -25,17 +24,15 @@ constructor(
     appContext: Context?,
     requestQueue: RequestQueue,
     accessToken: AccessToken,
-    userAgent: UserAgent,
-    val statsUtils: StatsUtils
+    userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchMostPopularInsights(site: SiteModel, forced: Boolean): FetchStatsPayload<MostPopularResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.insights.urlV1_1
 
-        val params = mapOf<String, String>()
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
-                params,
+                mapOf(),
                 MostPopularResponse::class.java,
                 enableCaching = true,
                 forced = forced
@@ -54,6 +51,20 @@ constructor(
         @SerializedName("highest_day_of_week") val highestDayOfWeek: Int?,
         @SerializedName("highest_hour") val highestHour: Int?,
         @SerializedName("highest_day_percent") val highestDayPercent: Double?,
-        @SerializedName("highest_hour_percent") val highestHourPercent: Double?
-    )
+        @SerializedName("highest_hour_percent") val highestHourPercent: Double?,
+        @SerializedName("years") val yearInsights: List<YearInsights>
+    ) {
+        data class YearInsights(
+            @SerializedName("avg_comments") val avgComments: Double?,
+            @SerializedName("avg_images") val avgImages: Double?,
+            @SerializedName("avg_likes") val avgLikes: Double?,
+            @SerializedName("avg_words") val avgWords: Double?,
+            @SerializedName("total_comments") val totalComments: Int,
+            @SerializedName("total_images") val totalImages: Int,
+            @SerializedName("total_likes") val totalLikes: Int,
+            @SerializedName("total_posts") val totalPosts: Int,
+            @SerializedName("total_words") val totalWords: Int,
+            @SerializedName("year") val year: String
+        )
+    }
 }
