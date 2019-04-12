@@ -330,8 +330,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
     private fun assertHeader(item: BlockListItem) {
         assertThat(item.type).isEqualTo(HEADER)
-        assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_posts_and_pages_title_label)
-        assertThat(item.rightLabel).isEqualTo(R.string.stats_posts_and_pages_views_label)
+        assertThat((item as Header).startLabel).isEqualTo(R.string.stats_posts_and_pages_title_label)
+        assertThat(item.endLabel).isEqualTo(R.string.stats_posts_and_pages_views_label)
     }
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
