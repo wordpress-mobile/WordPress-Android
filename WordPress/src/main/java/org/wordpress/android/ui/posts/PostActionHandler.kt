@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.DELETING_POST
+import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.MOVING_POST_TO_DRAFT
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.RESTORING_POST
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
@@ -120,11 +121,21 @@ class PostActionHandler(
         post.status = DRAFT.toString()
         dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
 
+        val localPostId = LocalId(post.id)
+        criticalPostActionTracker.add(localPostId, MOVING_POST_TO_DRAFT)
+        val removeFromCriticalPostActionTracker = {
+            criticalPostActionTracker.remove(localPostId, MOVING_POST_TO_DRAFT)
+        }
+
         val snackBarHolder = SnackbarMessageHolder(
                 messageRes = R.string.post_moving_to_draft,
                 buttonTitleRes = R.string.undo,
                 buttonAction = {
+                    removeFromCriticalPostActionTracker.invoke()
                     trashPost(post)
+                },
+                onDismissAction = {
+                    removeFromCriticalPostActionTracker.invoke()
                 }
         )
         showSnackbar.invoke(snackBarHolder)
