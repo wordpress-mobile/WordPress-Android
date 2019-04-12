@@ -220,7 +220,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
             // entries
-            holder.setEntryText(currentRowData.getName(), getResources().getColor(R.color.stats_text_color));
+            holder.setEntryText(currentRowData.getName(), getResources().getColor(R.color.text));
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));

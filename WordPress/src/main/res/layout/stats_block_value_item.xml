@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:textColor="@color/alert_green"
+        android:textColor="@color/success_500"
         android:textSize="16sp"
         android:visibility="gone"/>
 
@@ -46,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:textColor="@color/alert_red"
+        android:textColor="@color/error_500"
         android:textSize="16sp"
         android:visibility="gone"/>
 

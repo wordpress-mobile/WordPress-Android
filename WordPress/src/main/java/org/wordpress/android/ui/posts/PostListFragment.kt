@@ -10,11 +10,13 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.Toast
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -40,6 +42,7 @@ import org.wordpress.android.viewmodel.posts.PostListEmptyUiState
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 private const val EXTRA_POST_LIST_AUTHOR_FILTER = "post_list_author_filter"
@@ -150,7 +153,7 @@ class PostListFragment : Fragment() {
         nonNullActivity.findViewById<View>(R.id.coordinator)?.let { parent ->
             val message = getString(holder.messageRes)
             val duration = AccessibilityUtils.getSnackbarDuration(nonNullActivity)
-            val snackBar = Snackbar.make(parent, message, duration)
+            val snackBar = WPSnackbar.make(parent, message, duration)
             if (holder.buttonTitleRes != null) {
                 snackBar.setAction(getString(holder.buttonTitleRes)) {
                     holder.buttonAction()

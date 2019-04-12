@@ -35,7 +35,7 @@
                 android:layout_marginEnd="@dimen/content_margin"
                 android:layout_marginStart="@dimen/content_margin"
                 android:layout_marginTop="@dimen/margin_medium"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -69,7 +69,7 @@
                             android:contentDescription="@string/my_site_icon_content_description"
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"
-                            tools:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp" />
+                            tools:src="@drawable/bg_rectangle_neutral_100_globe_32dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -86,7 +86,7 @@
                                 android:fontFamily="sans-serif-light"
                                 android:gravity="center_vertical"
                                 android:maxLines="1"
-                                android:textColor="@color/grey_dark"
+                                android:textColor="@color/neutral_700"
                                 android:textSize="@dimen/text_sz_large"
                                 android:textStyle="bold"
                                 tools:text="Example" />
@@ -98,7 +98,7 @@
                                 android:ellipsize="end"
                                 android:gravity="center_vertical"
                                 android:maxLines="1"
-                                android:textColor="@color/grey_text_min"
+                                android:textColor="@color/neutral"
                                 android:textSize="@dimen/text_sz_medium"
                                 tools:text="example.wordpress.com" />
                         </LinearLayout>
@@ -107,7 +107,7 @@
 
                     <LinearLayout
                         android:id="@+id/switch_site"
-                        android:background="@color/grey_light"
+                        android:background="@color/neutral_0"
                         android:foreground="?attr/selectableItemBackgroundBorderless"
                         android:layout_below="@id/top_container"
                         android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
                             android:layout_width="wrap_content"
                             android:text="@string/my_site_btn_switch_site"
                             android:textAllCaps="true"
-                            android:textColor="@color/grey_dark"
+                            android:textColor="@color/neutral_700"
                             android:textSize="@dimen/text_sz_small"
                             style="@style/MySiteListRowTextView" >
                         </org.wordpress.android.widgets.WPTextView>
@@ -149,7 +149,7 @@
                 android:layout_marginEnd="@dimen/content_margin"
                 android:layout_marginStart="@dimen/content_margin"
                 android:layout_width="match_parent"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -177,7 +177,7 @@
                             android:layout_width="wrap_content"
                             android:maxLines="1"
                             android:text="@string/quick_start_sites"
-                            android:textColor="@color/grey_dark"
+                            android:textColor="@color/neutral_700"
                             android:textSize="@dimen/text_sz_large"
                             android:textStyle="bold" >
                         </org.wordpress.android.widgets.WPTextView>
@@ -193,7 +193,7 @@
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:src="@drawable/ic_more_vert_white_24dp"
-                            android:tint="@color/grey_darken_20" >
+                            android:tint="@color/neutral_500" >
                         </ImageView>
 
                     </RelativeLayout>
@@ -205,7 +205,7 @@
 
                         <ImageView
                             android:id="@+id/quick_start_customize_icon"
-                            android:background="@drawable/bg_oval_blue_medium_customize_white_40dp_selector"
+                            android:background="@drawable/bg_oval_primary_400_customize_white_40dp_selector"
                             android:importantForAccessibility="no"
                             style="@style/QuickStartTypeIcon" >
                         </ImageView>
@@ -228,7 +228,7 @@
                     </RelativeLayout>
 
                     <View
-                        android:background="@color/grey_lighten_30"
+                        android:background="@color/neutral_0"
                         android:layout_below="@+id/quick_start_customize"
                         android:layout_height="@dimen/list_divider_height"
                         android:layout_marginStart="@dimen/quick_start_type_divider_margin_start"
@@ -592,7 +592,7 @@
         android:layout_width="match_parent"
         android:visibility="gone"
         app:aevButton="@string/my_site_add_new_site"
-        app:aevImage="@drawable/img_site_wordpress_camera_pencils_226dp"
+        app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
         app:aevSubtitle="@string/my_site_create_new_site"
         app:aevTitle="@string/my_site_create_new_site_title" >
     </org.wordpress.android.ui.ActionableEmptyView>

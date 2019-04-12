@@ -35,8 +35,8 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         super(context, null, false);
         String clearAllText = context.getString(R.string.label_clear_search_history);
         mClearAllRow = new Object[]{CLEAR_ALL_ROW_ID, clearAllText};
-        mClearAllBgColor = ContextCompat.getColor(context, R.color.grey_lighten_30);
-        mSuggestionBgColor = ContextCompat.getColor(context, R.color.filtered_list_suggestions);
+        mClearAllBgColor = ContextCompat.getColor(context, R.color.neutral_0);
+        mSuggestionBgColor = ContextCompat.getColor(context, R.color.neutral_0);
     }
 
     public void setFilter(String filter) {

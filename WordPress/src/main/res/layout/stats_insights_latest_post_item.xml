@@ -18,7 +18,7 @@
             android:id="@+id/stats_post_trend_label"
             android:background="?android:selectableItemBackground"
             android:textAppearance="?android:attr/textAppearance"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

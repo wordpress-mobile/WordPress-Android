@@ -660,9 +660,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             };
             imgAvatar.setOnClickListener(authorListener);
             txtName.setOnClickListener(authorListener);
-            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.reader_hyperlink));
+            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.link_reader));
         } else {
-            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey_darken_30));
+            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.neutral_600));
         }
 
         showPostTitle(mSite, mComment.getRemotePostId());
@@ -700,7 +700,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // display "on [Post Title]..."
         if (isHyperlink) {
             String html = getString(R.string.on)
-                          + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color.reader_hyperlink)
+                          + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color.link_reader)
                           + ">"
                           + postTitle.trim()
                           + "</font>";
@@ -905,20 +905,20 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         switch (commentStatus) {
             case APPROVED:
                 statusTextResId = R.string.comment_status_approved;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.notification_status_unapproved_dark);
+                statusColor = ContextCompat.getColor(getActivity(), R.color.warning_600);
                 break;
             case UNAPPROVED:
                 statusTextResId = R.string.comment_status_unapproved;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.notification_status_unapproved_dark);
+                statusColor = ContextCompat.getColor(getActivity(), R.color.warning_600);
                 break;
             case SPAM:
                 statusTextResId = R.string.comment_status_spam;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.comment_status_spam);
+                statusColor = ContextCompat.getColor(getActivity(), R.color.error);
                 break;
             case TRASH:
             default:
                 statusTextResId = R.string.comment_status_trash;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.comment_status_spam);
+                statusColor = ContextCompat.getColor(getActivity(), R.color.error);
                 break;
         }
 
@@ -972,7 +972,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnTrashComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.TRASH) {
                 ColorUtils.INSTANCE.setImageResourceWithTint(mBtnModerateIcon, R.drawable.ic_undo_white_24dp,
-                        R.color.grey_text_min);
+                        R.color.neutral);
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
@@ -1012,10 +1012,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int color;
 
         if (status == CommentStatus.APPROVED) {
-            color = R.color.orange_jazzy;
+            color = R.color.accent;
             mBtnModerateTextView.setText(R.string.comment_status_approved);
         } else {
-            color = R.color.grey_text_min;
+            color = R.color.neutral;
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
         }
 
@@ -1142,12 +1142,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int drawable;
 
         if (isLiked) {
-            color = R.color.orange_jazzy;
+            color = R.color.accent;
             drawable = R.drawable.ic_star_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setActivated(true);
         } else {
-            color = R.color.grey_text_min;
+            color = R.color.neutral;
             drawable = R.drawable.ic_star_outline_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeComment.setActivated(false);

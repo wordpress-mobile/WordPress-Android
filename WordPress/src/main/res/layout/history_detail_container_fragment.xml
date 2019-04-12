@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/white">
+        android:background="@android:color/white">
 
         <ImageView
             android:id="@+id/previous"
@@ -27,7 +27,7 @@
             android:minWidth="@dimen/min_touch_target_sz"
             android:padding="@dimen/margin_extra_large"
             android:src="@drawable/ic_chevron_left_white_24dp"
-            android:tint="@color/grey_dark_grey_lighten_10_selector" >
+            android:tint="@color/neutral_700_neutral_200_selector" >
         </ImageView>
 
         <LinearLayout
@@ -48,9 +48,9 @@
                 android:layout_marginEnd="@dimen/margin_small_medium"
                 android:layout_marginStart="@dimen/margin_small_medium"
                 android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_blue_wordpress_plus_white_16dp"
+                android:drawableStart="@drawable/bg_oval_primary_500_plus_white_16dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 android:visibility="gone"
                 tools:text="3"
                 tools:visibility="visible">
@@ -63,9 +63,9 @@
                 android:layout_marginEnd="@dimen/margin_small_medium"
                 android:layout_marginStart="@dimen/margin_small_medium"
                 android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_alert_red_minus_white_16dp"
+                android:drawableStart="@drawable/bg_oval_error_500_minus_white_16dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 android:visibility="gone"
                 tools:text="1"
                 tools:visibility="visible">
@@ -86,7 +86,7 @@
             android:minWidth="@dimen/min_touch_target_sz"
             android:padding="@dimen/margin_extra_large"
             android:src="@drawable/ic_chevron_right_white_24dp"
-            android:tint="@color/grey_dark_grey_lighten_10_selector" >
+            android:tint="@color/neutral_700_neutral_200_selector" >
         </ImageView>
 
     </RelativeLayout>
@@ -104,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_bar"
         android:layout_alignParentTop="true"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:fillViewport="true"
         android:visibility="gone">
 
@@ -122,7 +122,7 @@
                 android:freezesText="true"
                 android:lineSpacingExtra="@dimen/spacing_extra_title"
                 android:padding="@dimen/margin_extra_large"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/aztec_title_size"
                 android:textStyle="bold"/>
 
@@ -165,7 +165,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
         android:layout_above="@+id/bottom_bar"
-        android:background="@color/grey_lighten_30">
+        android:background="@color/neutral_0">
     </View>
 
 </RelativeLayout>

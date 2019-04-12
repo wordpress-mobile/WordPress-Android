@@ -24,7 +24,7 @@
             android:layout_height="@dimen/magic_link_sent_illustration_sz"
             android:layout_width="@dimen/magic_link_sent_illustration_sz"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/img_email_alert_120dp" >
+            app:srcCompat="@drawable/img_illustration_email_alert_120dp" >
         </ImageView>
 
         <TextView

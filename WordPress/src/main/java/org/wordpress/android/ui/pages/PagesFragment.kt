@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v7.widget.SearchView
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -23,6 +24,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import de.greenrobot.event.EventBus
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.greenrobot.eventbus.Subscribe
@@ -56,6 +58,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.WPDialogSnackbar
+import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
@@ -150,6 +153,15 @@ class PagesFragment : Fragment() {
 
         newPageButton.setOnClickListener {
             viewModel.onNewPageButtonTapped()
+        }
+
+        newPageButton.setOnLongClickListener {
+            if (newPageButton.isHapticFeedbackEnabled) {
+                newPageButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
+
+            Toast.makeText(newPageButton.context, R.string.pages_empty_list_button, Toast.LENGTH_SHORT).show()
+            return@setOnLongClickListener true
         }
 
         pagesPager.addOnPageChangeListener(object : OnPageChangeListener {
@@ -256,9 +268,9 @@ class PagesFragment : Fragment() {
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
                 if (holder.buttonTitleRes == null) {
-                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                    WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
                 } else {
-                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                    val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
                     snackbar.setAction(getString(holder.buttonTitleRes)) { _ -> holder.buttonAction() }
                     snackbar.show()
                 }

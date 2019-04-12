@@ -243,7 +243,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             int children = getChildrenCount(groupPosition);
 
             if (children > 0) {
-                holder.setEntryText(groupName.toString(), getResources().getColor(R.color.stats_link_text_color));
+                holder.setEntryText(groupName.toString(), getResources().getColor(R.color.link_stats));
             } else {
                 holder.setEntryTextOrLink(tags.get(0).getLink(), groupName.toString());
             }

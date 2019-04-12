@@ -41,15 +41,22 @@ public abstract class WPIdler implements IdlingResource {
         Integer tries = 0;
 
         while (!checkCondition() && ++tries < mNumberOfTries) {
-            try {
-                Thread.sleep(mRetryInterval);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            idle();
         }
 
         if (tries == mNumberOfTries && failIfUnsatisfied) {
             fail("Unable to continue – expectation wasn't satisfied quickly enough");
+        }
+
+        // Idle one more cycle to allow the UI to settle down
+        idle();
+    }
+
+    private void idle() {
+        try {
+            Thread.sleep(mRetryInterval);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
