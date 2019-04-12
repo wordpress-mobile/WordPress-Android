@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 64;
+        return 66;
     }
 
     @Override
@@ -495,6 +495,14 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 63:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 64:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 65:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL(
                         "CREATE TABLE InsightTypes (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "REMOTE_SITE_ID INTEGER,INSIGHT_TYPE TEXT NOT NULL,POSITION INTEGER,STATUS TEXT NOT NULL)");
@@ -718,6 +726,24 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "CROSS_SELL_IDS TEXT NOT NULL,"
                                + "UPSELL_IDS TEXT NOT NULL,"
                                + "VARIATIONS TEXT NOT NULL)");
+                    break;
+                case 63:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCProductSettingsModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "WEIGHT_UNIT TEXT NOT NULL,"
+                               + "DIMENSION_UNIT TEXT NOT NULL)");
+                    break;
+                case 64:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCOrderShipmentTrackingModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "LOCAL_ORDER_ID INTEGER,"
+                               + "REMOTE_TRACKING_ID TEXT NOT NULL,"
+                               + "TRACKING_NUMBER TEXT NOT NULL,"
+                               + "TRACKING_PROVIDER TEXT NOT NULL,"
+                               + "TRACKING_LINK TEXT NOT NULL,"
+                               + "DATE_SHIPPED TEXT NOT NULL)");
                     break;
             }
         }
