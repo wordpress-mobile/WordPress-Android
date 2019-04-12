@@ -36,6 +36,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
@@ -237,7 +238,7 @@ class PostsListActivity : AppCompatActivity(),
         findViewById<View>(R.id.coordinator)?.let { parent ->
             val message = getString(holder.messageRes)
             val duration = AccessibilityUtils.getSnackbarDuration(this)
-            val snackBar = Snackbar.make(parent, message, duration)
+            val snackBar = WPSnackbar.make(parent, message, duration)
             if (holder.buttonTitleRes != null) {
                 snackBar.setAction(getString(holder.buttonTitleRes)) {
                     holder.buttonAction()
