@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
+import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel.InsightsTypes.LINK_BUTTON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 
 abstract class BaseStatsViewHolder(
@@ -20,6 +21,8 @@ abstract class BaseStatsViewHolder(
         if (statsTypes == OVERVIEW || statsTypes == LATEST_POST_SUMMARY) {
             val layoutParams = itemView.layoutParams as? StaggeredGridLayoutManager.LayoutParams
             layoutParams?.isFullSpan = true
+        } else if (statsTypes == LINK_BUTTON) {
+            itemView.background = null
         }
     }
 }

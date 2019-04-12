@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
@@ -19,14 +20,20 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManag
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.WEEK_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.YEAR_STATS_USE_CASE
+import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel.InsightsTypes.LINK_BUTTON
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Success
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LinkButton
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.util.throttle
@@ -57,12 +64,14 @@ abstract class StatsListViewModel(
 
     val selectedDate = dateSelector.selectedDate
 
-    private val _navigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(statsUseCase.navigationTarget, _navigationTarget)
+    protected val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
+    val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(
+            statsUseCase.navigationTarget, mutableNavigationTarget
+    )
 
     val listSelected = statsUseCase.listSelected
 
-    val uiModel: LiveData<UiModel> = statsUseCase.data.throttle(this, distinct = true)
+    open val uiModel: LiveData<UiModel> = statsUseCase.data.throttle(this, distinct = true)
 
     val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {
         it ?: DateSelectorUiModel(false)
@@ -113,7 +122,7 @@ abstract class StatsListViewModel(
     }
 
     fun onEmptyInsightsButtonClicked() {
-        _navigationTarget.value = ViewInsightsManagement()
+        mutableNavigationTarget.value = ViewInsightsManagement()
     }
 
     fun start() {
@@ -153,7 +162,33 @@ class InsightsListViewModel
         analyticsTracker,
         dateSelectorFactory.build(INSIGHTS),
         popupMenuHandler
-)
+) {
+    override val uiModel: LiveData<UiModel> = super.uiModel.map { model ->
+        if (model is Success && model.data.none { item -> item.type == LOADING }) {
+            return@map Success(
+                    model.data + listOf(
+                            StatsBlock.Success(
+                                    LINK_BUTTON,
+                                    listOf(
+                                            LinkButton(
+                                                    R.string.edit,
+                                                    NavigationAction.create {
+                                                        mutableNavigationTarget.value = ViewInsightsManagement()
+                                                    }
+                                            )
+                                    )
+                            )
+                    )
+            )
+        } else {
+            return@map model
+        }
+    }
+
+    enum class InsightsTypes : StatsTypes {
+        LINK_BUTTON
+    }
+}
 
 class YearsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
