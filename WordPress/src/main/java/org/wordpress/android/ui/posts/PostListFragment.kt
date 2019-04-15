@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.posts
 
-import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -19,14 +17,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
-import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
-import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SiteUtils
@@ -36,9 +29,9 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.posts.PagedPostList
+import org.wordpress.android.viewmodel.posts.PostListEmptyUiState
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListViewModel
-import org.wordpress.android.viewmodel.posts.PostListViewModel.PostListEmptyUiState
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
@@ -58,7 +51,8 @@ class PostListFragment : Fragment() {
     private var actionableEmptyView: ActionableEmptyView? = null
     private var progressLoadMore: ProgressBar? = null
 
-    private lateinit var nonNullActivity: Activity
+    private lateinit var nonNullActivity: FragmentActivity
+    // TODO: We can get rid of SiteModel in the Fragment once we remove the `isPhotonCapable`
     private lateinit var site: SiteModel
 
     private val postViewHolderConfig: PostViewHolderConfig by lazy {
@@ -108,9 +102,12 @@ class PostListFragment : Fragment() {
         val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
                 .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
         val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
+        val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+                .get(PostListMainViewModel::class.java)
+
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(site, authorFilter, postListType)
+        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
         viewModel.pagedListData.observe(this, Observer {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
@@ -123,95 +120,11 @@ class PostListFragment : Fragment() {
         viewModel.isLoadingMore.observe(this, Observer {
             progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
         })
-        viewModel.postListAction.observe(this, Observer {
-            it?.let { action -> handlePostListAction(requireActivity(), action) }
-        })
-        viewModel.postUploadAction.observe(this, Observer {
-            it?.let { uploadAction -> handleUploadAction(uploadAction) }
-        })
-        viewModel.toastMessage.observe(this, Observer {
-            it?.show(nonNullActivity)
-        })
-        viewModel.snackBarAction.observe(this, Observer {
-            it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
-        })
-        viewModel.dialogAction.observe(this, Observer {
-            val fragmentManager = requireNotNull(fragmentManager) { "FragmentManager can't be null at this point" }
-            it?.show(nonNullActivity, fragmentManager, uiHelpers)
-        })
         viewModel.scrollToPosition.observe(this, Observer {
             it?.let { index ->
                 recyclerView?.scrollToPosition(index)
             }
         })
-    }
-
-    private fun showSnackBar(holder: SnackbarMessageHolder) {
-        nonNullActivity.findViewById<View>(R.id.coordinator)?.let { parent ->
-            val message = getString(holder.messageRes)
-            val duration = AccessibilityUtils.getSnackbarDuration(nonNullActivity)
-            val snackBar = Snackbar.make(parent, message, duration)
-            if (holder.buttonTitleRes != null) {
-                snackBar.setAction(getString(holder.buttonTitleRes)) {
-                    holder.buttonAction()
-                }
-            }
-            snackBar.addCallback(object : Snackbar.Callback() {
-                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                    holder.onDismissAction()
-                    super.onDismissed(transientBottomBar, event)
-                }
-            })
-            snackBar.show()
-        }
-    }
-
-    private fun handleUploadAction(action: PostUploadAction) {
-        when (action) {
-            is PostUploadAction.EditPostResult -> {
-                UploadUtils.handleEditPostResultSnackbars(
-                        nonNullActivity,
-                        nonNullActivity.findViewById(R.id.coordinator),
-                        action.data,
-                        action.post,
-                        action.site
-                ) {
-                    action.publishAction()
-                }
-            }
-            is PostUploadAction.PublishPost -> {
-                UploadUtils.publishPost(
-                        nonNullActivity,
-                        action.post,
-                        action.site,
-                        action.dispatcher
-                )
-            }
-            is PostUploadAction.PostUploadedSnackbar -> {
-                UploadUtils.onPostUploadedSnackbarHandler(
-                        nonNullActivity,
-                        nonNullActivity.findViewById(R.id.coordinator),
-                        action.isError,
-                        action.post,
-                        action.errorMessage,
-                        action.site,
-                        action.dispatcher
-                )
-            }
-            is PostUploadAction.MediaUploadedSnackbar -> {
-                UploadUtils.onMediaUploadedSnackbarHandler(
-                        nonNullActivity,
-                        nonNullActivity.findViewById(R.id.coordinator),
-                        action.isError,
-                        action.mediaList,
-                        action.site,
-                        action.message
-                )
-            }
-            is PostUploadAction.CancelPostAndMediaUpload -> {
-                UploadService.cancelQueuedPostUploadAndRelatedMedia(nonNullActivity, action.post)
-            }
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -243,22 +156,6 @@ class PostListFragment : Fragment() {
         return view
     }
 
-    fun handleEditPostResult(resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (data != null && EditPostActivity.checkToRestart(data)) {
-                ActivityLauncher.editPostOrPageForResult(
-                        data, nonNullActivity, site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
-                )
-
-                // a restart will happen so, no need to continue here
-                return
-            }
-
-            viewModel.handleEditPostResult(data)
-        }
-    }
-
     private fun updatePagedListData(pagedListData: PagedPostList) {
         postListAdapter.submitList(pagedListData)
     }
@@ -283,18 +180,6 @@ class PostListFragment : Fragment() {
     ) {
         uiHelpers.setTextOrHide(buttonView, text)
         buttonView.setOnClickListener { onButtonClick?.invoke() }
-    }
-
-    fun onPositiveClickedForBasicDialog(instanceTag: String) {
-        viewModel.onPositiveClickedForBasicDialog(instanceTag)
-    }
-
-    fun onNegativeClickedForBasicDialog(instanceTag: String) {
-        viewModel.onNegativeClickedForBasicDialog(instanceTag)
-    }
-
-    fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
-        viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
     }
 
     fun scrollToTargetPost(localPostId: LocalPostId) {

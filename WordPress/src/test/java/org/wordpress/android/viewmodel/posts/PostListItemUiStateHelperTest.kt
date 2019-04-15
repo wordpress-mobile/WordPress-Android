@@ -211,7 +211,8 @@ class PostListItemUiStateHelperTest {
             statsSupported = statsSupported,
             featuredImageUrl = featuredImageUrl,
             formattedDate = formattedDate,
-            onAction = onAction
+            onAction = onAction,
+            performingCriticalAction = false
     )
 
     private fun createUploadStatus(

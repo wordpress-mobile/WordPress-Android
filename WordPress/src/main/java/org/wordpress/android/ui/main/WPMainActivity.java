@@ -110,6 +110,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static android.arch.lifecycle.Lifecycle.State.STARTED;
 import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
@@ -1094,16 +1095,18 @@ public class WPMainActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        SiteModel site = getSelectedSite();
-        if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
-            UploadUtils.onPostUploadedSnackbarHandler(
-                    this,
-                    findViewById(R.id.coordinator),
-                    event.isError(),
-                    event.post,
-                    null,
-                    site,
-                    mDispatcher);
+        if (getLifecycle().getCurrentState().isAtLeast(STARTED)) {
+            SiteModel site = getSelectedSite();
+            if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
+                UploadUtils.onPostUploadedSnackbarHandler(
+                        this,
+                        findViewById(R.id.coordinator),
+                        event.isError(),
+                        event.post,
+                        null,
+                        site,
+                        mDispatcher);
+            }
         }
     }
 

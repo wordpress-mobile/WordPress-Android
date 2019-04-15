@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:gravity="center_vertical"
     android:animateLayoutChanges="true"
     android:orientation="vertical">
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@+id/clear_all_layout"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:drawablePadding="@dimen/new_site_creation_verticals_search_input_text_padding"
         android:imeOptions="actionSearch"
         android:importantForAutofill="noExcludeDescendants"
@@ -25,8 +25,8 @@
         android:paddingTop="@dimen/margin_large"
         android:singleLine="true"
         android:textAlignment="viewStart"
-        android:textColor="@color/grey_dark"
-        android:textColorHint="@color/grey"
+        android:textColor="@color/neutral_700"
+        android:textColorHint="@color/neutral_300"
         tools:hint="@string/site_creation_domain_keywords_hint"
         tools:ignore="RtlSymmetry"
         tools:targetApi="o">
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:background="@color/white">
+        android:background="@android:color/white">
 
         <ProgressBar
             android:layout_width="@dimen/site_creation_verticals_search_progress_size"
@@ -70,6 +70,6 @@
         android:layout_alignBottom="@+id/input"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:background="@color/wp_grey_lighten_30"
+        android:background="@color/neutral_0"
         android:visibility="gone"/>
 </RelativeLayout>

@@ -48,6 +48,7 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -388,7 +389,7 @@ public class PostPreviewActivity extends AppCompatActivity implements
                     refreshPreview();
 
                     if (mMessageView != null) {
-                        Snackbar.make(mMessageView, getString(R.string.local_changes_discarded),
+                        WPSnackbar.make(mMessageView, getString(R.string.local_changes_discarded),
                                 AccessibilityUtils.getSnackbarDuration(PostPreviewActivity.this, Snackbar.LENGTH_LONG))
                                 .setAction(getString(R.string.undo), new OnClickListener() {
                                     @Override public void onClick(View view) {

@@ -410,7 +410,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         String mSubtitle = "";
         String mTitle = "";
         boolean mHideActivityBar = false;
-        int mToolbarColor = R.color.color_primary;
+        int mToolbarColor = R.color.primary;
 
         /**
          * Builder to construct {@link FullScreenDialogFragment}.

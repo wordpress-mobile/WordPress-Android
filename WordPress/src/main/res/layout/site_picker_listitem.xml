@@ -22,10 +22,10 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/site_picker_blavatar_margin_right"
             android:layout_marginStart="@dimen/site_picker_blavatar_margin_left"
-            android:background="@color/white"
+            android:background="@android:color/white"
             android:gravity="center_vertical"
             android:padding="1dp"
-            android:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"
+            android:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
             android:contentDescription="@string/blavatar_desc"/>
 
         <LinearLayout
@@ -42,7 +42,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="text_title"/>
 
@@ -53,7 +53,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@color/grey_text_min"
+                android:textColor="@color/neutral"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_domain"/>
 
@@ -67,7 +67,7 @@
         android:layout_height="1dp"
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
-        android:background="@color/grey_lighten_20"
+        android:background="@color/neutral_100"
         android:visibility="gone"
         tools:visibility="visible"/>
 

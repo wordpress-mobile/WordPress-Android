@@ -38,9 +38,9 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS = 3
-const val ERROR_COLOR = R.color.alert_red
-const val PROGRESS_INFO_COLOR = R.color.wp_grey_darken_20
-const val STATE_INFO_COLOR = R.color.alert_yellow_dark
+const val ERROR_COLOR = R.color.error
+const val PROGRESS_INFO_COLOR = R.color.neutral_500
+const val STATE_INFO_COLOR = R.color.warning_dark
 
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
@@ -54,6 +54,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         statsSupported: Boolean,
         featuredImageUrl: String?,
         formattedDate: String,
+        // TODO: Add a unit test for performing critical action property
+        performingCriticalAction: Boolean,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
@@ -81,8 +83,14 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                                 hasUnhandledConflicts = unhandledConflicts
                         ),
                         statusesDelimiter = UiStringRes(R.string.multiple_status_label_delimiter),
-                        showProgress = shouldShowProgress(uploadStatus = uploadStatus),
-                        showOverlay = shouldShowOverlay(uploadStatus = uploadStatus)
+                        showProgress = shouldShowProgress(
+                                uploadStatus = uploadStatus,
+                                performingCriticalAction = performingCriticalAction
+                        ),
+                        showOverlay = shouldShowOverlay(
+                                uploadStatus = uploadStatus,
+                                performingCriticalAction = performingCriticalAction
+                        )
                 ),
                 actions = createActions(
                         postStatus = postStatus,
@@ -112,9 +120,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                     ?.let { PostUtils.collapseShortcodes(it) }
                     ?.let { UiStringText(it) }
 
-    private fun shouldShowProgress(uploadStatus: PostListItemUploadStatus): Boolean {
-        return !uploadStatus.isUploadFailed &&
-                (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)
+    private fun shouldShowProgress(uploadStatus: PostListItemUploadStatus, performingCriticalAction: Boolean): Boolean {
+        return performingCriticalAction || (!uploadStatus.isUploadFailed &&
+                (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload))
     }
 
     private fun getStatuses(
@@ -196,9 +204,11 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         }
     }
 
-    private fun shouldShowOverlay(uploadStatus: PostListItemUploadStatus): Boolean {
+    private fun shouldShowOverlay(uploadStatus: PostListItemUploadStatus, performingCriticalAction: Boolean): Boolean {
         // show overlay when post upload is in progress or (media upload is in progress and the user is not using Aztec)
-        return uploadStatus.isUploading || (!appPrefsWrapper.isAztecEditorEnabled && uploadStatus.isUploadingOrQueued)
+        return performingCriticalAction ||
+                (uploadStatus.isUploading ||
+                        (!appPrefsWrapper.isAztecEditorEnabled && uploadStatus.isUploadingOrQueued))
     }
 
     private fun createActions(
@@ -246,11 +256,13 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             )
         }
 
-        if (postStatus != PostStatus.TRASHED) {
-            buttonTypes.add(PostListButtonType.BUTTON_TRASH)
-        } else {
-            buttonTypes.add(PostListButtonType.BUTTON_DELETE)
-            buttonTypes.add(PostListButtonType.BUTTON_RESTORE)
+        when {
+            isLocalDraft -> buttonTypes.add(PostListButtonType.BUTTON_DELETE)
+            postStatus == PostStatus.TRASHED -> {
+                buttonTypes.add(PostListButtonType.BUTTON_DELETE)
+                buttonTypes.add(PostListButtonType.BUTTON_RESTORE)
+            }
+            postStatus != PostStatus.TRASHED -> buttonTypes.add(PostListButtonType.BUTTON_TRASH)
         }
 
         if (canShowStats) {

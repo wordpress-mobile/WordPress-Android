@@ -28,7 +28,6 @@ sealed class PostListItemIdentifier {
 class PostListItemDataSource(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
-    private val performGetItemIdsToHide: ((PostListDescriptor) -> Pair<LocalPostId, RemotePostId>?),
     private val transform: ((PostModel) -> PostListItemUiState)
 ) : ListItemDataSourceInterface<PostListDescriptor, PostListItemIdentifier, PostListItemType> {
     override fun fetchList(listDescriptor: PostListDescriptor, offset: Long) {
@@ -47,11 +46,9 @@ class PostListItemDataSource(
         val actualItems = localItems + remoteItems
 
         // We only want to show the end list indicator if the list is fully fetched and it's not empty
-        val endListItem = if (isListFullyFetched && actualItems.isNotEmpty()) {
-            listOf(EndListIndicatorIdentifier)
-        } else emptyList()
-        val itemsToHide = getItemIdsToHide(listDescriptor)
-        return (actualItems + endListItem).filter { !itemsToHide.contains(it) }
+        return if (isListFullyFetched && actualItems.isNotEmpty()) {
+            (actualItems + listOf(EndListIndicatorIdentifier))
+        } else actualItems
     }
 
     override fun getItemsAndFetchIfNecessary(
@@ -101,10 +98,6 @@ class PostListItemDataSource(
             } else {
                 transform(post)
             }
-
-    private fun getItemIdsToHide(postListDescriptor: PostListDescriptor): Set<PostListItemIdentifier> {
-        return performGetItemIdsToHide.invoke(postListDescriptor)?.let { setOf(it.first, it.second) } ?: emptySet()
-    }
 
     // TODO: We should implement batch fetching when it's available in the API
     // TODO IMPORTANT: We need to prevent duplicate requests

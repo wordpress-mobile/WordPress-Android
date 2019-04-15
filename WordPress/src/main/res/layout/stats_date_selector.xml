@@ -4,7 +4,7 @@
                                              android:layout_width="match_parent"
                                              android:layout_height="@dimen/one_line_list_item_height"
                                              android:elevation="@dimen/appbar_elevation"
-                                             android:background="@color/white">
+                                             android:background="@android:color/white">
 
     <TextView
         android:id="@+id/selected_date"
@@ -31,7 +31,7 @@
         android:contentDescription="@string/stats_select_previous_period_description"
         android:padding="4dp"
         android:src="@drawable/ic_chevron_left_white_24dp"
-        android:tint="@color/grey_dark_grey_lighten_10_selector"
+        android:tint="@color/neutral_700_neutral_200_selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/select_next_date"
         app:layout_constraintStart_toEndOf="@+id/selected_date"
@@ -46,7 +46,7 @@
         android:contentDescription="@string/stats_select_next_period_description"
         android:padding="4dp"
         android:src="@drawable/ic_chevron_right_white_24dp"
-        android:tint="@color/grey_dark_grey_lighten_10_selector"
+        android:tint="@color/neutral_700_neutral_200_selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>

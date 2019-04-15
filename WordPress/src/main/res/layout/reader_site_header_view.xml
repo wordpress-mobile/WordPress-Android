@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:elevation="@dimen/card_elevation"
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin_large"
@@ -23,8 +23,8 @@
             android:id="@+id/image_blavatar"
             style="@style/ReaderImageView.Avatar"
             android:layout_centerVertical="true"
-            android:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"
-            android:layout_marginEnd="@dimen/margin_large"
+            android:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
+            android:layout_marginEnd="@dimen/reader_card_avatar_margin_end"
             android:contentDescription="@null"/>
 
         <org.wordpress.android.widgets.WPTextView
@@ -33,7 +33,7 @@
             android:id="@+id/text_blog_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_large"
             tools:text="Loading..."
             android:layout_toStartOf="@+id/follow_button"
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_blog_name"
-            android:textColor="@color/grey_darken_10"
+            android:textColor="@color/neutral_400"
             android:textSize="@dimen/text_sz_small"
             tools:text="text_domain"
             android:layout_toStartOf="@+id/follow_button"
@@ -67,7 +67,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey_lighten_30"
+        android:background="@color/neutral_0"
         android:orientation="vertical"
         android:paddingTop="@dimen/margin_extra_large">
 
@@ -79,7 +79,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="3"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_medium"
             android:fontFamily="serif"
             tools:text="text_description"
@@ -97,13 +97,13 @@
                 android:layout_height="1dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@color/grey_lighten_20" />
+                android:background="@color/neutral_100" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_follow_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="12 followers" />
 
@@ -112,7 +112,7 @@
                 android:layout_height="1dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@color/grey_lighten_20" />
+                android:background="@color/neutral_100" />
         </LinearLayout>
 
     </LinearLayout>
