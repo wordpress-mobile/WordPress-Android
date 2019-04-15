@@ -46,7 +46,7 @@ class StatsDetailActivity : AppCompatActivity() {
             postUrl: String?
         ) {
             val statsPostViewIntent = Intent(context, StatsDetailActivity::class.java)
-            statsPostViewIntent.putExtra(WordPress.SITE, site)
+            statsPostViewIntent.putExtra(WordPress.LOCAL_SITE_ID, site.id)
             statsPostViewIntent.putExtra(POST_ID, postId)
             statsPostViewIntent.putExtra(POST_TYPE, postType)
             statsPostViewIntent.putExtra(POST_TITLE, postTitle)
