@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.model.list
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.paging.PagedList
@@ -37,7 +38,6 @@ class PagedListWrapper<T>(
     private val lifecycle: Lifecycle,
     private val refresh: () -> Unit,
     private val invalidate: () -> Unit,
-    private val isListEmpty: () -> Boolean,
     private val parentCoroutineContext: CoroutineContext
 ) : LifecycleObserver, CoroutineScope {
     private var job: Job = Job()
@@ -54,7 +54,7 @@ class PagedListWrapper<T>(
     private val _listError = MutableLiveData<ListError?>()
     val listError: LiveData<ListError?> = _listError
 
-    private val _isEmpty = MutableLiveData<Boolean>()
+    private val _isEmpty = MediatorLiveData<Boolean>()
     val isEmpty: LiveData<Boolean> = _isEmpty
 
     /**
@@ -62,11 +62,11 @@ class PagedListWrapper<T>(
      * cleanup properly in `onDestroy`.
      */
     init {
+        _isEmpty.addSource(data) {
+            _isEmpty.value = it?.isEmpty()
+        }
         dispatcher.register(this)
         lifecycle.addObserver(this)
-
-        // We need to update the initial value for isEmpty, so we can immediately hide/show the empty view
-        updateIsEmpty()
     }
 
     /**
@@ -125,7 +125,6 @@ class PagedListWrapper<T>(
             return
         }
         invalidateData()
-        updateIsEmpty()
     }
 
     /**
@@ -139,7 +138,6 @@ class PagedListWrapper<T>(
             return
         }
         invalidateData()
-        updateIsEmpty()
     }
 
     /**
@@ -151,15 +149,6 @@ class PagedListWrapper<T>(
     fun onListRequiresRefresh(event: OnListRequiresRefresh) {
         if (listDescriptor.typeIdentifier == event.type) {
             fetchFirstPage()
-        }
-    }
-
-    /**
-     * A helper function that checks and post if a list is empty.
-     */
-    private fun updateIsEmpty() {
-        launch {
-            _isEmpty.postValue(isListEmpty())
         }
     }
 }
