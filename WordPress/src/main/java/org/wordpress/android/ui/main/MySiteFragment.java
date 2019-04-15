@@ -71,7 +71,6 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -254,8 +253,7 @@ public class MySiteFragment extends Fragment implements
                             WPDialogSnackbar.make(
                                     requireActivity().findViewById(R.id.coordinator),
                                     noticeMessage,
-                                    AccessibilityUtils.getSnackbarDuration(getActivity(),
-                                            getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+                                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
 
                     quickStartNoticeSnackBar.setTitle(noticeTitle);
 
@@ -1317,8 +1315,7 @@ public class MySiteFragment extends Fragment implements
                 mActiveTutorialPrompt.getIconId());
 
         WPDialogSnackbar promptSnackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator),
-                shortQuickStartMessage, AccessibilityUtils.getSnackbarDuration(requireContext(),
-                        getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+                shortQuickStartMessage, getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
 
         ((WPMainActivity) getActivity()).showQuickStartSnackBar(promptSnackbar);
     }

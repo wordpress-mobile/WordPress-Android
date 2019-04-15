@@ -80,6 +80,7 @@ import org.wordpress.android.util.ValidationUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
 import java.util.List;
@@ -1740,7 +1741,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                         AnalyticsUtils.trackWithSiteDetails(
                                 AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK, mSite);
                         dismissProgressDialog(progressDialog);
-                        Snackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
+                        WPSnackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
                     }
                 }
             }, new RestRequest.ErrorListener() {

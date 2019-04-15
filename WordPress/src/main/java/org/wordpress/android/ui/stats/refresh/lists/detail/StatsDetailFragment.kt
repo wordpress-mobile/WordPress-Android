@@ -14,14 +14,15 @@ import kotlinx.android.synthetic.main.stats_detail_fragment.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
 class StatsDetailFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsDetailViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -50,7 +51,9 @@ class StatsDetailFragment : DaggerFragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity) {
-        val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+        val siteId = activity.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0
+        statsSiteProvider.start(siteId)
+
         val postId = activity.intent?.getLongExtra(POST_ID, 0L)
         val postType = activity.intent?.getSerializableExtra(POST_TYPE) as String?
         val postTitle = activity.intent?.getSerializableExtra(POST_TITLE) as String?
@@ -59,7 +62,6 @@ class StatsDetailFragment : DaggerFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(StatsSection.DETAIL.name, StatsDetailViewModel::class.java)
         viewModel.init(
-                checkNotNull(site),
                 checkNotNull(postId),
                 checkNotNull(postType),
                 checkNotNull(postTitle),

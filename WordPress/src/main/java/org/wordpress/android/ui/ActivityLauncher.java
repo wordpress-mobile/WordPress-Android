@@ -290,11 +290,11 @@ public class ActivityLauncher {
     }
 
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab,
-                                                  SiteModel site) {
+                                                  int localSiteId) {
         Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
         intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
-        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId);
         context.startActivity(intent);
     }
 
@@ -324,7 +324,7 @@ public class ActivityLauncher {
             return;
         }
         Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(WordPress.LOCAL_SITE_ID, site.getId());
         intent.putExtra(LOGGED_INTO_JETPACK, true);
         context.startActivity(intent);
     }

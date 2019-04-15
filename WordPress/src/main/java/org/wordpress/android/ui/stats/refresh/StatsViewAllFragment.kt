@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.stats_list_fragment.*
 import kotlinx.android.synthetic.main.stats_view_all_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
@@ -35,15 +34,18 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class StatsViewAllFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var navigator: StatsNavigator
+    @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -76,9 +78,7 @@ class StatsViewAllFragment : DaggerFragment() {
                         intent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME)
                 )
             }
-            if (intent.hasExtra(WordPress.SITE)) {
-                outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
-            }
+            outState.putInt(WordPress.LOCAL_SITE_ID, intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0))
         }
 
         super.onSaveInstanceState(outState)
@@ -136,18 +136,16 @@ class StatsViewAllFragment : DaggerFragment() {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         }
 
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-        }
+        val nonNullIntent = checkNotNull(activity.intent)
+        val siteId = savedInstanceState?.getInt(WordPress.LOCAL_SITE_ID, 0)
+                ?: nonNullIntent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
+        statsSiteProvider.start(siteId)
 
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
         setupObservers(activity)
 
-        viewModel.start(site)
+        viewModel.start()
     }
 
     private fun setupObservers(activity: FragmentActivity) {
@@ -162,9 +160,9 @@ class StatsViewAllFragment : DaggerFragment() {
                 val parent = activity.findViewById<View>(R.id.coordinatorLayout)
                 if (parent != null) {
                     if (holder.buttonTitleRes == null) {
-                        Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                        WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
                     } else {
-                        val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                        val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
                         snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
                         snackbar.show()
                     }

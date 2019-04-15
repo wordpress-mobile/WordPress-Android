@@ -8,15 +8,17 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        app:tabGravity="center"
+        app:tabGravity="fill"
         app:tabIndicatorColor="@color/primary"
-        app:tabSelectedTextColor="@color/primary"
-        app:tabPaddingStart="@dimen/margin_extra_large"
+        app:tabMode="scrollable"
         app:tabPaddingEnd="@dimen/margin_extra_large"
-        app:tabTextColor="@color/neutral_500"/>
+        app:tabPaddingStart="@dimen/margin_extra_large"
+        app:tabSelectedTextColor="@color/primary"
+        app:tabTextColor="@color/neutral_500"
+        app:theme="@style/Base.Widget.Design.TabLayout"/>
 
     <View
         android:layout_width="match_parent"
