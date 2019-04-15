@@ -483,7 +483,7 @@ public class NotificationsListFragmentPage extends Fragment implements
                 showEmptyView(R.string.notifications_empty_list);
         }
 
-        mActionableEmptyView.image.setVisibility(DisplayUtils.isLandscape(requireContext()) ? View.GONE : View.VISIBLE);
+        mActionableEmptyView.image.setVisibility(DisplayUtils.isLandscape(getContext()) ? View.GONE : View.VISIBLE);
     }
 
     private void showNewNotificationsBar() {
