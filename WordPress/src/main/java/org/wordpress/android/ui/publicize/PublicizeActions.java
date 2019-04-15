@@ -161,7 +161,8 @@ public class PublicizeActions {
 
         Map<String, String> params = new HashMap<>();
         params.put("keyring_connection_ID", Long.toString(keyringConnectionId));
-        if (!externalUserId.isEmpty()) {
+        // Sending the external id for Twitter connections result in an error
+        if (!externalUserId.isEmpty() && !serviceId.equals(PublicizeConstants.TWITTER_ID)) {
             params.put("external_user_ID", externalUserId);
         }
         String path = String.format(Locale.ROOT, "/sites/%d/publicize-connections/new", siteId);
