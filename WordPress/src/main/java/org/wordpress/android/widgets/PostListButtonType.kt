@@ -23,7 +23,7 @@ enum class PostListButtonType constructor(
     BUTTON_MORE(9, R.string.button_more, R.drawable.ic_ellipsis_white_24dp, R.color.neutral_500),
     BUTTON_BACK(10, R.string.button_back, R.drawable.ic_chevron_left_white_24dp, R.color.neutral_500),
     BUTTON_SUBMIT(11, R.string.submit_for_review, R.drawable.ic_reader_white_24dp, R.color.neutral_500),
-    BUTTON_RETRY(12, R.string.button_retry, R.drawable.ic_refresh_white_24dp, R.color.error_500),
+    BUTTON_RETRY(12, R.string.button_retry, R.drawable.ic_refresh_white_24dp, R.color.error),
     BUTTON_RESTORE(13, R.string.button_restore, R.drawable.ic_refresh_white_24dp, R.color.neutral_500);
 
     companion object {
