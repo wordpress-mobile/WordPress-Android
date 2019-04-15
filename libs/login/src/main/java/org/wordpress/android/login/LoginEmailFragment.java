@@ -68,7 +68,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
-    private ArrayList<Integer> mOldSitesIDs;
+    private ArrayList<Integer> mOldSitesIDs = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private String mGoogleEmail;
     private String mRequestedEmail;
@@ -445,6 +445,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == EMAIL_CREDENTIALS_REQUEST_CODE) {
+            if (mEmailInput == null) {
+                // Activity result received before the fragments onCreateView(), disregard result.
+                return;
+            }
+
             if (resultCode == RESULT_OK) {
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
                 mEmailInput.getEditText().setText(credential.getId());
