@@ -999,6 +999,9 @@
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
+    <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
+    <string name="stats_insights_year">Year</string>
+    <string name="stats_insights_total_posts">Total Posts</string>
     <string name="stats_insights_best_day">Best Day</string>
     <string name="stats_insights_best_hour">Best Hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
