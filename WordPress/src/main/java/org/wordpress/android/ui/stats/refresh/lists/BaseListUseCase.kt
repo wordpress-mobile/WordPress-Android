@@ -27,9 +27,11 @@ class BaseListUseCase(
     private val statsSiteProvider: StatsSiteProvider,
     private val useCases: List<BaseStatsUseCase<*, *>>,
     private val getStatsTypes: suspend () -> List<StatsTypes>,
-    private val mapUiModel: (useCaseModels: List<UseCaseModel>,
+    private val mapUiModel: (
+        useCaseModels: List<UseCaseModel>,
         MutableLiveData<NavigationTarget>,
-        showError: (Int) -> Unit) -> UiModel
+        showError: (Int) -> Unit
+    ) -> UiModel
 ) {
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
