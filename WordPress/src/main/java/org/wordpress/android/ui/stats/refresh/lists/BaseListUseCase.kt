@@ -27,7 +27,9 @@ class BaseListUseCase(
     private val statsSiteProvider: StatsSiteProvider,
     private val useCases: List<BaseStatsUseCase<*, *>>,
     private val getStatsTypes: suspend () -> List<StatsTypes>,
-    private val mapUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel
+    private val mapUiModel: (useCaseModels: List<UseCaseModel>,
+        MutableLiveData<NavigationTarget>,
+        showError: (Int) -> Unit) -> UiModel
 ) {
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
@@ -42,13 +44,14 @@ class BaseListUseCase(
             }
         }
     }.map { useCaseModels ->
-        mapUiModel(useCaseModels) { message ->
+        mapUiModel(useCaseModels, mutableNavigationTarget) { message ->
             mutableSnackbarMessage.postValue(message)
         }
     }.distinct()
 
+    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(
-            useCases.map { it.navigationTarget },
+            useCases.map { it.navigationTarget } + mutableNavigationTarget,
             distinct = false
     )
 

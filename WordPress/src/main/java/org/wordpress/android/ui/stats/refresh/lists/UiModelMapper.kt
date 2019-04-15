@@ -1,22 +1,30 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
+import android.arch.lifecycle.MutableLiveData
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LinkButton
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
 class UiModelMapper
 @Inject constructor(private val networkUtilsWrapper: NetworkUtilsWrapper) {
-    fun mapInsights(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
+    fun mapInsights(
+        useCaseModels: List<UseCaseModel>,
+        navigationTarget: MutableLiveData<NavigationTarget>,
+        showError: (Int) -> Unit
+    ): UiModel {
         if (useCaseModels.isNotEmpty()) {
             val allFailing = useCaseModels.fold(true) { acc, useCaseModel ->
                 acc && useCaseModel.state == ERROR
@@ -25,7 +33,7 @@ class UiModelMapper
                 acc && useCaseModel.state == ERROR && useCaseModel.data == null
             }
             return if (!allFailing && !allFailingWithoutData) {
-                UiModel.Success(useCaseModels.map { useCaseModel ->
+                val data = useCaseModels.map { useCaseModel ->
                     when (useCaseModel.state) {
                         SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
                         ERROR -> StatsBlock.Error(
@@ -41,11 +49,21 @@ class UiModelMapper
                                 useCaseModel.stateData ?: useCaseModel.data ?: listOf()
                         )
                     }
-                })
+                }.toMutableList()
+
+                val allUseCasesLoaded = useCaseModels.none { it.state == LOADING }
+                if (allUseCasesLoaded) {
+                    data += StatsBlock.Control(listOf(LinkButton(string.edit,
+                            NavigationAction.create {
+                                navigationTarget.value = ViewInsightsManagement()
+                            }
+                    )))
+                }
+                UiModel.Success(data)
             } else if (!allFailingWithoutData) {
                 showError(getErrorMessage())
                 UiModel.Success(useCaseModels.map { useCaseModel ->
-                    Error(
+                    StatsBlock.Error(
                             useCaseModel.type,
                             useCaseModel.data ?: useCaseModel.stateData ?: listOf()
                     )
@@ -58,12 +76,20 @@ class UiModelMapper
         }
     }
 
-    fun mapTimeStats(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
+    fun mapTimeStats(
+        useCaseModels: List<UseCaseModel>,
+        navigationTarget: MutableLiveData<NavigationTarget>,
+        showError: (Int) -> Unit
+    ): UiModel {
         return mapStatsWithOverview(TimeStatsTypes.OVERVIEW, useCaseModels, showError)
     }
 
-    fun mapDetailStats(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
-        return mapStatsWithOverview(PostDetailTypes.POST_OVERVIEW, useCaseModels, showError)
+    fun mapDetailStats(
+        useCaseModels: List<UseCaseModel>,
+        navigationTarget: MutableLiveData<NavigationTarget>,
+        showError: (Int) -> Unit
+    ): UiModel {
+            return mapStatsWithOverview(PostDetailTypes.POST_OVERVIEW, useCaseModels, showError)
     }
 
     private fun mapStatsWithOverview(
@@ -115,7 +141,7 @@ class UiModelMapper
                     StatsBlock.Success(useCaseModel.type, useCaseModel.data)
                 } else {
                     useCaseModel.stateData?.let {
-                        Error(
+                        StatsBlock.Error(
                                 useCaseModel.type,
                                 useCaseModel.stateData
                         )
