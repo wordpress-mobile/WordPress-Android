@@ -14,7 +14,7 @@ class LoadingViewHolder(parent: ViewGroup, val imageManager: ImageManager) : Bas
         R.layout.stats_loading_view
 ) {
     private val list: RecyclerView = itemView.findViewById(R.id.stats_block_list)
-    override fun bind(statsTypes: StatsStore.StatsTypes, items: List<BlockListItem>) {
+    override fun bind(statsTypes: StatsStore.StatsTypes?, items: List<BlockListItem>) {
         super.bind(statsTypes, items)
         list.isNestedScrollingEnabled = false
         if (list.adapter == null) {

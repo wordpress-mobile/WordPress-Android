@@ -8,7 +8,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 
-sealed class StatsBlock(val type: Type, open val statsTypes: StatsTypes, open val data: List<BlockListItem>) {
+sealed class StatsBlock(val type: Type, open val data: List<BlockListItem>) {
     enum class Type {
         SUCCESS,
         ERROR,
@@ -18,27 +18,26 @@ sealed class StatsBlock(val type: Type, open val statsTypes: StatsTypes, open va
     }
 
     data class Success(
-        override val statsTypes: StatsTypes,
+        val statsTypes: StatsTypes,
         override val data: List<BlockListItem>
-    ) : StatsBlock(SUCCESS, statsTypes, data)
+    ) : StatsBlock(SUCCESS, data)
 
     data class Error(
-        override val statsTypes: StatsTypes,
+        val statsTypes: StatsTypes,
         override val data: List<BlockListItem> = listOf()
-    ) : StatsBlock(ERROR, statsTypes, data)
+    ) : StatsBlock(ERROR, data)
 
     data class EmptyBlock(
-        override val statsTypes: StatsTypes,
+        val statsTypes: StatsTypes,
         override val data: List<BlockListItem>
-    ) : StatsBlock(EMPTY, statsTypes, data)
+    ) : StatsBlock(EMPTY, data)
 
     data class Loading(
-        override val statsTypes: StatsTypes,
+        val statsTypes: StatsTypes,
         override val data: List<BlockListItem>
-    ) : StatsBlock(LOADING, statsTypes, data)
+    ) : StatsBlock(LOADING, data)
 
     data class Control(
-        override val statsTypes: StatsTypes,
         override val data: List<BlockListItem>
-    ) : StatsBlock(CONTROL, statsTypes, data)
+    ) : StatsBlock(CONTROL, data)
 }

@@ -16,7 +16,7 @@ abstract class BaseStatsViewHolder(
     @LayoutRes layout: Int
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     @CallSuper
-    open fun bind(statsTypes: StatsTypes, items: List<BlockListItem>) {
+    open fun bind(statsTypes: StatsTypes?, items: List<BlockListItem>) {
         if (statsTypes == OVERVIEW || statsTypes == LATEST_POST_SUMMARY) {
             val layoutParams = itemView.layoutParams as? StaggeredGridLayoutManager.LayoutParams
             layoutParams?.isFullSpan = true
