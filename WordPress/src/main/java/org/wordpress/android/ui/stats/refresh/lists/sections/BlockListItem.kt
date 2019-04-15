@@ -17,8 +17,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -101,7 +101,7 @@ sealed class BlockListItem(val type: Type) {
         }
     }
 
-    data class QuickScanItem(val leftColumn: Column, val rightColumn: Column) : BlockListItem(QUICK_SCAN_ITEM) {
+    data class QuickScanItem(val startColumn: Column, val endColumn: Column) : BlockListItem(QUICK_SCAN_ITEM) {
         data class Column(@StringRes val label: Int, val value: String, val tooltip: String? = null)
     }
 
@@ -158,7 +158,7 @@ sealed class BlockListItem(val type: Type) {
             get() = tabs.hashCode()
     }
 
-    data class Header(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(HEADER)
+    data class Header(@StringRes val startLabel: Int, @StringRes val endLabel: Int) : BlockListItem(HEADER)
 
     data class ExpandableItem(
         val header: ListItemWithIcon,

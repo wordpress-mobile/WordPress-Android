@@ -39,7 +39,7 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="@string/stats_default_number_zero"
-                android:textColor="@color/grey_darken_30"/>
+                android:textColor="@color/neutral_600"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_most_popular_day_percent"
@@ -49,7 +49,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/stats_insights_most_popular_percent_views"
-                android:textColor="@color/grey_text_min"/>
+                android:textColor="@color/neutral"/>
 
         </LinearLayout>
 
@@ -79,7 +79,7 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="@string/stats_default_number_zero"
-                android:textColor="@color/grey_darken_30"/>
+                android:textColor="@color/neutral_600"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_most_popular_hour_percent"
@@ -89,7 +89,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/stats_insights_most_popular_percent_views"
-                android:textColor="@color/grey_text_min"/>
+                android:textColor="@color/neutral"/>
 
         </LinearLayout>
 

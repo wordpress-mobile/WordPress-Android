@@ -656,7 +656,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             return new NotificationCompat.Builder(context,
                     context.getString(R.string.notification_channel_normal_id))
                     .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
-                    .setColor(context.getResources().getColor(R.color.blue_wordpress))
+                    .setColor(context.getResources().getColor(R.color.primary_500))
                     .setContentTitle(title)
                     .setContentText(message)
                     .setTicker(message)
@@ -711,7 +711,7 @@ public class GCMMessageService extends FirebaseMessagingService {
                         context.getString(R.string.notification_channel_normal_id))
                         .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
                         .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
-                        .setColor(context.getResources().getColor(R.color.blue_wordpress))
+                        .setColor(context.getResources().getColor(R.color.primary_500))
                         .setGroup(NOTIFICATION_GROUP_KEY)
                         .setGroupSummary(true)
                         .setAutoCancel(true)
@@ -987,7 +987,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
                     context.getString(R.string.notification_channel_important_id))
                     .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
-                    .setColor(context.getResources().getColor(R.color.blue_wordpress))
+                    .setColor(context.getResources().getColor(R.color.primary_500))
                     .setContentTitle(title)
                     .setContentText(message)
                     .setAutoCancel(true)

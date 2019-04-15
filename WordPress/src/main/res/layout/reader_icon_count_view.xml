@@ -18,7 +18,7 @@
         android:layout_height="@dimen/reader_count_icon"
         android:layout_width="@dimen/reader_count_icon"
         tools:src="@drawable/ic_comment_white_24dp"
-        tools:tint="@color/grey_text_min" >
+        tools:tint="@color/neutral" >
     </ImageView>
 
     <!--Set appropriate verbose content description to whole layout programmatically ex. "321 people liked this"-->
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_extra_small"
         android:layout_width="wrap_content"
-        android:textColor="@color/reader_count_text"
+        android:textColor="@color/neutral_accent_neutral_400_selector"
         android:textSize="@dimen/text_sz_medium"
         tools:text="2" >
     </TextView>
