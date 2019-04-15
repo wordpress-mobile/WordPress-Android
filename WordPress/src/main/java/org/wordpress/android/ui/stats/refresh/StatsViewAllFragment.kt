@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import kotlinx.android.synthetic.main.stats_view_all_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
@@ -33,16 +34,18 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.observeEvent
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class StatsViewAllFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var navigator: StatsNavigator
+    @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -75,6 +78,7 @@ class StatsViewAllFragment : DaggerFragment() {
                         intent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME)
                 )
             }
+            outState.putInt(WordPress.LOCAL_SITE_ID, intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0))
         }
 
         super.onSaveInstanceState(outState)
@@ -132,9 +136,15 @@ class StatsViewAllFragment : DaggerFragment() {
             savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
         }
 
+        val nonNullIntent = checkNotNull(activity.intent)
+        val siteId = savedInstanceState?.getInt(WordPress.LOCAL_SITE_ID, 0)
+                ?: nonNullIntent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
+        statsSiteProvider.start(siteId)
+
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
         setupObservers(activity)
+
         viewModel.start()
     }
 
@@ -145,15 +155,17 @@ class StatsViewAllFragment : DaggerFragment() {
             }
         })
 
-        viewModel.showSnackbarMessage.observe(this, Observer { holder ->
-            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
-            if (holder != null && parent != null) {
-                if (holder.buttonTitleRes == null) {
-                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
-                } else {
-                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
-                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
-                    snackbar.show()
+        viewModel.showSnackbarMessage.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { holder ->
+                val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+                if (parent != null) {
+                    if (holder.buttonTitleRes == null) {
+                        WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                    } else {
+                        val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                        snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
+                        snackbar.show()
+                    }
                 }
             }
         })
@@ -179,11 +191,11 @@ class StatsViewAllFragment : DaggerFragment() {
                 }
             }
         })
-
-        viewModel.navigationTarget.observeEvent(this) { target ->
-            navigator.navigate(activity, target)
-            return@observeEvent true
-        }
+        viewModel.navigationTarget.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { target ->
+                navigator.navigate(activity, target)
+            }
+        })
 
         viewModel.dateSelectorData.observe(this, Observer { dateSelectorUiModel ->
             val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
@@ -201,15 +213,17 @@ class StatsViewAllFragment : DaggerFragment() {
             }
         })
 
-        viewModel.navigationTarget.observeEvent(this) { target ->
-            navigator.navigate(activity, target)
-            return@observeEvent true
-        }
+        viewModel.navigationTarget.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { target ->
+                navigator.navigate(activity, target)
+            }
+        })
 
-        viewModel.selectedDate.observeEvent(this) {
-            viewModel.onDateChanged()
-            true
-        }
+        viewModel.selectedDate.observe(this, Observer { event ->
+            if (event?.hasBeenHandled == false) {
+                viewModel.onDateChanged()
+            }
+        })
 
         viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
             val elevation = if (hasShadow == true) resources.getDimension(R.dimen.appbar_elevation) else 0f

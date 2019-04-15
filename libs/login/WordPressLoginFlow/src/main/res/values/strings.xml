@@ -85,6 +85,7 @@
     <string name="auth_required">Log in again to continue.</string>
     <string name="checking_email">Checking email</string>
     <string name="email_invalid">Enter a valid email address</string>
+    <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
     <string name="logging_in">Logging in</string>
     <string name="forgot_password">Lost your password?</string>
     <string name="error_generic">An error occurred</string>
@@ -111,6 +112,7 @@
     <string name="notification_error_wrong_password">Please double check your password to continue.</string>
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
+    <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
 
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>

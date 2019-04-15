@@ -19,16 +19,16 @@
             android:layout_height="@dimen/reader_detail_header_blavatar"
             android:layout_gravity="top|start"
             android:contentDescription="@null"
-            tools:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"/>
+            tools:src="@drawable/bg_rectangle_neutral_100_globe_32dp"/>
 
         <ImageView
             android:id="@+id/image_header_avatar"
             android:layout_width="@dimen/reader_detail_header_avatar"
             android:layout_height="@dimen/reader_detail_header_avatar"
             android:layout_gravity="bottom|end"
-            android:background="@drawable/shape_oval_white"
+            android:background="@drawable/bg_oval_neutral_0_stroke_white"
             android:padding="2dp"
-            tools:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
+            tools:src="@drawable/bg_rectangle_neutral_100_user_32dp"
             android:contentDescription="@null"/>
     </FrameLayout>
 
@@ -45,7 +45,7 @@
             android:id="@+id/text_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/reader_hyperlink"
+            android:textColor="@color/link_reader"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
             tools:text="text_header_author_name" />
@@ -54,7 +54,7 @@
             android:id="@+id/text_header_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/reader_hyperlink"
+            android:textColor="@color/link_reader"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_header_blog_name" />
 

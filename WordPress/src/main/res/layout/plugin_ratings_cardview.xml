@@ -4,7 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/PluginCardView"
-    card_view:cardBackgroundColor="@color/white"
+    card_view:cardBackgroundColor="@android:color/white"
     card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
     <RelativeLayout
@@ -39,13 +39,13 @@
                 android:padding="@dimen/margin_medium"
                 android:text="@string/plugin_read_reviews"
                 android:textAllCaps="true"
-                android:textColor="@color/blue_medium"
+                android:textColor="@color/primary_400"
                 android:textSize="@dimen/text_sz_medium" />
 
             <ImageView
                 style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                 android:layout_gravity="center_vertical"
-                android:tint="@color/blue_medium"
+                android:tint="@color/primary_400"
                 android:contentDescription="@string/open_external_link_desc"
                 android:src="@drawable/ic_external_white_24dp" />
         </LinearLayout>
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="@string/plugin_five_stars"
-                    android:textColor="@color/grey_text_min"
+                    android:textColor="@color/neutral"
                     android:textSize="@dimen/text_sz_medium"
                     android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -80,7 +80,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="75"
-                    android:progressTint="@color/blue_medium"
+                    android:progressTint="@color/primary_400"
                     tools:ignore="UnusedAttribute"/>
 
             </LinearLayout>
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="@string/plugin_four_stars"
-                    android:textColor="@color/grey_text_min"
+                    android:textColor="@color/neutral"
                     android:textSize="@dimen/text_sz_medium"
                     android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -108,7 +108,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="25"
-                    android:progressTint="@color/blue_medium" />
+                    android:progressTint="@color/primary_400" />
 
             </LinearLayout>
 
@@ -123,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="@string/plugin_three_stars"
-                    android:textColor="@color/grey_text_min"
+                    android:textColor="@color/neutral"
                     android:textSize="@dimen/text_sz_medium"
                     android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -135,7 +135,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="10"
-                    android:progressTint="@color/blue_medium" />
+                    android:progressTint="@color/primary_400" />
 
             </LinearLayout>
 
@@ -150,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="@string/plugin_two_stars"
-                    android:textColor="@color/grey_text_min"
+                    android:textColor="@color/neutral"
                     android:textSize="@dimen/text_sz_medium"
                     android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -162,7 +162,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="10"
-                    android:progressTint="@color/blue_medium" />
+                    android:progressTint="@color/primary_400" />
 
             </LinearLayout>
 
@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="@string/plugin_one_stars"
-                    android:textColor="@color/grey_text_min"
+                    android:textColor="@color/neutral"
                     android:textSize="@dimen/text_sz_medium"
                     android:layout_marginEnd="@dimen/margin_large"/>
 
@@ -189,7 +189,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="0"
-                    android:progressTint="@color/blue_medium" />
+                    android:progressTint="@color/primary_400" />
 
             </LinearLayout>
         </LinearLayout>
@@ -205,7 +205,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/grey_text_min"
+                android:textColor="@color/neutral"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_num_ratings" />
 
@@ -214,7 +214,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/grey_text_min"
+                android:textColor="@color/neutral"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_num_downloads"
                 android:layout_alignParentEnd="true"/>

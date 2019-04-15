@@ -71,7 +71,6 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -254,8 +253,7 @@ public class MySiteFragment extends Fragment implements
                             WPDialogSnackbar.make(
                                     requireActivity().findViewById(R.id.coordinator),
                                     noticeMessage,
-                                    AccessibilityUtils.getSnackbarDuration(getActivity(),
-                                            getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+                                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
 
                     quickStartNoticeSnackBar.setTitle(noticeTitle);
 
@@ -579,7 +577,7 @@ public class MySiteFragment extends Fragment implements
                 mQuickStartGrowTitle.setPaintFlags(
                         mQuickStartGrowTitle.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
-                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_grey_multiple_users_white_40dp);
+                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_neutral_300_multiple_users_white_40dp);
                 mQuickStartGrowTitle.setEnabled(false);
                 mQuickStartGrowTitle.setPaintFlags(
                         mQuickStartGrowTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -851,8 +849,8 @@ public class MySiteFragment extends Fragment implements
 
         UCrop.Options options = new UCrop.Options();
         options.setShowCropGrid(false);
-        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar_tint));
-        options.setToolbarColor(ContextCompat.getColor(context, R.color.color_primary));
+        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar));
+        options.setToolbarColor(ContextCompat.getColor(context, R.color.primary));
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
         options.setHideBottomControls(true);
 
@@ -1317,8 +1315,7 @@ public class MySiteFragment extends Fragment implements
                 mActiveTutorialPrompt.getIconId());
 
         WPDialogSnackbar promptSnackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator),
-                shortQuickStartMessage, AccessibilityUtils.getSnackbarDuration(requireContext(),
-                        getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+                shortQuickStartMessage, getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
 
         ((WPMainActivity) getActivity()).showQuickStartSnackBar(promptSnackbar);
     }

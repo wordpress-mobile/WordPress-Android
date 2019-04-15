@@ -130,7 +130,7 @@ class LatestPostSummaryUseCase
 
     private fun onAddNewPostClick() {
         analyticsTracker.track(STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED)
-        navigateTo(AddNewPost())
+        navigateTo(AddNewPost)
     }
 
     private fun onViewMore(params: ViewMoreParams) {

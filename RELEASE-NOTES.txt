@@ -1,6 +1,13 @@
+12.3
+-----
+* Updated primary button color to pink
+* Redirect to username/password login when WordPress.com reports email login not allowed
+* Updated snackbar design to Material guidelines
+
 12.2
 -----
 * Added an action to share sites in the Reader
+* Updated color scheme to Classic Bright
 * Adds support for .blog subdomains for the new site creation flow
 
 12.1

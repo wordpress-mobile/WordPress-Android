@@ -2,7 +2,7 @@
 <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/stats_top_pager_button_selector"
     android:padding="@dimen/margin_medium"
-    android:textColor="@color/stats_text_color"
+    android:textColor="@color/text"
     android:textSize="@dimen/text_sz_small"
     android:clickable="true"
     android:focusable="true"

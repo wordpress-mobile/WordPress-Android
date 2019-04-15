@@ -10,10 +10,10 @@ class HeaderViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         layout.stats_block_header_item
 ) {
-    private val leftLabel = itemView.findViewById<TextView>(id.left_label)
-    private val rightLabel = itemView.findViewById<TextView>(id.right_label)
+    private val startLabel = itemView.findViewById<TextView>(id.start_label)
+    private val endLabel = itemView.findViewById<TextView>(id.end_label)
     fun bind(item: Header) {
-        leftLabel.setText(item.leftLabel)
-        rightLabel.setText(item.rightLabel)
+        startLabel.setText(item.startLabel)
+        endLabel.setText(item.endLabel)
     }
 }
