@@ -123,19 +123,11 @@ class PostActionHandler(
 
         val localPostId = LocalId(post.id)
         criticalPostActionTracker.add(localPostId, MOVING_POST_TO_DRAFT)
-        val removeFromCriticalPostActionTracker = {
-            criticalPostActionTracker.remove(localPostId, MOVING_POST_TO_DRAFT)
-        }
 
         val snackBarHolder = SnackbarMessageHolder(
                 messageRes = R.string.post_moving_to_draft,
-                buttonTitleRes = R.string.undo,
-                buttonAction = {
-                    removeFromCriticalPostActionTracker.invoke()
-                    trashPost(post)
-                },
                 onDismissAction = {
-                    removeFromCriticalPostActionTracker.invoke()
+                    criticalPostActionTracker.remove(localPostId, MOVING_POST_TO_DRAFT)
                 }
         )
         showSnackbar.invoke(snackBarHolder)
