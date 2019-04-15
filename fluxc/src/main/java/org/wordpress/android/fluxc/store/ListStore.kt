@@ -107,9 +107,6 @@ class ListStore @Inject constructor(
                     }
                 },
                 invalidate = factory::invalidate,
-                isListEmpty = {
-                    getListItemsCount(listDescriptor) == 0L
-                },
                 parentCoroutineContext = coroutineContext
         )
     }
@@ -171,14 +168,6 @@ class ListStore @Inject constructor(
         return if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id).map { it.remoteItemId }
         } else emptyList()
-    }
-
-    /**
-     * A helper function that returns the number of records a list has for the given [ListDescriptor].
-     */
-    private fun getListItemsCount(listDescriptor: ListDescriptor): Long {
-        val listModel = listSqlUtils.getList(listDescriptor)
-        return if (listModel != null) listItemSqlUtils.getListItemsCount(listModel.id) else 0L
     }
 
     /**
