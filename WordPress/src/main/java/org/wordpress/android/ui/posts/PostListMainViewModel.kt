@@ -149,7 +149,7 @@ class PostListMainViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
                 handlePostUploadedWithoutError = {
-                    // TODO("Fetch the first page of the lists so their id is added to the ListStore")
+                    refreshAllLists()
                 },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
                 invalidateUploadStatus = {
@@ -177,7 +177,10 @@ class PostListMainViewModel @Inject constructor(
         super.onCleared()
     }
 
-    // TODO: We shouldn't need to pass the AuthorFilterSelection to fragments and get it back, we have that info already
+    /*
+     * FUTURE_REFACTOR: We shouldn't need to pass the AuthorFilterSelection to fragments and get it back, we have that
+     * info already
+     */
     fun getPostListViewModelConnector(
         authorFilter: AuthorFilterSelection,
         postListType: PostListType
@@ -305,6 +308,11 @@ class PostListMainViewModel @Inject constructor(
     }
 
     private fun invalidateAllLists() {
+        val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
+        dispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(listTypeIdentifier))
+    }
+
+    private fun refreshAllLists() {
         val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
         dispatcher.dispatch(ListActionBuilder.newListRequiresRefreshAction(listTypeIdentifier))
     }
