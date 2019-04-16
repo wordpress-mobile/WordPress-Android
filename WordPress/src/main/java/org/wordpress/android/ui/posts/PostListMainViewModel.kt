@@ -132,6 +132,19 @@ class PostListMainViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Filtering by author is disable on:
+     * 1) Self-hosted sites - The XMLRPC api doesn't support filtering by author.
+     * 2) Jetpack sites - we need to pass in the self-hosted user id to be able to filter for authors
+     * which we currently can't
+     * 3) Sites on which the user doesn't have permissions to edit posts of other users.
+     *
+     * This behavior is consistent with Calypso as of 11/4/2019.
+     */
+    private val isFilteringByAuthorSupported: Boolean by lazy {
+        site.isWPCom && site.hasCapabilityEditOthersPosts
+    }
+
     init {
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
@@ -139,7 +152,11 @@ class PostListMainViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
 
-        val authorFilterSelection: AuthorFilterSelection = getInitialAuthorFilterSelection()
+        val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
+            prefs.postListAuthorSelection
+        } else {
+            AuthorFilterSelection.EVERYONE
+        }
 
         listenForPostListEvents(
                 lifecycle = lifecycle,
@@ -164,7 +181,7 @@ class PostListMainViewModel @Inject constructor(
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
-                isAuthorFilterVisible = isFilteringByAuthorSupported(),
+                isAuthorFilterVisible = isFilteringByAuthorSupported,
                 authorFilterSelection = authorFilterSelection,
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
@@ -207,7 +224,7 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterSelection = selection,
                 authorFilterItems = getAuthorFilterItems(selection, accountStore.account?.avatarUrl)
         )
-        if (isFilteringByAuthorSupported()) {
+        if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection = selection
         }
     }
@@ -234,24 +251,6 @@ class PostListMainViewModel @Inject constructor(
             }
         }
     }
-
-    private fun getInitialAuthorFilterSelection(): AuthorFilterSelection {
-        return if (isFilteringByAuthorSupported()) {
-            prefs.postListAuthorSelection
-        } else {
-            AuthorFilterSelection.EVERYONE
-        }
-    }
-
-    /**
-     * Filtering by author is disable on:
-     * 1) Self-hosted sites - The XMLRPC api doesn't support filtering by author.
-     * 2) Self-hosted JetPack powered sites - we'd need support on the API for filtering by self-hosted user id.
-     * 3) Sites on which the user doesn't have permissions to edit posts of other users.
-     *
-     * This behavior is consistent with Calypso as of 11/4/2019.
-     */
-    private fun isFilteringByAuthorSupported() = site.isWPCom && site.hasCapabilityEditOthersPosts
 
     fun handleEditPostResult(data: Intent?) {
         postActionHandler.handleEditPostResult(data)
