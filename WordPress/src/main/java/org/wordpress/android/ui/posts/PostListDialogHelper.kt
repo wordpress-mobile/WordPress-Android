@@ -68,8 +68,8 @@ class PostListDialogHelper(
                 tag = CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_trash_losing_local_changes_title),
                 message = UiStringRes(R.string.dialog_confirm_trash_losing_local_changes_message),
-                positiveButton = UiStringRes(R.string.trash_yes),
-                negativeButton = UiStringRes(R.string.trash_no)
+                positiveButton = UiStringRes(R.string.dialog_button_ok),
+                negativeButton = UiStringRes(R.string.dialog_button_cancel)
         )
         localPostIdForTrashPostWithLocalChangesDialog = post.id
         showDialog.invoke(dialogHolder)
