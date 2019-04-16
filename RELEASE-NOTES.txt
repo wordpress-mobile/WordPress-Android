@@ -3,6 +3,7 @@
 * Updated primary button color to pink
 * Redirect to username/password login when WordPress.com reports email login not allowed
 * Updated snackbar design to Material guidelines
+* New Follower totals insights in the Stats
 
 12.2
 -----
