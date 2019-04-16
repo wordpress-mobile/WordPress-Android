@@ -19,11 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.utils.UiHelpers
-<<<<<<< HEAD
 import org.wordpress.android.ui.utils.UiString
-=======
-import org.wordpress.android.util.AniUtils
->>>>>>> origin/develop
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SiteUtils
@@ -123,104 +119,9 @@ class PostListFragment : Fragment() {
         viewModel.isLoadingMore.observe(this, Observer {
             progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
         })
-<<<<<<< HEAD
         viewModel.scrollToPosition.observe(this, Observer {
             it?.let { index ->
                 recyclerView?.scrollToPosition(index)
-=======
-        viewModel.postListAction.observe(this, Observer {
-            it?.let { action -> handlePostListAction(action) }
-        })
-        viewModel.postUploadAction.observe(this, Observer {
-            it?.let { uploadAction -> handleUploadAction(uploadAction) }
-        })
-        viewModel.toastMessage.observe(this, Observer {
-            it?.show(nonNullActivity)
-        })
-        viewModel.snackbarAction.observe(this, Observer {
-            it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
-        })
-        viewModel.dialogAction.observe(this, Observer {
-            val fragmentManager = requireNotNull(fragmentManager) { "FragmentManager can't be null at this point" }
-            it?.show(nonNullActivity, fragmentManager, uiHelpers)
-        })
-    }
-
-    private fun handlePostListAction(action: PostListAction) {
-        when (action) {
-            is PostListAction.EditPost -> {
-                ActivityLauncher.editPostOrPageForResult(nonNullActivity, action.site, action.post)
-            }
-            is PostListAction.NewPost -> {
-                ActivityLauncher.addNewPostForResult(nonNullActivity, action.site, action.isPromo)
-            }
-            is PostListAction.PreviewPost -> {
-                ActivityLauncher.viewPostPreviewForResult(nonNullActivity, action.site, action.post)
-            }
-            is PostListAction.RetryUpload -> {
-                // restart the UploadService with retry parameters
-                val intent = UploadService.getUploadPostServiceIntent(
-                        nonNullActivity,
-                        action.post,
-                        action.trackAnalytics,
-                        action.publish,
-                        action.retry
-                )
-                nonNullActivity.startService(intent)
-            }
-            is PostListAction.ViewStats -> {
-                ActivityLauncher.viewStatsSinglePostDetails(nonNullActivity, action.site, action.post)
-            }
-            is PostListAction.ViewPost -> {
-                ActivityLauncher.browsePostOrPage(nonNullActivity, action.site, action.post)
-            }
-            is PostListAction.DismissPendingNotification -> {
-                NativeNotificationsUtils.dismissNotification(action.pushId, nonNullActivity)
-            }
-        }
-    }
-
-    private fun showSnackbar(holder: SnackbarMessageHolder) {
-        nonNullActivity.findViewById<View>(R.id.coordinator)?.let { parent ->
-            val message = getString(holder.messageRes)
-            val duration = Snackbar.LENGTH_LONG
-            val snackbar = WPSnackbar.make(parent, message, duration)
-            if (holder.buttonTitleRes != null) {
-                snackbar.setAction(getString(holder.buttonTitleRes)) {
-                    holder.buttonAction()
-                }
-            }
-            snackbar.addCallback(object : Snackbar.Callback() {
-                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                    holder.onDismissAction()
-                    super.onDismissed(transientBottomBar, event)
-                }
-            })
-            snackbar.show()
-        }
-    }
-
-    private fun handleUploadAction(action: PostUploadAction) {
-        when (action) {
-            is PostUploadAction.EditPostResult -> {
-                UploadUtils.handleEditPostResultSnackbars(
-                        nonNullActivity,
-                        nonNullActivity.findViewById(R.id.coordinator),
-                        action.data,
-                        action.post,
-                        action.site
-                ) {
-                    action.publishAction()
-                }
-            }
-            is PostUploadAction.PublishPost -> {
-                UploadUtils.publishPost(
-                        nonNullActivity,
-                        action.post,
-                        action.site,
-                        action.dispatcher
-                )
->>>>>>> origin/develop
             }
         })
     }

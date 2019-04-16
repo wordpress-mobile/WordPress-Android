@@ -104,9 +104,5 @@ buildScan {
 }
 
 ext {
-<<<<<<< HEAD
     fluxCVersion = 'b4b581f8dc00d6bac48eac04d521668d981af7ad'
-=======
-    fluxCVersion = '8cdbf03cf3d595ef904bab3c1dc207e39242c882'
->>>>>>> origin/develop
 }

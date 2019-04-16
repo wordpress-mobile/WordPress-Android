@@ -23,13 +23,9 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-<<<<<<< HEAD
 import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
-import org.wordpress.android.util.AccessibilityUtils;
-=======
->>>>>>> origin/develop
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
