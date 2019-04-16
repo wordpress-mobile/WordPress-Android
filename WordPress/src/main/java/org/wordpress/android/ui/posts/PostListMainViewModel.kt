@@ -267,6 +267,7 @@ class PostListMainViewModel @Inject constructor(
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         postListDialogHelper.onPositiveClickedForBasicDialog(
                 instanceTag = instanceTag,
+                trashPostWithLocalChanges = postActionHandler::trashPostWithLocalChanges,
                 deletePost = postActionHandler::deletePost,
                 publishPost = postActionHandler::publishPost,
                 updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion
