@@ -209,7 +209,7 @@ class PostActionHandler(
         if (!checkNetworkConnection()) {
             return
         }
-        val criticalPostAction = if(hasLocalChanges){
+        val criticalPostAction = if (hasLocalChanges) {
             TRASHING_POST_WITH_LOCAL_CHANGES
         } else {
             TRASHING_POST
