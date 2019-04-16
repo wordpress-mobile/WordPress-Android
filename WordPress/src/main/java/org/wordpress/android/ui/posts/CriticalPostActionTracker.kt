@@ -11,7 +11,7 @@ class CriticalPostActionTracker(
     private val shouldCrashOnUnexpectedAction: Boolean = BuildConfig.DEBUG
 ) {
     enum class CriticalPostAction {
-        DELETING_POST, RESTORING_POST, TRASHING_POST, MOVING_POST_TO_DRAFT
+        DELETING_POST, RESTORING_POST, TRASHING_POST, TRASHING_POST_WITH_LOCAL_CHANGES, MOVING_POST_TO_DRAFT
     }
     private val map = HashMap<LocalId, CriticalPostAction>()
 

@@ -8,6 +8,7 @@ import org.wordpress.android.viewmodel.helpers.DialogHolder
 
 private const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 private const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
+private const val CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG = "CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG"
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 
 /**
@@ -21,6 +22,7 @@ class PostListDialogHelper(
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForDeleteDialog: Int? = null
     private var localPostIdForPublishDialog: Int? = null
+    private var localPostIdForTrashPostWithLocalChangesDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
 
     fun showDeletePostConfirmationDialog(post: PostModel) {
@@ -58,6 +60,21 @@ class PostListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
+    fun showTrashPostWithLocalChangesConfirmationDialog(post: PostModel) {
+        if (!checkNetworkConnection.invoke()) {
+            return
+        }
+        val dialogHolder = DialogHolder(
+                tag = CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_trash_losing_local_changes_title),
+                message = UiStringRes(R.string.dialog_confirm_trash_losing_local_changes_message),
+                positiveButton = UiStringRes(R.string.trash_yes),
+                negativeButton = UiStringRes(R.string.trash_no)
+        )
+        localPostIdForTrashPostWithLocalChangesDialog = post.id
+        showDialog.invoke(dialogHolder)
+    }
+
     fun showConflictedPostResolutionDialog(post: PostModel) {
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
@@ -72,6 +89,7 @@ class PostListDialogHelper(
 
     fun onPositiveClickedForBasicDialog(
         instanceTag: String,
+        trashPostWithLocalChanges: (Int) -> Unit,
         deletePost: (Int) -> Unit,
         publishPost: (Int) -> Unit,
         updateConflictedPostWithRemoteVersion: (Int) -> Unit
@@ -90,6 +108,10 @@ class PostListDialogHelper(
                 // here load version from remote
                 updateConflictedPostWithRemoteVersion(it)
             }
+            CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithLocalChangesDialog?.let {
+                localPostIdForTrashPostWithLocalChangesDialog = null
+                trashPostWithLocalChanges(it)
+            }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
@@ -101,6 +123,7 @@ class PostListDialogHelper(
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
+            CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithLocalChangesDialog = null
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 updateConflictedPostWithLocalVersion(it)
             }
