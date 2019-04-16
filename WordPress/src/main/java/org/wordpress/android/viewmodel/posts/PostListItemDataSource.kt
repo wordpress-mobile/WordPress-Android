@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
-import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.EndListIndicatorIdentifier
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
@@ -28,7 +27,8 @@ sealed class PostListItemIdentifier {
 class PostListItemDataSource(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
-    private val transform: ((PostModel) -> PostListItemUiState)
+    private val postFetcher: PostFetcher,
+    private val transform: (PostModel) -> PostListItemUiState
 ) : ListItemDataSourceInterface<PostListDescriptor, PostListItemIdentifier, PostListItemType> {
     override fun fetchList(listDescriptor: PostListDescriptor, offset: Long) {
         val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
@@ -88,7 +88,7 @@ class PostListItemDataSource(
     ) {
         val remoteIdsToFetch: List<RemoteId> = localOrRemoteIds.mapNotNull { it as? RemoteId }
                 .filter { !remotePostMap.containsKey(it) }
-        fetchPosts(site, remoteIdsToFetch)
+        postFetcher.fetchPosts(site, remoteIdsToFetch)
     }
 
     private fun transformToPostListItemType(localOrRemoteId: LocalOrRemoteId, post: PostModel?): PostListItemType =
@@ -98,16 +98,4 @@ class PostListItemDataSource(
             } else {
                 transform(post)
             }
-
-    // TODO: We should implement batch fetching when it's available in the API
-    // TODO IMPORTANT: We need to prevent duplicate requests
-    private fun fetchPosts(site: SiteModel, remoteItemIds: List<RemoteId>) {
-        remoteItemIds.map {
-            val postToFetch = PostModel()
-            postToFetch.remotePostId = it.value
-            RemotePostPayload(postToFetch, site)
-        }.forEach {
-            dispatcher.dispatch(PostActionBuilder.newFetchPostAction(it))
-        }
-    }
 }
