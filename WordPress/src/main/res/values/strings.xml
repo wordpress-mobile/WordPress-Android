@@ -271,7 +271,7 @@
     <string name="button_discard">Discard</string>
     <string name="button_discard_changes">Discard Changes</string>
     <string name="button_retry">Retry</string>
-    <string name="button_restore">Restore</string>
+    <string name="button_move_to_draft">Move to Draft</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
@@ -441,6 +441,7 @@
     <string name="post_trashing">Post is being trashed</string>
     <string name="post_restored">Post restored</string>
     <string name="post_restoring">Post is being restored</string>
+    <string name="post_moving_to_draft">Post is being moved to draft</string>
 
     <string name="share_link">Share link</string>
     <string name="view_in_browser">View in browser</string>
