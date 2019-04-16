@@ -19,6 +19,8 @@ enum class ListAction : IAction {
     LIST_ITEMS_REMOVED,
     @Action(payloadType = ListDescriptorTypeIdentifier::class)
     LIST_REQUIRES_REFRESH,
+    @Action(payloadType = ListDescriptorTypeIdentifier::class)
+    LIST_DATA_INVALIDATED,
     @Action(payloadType = RemoveExpiredListsPayload::class)
     REMOVE_EXPIRED_LISTS,
     @Action

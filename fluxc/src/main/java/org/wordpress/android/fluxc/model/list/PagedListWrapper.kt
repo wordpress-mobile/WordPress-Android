@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListDataInvalidated
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
@@ -149,6 +150,18 @@ class PagedListWrapper<T>(
     fun onListRequiresRefresh(event: OnListRequiresRefresh) {
         if (listDescriptor.typeIdentifier == event.type) {
             fetchFirstPage()
+        }
+    }
+
+    /**
+     * Handles the [OnListDataInvalidated] `ListStore` event. It'll invalidate the list if the type of this list matches
+     * the type of list that is invalidated.
+     */
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onListDataInvalidated(event: OnListDataInvalidated) {
+        if (listDescriptor.typeIdentifier == event.type) {
+            invalidateData()
         }
     }
 }
