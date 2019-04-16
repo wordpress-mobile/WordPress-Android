@@ -129,10 +129,10 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     ) {
         Assertions.assertThat(blockListItem.type).isEqualTo(QUICK_SCAN_ITEM)
         val item = blockListItem as QuickScanItem
-        Assertions.assertThat(item.leftColumn.label).isEqualTo(startLabel)
-        Assertions.assertThat(item.leftColumn.value).isEqualTo(startValue)
-        Assertions.assertThat(item.rightColumn.label).isEqualTo(endLabel)
-        Assertions.assertThat(item.rightColumn.value).isEqualTo(endValue)
+        Assertions.assertThat(item.startColumn.label).isEqualTo(startLabel)
+        Assertions.assertThat(item.startColumn.value).isEqualTo(startValue)
+        Assertions.assertThat(item.endColumn.label).isEqualTo(endLabel)
+        Assertions.assertThat(item.endColumn.value).isEqualTo(endValue)
     }
 
     private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): UseCaseModel {
