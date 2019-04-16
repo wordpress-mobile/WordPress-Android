@@ -16,6 +16,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.Toolbar
 import android.view.HapticFeedbackConstants
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -111,6 +113,15 @@ class PostsListActivity : AppCompatActivity(),
         setupContent()
         initViewModel()
         loadIntentData(intent)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menu?.clear()
+        val item = menu?.add(Menu.FIRST, R.id.about_copyright, 3, "")
+        item?.setIcon(R.drawable.ab_icon_edit)
+        item?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+
+        return true
     }
 
     private fun setupActionBar() {
