@@ -33,7 +33,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.widgets.WPSnackbar
@@ -237,7 +236,7 @@ class PostsListActivity : AppCompatActivity(),
     private fun showSnackBar(holder: SnackbarMessageHolder) {
         findViewById<View>(R.id.coordinator)?.let { parent ->
             val message = getString(holder.messageRes)
-            val duration = AccessibilityUtils.getSnackbarDuration(this)
+            val duration = Snackbar.LENGTH_LONG
             val snackBar = WPSnackbar.make(parent, message, duration)
             if (holder.buttonTitleRes != null) {
                 snackBar.setAction(getString(holder.buttonTitleRes)) {
