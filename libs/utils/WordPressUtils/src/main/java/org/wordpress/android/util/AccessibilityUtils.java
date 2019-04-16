@@ -15,13 +15,6 @@ public class AccessibilityUtils {
     }
 
     /**
-     * If the accessibility is enabled, returns increased snackbar duration, otherwise returns LENGTH_LONG duration.
-     */
-    public static int getSnackbarDuration(Context ctx) {
-        return getSnackbarDuration(ctx, Snackbar.LENGTH_LONG);
-    }
-
-    /**
      * If the default duration is LENGTH_INDEFINITE, ignore accessibility duration and return LENGTH_INDEFINITE.
      * If the accessibility is enabled, returns increased snackbar duration, otherwise returns defaultDuration.
      *
