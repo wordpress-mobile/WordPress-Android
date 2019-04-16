@@ -58,7 +58,7 @@ class PostActionHandler(
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
     private val showToast: (ToastMessageHolder) -> Unit
 ) {
-    private val criticalPostActionTracker = CriticalPostActionTracker(listener = {
+    private val criticalPostActionTracker = CriticalPostActionTracker(onStateChanged = {
         invalidateList.invoke()
     })
 
