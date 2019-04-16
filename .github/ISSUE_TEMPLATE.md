@@ -7,4 +7,4 @@
 ### Steps to reproduce the behavior
 
 
-##### Tested on [device], Android [version]
+##### Tested on [device], Android [version], WPAndroid [version]
