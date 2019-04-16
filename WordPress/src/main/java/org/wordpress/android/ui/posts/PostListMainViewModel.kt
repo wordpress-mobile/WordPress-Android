@@ -37,6 +37,7 @@ import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
+import org.wordpress.android.viewmodel.posts.PostFetcher
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListViewModelConnector
 import javax.inject.Inject
@@ -96,6 +97,10 @@ class PostListMainViewModel @Inject constructor(
 
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
+
+    private val postFetcher by lazy {
+        PostFetcher(lifecycle, dispatcher)
+    }
 
     private val postListDialogHelper: PostListDialogHelper by lazy {
         PostListDialogHelper(
@@ -209,7 +214,8 @@ class PostListMainViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-                getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
+                getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
+                postFetcher = postFetcher
         )
     }
 

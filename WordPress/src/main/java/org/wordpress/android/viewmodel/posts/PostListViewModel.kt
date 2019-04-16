@@ -63,6 +63,7 @@ class PostListViewModel @Inject constructor(
         val dataSource = PostListItemDataSource(
                 dispatcher = dispatcher,
                 postStore = postStore,
+                postFetcher = connector.postFetcher,
                 transform = this::transformPostModelToPostListItemUiState
         )
         listStore.getList(listDescriptor, dataSource, lifecycle)
