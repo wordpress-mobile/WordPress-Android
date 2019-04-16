@@ -63,6 +63,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
+    private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
     private boolean mHtmlModeEnabled;
 
@@ -221,13 +222,23 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     @Override
-                    public void onUploadMediaButtonClicked() {
+                    public void onUploadPhotoButtonClicked() {
                         mEditorFragmentListener.onAddPhotoClicked();
                     }
 
                     @Override
+                    public void onUploadVideoButtonClicked() {
+                        mEditorFragmentListener.onAddVideoClicked();
+                    }
+
+                    @Override
+                    public void onCaptureVideoButtonClicked() {
+                        checkAndRequestCameraAndStoragePermissions(CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
+                    }
+
+                    @Override
                     public void onCapturePhotoButtonClicked() {
-                        checkAndRequestCameraAndStoragePermissions();
+                        checkAndRequestCameraAndStoragePermissions(CAPTURE_VIDEO_PERMISSION_REQUEST_CODE);
                     }
 
                     @Override public void onRetryUploadForMediaClicked(int mediaId) {
@@ -307,9 +318,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
-            checkAndRequestCameraAndStoragePermissions();
-        }
+        checkAndRequestCameraAndStoragePermissions(requestCode);
     }
 
     private void setEditorProgressBarVisibility(boolean shown) {
@@ -341,10 +350,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private void checkAndRequestCameraAndStoragePermissions() {
+    private void checkAndRequestCameraAndStoragePermissions(int permissionRequestCode) {
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
-                CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
-            mEditorFragmentListener.onCapturePhotoClicked();
+                permissionRequestCode)) {
+            if (permissionRequestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCapturePhotoClicked();
+            }
+            else if (permissionRequestCode == CAPTURE_VIDEO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCaptureVideoClicked();
+            }
         }
     }
 
