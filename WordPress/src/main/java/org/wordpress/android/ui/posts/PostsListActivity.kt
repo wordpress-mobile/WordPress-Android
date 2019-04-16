@@ -33,6 +33,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.posts.PostListMainViewModel.ViewState.MINIMIZED
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AccessibilityUtils
@@ -113,15 +114,6 @@ class PostsListActivity : AppCompatActivity(),
         setupContent()
         initViewModel()
         loadIntentData(intent)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menu?.clear()
-        val item = menu?.add(Menu.FIRST, R.id.about_copyright, 3, "")
-        item?.setIcon(R.drawable.ab_icon_edit)
-        item?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-
-        return true
     }
 
     private fun setupActionBar() {
@@ -299,8 +291,20 @@ class PostsListActivity : AppCompatActivity(),
         if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
+        } else if (item.itemId == R.id.about_copyright) {
+            viewModel.updateViewState(MINIMIZED)
+            return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menu?.clear()
+        val item = menu?.add(Menu.FIRST, R.id.about_copyright, 3, "")
+        item?.setIcon(R.drawable.ab_icon_edit)
+        item?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        return true
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {

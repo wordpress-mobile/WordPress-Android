@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
@@ -195,6 +196,16 @@ class PostListMainViewModel @Inject constructor(
 
     fun newPost() {
         postActionHandler.newPost()
+    }
+
+    enum class ViewState {
+        FULL,
+        MINIMIZED
+    }
+
+    fun updateViewState(viewState: ViewState) {
+        _updatePostsPager.value = ME
+        _updatePostsPager.call()
     }
 
     fun updateAuthorFilterSelection(selectionId: Long) {
