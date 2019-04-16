@@ -89,7 +89,7 @@ class PostAverageViewsPerDayUseCase(
     }
 
     private fun onLinkClick() {
-        navigateTo(ViewDayAverageStats())
+        navigateTo(ViewDayAverageStats)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> {
