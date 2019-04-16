@@ -42,8 +42,8 @@ class PostFetcher constructor(
     fun fetchPosts(site: SiteModel, remoteItemIds: List<RemoteId>) {
         remoteItemIds
                 .filter {
-                    val isDuplicate = ongoingRequests.contains(it)
-                    !isDuplicate
+                    // ignore duplicate requests
+                    !ongoingRequests.contains(it)
                 }
                 .forEach { remoteId ->
                     ongoingRequests.add(remoteId)
@@ -57,8 +57,8 @@ class PostFetcher constructor(
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
-        (event.causeOfChange as? UpdatePost)?.let {
-            ongoingRequests.remove(RemoteId((event.causeOfChange as UpdatePost).remotePostId))
+        (event.causeOfChange as? UpdatePost)?.let { updatePostCauseOfChange ->
+            ongoingRequests.remove(RemoteId(updatePostCauseOfChange.remotePostId))
         }
     }
 }
