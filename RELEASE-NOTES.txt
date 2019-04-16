@@ -2,6 +2,7 @@
 -----
 * Updated primary button color to pink
 * Updated snackbar design to Material guidelines
+* Add "This Year" card to Stats Insights screen
 
 12.2
 -----
