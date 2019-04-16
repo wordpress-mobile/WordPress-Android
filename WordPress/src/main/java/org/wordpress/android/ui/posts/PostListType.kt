@@ -22,10 +22,9 @@ enum class PostListType(val postStatuses: List<PostStatus>) {
         fun fromPostStatus(status: PostStatus): PostListType {
             return when (status) {
                 PostStatus.PUBLISHED, PRIVATE -> PUBLISHED
-                PostStatus.DRAFT, PostStatus.PENDING -> DRAFTS
+                PostStatus.DRAFT, PostStatus.PENDING, PostStatus.UNKNOWN -> DRAFTS
                 PostStatus.TRASHED -> TRASHED
                 PostStatus.SCHEDULED -> SCHEDULED
-                PostStatus.UNKNOWN -> TODO()
             }
         }
     }

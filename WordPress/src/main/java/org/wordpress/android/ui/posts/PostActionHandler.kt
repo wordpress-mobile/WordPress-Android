@@ -28,7 +28,6 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
-import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
@@ -59,7 +58,7 @@ class PostActionHandler(
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
     private val showToast: (ToastMessageHolder) -> Unit
 ) {
-    private val criticalPostActionTracker = CriticalPostActionTracker(listener = {
+    private val criticalPostActionTracker = CriticalPostActionTracker(onStateChanged = {
         invalidateList.invoke()
     })
 
@@ -84,7 +83,6 @@ class PostActionHandler(
             }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
-            BUTTON_BACK -> TODO("will be removed during PostViewHolder refactoring")
         }
     }
 

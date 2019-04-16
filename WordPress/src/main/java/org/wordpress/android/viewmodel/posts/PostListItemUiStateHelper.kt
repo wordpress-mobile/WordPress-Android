@@ -54,7 +54,6 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         statsSupported: Boolean,
         featuredImageUrl: String?,
         formattedDate: String,
-        // TODO: Add a unit test for performing critical action property
         performingCriticalAction: Boolean,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
@@ -67,7 +66,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         title = getTitle(post = post),
                         excerpt = getExcerpt(post = post),
                         imageUrl = featuredImageUrl,
-                        dateAndAuthor = UiStringText(text = formattedDate), // TODO Get name of the author
+                        dateAndAuthor = UiStringText(text = formattedDate),
                         statuses = getStatuses(
                                 postStatus = postStatus,
                                 isLocalDraft = post.isLocalDraft,
@@ -190,7 +189,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         uploadStatus: PostListItemUploadStatus,
         hasUnhandledConflicts: Boolean
     ): Int? {
-        val isError = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload ||
+        val isError = (uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload) ||
                 hasUnhandledConflicts
         val isProgressInfo = uploadStatus.isQueued || uploadStatus.hasPendingMediaUpload ||
                 uploadStatus.hasInProgressMediaUpload || uploadStatus.isUploading

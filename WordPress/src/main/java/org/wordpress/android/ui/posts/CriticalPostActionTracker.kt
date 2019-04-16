@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.posts
 
+import com.crashlytics.android.Crashlytics
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 
 class CriticalPostActionTracker(
-    // TODO: Find a better name than listener
-    private val listener: () -> Unit,
+    private val onStateChanged: () -> Unit,
     private val shouldCrashOnUnexpectedAction: Boolean = BuildConfig.DEBUG
 ) {
     enum class CriticalPostAction {
@@ -24,10 +24,12 @@ class CriticalPostActionTracker(
             AppLog.e(T.POSTS, errorMessage)
             if (shouldCrashOnUnexpectedAction) {
                 throw IllegalStateException(errorMessage)
+            } else {
+                Crashlytics.log(errorMessage)
             }
         }
         map[localPostId] = criticalPostAction
-        listener.invoke()
+        onStateChanged.invoke()
     }
 
     fun contains(localPostId: LocalId): Boolean = map.containsKey(localPostId)
@@ -37,7 +39,7 @@ class CriticalPostActionTracker(
     fun remove(localPostId: LocalId, criticalPostAction: CriticalPostAction) {
         if (map[localPostId] == criticalPostAction) {
             map.remove(localPostId)
-            listener.invoke()
+            onStateChanged.invoke()
         }
     }
 }
