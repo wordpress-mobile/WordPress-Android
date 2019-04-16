@@ -13,17 +13,15 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Quick
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.math.roundToInt
 
 class AnnualSiteStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val mostPopularStore: MostPopularInsightsStore,
-    private val statsSiteProvider: StatsSiteProvider,
-    private val resourceProvider: ResourceProvider
+    private val statsSiteProvider: StatsSiteProvider
 ) : StatelessUseCase<YearsInsightsModel>(ANNUAL_SITE_STATS, mainDispatcher) {
     override suspend fun loadCachedData(): YearsInsightsModel? {
         return mostPopularStore.getYearsInsights(statsSiteProvider.siteModel)
@@ -41,28 +39,57 @@ class AnnualSiteStatsUseCase
         }
     }
 
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_annual_site_stats))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_this_year_site_stats))
 
     override fun buildUiModel(domainModel: YearsInsightsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_insights_annual_site_stats))
+        items.add(Title(R.string.stats_insights_this_year_site_stats))
+        val lastYear = domainModel.years.last()
         items.add(
                 QuickScanItem(
                         Column(
-                                string.stats_insights_best_day,
-                                dateUtils.getWeekDay(domainModel.highestDayOfWeek),
-                                resourceProvider.getString(
-                                        string.stats_most_popular_percent_views,
-                                        domainModel.highestDayPercent.roundToInt()
-                                )
+                                string.stats_insights_year,
+                                lastYear.year
                         ),
                         Column(
-                                string.stats_insights_best_hour,
-                                dateUtils.getHour(domainModel.highestHour),
-                                resourceProvider.getString(
-                                        string.stats_most_popular_percent_views,
-                                        domainModel.highestHourPercent.roundToInt()
-                                )
+                                string.stats_insights_posts,
+                                lastYear.totalPosts.toFormattedString()
+                        )
+                )
+        )
+        items.add(
+                QuickScanItem(
+                        Column(
+                                string.stats_insights_total_comments,
+                                lastYear.totalComments.toFormattedString()
+                        ),
+                        Column(
+                                string.stats_insights_average_comments,
+                                lastYear.avgComments?.toFormattedString() ?: "0"
+                        )
+                )
+        )
+        items.add(
+                QuickScanItem(
+                        Column(
+                                string.stats_insights_total_likes,
+                                lastYear.totalLikes.toFormattedString()
+                        ),
+                        Column(
+                                string.stats_insights_average_likes,
+                                lastYear.avgLikes?.toFormattedString() ?: "0"
+                        )
+                )
+        )
+        items.add(
+                QuickScanItem(
+                        Column(
+                                string.stats_insights_total_words,
+                                lastYear.totalWords.toFormattedString()
+                        ),
+                        Column(
+                                string.stats_insights_average_words,
+                                lastYear.avgWords?.toFormattedString() ?: "0"
                         )
                 )
         )
