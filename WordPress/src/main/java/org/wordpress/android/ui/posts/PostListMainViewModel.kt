@@ -32,6 +32,9 @@ import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
+import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.ViewLayoutType.Companion
+import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
@@ -95,6 +98,9 @@ class PostListMainViewModel @Inject constructor(
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
 
+    private val _viewLayoutType = MutableLiveData<ViewLayoutType>()
+    val viewLayoutType: LiveData<ViewLayoutType> = _viewLayoutType
+
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
@@ -135,6 +141,7 @@ class PostListMainViewModel @Inject constructor(
 
     init {
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
+        _viewLayoutType.value = prefs.postListViewLayoutType
     }
 
     fun start(site: SiteModel) {
@@ -196,16 +203,6 @@ class PostListMainViewModel @Inject constructor(
 
     fun newPost() {
         postActionHandler.newPost()
-    }
-
-    enum class ViewState {
-        FULL,
-        MINIMIZED
-    }
-
-    fun updateViewState(viewState: ViewState) {
-        _updatePostsPager.value = ME
-        _updatePostsPager.call()
     }
 
     fun updateAuthorFilterSelection(selectionId: Long) {
@@ -307,4 +304,15 @@ class PostListMainViewModel @Inject constructor(
                 _toastMessage.postValue(ToastMessageHolder(string.no_network_message, Duration.SHORT))
                 false
             }
+
+
+    fun toggleViewLayout() {
+        val currentLayoutType = viewLayoutType.value ?: ViewLayoutType.defaultValue
+        val toggledValue = when(currentLayoutType) {
+            STANDARD -> COMPACT
+            COMPACT -> STANDARD
+        }
+        prefs.postListViewLayoutType = toggledValue
+        _viewLayoutType.value = toggledValue
+    }
 }

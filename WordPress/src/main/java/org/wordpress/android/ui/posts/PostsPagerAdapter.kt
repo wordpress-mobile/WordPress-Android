@@ -11,7 +11,8 @@ class PostsPagerAdapter(
     private val pages: List<PostListType>,
     private val site: SiteModel,
     private val authorFilter: AuthorFilterSelection,
-    val fm: FragmentManager
+    val fm: FragmentManager,
+    private var viewLayoutType: ViewLayoutType
 ) : FragmentStatePagerAdapter(fm) {
     private val listFragments = mutableMapOf<Int, WeakReference<PostListFragment>>()
 
@@ -31,5 +32,10 @@ class PostsPagerAdapter(
 
     fun getItemAtPosition(position: Int): PostListFragment? {
         return listFragments[position]?.get()
+    }
+
+    fun updateViewLayoutType(viewLayoutType: ViewLayoutType) {
+        this.viewLayoutType = viewLayoutType
+        //TODO: update the already-created fragments
     }
 }

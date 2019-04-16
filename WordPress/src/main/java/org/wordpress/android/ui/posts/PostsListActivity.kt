@@ -33,7 +33,9 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.PostListMainViewModel.ViewState.MINIMIZED
+import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.ViewLayoutType.Companion
+import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AccessibilityUtils
@@ -64,6 +66,8 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var pager: ViewPager
     private lateinit var fab: FloatingActionButton
+
+    private var toggleViewLayoutMenuItem: MenuItem? = null
 
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -199,12 +203,21 @@ class PostsListActivity : AppCompatActivity(),
         viewModel.updatePostsPager.observe(this, Observer { authorFilter ->
             authorFilter?.let {
                 val currentItem: Int = pager.currentItem
-                postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
+                val viewLayoutType = viewModel.viewLayoutType.value ?: ViewLayoutType.defaultValue
+                postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager, viewLayoutType)
                 pager.adapter = postsPagerAdapter
 
                 pager.removeOnPageChangeListener(onPageChangeListener)
                 pager.currentItem = currentItem
                 pager.addOnPageChangeListener(onPageChangeListener)
+
+                updateMenuIconForViewLayoutType(viewLayoutType)
+            }
+        })
+        viewModel.viewLayoutType.observe(this, Observer { viewLayoutType ->
+            viewLayoutType?.let { type ->
+                postsPagerAdapter.updateViewLayoutType(type)
+                updateMenuIconForViewLayoutType(type)
             }
         })
         viewModel.selectTab.observe(this, Observer { tabIndex ->
@@ -291,8 +304,8 @@ class PostsListActivity : AppCompatActivity(),
         if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
-        } else if (item.itemId == R.id.about_copyright) {
-            viewModel.updateViewState(MINIMIZED)
+        } else if (item.itemId == R.id.post_menu_item_view_layout_type) {
+            viewModel.toggleViewLayout()
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -301,9 +314,11 @@ class PostsListActivity : AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menu?.clear()
-        val item = menu?.add(Menu.FIRST, R.id.about_copyright, 3, "")
-        item?.setIcon(R.drawable.ab_icon_edit)
-        item?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        menu?.add(Menu.FIRST, R.id.post_menu_item_view_layout_type, 3, "")?.let { item ->
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            toggleViewLayoutMenuItem = item
+            updateMenuIconForViewLayoutType(viewModel.viewLayoutType.value ?: ViewLayoutType.defaultValue)
+        }
         return true
     }
 
@@ -324,5 +339,16 @@ class PostsListActivity : AppCompatActivity(),
 
     override fun onDismissByOutsideTouch(instanceTag: String) {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
+    }
+
+    // Menu ViewLayoutType handling
+
+    private fun updateMenuIconForViewLayoutType(viewLayoutType: ViewLayoutType) {
+        //TODO: Use actual icons when available
+        val iconId = when(viewLayoutType) {
+            STANDARD -> R.drawable.ab_icon_edit
+            COMPACT -> R.drawable.ic_info_white_24dp
+        }
+        toggleViewLayoutMenuItem?.setIcon(iconId)
     }
 }
