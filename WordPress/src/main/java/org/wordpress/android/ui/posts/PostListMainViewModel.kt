@@ -40,6 +40,7 @@ import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
+import org.wordpress.android.viewmodel.posts.PostFetcher
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListViewModelConnector
 import javax.inject.Inject
@@ -103,6 +104,10 @@ class PostListMainViewModel @Inject constructor(
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
+    private val postFetcher by lazy {
+        PostFetcher(lifecycle, dispatcher)
+    }
+
     private val postListDialogHelper: PostListDialogHelper by lazy {
         PostListDialogHelper(
                 showDialog = { _dialogAction.postValue(it) },
@@ -138,6 +143,19 @@ class PostListMainViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Filtering by author is disable on:
+     * 1) Self-hosted sites - The XMLRPC api doesn't support filtering by author.
+     * 2) Jetpack sites - we need to pass in the self-hosted user id to be able to filter for authors
+     * which we currently can't
+     * 3) Sites on which the user doesn't have permissions to edit posts of other users.
+     *
+     * This behavior is consistent with Calypso as of 11/4/2019.
+     */
+    private val isFilteringByAuthorSupported: Boolean by lazy {
+        site.isWPCom && site.hasCapabilityEditOthersPosts
+    }
+
     init {
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
         _viewLayoutType.value = prefs.postListViewLayoutType
@@ -146,7 +164,11 @@ class PostListMainViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
 
-        val authorFilterSelection: AuthorFilterSelection = prefs.postListAuthorSelection
+        val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
+            prefs.postListAuthorSelection
+        } else {
+            AuthorFilterSelection.EVERYONE
+        }
 
         listenForPostListEvents(
                 lifecycle = lifecycle,
@@ -156,7 +178,7 @@ class PostListMainViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
                 handlePostUploadedWithoutError = {
-                    // TODO("Fetch the first page of the lists so their id is added to the ListStore")
+                    refreshAllLists()
                 },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
                 invalidateUploadStatus = {
@@ -171,7 +193,7 @@ class PostListMainViewModel @Inject constructor(
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
-                isAuthorFilterVisible = site.isUsingWpComRestApi,
+                isAuthorFilterVisible = isFilteringByAuthorSupported,
                 authorFilterSelection = authorFilterSelection,
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
@@ -184,7 +206,10 @@ class PostListMainViewModel @Inject constructor(
         super.onCleared()
     }
 
-    // TODO: We shouldn't need to pass the AuthorFilterSelection to fragments and get it back, we have that info already
+    /*
+     * FUTURE_REFACTOR: We shouldn't need to pass the AuthorFilterSelection to fragments and get it back, we have that
+     * info already
+     */
     fun getPostListViewModelConnector(
         authorFilter: AuthorFilterSelection,
         postListType: PostListType
@@ -198,6 +223,7 @@ class PostListMainViewModel @Inject constructor(
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
                 getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
                 viewLayoutType = this.viewLayoutType.value ?: Companion.defaultValue
+                postFetcher = postFetcher
         )
     }
 
@@ -212,7 +238,9 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterSelection = selection,
                 authorFilterItems = getAuthorFilterItems(selection, accountStore.account?.avatarUrl)
         )
-        prefs.postListAuthorSelection = selection
+        if (isFilteringByAuthorSupported) {
+            prefs.postListAuthorSelection = selection
+        }
     }
 
     fun onTabChanged(position: Int) {
@@ -247,6 +275,7 @@ class PostListMainViewModel @Inject constructor(
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         postListDialogHelper.onPositiveClickedForBasicDialog(
                 instanceTag = instanceTag,
+                trashPostWithLocalChanges = postActionHandler::trashPostWithLocalChanges,
                 deletePost = postActionHandler::deletePost,
                 publishPost = postActionHandler::publishPost,
                 updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion
@@ -293,6 +322,11 @@ class PostListMainViewModel @Inject constructor(
     }
 
     private fun invalidateAllLists() {
+        val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
+        dispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(listTypeIdentifier))
+    }
+
+    private fun refreshAllLists() {
         val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
         dispatcher.dispatch(ListActionBuilder.newListRequiresRefreshAction(listTypeIdentifier))
     }

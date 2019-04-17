@@ -83,7 +83,6 @@
     <color name="primary_900">@color/blue_900</color>
     <color name="primary_dark">@color/blue_700</color>
     <color name="primary_light">@color/blue_300</color>
-    <color name="primary_500_transparent">@color/blue_500_transparent</color>
     <color name="success">@color/hot_green_500</color>
     <color name="success_0">@color/hot_green_0</color>
     <color name="success_100">@color/hot_green_100</color>
@@ -300,8 +299,4 @@
     <color name="grey_lighten_30_translucent_50">#80e9eff3</color> <!-- Use for old Stats.  Will be removed soon. -->
     <color name="white_translucent_40">#66ffffff</color>
     <color name="white_translucent_65">#a6ffffff</color>
-
-    <!-- TRANSPARENT -->
-    <color name="blue_500_transparent">#000087be</color>
-
 </resources>

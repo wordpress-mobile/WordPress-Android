@@ -7,13 +7,16 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.DELETING_POST
+import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.MOVING_POST_TO_DRAFT
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.RESTORING_POST
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST
+import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST_WITH_LOCAL_CHANGES
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PostListAction.RetryUpload
@@ -26,13 +29,12 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
-import org.wordpress.android.widgets.PostListButtonType.BUTTON_BACK
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
-import org.wordpress.android.widgets.PostListButtonType.BUTTON_RESTORE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
@@ -57,7 +59,7 @@ class PostActionHandler(
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
     private val showToast: (ToastMessageHolder) -> Unit
 ) {
-    private val criticalPostActionTracker = CriticalPostActionTracker(listener = {
+    private val criticalPostActionTracker = CriticalPostActionTracker(onStateChanged = {
         invalidateList.invoke()
     })
 
@@ -65,8 +67,8 @@ class PostActionHandler(
         when (buttonType) {
             BUTTON_EDIT -> editPostButtonAction(site, post)
             BUTTON_RETRY -> triggerPostListAction.invoke(RetryUpload(post))
-            BUTTON_RESTORE -> {
-                restorePost(post)
+            BUTTON_MOVE_TO_DRAFT -> {
+                moveTrashedPostToDraft(post)
             }
             BUTTON_SUBMIT, BUTTON_SYNC, BUTTON_PUBLISH -> {
                 postListDialogHelper.showPublishConfirmationDialog(post)
@@ -75,14 +77,17 @@ class PostActionHandler(
             BUTTON_PREVIEW -> triggerPostListAction.invoke(PreviewPost(site, post))
             BUTTON_STATS -> triggerPostListAction.invoke(ViewStats(site, post))
             BUTTON_TRASH -> {
-                trashPost(post)
+                if (post.isLocallyChanged) {
+                    postListDialogHelper.showTrashPostWithLocalChangesConfirmationDialog(post)
+                } else {
+                    trashPost(post)
+                }
             }
             BUTTON_DELETE -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
-            BUTTON_BACK -> TODO("will be removed during PostViewHolder refactoring")
         }
     }
 
@@ -108,45 +113,24 @@ class PostActionHandler(
         }
     }
 
-    private fun restorePost(post: PostModel) {
-        // We need network connection to restore a post
+    private fun moveTrashedPostToDraft(post: PostModel) {
+        /*
+         * We need network connection to move a post to remote draft. We can technically move it to the local drafts
+         * but that'll leave the trashed post in the remote which can be confusing.
+         */
         if (!checkNetworkConnection.invoke()) {
             return
         }
+        post.status = DRAFT.toString()
+        dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
 
-        criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = RESTORING_POST)
-        dispatcher.dispatch(PostActionBuilder.newRestorePostAction(RemotePostPayload(post, site)))
-    }
+        val localPostId = LocalId(post.id)
+        criticalPostActionTracker.add(localPostId, MOVING_POST_TO_DRAFT)
 
-    fun handlePostRestored(localPostId: LocalId, isError: Boolean) {
-        if (criticalPostActionTracker.get(localPostId) != RESTORING_POST) {
-            /*
-             * This is an unexpected action and either it has already been handled or another critical action has
-             * been performed. In either case, safest action is to just ignore it.
-             */
-            return
-        }
-        val removeFromTracker = {
-            criticalPostActionTracker.remove(localPostId = localPostId, criticalPostAction = RESTORING_POST)
-        }
-        if (isError) {
-            removeFromTracker.invoke()
-            showToast.invoke(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
-            return
-        }
         val snackBarHolder = SnackbarMessageHolder(
-                messageRes = R.string.post_restored,
-                buttonTitleRes = R.string.undo,
-                buttonAction = {
-                    val post = postStore.getPostByLocalPostId(localPostId.value)
-                    if (post != null) {
-                        removeFromTracker.invoke()
-                        trashPost(post)
-                        showSnackbar.invoke(SnackbarMessageHolder(R.string.post_trashing))
-                    }
-                },
+                messageRes = R.string.post_moving_to_draft,
                 onDismissAction = {
-                    removeFromTracker.invoke()
+                    criticalPostActionTracker.remove(localPostId, MOVING_POST_TO_DRAFT)
                 }
         )
         showSnackbar.invoke(snackBarHolder)
@@ -212,50 +196,85 @@ class PostActionHandler(
         }
     }
 
-    private fun trashPost(post: PostModel) {
+    fun trashPostWithLocalChanges(localPostId: Int) {
+        // If post doesn't exist, nothing else to do
+        val post = postStore.getPostByLocalPostId(localPostId) ?: return
+        trashPost(post, true)
+    }
+
+    private fun trashPost(post: PostModel, hasLocalChanges: Boolean = false) {
         // We need network connection to trash a post
         if (!checkNetworkConnection()) {
             return
         }
+        val criticalPostAction = if (hasLocalChanges) {
+            TRASHING_POST_WITH_LOCAL_CHANGES
+        } else {
+            TRASHING_POST
+        }
 
-        criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = TRASHING_POST)
+        showSnackbar.invoke(SnackbarMessageHolder(R.string.post_trashing))
+        criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = criticalPostAction)
 
         triggerPostUploadAction.invoke(CancelPostAndMediaUpload(post))
         dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
     }
 
     fun handlePostTrashed(localPostId: LocalId, isError: Boolean) {
-        if (criticalPostActionTracker.get(localPostId) != TRASHING_POST) {
+        val criticalAction = criticalPostActionTracker.get(localPostId)
+        if (criticalAction != TRASHING_POST && criticalAction != TRASHING_POST_WITH_LOCAL_CHANGES) {
             /*
              * This is an unexpected action and either it has already been handled or another critical action has
              * been performed. In either case, safest action is to just ignore it.
              */
             return
         }
-        val removeFromTracker = {
-            criticalPostActionTracker.remove(localPostId = localPostId, criticalPostAction = TRASHING_POST)
-        }
+        criticalPostActionTracker.remove(localPostId = localPostId, criticalPostAction = criticalAction)
         if (isError) {
-            removeFromTracker.invoke()
             showToast.invoke(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
+        } else {
+            val snackBarHolder = when (criticalAction) {
+                TRASHING_POST -> SnackbarMessageHolder(
+                        messageRes = R.string.post_trashed,
+                        buttonTitleRes = R.string.undo,
+                        buttonAction = {
+                            val post = postStore.getPostByLocalPostId(localPostId.value)
+                            if (post != null) {
+                                restorePost(post)
+                            }
+                        }
+                )
+                TRASHING_POST_WITH_LOCAL_CHANGES -> SnackbarMessageHolder(messageRes = R.string.post_trashed)
+                else -> throw IllegalStateException("Unexpected action in handlePostTrashed(): $criticalAction")
+            }
+            showSnackbar.invoke(snackBarHolder)
+        }
+    }
+
+    private fun restorePost(post: PostModel) {
+        // We need network connection to restore a post
+        if (!checkNetworkConnection.invoke()) {
             return
         }
-        val snackBarHolder = SnackbarMessageHolder(
-                messageRes = R.string.post_trashed,
-                buttonTitleRes = R.string.undo,
-                buttonAction = {
-                    val post = postStore.getPostByLocalPostId(localPostId.value)
-                    if (post != null) {
-                        removeFromTracker.invoke()
-                        restorePost(post)
-                        showSnackbar.invoke(SnackbarMessageHolder(R.string.post_restoring))
-                    }
-                },
-                onDismissAction = {
-                    removeFromTracker.invoke()
-                }
-        )
-        showSnackbar.invoke(snackBarHolder)
+        showSnackbar.invoke(SnackbarMessageHolder(messageRes = R.string.post_restoring))
+        criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = RESTORING_POST)
+        dispatcher.dispatch(PostActionBuilder.newRestorePostAction(RemotePostPayload(post, site)))
+    }
+
+    fun handlePostRestored(localPostId: LocalId, isError: Boolean) {
+        if (criticalPostActionTracker.get(localPostId) != RESTORING_POST) {
+            /*
+             * This is an unexpected action and either it has already been handled or another critical action has
+             * been performed. In either case, safest action is to just ignore it.
+             */
+            return
+        }
+        criticalPostActionTracker.remove(localPostId = localPostId, criticalPostAction = RESTORING_POST)
+        if (isError) {
+            showToast.invoke(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
+        } else {
+            showSnackbar.invoke(SnackbarMessageHolder(messageRes = R.string.post_restored))
+        }
     }
 
     fun isPerformingCriticalAction(localPostId: LocalId): Boolean {

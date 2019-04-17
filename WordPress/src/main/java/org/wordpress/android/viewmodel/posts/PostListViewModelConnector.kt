@@ -16,6 +16,7 @@ class PostListViewModelConnector(
     val doesPostHaveUnhandledConflict: (PostModel) -> Boolean,
     private val getFeaturedImageUrl: (site: SiteModel, featuredImageId: Long, postContent: String) -> String?,
     val viewLayoutType: ViewLayoutType
+    val postFetcher: PostFetcher
 ) {
     fun getFeaturedImageUrl(featuredImageId: Long, postContent: String): String? {
         return getFeaturedImageUrl.invoke(site, featuredImageId, postContent)

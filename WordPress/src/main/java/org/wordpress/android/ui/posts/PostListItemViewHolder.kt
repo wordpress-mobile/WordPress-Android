@@ -18,10 +18,10 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
+import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 
@@ -110,7 +110,6 @@ class PostListItemViewHolder(
     }
 
     private fun showFeaturedImage(imageUrl: String?) {
-        // TODO move part of this logic to VM
         if (imageUrl == null) {
             featuredImageView.visibility = View.GONE
             config.imageManager.cancelRequestAndClearImageView(featuredImageView)

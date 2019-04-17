@@ -7,6 +7,7 @@ public class PublicizeConstants {
 
     public static final String GOOGLE_PLUS_ID = "google_plus";
     public static final String FACEBOOK_ID = "facebook";
+    public static final String TWITTER_ID = "twitter";
 
     public enum ConnectAction {
         CONNECT,

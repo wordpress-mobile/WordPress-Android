@@ -267,11 +267,10 @@
     <string name="button_trash">Trash</string>
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
-    <string name="button_back">Back</string>
     <string name="button_discard">Discard</string>
     <string name="button_discard_changes">Discard Changes</string>
     <string name="button_retry">Retry</string>
-    <string name="button_restore">Restore</string>
+    <string name="button_move_to_draft">Move to Draft</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
@@ -337,6 +336,10 @@
     <string name="snackbar_conflict_local_version_discarded">Local version discarded</string>
     <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
     <string name="snackbar_conflict_undo">Undo</string>
+
+    <!-- trash post with local changes dialog -->
+    <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will discard local changes, are you sure you want to continue?</string>
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
@@ -441,6 +444,7 @@
     <string name="post_trashing">Post is being trashed</string>
     <string name="post_restored">Post restored</string>
     <string name="post_restoring">Post is being restored</string>
+    <string name="post_moving_to_draft">Post is being moved to draft</string>
 
     <string name="share_link">Share link</string>
     <string name="view_in_browser">View in browser</string>
@@ -1688,6 +1692,7 @@
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>
+    <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -2288,6 +2293,7 @@
     <string name="notification_error_wrong_password">Please double check your password to continue.</string>
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
+    <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
     <string name="change_photo">Change photo</string>
 
     <!-- Content description for accessibility  -->
@@ -2529,7 +2535,7 @@
     <string name="new_site_creation_screen_title_general">Create Site</string>
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
-    <string name="new_site_creation_preview_subtitle">You\'ll be able to customise look and feel of your site later</string>
+    <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>

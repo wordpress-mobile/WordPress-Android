@@ -28,8 +28,7 @@ fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postDat
         PostListButtonType.BUTTON_PUBLISH -> "publish"
         PostListButtonType.BUTTON_SYNC -> "sync"
         PostListButtonType.BUTTON_MORE -> "more"
-        PostListButtonType.BUTTON_BACK -> "back"
-        PostListButtonType.BUTTON_RESTORE -> "restore"
+        PostListButtonType.BUTTON_MOVE_TO_DRAFT -> "move_to_draft"
     }
 
     AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)

@@ -182,6 +182,48 @@ class PostListItemUiStateHelperTest {
         assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_post_private))
     }
 
+    @Test
+    fun `show progress when performing critical action`() {
+        val state = createPostListItemUiState(performingCriticalAction = true)
+        assertThat(state.data.showProgress).isTrue()
+    }
+
+    @Test
+    fun `show progress when post is uploading or queued`() {
+        val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploadingOrQueued = true))
+        assertThat(state.data.showProgress).isTrue()
+    }
+
+    @Test
+    fun `show progress when uploading media`() {
+        val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasInProgressMediaUpload = true))
+        assertThat(state.data.showProgress).isTrue()
+    }
+
+    @Test
+    fun `do not show progress when upload failed`() {
+        val state = createPostListItemUiState(
+                uploadStatus = createUploadStatus(
+                        isUploadFailed = true,
+                        isUploadingOrQueued = true,
+                        hasInProgressMediaUpload = true
+                )
+        )
+        assertThat(state.data.showProgress).isFalse()
+    }
+
+    @Test
+    fun `show overlay when performing critical action`() {
+        val state = createPostListItemUiState(performingCriticalAction = true)
+        assertThat(state.data.showOverlay).isTrue()
+    }
+
+    @Test
+    fun `show overlay when uploading post`() {
+        val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploading = true))
+        assertThat(state.data.showOverlay).isTrue()
+    }
+
     private fun createPostModel(
         status: String = POST_STATE_PUBLISH,
         isLocalDraft: Boolean = false,
@@ -202,6 +244,7 @@ class PostListItemUiStateHelperTest {
         statsSupported: Boolean = false,
         featuredImageUrl: String? = null,
         formattedDate: String = FORMATTER_DATE,
+        performingCriticalAction: Boolean = false,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit = { _, _, _ -> }
     ): PostListItemUiState = helper.createPostListItemUiState(
             post = post,
@@ -212,7 +255,7 @@ class PostListItemUiStateHelperTest {
             featuredImageUrl = featuredImageUrl,
             formattedDate = formattedDate,
             onAction = onAction,
-            performingCriticalAction = false
+            performingCriticalAction = performingCriticalAction
     )
 
     private fun createUploadStatus(
