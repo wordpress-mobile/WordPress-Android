@@ -48,7 +48,8 @@ abstract class StatsListViewModel(
         WEEKS(R.string.stats_timeframe_weeks),
         MONTHS(R.string.stats_timeframe_months),
         YEARS(R.string.stats_timeframe_years),
-        DETAIL(R.string.stats);
+        DETAIL(R.string.stats),
+        ANNUAL_STATS(R.string.stats_insights_annual_site_stats);
     }
 
     val selectedDate = dateSelector.selectedDate

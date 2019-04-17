@@ -35,7 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase.AnnualSiteStatsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase.CommentsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
@@ -84,7 +84,7 @@ class StatsModule {
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
-        annualSiteStatsUseCase: AnnualSiteStatsUseCase
+        annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -96,7 +96,7 @@ class StatsModule {
                 tagsAndCategoriesUseCaseFactory.build(UseCaseMode.BLOCK),
                 publicizeUseCaseFactory.build(UseCaseMode.BLOCK),
                 postingActivityUseCase,
-                annualSiteStatsUseCase
+                annualSiteStatsUseCaseFactory.build(BLOCK)
         )
     }
 
@@ -119,7 +119,8 @@ class StatsModule {
         postingActivityUseCase: PostingActivityUseCase,
         postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
         postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
-        postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory
+        postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory,
+        annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -133,7 +134,8 @@ class StatsModule {
                 postingActivityUseCase,
                 postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
                 postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
-                postRecentWeeksUseCaseFactory.build(VIEW_ALL)
+                postRecentWeeksUseCaseFactory.build(VIEW_ALL),
+                annualSiteStatsUseCaseFactory.build(VIEW_ALL)
         )
     }
 
