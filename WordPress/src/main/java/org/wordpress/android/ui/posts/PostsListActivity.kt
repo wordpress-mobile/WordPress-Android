@@ -6,6 +6,10 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -341,11 +345,13 @@ class PostsListActivity : AppCompatActivity(),
     // Menu ViewLayoutType handling
 
     private fun updateMenuIconForViewLayoutType(viewLayoutType: ViewLayoutType) {
-        //TODO: Use actual icons when available
         val iconId = when(viewLayoutType) {
-            STANDARD -> R.drawable.ab_icon_edit
-            COMPACT -> R.drawable.ic_info_white_24dp
+            STANDARD -> R.drawable.ic_view_post_compact
+            COMPACT -> R.drawable.ic_view_post_full
         }
-        toggleViewLayoutMenuItem?.setIcon(iconId)
+        getDrawable(iconId)?.let { drawable ->
+            drawable.setTint(Color.WHITE)
+            toggleViewLayoutMenuItem?.setIcon(drawable)
+        }
     }
 }
