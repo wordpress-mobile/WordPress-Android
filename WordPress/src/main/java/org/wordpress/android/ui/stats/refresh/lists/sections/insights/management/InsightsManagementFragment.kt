@@ -17,6 +17,8 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.insights_management_fragment.*
 import javax.inject.Inject
 import android.animation.LayoutTransition
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
 
@@ -40,6 +42,19 @@ class InsightsManagementFragment : DaggerFragment() {
 
         initializeViews()
         initializeViewModels(requireActivity())
+
+        enableAnimations()
+    }
+
+    private fun enableAnimations() {
+        viewModel.launch {
+            delay(500)
+            val transition = LayoutTransition()
+            transition.disableTransitionType(LayoutTransition.DISAPPEARING)
+            transition.disableTransitionType(LayoutTransition.APPEARING)
+            transition.enableTransitionType(LayoutTransition.CHANGING)
+            insightsManagementContainer.layoutTransition = transition
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -52,11 +67,6 @@ class InsightsManagementFragment : DaggerFragment() {
     private fun initializeViews() {
         removedInsights.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         addedInsights.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-
-        val transition = LayoutTransition()
-        transition.disableTransitionType(LayoutTransition.DISAPPEARING)
-        transition.enableTransitionType(LayoutTransition.CHANGING)
-        insightsManagementContainer.layoutTransition = transition
     }
 
     private fun initializeViewModels(activity: FragmentActivity) {
