@@ -85,7 +85,7 @@ class InsightsManagementViewModel @Inject constructor(
             val model = InsightTypesModel(addedTypes, removedTypes + FOLLOWER_TOTALS + ANNUAL_SITE_STATS)
             statsStore.updateTypes(siteProvider.siteModel, model)
 
-            insightsUseCase.refreshData()
+            insightsUseCase.refreshData(true)
         }
         _closeInsightsManagement.call()
     }
