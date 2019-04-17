@@ -2,11 +2,16 @@ package org.wordpress.android.ui.posts
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import org.wordpress.android.databinding.PostListItemCompactBinding
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.viewmodel.posts.PostListItemAction
+import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
+import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 
 data class PostListItemCompactViewBinder(
@@ -14,7 +19,8 @@ data class PostListItemCompactViewBinder(
     val date: UiString,
     val status: UiString,
     val image: ImageBundle,
-    val moreMenuClickHandler: (View) -> Unit
+    val moreMenuClickHandler: (View) -> Unit,
+    val onItemClickHandler: () -> Unit
 ) {
     fun hasImage(): Boolean {
         return image.url != null
@@ -40,19 +46,46 @@ class PostListItemCompactViewHolder(
     }
 
     private fun binderFromItem(item: PostListItemUiState): PostListItemCompactViewBinder {
-
-
         return PostListItemCompactViewBinder(
                 item.data.title!!,
                 item.data.dateAndAuthor!!,
                 statusTextFromItem(item),
                 ImageBundle(item.data.imageUrl, config),
-                ::handleOpenMenuClick
+                ::handleOpenMenuClick,
+                item.onSelected
         )
     }
 
     private fun handleOpenMenuClick(view: View) {
-        //TODO:
+        val menu = PopupMenu(view.context, view)
+        currentItem?.actions?.forEach { action ->
+            when (action) {
+                is MoreItem -> {
+                    action.actions.forEach { item -> addMenuItemForAction(menu, item) }
+                }
+                is SingleItem -> {
+                    addMenuItemForAction(menu, action)
+                }
+            }
+
+        }
+        menu.show()
+    }
+
+    private fun addMenuItemForAction(
+        menu: PopupMenu,
+        action: PostListItemAction
+    ) {
+        val menuItem = menu.menu.add(
+                Menu.NONE,
+                action.buttonType.value,
+                Menu.NONE,
+                action.buttonType.textResId
+        )
+        menuItem.setOnMenuItemClickListener {
+            action.onButtonClicked.invoke(action.buttonType)
+            true
+        }
     }
 
     private fun statusTextFromItem(item: PostListItemUiState): UiString {

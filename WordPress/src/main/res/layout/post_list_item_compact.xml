@@ -13,7 +13,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/white">
+        android:background="?selectableItemBackground"
+        android:onClick="@{ () -> binder.onItemClickHandler.invoke() }">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/title"
