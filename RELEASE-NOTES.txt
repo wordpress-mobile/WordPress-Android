@@ -2,6 +2,7 @@
 -----
 * Updated primary button color to pink
 * Updated snackbar design to Material guidelines
+* Added ability to toggle to compact view type for blog posts list
 
 12.2
 -----
