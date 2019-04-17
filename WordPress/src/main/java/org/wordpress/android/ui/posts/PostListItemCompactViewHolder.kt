@@ -37,7 +37,6 @@ class PostListItemCompactViewHolder(
     private val config: PostViewHolderConfig,
     private val uiHelpers: UiHelpers
 ) : RecyclerView.ViewHolder(binding.root) {
-
     var currentItem: PostListItemUiState? = null
 
     fun bind(item: PostListItemUiState) {
@@ -67,7 +66,6 @@ class PostListItemCompactViewHolder(
                     addMenuItemForAction(menu, action)
                 }
             }
-
         }
         menu.show()
     }
