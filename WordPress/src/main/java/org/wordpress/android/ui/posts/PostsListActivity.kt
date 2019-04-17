@@ -7,9 +7,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -311,7 +308,6 @@ class PostsListActivity : AppCompatActivity(),
         return super.onOptionsItemSelected(item)
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menu?.clear()
         menu?.add(Menu.FIRST, R.id.post_menu_item_view_layout_type, 3, "")?.let { item ->
@@ -344,7 +340,7 @@ class PostsListActivity : AppCompatActivity(),
     // Menu ViewLayoutType handling
 
     private fun updateMenuIconForViewLayoutType(viewLayoutType: ViewLayoutType) {
-        val iconId = when(viewLayoutType) {
+        val iconId = when (viewLayoutType) {
             STANDARD -> R.drawable.ic_view_post_compact
             COMPACT -> R.drawable.ic_view_post_full
         }
