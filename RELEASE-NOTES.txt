@@ -11,6 +11,7 @@
 
 12.2
 -----
+* Added an action to share sites in the Reader
 * Updated color scheme to Classic Bright
 * Adds support for .blog subdomains for the new site creation flow
 
