@@ -10,8 +10,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/insightsManagementContainer"
         style="@style/StatsInsightManagementList"
-        android:clipChildren="false"
-        android:animateLayoutChanges="true">
+        android:clipChildren="false">
 
         <TextView
             android:id="@+id/insightsManagementSubtitle"

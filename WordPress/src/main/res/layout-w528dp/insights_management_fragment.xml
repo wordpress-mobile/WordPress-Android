@@ -4,15 +4,15 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/insightsManagementScrollView"
-android:layout_width="match_parent"
+android:layout_width="wrap_content"
 android:layout_height="match_parent">
 
 <android.support.constraint.ConstraintLayout
     android:id="@+id/insightsManagementContainer"
     style="@style/StatsInsightManagementList"
-    android:clipChildren="false"
     android:paddingBottom="@dimen/margin_large"
-    android:animateLayoutChanges="true">
+    android:layout_marginStart="@dimen/margin_large"
+    android:layout_marginEnd="@dimen/margin_large">
 
     <TextView
         android:id="@+id/insightsManagementSubtitle"
@@ -37,6 +37,7 @@ android:layout_height="match_parent">
         android:layout_height="wrap_content"
         android:animateLayoutChanges="false"
         android:layout_marginTop="@dimen/stats_insights_management_margin"
+        app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/insightsManagementSubtitle"
@@ -48,7 +49,6 @@ android:layout_height="match_parent">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
-            android:translationZ="3dp"
             android:scrollbars="none"
             tools:listitem="@layout/insights_management_list_item"/>
 
@@ -90,6 +90,7 @@ android:layout_height="match_parent">
         android:layout_height="wrap_content"
         android:animateLayoutChanges="false"
         android:layout_marginTop="@dimen/margin_large"
+        app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/addInsightsHeader"
