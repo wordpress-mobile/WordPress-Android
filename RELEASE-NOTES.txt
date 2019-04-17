@@ -4,12 +4,14 @@
 * Redirect to username/password login when WordPress.com reports email login not allowed
 * Updated notifications list to Material guidelines
 * Updated snackbar design to Material guidelines
+* Add "This Year" card to Stats Insights screen
 * The Site → Blog Posts → View WebView will no longer show any Calypso UI
 * Fixed an issue with Twitter publicize connections
 * Fixed an issue where the site icon wasn't updating correctly after switching to another site
 
 12.2
 -----
+* Added an action to share sites in the Reader
 * Updated color scheme to Classic Bright
 * Adds support for .blog subdomains for the new site creation flow
 
