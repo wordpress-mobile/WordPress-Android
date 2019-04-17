@@ -99,13 +99,6 @@ class PostListFragment : Fragment() {
                 .get(PostListMainViewModel::class.java)
 
 
-        postListAdapter = PostListAdapter(
-                context = nonNullActivity,
-                postViewHolderConfig = postViewHolderConfig,
-                uiHelpers = uiHelpers,
-                viewLayoutType = mainViewModel.viewLayoutType.value ?: ViewLayoutType.defaultValue
-        )
-
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
         viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
@@ -145,6 +138,15 @@ class PostListFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recycler_view)
         progressLoadMore = view.findViewById(R.id.progress)
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
+
+        val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+                .get(PostListMainViewModel::class.java)
+        postListAdapter = PostListAdapter(
+                context = nonNullActivity,
+                postViewHolderConfig = postViewHolderConfig,
+                uiHelpers = uiHelpers,
+                viewLayoutType = mainViewModel.viewLayoutType.value ?: ViewLayoutType.defaultValue
+        )
 
         val context = nonNullActivity
         val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.margin_medium)
