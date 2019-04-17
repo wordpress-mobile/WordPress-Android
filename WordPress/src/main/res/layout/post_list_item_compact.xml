@@ -91,7 +91,7 @@
 
         <ImageButton
             android:id="@+id/more_button"
-            android:layout_widpoststh="24dp"
+            android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
