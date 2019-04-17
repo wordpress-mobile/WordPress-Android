@@ -1095,6 +1095,11 @@ public class WPMainActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
+        // WPMainActivity never stops listening for the Dispatcher events and as a result it tries to show the
+        // SnackBar even when another activity is in the foreground. However, this has a tricky side effect, as if
+        // the Activity in the foreground is showing a Snackbar the SnackBar is dismissed as soon as the
+        // WPMainActivity invokes show(). This condition makes sure, the WPMainActivity invokes show() only when
+        // it's visible. For more info see https://github.com/wordpress-mobile/WordPress-Android/issues/9604
         if (getLifecycle().getCurrentState().isAtLeast(STARTED)) {
             SiteModel site = getSelectedSite();
             if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
