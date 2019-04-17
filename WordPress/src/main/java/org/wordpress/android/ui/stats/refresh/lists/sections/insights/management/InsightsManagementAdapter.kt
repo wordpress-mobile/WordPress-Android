@@ -26,14 +26,16 @@ class InsightsManagementAdapter(
     }
 
     override fun onBindViewHolder(holder: InsightsManagementViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], position == items.size - 1)
     }
 
     override fun getItemViewType(position: Int): Int {
         return items[position].type.ordinal
     }
 
-    override fun onItemMoved(fromPosition: Int, toPosition: Int) {
+    override fun onItemMoved(originalViewHolder: ViewHolder, newViewHolder: ViewHolder) {
+        val fromPosition = originalViewHolder.adapterPosition
+        val toPosition = newViewHolder.adapterPosition
         if (fromPosition < toPosition) {
             for (i in fromPosition until toPosition) {
                 Collections.swap(items, i, i + 1)
@@ -44,6 +46,9 @@ class InsightsManagementAdapter(
             }
         }
         notifyItemMoved(fromPosition, toPosition)
+
+        (originalViewHolder as? AddedInsightViewHolder)?.updateDividerVisibility(toPosition == items.size - 1)
+        (newViewHolder as? AddedInsightViewHolder)?.updateDividerVisibility(fromPosition == items.size - 1)
     }
 
     override fun onDragFinished(viewHolder: ViewHolder) {
@@ -62,7 +67,7 @@ class InsightsManagementAdapter(
 }
 
 interface ItemTouchHelperAdapter {
-    fun onItemMoved(fromPosition: Int, toPosition: Int)
+    fun onItemMoved(originalViewHolder: ViewHolder, newViewHolder: ViewHolder)
     fun onDragFinished(viewHolder: ViewHolder)
 }
 

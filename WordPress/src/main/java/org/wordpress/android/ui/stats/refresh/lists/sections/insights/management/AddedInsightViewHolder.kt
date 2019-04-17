@@ -18,8 +18,9 @@ class AddedInsightViewHolder(
     private val title: TextView = itemView.findViewById(R.id.itemTitle)
     private val managementButton: ImageButton = itemView.findViewById(R.id.insightsManagementItemButton)
     private val dragAndDropButton: View = itemView.findViewById(R.id.dragAndDropItemButton)
+    private val divider: View = itemView.findViewById(R.id.divider)
 
-    override fun bind(insight: InsightModel) {
+    override fun bind(insight: InsightModel, isLast: Boolean) {
         title.setText(insight.name)
 
         managementButton.setImageResource(R.drawable.ic_remove_circle)
@@ -35,7 +36,14 @@ class AddedInsightViewHolder(
             }
             return@setOnTouchListener true
         }
+
         dragAndDropButton.visibility = View.VISIBLE
+
+        updateDividerVisibility(isLast)
+    }
+
+    fun updateDividerVisibility(isLast: Boolean) {
+        divider.visibility = if (isLast) View.GONE else View.VISIBLE
     }
 
     fun onDragFinished() {

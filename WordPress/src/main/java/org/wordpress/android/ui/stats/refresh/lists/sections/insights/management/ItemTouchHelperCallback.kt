@@ -15,11 +15,11 @@ class ItemTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) : Ite
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: ViewHolder): Int {
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-        return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, 0)
+        return makeMovementFlags(dragFlags, 0)
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: ViewHolder, target: ViewHolder): Boolean {
-        adapter.onItemMoved(viewHolder.adapterPosition, target.adapterPosition)
+        adapter.onItemMoved(viewHolder, target)
         return true
     }
 

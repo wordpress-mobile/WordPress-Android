@@ -9,5 +9,5 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 abstract class InsightsManagementViewHolder(
     parent: ViewGroup
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.insights_management_list_item, parent, false)) {
-    abstract fun bind(insight: InsightModel)
+    abstract fun bind(insight: InsightModel, isLast: Boolean)
 }

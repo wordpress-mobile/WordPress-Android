@@ -14,8 +14,9 @@ class RemovedInsightViewHolder(
     private val title: TextView = itemView.findViewById(R.id.itemTitle)
     private val managementButton: ImageButton = itemView.findViewById(R.id.insightsManagementItemButton)
     private val dragAndDropButton: View = itemView.findViewById(R.id.dragAndDropItemButton)
+    private val divider: View = itemView.findViewById(R.id.divider)
 
-    override fun bind(insight: InsightModel) {
+    override fun bind(insight: InsightModel, isLast: Boolean) {
         title.setText(insight.name)
 
         managementButton.setImageResource(R.drawable.ic_add_circle)
@@ -25,5 +26,6 @@ class RemovedInsightViewHolder(
         }
 
         dragAndDropButton.visibility = View.GONE
+        divider.visibility = if (isLast) View.GONE else View.VISIBLE
     }
 }
