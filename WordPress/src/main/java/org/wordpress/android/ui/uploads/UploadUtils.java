@@ -26,7 +26,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -200,9 +199,7 @@ public class UploadUtils {
 
     private static void showSnackbarError(View view, String message, int buttonTitleRes,
                                           View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, message,
-                AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener).show();
+        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
     }
 
     public static void showSnackbarError(View view, String message) {
@@ -211,32 +208,22 @@ public class UploadUtils {
 
     private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
                                      View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, messageRes,
-                AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener).show();
+        WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
     }
 
     public static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, messageRes,
-                AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener)
-                .show();
+        WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
     }
 
     private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, message,
-                AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener)
-                .show();
+        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
     }
 
     public static void showSnackbarSuccessActionOrange(View view, int messageRes, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
-                .setAction(buttonTitleRes, onClickListener)
-                .show();
+        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).setAction(buttonTitleRes, onClickListener).show();
     }
 
     public static void showSnackbar(View view, int messageRes) {
