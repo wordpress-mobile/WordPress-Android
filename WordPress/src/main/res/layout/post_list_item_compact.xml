@@ -1,15 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/red_0">
+        android:layout_height="wrap_content">
 
-    </RelativeLayout>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:fontFamily="serif"
+            android:maxLines="1"
+            android:textColor="@color/neutral_800"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/end_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginTop="@dimen/margin_extra_large"
+            tools:text="Testing title Testing title Testing title Testing title Testing title Testing title Testing title Testing title"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/date_and_author"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:fontFamily="serif"
+            android:maxLines="1"
+            android:textColor="@color/neutral_500"
+            android:textSize="@dimen/text_sz_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            tools:text="99 days ago"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/statuses_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:fontFamily="serif"
+            android:maxLines="1"
+            android:textAlignment="textStart"
+            android:textSize="@dimen/text_sz_medium"
+            app:layout_constraintEnd_toStartOf="@id/end_layout"
+            app:layout_constraintStart_toEndOf="@+id/date_and_author"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_goneMarginBottom="@dimen/margin_extra_large"
+            tools:text="Private · Local Changes"/>
+
+        <RelativeLayout
+            android:id="@+id/end_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="15dp"
+                android:contentDescription="@string/featured_image_desc"
+                android:background="@color/red_0"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
 </layout>

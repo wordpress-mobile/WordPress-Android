@@ -15,6 +15,7 @@ class PostListItemCompactViewHolder(
 
     fun bind(item: PostListItemUiState) {
         //TODO: Setup this row from the UI state object
+
     }
 
     companion object {
