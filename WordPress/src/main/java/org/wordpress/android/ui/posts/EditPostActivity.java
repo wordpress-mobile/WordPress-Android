@@ -1741,7 +1741,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
-                publishPost(PostStatus.fromPost(mPost) == PostStatus.DRAFT);
+                publishPost(true);
                 AppRatingDialog.INSTANCE
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
@@ -1750,7 +1750,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mEditorFragment.removeAllFailedMediaUploads();
                 break;
             case ASYNC_PROMO_DIALOG_TAG:
-                publishPost(PostStatus.fromPost(mPost) == PostStatus.DRAFT);
+                publishPost(true);
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
                 // no op
@@ -1973,7 +1973,7 @@ public class EditPostActivity extends AppCompatActivity implements
         publishPost(false);
     }
 
-    private void publishPost(final boolean isDraftToPublish) {
+    private void publishPost(final boolean isPublishConfirmed) {
         AccountModel account = mAccountStore.getAccount();
         // prompt user to verify e-mail before publishing
         if (!account.getEmailVerified()) {
@@ -2017,7 +2017,7 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 boolean isFirstTimePublish = isFirstTimePublish();
-                if (isDraftToPublish) {
+                if (isPublishConfirmed) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
                     // otherwise we'd have an incorrect value
                     mPost.setStatus(PostStatus.PUBLISHED.toString());
