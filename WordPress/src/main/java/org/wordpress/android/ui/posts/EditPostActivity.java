@@ -1298,11 +1298,9 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         hidePhotoPicker();
-        boolean userCanPublishPosts = userCanPublishPosts();
 
-        if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts)) {
-            if (AppPrefs.isAsyncPromoRequired() && userCanPublishPosts
-                && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
+        if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts())) {
+            if (shouldShowAsyncPromoDialog()) {
                 showAsyncPromoDialog(mPost.isPage(), PostStatus.fromPost(mPost) == PostStatus.SCHEDULED);
             } else {
                 showPublishConfirmationOrUpdateIfNotLocalDraft();
@@ -3943,6 +3941,22 @@ public class EditPostActivity extends AppCompatActivity implements
                 mEditorMediaUploadListener.onMediaUploadRetry(localMediaId, mediaType);
             }
         }
+    }
+
+    private boolean shouldShowAsyncPromoDialog() {
+        // To make sure the behavior matches what we're communicating to the user as available options,
+        // the same conditions as per `getSaveButtonText()` apply:
+        //
+        //if status is DRAFT and isNewPost() && mPost.isLocalDraft() --> PUBLISH;
+        //else if UNKNOWN and mPost.isLocalDraft() --> PUBLISH
+        //else if SAVE/UPDATE
+        PostStatus status = PostStatus.fromPost(mPost);
+        if (AppPrefs.isAsyncPromoRequired() && userCanPublishPosts()
+            && ((status == PostStatus.DRAFT || status == PostStatus.PUBLISHED) && isNewPost() && mPost.isLocalDraft()
+                || status == PostStatus.UNKNOWN && mPost.isLocalDraft())) {
+            return true;
+        }
+        return false;
     }
 
     private void showAsyncPromoDialog(boolean isPage, boolean isScheduled) {
