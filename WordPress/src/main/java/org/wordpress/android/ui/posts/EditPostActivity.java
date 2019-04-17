@@ -1492,7 +1492,7 @@ public class EditPostActivity extends AppCompatActivity implements
             showPublishConfirmationDialog();
         } else {
             // otherwise, if they're updating a Post, just go ahead and save it to the server
-            publishPost();
+            publishPost(false);
         }
     }
 
@@ -1967,10 +1967,6 @@ public class EditPostActivity extends AppCompatActivity implements
         i.putExtra(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
         i.putExtra(EXTRA_IS_NEW_POST, mIsNewPost);
         setResult(RESULT_OK, i);
-    }
-
-    private void publishPost() {
-        publishPost(false);
     }
 
     private void publishPost(final boolean isPublishConfirmed) {
