@@ -3946,10 +3946,9 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean shouldShowAsyncPromoDialog() {
         // To make sure the behavior matches what we're communicating to the user as available options,
         // the same conditions as per `getSaveButtonText()` apply:
-        //
-        //if status is DRAFT and isNewPost() && mPost.isLocalDraft() --> PUBLISH;
-        //else if UNKNOWN and mPost.isLocalDraft() --> PUBLISH
-        //else if SAVE/UPDATE
+        //  if status is DRAFT and isNewPost() && mPost.isLocalDraft() --> PUBLISH;
+        //  else if UNKNOWN and mPost.isLocalDraft() --> PUBLISH
+        //  else if SAVE/UPDATE
         PostStatus status = PostStatus.fromPost(mPost);
         if (AppPrefs.isAsyncPromoRequired() && userCanPublishPosts()
             && ((status == PostStatus.DRAFT || status == PostStatus.PUBLISHED) && isNewPost() && mPost.isLocalDraft()
