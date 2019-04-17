@@ -222,7 +222,7 @@ class PostListMainViewModel @Inject constructor(
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
                 getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
-                viewLayoutType = this.viewLayoutType.value ?: Companion.defaultValue
+                viewLayoutType = this.viewLayoutType.value ?: Companion.defaultValue,
                 postFetcher = postFetcher
         )
     }
