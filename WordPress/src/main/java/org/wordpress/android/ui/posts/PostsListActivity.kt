@@ -17,7 +17,6 @@ import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.Toolbar
 import android.view.HapticFeedbackConstants
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -34,7 +33,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeCli
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.ViewLayoutType.Companion
 import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
@@ -204,7 +202,7 @@ class PostsListActivity : AppCompatActivity(),
             authorFilter?.let {
                 val currentItem: Int = pager.currentItem
                 val viewLayoutType = viewModel.viewLayoutType.value ?: ViewLayoutType.defaultValue
-                postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager, viewLayoutType)
+                postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
                 pager.adapter = postsPagerAdapter
 
                 pager.removeOnPageChangeListener(onPageChangeListener)
@@ -216,7 +214,6 @@ class PostsListActivity : AppCompatActivity(),
         })
         viewModel.viewLayoutType.observe(this, Observer { viewLayoutType ->
             viewLayoutType?.let { type ->
-                postsPagerAdapter.updateViewLayoutType(type)
                 updateMenuIconForViewLayoutType(type)
             }
         })

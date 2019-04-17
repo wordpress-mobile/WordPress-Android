@@ -11,8 +11,11 @@ import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
+import org.wordpress.android.ui.posts.PostListItemCompactViewHolder
 import org.wordpress.android.ui.posts.PostListItemViewHolder
 import org.wordpress.android.ui.posts.PostViewHolderConfig
+import org.wordpress.android.ui.posts.ViewLayoutType
+import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
@@ -20,13 +23,15 @@ import org.wordpress.android.viewmodel.posts.PostListItemType.LoadingItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 
 private const val VIEW_TYPE_POST = 0
-private const val VIEW_TYPE_ENDLIST_INDICATOR = 1
-private const val VIEW_TYPE_LOADING = 2
+private const val VIEW_TYPE_POST_COMPACT = 1
+private const val VIEW_TYPE_ENDLIST_INDICATOR = 2
+private const val VIEW_TYPE_LOADING = 3
 
 class PostListAdapter(
     context: Context,
     private val postViewHolderConfig: PostViewHolderConfig,
-    private val uiHelpers: UiHelpers
+    private val uiHelpers: UiHelpers,
+    private var viewLayoutType: ViewLayoutType
 ) : PagedListAdapter<PostListItemType, ViewHolder>(PostListDiffItemCallback) {
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -34,7 +39,9 @@ class PostListAdapter(
         return when (getItem(position)) {
             is EndListIndicatorItem -> VIEW_TYPE_ENDLIST_INDICATOR
             is LoadingItem -> VIEW_TYPE_LOADING
-            is PostListItemUiState -> VIEW_TYPE_POST
+            is PostListItemUiState -> {
+                return if (viewLayoutType == COMPACT) { VIEW_TYPE_POST_COMPACT } else { VIEW_TYPE_POST }
+            }
             null -> VIEW_TYPE_LOADING // Placeholder by paged list
         }
     }
@@ -53,6 +60,9 @@ class PostListAdapter(
             VIEW_TYPE_POST -> {
                 PostListItemViewHolder(R.layout.post_list_item, parent, postViewHolderConfig, uiHelpers)
             }
+            VIEW_TYPE_POST_COMPACT -> {
+                PostListItemCompactViewHolder.create(layoutInflater, parent, postViewHolderConfig, uiHelpers)
+            }
             else -> {
                 // Fail fast if a new view type is added so the we can handle it
                 throw IllegalStateException("The view type '$viewType' needs to be handled")
@@ -61,7 +71,7 @@ class PostListAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        // The only holder type that requires a special setup is the PostViewHolder
+        // The only holders that require special setup are PostViewHolder and PostListItemCompactViewHolder
         if (holder is PostListItemViewHolder) {
             val item = getItem(position)
             assert(item is PostListItemUiState) {
@@ -69,7 +79,19 @@ class PostListAdapter(
                         "for position: $position"
             }
             holder.onBind((item as PostListItemUiState))
+        } else if (holder is PostListItemCompactViewHolder) {
+            val item = getItem(position)
+            assert(item is PostListItemUiState) {
+                "If we are presenting PostListItemCompactViewHolder, the item has to be of type PostListItemUiState " +
+                        "for position: $position"
+            }
+            holder.bind(item as PostListItemUiState)
         }
+    }
+
+    fun updateViewLayoutType(updatedViewLayoutType: ViewLayoutType) {
+        this.viewLayoutType = updatedViewLayoutType
+        notifyDataSetChanged()
     }
 
     private class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)

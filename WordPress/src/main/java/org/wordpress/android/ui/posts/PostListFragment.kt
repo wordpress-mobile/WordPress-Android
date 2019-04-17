@@ -54,6 +54,7 @@ class PostListFragment : Fragment() {
     private lateinit var nonNullActivity: FragmentActivity
     // TODO: We can get rid of SiteModel in the Fragment once we remove the `isPhotonCapable`
     private lateinit var site: SiteModel
+    private lateinit var postListAdapter: PostListAdapter
 
     private val postViewHolderConfig: PostViewHolderConfig by lazy {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
@@ -65,14 +66,6 @@ class PostListFragment : Fragment() {
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
                 isPhotonCapable = SiteUtils.isPhotonCapable(site),
                 imageManager = imageManager
-        )
-    }
-
-    private val postListAdapter: PostListAdapter by lazy {
-        PostListAdapter(
-                context = nonNullActivity,
-                postViewHolderConfig = postViewHolderConfig,
-                uiHelpers = uiHelpers
         )
     }
 
@@ -105,6 +98,14 @@ class PostListFragment : Fragment() {
         val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
+
+        postListAdapter = PostListAdapter(
+                context = nonNullActivity,
+                postViewHolderConfig = postViewHolderConfig,
+                uiHelpers = uiHelpers,
+                viewLayoutType = mainViewModel.viewLayoutType.value ?: ViewLayoutType.defaultValue
+        )
+
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
         viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
@@ -123,6 +124,11 @@ class PostListFragment : Fragment() {
         viewModel.scrollToPosition.observe(this, Observer {
             it?.let { index ->
                 recyclerView?.scrollToPosition(index)
+            }
+        })
+        mainViewModel.viewLayoutType.observe(this, Observer { viewLayoutType ->
+            viewLayoutType?.let { nonNullViewLayoutType ->
+                postListAdapter.updateViewLayoutType(nonNullViewLayoutType)
             }
         })
     }

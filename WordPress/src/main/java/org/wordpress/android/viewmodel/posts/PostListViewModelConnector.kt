@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostActionHandler
 import org.wordpress.android.ui.posts.PostListType
+import org.wordpress.android.ui.posts.ViewLayoutType
 
 class PostListViewModelConnector(
     val site: SiteModel,
@@ -13,7 +14,8 @@ class PostListViewModelConnector(
     val postActionHandler: PostActionHandler,
     val getUploadStatus: (PostModel) -> PostListItemUploadStatus,
     val doesPostHaveUnhandledConflict: (PostModel) -> Boolean,
-    private val getFeaturedImageUrl: (site: SiteModel, featuredImageId: Long, postContent: String) -> String?
+    private val getFeaturedImageUrl: (site: SiteModel, featuredImageId: Long, postContent: String) -> String?,
+    val viewLayoutType: ViewLayoutType
 ) {
     fun getFeaturedImageUrl(featuredImageId: Long, postContent: String): String? {
         return getFeaturedImageUrl.invoke(site, featuredImageId, postContent)

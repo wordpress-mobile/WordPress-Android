@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
@@ -197,7 +196,8 @@ class PostListMainViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-                getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
+                getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
+                viewLayoutType = this.viewLayoutType.value ?: Companion.defaultValue
         )
     }
 
@@ -305,10 +305,9 @@ class PostListMainViewModel @Inject constructor(
                 false
             }
 
-
     fun toggleViewLayout() {
         val currentLayoutType = viewLayoutType.value ?: ViewLayoutType.defaultValue
-        val toggledValue = when(currentLayoutType) {
+        val toggledValue = when (currentLayoutType) {
             STANDARD -> COMPACT
             COMPACT -> STANDARD
         }
