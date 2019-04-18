@@ -61,7 +61,7 @@ class StatsStore
                 FOLLOWERS,
                 POSTING_ACTIVITY,
                 PUBLICIZE,
-                FOLLOWER_TOTALS
+                FOLLOWER_TOTALS,
                 ANNUAL_SITE_STATS
         )
     }
