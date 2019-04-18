@@ -57,7 +57,6 @@ class StatsStore
         val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
 
         return@withContext if (addedInsights.isEmpty() && removedInsights.isEmpty()) {
-            updateTypes(site, DEFAULT_INSIGHTS)
             DEFAULT_INSIGHTS
         } else {
             addedInsights
