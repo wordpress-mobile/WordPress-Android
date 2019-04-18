@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.REFERRERS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.SEARCH_TERMS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.VIDEOS
 import org.wordpress.android.fluxc.store.Store.OnChangedError
+import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -72,38 +73,22 @@ class StatsStore
     }
 
     suspend fun moveTypeUp(site: SiteModel, type: InsightType) {
-        val insightTypes = getAddedInsights(site)
-        val indexOfMovedItem = insightTypes.indexOf(type)
-        if (indexOfMovedItem > 0 && indexOfMovedItem < insightTypes.size) {
-            val updatedInsights = mutableListOf<InsightType>()
-            val switchedItemIndex = indexOfMovedItem - 1
-            if (indexOfMovedItem > 1) {
-                updatedInsights.addAll(insightTypes.subList(0, switchedItemIndex))
-            }
-            updatedInsights.add(type)
-            updatedInsights.add(insightTypes[switchedItemIndex])
-            if (indexOfMovedItem + 1 < insightTypes.size) {
-                updatedInsights.addAll(insightTypes.subList(indexOfMovedItem + 1, insightTypes.size))
-            }
-            insightTypeSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
+        val insights = getAddedInsights(site)
+        val index = insights.indexOf(type)
+
+        if (index > 0) {
+            Collections.swap(insights, index, index - 1)
+            insightTypeSqlUtils.insertOrReplaceAddedItems(site, insights)
         }
     }
 
     suspend fun moveTypeDown(site: SiteModel, type: InsightType) {
-        val insightTypes = getAddedInsights(site)
-        val indexOfMovedItem = insightTypes.indexOf(type)
-        if (indexOfMovedItem >= 0 && indexOfMovedItem < insightTypes.size - 1) {
-            val updatedInsights = mutableListOf<InsightType>()
-            val switchedItemIndex = indexOfMovedItem + 1
-            if (indexOfMovedItem > 0) {
-                updatedInsights.addAll(insightTypes.subList(0, indexOfMovedItem))
-            }
-            updatedInsights.add(insightTypes[switchedItemIndex])
-            updatedInsights.add(type)
-            if (switchedItemIndex + 1 < insightTypes.size) {
-                updatedInsights.addAll(insightTypes.subList(switchedItemIndex + 1, insightTypes.size))
-            }
-            insightTypeSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
+        val insights = getAddedInsights(site)
+        val index = insights.indexOf(type)
+
+        if (index < insights.size - 1) {
+            Collections.swap(insights, index, index + 1)
+            insightTypeSqlUtils.insertOrReplaceAddedItems(site, insights)
         }
     }
 
