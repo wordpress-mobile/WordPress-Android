@@ -14,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SectionChange
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
+import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 class StatsDateSelectorTest : BaseUnitTest() {
@@ -26,19 +27,19 @@ class StatsDateSelectorTest : BaseUnitTest() {
     private val updatedDate = Date(10)
     private val updatedLabel = "Jan 2"
 
-    private val dateProviderSelectedDate = MutableLiveData<SectionChange>()
+    private val dateProviderSelectedDate = MutableLiveData<Event<SectionChange>>()
 
     private lateinit var dateSelector: StatsDateSelector
 
     @Before
     fun setUp() {
-        dateProviderSelectedDate.value = SectionChange(statsSection)
-        whenever(selectedDateProvider.selectedDateChanged).thenReturn(dateProviderSelectedDate)
+        dateProviderSelectedDate.value = Event(SectionChange(statsSection))
+        whenever(selectedDateProvider.granularSelectedDateChanged(statsSection)).thenReturn(dateProviderSelectedDate)
 
         dateSelector = StatsDateSelector(
                 selectedDateProvider,
                 statsDateFormatter,
-                StatsSection.DAYS
+                statsSection
         )
         whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(selectedDate)
         whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(selectedDateLabel)
@@ -97,6 +98,9 @@ class StatsDateSelectorTest : BaseUnitTest() {
 
     @Test
     fun `verify date selector hidden for insights`() {
+        whenever(selectedDateProvider.granularSelectedDateChanged(StatsSection.INSIGHTS)).thenReturn(
+                dateProviderSelectedDate
+        )
         dateSelector = StatsDateSelector(
                 selectedDateProvider,
                 statsDateFormatter,
@@ -109,33 +113,5 @@ class StatsDateSelectorTest : BaseUnitTest() {
 
         Assertions.assertThat(model).isNotNull
         Assertions.assertThat(model?.isVisible).isFalse()
-    }
-
-    @Test
-    fun `does not update date selector on unrelated granularity date change`() {
-        whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(selectedDateLabel)
-        whenever(statsDateFormatter.printGranularDate(updatedDate, statsGranularity)).thenReturn(updatedLabel)
-
-        var model: DateSelectorUiModel? = null
-        dateSelector.dateSelectorData.observeForever { model = it }
-
-        dateSelector.updateDateSelector()
-
-        Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
-
-        var selectedSection: StatsSection? = null
-        dateSelector.selectedDate.observeForever { selectedSection = it?.selectedSection }
-
-        dateProviderSelectedDate.value = SectionChange(StatsSection.WEEKS)
-
-        Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
-        Assertions.assertThat(selectedSection).isEqualTo(statsSection)
-
-        whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(updatedDate)
-
-        dateProviderSelectedDate.value = SectionChange(StatsSection.DAYS)
-
-        Assertions.assertThat(selectedSection).isEqualTo(statsSection)
-        Assertions.assertThat(model?.date).isEqualTo(updatedLabel)
     }
 }

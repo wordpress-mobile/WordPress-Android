@@ -24,7 +24,6 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.OldStatsActivity.ARG_DESIRED_TIMEFRAME
 import org.wordpress.android.ui.stats.OldStatsActivity.ARG_LAUNCHED_FROM
 import org.wordpress.android.ui.stats.OldStatsActivity.StatsLaunchedFrom
@@ -41,16 +40,17 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.WPSnackbar
-import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
 class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     @Inject lateinit var navigator: StatsNavigator
@@ -93,6 +93,11 @@ class StatsFragment : DaggerFragment() {
         initializeViews(nonNullActivity)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(WordPress.LOCAL_SITE_ID, activity?.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0)
+        super.onSaveInstanceState(outState)
+    }
+
     private fun initializeViews(activity: FragmentActivity) {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
@@ -120,14 +125,14 @@ class StatsFragment : DaggerFragment() {
 
         setupObservers(activity)
 
-        val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-        val nonNullSite = checkNotNull(site)
+        val siteId = activity.intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
+        statsSiteProvider.start(siteId)
 
         val launchedFrom = activity.intent.getSerializableExtra(ARG_LAUNCHED_FROM)
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(activity)
 
-        viewModel.start(nonNullSite, launchedFromWidget, initialTimeFrame)
+        viewModel.start(launchedFromWidget, initialTimeFrame)
 
         if (!isFirstStart) {
             restorePreviousSearch = true
@@ -200,10 +205,11 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.navigationTarget.observeEvent(this) { target ->
-            navigator.navigate(activity, target)
-            return@observeEvent true
-        }
+        viewModel.navigationTarget.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { target ->
+                navigator.navigate(activity, target)
+            }
+        })
     }
 }
 

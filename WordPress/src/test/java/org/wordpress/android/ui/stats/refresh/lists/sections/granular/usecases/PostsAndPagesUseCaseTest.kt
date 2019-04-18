@@ -319,7 +319,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(items[3] is Link).isTrue()
 
         var navigationTarget: NavigationTarget? = null
-        useCase.navigationTarget.observeForever { navigationTarget = it }
+        useCase.navigationTarget.observeForever { navigationTarget = it?.getContentIfNotHandled() }
 
         (items[3] as Link).navigateAction.click()
 

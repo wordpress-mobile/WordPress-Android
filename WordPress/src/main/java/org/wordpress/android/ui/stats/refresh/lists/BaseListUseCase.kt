@@ -20,6 +20,7 @@ import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mergeNotNull
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
 class BaseListUseCase(
@@ -48,7 +49,7 @@ class BaseListUseCase(
         }
     }.distinct()
 
-    val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(
+    val navigationTarget: LiveData<Event<NavigationTarget>> = mergeNotNull(
             useCases.map { it.navigationTarget },
             distinct = false
     )

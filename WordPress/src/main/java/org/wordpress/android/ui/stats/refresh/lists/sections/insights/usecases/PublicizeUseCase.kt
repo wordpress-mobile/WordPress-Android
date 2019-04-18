@@ -102,7 +102,7 @@ class PublicizeUseCase
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_PUBLICIZE_VIEW_MORE_TAPPED)
-        return navigateTo(ViewPublicizeStats())
+        return navigateTo(ViewPublicizeStats)
     }
 
     private fun onMenuClick(view: View) {

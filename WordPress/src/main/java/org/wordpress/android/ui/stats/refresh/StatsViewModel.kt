@@ -12,7 +12,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_A
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
@@ -30,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mergeNotNull
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -59,28 +59,27 @@ class StatsViewModel
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    private val _navigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = _navigationTarget
+    private val _navigationTarget = MutableLiveData<Event<NavigationTarget>>()
+    val navigationTarget: LiveData<Event<NavigationTarget>> = _navigationTarget
 
     val siteChanged = statsSiteProvider.siteChanged
 
     private val _toolbarHasShadow = MutableLiveData<Boolean>()
     val toolbarHasShadow: LiveData<Boolean> = _toolbarHasShadow
 
-    fun start(site: SiteModel, launchedFromWidget: Boolean, initialSection: StatsSection?) {
+    fun start(launchedFromWidget: Boolean, initialSection: StatsSection?) {
         // Check if VM is not already initialized
         if (!isInitialized) {
-            statsSiteProvider.start(site)
             isInitialized = true
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
 
             _toolbarHasShadow.value = statsSectionManager.getSelectedSection() == INSIGHTS
 
-            analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, site)
+            analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, statsSiteProvider.siteModel)
 
             if (launchedFromWidget) {
-                analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, site)
+                analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
             }
         }
     }
@@ -132,14 +131,14 @@ class StatsViewModel
     }
 
     fun onManageInsightsButtonTapped() {
-        _navigationTarget.value = ViewInsightsManagement()
+        _navigationTarget.value = Event(ViewInsightsManagement)
     }
 
     override fun onCleared() {
         super.onCleared()
         _showSnackbarMessage.value = null
         selectedDateProvider.clear()
-        statsSiteProvider.stop()
+        statsSiteProvider.reset()
     }
 
     data class DateSelectorUiModel(
