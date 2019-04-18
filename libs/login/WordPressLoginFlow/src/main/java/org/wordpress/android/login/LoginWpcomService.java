@@ -56,6 +56,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         FAILURE_SOCIAL_2FA,
         FAILURE_FETCHING_ACCOUNT,
         FAILURE_CANNOT_ADD_DUPLICATE_SITE,
+        FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL,
         FAILURE;
 
         public final int progressPercent;
@@ -97,7 +98,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                     || mStep == LoginStep.FAILURE_2FA
                     || mStep == LoginStep.FAILURE_SOCIAL_2FA
                     || mStep == LoginStep.FAILURE_FETCHING_ACCOUNT
-                    || mStep == LoginStep.FAILURE_CANNOT_ADD_DUPLICATE_SITE;
+                    || mStep == LoginStep.FAILURE_CANNOT_ADD_DUPLICATE_SITE
+                    || mStep == LoginStep.FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL;
         }
 
         @Override
@@ -203,6 +205,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                 return LoginNotification.failure(this, R.string.notification_2fa_needed);
             case FAILURE_SOCIAL_2FA:
                 return LoginNotification.failure(this, R.string.notification_2fa_needed);
+            case FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL:
+                return LoginNotification.failure(this, R.string.notification_wpcom_username_needed);
             case FAILURE_FETCHING_ACCOUNT:
             case FAILURE_CANNOT_ADD_DUPLICATE_SITE:
             case FAILURE:
@@ -285,6 +289,9 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                     setState(LoginStep.FAILURE_2FA);
                 }
 
+                break;
+            case EMAIL_LOGIN_NOT_ALLOWED:
+                setState(LoginStep.FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL);
                 break;
             case INVALID_REQUEST:
                 // TODO: FluxC: could be specific?
