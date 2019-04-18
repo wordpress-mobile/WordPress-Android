@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -33,7 +33,7 @@ private val DATE = Date(0)
 class ReferrersStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var restClient: ReferrersRestClient
-    @Mock lateinit var sqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var sqlUtils: ReferrersSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
     private lateinit var store: ReferrersStore
     @Before
@@ -82,7 +82,7 @@ class ReferrersStoreTest {
 
     @Test
     fun `returns referrers from db`() {
-        whenever(sqlUtils.selectReferrers(site, DAYS, DATE)).thenReturn(REFERRERS_RESPONSE)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(REFERRERS_RESPONSE)
         val model = mock<ReferrersModel>()
         whenever(mapper.map(REFERRERS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 

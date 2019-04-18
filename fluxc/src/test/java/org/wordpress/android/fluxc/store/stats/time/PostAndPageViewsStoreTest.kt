@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.PostsAndPagesSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -36,7 +36,7 @@ private val DATE = Date(0)
 class PostAndPageViewsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var restClient: PostAndPageViewsRestClient
-    @Mock lateinit var sqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var sqlUtils: PostsAndPagesSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
     private lateinit var store: PostAndPageViewsStore
     @Before
@@ -87,7 +87,7 @@ class PostAndPageViewsStoreTest {
 
     @Test
     fun `returns post and page day views from db`() {
-        whenever(sqlUtils.selectPostAndPageViews(site, DAYS, DATE)).thenReturn(DAY_POST_AND_PAGE_VIEWS_RESPONSE)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(DAY_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
         whenever(mapper.map(DAY_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
@@ -134,7 +134,7 @@ class PostAndPageViewsStoreTest {
 
     @Test
     fun `returns post and page week views from db`() {
-        whenever(sqlUtils.selectPostAndPageViews(site, WEEKS, DATE)).thenReturn(WEEK_POST_AND_PAGE_VIEWS_RESPONSE)
+        whenever(sqlUtils.select(site, WEEKS, DATE)).thenReturn(WEEK_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
         whenever(mapper.map(WEEK_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
@@ -181,7 +181,7 @@ class PostAndPageViewsStoreTest {
 
     @Test
     fun `returns post and page month views from db`() {
-        whenever(sqlUtils.selectPostAndPageViews(site, MONTHS, DATE)).thenReturn(MONTH_POST_AND_PAGE_VIEWS_RESPONSE)
+        whenever(sqlUtils.select(site, MONTHS, DATE)).thenReturn(MONTH_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
         whenever(mapper.map(MONTH_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 
@@ -228,7 +228,7 @@ class PostAndPageViewsStoreTest {
 
     @Test
     fun `returns post and page year views from db`() {
-        whenever(sqlUtils.selectPostAndPageViews(site, YEARS, DATE)).thenReturn(YEAR_POST_AND_PAGE_VIEWS_RESPONSE)
+        whenever(sqlUtils.select(site, YEARS, DATE)).thenReturn(YEAR_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
         whenever(mapper.map(YEAR_POST_AND_PAGE_VIEWS_RESPONSE, LimitMode.Top(ITEMS_TO_LOAD))).thenReturn(model)
 

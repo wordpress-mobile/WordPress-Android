@@ -130,7 +130,7 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
             VisitsAndViewsResponse::class.java
     )
 
-    class ContryViewsSqlUtils
+    class CountryViewsSqlUtils
     @Inject constructor(
         statsSqlUtils: StatsSqlUtils,
         statsUtils: StatsUtils,

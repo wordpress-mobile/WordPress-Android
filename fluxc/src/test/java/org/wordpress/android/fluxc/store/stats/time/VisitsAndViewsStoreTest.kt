@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.VisitsAndViewsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -34,7 +34,7 @@ private val DATE = Date(0)
 class VisitsAndViewsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var restClient: VisitAndViewsRestClient
-    @Mock lateinit var sqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var sqlUtils: VisitsAndViewsSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
     private lateinit var store: VisitsAndViewsStore
     @Before
@@ -96,7 +96,7 @@ class VisitsAndViewsStoreTest {
 
     @Test
     fun `returns data from db`() {
-        whenever(sqlUtils.selectVisitsAndViews(site, DAYS, DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
         val model = mock<VisitsAndViewsModel>()
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 

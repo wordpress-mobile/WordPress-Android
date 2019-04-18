@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.VideoPlaysSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -34,7 +34,7 @@ private val DATE = Date(0)
 class VideoPlaysStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var restClient: VideoPlaysRestClient
-    @Mock lateinit var sqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var sqlUtils: VideoPlaysSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
     private lateinit var store: VideoPlaysStore
     @Before
@@ -83,7 +83,7 @@ class VideoPlaysStoreTest {
 
     @Test
     fun `returns video plays from db`() {
-        whenever(sqlUtils.selectVideoPlays(site, DAYS, DATE)).thenReturn(VIDEO_PLAYS_RESPONSE)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(VIDEO_PLAYS_RESPONSE)
         val model = mock<VideoPlaysModel>()
         whenever(mapper.map(VIDEO_PLAYS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 

@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.CountryViewsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -34,7 +34,7 @@ private val DATE = Date(0)
 class CountryViewsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var restClient: CountryViewsRestClient
-    @Mock lateinit var sqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var sqlUtils: CountryViewsSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
     private lateinit var store: CountryViewsStore
     @Before
@@ -82,7 +82,7 @@ class CountryViewsStoreTest {
 
     @Test
     fun `returns country views from db`() {
-        whenever(sqlUtils.selectCountryViews(site, DAYS, DATE)).thenReturn(COUNTRY_VIEWS_RESPONSE)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(COUNTRY_VIEWS_RESPONSE)
         val model = mock<CountryViewsModel>()
         whenever(mapper.map(COUNTRY_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 

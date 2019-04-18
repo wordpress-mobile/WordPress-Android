@@ -15,13 +15,14 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.fluxc.persistence.StatsRequestSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.VIDEO_PLAYS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.DAY
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.MONTH
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.WEEK
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.YEAR
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.VideoPlaysSqlUtils
 import org.wordpress.android.fluxc.store.stats.time.VIDEO_PLAYS_RESPONSE
 import java.util.Date
 import kotlin.test.assertEquals
@@ -34,12 +35,13 @@ class VideoPlaysSqlUtilsTest {
     @Mock lateinit var statsSqlUtils: StatsSqlUtils
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsUtils: StatsUtils
-    private lateinit var timeStatsSqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var statsRequestSqlUtils: StatsRequestSqlUtils
+    private lateinit var timeStatsSqlUtils: VideoPlaysSqlUtils
     private val mappedTypes = mapOf(DAY to DAYS, WEEK to WEEKS, MONTH to MONTHS, YEAR to YEARS)
 
     @Before
     fun setUp() {
-        timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils, statsUtils)
+        timeStatsSqlUtils = VideoPlaysSqlUtils(statsSqlUtils, statsUtils, statsRequestSqlUtils)
         whenever(statsUtils.getFormattedDate(eq(DATE))).thenReturn(DATE_VALUE)
     }
 
@@ -52,7 +54,7 @@ class VideoPlaysSqlUtilsTest {
                             VIDEO_PLAYS_RESPONSE
                     )
 
-            val result = timeStatsSqlUtils.selectVideoPlays(site, dbGranularity, DATE)
+            val result = timeStatsSqlUtils.select(site, dbGranularity, DATE)
 
             assertEquals(result, VIDEO_PLAYS_RESPONSE)
         }

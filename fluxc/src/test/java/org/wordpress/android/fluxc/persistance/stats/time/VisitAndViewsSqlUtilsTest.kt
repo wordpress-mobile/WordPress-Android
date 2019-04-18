@@ -15,13 +15,14 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.fluxc.persistence.StatsRequestSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.VISITS_AND_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.DAY
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.MONTH
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.WEEK
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.YEAR
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.VisitsAndViewsSqlUtils
 import org.wordpress.android.fluxc.store.stats.time.VISITS_AND_VIEWS_RESPONSE
 import java.util.Date
 import kotlin.test.assertEquals
@@ -34,12 +35,13 @@ class VisitAndViewsSqlUtilsTest {
     @Mock lateinit var statsSqlUtils: StatsSqlUtils
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsUtils: StatsUtils
-    private lateinit var timeStatsSqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var statsRequestSqlUtils: StatsRequestSqlUtils
+    private lateinit var timeStatsSqlUtils: VisitsAndViewsSqlUtils
     private val mappedTypes = mapOf(DAY to DAYS, WEEK to WEEKS, MONTH to MONTHS, YEAR to YEARS)
 
     @Before
     fun setUp() {
-        timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils, statsUtils)
+        timeStatsSqlUtils = VisitsAndViewsSqlUtils(statsSqlUtils, statsUtils, statsRequestSqlUtils)
         whenever(statsUtils.getFormattedDate(eq(DATE))).thenReturn(DATE_VALUE)
     }
 
@@ -60,7 +62,7 @@ class VisitAndViewsSqlUtilsTest {
                             VISITS_AND_VIEWS_RESPONSE
                     )
 
-            val result = timeStatsSqlUtils.selectVisitsAndViews(site, dbGranularity, DATE)
+            val result = timeStatsSqlUtils.select(site, dbGranularity, DATE)
 
             assertEquals(result, VISITS_AND_VIEWS_RESPONSE)
         }

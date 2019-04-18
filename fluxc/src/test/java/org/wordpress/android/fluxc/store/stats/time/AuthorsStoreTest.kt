@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.AuthorsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -34,7 +34,7 @@ private val DATE = Date(0)
 class AuthorsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var restClient: AuthorsRestClient
-    @Mock lateinit var sqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var sqlUtils: AuthorsSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
     private lateinit var store: AuthorsStore
     @Before
@@ -83,7 +83,7 @@ class AuthorsStoreTest {
 
     @Test
     fun `returns data from db`() {
-        whenever(sqlUtils.selectAuthors(site, DAYS, DATE)).thenReturn(AUTHORS_RESPONSE)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(AUTHORS_RESPONSE)
         val model = mock<AuthorsModel>()
         whenever(mapper.map(AUTHORS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
