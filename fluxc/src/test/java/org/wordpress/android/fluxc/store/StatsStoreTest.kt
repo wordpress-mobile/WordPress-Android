@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers.Unconfined
@@ -14,7 +15,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.InsightTypeModel
 import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
@@ -48,16 +48,16 @@ class StatsStoreTest {
     fun `returns default stats types when DB is empty`() = test {
         whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(listOf())
 
-        val result = store.getInsights(site)
+        val result = store.getAddedInsights(site)
 
-        assertThat(result).containsExactly(LATEST_POST_SUMMARY, TODAY_STATS, ALL_TIME_STATS, POSTING_ACTIVITY)
+        assertThat(result).containsExactly(*DEFAULT_INSIGHTS.toTypedArray())
     }
 
     @Test
     fun `returns updated stats types from DB`() = test {
         whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(listOf(COMMENTS))
 
-        val result = store.getInsights(site)
+        val result = store.getAddedInsights(site)
 
         assertThat(result).containsExactly(COMMENTS)
     }
@@ -67,10 +67,8 @@ class StatsStoreTest {
         val addedTypes = listOf(
                 COMMENTS
         )
-        val removedTypes = listOf(
-                LATEST_POST_SUMMARY
-        )
-        store.updateTypes(site, InsightTypeModel(addedTypes, removedTypes))
+        val removedTypes = store.getRemovedInsights(addedTypes)
+        store.updateTypes(site, addedTypes)
 
         verify(insightTypesSqlUtils).insertOrReplaceAddedItems(site, addedTypes)
         verify(insightTypesSqlUtils).insertOrReplaceRemovedItems(site, removedTypes)
@@ -136,23 +134,30 @@ class StatsStoreTest {
     fun `removes type from list`() = test {
         store.removeType(site, LATEST_POST_SUMMARY)
 
+        val addedTypes = DEFAULT_INSIGHTS - LATEST_POST_SUMMARY
+
+        // executed twice, because the first time the default list is inserted first
+        verify(insightTypesSqlUtils, times(2)).insertOrReplaceAddedItems(
+                site,
+                addedTypes
+        )
+
+        verify(insightTypesSqlUtils, times(2)).insertOrReplaceRemovedItems(
+                site,
+                store.getRemovedInsights(addedTypes)
+        )
+
+
+        store.removeType(site, POSTING_ACTIVITY)
+
         verify(insightTypesSqlUtils).insertOrReplaceAddedItems(
                 site,
-                listOf(TODAY_STATS, ALL_TIME_STATS, POSTING_ACTIVITY)
+                addedTypes - POSTING_ACTIVITY
         )
 
         verify(insightTypesSqlUtils).insertOrReplaceRemovedItems(
                 site,
-                listOf(
-                        MOST_POPULAR_DAY_AND_HOUR,
-                        FOLLOWER_TOTALS,
-                        TAGS_AND_CATEGORIES,
-                        ANNUAL_SITE_STATS,
-                        COMMENTS,
-                        FOLLOWERS,
-                        PUBLICIZE,
-                        LATEST_POST_SUMMARY
-                )
+                store.getRemovedInsights(addedTypes - POSTING_ACTIVITY)
         )
     }
 }
