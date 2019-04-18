@@ -28,7 +28,7 @@ class InsightTypeSqlUtils
         return selectItemsOrderedByStatus(site, REMOVED)
     }
 
-    private fun selectItemsOrderedByStatus(site: SiteModel, status: InsightTypeDataModel.Status): List<InsightType> {
+    private fun selectItemsOrderedByStatus(site: SiteModel, status: Status): List<InsightType> {
         return WellSql.select(InsightTypesBuilder::class.java)
                 .where()
                 .equals(InsightTypesTable.LOCAL_SITE_ID, site.id)
