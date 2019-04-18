@@ -50,6 +50,8 @@ import kotlin.coroutines.CoroutineContext
 private const val SCROLL_TO_DELAY = 50L
 private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS)
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
+private const val TRACKS_SELECTED_TAB = "selected_tab"
+private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
 
 class PostListMainViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -245,7 +247,7 @@ class PostListMainViewModel @Inject constructor(
         AnalyticsUtils.trackWithSiteDetails(
                 POST_LIST_TAB_CHANGED,
                 site,
-                mutableMapOf("selected_tab" to currentPage.toString() as Any)
+                mapOf(TRACKS_SELECTED_TAB to currentPage.toString() as Any)
         )
     }
 
@@ -323,7 +325,7 @@ class PostListMainViewModel @Inject constructor(
             AnalyticsUtils.trackWithSiteDetails(
                     POST_LIST_AUTHOR_FILTER_CHANGED,
                     site,
-                    mutableMapOf("author_filter_selection" to authorFilterSelection.toString() as Any)
+                    mapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString() as Any)
             )
         }
     }
