@@ -99,7 +99,8 @@ class PostListFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
+        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType),
+                mainViewModel.viewLayoutType)
         viewModel.pagedListData.observe(this, Observer {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
@@ -115,11 +116,6 @@ class PostListFragment : Fragment() {
         viewModel.scrollToPosition.observe(this, Observer {
             it?.let { index ->
                 recyclerView?.scrollToPosition(index)
-            }
-        })
-        mainViewModel.viewLayoutType.observe(this, Observer { viewLayoutType ->
-            viewLayoutType?.let { nonNullViewLayoutType ->
-                postListAdapter.updateViewLayoutType(nonNullViewLayoutType)
             }
         })
     }
@@ -140,10 +136,11 @@ class PostListFragment : Fragment() {
         val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
         postListAdapter = PostListAdapter(
+                fragment = this,
                 context = nonNullActivity,
                 postViewHolderConfig = postViewHolderConfig,
                 uiHelpers = uiHelpers,
-                viewLayoutType = mainViewModel.viewLayoutType.value ?: ViewLayoutType.defaultValue
+                viewLayoutType = mainViewModel.viewLayoutType
         )
 
         val context = nonNullActivity

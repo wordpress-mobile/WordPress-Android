@@ -22,6 +22,10 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.posts.ViewLayoutType
+import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.ViewLayoutType.Companion
+import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -52,6 +56,7 @@ class PostListViewModel @Inject constructor(
     private lateinit var connector: PostListViewModelConnector
 
     private var scrollToLocalPostId: LocalPostId? = null
+    private var layoutType: ViewLayoutType? = null
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
@@ -111,10 +116,18 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(postListViewModelConnector: PostListViewModelConnector) {
+    fun start(postListViewModelConnector: PostListViewModelConnector,
+              viewLayoutTypeStatus: LiveData<ViewLayoutType>) {
         if (isStarted) {
             return
         }
+
+        layoutType = viewLayoutTypeStatus.value
+        viewLayoutTypeStatus.observe(this, Observer {
+            it?.let { layout ->
+                layoutType = layout
+            }
+        })
         connector = postListViewModelConnector
 
         this.listDescriptor = if (connector.site.isUsingWpComRestApi) {
@@ -197,11 +210,12 @@ class PostListViewModel @Inject constructor(
                             post.content
                     ),
                     formattedDate = PostUtils.getFormattedDate(post),
-                    performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id))
-            ) { postModel, buttonType, statEvent ->
-                trackPostListAction(connector.site, buttonType, postModel, statEvent)
-                connector.postActionHandler.handlePostButton(buttonType, postModel)
-            }
+                    performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
+                    onAction = { postModel, buttonType, statEvent ->
+                        trackPostListAction(connector.site, buttonType, postModel, statEvent)
+                        connector.postActionHandler.handlePostButton(buttonType, postModel)
+                    }
+            )
 
     private fun retryOnConnectionAvailableAfterRefreshError() {
         val connectionAvailableAfterRefreshError = networkUtilsWrapper.isNetworkAvailable() &&

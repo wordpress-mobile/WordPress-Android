@@ -9,9 +9,7 @@ import android.widget.PopupMenu
 import org.wordpress.android.databinding.PostListItemCompactBinding
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.viewmodel.posts.PostListItemAction
-import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
-import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 
 data class PostListItemCompactViewBinder(
@@ -46,10 +44,10 @@ class PostListItemCompactViewHolder(
 
     private fun binderFromItem(item: PostListItemUiState): PostListItemCompactViewBinder {
         return PostListItemCompactViewBinder(
-                item.data.title!!,
-                item.data.dateAndAuthor!!,
+                item.compactData.title ?: UiStringText(""),
+                item.compactData.date ?: UiStringText(""),
                 statusTextFromItem(item),
-                ImageBundle(item.data.imageUrl, config),
+                ImageBundle(item.compactData.imageUrl, config),
                 ::handleOpenMenuClick,
                 item.onSelected
         )
@@ -57,39 +55,26 @@ class PostListItemCompactViewHolder(
 
     private fun handleOpenMenuClick(view: View) {
         val menu = PopupMenu(view.context, view)
-        currentItem?.actions?.forEach { action ->
-            when (action) {
-                is MoreItem -> {
-                    action.actions.forEach { item -> addMenuItemForAction(menu, item) }
-                }
-                is SingleItem -> {
-                    addMenuItemForAction(menu, action)
-                }
+        currentItem?.compactActions?.forEach { action ->
+            val menuItem = menu.menu.add(
+                    Menu.NONE,
+                    action.buttonType.value,
+                    Menu.NONE,
+                    action.buttonType.textResId
+            )
+            menuItem.setOnMenuItemClickListener {
+                action.onButtonClicked.invoke(action.buttonType)
+                true
             }
         }
         menu.show()
     }
 
-    private fun addMenuItemForAction(
-        menu: PopupMenu,
-        action: PostListItemAction
-    ) {
-        val menuItem = menu.menu.add(
-                Menu.NONE,
-                action.buttonType.value,
-                Menu.NONE,
-                action.buttonType.textResId
-        )
-        menuItem.setOnMenuItemClickListener {
-            action.onButtonClicked.invoke(action.buttonType)
-            true
-        }
-    }
-
+    //TODO: Use the status color too!
     private fun statusTextFromItem(item: PostListItemUiState): UiString {
         val context = binding.root.context
         val separator = uiHelpers.getTextOfUiString(context, item.data.statusesDelimiter)
-        val statusText = item.data.statuses.joinToString(separator) { uiHelpers.getTextOfUiString(context, it) }
+        val statusText = item.compactData.statuses.joinToString(separator) { uiHelpers.getTextOfUiString(context, it) }
         return UiString.UiStringText(statusText)
     }
 

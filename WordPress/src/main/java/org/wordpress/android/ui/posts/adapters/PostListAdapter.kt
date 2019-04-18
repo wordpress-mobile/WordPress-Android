@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.posts.adapters
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.arch.paging.PagedListAdapter
 import android.content.Context
+import android.support.v4.app.Fragment
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
@@ -16,6 +19,7 @@ import org.wordpress.android.ui.posts.PostListItemViewHolder
 import org.wordpress.android.ui.posts.PostViewHolderConfig
 import org.wordpress.android.ui.posts.ViewLayoutType
 import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
@@ -28,19 +32,35 @@ private const val VIEW_TYPE_ENDLIST_INDICATOR = 2
 private const val VIEW_TYPE_LOADING = 3
 
 class PostListAdapter(
+    fragment: Fragment,
     context: Context,
     private val postViewHolderConfig: PostViewHolderConfig,
     private val uiHelpers: UiHelpers,
-    private var viewLayoutType: ViewLayoutType
+    private val viewLayoutType: LiveData<ViewLayoutType>
 ) : PagedListAdapter<PostListItemType, ViewHolder>(PostListDiffItemCallback) {
+
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
+    private var layout: ViewLayoutType
+
+    init {
+        layout = viewLayoutType.value ?: ViewLayoutType.defaultValue
+        viewLayoutType.observe(fragment, Observer {
+            it?.let { updatedLayout ->
+                layout = updatedLayout
+                notifyDataSetChanged()
+            }
+        })
+    }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is EndListIndicatorItem -> VIEW_TYPE_ENDLIST_INDICATOR
             is LoadingItem -> VIEW_TYPE_LOADING
             is PostListItemUiState -> {
-                return if (viewLayoutType == COMPACT) { VIEW_TYPE_POST_COMPACT } else { VIEW_TYPE_POST }
+                return when (layout) {
+                    STANDARD -> VIEW_TYPE_POST
+                    COMPACT -> VIEW_TYPE_POST_COMPACT
+                }
             }
             null -> VIEW_TYPE_LOADING // Placeholder by paged list
         }
@@ -87,11 +107,6 @@ class PostListAdapter(
             }
             holder.bind(item as PostListItemUiState)
         }
-    }
-
-    fun updateViewLayoutType(updatedViewLayoutType: ViewLayoutType) {
-        this.viewLayoutType = updatedViewLayoutType
-        notifyDataSetChanged()
     }
 
     private class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)

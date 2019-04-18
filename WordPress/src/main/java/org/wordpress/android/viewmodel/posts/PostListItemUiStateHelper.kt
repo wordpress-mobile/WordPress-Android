@@ -17,6 +17,9 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.posts.ViewLayoutType
+import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiString
@@ -58,51 +61,83 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
-
-        return PostListItemUiState(
-                data = PostListItemUiStateData(
-                        remotePostId = RemotePostId(RemoteId(post.remotePostId)),
-                        localPostId = LocalPostId(LocalId(post.id)),
-                        title = getTitle(post = post),
-                        excerpt = getExcerpt(post = post),
-                        imageUrl = featuredImageUrl,
-                        dateAndAuthor = UiStringText(text = formattedDate),
-                        statuses = getStatuses(
-                                postStatus = postStatus,
-                                isLocalDraft = post.isLocalDraft,
-                                isLocallyChanged = post.isLocallyChanged,
-                                uploadStatus = uploadStatus,
-                                hasUnhandledConflicts = unhandledConflicts
-                        ),
-                        statusesColor = getStatusesColor(
-                                postStatus = postStatus,
-                                isLocalDraft = post.isLocalDraft,
-                                isLocallyChanged = post.isLocallyChanged,
-                                uploadStatus = uploadStatus,
-                                hasUnhandledConflicts = unhandledConflicts
-                        ),
-                        statusesDelimiter = UiStringRes(R.string.multiple_status_label_delimiter),
-                        showProgress = shouldShowProgress(
-                                uploadStatus = uploadStatus,
-                                performingCriticalAction = performingCriticalAction
-                        ),
-                        showOverlay = shouldShowOverlay(
-                                uploadStatus = uploadStatus,
-                                performingCriticalAction = performingCriticalAction
-                        )
-                ),
-                actions = createActions(
-                        postStatus = postStatus,
-                        isLocalDraft = post.isLocalDraft,
-                        isLocallyChanged = post.isLocallyChanged,
+        val actions = createActions(
+                postStatus = postStatus,
+                isLocalDraft = post.isLocalDraft,
+                isLocallyChanged = post.isLocallyChanged,
+                uploadStatus = uploadStatus,
+                siteHasCapabilitiesToPublish = capabilitiesToPublish,
+                statsSupported = statsSupported,
+                onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) },
+                viewLayoutType = STANDARD
+        )
+        val compactActions = createActions(
+                postStatus = postStatus,
+                isLocalDraft = post.isLocalDraft,
+                isLocallyChanged = post.isLocallyChanged,
+                uploadStatus = uploadStatus,
+                siteHasCapabilitiesToPublish = capabilitiesToPublish,
+                statsSupported = statsSupported,
+                onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) },
+                viewLayoutType = COMPACT
+        )
+        val remotePostId = RemotePostId(RemoteId(post.remotePostId))
+        val localPostId = LocalPostId(LocalId(post.id))
+        val title = getTitle(post = post)
+        val date = UiStringText(text = formattedDate)
+        val statuses = getStatuses(
+                postStatus = postStatus,
+                isLocalDraft = post.isLocalDraft,
+                isLocallyChanged = post.isLocallyChanged,
+                uploadStatus = uploadStatus,
+                hasUnhandledConflicts = unhandledConflicts
+        )
+        val statusesColor = getStatusesColor(
+                postStatus = postStatus,
+                isLocalDraft = post.isLocalDraft,
+                isLocallyChanged = post.isLocallyChanged,
+                uploadStatus = uploadStatus,
+                hasUnhandledConflicts = unhandledConflicts
+        )
+        val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
+        val onSelected = {
+            onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
+        }
+        val itemUiData = PostListItemUiStateData(
+                remotePostId = remotePostId,
+                localPostId = localPostId,
+                title = title,
+                excerpt = getExcerpt(post = post),
+                imageUrl = featuredImageUrl,
+                dateAndAuthor = date,
+                statuses = statuses,
+                statusesColor = statusesColor,
+                statusesDelimiter = statusesDelimeter,
+                showProgress = shouldShowProgress(
                         uploadStatus = uploadStatus,
-                        siteHasCapabilitiesToPublish = capabilitiesToPublish,
-                        statsSupported = statsSupported,
-                        onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) }
+                        performingCriticalAction = performingCriticalAction
                 ),
-                onSelected = {
-                    onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
-                }
+                showOverlay = shouldShowOverlay(
+                        uploadStatus = uploadStatus,
+                        performingCriticalAction = performingCriticalAction
+                )
+        )
+        val itemCompactUiData = PostListItemCompactUiStateData(
+                remotePostId = remotePostId,
+                localPostId = localPostId,
+                title = title,
+                imageUrl = featuredImageUrl,
+                date = date,
+                statuses = statuses,
+                statusesColor = statusesColor,
+                statusesDelimiter = statusesDelimeter
+        )
+        return PostListItemUiState(
+                data = itemUiData,
+                compactData = itemCompactUiData,
+                actions = actions,
+                compactActions = compactActions,
+                onSelected = onSelected
         )
     }
 
@@ -217,7 +252,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         uploadStatus: PostListItemUploadStatus,
         siteHasCapabilitiesToPublish: Boolean,
         statsSupported: Boolean,
-        onButtonClicked: (PostListButtonType) -> Unit
+        onButtonClicked: (PostListButtonType) -> Unit,
+        viewLayoutType: ViewLayoutType
     ): List<PostListItemAction> {
         val canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
         val canPublishPost = !uploadStatus.isUploadingOrQueued &&
@@ -272,7 +308,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             PostListItemAction.SingleItem(buttonType, onButtonClicked)
         }
 
-        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS) {
+        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS && viewLayoutType != COMPACT) {
             val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1)
                     .map(createSinglePostListItem)
             val itemsUnderMore = buttonTypes.subList(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1, buttonTypes.size)
