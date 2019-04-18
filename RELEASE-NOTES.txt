@@ -4,6 +4,7 @@
 * Redirect to username/password login when WordPress.com reports email login not allowed
 * Updated notifications list to Material guidelines
 * Updated snackbar design to Material guidelines
+* Fixed crash when viewing Notifications tab
 * Add "This Year" card to Stats Insights screen
 * The Site → Blog Posts → View WebView will no longer show any Calypso UI
 * Fixed an issue with Twitter publicize connections
