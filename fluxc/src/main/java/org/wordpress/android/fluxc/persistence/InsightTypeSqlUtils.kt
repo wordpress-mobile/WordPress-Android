@@ -13,22 +13,22 @@ import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel
 import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel.Status
 import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel.Status.ADDED
 import org.wordpress.android.fluxc.model.stats.InsightTypeDataModel.Status.REMOVED
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class InsightTypesSqlUtils
+class InsightTypeSqlUtils
 @Inject constructor() {
-    fun selectAddedItemsOrderedByStatus(site: SiteModel): List<InsightsTypes> {
+    fun selectAddedItemsOrderedByStatus(site: SiteModel): List<InsightType> {
         return selectItemsOrderedByStatus(site, ADDED)
     }
 
-    fun selectRemovedItemsOrderedByStatus(site: SiteModel): List<InsightsTypes> {
+    fun selectRemovedItemsOrderedByStatus(site: SiteModel): List<InsightType> {
         return selectItemsOrderedByStatus(site, REMOVED)
     }
 
-    private fun selectItemsOrderedByStatus(site: SiteModel, status: InsightTypeDataModel.Status): List<InsightsTypes> {
+    private fun selectItemsOrderedByStatus(site: SiteModel, status: InsightTypeDataModel.Status): List<InsightType> {
         return WellSql.select(InsightTypesBuilder::class.java)
                 .where()
                 .equals(InsightTypesTable.LOCAL_SITE_ID, site.id)
@@ -36,24 +36,24 @@ class InsightTypesSqlUtils
                 .endWhere()
                 .orderBy(InsightTypesTable.POSITION, ORDER_ASCENDING)
                 .asModel
-                .map { InsightsTypes.valueOf(it.insightType) }
+                .map { InsightType.valueOf(it.insightType) }
     }
 
-    fun insertOrReplaceAddedItems(site: SiteModel, insightsTypes: List<InsightsTypes>) {
-        insertOrReplaceList(site, insightsTypes, ADDED)
+    fun insertOrReplaceAddedItems(site: SiteModel, insightTypes: List<InsightType>) {
+        insertOrReplaceList(site, insightTypes, ADDED)
     }
 
-    fun insertOrReplaceRemovedItems(site: SiteModel, insightsTypes: List<InsightsTypes>) {
-        insertOrReplaceList(site, insightsTypes, REMOVED)
+    fun insertOrReplaceRemovedItems(site: SiteModel, insightTypes: List<InsightType>) {
+        insertOrReplaceList(site, insightTypes, REMOVED)
     }
 
-    private fun insertOrReplaceList(site: SiteModel, insightsTypes: List<InsightsTypes>, status: Status) {
+    private fun insertOrReplaceList(site: SiteModel, insightTypes: List<InsightType>, status: Status) {
         WellSql.delete(InsightTypesBuilder::class.java)
                 .where()
                 .equals(InsightTypesTable.LOCAL_SITE_ID, site.id)
                 .equals(InsightTypesTable.STATUS, status.name)
                 .endWhere().execute()
-        WellSql.insert(insightsTypes.mapIndexed { index, type ->
+        WellSql.insert(insightTypes.mapIndexed { index, type ->
             type.toBuilder(
                     site,
                     status,
@@ -62,7 +62,7 @@ class InsightTypesSqlUtils
         }).execute()
     }
 
-    fun updateStatus(site: SiteModel, type: InsightsTypes, status: Status = REMOVED, position: Int = -1) {
+    fun updateStatus(site: SiteModel, type: InsightType, status: Status = REMOVED, position: Int = -1) {
         WellSql.update(InsightTypesBuilder::class.java)
                 .where()
                 .equals(InsightTypesTable.LOCAL_SITE_ID, site.id)
@@ -76,7 +76,7 @@ class InsightTypesSqlUtils
                 }
     }
 
-    private fun InsightsTypes.toBuilder(site: SiteModel, status: Status, position: Int): InsightTypesBuilder {
+    private fun InsightType.toBuilder(site: SiteModel, status: Status, position: Int): InsightTypesBuilder {
         return InsightTypesBuilder(
                 localSiteId = site.id,
                 remoteSiteId = site.siteId,
@@ -105,7 +105,7 @@ class InsightTypesSqlUtils
 
         fun build(): InsightTypeDataModel {
             return InsightTypeDataModel(
-                    InsightsTypes.valueOf(insightType),
+                    InsightType.valueOf(insightType),
                     Status.valueOf(status),
                     if (position >= 0) position else null
             )

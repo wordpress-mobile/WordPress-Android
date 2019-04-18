@@ -14,25 +14,25 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.InsightTypesModel
-import org.wordpress.android.fluxc.persistence.InsightTypesSqlUtils
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ANNUAL_SITE_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWER_TOTALS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVITY
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
+import org.wordpress.android.fluxc.model.stats.InsightTypeModel
+import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
 import org.wordpress.android.fluxc.test
 
 @RunWith(MockitoJUnitRunner::class)
 class StatsStoreTest {
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var insightTypesSqlUtils: InsightTypesSqlUtils
+    @Mock lateinit var insightTypesSqlUtils: InsightTypeSqlUtils
     private lateinit var store: StatsStore
 
     @ExperimentalCoroutinesApi
@@ -70,7 +70,7 @@ class StatsStoreTest {
         val removedTypes = listOf(
                 LATEST_POST_SUMMARY
         )
-        store.updateTypes(site, InsightTypesModel(addedTypes, removedTypes))
+        store.updateTypes(site, InsightTypeModel(addedTypes, removedTypes))
 
         verify(insightTypesSqlUtils).insertOrReplaceAddedItems(site, addedTypes)
         verify(insightTypesSqlUtils).insertOrReplaceRemovedItems(site, removedTypes)
@@ -78,12 +78,12 @@ class StatsStoreTest {
 
     @Test
     fun `moves type up in the list when it is last`() = test {
-        val insightsTypes = listOf(
+        val insightType = listOf(
                 LATEST_POST_SUMMARY,
                 FOLLOWERS,
                 COMMENTS
         )
-        whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(insightsTypes)
+        whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(insightType)
 
         store.moveTypeUp(site, COMMENTS)
 
@@ -92,12 +92,12 @@ class StatsStoreTest {
 
     @Test
     fun `does not move type up in the list when it is first`() = test {
-        val insightsTypes = listOf(
+        val insightType = listOf(
                 COMMENTS,
                 LATEST_POST_SUMMARY,
                 FOLLOWERS
         )
-        whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(insightsTypes)
+        whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(insightType)
 
         store.moveTypeUp(site, COMMENTS)
 
@@ -106,12 +106,12 @@ class StatsStoreTest {
 
     @Test
     fun `moves type down in the list when it is first`() = test {
-        val insightsTypes = listOf(
+        val insightType = listOf(
                 LATEST_POST_SUMMARY,
                 FOLLOWERS,
                 COMMENTS
         )
-        whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(insightsTypes)
+        whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(insightType)
 
         store.moveTypeDown(site, LATEST_POST_SUMMARY)
 
@@ -120,12 +120,12 @@ class StatsStoreTest {
 
     @Test
     fun `does not move type down in the list when it is last`() = test {
-        val insightsTypes = listOf(
+        val insightType = listOf(
                 COMMENTS,
                 FOLLOWERS,
                 LATEST_POST_SUMMARY
         )
-        whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(insightsTypes)
+        whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(insightType)
 
         store.moveTypeDown(site, LATEST_POST_SUMMARY)
 

@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.store
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.InsightTypesModel
+import org.wordpress.android.fluxc.model.stats.InsightTypeModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.CENSORED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.HTTP_AUTH_ERROR
@@ -18,12 +18,12 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.SERVER_E
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.TIMEOUT
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
-import org.wordpress.android.fluxc.persistence.InsightTypesSqlUtils
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVITY
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
+import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.AVERAGE_VIEWS_PER_DAY
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.CLICKS_BY_WEEKS
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.MONTHS_AND_YEARS
@@ -49,13 +49,13 @@ import kotlin.coroutines.CoroutineContext
 class StatsStore
 @Inject constructor(
     private val coroutineContext: CoroutineContext,
-    private val insightTypesSqlUtils: InsightTypesSqlUtils
+    private val insightTypeSqlUtils: InsightTypeSqlUtils
 ) {
     private val defaultList = listOf(POSTING_ACTIVITY, TODAY_STATS, ALL_TIME_STATS, MOST_POPULAR_DAY_AND_HOUR, COMMENTS)
 
-    suspend fun getInsights(site: SiteModel): List<InsightsTypes> = withContext(coroutineContext) {
-        val addedInsights = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
-        val removedInsights = insightTypesSqlUtils.selectRemovedItemsOrderedByStatus(site)
+    suspend fun getInsights(site: SiteModel): List<InsightType> = withContext(coroutineContext) {
+        val addedInsights = insightTypeSqlUtils.selectAddedItemsOrderedByStatus(site)
+        val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
 
         return@withContext if (addedInsights.isEmpty() && removedInsights.isEmpty()) {
             defaultList
@@ -65,25 +65,25 @@ class StatsStore
     }
 
     suspend fun getInsightsManagementModel(site: SiteModel) = withContext(coroutineContext) {
-        val addedInsights = insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)
-        val removedInsights = insightTypesSqlUtils.selectRemovedItemsOrderedByStatus(site)
+        val addedInsights = insightTypeSqlUtils.selectAddedItemsOrderedByStatus(site)
+        val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
 
         return@withContext if (addedInsights.isEmpty() && removedInsights.isEmpty()) {
-            InsightTypesModel(defaultList, InsightsTypes.values().filter { !defaultList.contains(it) })
+            InsightTypeModel(defaultList, InsightType.values().filter { !defaultList.contains(it) })
         } else {
-            InsightTypesModel(addedInsights, removedInsights)
+            InsightTypeModel(addedInsights, removedInsights)
         }
     }
 
-    suspend fun updateTypes(site: SiteModel, model: InsightTypesModel) = withContext(coroutineContext) {
+    suspend fun updateTypes(site: SiteModel, model: InsightTypeModel) = withContext(coroutineContext) {
         insertOrReplaceItems(site, model.addedTypes, model.removedTypes)
     }
 
-    suspend fun moveTypeUp(site: SiteModel, type: InsightsTypes) {
+    suspend fun moveTypeUp(site: SiteModel, type: InsightType) {
         val insightTypes = getInsights(site)
         val indexOfMovedItem = insightTypes.indexOf(type)
         if (indexOfMovedItem > 0 && indexOfMovedItem < insightTypes.size) {
-            val updatedInsights = mutableListOf<InsightsTypes>()
+            val updatedInsights = mutableListOf<InsightType>()
             val switchedItemIndex = indexOfMovedItem - 1
             if (indexOfMovedItem > 1) {
                 updatedInsights.addAll(insightTypes.subList(0, switchedItemIndex))
@@ -93,15 +93,15 @@ class StatsStore
             if (indexOfMovedItem + 1 < insightTypes.size) {
                 updatedInsights.addAll(insightTypes.subList(indexOfMovedItem + 1, insightTypes.size))
             }
-            insightTypesSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
+            insightTypeSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
         }
     }
 
-    suspend fun moveTypeDown(site: SiteModel, type: InsightsTypes) {
+    suspend fun moveTypeDown(site: SiteModel, type: InsightType) {
         val insightTypes = getInsights(site)
         val indexOfMovedItem = insightTypes.indexOf(type)
         if (indexOfMovedItem >= 0 && indexOfMovedItem < insightTypes.size - 1) {
-            val updatedInsights = mutableListOf<InsightsTypes>()
+            val updatedInsights = mutableListOf<InsightType>()
             val switchedItemIndex = indexOfMovedItem + 1
             if (indexOfMovedItem > 0) {
                 updatedInsights.addAll(insightTypes.subList(0, indexOfMovedItem))
@@ -111,18 +111,18 @@ class StatsStore
             if (switchedItemIndex + 1 < insightTypes.size) {
                 updatedInsights.addAll(insightTypes.subList(switchedItemIndex + 1, insightTypes.size))
             }
-            insightTypesSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
+            insightTypeSqlUtils.insertOrReplaceAddedItems(site, updatedInsights)
         }
     }
 
-    suspend fun removeType(site: SiteModel, type: InsightsTypes) = withContext(coroutineContext) {
+    suspend fun removeType(site: SiteModel, type: InsightType) = withContext(coroutineContext) {
         val insightsModel = getInsightsManagementModel(site)
         val addedItems = insightsModel.addedTypes.filter { it != type }
         val removedItems = insightsModel.removedTypes + listOf(type)
         insertOrReplaceItems(site, addedItems, removedItems)
     }
 
-    suspend fun addType(site: SiteModel, type: InsightsTypes) = withContext(coroutineContext) {
+    suspend fun addType(site: SiteModel, type: InsightType) = withContext(coroutineContext) {
         val insightsModel = getInsightsManagementModel(site)
         val addedItems = insightsModel.addedTypes + listOf(type)
         val removedItems = insightsModel.removedTypes.filter { it != type }
@@ -131,11 +131,11 @@ class StatsStore
 
     private fun insertOrReplaceItems(
         site: SiteModel,
-        addedItems: List<InsightsTypes>,
-        removedItems: List<InsightsTypes>
+        addedItems: List<InsightType>,
+        removedItems: List<InsightType>
     ) {
-        insightTypesSqlUtils.insertOrReplaceAddedItems(site, addedItems)
-        insightTypesSqlUtils.insertOrReplaceRemovedItems(site, removedItems)
+        insightTypeSqlUtils.insertOrReplaceAddedItems(site, addedItems)
+        insightTypeSqlUtils.insertOrReplaceRemovedItems(site, removedItems)
     }
 
     suspend fun getTimeStatsTypes(): List<TimeStatsTypes> = withContext(coroutineContext) {
@@ -163,7 +163,7 @@ class StatsStore
 
     interface StatsTypes
 
-    enum class InsightsTypes : StatsTypes {
+    enum class InsightType : StatsTypes {
         LATEST_POST_SUMMARY,
         MOST_POPULAR_DAY_AND_HOUR,
         ALL_TIME_STATS,
