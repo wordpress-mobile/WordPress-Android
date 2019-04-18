@@ -1,9 +1,10 @@
 package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
+import org.wordpress.android.fluxc.model.stats.YearsInsightsModel.YearInsights
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Month
@@ -60,6 +61,22 @@ class InsightsMapper
                 response.highestDayPercent ?: 0.0,
                 response.highestHourPercent ?: 0.0
         )
+    }
+
+    fun map(response: MostPopularResponse): YearsInsightsModel? {
+        val yearInsightsResponse = response.yearInsightResponses?.map { YearInsights(
+                it.avgComments,
+                it.avgImages,
+                it.avgLikes,
+                it.avgWords,
+                it.totalComments,
+                it.totalImages,
+                it.totalLikes,
+                it.totalPosts,
+                it.totalWords,
+                it.year
+        ) }
+        return yearInsightsResponse?.let { YearsInsightsModel(it) }
     }
 
     fun map(

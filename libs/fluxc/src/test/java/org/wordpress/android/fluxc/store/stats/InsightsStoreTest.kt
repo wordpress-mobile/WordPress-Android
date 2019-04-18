@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
-import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
@@ -35,8 +34,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostI
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse.PostResponse.Discussion
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient
@@ -49,7 +46,6 @@ import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.CommentsInsights
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.DetailedPostStatsSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.EmailFollowersSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.LatestPostDetailSqlUtils
-import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.MostPopularSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.PublicizeSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.TagsSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.TodayInsightsSqlUtils
@@ -61,7 +57,6 @@ import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
-import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
@@ -83,7 +78,6 @@ class InsightsStoreTest {
     @Mock lateinit var commentsRestClient: CommentsRestClient
     @Mock lateinit var followersRestClient: FollowersRestClient
     @Mock lateinit var latestPostInsightsRestClient: LatestPostInsightsRestClient
-    @Mock lateinit var mostPopularRestClient: MostPopularRestClient
     @Mock lateinit var publicizeRestClient: PublicizeRestClient
     @Mock lateinit var tagsRestClient: TagsRestClient
     @Mock lateinit var todayInsightsRestClient: TodayInsightsRestClient
@@ -93,7 +87,6 @@ class InsightsStoreTest {
     @Mock lateinit var emailFollowersSqlUtils: EmailFollowersSqlUtils
     @Mock lateinit var latestPostDetailSqlUtils: LatestPostDetailSqlUtils
     @Mock lateinit var detailedPostStatsSqlUtils: DetailedPostStatsSqlUtils
-    @Mock lateinit var mostPopularSqlUtils: MostPopularSqlUtils
     @Mock lateinit var publicizeSqlUtils: PublicizeSqlUtils
     @Mock lateinit var tagsSqlUtils: TagsSqlUtils
     @Mock lateinit var todaySqlUtils: TodayInsightsSqlUtils
@@ -103,7 +96,6 @@ class InsightsStoreTest {
     private lateinit var commentsStore: CommentsStore
     private lateinit var followersStore: FollowersStore
     private lateinit var latestPostStore: LatestPostInsightsStore
-    private lateinit var mostPopularStore: MostPopularInsightsStore
     private lateinit var publicizeStore: PublicizeStore
     private lateinit var tagsStore: TagsStore
     private lateinit var todayStore: TodayInsightsStore
@@ -133,12 +125,6 @@ class InsightsStoreTest {
                 latestPostInsightsRestClient,
                 latestPostDetailSqlUtils,
                 detailedPostStatsSqlUtils,
-                mapper,
-                Unconfined
-        )
-        mostPopularStore = MostPopularInsightsStore(
-                mostPopularRestClient,
-                mostPopularSqlUtils,
                 mapper,
                 Unconfined
         )
@@ -203,49 +189,6 @@ class InsightsStoreTest {
         whenever(mapper.map(ALL_TIME_RESPONSE, site)).thenReturn(model)
 
         val result = allTimeStore.getAllTimeInsights(site)
-
-        assertThat(result).isEqualTo(model)
-    }
-
-    @Test
-    fun `returns most popular insights per site`() = test {
-        val fetchInsightsPayload = FetchStatsPayload(
-                MOST_POPULAR_RESPONSE
-        )
-        val forced = true
-        whenever(mostPopularRestClient.fetchMostPopularInsights(site, forced)).thenReturn(fetchInsightsPayload)
-        val model = mock<InsightsMostPopularModel>()
-        whenever(mapper.map(MOST_POPULAR_RESPONSE, site)).thenReturn(model)
-
-        val responseModel = mostPopularStore.fetchMostPopularInsights(site, forced)
-
-        assertThat(responseModel.model).isEqualTo(model)
-        verify(mostPopularSqlUtils).insert(site, MOST_POPULAR_RESPONSE)
-    }
-
-    @Test
-    fun `returns error when most popular insights call fail`() = test {
-        val type = API_ERROR
-        val message = "message"
-        val errorPayload = FetchStatsPayload<MostPopularResponse>(StatsError(type, message))
-        val forced = true
-        whenever(mostPopularRestClient.fetchMostPopularInsights(site, forced)).thenReturn(errorPayload)
-
-        val responseModel = mostPopularStore.fetchMostPopularInsights(site, forced)
-
-        assertNotNull(responseModel.error)
-        val error = responseModel.error!!
-        assertEquals(type, error.type)
-        assertEquals(message, error.message)
-    }
-
-    @Test
-    fun `returns most popular insights from db`() {
-        whenever(mostPopularSqlUtils.select(site)).thenReturn(MOST_POPULAR_RESPONSE)
-        val model = mock<InsightsMostPopularModel>()
-        whenever(mapper.map(MOST_POPULAR_RESPONSE, site)).thenReturn(model)
-
-        val result = mostPopularStore.getMostPopularInsights(site)
 
         assertThat(result).isEqualTo(model)
     }

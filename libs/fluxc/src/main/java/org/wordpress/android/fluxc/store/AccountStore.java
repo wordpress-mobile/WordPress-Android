@@ -460,6 +460,7 @@ public class AccountStore extends Store {
         UNSUPPORTED_GRANT_TYPE,
         UNSUPPORTED_RESPONSE_TYPE,
         UNKNOWN_TOKEN,
+        EMAIL_LOGIN_NOT_ALLOWED,
 
         // From response's "message" field - sadly... (be careful with i18n)
         INCORRECT_USERNAME_OR_PASSWORD,
