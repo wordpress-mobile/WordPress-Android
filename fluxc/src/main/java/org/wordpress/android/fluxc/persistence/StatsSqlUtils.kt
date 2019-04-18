@@ -43,6 +43,9 @@ class StatsSqlUtils
             if (date != null) {
                 deleteStatement = deleteStatement.equals(StatsBlockTable.DATE, date)
             }
+            if (postId != null) {
+                deleteStatement = deleteStatement.equals(StatsBlockTable.POST_ID, postId)
+            }
             deleteStatement.endWhere().execute()
         }
         WellSql.insert(

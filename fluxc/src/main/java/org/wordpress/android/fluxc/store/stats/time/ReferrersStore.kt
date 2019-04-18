@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -20,7 +20,7 @@ import kotlin.coroutines.CoroutineContext
 class ReferrersStore
 @Inject constructor(
     private val restClient: ReferrersRestClient,
-    private val sqlUtils: TimeStatsSqlUtils,
+    private val sqlUtils: ReferrersSqlUtils,
     private val timeStatsMapper: TimeStatsMapper,
     private val coroutineContext: CoroutineContext
 ) {
@@ -43,6 +43,6 @@ class ReferrersStore
     }
 
     fun getReferrers(site: SiteModel, granularity: StatsGranularity, limitMode: Top, date: Date): ReferrersModel? {
-        return sqlUtils.selectReferrers(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
+        return sqlUtils.select(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
