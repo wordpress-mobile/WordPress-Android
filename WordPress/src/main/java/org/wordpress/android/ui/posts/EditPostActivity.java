@@ -177,6 +177,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -2020,6 +2021,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (isPublishConfirmed) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
                     // otherwise we'd have an incorrect value
+                    // also re-set the published date in case it was SCHEDULED and they want to publish NOW
+                    if (PostStatus.fromPost(mPost) == PostStatus.SCHEDULED) {
+                        mPost.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
+                    }
                     mPost.setStatus(PostStatus.PUBLISHED.toString());
                     mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                 }
