@@ -15,13 +15,14 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.fluxc.persistence.StatsRequestSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.DAY
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.MONTH
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.WEEK
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.YEAR
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.PostsAndPagesSqlUtils
 import org.wordpress.android.fluxc.store.stats.time.DAY_POST_AND_PAGE_VIEWS_RESPONSE
 import org.wordpress.android.fluxc.store.stats.time.MONTH_POST_AND_PAGE_VIEWS_RESPONSE
 import org.wordpress.android.fluxc.store.stats.time.WEEK_POST_AND_PAGE_VIEWS_RESPONSE
@@ -37,11 +38,12 @@ class PostAndPageViewsSqlUtilsTest {
     @Mock lateinit var statsSqlUtils: StatsSqlUtils
     @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var site: SiteModel
-    private lateinit var timeStatsSqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var statsRequestSqlUtils: StatsRequestSqlUtils
+    private lateinit var timeStatsSqlUtils: PostsAndPagesSqlUtils
 
     @Before
     fun setUp() {
-        timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils, statsUtils)
+        timeStatsSqlUtils = PostsAndPagesSqlUtils(statsSqlUtils, statsUtils, statsRequestSqlUtils)
         whenever(statsUtils.getFormattedDate(eq(DATE))).thenReturn(DATE_VALUE)
     }
 
@@ -60,7 +62,7 @@ class PostAndPageViewsSqlUtilsTest {
                         DAY_POST_AND_PAGE_VIEWS_RESPONSE
                 )
 
-        val result = timeStatsSqlUtils.selectPostAndPageViews(site, DAYS, DATE)
+        val result = timeStatsSqlUtils.select(site, DAYS, DATE)
 
         assertEquals(result, DAY_POST_AND_PAGE_VIEWS_RESPONSE)
     }
@@ -91,7 +93,7 @@ class PostAndPageViewsSqlUtilsTest {
                         WEEK_POST_AND_PAGE_VIEWS_RESPONSE
                 )
 
-        val result = timeStatsSqlUtils.selectPostAndPageViews(site, WEEKS, DATE)
+        val result = timeStatsSqlUtils.select(site, WEEKS, DATE)
 
         assertEquals(result, WEEK_POST_AND_PAGE_VIEWS_RESPONSE)
     }
@@ -122,7 +124,7 @@ class PostAndPageViewsSqlUtilsTest {
                         MONTH_POST_AND_PAGE_VIEWS_RESPONSE
                 )
 
-        val result = timeStatsSqlUtils.selectPostAndPageViews(site, MONTHS, DATE)
+        val result = timeStatsSqlUtils.select(site, MONTHS, DATE)
 
         assertEquals(result, MONTH_POST_AND_PAGE_VIEWS_RESPONSE)
     }
@@ -153,7 +155,7 @@ class PostAndPageViewsSqlUtilsTest {
                         YEAR_POST_AND_PAGE_VIEWS_RESPONSE
                 )
 
-        val result = timeStatsSqlUtils.selectPostAndPageViews(site, YEARS, DATE)
+        val result = timeStatsSqlUtils.select(site, YEARS, DATE)
 
         assertEquals(result, YEAR_POST_AND_PAGE_VIEWS_RESPONSE)
     }

@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ClicksSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -34,7 +34,7 @@ private val limitMode = LimitMode.Top(ITEMS_TO_LOAD)
 class ClicksStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var restClient: ClicksRestClient
-    @Mock lateinit var sqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var sqlUtils: ClicksSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
     private lateinit var store: ClicksStore
     @Before
@@ -83,7 +83,7 @@ class ClicksStoreTest {
 
     @Test
     fun `returns clicks from db`() {
-        whenever(sqlUtils.selectClicks(site, DAYS, DATE)).thenReturn(CLICKS_RESPONSE)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(CLICKS_RESPONSE)
         val model = mock<ClicksModel>()
         whenever(mapper.map(CLICKS_RESPONSE, limitMode)).thenReturn(model)
 
