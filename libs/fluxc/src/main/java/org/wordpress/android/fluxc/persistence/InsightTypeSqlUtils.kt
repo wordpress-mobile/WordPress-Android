@@ -62,20 +62,6 @@ class InsightTypeSqlUtils
         }).execute()
     }
 
-    fun updateStatus(site: SiteModel, type: InsightType, status: Status = REMOVED, position: Int = -1) {
-        WellSql.update(InsightTypesBuilder::class.java)
-                .where()
-                .equals(InsightTypesTable.LOCAL_SITE_ID, site.id)
-                .equals(InsightTypesTable.INSIGHT_TYPE, type.name)
-                .endWhere()
-                .put(status.name) {
-                    val cv = ContentValues()
-                    cv.put(InsightTypesTable.STATUS, it)
-                    cv.put(InsightTypesTable.POSITION, position)
-                    cv
-                }
-    }
-
     private fun InsightType.toBuilder(site: SiteModel, status: Status, position: Int): InsightTypesBuilder {
         return InsightTypesBuilder(
                 localSiteId = site.id,
