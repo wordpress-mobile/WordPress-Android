@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.store
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.InsightTypeModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.CENSORED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.HTTP_AUTH_ERROR
@@ -45,43 +44,35 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
+val DEFAULT_INSIGHTS = listOf(POSTING_ACTIVITY, TODAY_STATS, ALL_TIME_STATS, MOST_POPULAR_DAY_AND_HOUR, COMMENTS)
 @Singleton
 class StatsStore
 @Inject constructor(
     private val coroutineContext: CoroutineContext,
     private val insightTypeSqlUtils: InsightTypeSqlUtils
 ) {
-    private val defaultList = listOf(POSTING_ACTIVITY, TODAY_STATS, ALL_TIME_STATS, MOST_POPULAR_DAY_AND_HOUR, COMMENTS)
-
-    suspend fun getInsights(site: SiteModel): List<InsightType> = withContext(coroutineContext) {
+    suspend fun getAddedInsights(site: SiteModel) = withContext(coroutineContext) {
         val addedInsights = insightTypeSqlUtils.selectAddedItemsOrderedByStatus(site)
         val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
 
         return@withContext if (addedInsights.isEmpty() && removedInsights.isEmpty()) {
-            insertOrReplaceItems(site, defaultList, getRemovedInsights(defaultList))
-            defaultList
+            updateTypes(site, DEFAULT_INSIGHTS)
+            DEFAULT_INSIGHTS
         } else {
             addedInsights
         }
     }
 
-    suspend fun getInsightsManagementModel(site: SiteModel) = withContext(coroutineContext) {
-        val addedInsights = insightTypeSqlUtils.selectAddedItemsOrderedByStatus(site)
-        val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
-
-        return@withContext if (addedInsights.isEmpty() && removedInsights.isEmpty()) {
-            InsightTypeModel(defaultList, InsightType.values().filter { !defaultList.contains(it) })
-        } else {
-            InsightTypeModel(addedInsights, removedInsights)
-        }
+    fun getRemovedInsights(addedInsights: List<InsightType>): List<InsightType> {
+        return InsightType.values().asList() - addedInsights
     }
 
-    suspend fun updateTypes(site: SiteModel, model: InsightTypeModel) = withContext(coroutineContext) {
-        insertOrReplaceItems(site, model.addedTypes, model.removedTypes)
+    suspend fun updateTypes(site: SiteModel, addedInsights: List<InsightType>) = withContext(coroutineContext) {
+        insertOrReplaceItems(site, addedInsights, getRemovedInsights(addedInsights))
     }
 
     suspend fun moveTypeUp(site: SiteModel, type: InsightType) {
-        val insightTypes = getInsights(site)
+        val insightTypes = getAddedInsights(site)
         val indexOfMovedItem = insightTypes.indexOf(type)
         if (indexOfMovedItem > 0 && indexOfMovedItem < insightTypes.size) {
             val updatedInsights = mutableListOf<InsightType>()
@@ -99,7 +90,7 @@ class StatsStore
     }
 
     suspend fun moveTypeDown(site: SiteModel, type: InsightType) {
-        val insightTypes = getInsights(site)
+        val insightTypes = getAddedInsights(site)
         val indexOfMovedItem = insightTypes.indexOf(type)
         if (indexOfMovedItem >= 0 && indexOfMovedItem < insightTypes.size - 1) {
             val updatedInsights = mutableListOf<InsightType>()
@@ -117,21 +108,13 @@ class StatsStore
     }
 
     suspend fun removeType(site: SiteModel, type: InsightType) = withContext(coroutineContext) {
-        val insightsModel = getInsightsManagementModel(site)
-        val addedItems = insightsModel.addedTypes.filter { it != type }
-        val removedItems = insightsModel.removedTypes + listOf(type)
-        insertOrReplaceItems(site, addedItems, removedItems)
+        val addedItems = getAddedInsights(site) - type
+        updateTypes(site, addedItems)
     }
 
     suspend fun addType(site: SiteModel, type: InsightType) = withContext(coroutineContext) {
-        val insightsModel = getInsightsManagementModel(site)
-        val addedItems = insightsModel.addedTypes + listOf(type)
-        val removedItems = insightsModel.removedTypes.filter { it != type }
-        insertOrReplaceItems(site, addedItems, removedItems)
-    }
-
-    private fun getRemovedInsights(addedInsights: List<InsightType>): List<InsightType> {
-        return InsightType.values().filter { !addedInsights.contains(it) }
+        val addedItems = getAddedInsights(site) + type
+        updateTypes(site, addedItems)
     }
 
     private fun insertOrReplaceItems(
