@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.persistence
 
-import android.content.ContentValues
 import com.wellsql.generated.InsightTypesTable
 import com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING
 import com.yarolegovich.wellsql.WellSql

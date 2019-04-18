@@ -16,17 +16,10 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
 import org.wordpress.android.fluxc.test
 
 @RunWith(MockitoJUnitRunner::class)
@@ -147,14 +140,12 @@ class StatsStoreTest {
                 store.getRemovedInsights(addedTypes)
         )
 
-
         store.removeType(site, POSTING_ACTIVITY)
 
         verify(insightTypesSqlUtils).insertOrReplaceAddedItems(
                 site,
                 addedTypes - POSTING_ACTIVITY
         )
-
         verify(insightTypesSqlUtils).insertOrReplaceRemovedItems(
                 site,
                 store.getRemovedInsights(addedTypes - POSTING_ACTIVITY)
