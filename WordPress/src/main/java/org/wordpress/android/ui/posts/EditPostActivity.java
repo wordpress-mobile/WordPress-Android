@@ -1356,9 +1356,10 @@ public class EditPostActivity extends AppCompatActivity implements
                         return false;
                     }
 
-                    if (status == PostStatus.SCHEDULED) {
+                    if (status == PostStatus.SCHEDULED || status == PostStatus.PUBLISHED) {
                         if (isNewPost()) {
-                            // if user pressed `Save as draft` on a new, Scheduled Post, re-convert it to draft.
+                            // if user pressed `Save as draft` on a new, Scheduled (or set to Publish) Post,
+                            // so re-convert it to draft.
                             if (mEditPostSettingsFragment != null) {
                                 mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
                                 ToastUtils.showToast(EditPostActivity.this,
