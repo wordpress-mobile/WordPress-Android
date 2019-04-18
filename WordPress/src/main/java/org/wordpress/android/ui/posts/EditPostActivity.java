@@ -1355,12 +1355,18 @@ public class EditPostActivity extends AppCompatActivity implements
                         return false;
                     }
 
-                    if (status == PostStatus.SCHEDULED && isNewPost()) {
-                        // if user pressed `Save as draft` on a new, Scheduled Post, re-convert it to draft.
-                        if (mEditPostSettingsFragment != null) {
-                            mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
-                            ToastUtils.showToast(EditPostActivity.this,
-                                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
+                    if (status == PostStatus.SCHEDULED) {
+                        if (isNewPost()) {
+                            // if user pressed `Save as draft` on a new, Scheduled Post, re-convert it to draft.
+                            if (mEditPostSettingsFragment != null) {
+                                mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
+                                ToastUtils.showToast(EditPostActivity.this,
+                                        getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
+                            }
+                        } else {
+                            // user pressed `Publish Now` on a non-new, Scheduled Post. Let's confirm and publish!
+                            showPublishConfirmationDialog();
+                            return false;
                         }
                     }
                     UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
