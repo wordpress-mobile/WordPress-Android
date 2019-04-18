@@ -34,12 +34,11 @@ import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
-import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.image.ImageManager;
@@ -212,8 +211,7 @@ public class ThemeBrowserFragment extends Fragment
                             R.drawable.ic_customize_white_24dp);
 
                     WPDialogSnackbar.make(getView(), title,
-                            AccessibilityUtils.getSnackbarDuration(getActivity(),
-                                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms))).show();
+                            getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)).show();
                 }
             });
         }

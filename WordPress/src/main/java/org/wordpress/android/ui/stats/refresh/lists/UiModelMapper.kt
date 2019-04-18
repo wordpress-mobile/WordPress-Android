@@ -16,13 +16,14 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LinkButton
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class UiModelMapper
 @Inject constructor(private val networkUtilsWrapper: NetworkUtilsWrapper) {
     fun mapInsights(
         useCaseModels: List<UseCaseModel>,
-        navigationTarget: MutableLiveData<NavigationTarget>,
+        navigationTarget: MutableLiveData<Event<NavigationTarget>>,
         showError: (Int) -> Unit
     ): UiModel {
         if (useCaseModels.isNotEmpty()) {
@@ -55,7 +56,7 @@ class UiModelMapper
                 if (allUseCasesLoaded) {
                     data += StatsBlock.Control(listOf(LinkButton(string.edit,
                             NavigationAction.create {
-                                navigationTarget.value = ViewInsightsManagement()
+                                navigationTarget.value = Event(ViewInsightsManagement)
                             }
                     )))
                 }
@@ -78,7 +79,7 @@ class UiModelMapper
 
     fun mapTimeStats(
         useCaseModels: List<UseCaseModel>,
-        navigationTarget: MutableLiveData<NavigationTarget>,
+        navigationTarget: MutableLiveData<Event<NavigationTarget>>,
         showError: (Int) -> Unit
     ): UiModel {
         return mapStatsWithOverview(TimeStatsTypes.OVERVIEW, useCaseModels, showError)
@@ -86,7 +87,7 @@ class UiModelMapper
 
     fun mapDetailStats(
         useCaseModels: List<UseCaseModel>,
-        navigationTarget: MutableLiveData<NavigationTarget>,
+        navigationTarget: MutableLiveData<Event<NavigationTarget>>,
         showError: (Int) -> Unit
     ): UiModel {
             return mapStatsWithOverview(PostDetailTypes.POST_OVERVIEW, useCaseModels, showError)

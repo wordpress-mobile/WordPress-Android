@@ -30,6 +30,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.util.throttle
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -57,8 +58,8 @@ abstract class StatsListViewModel(
 
     val selectedDate = dateSelector.selectedDate
 
-    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(
+    private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
+    val navigationTarget: LiveData<Event<NavigationTarget>> = mergeNotNull(
             statsUseCase.navigationTarget, mutableNavigationTarget
     )
 
@@ -115,7 +116,7 @@ abstract class StatsListViewModel(
     }
 
     fun onEmptyInsightsButtonClicked() {
-        mutableNavigationTarget.value = ViewInsightsManagement()
+        mutableNavigationTarget.value = Event(ViewInsightsManagement)
     }
 
     fun start() {

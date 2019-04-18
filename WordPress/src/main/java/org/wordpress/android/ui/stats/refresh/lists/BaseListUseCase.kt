@@ -19,6 +19,7 @@ import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mergeNotNull
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
 class BaseListUseCase(
@@ -29,7 +30,7 @@ class BaseListUseCase(
     private val getStatsTypes: suspend () -> List<StatsTypes>,
     private val mapUiModel: (
         useCaseModels: List<UseCaseModel>,
-        MutableLiveData<NavigationTarget>,
+        MutableLiveData<Event<NavigationTarget>>,
         showError: (Int) -> Unit
     ) -> UiModel
 ) {
@@ -51,8 +52,8 @@ class BaseListUseCase(
         }
     }.distinct()
 
-    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(
+    private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
+    val navigationTarget: LiveData<Event<NavigationTarget>> = mergeNotNull(
             useCases.map { it.navigationTarget } + mutableNavigationTarget,
             distinct = false
     )

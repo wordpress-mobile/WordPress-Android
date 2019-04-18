@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.util.Event
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -32,8 +32,8 @@ class ItemPopupMenuHandler
     private val statsStore: StatsStore,
     private val statsSiteProvider: StatsSiteProvider
 ) {
-    private val mutableTypeMoved = MutableLiveData<TypeChangeEvent>()
-    val typeMoved: LiveData<TypeChangeEvent> = mutableTypeMoved
+    private val mutableTypeMoved = MutableLiveData<Event<InsightsTypes>>()
+    val typeMoved: LiveData<Event<InsightsTypes>> = mutableTypeMoved
 
     fun onMenuClick(view: View, statsType: StatsTypes) {
         GlobalScope.launch(bgDispatcher) {
@@ -56,19 +56,19 @@ class ItemPopupMenuHandler
                         UP -> {
                             GlobalScope.launch(bgDispatcher) {
                                 statsStore.moveTypeUp(statsSiteProvider.siteModel, type)
-                                mutableTypeMoved.postValue(TypeChangeEvent(type))
+                                mutableTypeMoved.postValue(Event(type))
                             }
                         }
                         DOWN -> {
                             GlobalScope.launch(bgDispatcher) {
                                 statsStore.moveTypeDown(statsSiteProvider.siteModel, type)
-                                mutableTypeMoved.postValue(TypeChangeEvent(type))
+                                mutableTypeMoved.postValue(Event(type))
                             }
                         }
                         REMOVE -> {
                             GlobalScope.launch(bgDispatcher) {
                                 statsStore.removeType(statsSiteProvider.siteModel, type)
-                                mutableTypeMoved.postValue(TypeChangeEvent(type))
+                                mutableTypeMoved.postValue(Event(type))
                             }
                         }
                     }
@@ -78,6 +78,4 @@ class ItemPopupMenuHandler
             }
         }
     }
-
-    data class TypeChangeEvent(val types: StatsTypes) : Event()
 }
