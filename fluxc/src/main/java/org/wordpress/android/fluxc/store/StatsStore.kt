@@ -24,22 +24,22 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.AVERAGE_VIEWS_PER_DAY
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.CLICKS_BY_WEEKS
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.MONTHS_AND_YEARS
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.POST_HEADER
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes.POST_OVERVIEW
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType.AVERAGE_VIEWS_PER_DAY
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType.CLICKS_BY_WEEKS
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType.MONTHS_AND_YEARS
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType.POST_HEADER
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType.POST_OVERVIEW
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.CLICKS
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.COUNTRIES
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAGES
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.REFERRERS
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.SEARCH_TERMS
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.VIDEOS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.AUTHORS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.CLICKS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.COUNTRIES
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.OVERVIEW
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.POSTS_AND_PAGES
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.REFERRERS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.SEARCH_TERMS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.VIDEOS
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -138,7 +138,7 @@ class StatsStore
         insightTypeSqlUtils.insertOrReplaceRemovedItems(site, removedItems)
     }
 
-    suspend fun getTimeStatsTypes(): List<TimeStatsTypes> = withContext(coroutineContext) {
+    suspend fun getTimeStatsTypes(): List<TimeStatsType> = withContext(coroutineContext) {
         return@withContext listOf(
                 OVERVIEW,
                 POSTS_AND_PAGES,
@@ -151,7 +151,7 @@ class StatsStore
         )
     }
 
-    suspend fun getPostDetailTypes(): List<PostDetailTypes> = withContext(coroutineContext) {
+    suspend fun getPostDetailTypes(): List<PostDetailType> = withContext(coroutineContext) {
         return@withContext listOf(
                 POST_HEADER,
                 POST_OVERVIEW,
@@ -161,9 +161,9 @@ class StatsStore
         )
     }
 
-    interface StatsTypes
+    interface StatsType
 
-    enum class InsightType : StatsTypes {
+    enum class InsightType : StatsType {
         LATEST_POST_SUMMARY,
         MOST_POPULAR_DAY_AND_HOUR,
         ALL_TIME_STATS,
@@ -177,7 +177,7 @@ class StatsStore
         PUBLICIZE
     }
 
-    enum class TimeStatsTypes : StatsTypes {
+    enum class TimeStatsType : StatsType {
         OVERVIEW,
         POSTS_AND_PAGES,
         REFERRERS,
@@ -189,7 +189,7 @@ class StatsStore
         VIDEOS
     }
 
-    enum class PostDetailTypes : StatsTypes {
+    enum class PostDetailType : StatsType {
         POST_HEADER,
         POST_OVERVIEW,
         MONTHS_AND_YEARS,
