@@ -246,10 +246,9 @@ public class ReleaseNetworkModule {
     public MostPopularRestClient provideMostPopularInsightsRestClient(Context appContext, Dispatcher dispatcher,
                                                                       @Named("regular") RequestQueue requestQueue,
                                                                       AccessToken token, UserAgent userAgent,
-                                                                      WPComGsonRequestBuilder wpComGsonRequestBuilder,
-                                                                      StatsUtils statsUtils) {
+                                                                      WPComGsonRequestBuilder wpComGsonRequestBuilder) {
         return new MostPopularRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
-                userAgent, statsUtils);
+                userAgent);
     }
 
     @Singleton
