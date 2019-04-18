@@ -89,7 +89,7 @@ class PostMonthsAndYearsUseCase(
     }
 
     private fun onLinkClick() {
-        navigateTo(ViewMonthsAndYearsStats())
+        navigateTo(ViewMonthsAndYearsStats)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> {
