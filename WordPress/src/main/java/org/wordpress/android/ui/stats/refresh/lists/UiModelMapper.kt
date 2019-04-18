@@ -52,14 +52,11 @@ class UiModelMapper
                     }
                 }.toMutableList()
 
-                val allUseCasesLoaded = useCaseModels.none { it.state == LOADING }
-                if (allUseCasesLoaded) {
-                    data += StatsBlock.Control(listOf(LinkButton(string.edit,
-                            NavigationAction.create {
-                                navigationTarget.value = Event(ViewInsightsManagement)
-                            }
-                    )))
-                }
+                data += StatsBlock.Control(listOf(LinkButton(string.edit,
+                        NavigationAction.create {
+                            navigationTarget.value = Event(ViewInsightsManagement)
+                        }
+                )))
                 UiModel.Success(data)
             } else if (!allFailingWithoutData) {
                 showError(getErrorMessage())
