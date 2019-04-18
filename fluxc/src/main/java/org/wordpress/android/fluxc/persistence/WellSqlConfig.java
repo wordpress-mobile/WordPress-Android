@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 66;
+        return 67;
     }
 
     @Override
@@ -503,6 +503,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 65:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 66:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL(
                         "CREATE TABLE InsightTypes (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "REMOTE_SITE_ID INTEGER,INSIGHT_TYPE TEXT NOT NULL,POSITION INTEGER,STATUS TEXT NOT NULL)");
@@ -744,6 +748,15 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "TRACKING_PROVIDER TEXT NOT NULL,"
                                + "TRACKING_LINK TEXT NOT NULL,"
                                + "DATE_SHIPPED TEXT NOT NULL)");
+                    break;
+                case 65:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCOrderShipmentProviderModel ("
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "COUNTRY TEXT NOT NULL,"
+                               + "CARRIER_NAME TEXT NOT NULL,"
+                               + "CARRIER_LINK TEXT NOT NULL,"
+                               + "_id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
             }
         }
