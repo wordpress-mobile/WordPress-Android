@@ -58,6 +58,7 @@ class StatsStore
         val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
 
         return@withContext if (addedInsights.isEmpty() && removedInsights.isEmpty()) {
+            insertOrReplaceItems(site, defaultList, getRemovedInsights(defaultList))
             defaultList
         } else {
             addedInsights
@@ -127,6 +128,10 @@ class StatsStore
         val addedItems = insightsModel.addedTypes + listOf(type)
         val removedItems = insightsModel.removedTypes.filter { it != type }
         insertOrReplaceItems(site, addedItems, removedItems)
+    }
+
+    private fun getRemovedInsights(addedInsights: List<InsightType>): List<InsightType> {
+        return InsightType.values().filter { !addedInsights.contains(it) }
     }
 
     private fun insertOrReplaceItems(
