@@ -36,8 +36,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRe
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostInsightsRestClient.PostsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient
@@ -71,7 +69,6 @@ class InsightsRestClientTest {
     private lateinit var commentsRestClient: CommentsRestClient
     private lateinit var followersRestClient: FollowersRestClient
     private lateinit var latestPostInsightsRestClient: LatestPostInsightsRestClient
-    private lateinit var mostPopularRestClient: MostPopularRestClient
     private lateinit var publicizeRestClient: PublicizeRestClient
     private lateinit var tagsRestClient: TagsRestClient
     private lateinit var todayInsightsRestClient: TodayInsightsRestClient
@@ -111,15 +108,6 @@ class InsightsRestClientTest {
                 statsUtils
         )
         latestPostInsightsRestClient = LatestPostInsightsRestClient(
-                dispatcher,
-                wpComGsonRequestBuilder,
-                null,
-                requestQueue,
-                accessToken,
-                userAgent,
-                statsUtils
-        )
-        mostPopularRestClient = MostPopularRestClient(
                 dispatcher,
                 wpComGsonRequestBuilder,
                 null,
@@ -184,39 +172,6 @@ class InsightsRestClientTest {
         )
 
         val responseModel = allTimeInsightsRestClient.fetchAllTimeInsights(site, false)
-
-        assertThat(responseModel.error).isNotNull
-        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
-        assertThat(responseModel.error.message).isEqualTo(errorMessage)
-    }
-
-    @Test
-    fun `returns most popular success response`() = test {
-        val response = mock<MostPopularResponse>()
-        initMostPopularResponse(response)
-
-        val responseModel = mostPopularRestClient.fetchMostPopularInsights(site, false)
-
-        assertThat(responseModel.response).isNotNull
-        assertThat(responseModel.response).isEqualTo(response)
-        assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/insights/")
-        assertThat(paramsCaptor.lastValue).isEmpty()
-    }
-
-    @Test
-    fun `returns most popular error response`() = test {
-        val errorMessage = "message"
-        initMostPopularResponse(
-                error = WPComGsonNetworkError(
-                        BaseNetworkError(
-                                NETWORK_ERROR,
-                                errorMessage,
-                                VolleyError(errorMessage)
-                        )
-                )
-        )
-
-        val responseModel = mostPopularRestClient.fetchMostPopularInsights(site, false)
 
         assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
@@ -490,13 +445,6 @@ class InsightsRestClientTest {
         error: WPComGsonNetworkError? = null
     ): Response<AllTimeResponse> {
         return initResponse(AllTimeResponse::class.java, data ?: mock(), error)
-    }
-
-    private suspend fun initMostPopularResponse(
-        data: MostPopularResponse? = null,
-        error: WPComGsonNetworkError? = null
-    ): Response<MostPopularResponse> {
-        return initResponse(MostPopularResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun initLatestPostResponse(
