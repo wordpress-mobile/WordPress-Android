@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.VisitsAndViewsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -20,7 +20,7 @@ import kotlin.coroutines.CoroutineContext
 class VisitsAndViewsStore
 @Inject constructor(
     private val restClient: VisitAndViewsRestClient,
-    private val sqlUtils: TimeStatsSqlUtils,
+    private val sqlUtils: VisitsAndViewsSqlUtils,
     private val timeStatsMapper: TimeStatsMapper,
     private val coroutineContext: CoroutineContext
 ) {
@@ -52,6 +52,6 @@ class VisitsAndViewsStore
         limitMode: LimitMode,
         date: Date
     ): VisitsAndViewsModel? {
-        return sqlUtils.selectVisitsAndViews(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
+        return sqlUtils.select(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
