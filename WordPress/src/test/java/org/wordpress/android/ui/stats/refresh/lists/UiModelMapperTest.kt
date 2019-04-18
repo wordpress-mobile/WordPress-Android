@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWER_TOTALS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
@@ -36,7 +36,7 @@ class UiModelMapperTest : BaseUnitTest() {
 
         val model = uiModel as UiModel.Success
         assertThat(model.data).hasSize(2)
-        assertThat((model.data[0] as Success).statsTypes).isEqualTo(FOLLOWER_TOTALS)
+        assertThat((model.data[0] as Success).statsType).isEqualTo(FOLLOWER_TOTALS)
         assertThat(model.data[0].type).isEqualTo(StatsBlock.Type.SUCCESS)
         assertThat(model.data[0].data).isEmpty()
         assertThat(model.data[1].type).isEqualTo(StatsBlock.Type.CONTROL)

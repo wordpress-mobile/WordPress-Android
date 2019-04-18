@@ -28,7 +28,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mergeNotNull
-import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named

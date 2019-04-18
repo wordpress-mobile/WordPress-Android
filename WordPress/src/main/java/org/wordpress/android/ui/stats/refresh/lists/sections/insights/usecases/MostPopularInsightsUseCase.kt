@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase

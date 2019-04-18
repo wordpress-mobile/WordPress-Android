@@ -6,25 +6,24 @@ import androidx.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.stats.InsightTypesModel
 import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ANNUAL_SITE_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWER_TOTALS
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVITY
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.ADDED
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.REMOVED
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Status.ADDED
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Status.REMOVED
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -62,13 +61,9 @@ class InsightsManagementViewModel @Inject constructor(
 
     private fun loadInsights() {
         launch {
-            val model = statsStore.getInsightsManagementModel(siteProvider.siteModel)
-            insights = model.addedTypes
-                        .filter { it != FOLLOWER_TOTALS && it != ANNUAL_SITE_STATS }
-                        .map { InsightModel(it, ADDED) } +
-                    model.removedTypes
-                        .filter { it != FOLLOWER_TOTALS && it != ANNUAL_SITE_STATS }
-                        .map { InsightModel(it, REMOVED) }
+            val addedInsights = statsStore.getAddedInsights(siteProvider.siteModel)
+            insights = addedInsights.map { InsightModel(it, ADDED) } +
+                    statsStore.getRemovedInsights(addedInsights).map { InsightModel(it, REMOVED) }
             displayInsights()
         }
     }
@@ -80,10 +75,8 @@ class InsightsManagementViewModel @Inject constructor(
 
     fun onSaveInsights() {
         launch {
-            val addedTypes = insights.filter { it.type == ADDED }.map { it.insightsTypes }
-            val removedTypes = insights.filter { it.type == REMOVED }.map { it.insightsTypes }
-            val model = InsightTypesModel(addedTypes, removedTypes + FOLLOWER_TOTALS + ANNUAL_SITE_STATS)
-            statsStore.updateTypes(siteProvider.siteModel, model)
+            val addedTypes = insights.filter { it.type == ADDED }.map { it.insightType }
+            statsStore.updateTypes(siteProvider.siteModel, addedTypes)
 
             insightsUseCase.refreshData(true)
         }
@@ -105,8 +98,8 @@ class InsightsManagementViewModel @Inject constructor(
         _isMenuVisible.value = true
     }
 
-    data class InsightModel(val insightsTypes: InsightsTypes, var type: Type) {
-        @StringRes val name: Int = when (insightsTypes) {
+    data class InsightModel(val insightType: InsightType, var type: Status) {
+        @StringRes val name: Int = when (insightType) {
             LATEST_POST_SUMMARY -> R.string.stats_insights_latest_post_summary
             MOST_POPULAR_DAY_AND_HOUR -> R.string.stats_insights_popular
             ALL_TIME_STATS -> R.string.stats_insights_all_time_stats
@@ -116,10 +109,11 @@ class InsightsManagementViewModel @Inject constructor(
             TODAY_STATS -> R.string.stats_insights_today
             POSTING_ACTIVITY -> R.string.stats_insights_posting_activity
             PUBLICIZE -> R.string.stats_view_publicize
-            else -> R.string.unknown
+            ANNUAL_SITE_STATS -> R.string.stats_insights_this_year_site_stats
+            FOLLOWER_TOTALS -> R.string.stats_view_follower_totals
         }
 
-        enum class Type {
+        enum class Status {
             ADDED,
             REMOVED
         }

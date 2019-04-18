@@ -9,8 +9,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
+import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.viewmodel.Event
@@ -32,13 +32,13 @@ class ItemPopupMenuHandler
     private val statsStore: StatsStore,
     private val statsSiteProvider: StatsSiteProvider
 ) {
-    private val mutableTypeMoved = MutableLiveData<Event<InsightsTypes>>()
-    val typeMoved: LiveData<Event<InsightsTypes>> = mutableTypeMoved
+    private val mutableTypeMoved = MutableLiveData<Event<InsightType>>()
+    val typeMoved: LiveData<Event<InsightType>> = mutableTypeMoved
 
-    fun onMenuClick(view: View, statsType: StatsTypes) {
+    fun onMenuClick(view: View, statsType: StatsType) {
         GlobalScope.launch(bgDispatcher) {
-            val type = statsType as InsightsTypes
-            val insights = statsStore.getInsights(statsSiteProvider.siteModel)
+            val type = statsType as InsightType
+            val insights = statsStore.getAddedInsights(statsSiteProvider.siteModel)
 
             val indexOfBlock = insights.indexOfFirst { it == type }
             val showUpAction = indexOfBlock > 0

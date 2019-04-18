@@ -54,10 +54,10 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
             is BlockListViewHolder,
             is LoadingViewHolder -> {
                 when (item) {
-                    is Success -> holder.bind(item.statsTypes, item.data)
-                    is Loading -> holder.bind(item.statsTypes, item.data)
-                    is EmptyBlock -> holder.bind(item.statsTypes, item.data)
-                    is Error -> holder.bind(item.statsTypes, item.data)
+                    is Success -> holder.bind(item.statsType, item.data)
+                    is Loading -> holder.bind(item.statsType, item.data)
+                    is EmptyBlock -> holder.bind(item.statsType, item.data)
+                    is Error -> holder.bind(item.statsType, item.data)
                 }
             }
         }

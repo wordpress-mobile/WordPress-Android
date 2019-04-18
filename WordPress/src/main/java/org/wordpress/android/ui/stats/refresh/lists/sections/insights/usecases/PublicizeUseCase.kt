@@ -7,7 +7,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
 import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPublicizeStats

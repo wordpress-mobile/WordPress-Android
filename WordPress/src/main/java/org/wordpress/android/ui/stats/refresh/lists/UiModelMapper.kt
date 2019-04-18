@@ -2,9 +2,9 @@ package org.wordpress.android.ui.stats.refresh.lists
 
 import android.arch.lifecycle.MutableLiveData
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
+import org.wordpress.android.fluxc.store.StatsStore.StatsType
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
@@ -82,7 +82,7 @@ class UiModelMapper
         navigationTarget: MutableLiveData<Event<NavigationTarget>>,
         showError: (Int) -> Unit
     ): UiModel {
-        return mapStatsWithOverview(TimeStatsTypes.OVERVIEW, useCaseModels, showError)
+        return mapStatsWithOverview(TimeStatsType.OVERVIEW, useCaseModels, showError)
     }
 
     fun mapDetailStats(
@@ -90,11 +90,11 @@ class UiModelMapper
         navigationTarget: MutableLiveData<Event<NavigationTarget>>,
         showError: (Int) -> Unit
     ): UiModel {
-            return mapStatsWithOverview(PostDetailTypes.POST_OVERVIEW, useCaseModels, showError)
+            return mapStatsWithOverview(PostDetailType.POST_OVERVIEW, useCaseModels, showError)
     }
 
     private fun mapStatsWithOverview(
-        overViewType: StatsTypes,
+        overViewType: StatsType,
         useCaseModels: List<UseCaseModel>,
         showError: (Int) -> Unit
     ): UiModel {

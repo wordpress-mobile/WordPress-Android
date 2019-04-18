@@ -9,7 +9,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag

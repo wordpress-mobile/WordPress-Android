@@ -12,7 +12,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -64,7 +64,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.ERROR)
-        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        assertThat(result.type).isEqualTo(InsightType.ALL_TIME_STATS)
     }
 
     @Test
@@ -82,7 +82,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
-        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        assertThat(result.type).isEqualTo(InsightType.ALL_TIME_STATS)
         val items = result.stateData!!
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
@@ -110,7 +110,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        assertThat(result.type).isEqualTo(InsightType.ALL_TIME_STATS)
         val items = result.data!!
         assertEquals(items.size, 3)
         assertTrue(items[0] is Title)
@@ -146,7 +146,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        assertThat(result.type).isEqualTo(InsightType.ALL_TIME_STATS)
         val items = result.data!!
         assertEquals(items.size, 3)
         assertTrue(items[0] is Title)

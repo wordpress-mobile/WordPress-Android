@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
@@ -91,7 +91,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val result = loadData(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.ERROR)
-        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        assertThat(result.type).isEqualTo(TimeStatsType.POSTS_AND_PAGES)
     }
 
     @Test
@@ -112,7 +112,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val result = loadData(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
-        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        assertThat(result.type).isEqualTo(TimeStatsType.POSTS_AND_PAGES)
         val items = result.stateData!!
         assertThat(items.size).isEqualTo(2)
         assertThat(items[0] is Title).isTrue()
@@ -147,7 +147,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val result = loadData(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        assertThat(result.type).isEqualTo(TimeStatsType.POSTS_AND_PAGES)
         val items = result.data!!
         assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
@@ -189,7 +189,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val result = loadData(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        assertThat(result.type).isEqualTo(TimeStatsType.POSTS_AND_PAGES)
         val items = result.data!!
         assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
@@ -231,7 +231,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val result = loadData(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        assertThat(result.type).isEqualTo(TimeStatsType.POSTS_AND_PAGES)
         val items = result.data!!
         assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
@@ -272,7 +272,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val result = loadData(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        assertThat(result.type).isEqualTo(TimeStatsType.POSTS_AND_PAGES)
         val items = result.data!!
         assertThat(items.size).isEqualTo(4)
         assertHeader(items[1])
@@ -312,7 +312,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val result = loadData(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        assertThat(result.type).isEqualTo(TimeStatsType.POSTS_AND_PAGES)
         val items = result.data!!
         assertThat(items.size).isEqualTo(4)
         assertThat(items[2] is ListItemWithIcon).isTrue()

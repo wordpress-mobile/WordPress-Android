@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
@@ -27,7 +27,7 @@ class BaseListUseCase(
     private val mainDispatcher: CoroutineDispatcher,
     private val statsSiteProvider: StatsSiteProvider,
     private val useCases: List<BaseStatsUseCase<*, *>>,
-    private val getStatsTypes: suspend () -> List<StatsTypes>,
+    private val getStatsTypes: suspend () -> List<StatsType>,
     private val mapUiModel: (
         useCaseModels: List<UseCaseModel>,
         MutableLiveData<Event<NavigationTarget>>,
@@ -37,7 +37,7 @@ class BaseListUseCase(
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
-    private val statsTypes = MutableLiveData<List<StatsTypes>>()
+    private val statsTypes = MutableLiveData<List<StatsType>>()
     val data: MediatorLiveData<UiModel> = mergeNotNull(statsTypes, blockListData) { types, map ->
         types.mapNotNull {
             if (map.containsKey(it)) {
@@ -74,7 +74,7 @@ class BaseListUseCase(
         loadData(true, forced)
     }
 
-    suspend fun refreshTypes(): List<StatsTypes> {
+    suspend fun refreshTypes(): List<StatsType> {
         val items = getStatsTypes()
         withContext(mainDispatcher) {
             statsTypes.value = items

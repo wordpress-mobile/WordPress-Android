@@ -16,10 +16,10 @@ class StatsBlockDiffCallback(
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
         return oldItem.type == newItem.type && when (oldItem) {
-            is Success -> oldItem.statsTypes == (newItem as Success).statsTypes
-            is EmptyBlock -> oldItem.statsTypes == (newItem as EmptyBlock).statsTypes
-            is Error -> oldItem.statsTypes == (newItem as Error).statsTypes
-            is Loading -> oldItem.statsTypes == (newItem as Loading).statsTypes
+            is Success -> oldItem.statsType == (newItem as Success).statsType
+            is EmptyBlock -> oldItem.statsType == (newItem as EmptyBlock).statsType
+            is Error -> oldItem.statsType == (newItem as Error).statsType
+            is Loading -> oldItem.statsType == (newItem as Loading).statsType
             is Control -> true
         }
     }

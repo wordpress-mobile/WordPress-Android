@@ -6,8 +6,8 @@ import android.support.v7.widget.RecyclerView.Adapter
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.ADDED
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Type.REMOVED
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Status.ADDED
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Status.REMOVED
 import java.util.Collections
 
 class InsightsManagementAdapter(
@@ -18,7 +18,7 @@ class InsightsManagementAdapter(
     private var items = ArrayList<InsightModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, itemType: Int): InsightsManagementViewHolder {
-        val type = InsightModel.Type.values()[itemType]
+        val type = InsightModel.Status.values()[itemType]
         return when (type) {
             ADDED -> AddedInsightViewHolder(parent, onDragStarted, onItemButtonClicked)
             REMOVED -> RemovedInsightViewHolder(parent, onItemButtonClicked)
@@ -76,7 +76,7 @@ class InsightModelDiffCallback(
     private val newList: List<InsightModel>
 ) : Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].insightsTypes == newList[newItemPosition].insightsTypes
+        return oldList[oldItemPosition].insightType == newList[newItemPosition].insightType
     }
 
     override fun getOldListSize(): Int = oldList.size

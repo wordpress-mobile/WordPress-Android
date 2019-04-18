@@ -10,7 +10,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -61,7 +61,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.TODAY_STATS)
+        assertThat(result.type).isEqualTo(InsightType.TODAY_STATS)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertThat(this).hasSize(3)
@@ -83,7 +83,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.TODAY_STATS)
+        assertThat(result.type).isEqualTo(InsightType.TODAY_STATS)
         assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
         result.stateData!!.apply {
             assertThat(this).hasSize(2)

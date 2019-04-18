@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
@@ -30,7 +30,7 @@ class PostDayViewsUseCase
     private val statsPostProvider: StatsPostProvider,
     private val postDetailStore: PostDetailStore
 ) : BaseStatsUseCase<PostDetailStatsModel, UiState>(
-        PostDetailTypes.POST_OVERVIEW,
+        PostDetailType.POST_OVERVIEW,
         mainDispatcher,
         UiState()
 ) {

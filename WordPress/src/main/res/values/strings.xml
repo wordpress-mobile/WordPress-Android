@@ -902,6 +902,7 @@
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
+    <string name="stats_view_follower_totals">Followers Totals</string>
 
     <!-- stats: label for the entries -->
     <string name="stats_entry_country">Country</string>

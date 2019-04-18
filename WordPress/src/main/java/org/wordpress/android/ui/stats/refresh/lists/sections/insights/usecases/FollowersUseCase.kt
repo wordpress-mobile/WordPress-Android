@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PagedMode
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
