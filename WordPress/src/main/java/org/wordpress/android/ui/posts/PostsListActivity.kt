@@ -22,6 +22,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -208,13 +209,11 @@ class PostsListActivity : AppCompatActivity(),
                 pager.removeOnPageChangeListener(onPageChangeListener)
                 pager.currentItem = currentItem
                 pager.addOnPageChangeListener(onPageChangeListener)
-
-                updateMenuIconForViewLayoutType(viewLayoutType)
             }
         })
-        viewModel.viewLayoutType.observe(this, Observer { viewLayoutType ->
-            viewLayoutType?.let { type ->
-                updateMenuIconForViewLayoutType(type)
+        viewModel.updateViewLayoutMenuIcon.observe(this, Observer {
+            it?.let { icon ->
+                updateMenuIconForViewLayoutType(icon)
             }
         })
         viewModel.selectTab.observe(this, Observer { tabIndex ->
@@ -313,7 +312,9 @@ class PostsListActivity : AppCompatActivity(),
         menu?.add(Menu.FIRST, R.id.post_menu_item_view_layout_type, 3, "")?.let { item ->
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             toggleViewLayoutMenuItem = item
-            updateMenuIconForViewLayoutType(viewModel.viewLayoutType.value ?: PostListViewLayoutType.defaultValue)
+            viewModel.updateViewLayoutMenuIcon.value?.let {
+                updateMenuIconForViewLayoutType(it)
+            }
         }
         return true
     }
@@ -339,11 +340,7 @@ class PostsListActivity : AppCompatActivity(),
 
     // Menu PostListViewLayoutType handling
 
-    private fun updateMenuIconForViewLayoutType(postListViewLayoutType: PostListViewLayoutType) {
-        val iconId = when (postListViewLayoutType) {
-            STANDARD -> R.drawable.ic_view_post_compact
-            COMPACT -> R.drawable.ic_view_post_full
-        }
+    private fun updateMenuIconForViewLayoutType(@DrawableRes iconId: Int) {
         getDrawable(iconId)?.let { drawable ->
             drawable.setTint(Color.WHITE)
             toggleViewLayoutMenuItem?.setIcon(drawable)

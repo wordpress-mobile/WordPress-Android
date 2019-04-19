@@ -13,6 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
@@ -101,6 +102,9 @@ class PostListMainViewModel @Inject constructor(
     private val _viewLayoutType = MutableLiveData<PostListViewLayoutType>()
     val viewLayoutType: LiveData<PostListViewLayoutType> = _viewLayoutType
 
+    private val _updateViewLayoutMenuIcon = MutableLiveData<Int>()
+    val updateViewLayoutMenuIcon: LiveData<Int> = _updateViewLayoutMenuIcon
+
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
@@ -158,7 +162,10 @@ class PostListMainViewModel @Inject constructor(
 
     init {
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
-        _viewLayoutType.value = prefs.postListViewLayoutType
+
+        val layout = prefs.postListViewLayoutType
+        _viewLayoutType.value = layout
+        _updateViewLayoutMenuIcon.value = iconForViewLayout(layout)
     }
 
     fun start(site: SiteModel) {
@@ -347,5 +354,11 @@ class PostListMainViewModel @Inject constructor(
         }
         prefs.postListViewLayoutType = toggledValue
         _viewLayoutType.value = toggledValue
+        _updateViewLayoutMenuIcon.value = iconForViewLayout(toggledValue)
+    }
+
+    private fun iconForViewLayout(layout: PostListViewLayoutType) = when (layout) {
+        STANDARD -> R.drawable.ic_view_post_compact
+        COMPACT -> R.drawable.ic_view_post_full
     }
 }
