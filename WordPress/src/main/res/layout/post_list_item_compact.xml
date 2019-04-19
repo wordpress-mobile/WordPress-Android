@@ -1,101 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="?selectableItemBackground">
 
-    <data>
-        <variable
-            name="binder"
-            type="org.wordpress.android.ui.posts.PostListItemCompactViewBinder"/>
-    </data>
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_toStartOf="@+id/image_featured"
+        android:ellipsize="end"
+        android:fontFamily="serif"
+        android:maxLines="1"
+        android:textAlignment="textStart"
+        android:textColor="@color/neutral_800"
+        android:textSize="@dimen/text_sz_large"
+        android:textStyle="bold"
+        app:layout_goneMarginTop="@dimen/margin_extra_large"
+        tools:text="Testing title Testing title Testing title Testing title Testing title Testing title Testing title Testing title"/>
 
-    <RelativeLayout
-        android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="?selectableItemBackground">
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/title"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:ellipsize="end"
+        android:fontFamily="serif"
+        android:maxLines="1"
+        android:textColor="@color/neutral_500"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="99 days ago"/>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_toStartOf="@+id/image_view"
-            android:ellipsize="end"
-            android:fontFamily="serif"
-            android:maxLines="1"
-            android:textAlignment="textStart"
-            android:textColor="@color/neutral_800"
-            android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"
-            app:layout_goneMarginTop="@dimen/margin_extra_large"
-            tools:text="Testing title Testing title Testing title Testing title Testing title Testing title Testing title Testing title"/>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/title"
-            android:layout_marginBottom="6dp"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:ellipsize="end"
-            android:fontFamily="serif"
-            android:maxLines="1"
-            android:textColor="@color/neutral_500"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="99 days ago"/>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/statuses_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_toEndOf="@+id/date"
-            android:layout_toStartOf="@+id/image_view"
-            android:ellipsize="end"
-            android:fontFamily="serif"
-            android:maxLines="1"
-            android:textAlignment="textStart"
-            android:textColor="@color/warning_500"
-            app:layout_goneMarginBottom="@dimen/margin_extra_large"
-            tools:text="Private · Local Changes"/>
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/statuses_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_toEndOf="@+id/date"
+        android:layout_toStartOf="@+id/image_featured"
+        android:ellipsize="end"
+        android:fontFamily="serif"
+        android:maxLines="1"
+        android:textAlignment="textStart"
+        android:textColor="@color/warning_500"
+        app:layout_goneMarginBottom="@dimen/margin_extra_large"
+        tools:text="Private · Local Changes"/>
 
 
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_toStartOf="@+id/more_button"
-            android:background="@color/red_0"
-            android:contentDescription="@string/featured_image_desc"
-            android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/image_featured"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_toStartOf="@+id/more_button"
+        android:background="@color/red_0"
+        android:contentDescription="@string/featured_image_desc"
+        android:visibility="gone"/>
 
-        <ImageButton
-            android:id="@+id/more_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginStart="@dimen/margin_small"
-            android:background="@color/transparent"
-            android:contentDescription="@string/more"
-            android:src="@drawable/ic_ellipsis_vertical_white_24dp"
-            android:tint="@color/neutral_600"/>
+    <ImageButton
+        android:id="@+id/more_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_small"
+        android:contentDescription="@string/more"
+        android:src="@drawable/ic_ellipsis_vertical_white_24dp"
+        android:tint="@color/neutral_600"
+        android:background="?selectableItemBackground"/>
 
-    </RelativeLayout>
-
-</layout>
+</RelativeLayout>

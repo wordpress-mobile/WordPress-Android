@@ -19,21 +19,32 @@ sealed class PostListItemType {
     object EndListIndicatorItem : PostListItemType()
 }
 
-data class PostListItemUiStateData(
-    val remotePostId: RemotePostId,
-    val localPostId: LocalPostId,
-    val title: UiString?,
+class PostListItemUiStateData(
+    remotePostId: RemotePostId,
+    localPostId: LocalPostId,
+    title: UiString?,
     val excerpt: UiString?,
-    val imageUrl: String?,
-    val dateAndAuthor: UiString?,
-    @ColorRes val statusesColor: Int?,
-    val statuses: List<UiString>,
-    val statusesDelimiter: UiString,
+    imageUrl: String?,
+    date: UiString?,
+    @ColorRes statusesColor: Int?,
+    statuses: List<UiString>,
+    statusesDelimiter: UiString,
     val showProgress: Boolean,
     val showOverlay: Boolean
-)
+) : PostListItemUiData(remotePostId, localPostId, title, date, imageUrl, statuses, statusesDelimiter, statusesColor)
 
-data class PostListItemCompactUiStateData(
+class PostListItemCompactUiStateData(
+    remotePostId: RemotePostId,
+    localPostId: LocalPostId,
+    title: UiString?,
+    date: UiString?,
+    imageUrl: String?,
+    statuses: List<UiString>,
+    statusesDelimiter: UiString,
+    @ColorRes statusesColor: Int?
+) : PostListItemUiData(remotePostId, localPostId, title, date, imageUrl, statuses, statusesDelimiter, statusesColor)
+
+abstract class PostListItemUiData(
     val remotePostId: RemotePostId,
     val localPostId: LocalPostId,
     val title: UiString?,

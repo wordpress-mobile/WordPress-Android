@@ -90,10 +90,10 @@ class PostListAdapter(
                 LoadingViewHolder(view)
             }
             VIEW_TYPE_POST -> {
-                PostListItemViewHolder(R.layout.post_list_item, parent, postViewHolderConfig, uiHelpers)
+                PostListItemViewHolder(parent, postViewHolderConfig, uiHelpers)
             }
             VIEW_TYPE_POST_COMPACT -> {
-                PostListItemCompactViewHolder.create(layoutInflater, parent, postViewHolderConfig, uiHelpers)
+                PostListItemCompactViewHolder(parent, postViewHolderConfig, uiHelpers)
             }
             else -> {
                 // Fail fast if a new view type is added so the we can handle it

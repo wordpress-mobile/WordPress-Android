@@ -109,7 +109,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 title = title,
                 excerpt = getExcerpt(post = post),
                 imageUrl = featuredImageUrl,
-                dateAndAuthor = date,
+                date = date,
                 statuses = statuses,
                 statusesColor = statusesColor,
                 statusesDelimiter = statusesDelimeter,
