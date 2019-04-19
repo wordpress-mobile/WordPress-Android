@@ -355,8 +355,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 permissionRequestCode)) {
             if (permissionRequestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
                 mEditorFragmentListener.onCapturePhotoClicked();
-            }
-            else if (permissionRequestCode == CAPTURE_VIDEO_PERMISSION_REQUEST_CODE) {
+            } else if (permissionRequestCode == CAPTURE_VIDEO_PERMISSION_REQUEST_CODE) {
                 mEditorFragmentListener.onCaptureVideoClicked();
             }
         }
