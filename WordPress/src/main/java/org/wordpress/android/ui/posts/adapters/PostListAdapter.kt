@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
-import org.wordpress.android.ui.posts.PostListItemCompactViewHolder
 import org.wordpress.android.ui.posts.PostListItemViewHolder
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
@@ -89,10 +88,10 @@ class PostListAdapter(
                 LoadingViewHolder(view)
             }
             VIEW_TYPE_POST -> {
-                PostListItemViewHolder(parent, postViewHolderConfig, uiHelpers)
+                PostListItemViewHolder.Standard(parent, postViewHolderConfig, uiHelpers)
             }
             VIEW_TYPE_POST_COMPACT -> {
-                PostListItemCompactViewHolder(parent, postViewHolderConfig, uiHelpers)
+                PostListItemViewHolder.Compact(parent, postViewHolderConfig, uiHelpers)
             }
             else -> {
                 // Fail fast if a new view type is added so the we can handle it
@@ -110,13 +109,6 @@ class PostListAdapter(
                         "for position: $position"
             }
             holder.onBind((item as PostListItemUiState))
-        } else if (holder is PostListItemCompactViewHolder) {
-            val item = getItem(position)
-            assert(item is PostListItemUiState) {
-                "If we are presenting PostListItemCompactViewHolder, the item has to be of type PostListItemUiState " +
-                        "for position: $position"
-            }
-            holder.bind(item as PostListItemUiState)
         }
     }
 
