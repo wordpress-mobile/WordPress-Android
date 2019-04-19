@@ -22,10 +22,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.posts.ViewLayoutType
-import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.ViewLayoutType.Companion
-import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
+import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -56,7 +53,7 @@ class PostListViewModel @Inject constructor(
     private lateinit var connector: PostListViewModelConnector
 
     private var scrollToLocalPostId: LocalPostId? = null
-    private var layoutType: ViewLayoutType? = null
+    private var layoutType: PostListViewLayoutType? = null
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
@@ -117,7 +114,7 @@ class PostListViewModel @Inject constructor(
     }
 
     fun start(postListViewModelConnector: PostListViewModelConnector,
-              viewLayoutTypeStatus: LiveData<ViewLayoutType>) {
+              viewLayoutTypeStatus: LiveData<PostListViewLayoutType>) {
         if (isStarted) {
             return
         }

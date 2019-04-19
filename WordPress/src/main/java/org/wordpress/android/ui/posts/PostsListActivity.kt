@@ -33,8 +33,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
+import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
@@ -201,7 +201,7 @@ class PostsListActivity : AppCompatActivity(),
         viewModel.updatePostsPager.observe(this, Observer { authorFilter ->
             authorFilter?.let {
                 val currentItem: Int = pager.currentItem
-                val viewLayoutType = viewModel.viewLayoutType.value ?: ViewLayoutType.defaultValue
+                val viewLayoutType = viewModel.viewLayoutType.value ?: PostListViewLayoutType.defaultValue
                 postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
                 pager.adapter = postsPagerAdapter
 
@@ -313,7 +313,7 @@ class PostsListActivity : AppCompatActivity(),
         menu?.add(Menu.FIRST, R.id.post_menu_item_view_layout_type, 3, "")?.let { item ->
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             toggleViewLayoutMenuItem = item
-            updateMenuIconForViewLayoutType(viewModel.viewLayoutType.value ?: ViewLayoutType.defaultValue)
+            updateMenuIconForViewLayoutType(viewModel.viewLayoutType.value ?: PostListViewLayoutType.defaultValue)
         }
         return true
     }
@@ -337,10 +337,10 @@ class PostsListActivity : AppCompatActivity(),
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
     }
 
-    // Menu ViewLayoutType handling
+    // Menu PostListViewLayoutType handling
 
-    private fun updateMenuIconForViewLayoutType(viewLayoutType: ViewLayoutType) {
-        val iconId = when (viewLayoutType) {
+    private fun updateMenuIconForViewLayoutType(postListViewLayoutType: PostListViewLayoutType) {
+        val iconId = when (postListViewLayoutType) {
             STANDARD -> R.drawable.ic_view_post_compact
             COMPACT -> R.drawable.ic_view_post_full
         }

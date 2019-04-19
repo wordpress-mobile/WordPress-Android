@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.prefs
 
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.posts.ViewLayoutType
+import org.wordpress.android.ui.posts.PostListViewLayoutType
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,7 +34,7 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getAuthorFilterSelection()
         set(value) = AppPrefs.setAuthorFilterSelection(value)
 
-    var postListViewLayoutType: ViewLayoutType
+    var postListViewLayoutType: PostListViewLayoutType
         get() = AppPrefs.getPostsListViewLayoutType()
         set(value) = AppPrefs.setPostsListViewLayoutType(value)
 }

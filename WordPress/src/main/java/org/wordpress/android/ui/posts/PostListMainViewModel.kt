@@ -31,9 +31,9 @@ import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
-import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.ViewLayoutType.Companion
-import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
+import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.PostListViewLayoutType.Companion
+import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
@@ -98,8 +98,8 @@ class PostListMainViewModel @Inject constructor(
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
 
-    private val _viewLayoutType = MutableLiveData<ViewLayoutType>()
-    val viewLayoutType: LiveData<ViewLayoutType> = _viewLayoutType
+    private val _viewLayoutType = MutableLiveData<PostListViewLayoutType>()
+    val viewLayoutType: LiveData<PostListViewLayoutType> = _viewLayoutType
 
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
@@ -222,7 +222,7 @@ class PostListMainViewModel @Inject constructor(
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
                 getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
-                viewLayoutType = this.viewLayoutType.value ?: Companion.defaultValue,
+                postListViewLayoutType = this.viewLayoutType.value ?: Companion.defaultValue,
                 postFetcher = postFetcher
         )
     }
@@ -340,7 +340,7 @@ class PostListMainViewModel @Inject constructor(
             }
 
     fun toggleViewLayout() {
-        val currentLayoutType = viewLayoutType.value ?: ViewLayoutType.defaultValue
+        val currentLayoutType = viewLayoutType.value ?: PostListViewLayoutType.defaultValue
         val toggledValue = when (currentLayoutType) {
             STANDARD -> COMPACT
             COMPACT -> STANDARD

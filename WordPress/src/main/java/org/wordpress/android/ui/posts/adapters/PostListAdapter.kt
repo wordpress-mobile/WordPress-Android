@@ -17,9 +17,9 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.ui.posts.PostListItemCompactViewHolder
 import org.wordpress.android.ui.posts.PostListItemViewHolder
 import org.wordpress.android.ui.posts.PostViewHolderConfig
-import org.wordpress.android.ui.posts.ViewLayoutType
-import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
+import org.wordpress.android.ui.posts.PostListViewLayoutType
+import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
@@ -36,18 +36,30 @@ class PostListAdapter(
     context: Context,
     private val postViewHolderConfig: PostViewHolderConfig,
     private val uiHelpers: UiHelpers,
-    private val viewLayoutType: LiveData<ViewLayoutType>
+    private val postListViewLayoutType: LiveData<PostListViewLayoutType>
 ) : PagedListAdapter<PostListItemType, ViewHolder>(PostListDiffItemCallback) {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
-    private var layout: ViewLayoutType
+    private var layout: PostListViewLayoutType
+    private var recyclerView: RecyclerView? = null
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        this.recyclerView = null
+    }
 
     init {
-        layout = viewLayoutType.value ?: ViewLayoutType.defaultValue
-        viewLayoutType.observe(fragment, Observer {
+        layout = postListViewLayoutType.value ?: PostListViewLayoutType.defaultValue
+        postListViewLayoutType.observe(fragment, Observer {
             it?.let { updatedLayout ->
                 layout = updatedLayout
                 notifyDataSetChanged()
+                recyclerView?.scrollToPosition(0)
             }
         })
     }

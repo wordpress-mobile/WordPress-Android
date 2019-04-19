@@ -17,9 +17,9 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.posts.ViewLayoutType
-import org.wordpress.android.ui.posts.ViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.ViewLayoutType.STANDARD
+import org.wordpress.android.ui.posts.PostListViewLayoutType
+import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiString
@@ -69,7 +69,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 siteHasCapabilitiesToPublish = capabilitiesToPublish,
                 statsSupported = statsSupported,
                 onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) },
-                viewLayoutType = STANDARD
+                postListViewLayoutType = STANDARD
         )
         val compactActions = createActions(
                 postStatus = postStatus,
@@ -79,7 +79,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 siteHasCapabilitiesToPublish = capabilitiesToPublish,
                 statsSupported = statsSupported,
                 onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) },
-                viewLayoutType = COMPACT
+                postListViewLayoutType = COMPACT
         )
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
         val localPostId = LocalPostId(LocalId(post.id))
@@ -253,7 +253,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         siteHasCapabilitiesToPublish: Boolean,
         statsSupported: Boolean,
         onButtonClicked: (PostListButtonType) -> Unit,
-        viewLayoutType: ViewLayoutType
+        postListViewLayoutType: PostListViewLayoutType
     ): List<PostListItemAction> {
         val canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
         val canPublishPost = !uploadStatus.isUploadingOrQueued &&
@@ -308,7 +308,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             PostListItemAction.SingleItem(buttonType, onButtonClicked)
         }
 
-        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS && viewLayoutType != COMPACT) {
+        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS && postListViewLayoutType != COMPACT) {
             val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1)
                     .map(createSinglePostListItem)
             val itemsUnderMore = buttonTypes.subList(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1, buttonTypes.size)

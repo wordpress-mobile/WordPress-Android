@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts
 
-enum class ViewLayoutType(val id: Long) {
+enum class PostListViewLayoutType(val id: Long) {
     STANDARD(id = 0),
     COMPACT(id = 1);
 
@@ -9,7 +9,7 @@ enum class ViewLayoutType(val id: Long) {
         val defaultValue = STANDARD
 
         @JvmStatic
-        fun fromId(id: Long): ViewLayoutType {
+        fun fromId(id: Long): PostListViewLayoutType {
             return values().firstOrNull { it.id == id } ?: defaultValue
         }
     }

@@ -140,7 +140,7 @@ class PostListFragment : Fragment() {
                 context = nonNullActivity,
                 postViewHolderConfig = postViewHolderConfig,
                 uiHelpers = uiHelpers,
-                viewLayoutType = mainViewModel.viewLayoutType
+                postListViewLayoutType = mainViewModel.viewLayoutType
         )
 
         val context = nonNullActivity
