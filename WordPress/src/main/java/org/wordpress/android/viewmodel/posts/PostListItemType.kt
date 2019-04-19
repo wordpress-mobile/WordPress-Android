@@ -6,6 +6,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.widgets.PostListButtonType
+import java.util.Objects
 
 sealed class PostListItemType {
     class PostListItemUiState(
@@ -31,7 +32,40 @@ class PostListItemUiStateData(
     statusesDelimiter: UiString,
     val showProgress: Boolean,
     val showOverlay: Boolean
-) : PostListItemUiData(remotePostId, localPostId, title, date, imageUrl, statuses, statusesDelimiter, statusesColor)
+) : PostListItemUiData(remotePostId, localPostId, title, date, imageUrl, statuses, statusesDelimiter, statusesColor) {
+
+    override fun hashCode(): Int {
+        return Objects.hash(remotePostId,
+                localPostId,
+                title,
+                excerpt,
+                imageUrl,
+                date,
+                statusesColor,
+                statuses,
+                statusesDelimiter,
+                showProgress,
+                showOverlay)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is PostListItemUiStateData) {
+            return false
+        }
+
+        return remotePostId == other.remotePostId &&
+                localPostId == other.localPostId &&
+                title == other.title &&
+                excerpt == other.excerpt &&
+                imageUrl == other.imageUrl &&
+                date == other.date &&
+                statusesColor == other.statusesColor &&
+                statuses == other.statuses &&
+                statusesDelimiter == other.statusesDelimiter &&
+                showProgress == other.showProgress &&
+                showOverlay == other.showOverlay
+    }
+}
 
 class PostListItemCompactUiStateData(
     remotePostId: RemotePostId,
@@ -42,7 +76,33 @@ class PostListItemCompactUiStateData(
     statuses: List<UiString>,
     statusesDelimiter: UiString,
     @ColorRes statusesColor: Int?
-) : PostListItemUiData(remotePostId, localPostId, title, date, imageUrl, statuses, statusesDelimiter, statusesColor)
+) : PostListItemUiData(remotePostId, localPostId, title, date, imageUrl, statuses, statusesDelimiter, statusesColor) {
+    override fun hashCode(): Int {
+        return Objects.hash(remotePostId,
+                localPostId,
+                title,
+                imageUrl,
+                date,
+                statusesColor,
+                statuses,
+                statusesDelimiter)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is PostListItemUiStateData) {
+            return false
+        }
+
+        return remotePostId == other.remotePostId &&
+                localPostId == other.localPostId &&
+                title == other.title &&
+                imageUrl == other.imageUrl &&
+                date == other.date &&
+                statusesColor == other.statusesColor &&
+                statuses == other.statuses &&
+                statusesDelimiter == other.statusesDelimiter
+    }
+}
 
 abstract class PostListItemUiData(
     val remotePostId: RemotePostId,
