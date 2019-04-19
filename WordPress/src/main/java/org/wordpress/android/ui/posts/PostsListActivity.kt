@@ -34,8 +34,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog

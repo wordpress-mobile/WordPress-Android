@@ -58,7 +58,8 @@ abstract class PostListItemSharedViewHolder(
     }
 
     private fun updateStatusesLabel(
-        view: WPTextView, statuses: List<UiString>,
+        view: WPTextView,
+        statuses: List<UiString>,
         delimiter: UiString,
         @ColorRes color: Int?
     ) {

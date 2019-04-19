@@ -21,8 +21,8 @@ import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
-import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.PostListViewLayoutType
+import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -113,8 +113,10 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(postListViewModelConnector: PostListViewModelConnector,
-              viewLayoutTypeStatus: LiveData<PostListViewLayoutType>) {
+    fun start(
+        postListViewModelConnector: PostListViewModelConnector,
+        viewLayoutTypeStatus: LiveData<PostListViewLayoutType>
+    ) {
         if (isStarted) {
             return
         }
