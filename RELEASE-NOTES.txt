@@ -9,7 +9,7 @@
 * The Site → Blog Posts → View WebView will no longer show any Calypso UI
 * Fixed an issue with Twitter publicize connections
 * Fixed an issue where the site icon wasn't updating correctly after switching to another site
-* Fixes an issue which can result in creating gaps in Reader
+* Fixes an issue which can result in missing posts in the Reader
 
 12.2
 -----
