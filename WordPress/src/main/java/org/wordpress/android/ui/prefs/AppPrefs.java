@@ -832,7 +832,7 @@ public class AppPrefs {
     public static void setAvatarVersion(int version) {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
     }
-    
+
     public static void setGutenbergInformativeDialogDisabled(Boolean isDisabled) {
         setBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, isDisabled);
     }
@@ -851,7 +851,8 @@ public class AppPrefs {
     }
 
     @NonNull public static PostListViewLayoutType getPostsListViewLayoutType() {
-        long id = getLong(DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE, PostListViewLayoutType.getDefaultValue().getId());
+        long id = getLong(DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE,
+                PostListViewLayoutType.getDefaultValue().getId());
         return PostListViewLayoutType.fromId(id);
     }
 

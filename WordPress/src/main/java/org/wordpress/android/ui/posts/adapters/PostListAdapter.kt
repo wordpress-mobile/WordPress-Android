@@ -16,10 +16,10 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.ui.posts.PostListItemCompactViewHolder
 import org.wordpress.android.ui.posts.PostListItemViewHolder
-import org.wordpress.android.ui.posts.PostViewHolderConfig
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
+import org.wordpress.android.ui.posts.PostViewHolderConfig
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
@@ -38,7 +38,6 @@ class PostListAdapter(
     private val uiHelpers: UiHelpers,
     private val postListViewLayoutType: LiveData<PostListViewLayoutType>
 ) : PagedListAdapter<PostListItemType, ViewHolder>(PostListDiffItemCallback) {
-
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
     private var layout: PostListViewLayoutType
     private var recyclerView: RecyclerView? = null

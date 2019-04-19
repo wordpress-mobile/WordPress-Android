@@ -16,6 +16,7 @@ sealed class PostListItemType {
         val compactActions: List<PostListItemAction>,
         val onSelected: () -> Unit
     ) : PostListItemType()
+
     class LoadingItem(val localOrRemoteId: LocalOrRemoteId) : PostListItemType()
     object EndListIndicatorItem : PostListItemType()
 }
@@ -33,9 +34,9 @@ class PostListItemUiStateData(
     val showProgress: Boolean,
     val showOverlay: Boolean
 ) : PostListItemUiData(remotePostId, localPostId, title, date, imageUrl, statuses, statusesDelimiter, statusesColor) {
-
     override fun hashCode(): Int {
-        return Objects.hash(remotePostId,
+        return Objects.hash(
+                remotePostId,
                 localPostId,
                 title,
                 excerpt,
@@ -45,7 +46,8 @@ class PostListItemUiStateData(
                 statuses,
                 statusesDelimiter,
                 showProgress,
-                showOverlay)
+                showOverlay
+        )
     }
 
     override fun equals(other: Any?): Boolean {
@@ -78,14 +80,16 @@ class PostListItemCompactUiStateData(
     @ColorRes statusesColor: Int?
 ) : PostListItemUiData(remotePostId, localPostId, title, date, imageUrl, statuses, statusesDelimiter, statusesColor) {
     override fun hashCode(): Int {
-        return Objects.hash(remotePostId,
+        return Objects.hash(
+                remotePostId,
                 localPostId,
                 title,
                 imageUrl,
                 date,
                 statusesColor,
                 statuses,
-                statusesDelimiter)
+                statusesDelimiter
+        )
     }
 
     override fun equals(other: Any?): Boolean {
