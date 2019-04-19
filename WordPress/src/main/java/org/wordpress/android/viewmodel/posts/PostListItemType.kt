@@ -21,92 +21,39 @@ sealed class PostListItemType {
     object EndListIndicatorItem : PostListItemType()
 }
 
+interface PostListItemBasicUiStateData {
+    val title: UiString?
+    val imageUrl: String?
+    val date: UiString?
+    val statusesColor: Int?
+    val statuses: List<UiString>
+    val statusesDelimiter: UiString
+}
+
 class PostListItemUiStateData(
-    remotePostId: RemotePostId,
-    localPostId: LocalPostId,
-    title: UiString?,
+    val remotePostId: RemotePostId,
+    val localPostId: LocalPostId,
+    override val title: UiString?,
     val excerpt: UiString?,
-    imageUrl: String?,
-    date: UiString?,
-    @ColorRes statusesColor: Int?,
-    statuses: List<UiString>,
-    statusesDelimiter: UiString,
+    override val imageUrl: String?,
+    override val date: UiString?,
+    @ColorRes override val statusesColor: Int?,
+    override val statuses: List<UiString>,
+    override val statusesDelimiter: UiString,
     val showProgress: Boolean,
     val showOverlay: Boolean
-) : PostListItemUiData(remotePostId, localPostId, title, date, imageUrl, statuses, statusesDelimiter, statusesColor) {
-    override fun hashCode(): Int {
-        return Objects.hash(
-                remotePostId,
-                localPostId,
-                title,
-                excerpt,
-                imageUrl,
-                date,
-                statusesColor,
-                statuses,
-                statusesDelimiter,
-                showProgress,
-                showOverlay
-        )
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (other == null || other !is PostListItemUiStateData) {
-            return false
-        }
-
-        return remotePostId == other.remotePostId &&
-                localPostId == other.localPostId &&
-                title == other.title &&
-                excerpt == other.excerpt &&
-                imageUrl == other.imageUrl &&
-                date == other.date &&
-                statusesColor == other.statusesColor &&
-                statuses == other.statuses &&
-                statusesDelimiter == other.statusesDelimiter &&
-                showProgress == other.showProgress &&
-                showOverlay == other.showOverlay
-    }
-}
+): PostListItemBasicUiStateData
 
 class PostListItemCompactUiStateData(
-    remotePostId: RemotePostId,
-    localPostId: LocalPostId,
-    title: UiString?,
-    date: UiString?,
-    imageUrl: String?,
-    statuses: List<UiString>,
-    statusesDelimiter: UiString,
-    @ColorRes statusesColor: Int?
-) : PostListItemUiData(remotePostId, localPostId, title, date, imageUrl, statuses, statusesDelimiter, statusesColor) {
-    override fun hashCode(): Int {
-        return Objects.hash(
-                remotePostId,
-                localPostId,
-                title,
-                imageUrl,
-                date,
-                statusesColor,
-                statuses,
-                statusesDelimiter
-        )
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (other == null || other !is PostListItemUiStateData) {
-            return false
-        }
-
-        return remotePostId == other.remotePostId &&
-                localPostId == other.localPostId &&
-                title == other.title &&
-                imageUrl == other.imageUrl &&
-                date == other.date &&
-                statusesColor == other.statusesColor &&
-                statuses == other.statuses &&
-                statusesDelimiter == other.statusesDelimiter
-    }
-}
+    val remotePostId: RemotePostId,
+    val localPostId: LocalPostId,
+    override val title: UiString?,
+    override val date: UiString?,
+    override val imageUrl: String?,
+    override val statuses: List<UiString>,
+    override val statusesDelimiter: UiString,
+    @ColorRes override val statusesColor: Int?
+): PostListItemBasicUiStateData
 
 abstract class PostListItemUiData(
     val remotePostId: RemotePostId,

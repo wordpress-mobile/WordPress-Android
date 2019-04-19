@@ -23,8 +23,8 @@ import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
+import org.wordpress.android.viewmodel.posts.PostListItemBasicUiStateData
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
-import org.wordpress.android.viewmodel.posts.PostListItemUiData
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
 
@@ -117,7 +117,7 @@ sealed class PostListItemViewHolder(
         }
     }
 
-    protected fun setBasicValues(data: PostListItemUiData) {
+    protected fun setBasicValues(data: PostListItemBasicUiStateData) {
         uiHelpers.setTextOrHide(titleTextView, data.title)
         uiHelpers.setTextOrHide(dateTextView, data.date)
         uiHelpers.updateVisibility(statusesTextView, data.statuses.isNotEmpty())
