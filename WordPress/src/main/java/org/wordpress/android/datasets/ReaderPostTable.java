@@ -410,7 +410,7 @@ public class ReaderPostTable {
      */
     public static boolean hasOverlap(ReaderPostList posts, ReaderTag tag) {
         for (ReaderPost post : posts) {
-            if (ReaderPostTable.postExistsForReaderTag(post.blogId, post.postId, tag)) {
+            if (postExistsForReaderTag(post.blogId, post.postId, tag)) {
                 return true;
             }
         }
