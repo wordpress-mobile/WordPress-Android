@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="@dimen/posts_list_compact_row_height"
     android:background="?selectableItemBackground">
 
     <org.wordpress.android.widgets.WPTextView
@@ -64,12 +64,12 @@
 
     <ImageView
         android:id="@+id/image_featured"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/posts_list_compact_image_size"
+        android:layout_height="@dimen/posts_list_compact_image_size"
         android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/margin_large"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_large"
         android:layout_toStartOf="@+id/more_button"
         android:background="@color/red_0"
@@ -78,8 +78,8 @@
 
     <ImageButton
         android:id="@+id/more_button"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="@dimen/posts_list_compact_menu_button_size"
+        android:layout_height="@dimen/posts_list_compact_menu_button_size"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_large"
