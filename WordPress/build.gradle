@@ -117,11 +117,6 @@ android {
         // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
-
-    dataBinding {
-        enabled = true
-    }
-
 }
 
 // allows us to use cool things like @Parcelize annotations

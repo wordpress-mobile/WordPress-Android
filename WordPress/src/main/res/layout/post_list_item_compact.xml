@@ -4,17 +4,16 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="binder"
             type="org.wordpress.android.ui.posts.PostListItemCompactViewBinder"/>
     </data>
 
     <RelativeLayout
+        android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="?selectableItemBackground"
-        android:onClick="@{ () -> binder.onItemClickHandler.invoke() }">
+        android:background="?selectableItemBackground">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/title"
@@ -33,7 +32,6 @@
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
             app:layout_goneMarginTop="@dimen/margin_extra_large"
-            app:uiStringValue="@{ binder.title }"
             tools:text="Testing title Testing title Testing title Testing title Testing title Testing title Testing title Testing title"/>
 
         <org.wordpress.android.widgets.WPTextView
@@ -50,7 +48,6 @@
             android:maxLines="1"
             android:textColor="@color/neutral_500"
             android:textSize="@dimen/text_sz_medium"
-            app:uiStringValue="@{ binder.date }"
             tools:text="99 days ago"/>
 
         <org.wordpress.android.widgets.WPTextView
@@ -69,7 +66,6 @@
             android:textAlignment="textStart"
             android:textColor="@color/warning_500"
             app:layout_goneMarginBottom="@dimen/margin_extra_large"
-            app:uiStringValue="@{ binder.status }"
             tools:text="Private · Local Changes"/>
 
 
@@ -85,9 +81,7 @@
             android:layout_toStartOf="@+id/more_button"
             android:background="@color/red_0"
             android:contentDescription="@string/featured_image_desc"
-            android:visibility="gone"
-            app:postsImage="@{ binder.image }"
-            app:visible="@{ binder.hasImage() }"/>
+            android:visibility="gone"/>
 
         <ImageButton
             android:id="@+id/more_button"
@@ -99,7 +93,6 @@
             android:layout_marginStart="@dimen/margin_small"
             android:background="@color/transparent"
             android:contentDescription="@string/more"
-            android:onClick="@{ (view) -> binder.moreMenuClickHandler.invoke(view) }"
             android:src="@drawable/ic_ellipsis_vertical_white_24dp"
             android:tint="@color/neutral_600"/>
 
