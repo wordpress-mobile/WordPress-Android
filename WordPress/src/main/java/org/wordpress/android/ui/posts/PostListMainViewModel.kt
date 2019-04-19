@@ -14,6 +14,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
@@ -34,6 +36,7 @@ import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -47,6 +50,8 @@ import kotlin.coroutines.CoroutineContext
 private const val SCROLL_TO_DELAY = 50L
 private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS)
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
+private const val TRACKS_SELECTED_TAB = "selected_tab"
+private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
 
 class PostListMainViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -238,6 +243,12 @@ class PostListMainViewModel @Inject constructor(
     fun onTabChanged(position: Int) {
         val currentPage = POST_LIST_PAGES[position]
         updateViewStateTriggerPagerChange(isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(currentPage))
+
+        AnalyticsUtils.trackWithSiteDetails(
+                POST_LIST_TAB_CHANGED,
+                site,
+                mapOf(TRACKS_SELECTED_TAB to currentPage.toString())
+        )
     }
 
     fun showTargetPost(targetPostId: Int) {
@@ -310,6 +321,12 @@ class PostListMainViewModel @Inject constructor(
 
         if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
             _updatePostsPager.value = authorFilterSelection
+
+            AnalyticsUtils.trackWithSiteDetails(
+                    POST_LIST_AUTHOR_FILTER_CHANGED,
+                    site,
+                    mapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString())
+            )
         }
     }
 
