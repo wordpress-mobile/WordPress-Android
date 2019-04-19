@@ -800,7 +800,7 @@
     <issue
         id="StaticFieldLeak"
         severity="Error"
-        message="This AsyncTask class should be static or leaks might occur (org.wordpress.android.ui.posts.EditPostPreviewFragment.LoadPostPreviewTask)"
+        message="This AsyncTask class should be static or leaks might occur (org.wordpress.android.ui.posts.PostPreviewFragment.LoadPostPreviewTask)"
         category="Performance"
         priority="6"
         summary="Static Field Leaks"
@@ -808,7 +808,7 @@
         errorLine1="    private class LoadPostPreviewTask extends AsyncTask&lt;Void, Void, Spanned> {"
         errorLine2="                  ~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/posts/EditPostPreviewFragment.java"
+            file="../WordPress/src/main/java/org/wordpress/android/ui/posts/PostPreviewFragment.java"
             line="104"
             column="19"/>
     </issue>

@@ -303,7 +303,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
-    private PostPreviewFragment mEditPostPreviewFragment;
+    private PostPreviewFragment mPostPreviewFragment;
 
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
@@ -568,12 +568,12 @@ public class EditPostActivity extends AppCompatActivity implements
                     savePostAsync(new AfterSavePostListener() {
                         @Override
                         public void onPostSave() {
-                            if (mEditPostPreviewFragment != null) {
+                            if (mPostPreviewFragment != null) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost();
+                                        if (mPostPreviewFragment != null) {
+                                            mPostPreviewFragment.loadPost();
                                         }
                                     }
                                 });
@@ -2283,7 +2283,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
                     break;
                 case 2:
-                    mEditPostPreviewFragment = (PostPreviewFragment) fragment;
+                    mPostPreviewFragment = (PostPreviewFragment) fragment;
                     break;
             }
             return fragment;
