@@ -101,7 +101,7 @@ class PostListAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        // The only holders that require special setup are PostViewHolder and PostListItemCompactViewHolder
+        // The only holders that require special setup are PostListItemViewHolder sealed subclasses
         if (holder is PostListItemViewHolder) {
             val item = getItem(position)
             assert(item is PostListItemUiState) {
