@@ -1,21 +1,21 @@
 package org.wordpress.android.ui.domains
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.OnDomainSelectedListener
+import javax.inject.Inject
 
-class DomainRegistrationActivity : AppCompatActivity(),
-        OnDomainSelectedListener,
-        OnDomainRegisteredListener {
-    private var site: SiteModel? = null
+class DomainRegistrationActivity : AppCompatActivity(), OnDomainSelectedListener {
+    @Inject lateinit var accountStore: AccountStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as WordPress).component().inject(this)
 
         setContentView(R.layout.activity_domain_suggestions_activity)
 
@@ -26,10 +26,12 @@ class DomainRegistrationActivity : AppCompatActivity(),
         }
 
         if (savedInstanceState == null) {
-            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            showFragment(DomainSuggestionsFragment.newInstance(), "domain_suggestion_fragment")
-        } else {
-            site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(
+                    R.id.fragment_container,
+                    DomainSuggestionsFragment.newInstance()
+            )
+            fragmentTransaction.commit()
         }
     }
 
@@ -42,27 +44,6 @@ class DomainRegistrationActivity : AppCompatActivity(),
     }
 
     override fun onDomainSelected(domainProductDetails: DomainProductDetails) {
-        val whoisFragment = DomainRegistrationDetailsFragment.newInstance(
-                domainProductDetails
-        )
-        showFragment(whoisFragment, "whois")
+        // TODO show Domain registration details
     }
-
-    private fun showFragment(fragment: Fragment, tag: kotlin.String) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
-        fragmentTransaction.commit()
-    }
-
-    override fun onDomainRegistered(domainName: String) {
-        showFragment(DomainRegistrationResultFragment.newInstance(domainName), "domain_success")
-    }
-}
-
-interface OnDomainSelectedListener {
-    fun onDomainSelected(domainProductDetails: DomainProductDetails)
-}
-
-interface OnDomainRegisteredListener {
-    fun onDomainRegistered(domainName: String)
 }
