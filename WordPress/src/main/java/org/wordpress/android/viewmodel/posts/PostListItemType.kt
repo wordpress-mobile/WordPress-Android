@@ -6,7 +6,6 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.widgets.PostListButtonType
-import java.util.Objects
 
 sealed class PostListItemType {
     class PostListItemUiState(
@@ -42,7 +41,7 @@ data class PostListItemUiStateData(
     override val statusesDelimiter: UiString,
     val showProgress: Boolean,
     val showOverlay: Boolean
-): PostListItemBasicUiStateData
+) : PostListItemBasicUiStateData
 
 data class PostListItemCompactUiStateData(
     val remotePostId: RemotePostId,
@@ -53,7 +52,7 @@ data class PostListItemCompactUiStateData(
     override val statuses: List<UiString>,
     override val statusesDelimiter: UiString,
     @ColorRes override val statusesColor: Int?
-): PostListItemBasicUiStateData
+) : PostListItemBasicUiStateData
 
 sealed class PostListItemAction(val buttonType: PostListButtonType, val onButtonClicked: (PostListButtonType) -> Unit) {
     class SingleItem(buttonType: PostListButtonType, onButtonClicked: (PostListButtonType) -> Unit) :

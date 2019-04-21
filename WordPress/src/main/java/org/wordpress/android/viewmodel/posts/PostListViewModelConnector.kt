@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostActionHandler
 import org.wordpress.android.ui.posts.PostListType
-import org.wordpress.android.ui.posts.PostListViewLayoutType
 
 class PostListViewModelConnector(
     val site: SiteModel,
