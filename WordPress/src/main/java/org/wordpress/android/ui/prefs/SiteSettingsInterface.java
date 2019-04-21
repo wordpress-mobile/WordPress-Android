@@ -193,6 +193,10 @@ public abstract class SiteSettingsInterface {
         SiteSettingsTable.saveSettings(mSettings);
     }
 
+    public int getLocalSiteId() {
+        return mSite.getId();
+    }
+
     public @NonNull String getTitle() {
         return mSettings.title == null ? "" : mSettings.title;
     }

@@ -82,7 +82,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     private WPLoginInputRow m2FaInput;
 
-    private @StringRes int mInProgressMessageId;
+    private static final @StringRes int DEFAULT_PROGRESS_MESSAGE_ID = R.string.logging_in;
+    private @StringRes int mInProgressMessageId = DEFAULT_PROGRESS_MESSAGE_ID;
+
     ArrayList<Integer> mOldSitesIDs;
 
     private Button mSecondaryButton;
@@ -241,7 +243,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         // retrieve mInProgressMessageId before super.onActivityCreated() so the string will be available to the
         //  progress bar helper if in progress
         if (savedInstanceState != null) {
-            mInProgressMessageId = savedInstanceState.getInt(KEY_IN_PROGRESS_MESSAGE_ID, 0);
+            mInProgressMessageId = savedInstanceState.getInt(KEY_IN_PROGRESS_MESSAGE_ID, DEFAULT_PROGRESS_MESSAGE_ID);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         } else {
             mAnalyticsListener.trackTwoFactorFormViewed();
@@ -370,7 +372,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Override
     protected void endProgress() {
         super.endProgress();
-        mInProgressMessageId = 0;
+        mInProgressMessageId = DEFAULT_PROGRESS_MESSAGE_ID;
     }
 
     private void handleAuthError(AuthenticationErrorType error, String errorMessage) {

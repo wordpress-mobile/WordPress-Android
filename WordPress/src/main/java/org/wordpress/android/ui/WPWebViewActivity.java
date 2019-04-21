@@ -106,7 +106,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static void openJetpackBlogPostPreview(Context context, String url, String shareableUrl, String shareSubject,
                                                   String frameNonce) {
         if (!TextUtils.isEmpty(frameNonce)) {
-            url += "&frame-nonce=" + frameNonce;
+            url += "&frame-nonce=" + UrlUtils.urlEncode(frameNonce);
         }
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);

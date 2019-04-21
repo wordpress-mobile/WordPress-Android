@@ -15,8 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
-        android:clickable="false"
-        app:buttonTint="@color/dialog_compound_button_thumb"/>
+        android:clickable="false"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/domainSuggestionsName"

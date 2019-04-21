@@ -22,7 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
-import org.wordpress.android.ui.stats.refresh.utils.HUNDRED_THOUSAND
+import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -72,7 +72,7 @@ class LatestPostSummaryUseCase
         if (domainModel != null && domainModel.hasData()) {
             items.add(
                     ValueItem(
-                            domainModel.postViewsCount.toFormattedString(startValue = HUNDRED_THOUSAND),
+                            domainModel.postViewsCount.toFormattedString(startValue = MILLION),
                             R.string.stats_views
                     )
             )
@@ -130,7 +130,7 @@ class LatestPostSummaryUseCase
 
     private fun onAddNewPostClick() {
         analyticsTracker.track(STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED)
-        navigateTo(AddNewPost())
+        navigateTo(AddNewPost)
     }
 
     private fun onViewMore(params: ViewMoreParams) {

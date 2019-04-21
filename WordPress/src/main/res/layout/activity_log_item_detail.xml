@@ -29,7 +29,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="12dp"
-                    android:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
+                    android:src="@drawable/bg_rectangle_neutral_100_user_32dp"
                     android:contentDescription="@null"/>
 
                 <ImageView
@@ -39,7 +39,7 @@
                     android:layout_marginEnd="12dp"
                     android:visibility="gone"
                     android:src="@drawable/ic_plans_white_24dp"
-                    android:tint="@color/grey"
+                    android:tint="@color/neutral_300"
                     android:contentDescription="@string/activity_log_jetpack_icon"/>
 
                 <LinearLayout
@@ -57,7 +57,7 @@
                         android:ellipsize="end"
                         android:lines="1"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey_dark"
+                        android:textColor="@color/neutral_700"
                         android:textStyle="bold"
                         tools:text="John Smith"/>
 
@@ -68,7 +68,7 @@
                         android:ellipsize="end"
                         android:lines="1"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey_dark"
+                        android:textColor="@color/neutral_700"
                         tools:text="Administrator"/>
 
                 </LinearLayout>
@@ -85,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey_dark"
+                        android:textColor="@color/neutral_700"
                         tools:ignore="RelativeOverlap"
                         tools:text="January 8, 2018"/>
 
@@ -94,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey_dark"
+                        android:textColor="@color/neutral_700"
                         tools:ignore="RelativeOverlap"
                         tools:text="11:32 PM"/>
                 </LinearLayout>
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:linksClickable="true"
                 tools:text="Jetpack by WordPress.com autoupdated to 5.6"
                 android:focusable="true"/>
@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 tools:text="Plugin autoupdated"/>
 
             <LinearLayout
@@ -137,7 +137,7 @@
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_history_white_24dp"
-                    android:tint="@color/blue_medium"/>
+                    android:tint="@color/primary_400"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
@@ -146,7 +146,7 @@
                     android:text="@string/rewind"
                     android:textAllCaps="true"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                    android:textColor="@color/blue_medium"/>
+                    android:textColor="@color/primary_400"/>
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

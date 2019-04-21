@@ -17,7 +17,7 @@
         android:gravity="start"
         android:textAlignment="viewStart"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/neutral_700"
         tools:text="Feature Name">
     </org.wordpress.android.widgets.WPTextView>
 
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-        android:textColor="@color/grey_darken_10"
+        android:textColor="@color/neutral_400"
         tools:text="Feature Description">
     </org.wordpress.android.widgets.WPTextView>
 

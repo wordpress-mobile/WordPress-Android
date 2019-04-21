@@ -48,7 +48,7 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             override fun updateDrawState(ds: TextPaint?) {
                 ds?.color = ContextCompat.getColor(
                         context,
-                        color.blue_wordpress
+                        color.primary_500
                 )
                 ds?.typeface = Typeface.create(
                         Typeface.DEFAULT_BOLD,

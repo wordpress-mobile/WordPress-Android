@@ -3,15 +3,14 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_layout"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:minHeight="?attr/listPreferredItemHeight"
-    tools:layout_height="?attr/listPreferredItemHeightLarge" >
+    tools:layout_height="?attr/listPreferredItemHeightLarge">
 
     <RelativeLayout
         android:background="?attr/selectableItemBackground"
@@ -26,7 +25,7 @@
             android:layout_height="@dimen/activity_log_icon_size"
             android:layout_margin="@dimen/activity_log_icon_margin"
             android:layout_width="@dimen/activity_log_icon_size"
-            android:src="@drawable/bg_oval_grey_user_32dp" >
+            android:src="@drawable/bg_oval_neutral_300_user_32dp" >
         </ImageView>
 
         <LinearLayout
@@ -46,24 +45,24 @@
             <TextView
                 android:id="@+id/diff_additions"
                 android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_blue_wordpress_plus_white_16dp"
+                android:drawableStart="@drawable/bg_oval_primary_500_plus_white_16dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="wrap_content"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 tools:text="3" >
             </TextView>
 
             <TextView
                 android:id="@+id/diff_deletions"
                 android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_alert_red_minus_white_16dp"
+                android:drawableStart="@drawable/bg_oval_error_500_minus_white_16dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="wrap_content"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 tools:text="1" >
             </TextView>
 
@@ -88,7 +87,7 @@
                 android:singleLine="true"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 tools:text="1d ago" >
             </org.wordpress.android.widgets.WPTextView>
 
@@ -99,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:singleLine="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 tools:text="Draft" >
             </org.wordpress.android.widgets.WPTextView>
 
