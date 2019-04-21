@@ -33,7 +33,6 @@ import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.PostListViewLayoutType.Companion
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -229,7 +228,6 @@ class PostListMainViewModel @Inject constructor(
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
                 getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
-                postListViewLayoutType = this.viewLayoutType.value ?: Companion.defaultValue,
                 postFetcher = postFetcher
         )
     }
