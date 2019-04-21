@@ -99,8 +99,7 @@ class PostListFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType),
-                mainViewModel.viewLayoutType)
+        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
         viewModel.pagedListData.observe(this, Observer {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })

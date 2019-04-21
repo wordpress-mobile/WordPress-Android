@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
-import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.util.AppLog
@@ -53,7 +52,6 @@ class PostListViewModel @Inject constructor(
     private lateinit var connector: PostListViewModelConnector
 
     private var scrollToLocalPostId: LocalPostId? = null
-    private var layoutType: PostListViewLayoutType? = null
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
@@ -113,20 +111,10 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(
-        postListViewModelConnector: PostListViewModelConnector,
-        viewLayoutTypeStatus: LiveData<PostListViewLayoutType>
-    ) {
+    fun start(postListViewModelConnector: PostListViewModelConnector) {
         if (isStarted) {
             return
         }
-
-        layoutType = viewLayoutTypeStatus.value
-        viewLayoutTypeStatus.observe(this, Observer {
-            it?.let { layout ->
-                layoutType = layout
-            }
-        })
         connector = postListViewModelConnector
 
         this.listDescriptor = if (connector.site.isUsingWpComRestApi) {
