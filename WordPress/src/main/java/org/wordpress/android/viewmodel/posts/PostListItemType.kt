@@ -30,7 +30,7 @@ interface PostListItemBasicUiStateData {
     val statusesDelimiter: UiString
 }
 
-class PostListItemUiStateData(
+data class PostListItemUiStateData(
     val remotePostId: RemotePostId,
     val localPostId: LocalPostId,
     override val title: UiString?,
@@ -44,7 +44,7 @@ class PostListItemUiStateData(
     val showOverlay: Boolean
 ): PostListItemBasicUiStateData
 
-class PostListItemCompactUiStateData(
+data class PostListItemCompactUiStateData(
     val remotePostId: RemotePostId,
     val localPostId: LocalPostId,
     override val title: UiString?,
@@ -54,17 +54,6 @@ class PostListItemCompactUiStateData(
     override val statusesDelimiter: UiString,
     @ColorRes override val statusesColor: Int?
 ): PostListItemBasicUiStateData
-
-abstract class PostListItemUiData(
-    val remotePostId: RemotePostId,
-    val localPostId: LocalPostId,
-    val title: UiString?,
-    val date: UiString?,
-    val imageUrl: String?,
-    val statuses: List<UiString>,
-    val statusesDelimiter: UiString,
-    @ColorRes val statusesColor: Int?
-)
 
 sealed class PostListItemAction(val buttonType: PostListButtonType, val onButtonClicked: (PostListButtonType) -> Unit) {
     class SingleItem(buttonType: PostListButtonType, onButtonClicked: (PostListButtonType) -> Unit) :
