@@ -97,6 +97,10 @@ class DomainSuggestionsFragment : Fragment() {
     private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
     }
+
+    interface OnDomainSelectedListener {
+        fun onDomainSelected(domainProductDetails: DomainProductDetails)
+    }
 }
 
 @Parcelize

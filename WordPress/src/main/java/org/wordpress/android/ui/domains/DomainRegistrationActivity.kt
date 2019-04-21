@@ -5,17 +5,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.OnDomainSelectedListener
-import javax.inject.Inject
+import org.wordpress.android.ui.domains.DomainSuggestionsFragment.OnDomainSelectedListener
 
 class DomainRegistrationActivity : AppCompatActivity(), OnDomainSelectedListener {
-    @Inject lateinit var accountStore: AccountStore
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
 
         setContentView(R.layout.activity_domain_suggestions_activity)
 

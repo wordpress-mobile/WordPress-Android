@@ -101,7 +101,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         suggestions = ListState.Loading(suggestions)
 
         val suggestDomainsPayload =
-                SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT)
+                SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT, false)
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
 
         // Reset the selected suggestion, if list is updated
@@ -117,8 +117,10 @@ class DomainSuggestionsViewModel @Inject constructor(
             return
         }
         if (event.isError) {
-            AppLog.e(T.DOMAIN_REGISTRATION,
-                    "An error occurred while fetching the domain suggestions with type: " + event.error.type)
+            AppLog.e(
+                    T.DOMAIN_REGISTRATION,
+                    "An error occurred while fetching the domain suggestions with type: " + event.error.type
+            )
             suggestions = ListState.Error(suggestions, event.error.message)
             return
         }
