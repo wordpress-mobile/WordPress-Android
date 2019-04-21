@@ -101,7 +101,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 
-public class PluginDetailActivity extends AppCompatActivity {
+public class PluginDetailActivity extends AppCompatActivity implements OnDomainRegistrationRequestedListener {
     public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
     private static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";
     private static final String KEY_IS_INSTALLING_PLUGIN = "KEY_IS_INSTALLING_PLUGIN";
@@ -275,7 +275,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             AppLog.e(T.PLANS, PluginDetailActivity.class.getSimpleName() + ".onPlansFetched: "
                               + event.error.type + " - " + event.error.message);
             WPSnackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error), Snackbar.LENGTH_LONG)
-                    .show();
+                      .show();
         } else {
             // This should not happen
             if (event.plans == null) {
@@ -284,7 +284,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                     throw new IllegalStateException(errorMessage);
                 }
                 WPSnackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error), Snackbar.LENGTH_LONG)
-                        .show();
+                          .show();
                 AppLog.e(T.PLANS, errorMessage);
                 return;
             }
@@ -306,6 +306,11 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onDomainRegistrationRequested() {
+        ActivityLauncher.viewDomainRegistrationActivity(this, mSite);
+    }
+
     public static class DomainRegistrationPromptDialog extends DialogFragment {
         static final String DOMAIN_REGISTRATION_PROMPT_DIALOG_TAG = "DOMAIN_REGISTRATION_PROMPT_DIALOG";
 
@@ -320,7 +325,9 @@ public class PluginDetailActivity extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            // TODO navigate to domain registration flow
+                            if (isAdded() && getActivity() instanceof OnDomainRegistrationRequestedListener) {
+                                ((OnDomainRegistrationRequestedListener) getActivity()).onDomainRegistrationRequested();
+                            }
                         }
                     });
             builder.setNegativeButton(R.string.cancel,
@@ -836,52 +843,52 @@ public class PluginDetailActivity extends AppCompatActivity {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_updated_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
-                .show();
+                  .show();
     }
 
     private void showSuccessfulInstallSnackbar() {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_installed_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
-                .show();
+                  .show();
     }
 
     private void showSuccessfulPluginRemovedSnackbar() {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
-                .show();
+                  .show();
     }
 
     private void showUpdateFailedSnackbar() {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_updated_failed, mPlugin.getDisplayName()), Snackbar.LENGTH_LONG)
-                .setAction(R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dispatchUpdatePluginAction();
-                    }
-                })
-                .show();
+                  .setAction(R.string.retry, new View.OnClickListener() {
+                      @Override
+                      public void onClick(View view) {
+                          dispatchUpdatePluginAction();
+                      }
+                  })
+                  .show();
     }
 
     private void showInstallFailedSnackbar() {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_installed_failed, mPlugin.getDisplayName()), Snackbar.LENGTH_LONG)
-                .setAction(R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dispatchInstallPluginAction();
-                    }
-                })
-                .show();
+                  .setAction(R.string.retry, new View.OnClickListener() {
+                      @Override
+                      public void onClick(View view) {
+                          dispatchInstallPluginAction();
+                      }
+                  })
+                  .show();
     }
 
     private void showPluginRemoveFailedSnackbar() {
         WPSnackbar.make(mContainer,
                 getString(R.string.plugin_remove_failed, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
-                .show();
+                  .show();
     }
 
     private void showDomainCreditsCheckProgressDialog() {
@@ -1362,7 +1369,7 @@ public class PluginDetailActivity extends AppCompatActivity {
      * This is the first Automated Transfer FluxC event. It returns whether the site is eligible or not with a set of
      * errors for why it's not eligible. We are handling a single error at a time, but all the likely errors should be
      * pre-handled by preventing the access of plugins page.
-     *
+     * <p>
      * If the site is eligible, we'll initiate the Automated Transfer. Check out `onAutomatedTransferInitiated` for next
      * step.
      */
@@ -1404,10 +1411,10 @@ public class PluginDetailActivity extends AppCompatActivity {
      * After we check the eligibility of a site, the Automated Transfer will be initiated. This is its callback and it
      * should be a fairly quick one, that's why we are not updating the progress bar. The event contains the plugin that
      * will be installed after Automated Transfer is completed, but we don't need to handle anything about that.
-     *
+     * <p>
      * We don't know if there is any specific errors we might need to handle, so we are just showing a message about it
      * for now.
-     *
+     * <p>
      * Once the transfer is initiated, we need to start checking the status of it. Check out
      * `onAutomatedTransferStatusChecked` for the callback.
      */
@@ -1433,12 +1440,12 @@ public class PluginDetailActivity extends AppCompatActivity {
      * After Automated Transfer is initiated, we'll need to check for the status of it several times as the process
      * takes about 1 minute on average. We don't know if there are any specific errors we can handle, so for now we are
      * simply showing the message.
-     *
+     * <p>
      * We'll get an `isCompleted` flag from the event and when that's `true` we'll need to re-fetch the site. It'll
      * become a Jetpack site at that point and we'll need the updated site to be able to fetch the plugins and refresh
      * this page. If the transfer is not completed, we use the current step and total steps to update the progress bar
      * and check the status again after waiting for a second.
-     *
+     * <p>
      * Unfortunately we can't close the progress dialog until both the site and its plugins are fetched. Check out
      * `onSiteChanged` for the next step.
      */
@@ -1484,7 +1491,7 @@ public class PluginDetailActivity extends AppCompatActivity {
      * Whenever the site is updated we update `mSite` property. If the Automated Transfer progress dialog is
      * showing and we make sure that the updated site has the correct `isAutomatedTransfer` flag, we fetch the site
      * plugins so we can refresh this page.
-     *
+     * <p>
      * Check out `onPluginDirectoryFetched` for the last step of a successful Automated Transfer.
      */
     @SuppressWarnings("unused")
@@ -1532,7 +1539,7 @@ public class PluginDetailActivity extends AppCompatActivity {
      * Completing an Automated Transfer will trigger a site fetch which then will trigger a fetch for the site plugins.
      * We'll complete the Automated Transfer if the progress dialog is showing and only update the plugin and the views
      * if it's not.
-     *
+     * <p>
      * This event is unlikely to happen outside of Automated Transfer process, and it is even less likely that the views
      * will need to be updated because of it, but they are both still possible and we try to handle it with a refresh.
      */
