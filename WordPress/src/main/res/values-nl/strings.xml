@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-03 07:54:13+0000
+Translation-Revision-Date: 2019-04-15 12:54:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Fout bij het controleren van beschikbaar domeinkrediet</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Domeinkrediet wordt gecontroleerd</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Domein registreren</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Om plugins te installeren, moet er een aangepast domein aan je site zijn gekoppeld.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Plugin installeren</string>
     <string name="new_site_creation_preview_subtitle">Je kunt de uitstraling van je site later aanpassen</string>
     <string name="publish_on">Publiceren op: %s</string>
     <string name="schedule_for">Ingepland voor: %s</string>
