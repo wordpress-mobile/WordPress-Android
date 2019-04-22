@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
@@ -12,12 +11,13 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.domain_suggestions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
+import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel
 import javax.inject.Inject
 
@@ -74,13 +74,18 @@ class DomainSuggestionsFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.isLoadingInProgress.observe(this, Observer {
-            domainSuggestionsListContainer.visibility = if (it == true) View.INVISIBLE else View.VISIBLE
-            suggestionsProgressBar.visibility = if (it == true) View.VISIBLE else View.GONE
-        })
-        viewModel.suggestionsLiveData.observe(this, Observer {
-            if (it != null) {
-                reloadSuggestions(it)
+        viewModel.suggestionsLiveData.observe(this, Observer { listState ->
+            if (listState != null) {
+                val isLoading = listState is ListState.Loading<*>
+
+                domainSuggestionsListContainer.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+                suggestionsProgressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+
+                reloadSuggestions(listState.data)
+
+                if (listState is ListState.Error<*>) {
+                    ToastUtils.showToast(context, listState.errorMessage)
+                }
             }
         })
         viewModel.shouldEnableChooseDomain.observe(this, Observer {
@@ -103,9 +108,4 @@ class DomainSuggestionsFragment : Fragment() {
     }
 }
 
-@Parcelize
-data class DomainProductDetails(
-    val productId: String,
-    val domainName: String
-) : Parcelable
 

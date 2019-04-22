@@ -23,19 +23,14 @@ import kotlin.properties.Delegates
 
 typealias DomainSuggestionsListState = ListState<DomainSuggestionResponse>
 
-class DomainSuggestionsViewModel @Inject constructor(
-    private val dispatcher: Dispatcher
-) : ViewModel() {
+class DomainSuggestionsViewModel @Inject constructor(private val dispatcher: Dispatcher) : ViewModel() {
     lateinit var site: SiteModel
     private var isStarted = false
     private val handler = Handler()
 
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
-    val suggestionsLiveData: LiveData<List<DomainSuggestionResponse>>
-        get() = Transformations.map(_suggestions) { it?.data ?: emptyList() }
-
-    val isLoadingInProgress: LiveData<Boolean>
-        get() = Transformations.map(_suggestions) { it?.isFetchingFirstPage() == true }
+    val suggestionsLiveData: LiveData<DomainSuggestionsListState>
+        get() = _suggestions
 
     private var suggestions: ListState<DomainSuggestionResponse>
             by Delegates.observable(ListState.Init()) { _, _, new ->
@@ -56,6 +51,11 @@ class DomainSuggestionsViewModel @Inject constructor(
         if (newValue != oldValue) {
             submitSearch(newValue, true)
         }
+    }
+
+    companion object {
+        private const val SEARCH_QUERY_DELAY_MS = 250L
+        private const val SUGGESTIONS_REQUEST_COUNT = 30
     }
 
     // Bind Dispatcher to Lifecycle
@@ -88,7 +88,7 @@ class DomainSuggestionsViewModel @Inject constructor(
                 if (query == searchQuery) {
                     submitSearch(query, false)
                 }
-            }, 250)
+            }, SEARCH_QUERY_DELAY_MS)
         } else {
             suggestions = ListState.Ready(ArrayList())
             fetchSuggestions()
@@ -111,7 +111,6 @@ class DomainSuggestionsViewModel @Inject constructor(
     // Network Callback
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onDomainSuggestionsFetched(event: OnSuggestedDomains) {
         if (searchQuery != event.query) {
             return
@@ -139,9 +138,5 @@ class DomainSuggestionsViewModel @Inject constructor(
             // Only reinitialize the search query, if it has changed.
             initializeDefaultSuggestions()
         }
-    }
-
-    companion object {
-        private const val SUGGESTIONS_REQUEST_COUNT = 30
     }
 }
