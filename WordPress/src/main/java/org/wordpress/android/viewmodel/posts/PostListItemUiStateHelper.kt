@@ -16,10 +16,10 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
-import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
+import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiString
@@ -40,7 +40,8 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
-private const val MAX_NUMBER_OF_VISIBLE_ACTIONS = 3
+private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
+private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_COMPACT = Int.MAX_VALUE
 const val ERROR_COLOR = R.color.error
 const val PROGRESS_INFO_COLOR = R.color.neutral_500
 const val STATE_INFO_COLOR = R.color.warning_dark
@@ -63,6 +64,11 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val postStatus: PostStatus = PostStatus.fromPost(post)
 
         val createActionsWithLayoutType = { layoutType: PostListViewLayoutType ->
+            val maxVisibleButtons = if (layoutType == COMPACT) {
+                MAX_NUMBER_OF_VISIBLE_ACTIONS_COMPACT
+            } else {
+                MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD
+            }
             createActions(
                     postStatus = postStatus,
                     isLocalDraft = post.isLocalDraft,
@@ -71,7 +77,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                     siteHasCapabilitiesToPublish = capabilitiesToPublish,
                     statsSupported = statsSupported,
                     onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) },
-                    postListViewLayoutType = layoutType
+                    maxNumberOfVisibleButtons = maxVisibleButtons
             )
         }
         val actions = createActionsWithLayoutType(STANDARD)
@@ -117,19 +123,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         performingCriticalAction = performingCriticalAction
                 )
         )
-        val itemCompactUiData = PostListItemCompactUiStateData(
-                remotePostId = remotePostId,
-                localPostId = localPostId,
-                title = title,
-                imageUrl = featuredImageUrl,
-                date = date,
-                statuses = statuses,
-                statusesColor = statusesColor,
-                statusesDelimiter = statusesDelimeter
-        )
         return PostListItemUiState(
                 data = itemUiData,
-                compactData = itemCompactUiData,
                 actions = actions,
                 compactActions = compactActions,
                 onSelected = onSelected
@@ -248,7 +243,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         siteHasCapabilitiesToPublish: Boolean,
         statsSupported: Boolean,
         onButtonClicked: (PostListButtonType) -> Unit,
-        postListViewLayoutType: PostListViewLayoutType
+        maxNumberOfVisibleButtons: Int
     ): List<PostListItemAction> {
         val canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
         val canPublishPost = !uploadStatus.isUploadingOrQueued &&
@@ -303,10 +298,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             PostListItemAction.SingleItem(buttonType, onButtonClicked)
         }
 
-        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS && postListViewLayoutType != COMPACT) {
-            val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1)
+        return if (buttonTypes.size > maxNumberOfVisibleButtons) {
+            val visibleItems = buttonTypes.take(maxNumberOfVisibleButtons - 1)
                     .map(createSinglePostListItem)
-            val itemsUnderMore = buttonTypes.subList(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1, buttonTypes.size)
+            val itemsUnderMore = buttonTypes.subList(maxNumberOfVisibleButtons - 1, buttonTypes.size)
                     .map(createSinglePostListItem)
 
             visibleItems.plus(PostListItemAction.MoreItem(itemsUnderMore, onButtonClicked))
