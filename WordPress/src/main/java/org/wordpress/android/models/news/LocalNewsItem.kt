@@ -10,9 +10,9 @@ import org.wordpress.android.R.string
  * Don't forget to increment the version number, otherwise some users might not see the new announcement.
  */
 object LocalNewsItem {
-    val titleResId: Int = string.news_card_announcement_title_sample_announcement
-    val contentResId: Int = string.news_card_announcement_content_sample_announcement
-    val actionResId: Int = string.news_card_announcement_action_sample_announcement
-    val urlResId: Int = string.news_card_announcement_action_url_sample_announcement
-    val version: Int = -1
+    const val titleResId: Int = string.news_card_announcement_title_sample_announcement
+    const val contentResId: Int = string.news_card_announcement_content_sample_announcement
+    const val actionResId: Int = string.news_card_announcement_action_sample_announcement
+    const val urlResId: Int = string.news_card_announcement_action_url_sample_announcement
+    const val version: Int = -1
 }
