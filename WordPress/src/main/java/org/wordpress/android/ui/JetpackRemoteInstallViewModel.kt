@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.JetpackActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.JetpackStore
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action
@@ -55,7 +54,6 @@ private const val EMPTY_MESSAGE = "EMPTY_MESSAGE"
 
 class JetpackRemoteInstallViewModel
 @Inject constructor(
-    private val jetpackStore: JetpackStore,
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
     private val siteStore: SiteStore
