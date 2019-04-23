@@ -1,6 +1,7 @@
 package org.wordpress.android.login;
 
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -437,6 +438,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             startIntentSenderForResult(intent.getIntentSender(), EMAIL_CREDENTIALS_REQUEST_CODE, null, 0, 0, 0, null);
         } catch (IntentSender.SendIntentException exception) {
             AppLog.d(T.NUX, LOG_TAG + "Could not start email hint picker" + exception);
+        } catch (ActivityNotFoundException exception) {
+            AppLog.d(T.NUX, LOG_TAG + "Could not find any activity to handle email hint picker" + exception);
         }
     }
 
