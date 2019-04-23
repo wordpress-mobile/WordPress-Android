@@ -65,7 +65,7 @@ class ClicksStoreTest {
         val responseModel = store.fetchClicks(site, DAYS, limitMode, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, CLICKS_RESPONSE, DAYS, DATE)
+        verify(sqlUtils).insert(site, CLICKS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
     }
 
     @Test

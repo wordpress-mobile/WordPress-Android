@@ -62,7 +62,7 @@ class VisitsAndViewsStoreTest {
         val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(VISITS_AND_VIEWS_MODEL)
-        verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, DATE)
+        verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
     }
 
     @Test

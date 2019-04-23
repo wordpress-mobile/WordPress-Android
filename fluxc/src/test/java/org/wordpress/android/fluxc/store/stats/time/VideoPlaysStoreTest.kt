@@ -65,7 +65,7 @@ class VideoPlaysStoreTest {
         val responseModel = store.fetchVideoPlays(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, VIDEO_PLAYS_RESPONSE, DAYS, DATE)
+        verify(sqlUtils).insert(site, VIDEO_PLAYS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
     }
 
     @Test

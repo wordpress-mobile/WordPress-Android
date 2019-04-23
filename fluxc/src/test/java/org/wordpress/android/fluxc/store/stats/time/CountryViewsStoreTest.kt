@@ -64,7 +64,7 @@ class CountryViewsStoreTest {
         val responseModel = store.fetchCountryViews(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, COUNTRY_VIEWS_RESPONSE, DAYS, DATE)
+        verify(sqlUtils).insert(site, COUNTRY_VIEWS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
     }
 
     @Test

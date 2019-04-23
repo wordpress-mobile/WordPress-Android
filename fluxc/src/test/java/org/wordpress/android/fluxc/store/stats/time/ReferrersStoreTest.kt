@@ -64,7 +64,7 @@ class ReferrersStoreTest {
         val responseModel = store.fetchReferrers(site, DAYS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, REFERRERS_RESPONSE, DAYS, DATE)
+        verify(sqlUtils).insert(site, REFERRERS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
     }
 
     @Test
