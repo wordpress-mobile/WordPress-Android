@@ -29,9 +29,4 @@ class WPWellSqlConfig(context: Context?) : WellSqlConfig(context) {
             super.onDowngrade(db, helper, oldVersion, newVersion)
         }
     }
-
-    // TODO: remove this
-    override fun getDbVersion(): Int {
-        return 9991
-    }
 }
