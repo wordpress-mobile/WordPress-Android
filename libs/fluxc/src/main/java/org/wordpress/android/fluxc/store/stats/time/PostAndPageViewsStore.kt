@@ -32,6 +32,9 @@ class PostAndPageViewsStore
         date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
+        if (!forced && sqlUtils.hasFreshRequest(site, granularity, date, limitMode.limit)) {
+            return@withContext OnStatsFetched(getPostAndPageViews(site, granularity, limitMode, date), cached = true)
+        }
         val payload = restClient.fetchPostAndPageViews(site, granularity, date, limitMode.limit + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)

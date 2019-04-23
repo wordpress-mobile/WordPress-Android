@@ -32,6 +32,9 @@ class AuthorsStore
         date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
+        if (!forced && sqlUtils.hasFreshRequest(site, period, date, limitMode.limit)) {
+            return@withContext OnStatsFetched(getAuthors(site, period, limitMode, date), cached = true)
+        }
         val payload = restClient.fetchAuthors(site, period, date, limitMode.limit + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)

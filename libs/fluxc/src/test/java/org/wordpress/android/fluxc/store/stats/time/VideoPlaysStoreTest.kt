@@ -1,6 +1,9 @@
 package org.wordpress.android.fluxc.store.stats.time
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers.Unconfined
@@ -63,6 +66,21 @@ class VideoPlaysStoreTest {
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, VIDEO_PLAYS_RESPONSE, DAYS, DATE)
+    }
+
+    @Test
+    fun `returns cached data per site`() = test {
+        whenever(sqlUtils.hasFreshRequest(site, DAYS, DATE, ITEMS_TO_LOAD)).thenReturn(true)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(VIDEO_PLAYS_RESPONSE)
+        val model = mock<VideoPlaysModel>()
+        whenever(mapper.map(VIDEO_PLAYS_RESPONSE, LIMIT_MODE)).thenReturn(model)
+
+        val forced = false
+        val responseModel = store.fetchVideoPlays(site, DAYS, LIMIT_MODE, DATE, forced)
+
+        assertThat(responseModel.model).isEqualTo(model)
+        assertThat(responseModel.cached).isTrue()
+        verify(sqlUtils, never()).insert(any(), any(), any(), any(), isNull())
     }
 
     @Test
