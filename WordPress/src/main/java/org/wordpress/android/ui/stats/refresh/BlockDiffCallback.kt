@@ -44,8 +44,7 @@ class BlockDiffCallback(
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
         return if (oldItem.type == newItem.type) {
-            val type = oldItem.type
-            when (type) {
+            when (oldItem.type) {
                 LIST_ITEM_WITH_ICON,
                 EXPANDABLE_ITEM,
                 TABS,
