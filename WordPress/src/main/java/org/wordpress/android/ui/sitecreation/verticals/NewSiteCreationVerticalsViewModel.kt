@@ -226,7 +226,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                         searchInputUiState = createSearchInputUiState(
                                 query,
                                 showProgress = state is Loading,
-                                showDivider = !state.data.isEmpty(),
+                                showDivider = state.data.isNotEmpty(),
                                 hint = segmentPrompt.hint
                         ),
                         items = createSuggestionsUiStates(

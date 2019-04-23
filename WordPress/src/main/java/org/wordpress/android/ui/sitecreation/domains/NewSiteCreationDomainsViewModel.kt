@@ -191,7 +191,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                         searchInputUiState = createSearchInputUiState(
                                 showProgress = state is Loading,
                                 showClearButton = isNonEmptyUserQuery,
-                                showDivider = !state.data.isEmpty()
+                                showDivider = state.data.isNotEmpty()
                         ),
                         contentState = createDomainsUiContentState(query, state),
                         createSiteButtonContainerVisibility = selectedDomain != null

@@ -195,7 +195,7 @@ class HelpActivity : AppCompatActivity() {
                 extraSupportTags as ArrayList<String>?
             }
 
-            if (tagsList != null && !tagsList.isEmpty()) {
+            if (tagsList != null && tagsList.isNotEmpty()) {
                 intent.putStringArrayListExtra(EXTRA_TAGS_KEY, tagsList)
             }
 

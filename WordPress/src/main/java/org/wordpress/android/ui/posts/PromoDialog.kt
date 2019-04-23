@@ -147,7 +147,7 @@ class PromoDialog : AppCompatDialogFragment() {
         }
 
         val buttonNegative = view.findViewById<Button>(R.id.promo_dialog_button_negative)
-        if (!negativeButtonLabel.isEmpty()) {
+        if (negativeButtonLabel.isNotEmpty()) {
             buttonNegative.visibility = View.VISIBLE
             buttonNegative.text = negativeButtonLabel
             buttonNegative.setOnClickListener {
@@ -159,7 +159,7 @@ class PromoDialog : AppCompatDialogFragment() {
         }
 
         val buttonNeutral = view.findViewById<Button>(R.id.promo_dialog_button_neutral)
-        if (!neutralButtonLabel.isEmpty()) {
+        if (neutralButtonLabel.isNotEmpty()) {
             buttonNeutral.visibility = View.VISIBLE
             buttonNeutral.text = neutralButtonLabel
             buttonNeutral.setOnClickListener {
