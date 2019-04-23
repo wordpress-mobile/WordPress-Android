@@ -31,6 +31,9 @@ class CountryViewsStore
         date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
+        if (!forced && sqlUtils.hasFreshRequest(site, granularity, date, limitMode.limit)) {
+            return@withContext OnStatsFetched(getCountryViews(site, granularity, limitMode, date), cached = true)
+        }
         val payload = restClient.fetchCountryViews(site, granularity, date, limitMode.limit + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
