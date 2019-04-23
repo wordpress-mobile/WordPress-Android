@@ -18,7 +18,7 @@ import javax.inject.Singleton
  *
  */
 @Singleton
-class NotificationsUtilsWrapper @Inject constructor(val formattableContentMapper: FormattableContentMapper) {
+class NotificationsUtilsWrapper @Inject constructor(private val formattableContentMapper: FormattableContentMapper) {
     fun getSpannableContentForRanges(subject: FormattableContent?): SpannableStringBuilder = NotificationsUtils
             .getSpannableContentForRanges(subject, null, null as? NoteBlock.OnNoteBlockTextClickListener, false)
 
