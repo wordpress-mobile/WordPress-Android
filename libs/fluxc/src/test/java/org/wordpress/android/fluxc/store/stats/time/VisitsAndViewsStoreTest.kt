@@ -56,7 +56,7 @@ class VisitsAndViewsStoreTest {
                 VISITS_AND_VIEWS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchVisits(site, DATE, DAYS, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
+        whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(VISITS_AND_VIEWS_MODEL)
 
         val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
@@ -86,7 +86,7 @@ class VisitsAndViewsStoreTest {
         val fetchInsightsPayload = FetchStatsPayload(
                 VISITS_AND_VIEWS_RESPONSE
         )
-        whenever(restClient.fetchVisits(site, DATE, DAYS, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
+        whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
         val emptyModel = VisitsAndViewsModel("", emptyList())
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(emptyModel)
 
@@ -102,7 +102,7 @@ class VisitsAndViewsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<VisitsAndViewsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchVisits(site, DATE, DAYS, ITEMS_TO_LOAD, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
 

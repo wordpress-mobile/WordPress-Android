@@ -34,7 +34,7 @@ class VisitsAndViewsStore
         if (!forced && sqlUtils.hasFreshRequest(site, granularity, date, limitMode.limit)) {
             return@withContext OnStatsFetched(getVisits(site, granularity, limitMode, date), cached = true)
         }
-        val payload = restClient.fetchVisits(site, date, granularity, limitMode.limit, forced)
+        val payload = restClient.fetchVisits(site, granularity, date, limitMode.limit, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
