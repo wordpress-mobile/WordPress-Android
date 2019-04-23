@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-26 16:45:05+0000
+Translation-Revision-Date: 2019-04-15 14:18:27+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Ошибка проверки возможности покупки домена</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Проверка возможности покупки домена</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Зарегистрировать домен</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Для установки плагинов требуется привязать к сайту ваш пользовательский домен.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Установка плагина</string>
     <string name="new_site_creation_preview_subtitle">Вы сможете настроить внешний вид вашего сайта позже</string>
     <string name="publish_on">Опубликовать в: %s</string>
     <string name="schedule_for">Запланировать на: %s</string>

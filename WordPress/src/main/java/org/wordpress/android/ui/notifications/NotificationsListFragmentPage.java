@@ -40,6 +40,7 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -192,6 +193,10 @@ public class NotificationsListFragmentPage extends Fragment implements
 
     @Override
     public void onDataLoaded(int itemsCount) {
+        if (!isAdded()) {
+            CrashlyticsUtils.log("NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached.");
+        }
+
         if (itemsCount > 0) {
             hideEmptyView();
         } else {
@@ -483,7 +488,7 @@ public class NotificationsListFragmentPage extends Fragment implements
                 showEmptyView(R.string.notifications_empty_list);
         }
 
-        mActionableEmptyView.image.setVisibility(DisplayUtils.isLandscape(requireContext()) ? View.GONE : View.VISIBLE);
+        mActionableEmptyView.image.setVisibility(DisplayUtils.isLandscape(getContext()) ? View.GONE : View.VISIBLE);
     }
 
     private void showNewNotificationsBar() {

@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase.CommentsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
@@ -83,7 +84,8 @@ class StatsModule {
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
-        followerTotalsUseCase: FollowerTotalsUseCase
+        followerTotalsUseCase: FollowerTotalsUseCase,
+        annualSiteStatsUseCase: AnnualSiteStatsUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -95,7 +97,8 @@ class StatsModule {
                 tagsAndCategoriesUseCaseFactory.build(BLOCK),
                 publicizeUseCaseFactory.build(BLOCK),
                 postingActivityUseCase,
-                followerTotalsUseCase
+                followerTotalsUseCase,
+                annualSiteStatsUseCase
         )
     }
 

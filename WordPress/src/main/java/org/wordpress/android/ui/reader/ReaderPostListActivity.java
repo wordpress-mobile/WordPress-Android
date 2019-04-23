@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -9,20 +11,26 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.ToastUtils;
 
 /*
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
 public class ReaderPostListActivity extends AppCompatActivity {
     private ReaderPostListType mPostListType;
+    private long mSiteId;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -34,7 +42,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -67,9 +75,13 @@ public class ReaderPostListActivity extends AppCompatActivity {
                     long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
                     if (feedId != 0) {
                         showListFragmentForFeed(feedId);
+                        mSiteId = feedId;
                     } else {
                         showListFragmentForBlog(blogId);
+                        mSiteId = blogId;
                     }
+                } else {
+                    mSiteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID);
                 }
             } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
                 setTitle(R.string.reader_title_tag_preview);
@@ -99,7 +111,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
     private void disableFilteredRecyclerViewToolbar() {
         // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
         // occupied space, as otherwise expected
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         if (appBarLayout != null) {
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
             lp.height = 0;
@@ -107,7 +119,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
         }
 
         // disabling any CoordinatorLayout behavior for scrolling
-        Toolbar toolbarWithSpinner = (Toolbar) findViewById(R.id.toolbar_with_spinner);
+        Toolbar toolbarWithSpinner = findViewById(R.id.toolbar_with_spinner);
         if (toolbarWithSpinner != null) {
             AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) toolbarWithSpinner.getLayoutParams();
             p.setScrollFlags(0);
@@ -129,6 +141,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
         if (getPostListType() == ReaderPostListType.BLOG_PREVIEW
             || getPostListType() == ReaderPostListType.TAG_PREVIEW) {
             outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, getTitle().toString());
+            outState.putLong(ReaderConstants.KEY_SITE_ID, mSiteId);
         }
 
         super.onSaveInstanceState(outState);
@@ -143,12 +156,49 @@ public class ReaderPostListActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            getMenuInflater().inflate(R.menu.share, menu);
         }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_share:
+                shareSite();
+                return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareSite() {
+        ReaderBlog blog = ReaderBlogTable.getBlogInfo(mSiteId);
+
+        if (blog != null && blog.hasUrl()) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, blog.getUrl());
+
+            if (blog.hasName()) {
+                intent.putExtra(Intent.EXTRA_SUBJECT, blog.getName());
+            }
+
+            try {
+                AnalyticsTracker.track(Stat.READER_SITE_SHARED);
+                startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
+            } catch (ActivityNotFoundException exception) {
+                ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
+            }
+        } else {
+            ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
+        }
     }
 
     /*
