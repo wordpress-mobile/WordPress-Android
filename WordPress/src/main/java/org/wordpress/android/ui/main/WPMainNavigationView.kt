@@ -300,7 +300,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun isValidPosition(position: Int): Boolean {
-        return position in 0..(NUM_PAGES - 1)
+        return position in 0 until NUM_PAGES
     }
 
     private inner class NavAdapter {
