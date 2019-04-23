@@ -24,7 +24,7 @@ class WPWellSqlConfig(context: Context?) : WellSqlConfig(context) {
                     "Database downgraded, recreating tables and loading sites",
                     Duration.LONG
             )
-            recreateTables(helper)
+            reset(helper)
         } else {
             super.onDowngrade(db, helper, oldVersion, newVersion)
         }
@@ -32,14 +32,6 @@ class WPWellSqlConfig(context: Context?) : WellSqlConfig(context) {
 
     // TODO: remove this
     override fun getDbVersion(): Int {
-        return 9997
-    }
-
-    private fun recreateTables(helper: WellTableManager?) {
-        for (table in mTables) {
-            AppLog.w(T.DB, "recreating table ${table.simpleName}")
-            helper?.dropTable(table)
-            helper?.createTable(table)
-        }
+        return 9991
     }
 }
