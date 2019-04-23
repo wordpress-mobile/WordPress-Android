@@ -96,9 +96,7 @@ class StatsViewAllViewModel(
     }
 
     fun onRetryClick() {
-        loadData {
-            loadData(refresh = true, forced = true)
-        }
+        refreshData()
     }
 
     fun onNextDateSelected() {
@@ -114,7 +112,9 @@ class StatsViewAllViewModel(
     }
 
     fun onDateChanged() {
-        refreshData()
+        loadData {
+            loadData(refresh = true, forced = false)
+        }
     }
 
     private fun refreshData() {
