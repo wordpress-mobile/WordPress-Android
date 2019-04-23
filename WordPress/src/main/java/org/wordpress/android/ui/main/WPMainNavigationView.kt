@@ -325,11 +325,11 @@ class WPMainNavigationView @JvmOverloads constructor(
             }
 
             val fragment = fragmentManager.findFragmentByTag(getTagForPosition(position))
-            if (fragment != null) {
+            return if (fragment != null) {
                 mFragments.put(position, fragment)
-                return fragment
+                fragment
             } else {
-                return createFragment(position)
+                createFragment(position)
             }
         }
     }
