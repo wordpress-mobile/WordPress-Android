@@ -20,7 +20,7 @@ class ReaderPostListViewModel @Inject constructor(
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
 
-    private val onTagChanged: Observer<NewsItem?> = Observer { it: NewsItem? -> _newsItemSourceMediator.value = it }
+    private val onTagChanged: Observer<NewsItem?> = Observer { _newsItemSourceMediator.value = it }
 
     /**
      * First tag for which the card was shown.
