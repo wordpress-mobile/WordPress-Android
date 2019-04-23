@@ -19,7 +19,7 @@ class GeneratedNoteBlock(
     imageManager: ImageManager,
     notificationsUtilsWrapper: NotificationsUtilsWrapper,
     val clickListener: OnNoteBlockTextClickListener,
-    val pingbackUrl: String
+    private val pingbackUrl: String
 ) : NoteBlock(FormattableContent(), imageManager, notificationsUtilsWrapper, clickListener) {
     override fun getNoteText(): Spannable {
         val spannableStringBuilder = SpannableStringBuilder(text)
