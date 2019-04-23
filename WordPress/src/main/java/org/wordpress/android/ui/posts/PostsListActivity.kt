@@ -208,7 +208,7 @@ class PostsListActivity : AppCompatActivity(),
                 pager.addOnPageChangeListener(onPageChangeListener)
             }
         })
-        viewModel.updateViewLayoutMenuIcon.observe(this, Observer {
+        viewModel.viewLayoutMenuIcon.observe(this, Observer {
             it?.let { icon ->
                 updateMenuIconForViewLayoutType(icon)
             }
@@ -305,11 +305,12 @@ class PostsListActivity : AppCompatActivity(),
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
         menu?.clear()
         menu?.add(Menu.FIRST, R.id.post_menu_item_view_layout_type, 3, "")?.let { item ->
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             toggleViewLayoutMenuItem = item
-            viewModel.updateViewLayoutMenuIcon.value?.let {
+            viewModel.viewLayoutMenuIcon.value?.let {
                 updateMenuIconForViewLayoutType(it)
             }
         }

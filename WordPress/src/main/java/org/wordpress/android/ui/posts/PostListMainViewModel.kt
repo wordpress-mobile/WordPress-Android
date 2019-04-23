@@ -101,8 +101,8 @@ class PostListMainViewModel @Inject constructor(
     private val _viewLayoutType = MutableLiveData<PostListViewLayoutType>()
     val viewLayoutType: LiveData<PostListViewLayoutType> = _viewLayoutType
 
-    private val _updateViewLayoutMenuIcon = MutableLiveData<Int>()
-    val updateViewLayoutMenuIcon: LiveData<Int> = _updateViewLayoutMenuIcon
+    private val _viewLayoutMenuIcon = MutableLiveData<Int>()
+    val viewLayoutMenuIcon: LiveData<Int> = _viewLayoutMenuIcon
 
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
@@ -161,14 +161,14 @@ class PostListMainViewModel @Inject constructor(
 
     init {
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
-
-        val layout = prefs.postListViewLayoutType
-        _viewLayoutType.value = layout
-        _updateViewLayoutMenuIcon.value = iconForViewLayout(layout)
     }
 
     fun start(site: SiteModel) {
         this.site = site
+
+        val layout = prefs.postListViewLayoutType
+        _viewLayoutType.value = layout
+        _viewLayoutMenuIcon.value = iconForViewLayout(layout)
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection
@@ -227,8 +227,8 @@ class PostListMainViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-                getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
-                postFetcher = postFetcher
+                postFetcher = postFetcher,
+                getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
     }
 
@@ -352,7 +352,7 @@ class PostListMainViewModel @Inject constructor(
         }
         prefs.postListViewLayoutType = toggledValue
         _viewLayoutType.value = toggledValue
-        _updateViewLayoutMenuIcon.value = iconForViewLayout(toggledValue)
+        _viewLayoutMenuIcon.value = iconForViewLayout(toggledValue)
     }
 
     private fun iconForViewLayout(layout: PostListViewLayoutType) = when (layout) {

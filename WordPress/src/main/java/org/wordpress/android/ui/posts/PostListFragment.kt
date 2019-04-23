@@ -53,7 +53,6 @@ class PostListFragment : Fragment() {
 
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
-    private lateinit var postListAdapter: PostListAdapter
 
     private val postViewHolderConfig: PostViewHolderConfig by lazy {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
@@ -65,6 +64,14 @@ class PostListFragment : Fragment() {
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
                 isPhotonCapable = SiteUtils.isPhotonCapable(site),
                 imageManager = imageManager
+        )
+    }
+
+    private val postListAdapter: PostListAdapter by lazy {
+        PostListAdapter(
+                context = nonNullActivity,
+                postViewHolderConfig = postViewHolderConfig,
+                uiHelpers = uiHelpers
         )
     }
 
@@ -96,6 +103,13 @@ class PostListFragment : Fragment() {
         val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
         val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
+
+        postListAdapter.updateItemLayoutType(mainViewModel.viewLayoutType.value ?: PostListViewLayoutType.defaultValue)
+        mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
+            optionaLayoutType?.let { layoutType ->
+                postListAdapter.updateItemLayoutType(layoutType)
+            }
+        })
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
@@ -131,16 +145,6 @@ class PostListFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recycler_view)
         progressLoadMore = view.findViewById(R.id.progress)
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
-
-        val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
-                .get(PostListMainViewModel::class.java)
-        postListAdapter = PostListAdapter(
-                fragment = this,
-                context = nonNullActivity,
-                postViewHolderConfig = postViewHolderConfig,
-                uiHelpers = uiHelpers,
-                postListViewLayoutType = mainViewModel.viewLayoutType
-        )
 
         val context = nonNullActivity
         val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.margin_medium)

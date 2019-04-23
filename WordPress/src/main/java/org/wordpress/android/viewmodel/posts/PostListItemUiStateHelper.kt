@@ -61,26 +61,21 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
-        val actions = createActions(
-                postStatus = postStatus,
-                isLocalDraft = post.isLocalDraft,
-                isLocallyChanged = post.isLocallyChanged,
-                uploadStatus = uploadStatus,
-                siteHasCapabilitiesToPublish = capabilitiesToPublish,
-                statsSupported = statsSupported,
-                onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) },
-                postListViewLayoutType = STANDARD
-        )
-        val compactActions = createActions(
-                postStatus = postStatus,
-                isLocalDraft = post.isLocalDraft,
-                isLocallyChanged = post.isLocallyChanged,
-                uploadStatus = uploadStatus,
-                siteHasCapabilitiesToPublish = capabilitiesToPublish,
-                statsSupported = statsSupported,
-                onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) },
-                postListViewLayoutType = COMPACT
-        )
+
+        val createActionsWithLayoutType = { layoutType: PostListViewLayoutType ->
+            createActions(
+                    postStatus = postStatus,
+                    isLocalDraft = post.isLocalDraft,
+                    isLocallyChanged = post.isLocallyChanged,
+                    uploadStatus = uploadStatus,
+                    siteHasCapabilitiesToPublish = capabilitiesToPublish,
+                    statsSupported = statsSupported,
+                    onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) },
+                    postListViewLayoutType = layoutType
+            )
+        }
+        val actions = createActionsWithLayoutType(STANDARD)
+        val compactActions = createActionsWithLayoutType(COMPACT)
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
         val localPostId = LocalPostId(LocalId(post.id))
         val title = getTitle(post = post)
