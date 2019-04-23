@@ -542,7 +542,7 @@ public class WellSqlConfig extends DefaultWellConfig {
      * call giveMeWritableDb (attempting to do so results in "IllegalStateException: getDatabase called recursively")
      */
     @SuppressWarnings("unused")
-    private void reset(WellTableManager helper) {
+    public void reset(WellTableManager helper) {
         AppLog.d(T.DB, "resetting tables");
         for (Class<? extends Identifiable> table : mTables) {
             AppLog.d(T.DB, "dropping table " + table.getSimpleName());
