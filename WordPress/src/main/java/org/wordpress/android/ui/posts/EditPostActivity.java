@@ -3960,15 +3960,23 @@ public class EditPostActivity extends AppCompatActivity implements
         // the same conditions as per `getSaveButtonText()` apply:
         //  if status is DRAFT and isNewPost() && mPost.isLocalDraft() --> PUBLISH;
         //  else if UNKNOWN and mPost.isLocalDraft() --> PUBLISH
-        PostStatus status = PostStatus.fromPost(mPost);
-        if (AppPrefs.isAsyncPromoRequired() && userCanPublishPosts()
-            && ((status == PostStatus.DRAFT || status == PostStatus.PUBLISHED) && isNewPost() && mPost.isLocalDraft()
-                // we also check for PUBLISHED posts here because the user can have a isNewPost() and
+        if (!AppPrefs.isAsyncPromoRequired() || !userCanPublishPosts()) return false;
+
+        switch (PostStatus.fromPost(mPost)) {
+            case DRAFT:
+            case PUBLISHED:
+                // we check for both DRAFT _AND_ PUBLISHED posts here because the user can have a isNewPost() and
                 // they may edit the Post settings and change the status to Publish
-                || status == PostStatus.UNKNOWN && mPost.isLocalDraft())) {
-            return true;
+                return isNewPost() && mPost.isLocalDraft();
+            case UNKNOWN:
+                return mPost.isLocalDraft();
+            case SCHEDULED:
+            case PRIVATE:
+            case PENDING:
+            case TRASHED:
+            default:
+                return false;
         }
-        return false;
     }
 
     private void showAsyncPromoDialog(boolean isPage, boolean isScheduled) {
