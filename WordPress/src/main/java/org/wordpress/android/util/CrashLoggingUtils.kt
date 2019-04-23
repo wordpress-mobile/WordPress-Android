@@ -19,7 +19,7 @@ class CrashLoggingUtils {
 
     fun enableCrashLogging(context: android.content.Context) {
         val sentryDsn = "https://fd5df99b7dfa4a358df5c029c171906e@sentry.io/1438088"
-        Sentry.init(sentryDsn, AndroidSentryClientFactory (context))
+        Sentry.init(sentryDsn, AndroidSentryClientFactory(context))
     }
 
     companion object {
