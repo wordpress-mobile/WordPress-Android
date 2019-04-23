@@ -70,7 +70,7 @@ class ActionableEmptyView : LinearLayout {
             if (!titleAttribute.isNullOrEmpty()) {
                 title.text = titleAttribute
             } else {
-                throw RuntimeException(context.toString() + ": ActionableEmptyView must have a title (aevTitle)")
+                throw RuntimeException("$context: ActionableEmptyView must have a title (aevTitle)")
             }
 
             if (!subtitleAttribute.isNullOrEmpty()) {
