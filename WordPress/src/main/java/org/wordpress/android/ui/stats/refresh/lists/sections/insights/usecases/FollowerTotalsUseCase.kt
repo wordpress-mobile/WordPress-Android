@@ -40,7 +40,7 @@ class FollowerTotalsUseCase
         val emailFollowers = followersStore.getEmailFollowers(statsSiteProvider.siteModel, LimitMode.Top(0))
         val publicizeServices = publicizeStore.getPublicizeData(statsSiteProvider.siteModel, LimitMode.All)
         if (wpComFollowers != null && emailFollowers != null && publicizeServices != null) {
-            val socialFollowers = publicizeServices.services.fold(0, { acc, service -> acc + service.followers })
+            val socialFollowers = publicizeServices.services.sumBy { it.followers }
             return buildDataModel(wpComFollowers.totalCount, emailFollowers.totalCount, socialFollowers)
         }
         return null
@@ -104,7 +104,7 @@ class FollowerTotalsUseCase
 
         val wpComModel = wpComResponse.model
         val emailModel = emailResponse.model
-        val socialTotals = publicizeResponse.model?.services?.fold(0, { acc, service -> acc + service.followers })
+        val socialTotals = publicizeResponse.model?.services?.sumBy { it.followers }
 
         val error = wpComResponse.error ?: emailResponse.error ?: publicizeResponse.error
         val data = buildDataModel(wpComModel?.totalCount, emailModel?.totalCount, socialTotals)
