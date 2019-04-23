@@ -26,6 +26,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -289,8 +290,12 @@ public class PostUtils {
 
     static boolean isPublishDateInThePast(PostModel postModel) {
         Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
-        Date now = new Date();
-        return pubDate != null && pubDate.before(now);
+
+        // just use half an hour before now as a threshold to make sure this is backdated, to avoid false positives
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -30);
+        Date halfHourBack = cal.getTime();
+        return pubDate != null && pubDate.before(halfHourBack);
     }
 
     // Only drafts should have the option to publish immediately to avoid user confusion
