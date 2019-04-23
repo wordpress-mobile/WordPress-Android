@@ -38,6 +38,8 @@ sealed class PostListItemViewHolder(
     private val titleTextView: WPTextView = itemView.findViewById(R.id.title)
     private val dateTextView: WPTextView = itemView.findViewById(R.id.date)
     private val statusesTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
+    private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
+    private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
 
     abstract fun onBind(item: PostListItemUiState)
 
@@ -47,8 +49,6 @@ sealed class PostListItemViewHolder(
         private val uiHelpers: UiHelpers
     ) : PostListItemViewHolder(R.layout.post_list_item, parent, config, uiHelpers) {
         private val excerptTextView: WPTextView = itemView.findViewById(R.id.excerpt)
-        private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
-        private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
         private val actionButtons: List<PostListButton> = listOf(
                 itemView.findViewById(R.id.btn_primary),
                 itemView.findViewById(R.id.btn_secondary),
@@ -59,8 +59,6 @@ sealed class PostListItemViewHolder(
             setBasicValues(item.data)
 
             uiHelpers.setTextOrHide(excerptTextView, item.data.excerpt)
-            uiHelpers.updateVisibility(uploadProgressBar, item.data.showProgress)
-            uiHelpers.updateVisibility(disabledOverlay, item.data.showOverlay)
             itemView.setOnClickListener { item.onSelected.invoke() }
 
             actionButtons.forEachIndexed { index, button ->
@@ -123,6 +121,8 @@ sealed class PostListItemViewHolder(
         uiHelpers.updateVisibility(statusesTextView, data.statuses.isNotEmpty())
         updateStatusesLabel(statusesTextView, data.statuses, data.statusesDelimiter, data.statusesColor)
         showFeaturedImage(data.imageUrl)
+        uiHelpers.updateVisibility(uploadProgressBar, data.showProgress)
+        uiHelpers.updateVisibility(disabledOverlay, data.showOverlay)
     }
 
     protected fun onMoreClicked(actions: List<PostListItemAction>, v: View) {

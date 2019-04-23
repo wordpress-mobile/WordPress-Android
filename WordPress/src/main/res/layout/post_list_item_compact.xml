@@ -94,6 +94,22 @@
             android:tint="@color/neutral_600"
             android:background="?selectableItemBackground"/>
 
+        <FrameLayout
+            android:id="@+id/disabled_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_translucent_65"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <ProgressBar
+            android:id="@+id/upload_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_alignParentBottom="true"/>
+
     </RelativeLayout>
 
 </RelativeLayout>
