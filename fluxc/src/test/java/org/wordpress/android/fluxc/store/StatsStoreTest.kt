@@ -130,12 +130,12 @@ class StatsStoreTest {
         val addedTypes = DEFAULT_INSIGHTS - LATEST_POST_SUMMARY
 
         // executed twice, because the first time the default list is inserted first
-        verify(insightTypesSqlUtils, times(2)).insertOrReplaceAddedItems(
+        verify(insightTypesSqlUtils).insertOrReplaceAddedItems(
                 site,
                 addedTypes
         )
 
-        verify(insightTypesSqlUtils, times(2)).insertOrReplaceRemovedItems(
+        verify(insightTypesSqlUtils).insertOrReplaceRemovedItems(
                 site,
                 store.getRemovedInsights(addedTypes)
         )
