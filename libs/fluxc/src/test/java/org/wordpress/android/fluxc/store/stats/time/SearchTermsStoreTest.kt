@@ -65,7 +65,7 @@ class SearchTermsStoreTest {
         val responseModel = store.fetchSearchTerms(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, SEARCH_TERMS_RESPONSE, DAYS, DATE)
+        verify(sqlUtils).insert(site, SEARCH_TERMS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
     }
 
     @Test

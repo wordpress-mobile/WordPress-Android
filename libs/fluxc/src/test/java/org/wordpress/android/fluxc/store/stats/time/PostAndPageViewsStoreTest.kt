@@ -64,7 +64,7 @@ class PostAndPageViewsStoreTest {
         val responseModel = store.fetchPostAndPageViews(site, DAYS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, POST_AND_PAGE_VIEWS_RESPONSE, DAYS, DATE)
+        verify(sqlUtils).insert(site, POST_AND_PAGE_VIEWS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
     }
 
     @Test

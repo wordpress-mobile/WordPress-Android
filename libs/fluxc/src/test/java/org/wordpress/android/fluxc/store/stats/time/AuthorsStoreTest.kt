@@ -66,7 +66,7 @@ class AuthorsStoreTest {
 
         assertThat(responseModel.model).isEqualTo(model)
         assertThat(responseModel.cached).isFalse()
-        verify(sqlUtils).insert(site, AUTHORS_RESPONSE, DAYS, DATE)
+        verify(sqlUtils).insert(site, AUTHORS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
     }
 
     @Test

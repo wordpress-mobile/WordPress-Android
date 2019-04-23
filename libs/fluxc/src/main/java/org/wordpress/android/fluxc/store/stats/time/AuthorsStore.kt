@@ -39,7 +39,7 @@ class AuthorsStore
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
-                sqlUtils.insert(site, payload.response, period, date)
+                sqlUtils.insert(site, payload.response, period, date, limitMode.limit)
                 OnStatsFetched(timeStatsMapper.map(payload.response, limitMode))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
