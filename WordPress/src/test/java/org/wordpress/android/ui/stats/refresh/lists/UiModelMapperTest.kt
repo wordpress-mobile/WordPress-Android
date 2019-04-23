@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LinkButton
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.Event
 
 class UiModelMapperTest : BaseUnitTest() {
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -28,7 +29,7 @@ class UiModelMapperTest : BaseUnitTest() {
     @Test
     fun `mapInsights returns success ui model when all the inputs are successful`() {
         var error: Int? = null
-        val navigationTarget = MutableLiveData<NavigationTarget>()
+        val navigationTarget = MutableLiveData<Event<NavigationTarget>>()
         val uiModel = mapper.mapInsights(listOf(
                 UseCaseModel(FOLLOWER_TOTALS, data = listOf(), state = SUCCESS)), navigationTarget) {
             error = it
