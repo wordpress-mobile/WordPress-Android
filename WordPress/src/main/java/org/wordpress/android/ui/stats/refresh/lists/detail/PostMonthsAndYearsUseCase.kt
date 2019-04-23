@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.detail
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
@@ -33,7 +33,7 @@ class PostMonthsAndYearsUseCase(
     private val postDetailMapper: PostDetailMapper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<PostDetailStatsModel, ExpandedYearUiState>(
-        PostDetailTypes.MONTHS_AND_YEARS,
+        PostDetailType.MONTHS_AND_YEARS,
         mainDispatcher,
         ExpandedYearUiState()
 ) {

@@ -4,14 +4,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.util.Date
 
 abstract class GranularStatelessUseCase<DOMAIN_MODEL>(
-    type: StatsTypes,
+    type: StatsType,
     mainDispatcher: CoroutineDispatcher,
     val selectedDateProvider: SelectedDateProvider,
     val statsSiteProvider: StatsSiteProvider,

@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel.Service
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -75,7 +75,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
 
         val result = loadPublicizeModel(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.PUBLICIZE)
+        assertThat(result.type).isEqualTo(InsightType.PUBLICIZE)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertThat(this).hasSize(3)
@@ -106,7 +106,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
 
         val result = loadPublicizeModel(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.PUBLICIZE)
+        assertThat(result.type).isEqualTo(InsightType.PUBLICIZE)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertThat(this).hasSize(4)
@@ -130,7 +130,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
 
         val result = loadPublicizeModel(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.PUBLICIZE)
+        assertThat(result.type).isEqualTo(InsightType.PUBLICIZE)
         assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
         result.stateData!!.apply {
             assertThat(this).hasSize(2)

@@ -14,7 +14,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
@@ -29,7 +28,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mergeNotNull
-import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,9 +45,6 @@ class StatsViewModel
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val _isMenuVisible = MutableLiveData<Boolean>()
-    val isMenuVisible: LiveData<Boolean> = _isMenuVisible
-
     private var isInitialized = false
 
     private val _showSnackbarMessage = mergeNotNull(
@@ -58,9 +53,6 @@ class StatsViewModel
             singleEvent = true
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
-
-    private val _navigationTarget = MutableLiveData<Event<NavigationTarget>>()
-    val navigationTarget: LiveData<Event<NavigationTarget>> = _navigationTarget
 
     val siteChanged = statsSiteProvider.siteChanged
 
@@ -117,7 +109,6 @@ class StatsViewModel
         listUseCases[statsSection]?.onListSelected()
 
         _toolbarHasShadow.value = statsSection == INSIGHTS
-        _isMenuVisible.value = statsSection == INSIGHTS
 
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
@@ -128,10 +119,6 @@ class StatsViewModel
             DETAIL -> {
             }
         }
-    }
-
-    fun onManageInsightsButtonTapped() {
-        _navigationTarget.value = Event(ViewInsightsManagement)
     }
 
     override fun onCleared() {

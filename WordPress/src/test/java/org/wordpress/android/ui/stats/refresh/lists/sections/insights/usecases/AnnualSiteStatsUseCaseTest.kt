@@ -24,19 +24,22 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Quick
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 
 class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: MostPopularInsightsStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     private lateinit var useCase: AnnualSiteStatsUseCase
     @Before
     fun setUp() {
         useCase = AnnualSiteStatsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                statsSiteProvider
+                statsSiteProvider,
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }

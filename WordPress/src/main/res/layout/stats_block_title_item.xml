@@ -21,7 +21,7 @@
         android:id="@+id/menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/transparent"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_ellipsis_vertical_grey_darken_48dp"
         android:contentDescription="@string/stats_item_settings"/>
 

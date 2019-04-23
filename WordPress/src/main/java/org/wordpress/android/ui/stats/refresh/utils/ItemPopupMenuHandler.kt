@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.support.v7.widget.PopupMenu
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
@@ -10,14 +9,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
+import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import android.support.v7.widget.ListPopupWindow
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem.DOWN
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem.REMOVE
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem.UP
 
 @Singleton
 class ItemPopupMenuHandler
@@ -27,49 +32,49 @@ class ItemPopupMenuHandler
     private val statsStore: StatsStore,
     private val statsSiteProvider: StatsSiteProvider
 ) {
-    private val mutableTypeMoved = MutableLiveData<Event<InsightsTypes>>()
-    val typeMoved: LiveData<Event<InsightsTypes>> = mutableTypeMoved
-    fun onMenuClick(view: View, statsType: StatsTypes) {
+    private val mutableTypeMoved = MutableLiveData<Event<InsightType>>()
+    val typeMoved: LiveData<Event<InsightType>> = mutableTypeMoved
+
+    fun onMenuClick(view: View, statsType: StatsType) {
         GlobalScope.launch(bgDispatcher) {
-            val type = statsType as InsightsTypes
-            val insights = statsStore.getInsights(statsSiteProvider.siteModel)
+            val type = statsType as InsightType
+            val insights = statsStore.getAddedInsights(statsSiteProvider.siteModel)
 
             val indexOfBlock = insights.indexOfFirst { it == type }
             val showUpAction = indexOfBlock > 0
             val showDownAction = indexOfBlock < insights.size - 1
+
             withContext(mainDispatcher) {
-                val popup = PopupMenu(view.context, view)
-                val popupMenu = popup.menu
-                popup.inflate(R.menu.menu_stats_item)
-                popupMenu.findItem(R.id.action_move_up).isVisible = showUpAction
-                popupMenu.findItem(R.id.action_move_down).isVisible = showDownAction
-                popup.show()
-                popup.setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.itemId) {
-                        R.id.action_move_up -> {
+                val popup = ListPopupWindow(view.context)
+                val adapter = InsightsMenuAdapter(view.context, showUpAction, showDownAction)
+                popup.setAdapter(adapter)
+                popup.width = view.context.resources.getDimensionPixelSize(R.dimen.stats_insights_menu_item_width)
+                popup.anchorView = view
+                popup.isModal = true
+                popup.setOnItemClickListener { _, _, _, id ->
+                    when (InsightsMenuItem.values()[id.toInt()]) {
+                        UP -> {
                             GlobalScope.launch(bgDispatcher) {
                                 statsStore.moveTypeUp(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))
                             }
-                            true
                         }
-                        R.id.action_move_down -> {
+                        DOWN -> {
                             GlobalScope.launch(bgDispatcher) {
                                 statsStore.moveTypeDown(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))
                             }
-                            true
                         }
-                        R.id.action_remove -> {
+                        REMOVE -> {
                             GlobalScope.launch(bgDispatcher) {
                                 statsStore.removeType(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))
                             }
-                            true
                         }
-                        else -> false
                     }
+                    popup.dismiss()
                 }
+                popup.show()
             }
         }
     }

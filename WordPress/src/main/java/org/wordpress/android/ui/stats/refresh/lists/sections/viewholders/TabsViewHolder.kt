@@ -6,7 +6,6 @@ import android.support.design.widget.TabLayout.Tab
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.util.image.ImageManager
 

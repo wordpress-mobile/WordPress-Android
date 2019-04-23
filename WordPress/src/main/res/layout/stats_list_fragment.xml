@@ -17,10 +17,7 @@
         android:layout_weight="1"/>
 
     <include
-        layout="@layout/stats_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        layout="@layout/stats_empty_view" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/loadingContainer"

@@ -14,9 +14,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -55,33 +52,11 @@ class StatsFragment : DaggerFragment() {
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     @Inject lateinit var navigator: StatsNavigator
 
-    private var menu: Menu? = null
-
     private var restorePreviousSearch = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-
         return inflater.inflate(R.layout.stats_fragment, container, false)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        inflater?.inflate(R.menu.menu_stats_insights, menu)
-        this.menu = menu
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.manage_insights) {
-            viewModel.onManageInsightsButtonTapped()
-        }
-        return true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -197,18 +172,6 @@ class StatsFragment : DaggerFragment() {
 
         viewModel.siteChanged.observe(this, Observer {
             viewModel.refreshData()
-        })
-
-        viewModel.isMenuVisible.observe(this, Observer { isMenuVisible ->
-            isMenuVisible?.let {
-                menu?.findItem(R.id.manage_insights)?.isVisible = isMenuVisible
-            }
-        })
-
-        viewModel.navigationTarget.observe(this, Observer { event ->
-            event?.getContentIfNotHandled()?.let { target ->
-                navigator.navigate(activity, target)
-            }
         })
     }
 }
