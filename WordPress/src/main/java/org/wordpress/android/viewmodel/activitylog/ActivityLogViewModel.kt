@@ -156,7 +156,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun updateRewindState(status: Status?) {
         lastRewindStatus = status
         if (status == RUNNING && !isRewindProgressItemShown) {
-            reloadEvents(true, true)
+            reloadEvents(disableActions = true, displayProgressItem = true)
         } else if (status != RUNNING && isRewindProgressItemShown) {
             requestEventsUpdate(false)
         }
