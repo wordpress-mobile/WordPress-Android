@@ -51,6 +51,7 @@ class ActionPerformer
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onPostUploaded(event: OnPostUploaded) {
         // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
         val continuation = continuations[event.post.remotePostId to UPLOAD]
@@ -59,6 +60,7 @@ class ActionPerformer
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onPostChange(event: OnPostChanged) {
         postCauseOfChangeToPostAction(event.causeOfChange)?.let { (remoteId, localId, eventType) ->
             // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)

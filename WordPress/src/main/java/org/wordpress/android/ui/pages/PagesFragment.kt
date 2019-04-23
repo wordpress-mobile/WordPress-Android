@@ -373,6 +373,7 @@ class PagesFragment : Fragment() {
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onEvent(event: QuickStartEvent) {
         if (!isAdded || view == null) {
             return

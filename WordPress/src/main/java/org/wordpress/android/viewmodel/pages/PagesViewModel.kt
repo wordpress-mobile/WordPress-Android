@@ -614,6 +614,7 @@ class PagesViewModel
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onPostUploaded(event: OnPostUploaded) {
         var id = 0L
         if (!pageUpdateContinuations.contains(id)) {

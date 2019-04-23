@@ -276,6 +276,7 @@ class PageListViewModel @Inject constructor(
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
             invalidateFeaturedMedia(*event.mediaList.map { it.mediaId }.toLongArray())

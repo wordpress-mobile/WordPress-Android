@@ -349,10 +349,6 @@ class PostListViewModel @Inject constructor(
         localPostIdForPublishDialog = null
     }
 
-    private fun isGutenbergEnabled(): Boolean {
-        return BuildConfig.OFFER_GUTENBERG && AppPrefs.isGutenbergEditorEnabled()
-    }
-
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state.
         if (doesPostHaveUnhandledConflict(post)) {
