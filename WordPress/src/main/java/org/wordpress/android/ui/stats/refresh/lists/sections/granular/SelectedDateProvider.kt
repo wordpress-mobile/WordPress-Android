@@ -117,11 +117,11 @@ class SelectedDateProvider
         }
     }
 
-    fun dateLoadingFailed(statsGranularity: StatsGranularity) {
-        dateLoadingFailed(statsGranularity.toStatsSection())
+    fun onDateLoadingFailed(statsGranularity: StatsGranularity) {
+        onDateLoadingFailed(statsGranularity.toStatsSection())
     }
 
-    fun dateLoadingFailed(statsSection: StatsSection) {
+    fun onDateLoadingFailed(statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.index != null && !selectedDate.error) {
             updateSelectedDate(selectedDate.copy(error = true), statsSection)
@@ -130,11 +130,11 @@ class SelectedDateProvider
         }
     }
 
-    fun dateLoadingSucceeded(statsGranularity: StatsGranularity) {
-        dateLoadingSucceeded(statsGranularity.toStatsSection())
+    fun onDateLoadingSucceeded(statsGranularity: StatsGranularity) {
+        onDateLoadingSucceeded(statsGranularity.toStatsSection())
     }
 
-    fun dateLoadingSucceeded(statsSection: StatsSection) {
+    fun onDateLoadingSucceeded(statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.index != null && selectedDate.error) {
             updateSelectedDate(selectedDate.copy(error = false), statsSection)

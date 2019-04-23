@@ -74,15 +74,15 @@ constructor(
 
         return when {
             error != null -> {
-                selectedDateProvider.dateLoadingFailed(statsGranularity)
+                selectedDateProvider.onDateLoadingFailed(statsGranularity)
                 State.Error(error.message ?: error.type.name)
             }
             model != null && model.dates.isNotEmpty() -> {
-                selectedDateProvider.dateLoadingSucceeded(statsGranularity)
+                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
                 State.Data(model)
             }
             else -> {
-                selectedDateProvider.dateLoadingSucceeded(statsGranularity)
+                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
                 State.Empty()
             }
         }
@@ -126,7 +126,7 @@ constructor(
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
         } else {
-            selectedDateProvider.dateLoadingFailed(statsGranularity)
+            selectedDateProvider.onDateLoadingFailed(statsGranularity)
             AppLog.e(T.STATS, "There is no data to be shown in the overview block")
         }
         return items
