@@ -33,8 +33,8 @@ class VisitAndViewsRestClient
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchVisits(
         site: SiteModel,
-        date: Date,
         granularity: StatsGranularity,
+        date: Date,
         itemsToLoad: Int,
         forced: Boolean
     ): FetchStatsPayload<VisitsAndViewsResponse> {
