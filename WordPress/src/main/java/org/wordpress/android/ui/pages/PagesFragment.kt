@@ -248,8 +248,7 @@ class PagesFragment : Fragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
-        val nonNullSite = checkNotNull(site)
-        viewModel.start(nonNullSite)
+        viewModel.start(site)
     }
 
     private fun setupObservers(activity: FragmentActivity) {
