@@ -1,5 +1,6 @@
 12.4
 -----
+* Reduce number of network calls in Stats and improve performance
 
 12.3
 -----
