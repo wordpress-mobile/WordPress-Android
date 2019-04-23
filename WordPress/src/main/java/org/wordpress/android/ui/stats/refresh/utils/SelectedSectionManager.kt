@@ -16,8 +16,8 @@ const val SELECTED_SECTION_KEY = "SELECTED_STATS_SECTION_KEY"
 class SelectedSectionManager
 @Inject constructor(private val sharedPrefs: SharedPreferences) {
     fun getSelectedSection(): StatsSection {
-        val value = sharedPrefs.getString(SELECTED_SECTION_KEY, StatsSection.INSIGHTS.name)
-        return value?.let { StatsSection.valueOf(value) } ?: StatsSection.INSIGHTS
+        val value = sharedPrefs.getString(SELECTED_SECTION_KEY, INSIGHTS.name)
+        return value?.let { StatsSection.valueOf(value) } ?: INSIGHTS
     }
 
     fun getSelectedStatsGranularity(): StatsGranularity? {

@@ -375,7 +375,7 @@ class PostListFragment : Fragment() {
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
             targetPost?.let {
-                bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, it.id)
+                bundle.putInt(EXTRA_TARGET_POST_LOCAL_ID, it.id)
             }
             fragment.arguments = bundle
             return fragment

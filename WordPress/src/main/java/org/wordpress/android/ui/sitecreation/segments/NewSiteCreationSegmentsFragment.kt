@@ -160,7 +160,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment() {
         fun newInstance(screenTitle: String): NewSiteCreationSegmentsFragment {
             val fragment = NewSiteCreationSegmentsFragment()
             val bundle = Bundle()
-            bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
             fragment.arguments = bundle
             return fragment
         }

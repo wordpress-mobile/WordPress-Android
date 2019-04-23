@@ -23,7 +23,7 @@ private const val PATH_ICON = "https://secure.gravatar.com/blavatar/3a03c8ce5bf1
 
 class ServiceMapper
 @Inject constructor(private val resourceProvider: ResourceProvider) {
-    fun map(services: List<PublicizeModel.Service>): List<BlockListItem.ListItemWithIcon> {
+    fun map(services: List<PublicizeModel.Service>): List<ListItemWithIcon> {
         val dimension = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)
         return services.mapIndexed { index, service ->
             val mappedService = getService(service.name)

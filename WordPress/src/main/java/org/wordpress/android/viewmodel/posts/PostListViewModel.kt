@@ -553,11 +553,11 @@ class PostListViewModel @Inject constructor(
         return PostAdapterItem(
                 data = postData,
                 onSelected = {
-                    trackAction(PostListButton.BUTTON_EDIT, post, AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED)
+                    trackAction(PostListButton.BUTTON_EDIT, post, POST_LIST_ITEM_SELECTED)
                     handlePostButton(PostListButton.BUTTON_EDIT, post)
                 },
                 onButtonClicked = {
-                    trackAction(it, post, AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED)
+                    trackAction(it, post, POST_LIST_BUTTON_PRESSED)
                     handlePostButton(it, post)
                 }
         )
@@ -586,7 +586,7 @@ class PostListViewModel @Inject constructor(
             PostListButton.BUTTON_SYNC -> "sync"
             PostListButton.BUTTON_MORE -> "more"
             PostListButton.BUTTON_BACK -> "back"
-            else -> AppLog.e(AppLog.T.POSTS, "Unknown button type")
+            else -> AppLog.e(POSTS, "Unknown button type")
         }
 
         AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)

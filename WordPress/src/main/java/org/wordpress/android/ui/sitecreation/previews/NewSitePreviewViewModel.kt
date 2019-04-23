@@ -208,7 +208,7 @@ class NewSitePreviewViewModel @Inject constructor(
                 }
                 CreateSiteState.SiteCreationCompleted(siteBySiteId.id)
             } else {
-                CreateSiteState.SiteNotInLocalDb(remoteSiteId)
+                SiteNotInLocalDb(remoteSiteId)
             }
         }
     }

@@ -73,7 +73,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
     }
 
     override fun getCurrentState(): NewSiteCreationServiceState? =
-            AutoForeground.getState(NewSiteCreationServiceState::class.java)
+            getState(NewSiteCreationServiceState::class.java)
 
     override fun updateState(state: NewSiteCreationServiceState) {
         setState(state)
@@ -99,7 +99,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
             retryFromState: NewSiteCreationServiceState?,
             data: NewSiteCreationServiceData
         ) {
-            val currentState = AutoForeground.getState(NewSiteCreationServiceState::class.java)
+            val currentState = getState(NewSiteCreationServiceState::class.java)
             if (currentState == null || currentState.step == INITIAL_STATE || currentState.step == FAILURE) {
                 clearSiteCreationServiceState()
 
@@ -118,7 +118,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
         }
 
         fun clearSiteCreationServiceState() {
-            AutoForeground.clearServiceState(NewSiteCreationServiceState::class.java)
+            clearServiceState(NewSiteCreationServiceState::class.java)
         }
     }
 }

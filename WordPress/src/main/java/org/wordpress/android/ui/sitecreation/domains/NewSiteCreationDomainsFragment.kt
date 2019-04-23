@@ -165,7 +165,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment() {
         fun newInstance(screenTitle: String, siteTitle: String?, segmentId: Long): NewSiteCreationDomainsFragment {
             val fragment = NewSiteCreationDomainsFragment()
             val bundle = Bundle()
-            bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
             bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
             siteTitle?.let { bundle.putString(EXTRA_SITE_TITLE, siteTitle) }
             fragment.arguments = bundle

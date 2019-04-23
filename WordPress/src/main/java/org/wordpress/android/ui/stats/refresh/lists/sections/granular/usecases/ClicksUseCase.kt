@@ -121,7 +121,7 @@ constructor(
                                     textStyle = LIGHT,
                                     value = click.views.toFormattedString(),
                                     showDivider = false,
-                                    navigationAction = click.url?.let { NavigationAction.create(it, this::onItemClick) }
+                                    navigationAction = click.url?.let { create(it, this::onItemClick) }
                             )
                         })
                         items.add(Divider)

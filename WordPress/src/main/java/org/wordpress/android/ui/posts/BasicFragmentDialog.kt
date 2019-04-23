@@ -55,7 +55,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
         super.onCreate(savedInstanceState)
         this.isCancelable = true
         val theme = 0
-        setStyle(AppCompatDialogFragment.STYLE_NORMAL, theme)
+        setStyle(STYLE_NORMAL, theme)
 
         if (savedInstanceState != null) {
             mTag = savedInstanceState.getString(STATE_KEY_TAG)

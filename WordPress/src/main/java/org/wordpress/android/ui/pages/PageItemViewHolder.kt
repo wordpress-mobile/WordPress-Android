@@ -75,7 +75,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             }
         }
 
-        private fun moreClick(pageItem: PageItem.Page, v: View) {
+        private fun moreClick(pageItem: Page, v: View) {
             val popup = PopupMenu(v.context, v)
             popup.setOnMenuItemClickListener { item ->
                 val action = PageItem.Action.fromItemId(item.itemId)

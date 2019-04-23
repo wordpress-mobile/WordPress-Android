@@ -36,7 +36,7 @@ class PostListAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             VIEW_TYPE_ENDLIST_INDICATOR -> {
                 val view = layoutInflater.inflate(R.layout.endlist_indicator, parent, false)
@@ -58,7 +58,7 @@ class PostListAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // The only holder type that requires a special setup is the PostViewHolder
         if (holder is PostViewHolder) {
             val item = getItem(position)
@@ -69,8 +69,8 @@ class PostListAdapter(
         }
     }
 
-    private class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
-    private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private class LoadingViewHolder(view: View) : ViewHolder(view)
+    private class EndListViewHolder(view: View) : ViewHolder(view)
 }
 
 private val PostListDiffItemCallback = PagedListDiffItemCallback<PostAdapterItem>(
