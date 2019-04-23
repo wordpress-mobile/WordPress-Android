@@ -111,7 +111,7 @@ class VisitAndViewsRestClientTest {
         val response = mock<VisitsAndViewsResponse>()
         initVisitsAndViewsResponse(response)
 
-        val responseModel = restClient.fetchVisits(site, currentDate, period, pageSize, false)
+        val responseModel = restClient.fetchVisits(site, period, currentDate, pageSize, false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(response)
@@ -138,7 +138,7 @@ class VisitAndViewsRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchVisits(site, currentDate, period, pageSize, false)
+        val responseModel = restClient.fetchVisits(site, period, currentDate, pageSize, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
