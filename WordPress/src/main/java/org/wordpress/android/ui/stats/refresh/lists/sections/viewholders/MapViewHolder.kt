@@ -25,7 +25,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         layout.stats_block_web_view_item
 ) {
-    val webView = itemView.findViewById<WebView>(id.web_view)
+    val webView: WebView? = itemView.findViewById(id.web_view)
     fun bind(item: MapItem) {
         GlobalScope.launch {
             delay(100)
@@ -62,37 +62,39 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val width = itemView.width
             val height = width * 3 / 4
 
-            val params = webView.layoutParams as LayoutParams
-            val wrapperParams = itemView.layoutParams as RecyclerView.LayoutParams
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT
-            params.height = height
-            wrapperParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            wrapperParams.height = height
+            if (webView != null) {
+                val params = webView.layoutParams as LayoutParams
+                val wrapperParams = itemView.layoutParams as RecyclerView.LayoutParams
+                params.width = ViewGroup.LayoutParams.MATCH_PARENT
+                params.height = height
+                wrapperParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                wrapperParams.height = height
 
-            launch(Dispatchers.Main) {
-                webView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+                launch(Dispatchers.Main) {
+                    webView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
 
-                webView.layoutParams = params
-                itemView.layoutParams = wrapperParams
+                    webView.layoutParams = params
+                    itemView.layoutParams = wrapperParams
 
-                webView.webViewClient = object : WebViewClient() {
-                    override fun onReceivedError(
-                        view: WebView?,
-                        request: WebResourceRequest?,
-                        error: WebResourceError
-                    ) {
-                        super.onReceivedError(view, request, error)
-                        itemView.visibility = View.GONE
+                    webView.webViewClient = object : WebViewClient() {
+                        override fun onReceivedError(
+                            view: WebView?,
+                            request: WebResourceRequest?,
+                            error: WebResourceError
+                        ) {
+                            super.onReceivedError(view, request, error)
+                            itemView.visibility = View.GONE
+                        }
+
+                        override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                            super.onReceivedSslError(view, handler, error)
+                            itemView.visibility = View.GONE
+                        }
                     }
-
-                    override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                        super.onReceivedSslError(view, handler, error)
-                        itemView.visibility = View.GONE
-                    }
+                    webView.settings.javaScriptEnabled = true
+                    webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                    webView.loadData(htmlPage, "text/html", "UTF-8")
                 }
-                webView.settings.javaScriptEnabled = true
-                webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-                webView.loadData(htmlPage, "text/html", "UTF-8")
             }
         }
     }
