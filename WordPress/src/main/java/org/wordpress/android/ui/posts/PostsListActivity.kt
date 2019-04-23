@@ -200,7 +200,6 @@ class PostsListActivity : AppCompatActivity(),
         viewModel.updatePostsPager.observe(this, Observer { authorFilter ->
             authorFilter?.let {
                 val currentItem: Int = pager.currentItem
-                val viewLayoutType = viewModel.viewLayoutType.value ?: PostListViewLayoutType.defaultValue
                 postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
                 pager.adapter = postsPagerAdapter
 
