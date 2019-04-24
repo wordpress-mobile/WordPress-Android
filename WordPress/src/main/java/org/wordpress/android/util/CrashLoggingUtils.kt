@@ -4,6 +4,7 @@ import android.preference.PreferenceManager
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 import io.sentry.event.BreadcrumbBuilder
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 
 class CrashLoggingUtils {
@@ -18,8 +19,7 @@ class CrashLoggingUtils {
     }
 
     fun enableCrashLogging(context: android.content.Context) {
-        val sentryDsn = "https://fd5df99b7dfa4a358df5c029c171906e@sentry.io/1438088"
-        Sentry.init(sentryDsn, AndroidSentryClientFactory(context))
+        Sentry.init(BuildConfig.SENTRY_DSN, AndroidSentryClientFactory(context))
     }
 
     companion object {
