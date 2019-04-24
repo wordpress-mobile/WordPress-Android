@@ -13,12 +13,23 @@ import android.support.v7.widget.RecyclerView.Adapter
  * the removal of items and then decreases the height of the wrapped recycler view.
  * Solution is based on: https://stackoverflow.com/questions/40242011/custom-recyclerviews-layoutmanager-automeasuring-after-animation-finished-on-i
  */
-class WrappingLinearLayoutManager(context: Context?, orientation: Int, reverseLayout: Boolean) : LinearLayoutManager(
+class WrappingLinearLayoutManager(
+    context: Context?,
+    orientation: Int,
+    reverseLayout: Boolean
+) : LinearLayoutManager(
         context,
         orientation,
         reverseLayout
 ) {
+    private lateinit var requestRedraw: () -> Unit
     private var enableAutoMeasure: Boolean = true
+
+    fun init(requestRedraw: () -> Unit) {
+        this.requestRedraw = requestRedraw
+        enableAutoMeasure = true
+    }
+
     override fun onAdapterChanged(oldAdapter: Adapter<*>?, newAdapter: Adapter<*>?) {
         newAdapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
@@ -46,8 +57,15 @@ class WrappingLinearLayoutManager(context: Context?, orientation: Int, reverseLa
         super.onItemsRemoved(recyclerView, positionStart, itemCount)
         postOnAnimation {
             recyclerView.itemAnimator?.isRunning {
+                if (!enableAutoMeasure) {
+                    requestRedraw()
+                    postOnAnimation {
+                        recyclerView.itemAnimator?.isRunning {
+                            requestLayout()
+                        }
+                    }
+                }
                 enableAutoMeasure = true
-                requestLayout()
             }
         }
     }
