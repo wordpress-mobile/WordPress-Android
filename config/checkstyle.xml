@@ -109,6 +109,14 @@
       <property name="severity" value="error"/>
     </module>
 
+    <!-- Specific to WordPress -->
+    <module name="RegexpSingleline">
+      <property name="format" value=" Snackbar\.make(?!.*checkstyle ignore)"/>
+      <property name="ignoreCase" value="true"/>
+      <property name="message" value="You should not use Snackbar directly, use WPSnackbar instead"/>
+      <property name="severity" value="error"/>
+    </module>
+
     <module name="TreeWalker">
 
         <!-- Checks for Naming Conventions.                  -->
