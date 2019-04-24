@@ -15,12 +15,12 @@ import org.wordpress.android.util.AppLog.T
 
 class WPWellSqlConfig(context: Context?) : WellSqlConfig(context) {
     /**
-     * Detect when the database is downgraded, and if this is a debug user recreate all the tables and show
-     * a toast alerting to the downgrade. The sole purpose of this is to avoid the hassle of devs switching
+     * Detect when the database is downgraded in debug builds, and if the build flag is set recreate all the tables
+     * and show a toast alerting to the downgrade. The sole purpose of this is to avoid the hassle of devs switching
      * branches and having to clear storage and login again due to a version downgrade.
      */
     override fun onDowngrade(db: SQLiteDatabase?, helper: WellTableManager?, oldVersion: Int, newVersion: Int) {
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && BuildConfig.RESET_DB_ON_DOWNGRADE.toBoolean()) {
             // note: don't call super() here because it throws an exception
             AppLog.w(T.DB, "Resetting database due to downgrade from version $oldVersion to $newVersion")
 
