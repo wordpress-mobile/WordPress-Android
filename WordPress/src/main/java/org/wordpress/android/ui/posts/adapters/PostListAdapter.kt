@@ -48,21 +48,21 @@ class PostListAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
+        val loadingType = when (itemLayoutType) {
+            STANDARD -> VIEW_TYPE_LOADING
+            COMPACT -> VIEW_TYPE_LOADING_COMPACT
+        }
+
         return when (getItem(position)) {
             is EndListIndicatorItem -> VIEW_TYPE_ENDLIST_INDICATOR
-            is LoadingItem -> VIEW_TYPE_LOADING
+            is LoadingItem -> loadingType
             is PostListItemUiState -> {
                 return when (itemLayoutType) {
                     STANDARD -> VIEW_TYPE_POST
                     COMPACT -> VIEW_TYPE_POST_COMPACT
                 }
             }
-            null -> {
-                return when (itemLayoutType) {
-                    STANDARD -> VIEW_TYPE_LOADING
-                    COMPACT -> VIEW_TYPE_LOADING_COMPACT
-                }
-            }
+            null -> loadingType
         }
     }
 
