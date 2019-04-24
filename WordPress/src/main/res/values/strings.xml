@@ -463,8 +463,7 @@
     <string name="uploading_media">Uploading media…</string>
 
     <!-- new account view -->
-    <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
-        address. Check the site address (URL) you entered.</string>
+    <string name="no_site_error">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -999,6 +998,15 @@
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
+    <string name="stats_insights_this_year_site_stats">This Year</string>
+    <string name="stats_insights_year">Year</string>
+    <string name="stats_insights_posts">Posts</string>
+    <string name="stats_insights_total_comments">Total comments</string>
+    <string name="stats_insights_average_comments">Avg comments/post</string>
+    <string name="stats_insights_total_likes">Total likes</string>
+    <string name="stats_insights_average_likes">Avg likes/post</string>
+    <string name="stats_insights_total_words">Total words</string>
+    <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_best_day">Best Day</string>
     <string name="stats_insights_best_hour">Best Hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
@@ -1682,6 +1690,7 @@
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>
+    <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -2182,6 +2191,7 @@
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
+    <string name="login_invalid_site_url">The site address you entered is invalid. Please re-enter it.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
@@ -2282,6 +2292,7 @@
     <string name="notification_error_wrong_password">Please double check your password to continue.</string>
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
+    <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
     <string name="change_photo">Change photo</string>
 
     <!-- Content description for accessibility  -->
@@ -2513,7 +2524,7 @@
     <string name="new_site_creation_screen_title_general">Create Site</string>
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
-    <string name="new_site_creation_preview_subtitle">You\'ll be able to customise look and feel of your site later</string>
+    <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
