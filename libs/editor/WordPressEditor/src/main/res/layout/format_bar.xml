@@ -106,6 +106,7 @@
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
             android:id="@+id/imageView" />
 
         <org.wordpress.android.editor.RippleToggleButton
