@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/bg_rectangle_neutral_50_radius_margin_extra_large"
+                android:background="@drawable/bg_rectangle_neutral_0_radius_margin_extra_large"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large"
