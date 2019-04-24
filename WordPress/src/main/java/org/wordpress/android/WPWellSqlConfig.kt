@@ -2,12 +2,16 @@ package org.wordpress.android
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.view.Gravity
+import android.widget.TextView
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import com.yarolegovich.wellsql.WellTableManager
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.ToastUtils.Duration
 
 class WPWellSqlConfig(context: Context?) : WellSqlConfig(context) {
     /**
@@ -19,11 +23,15 @@ class WPWellSqlConfig(context: Context?) : WellSqlConfig(context) {
         if (BuildConfig.DEBUG) {
             // note: don't call super() here because it throws an exception
             AppLog.w(T.DB, "Resetting database due to downgrade from version $oldVersion to $newVersion")
-            ToastUtils.showToast(
-                    context,
-                    "Database downgraded, recreating tables and loading sites",
-                    Duration.LONG
-            )
+
+            val toast = Toast.makeText(context, "Database downgraded, recreating tables and loading sites", LENGTH_LONG)
+            toast.view?.let {view ->
+                view.background.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN)
+                view.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.WHITE)
+            }
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+
             reset(helper)
         } else {
             super.onDowngrade(db, helper, oldVersion, newVersion)
