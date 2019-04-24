@@ -1255,6 +1255,7 @@
     <string name="immediately">Immediately</string>
     <string name="now">Now</string>
     <string name="scheduled_for">Scheduled for: %s</string>
+    <string name="backdated_for">Backdated for: %s</string>
     <string name="published_on">Published on: %s</string>
     <string name="schedule_for">Schedule for: %s</string>
     <string name="publish_on">Publish on: %s</string>

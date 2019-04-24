@@ -232,7 +232,7 @@ public class ReaderPostLogic {
                                 int numServerPosts = serverPosts.size();
                                 if (numServerPosts >= 2
                                     && ReaderPostTable.getNumPostsWithTag(tag) > 0
-                                    && !ReaderPostTable.hasOverlap(serverPosts)) {
+                                    && !ReaderPostTable.hasOverlap(serverPosts, tag)) {
                                     // treat the second to last server post as having a gap
                                     postWithGap = serverPosts.get(numServerPosts - 2);
                                     // remove the last server post to deal with the edge case of
