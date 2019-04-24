@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-08 08:54:09+0000
+Translation-Revision-Date: 2019-04-17 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">無法查看可用的網域額度</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">正在查看網域額度</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">註冊網域</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">若要安裝外掛程式，你的自訂網域必須與你的網站建立關聯。</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">安裝外掛程式</string>
     <string name="new_site_creation_preview_subtitle">你可以稍後自訂網站的外觀和風格</string>
     <string name="publish_on">發表於：%s</string>
     <string name="schedule_for">排程於：%s</string>

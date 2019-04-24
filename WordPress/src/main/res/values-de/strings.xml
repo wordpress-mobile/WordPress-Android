@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-03 13:54:09+0000
+Translation-Revision-Date: 2019-04-12 22:52:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Die Überprüfung des verfügbaren Domain-Guthabens konnte nicht durchgeführt werden</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Überprüfen von Domain-Guthaben</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Domain registrieren</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Um Plugins zu installieren, benötigst du eine individuelle Domain, die deiner Website zugeordnet ist.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Plugin installieren</string>
     <string name="new_site_creation_preview_subtitle">Du kannst das Erscheinungsbild deiner Website später anpassen</string>
     <string name="publish_on">Veröffentlichen auf: %s</string>
     <string name="schedule_for">Planen für: %s</string>
