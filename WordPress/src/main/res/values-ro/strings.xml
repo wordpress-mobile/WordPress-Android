@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-03 14:02:21+0000
+Translation-Revision-Date: 2019-04-11 11:22:54+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Verificarea reputației domeniului disponibil a eșuat</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Verific reputația domeniului</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Înregistrează domeniul</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Pentru a instala module, trebuie să ai un domeniu personalizat asociat cu situl tău.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Instalează modulul</string>
     <string name="new_site_creation_preview_subtitle">Vei putea să personalizezi mai târziu aspectul sitului și cum va apărea el pentru vizitatori</string>
     <string name="publish_on">Publică pe: %s</string>
     <string name="schedule_for">Programează pentru: %s</string>
