@@ -25,7 +25,7 @@ class WPWellSqlConfig(context: Context?) : WellSqlConfig(context) {
             AppLog.w(T.DB, "Resetting database due to downgrade from version $oldVersion to $newVersion")
 
             val toast = Toast.makeText(context, "Database downgraded, recreating tables and loading sites", LENGTH_LONG)
-            toast.view?.let {view ->
+            toast.view?.let { view ->
                 view.background.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN)
                 view.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.WHITE)
             }
