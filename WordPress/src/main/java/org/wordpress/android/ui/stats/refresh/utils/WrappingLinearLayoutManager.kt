@@ -22,11 +22,9 @@ class WrappingLinearLayoutManager(
         orientation,
         reverseLayout
 ) {
-    private lateinit var requestRedraw: () -> Unit
     private var enableAutoMeasure: Boolean = true
 
-    fun init(requestRedraw: () -> Unit) {
-        this.requestRedraw = requestRedraw
+    fun init() {
         enableAutoMeasure = true
     }
 
@@ -57,15 +55,8 @@ class WrappingLinearLayoutManager(
         super.onItemsRemoved(recyclerView, positionStart, itemCount)
         postOnAnimation {
             recyclerView.itemAnimator?.isRunning {
-                if (!enableAutoMeasure) {
-                    requestRedraw()
-                    postOnAnimation {
-                        recyclerView.itemAnimator?.isRunning {
-                            requestLayout()
-                        }
-                    }
-                }
                 enableAutoMeasure = true
+                requestLayout()
             }
         }
     }

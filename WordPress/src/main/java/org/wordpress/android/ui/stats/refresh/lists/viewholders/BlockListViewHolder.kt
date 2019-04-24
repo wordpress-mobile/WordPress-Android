@@ -15,18 +15,14 @@ class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : B
         R.layout.stats_list_block
 ) {
     private val list: RecyclerView = itemView.findViewById(R.id.stats_block_list)
-    override fun bind(
-        statsTypes: StatsTypes,
-        items: List<BlockListItem>,
-        requestRedraw: () -> Unit
-    ) {
-        super.bind(statsTypes, items, requestRedraw)
+    override fun bind(statsTypes: StatsTypes, items: List<BlockListItem>) {
+        super.bind(statsTypes, items)
         list.isNestedScrollingEnabled = false
         if (list.adapter == null) {
             list.adapter = BlockListAdapter(imageManager)
             list.layoutManager = WrappingLinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
         }
-        (list.layoutManager as WrappingLinearLayoutManager).init(requestRedraw)
+        (list.layoutManager as WrappingLinearLayoutManager).init()
         (list.adapter as BlockListAdapter).update(items)
     }
 }

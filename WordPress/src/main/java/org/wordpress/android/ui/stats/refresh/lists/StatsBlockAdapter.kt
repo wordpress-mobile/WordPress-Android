@@ -43,9 +43,7 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
     override fun onBindViewHolder(holder: BaseStatsViewHolder, position: Int, payloads: List<Any>) {
         val item = items[position]
         when (holder) {
-            is BlockListViewHolder -> holder.bind(item.statsTypes, item.data) {
-                notifyItemChanged(position)
-            }
+            is BlockListViewHolder -> holder.bind(item.statsTypes, item.data)
             is LoadingViewHolder -> holder.bind(item.statsTypes, item.data)
         }
     }
