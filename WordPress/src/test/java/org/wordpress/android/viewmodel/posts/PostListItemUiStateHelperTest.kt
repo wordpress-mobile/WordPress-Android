@@ -201,6 +201,16 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
+    fun `do not show progress when upload failed`() {
+        val state = createPostListItemUiState(
+                uploadStatus = createUploadStatus(
+                        isUploadFailed = true
+                )
+        )
+        assertThat(state.data.showProgress).isFalse()
+    }
+
+    @Test
     fun `show progress when upload failed and retrying`() {
         val state = createPostListItemUiState(
                 uploadStatus = createUploadStatus(
