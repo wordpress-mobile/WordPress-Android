@@ -20,6 +20,7 @@ class CrashLoggingUtils {
 
     fun enableCrashLogging(context: android.content.Context) {
         Sentry.init(BuildConfig.SENTRY_DSN, AndroidSentryClientFactory(context))
+        Sentry.getContext().addTag("version", BuildConfig.VERSION_NAME)
     }
 
     companion object {
