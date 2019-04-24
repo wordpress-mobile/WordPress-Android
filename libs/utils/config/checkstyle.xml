@@ -34,15 +34,6 @@
 
     <!-- Miscellaneous other checks.                   -->
     <!-- See http://checkstyle.sf.net/config_misc.html -->
-    <module name="RegexpSingleline">
-       <property name="format" value="\s+$"/>
-       <property name="minimum" value="0"/>
-       <property name="maximum" value="0"/>
-       <property name="message" value="Line has trailing spaces."/>
-       <property name="severity" value="error"/>
-    </module>
-
-
     <module name="RegexpMultiline">
       <property name="format"
                 value="(\n|\r\n)[\t ]*(\n|\r\n)[\t ]*\}"/>
@@ -154,7 +145,9 @@
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
         <module name="AvoidStarImport"/>
-        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+        <module name="IllegalImport">
+            <property name="illegalClasses" value="android.app.Fragment"/>
+        </module>
         <module name="RedundantImport"/>
         <module name="UnusedImports">
             <property name="processJavadoc" value="true"/>
@@ -181,6 +174,7 @@
           <property name="tokens" value="METHOD_DEF"/>
           <!-- TODO: We should set this value around 40 or 50 -->
           <property name="max" value="200"/>
+          <property name="severity" value="warning"/>
         </module>
 
         <!-- Checks for whitespace                               -->
