@@ -161,6 +161,7 @@ private class PostListEventListener(
             return
         }
         featuredMediaChanged(event.media.mediaId)
+        uploadStatusChanged(event.media.localPostId)
     }
 
     // EventBus Events
