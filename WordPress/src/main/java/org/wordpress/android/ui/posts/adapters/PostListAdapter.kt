@@ -108,4 +108,12 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
         }
         return false
     }
+
+    override fun getChangePayload(oldItem: PostListItemType, newItem: PostListItemType): Any? {
+        if (oldItem is PostListItemUiState && newItem is PostListItemUiState) {
+            // suppresses the default animation if the progress has changed to prevent blinking as the upload progresses
+            return oldItem.data.progressBarState != newItem.data.progressBarState
+        }
+        return super.getChangePayload(oldItem, newItem)
+    }
 }
