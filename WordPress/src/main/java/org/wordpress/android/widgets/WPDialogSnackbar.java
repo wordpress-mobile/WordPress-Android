@@ -25,7 +25,8 @@ public class WPDialogSnackbar {
     private View mContentView;
 
     private WPDialogSnackbar(@NonNull View view, @NonNull CharSequence text, int duration) {
-        mSnackbar = Snackbar.make(view, "", AccessibilityUtils.getSnackbarDuration(view.getContext(), duration));
+        mSnackbar = Snackbar.make(view, "", // CHECKSTYLE IGNORE
+                AccessibilityUtils.getSnackbarDuration(view.getContext(), duration));
 
         // Set underlying snackbar layout.
         SnackbarLayout snackbarLayout = (SnackbarLayout) mSnackbar.getView();
