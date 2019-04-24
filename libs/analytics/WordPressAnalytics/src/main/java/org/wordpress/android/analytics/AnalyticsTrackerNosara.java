@@ -448,7 +448,7 @@ public class AnalyticsTrackerNosara extends Tracker {
         if (user == null) {
             try {
                 throw new AnalyticsException("Trying to track analytics with an null user!");
-                // TODO add CrashlyticsUtils.logException or track this error in Nosara by using a special test user.
+                // TODO add Crash Logging Exception or track this error in Nosara by using a special test user.
             } catch (AnalyticsException e) {
                 AppLog.e(AppLog.T.STATS, e);
             }

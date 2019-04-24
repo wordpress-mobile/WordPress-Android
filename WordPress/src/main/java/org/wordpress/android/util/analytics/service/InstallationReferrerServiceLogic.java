@@ -14,7 +14,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashLoggingUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -123,7 +123,7 @@ public class InstallationReferrerServiceLogic {
         try {
             mReferrerClient.startConnection(installReferrerStateListener);
         } catch (RuntimeException e) {
-            CrashlyticsUtils.logException(e, T.UTILS);
+            CrashLoggingUtils.logException(e, T.UTILS);
             AppLog.e(T.UTILS, "installation referrer start connection failed!", e);
             AnalyticsTracker.track(Stat.INSTALLATION_REFERRER_FAILED);
 

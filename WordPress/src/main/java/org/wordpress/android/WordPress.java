@@ -30,7 +30,6 @@ import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
 
 import com.android.volley.RequestQueue;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -76,6 +75,7 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -83,7 +83,6 @@ import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -109,7 +108,6 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasServiceInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import de.greenrobot.event.EventBus;
-import io.fabric.sdk.android.Fabric;
 
 public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
         LifecycleObserver {
@@ -223,9 +221,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
-        if (CrashlyticsUtils.shouldEnableCrashlytics(this)) {
-            Fabric.with(this, new Crashlytics());
-        }
+        CrashLoggingUtils.startCrashLogging(getContext());
 
         // Init WellSql
         WellSql.init(new WellSqlConfig(getApplicationContext()));
@@ -249,7 +245,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 StringBuffer sb = new StringBuffer();
                 sb.append(logLevel.toString()).append("/").append(AppLog.TAG).append("-")
                   .append(tag.toString()).append(": ").append(message);
-                CrashlyticsUtils.log(sb.toString());
+                CrashLoggingUtils.log(sb.toString());
             }
         });
         AppLog.i(T.UTILS, "WordPress.onCreate");
@@ -797,7 +793,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     AppLog.d(T.MAIN, "ConnectionChangeReceiver successfully unregistered");
                 } catch (IllegalArgumentException e) {
                     AppLog.e(T.MAIN, "ConnectionChangeReceiver was already unregistered");
-                    Crashlytics.logException(e);
+                    CrashLoggingUtils.log(e);
                 }
             }
         }

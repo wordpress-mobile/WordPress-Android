@@ -34,7 +34,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.AutoForegroundNotification;
-import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.UrlUtils;
@@ -207,7 +207,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             mDispatcher.register(this);
         } catch (EventBusException e) {
             AppLog.w(T.NUX, "Registering SiteCreationService to EventBus failed! " + e.getMessage());
-            CrashlyticsUtils.logException(e, T.NUX);
+            CrashLoggingUtils.logException(e, T.NUX);
         }
     }
 
