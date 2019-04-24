@@ -1,21 +1,19 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'io.fabric.tools:gradle:1.27.0'
         classpath 'com.google.gms:google-services:3.2.0'
         classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.51'
+        classpath 'io.sentry:sentry-android-gradle-plugin:1.7.16'
     }
 }
 
 repositories {
     google()
     jcenter()
-    maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://giphy.bintray.com/giphy-sdk" }
     maven { url "https://jitpack.io" }
@@ -25,7 +23,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
@@ -97,7 +94,6 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
-            ext.enableCrashlytics = false
         }
     }
 
@@ -125,9 +121,6 @@ androidExtensions {
 }
 
 dependencies {
-    implementation('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-        transitive = true;
-    }
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -243,6 +236,10 @@ dependencies {
 
     lintChecks 'org.wordpress:lint:1.0.1'
 
+    // Sentry
+    implementation 'io.sentry:sentry-android:1.7.16'
+    implementation 'org.slf4j:slf4j-nop:1.7.25'
+
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.5.0'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
@@ -258,26 +255,6 @@ configurations.all {
     // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
     exclude group: 'org.wordpress', module: 'utils'
     exclude group: 'org.wordpress', module: 'analytics'
-}
-
-task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
-    def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
-    def inputFile = checkGradlePropertiesFile()
-    outputs.file outputFile
-    inputs.file inputFile
-    doLast {
-        def properties = loadPropertiesFromFile(inputFile)
-        def crashlyticsApiKey = properties.getProperty('wp.crashlytics.apikey', '0')
-        def writer = new FileWriter(outputFile)
-        writer.write("""// auto-generated file from ${rootDir}/gradle.properties do not modify
-apiKey=${crashlyticsApiKey}""")
-        writer.close()
-    }
-}
-
-// Add generateCrashlyticsConfig to all generateBuildConfig tasks (all variants)
-android.applicationVariants.all { variant ->
-    variant.generateBuildConfig.dependsOn(generateCrashlyticsConfig)
 }
 
 android.buildTypes.all { buildType ->
@@ -373,3 +350,5 @@ assert !(file(legacyGBBundleFile).exists()) : "Error: Legacy Gutenberg JS bundle
 
 // Keep this at the bottom (https://stackoverflow.com/a/37565535)
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.sentry.android.gradle'
+
