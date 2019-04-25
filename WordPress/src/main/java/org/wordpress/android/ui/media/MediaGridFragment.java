@@ -378,24 +378,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         } else if (mBrowserType.isSingleImagePicker()) {
             mediaList = mMediaStore.getSiteImages(mSite);
-        } else if (mBrowserType.canFilter()) {
-            switch (mFilter) {
-                case FILTER_IMAGES:
-                    mediaList = mMediaStore.getSiteImages(mSite);
-                    break;
-                case FILTER_DOCUMENTS:
-                    mediaList = mMediaStore.getSiteDocuments(mSite);
-                    break;
-                case FILTER_VIDEOS:
-                    mediaList = mMediaStore.getSiteVideos(mSite);
-                    break;
-                case FILTER_AUDIO:
-                    mediaList = mMediaStore.getSiteAudio(mSite);
-                    break;
-                default:
-                    mediaList = mMediaStore.getAllSiteMedia(mSite);
-                    break;
-            }
+        } else if (mBrowserType.canFilter() || mBrowserType.canOnlyDoInitialFilter()) {
+            mediaList = getMediaList();
         } else {
             List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
             mediaList = new ArrayList<>();
@@ -409,6 +393,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         ensureCorrectState(mediaList);
         return mediaList;
+    }
+
+    private List<MediaModel> getMediaList() {
+        switch (mFilter) {
+            case FILTER_IMAGES:
+                return mMediaStore.getSiteImages(mSite);
+            case FILTER_DOCUMENTS:
+                return mMediaStore.getSiteDocuments(mSite);
+            case FILTER_VIDEOS:
+                return mMediaStore.getSiteVideos(mSite);
+            case FILTER_AUDIO:
+                return mMediaStore.getSiteAudio(mSite);
+            default:
+                return mMediaStore.getAllSiteMedia(mSite);
+        }
     }
 
     void setFilter(@NonNull MediaFilter filter) {

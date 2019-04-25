@@ -217,8 +217,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
         getGutenbergContainerFragment().attachToContainer(gutenbergContainer,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryButtonClicked() {
-                        onToolbarMediaButtonClicked();
+                    @Override public void onMediaLibraryImageButtonClicked() {
+                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+                        mEditorFragmentListener.onAddMediaImageClicked();
+                    }
+
+                    @Override
+                    public void onMediaLibraryVideoButtonClicked() {
+                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+                        mEditorFragmentListener.onAddMediaVideoClicked();
                     }
 
                     @Override
@@ -756,35 +763,5 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
-    }
-
-    /**
-     * Returns true if a hardware keyboard is detected, otherwise false.
-     */
-    private boolean isHardwareKeyboardPresent() {
-        Configuration config = getResources().getConfiguration();
-        boolean returnValue = false;
-        if (config.keyboard != Configuration.KEYBOARD_NOKEYS) {
-            returnValue = true;
-        }
-        return returnValue;
-    }
-
-    public boolean onToolbarMediaButtonClicked() {
-        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-
-        if (isActionInProgress()) {
-            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
-        }
-
-
-        getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mEditorFragmentListener.onAddMediaClicked();
-                }
-            });
-
-        return true;
     }
 }
