@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.persistence;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -11,11 +12,15 @@ import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.SelectQuery.Order;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.wordpress.android.fluxc.model.LocalOrRemoteId;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -128,6 +133,36 @@ public class PostSqlUtils {
                           .getAsModel();
         }
         return Collections.emptyList();
+    }
+
+    public static List<PostModel> getPostsByLocalOrRemotePostIds(
+            @NonNull List<? extends LocalOrRemoteId> localOrRemoteIds, int localSiteId) {
+        if (localOrRemoteIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Integer> localIds = new ArrayList<>();
+        List<Long> remoteIds = new ArrayList<>();
+        for (LocalOrRemoteId localOrRemoteId : localOrRemoteIds) {
+            if (localOrRemoteId instanceof LocalId) {
+                localIds.add(((LocalId) localOrRemoteId).getValue());
+            } else if (localOrRemoteId instanceof RemoteId) {
+                remoteIds.add(((RemoteId) localOrRemoteId).getValue());
+            }
+        }
+        ConditionClauseBuilder<SelectQuery<PostModel>> whereQuery =
+                WellSql.select(PostModel.class).where().equals(PostModelTable.LOCAL_SITE_ID, localSiteId).beginGroup();
+        boolean addIsInLocalIdsCondition = !localIds.isEmpty();
+        if (addIsInLocalIdsCondition) {
+            whereQuery = whereQuery.isIn(PostModelTable.ID, localIds);
+        }
+        if (!remoteIds.isEmpty()) {
+            if (addIsInLocalIdsCondition) {
+                // Add `or` only if we are checking for both local and remote ids
+                whereQuery = whereQuery.or();
+            }
+            whereQuery = whereQuery.isIn(PostModelTable.REMOTE_POST_ID, remoteIds);
+        }
+        return whereQuery.endGroup().endWhere().getAsModel();
     }
 
     public static PostModel insertPostForResult(PostModel post) {
@@ -271,10 +306,13 @@ public class PostSqlUtils {
                 .endGroup().endWhere().execute();
     }
 
-    public static List<PostModel> getLocalPostsForFilter(SiteModel site, boolean isPage, String searchQuery,
+    public static List<LocalId> getLocalPostIdsForFilter(SiteModel site, boolean isPage, String searchQuery,
                                                          String orderBy, @Order int order) {
         ConditionClauseBuilder<SelectQuery<PostModel>> clauseBuilder =
-                WellSql.select(PostModel.class).where().beginGroup()
+                WellSql.select(PostModel.class)
+                       // We only need the local ids
+                       .columns(PostModelTable.ID)
+                       .where().beginGroup()
                        .equals(PostModelTable.IS_LOCAL_DRAFT, true)
                        .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
                        .equals(PostModelTable.IS_PAGE, isPage)
@@ -283,6 +321,15 @@ public class PostSqlUtils {
             clauseBuilder = clauseBuilder.beginGroup().contains(PostModelTable.TITLE, searchQuery).or()
                                          .contains(PostModelTable.CONTENT, searchQuery).endGroup();
         }
-        return clauseBuilder.endWhere().orderBy(orderBy, order).getAsModel();
+        /*
+         * Remember that, since we are only querying the `PostModelTable.ID` column, the rest of the fields for the
+         * post won't be there which is exactly what we want.
+         */
+        List<PostModel> localPosts = clauseBuilder.endWhere().orderBy(orderBy, order).getAsModel();
+        List<LocalId> localPostIds = new ArrayList<>();
+        for (PostModel post : localPosts) {
+            localPostIds.add(new LocalId(post.getId()));
+        }
+        return localPostIds;
     }
 }
