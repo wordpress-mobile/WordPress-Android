@@ -533,8 +533,8 @@ public class NotificationsProcessingService extends Service {
 
             SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
             if (site != null) {
-                // keep the local CommentId, we'll use it later to know whether to trigger the end processing notification
-                // or not
+                // keep the local CommentId, we'll use it later to know whether to trigger the end processing
+                // notification or not
                 keepLocalCommentIdForPostProcessing(site, mNote.getCommentId());
 
                 mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
