@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.JetpackActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.JetpackStore
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action
@@ -56,7 +57,8 @@ class JetpackRemoteInstallViewModel
 @Inject constructor(
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
-    private val siteStore: SiteStore
+    private val siteStore: SiteStore,
+    private val jetpackStore: JetpackStore
 ) : ViewModel() {
     private val mutableViewState = MutableLiveData<JetpackRemoteInstallViewState>()
     val liveViewState: LiveData<JetpackRemoteInstallViewState> = mutableViewState
