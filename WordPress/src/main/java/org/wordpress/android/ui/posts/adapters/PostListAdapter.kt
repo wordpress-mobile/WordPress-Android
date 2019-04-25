@@ -34,17 +34,6 @@ class PostListAdapter(
 ) : PagedListAdapter<PostListItemType, ViewHolder>(PostListDiffItemCallback) {
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
     private var itemLayoutType: PostListViewLayoutType = PostListViewLayoutType.defaultValue
-    private var recyclerView: RecyclerView? = null
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        this.recyclerView = recyclerView
-    }
-
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        this.recyclerView = null
-    }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
@@ -97,6 +86,9 @@ class PostListAdapter(
     }
 
     fun updateItemLayoutType(updatedItemLayoutType: PostListViewLayoutType) {
+        if (updatedItemLayoutType == itemLayoutType) {
+            return
+        }
         itemLayoutType = updatedItemLayoutType
         notifyDataSetChanged()
     }

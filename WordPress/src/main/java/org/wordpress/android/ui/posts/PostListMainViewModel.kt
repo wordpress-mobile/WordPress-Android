@@ -167,8 +167,7 @@ class PostListMainViewModel @Inject constructor(
         this.site = site
 
         val layout = prefs.postListViewLayoutType
-        _viewLayoutType.value = layout
-        _viewLayoutMenuIcon.value = iconForViewLayout(layout)
+        setViewLayoutAndIcon(layout)
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection
@@ -351,12 +350,16 @@ class PostListMainViewModel @Inject constructor(
             COMPACT -> STANDARD
         }
         prefs.postListViewLayoutType = toggledValue
-        _viewLayoutType.value = toggledValue
-        _viewLayoutMenuIcon.value = iconForViewLayout(toggledValue)
+        setViewLayoutAndIcon(toggledValue)
+    }
+
+    private fun setViewLayoutAndIcon(layout: PostListViewLayoutType) {
+        _viewLayoutType.value = layout
+        _viewLayoutMenuIcon.value = iconForViewLayout(layout)
     }
 
     private fun iconForViewLayout(layout: PostListViewLayoutType) = when (layout) {
-        STANDARD -> R.drawable.ic_view_post_compact
-        COMPACT -> R.drawable.ic_view_post_full
+        STANDARD -> R.drawable.ic_view_post_compact_white_24dp
+        COMPACT -> R.drawable.ic_view_post_full_white_24dp
     }
 }

@@ -340,7 +340,6 @@ class PostsListActivity : AppCompatActivity(),
 
     private fun updateMenuIconForViewLayoutType(@DrawableRes iconId: Int) {
         getDrawable(iconId)?.let { drawable ->
-            drawable.setTint(Color.WHITE)
             toggleViewLayoutMenuItem?.setIcon(drawable)
         }
     }

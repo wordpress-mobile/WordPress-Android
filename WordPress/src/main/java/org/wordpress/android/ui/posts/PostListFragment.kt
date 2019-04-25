@@ -104,13 +104,11 @@ class PostListFragment : Fragment() {
         val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
-        postListAdapter.updateItemLayoutType(mainViewModel.viewLayoutType.value ?: PostListViewLayoutType.defaultValue)
         mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
                 postListAdapter.updateItemLayoutType(layoutType)
             }
         })
-
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
         viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))

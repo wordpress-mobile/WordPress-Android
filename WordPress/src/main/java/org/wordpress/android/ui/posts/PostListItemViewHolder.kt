@@ -93,25 +93,11 @@ sealed class PostListItemViewHolder(
     ) : PostListItemViewHolder(R.layout.post_list_item_compact, parent, config, uiHelpers) {
         private val moreButton: ImageButton = itemView.findViewById(R.id.more_button)
 
-        private var currentItem: PostListItemUiState? = null
-
-        init {
-            itemView.setOnClickListener { currentItem?.onSelected?.invoke() }
-            moreButton.setOnClickListener { handleOpenMenuClick(it) }
-        }
-
         override fun onBind(item: PostListItemUiState) {
-            currentItem = item
             setBasicValues(item.data)
 
             itemView.setOnClickListener { item.onSelected.invoke() }
             moreButton.setOnClickListener { onMoreClicked(item.compactActions, moreButton) }
-        }
-
-        private fun handleOpenMenuClick(view: View) {
-            currentItem?.compactActions?.let { actions ->
-                onMoreClicked(actions, view)
-            }
         }
     }
 
