@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.design.widget.AppBarLayout
 import android.support.design.widget.AppBarLayout.LayoutParams
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout.OnTabSelectedListener

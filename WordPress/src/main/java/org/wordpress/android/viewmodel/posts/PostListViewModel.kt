@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
@@ -13,11 +14,11 @@ import de.greenrobot.event.EventBus
 import org.apache.commons.text.StringEscapeUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -59,7 +60,6 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -67,7 +67,7 @@ import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -92,6 +92,7 @@ enum class PostListEmptyViewState {
 
 typealias PagedPostList = PagedList<PagedListItemType<PostAdapterItem>>
 
+@SuppressLint("UseSparseArrays")
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,
@@ -407,7 +408,7 @@ class PostListViewModel @Inject constructor(
             is CauseOfOnPostChanged.UpdatePost -> {
                 if (event.isError) {
                     AppLog.e(
-                            T.POSTS,
+                            POSTS,
                             "Error updating the post with type: ${event.error.type} and message: ${event.error.message}"
                     )
                 } else {

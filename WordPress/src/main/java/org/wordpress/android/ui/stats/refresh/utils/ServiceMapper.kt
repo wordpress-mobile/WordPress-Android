@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.utils
 import android.support.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper.Service.FACEBOOK
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper.Service.GOOGLE_PLUS

@@ -27,7 +27,6 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         layout.stats_block_web_view_item
 ) {
     val webView: WebView? = itemView.findViewById(id.web_view)
-    
     @SuppressLint("SetJavaScriptEnabled")
     fun bind(item: MapItem) {
         GlobalScope.launch {
