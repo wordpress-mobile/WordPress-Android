@@ -23,10 +23,12 @@ import kotlin.properties.Delegates
 
 typealias DomainSuggestionsListState = ListState<DomainSuggestionResponse>
 
-class DomainSuggestionsViewModel @Inject constructor(private val dispatcher: Dispatcher) : ViewModel() {
+class DomainSuggestionsViewModel @Inject constructor(
+    private val dispatcher: Dispatcher,
+    private val debouncer: Debouncer
+) : ViewModel() {
     lateinit var site: SiteModel
     private var isStarted = false
-    private val debouncer = Debouncer()
 
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
     val suggestionsLiveData: LiveData<DomainSuggestionsListState>
@@ -68,6 +70,7 @@ class DomainSuggestionsViewModel @Inject constructor(private val dispatcher: Dis
 
     override fun onCleared() {
         dispatcher.unregister(this)
+        debouncer.shutdown()
         super.onCleared()
     }
 

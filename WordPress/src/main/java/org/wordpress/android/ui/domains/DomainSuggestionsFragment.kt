@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -84,7 +85,12 @@ class DomainSuggestionsFragment : Fragment() {
                 reloadSuggestions(listState.data)
 
                 if (listState is ListState.Error<*>) {
-                    ToastUtils.showToast(context, listState.errorMessage)
+                    val errorMessage = if (TextUtils.isEmpty(listState.errorMessage)) {
+                        getString(R.string.suggestion_fetch_error)
+                    } else {
+                        listState.errorMessage
+                    }
+                    ToastUtils.showToast(context, errorMessage)
                 }
             }
         })

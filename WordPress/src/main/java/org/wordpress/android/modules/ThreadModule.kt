@@ -5,6 +5,7 @@ import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import org.wordpress.android.util.helpers.Debouncer
 import javax.inject.Named
 
 const val UI_SCOPE = "UI_SCOPE"
@@ -36,5 +37,10 @@ class ThreadModule {
     @Named(BG_THREAD)
     fun provideBackgroundDispatcher(): CoroutineDispatcher {
         return Dispatchers.Default
+    }
+
+    @Provides
+    fun provideDebouncer(): Debouncer {
+        return Debouncer()
     }
 }
