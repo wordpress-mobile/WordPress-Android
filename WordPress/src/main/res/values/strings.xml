@@ -474,8 +474,7 @@
     <string name="uploading_media">Uploading media…</string>
 
     <!-- new account view -->
-    <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
-        address. Check the site address (URL) you entered.</string>
+    <string name="no_site_error">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -1010,6 +1009,15 @@
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
+    <string name="stats_insights_this_year_site_stats">This Year</string>
+    <string name="stats_insights_year">Year</string>
+    <string name="stats_insights_posts">Posts</string>
+    <string name="stats_insights_total_comments">Total comments</string>
+    <string name="stats_insights_average_comments">Avg comments/post</string>
+    <string name="stats_insights_total_likes">Total likes</string>
+    <string name="stats_insights_average_likes">Avg likes/post</string>
+    <string name="stats_insights_total_words">Total words</string>
+    <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_best_day">Best Day</string>
     <string name="stats_insights_best_hour">Best Hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
@@ -1258,6 +1266,7 @@
     <string name="immediately">Immediately</string>
     <string name="now">Now</string>
     <string name="scheduled_for">Scheduled for: %s</string>
+    <string name="backdated_for">Backdated for: %s</string>
     <string name="published_on">Published on: %s</string>
     <string name="schedule_for">Schedule for: %s</string>
     <string name="publish_on">Publish on: %s</string>
@@ -2193,6 +2202,7 @@
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
+    <string name="login_invalid_site_url">The site address you entered is invalid. Please re-enter it.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>

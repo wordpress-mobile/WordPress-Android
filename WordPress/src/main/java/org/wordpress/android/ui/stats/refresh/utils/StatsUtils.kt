@@ -37,3 +37,14 @@ fun Long.toFormattedString(startValue: Int = TEN_THOUSAND, locale: Locale = Loca
     else
         DecimalFormat.getInstance(locale).format(truncated / 10) + suffix
 }
+
+fun Double.toFormattedString(thresholdValue: Int = TEN_THOUSAND, locale: Locale = Locale.getDefault()): String {
+    return if (this < thresholdValue) {
+        val formatter = DecimalFormat.getInstance(locale)
+        formatter.maximumFractionDigits = 1
+        formatter.minimumFractionDigits = 0
+        formatter.format(this)
+    } else {
+        this.toLong().toFormattedString(thresholdValue, locale)
+    }
+}
