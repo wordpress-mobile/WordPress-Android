@@ -20,7 +20,7 @@ class WPWellSqlConfig(context: Context?) : WellSqlConfig(context) {
      * branches and having to clear storage and login again due to a version downgrade.
      */
     override fun onDowngrade(db: SQLiteDatabase?, helper: WellTableManager?, oldVersion: Int, newVersion: Int) {
-        if (BuildConfig.DEBUG && BuildConfig.RESET_DB_ON_DOWNGRADE.toBoolean()) {
+        if (BuildConfig.RESET_DB_ON_DOWNGRADE.toBoolean()) {
             // note: don't call super() here because it throws an exception
             AppLog.w(T.DB, "Resetting database due to downgrade from version $oldVersion to $newVersion")
 

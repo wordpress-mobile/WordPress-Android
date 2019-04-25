@@ -52,6 +52,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -226,8 +227,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             Fabric.with(this, new Crashlytics());
         }
 
-        // Init WellSql
-        WellSql.init(new WPWellSqlConfig(getApplicationContext()));
+        initWellSql();
 
         // Init Dagger
         initDaggerComponent();
@@ -309,6 +309,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+    }
+
+    // note that this is overridden in WordPressDebug
+    protected void initWellSql() {
+        WellSql.init(new WellSqlConfig(getApplicationContext()));
     }
 
     protected void initDaggerComponent() {
