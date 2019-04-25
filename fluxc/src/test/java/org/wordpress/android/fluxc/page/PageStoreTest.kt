@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.TRASH
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
@@ -149,7 +150,7 @@ class PageStoreTest {
     fun deletePageTest() = test {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(post)
-        val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(post.id, post.remotePostId), 0)
+        val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(post.id, post.remotePostId, TRASH), 0)
         val page = PageModel(site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
                 post.remotePostId, null, post.featuredImageId)
         var result: OnPostChanged? = null
@@ -172,7 +173,7 @@ class PageStoreTest {
     fun deletePageWithErrorTest() = test {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(null)
-        val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(post.id, post.remotePostId), 0)
+        val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(post.id, post.remotePostId, TRASH), 0)
         event.error = PostError(UNKNOWN_POST)
         val page = PageModel(site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
             post.remotePostId, null, post.featuredImageId)
