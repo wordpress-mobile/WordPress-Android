@@ -86,7 +86,7 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_NOTE_BUNDLE = "note_bundle";
 
     private QuickActionProcessor mQuickActionProcessor;
-    private List<Integer> mActionedCommentsLocalIds = new ArrayList<>();
+    private List<Long> mActionedCommentsRemoteIds = new ArrayList<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -497,11 +497,9 @@ public class NotificationsProcessingService extends Service {
             stopSelf(mTaskId);
         }
 
-        private void keepLocalCommentIdForPostProcessing(SiteModel site, long remoteCommendId) {
-            CommentModel localComment = mCommentStore.getCommentBySiteAndRemoteId(site, remoteCommendId);
-            int localCommentId = localComment.getId();
-            if (!mActionedCommentsLocalIds.contains(localCommentId)) {
-                mActionedCommentsLocalIds.add(localCommentId);
+        private void keepRemoteCommentIdForPostProcessing(long remoteCommendId) {
+            if (!mActionedCommentsRemoteIds.contains(remoteCommendId)) {
+                mActionedCommentsRemoteIds.add(remoteCommendId);
             }
         }
 
@@ -533,10 +531,6 @@ public class NotificationsProcessingService extends Service {
 
             SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
             if (site != null) {
-                // keep the local CommentId, we'll use it later to know whether to trigger the end processing
-                // notification or not
-                keepLocalCommentIdForPostProcessing(site, mNote.getCommentId());
-
                 mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
                         new RemoteLikeCommentPayload(site, mNote.getCommentId(), true)));
             } else {
@@ -572,7 +566,7 @@ public class NotificationsProcessingService extends Service {
 
             // keep the local CommentId, we'll use it later to know whether to trigger the end processing notification
             // or not
-            keepLocalCommentIdForPostProcessing(site, comment.getRemoteCommentId());
+            keepRemoteCommentIdForPostProcessing(comment.getRemoteCommentId());
 
             // Push the comment
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(site, comment)));
@@ -599,10 +593,6 @@ public class NotificationsProcessingService extends Service {
                 // Pseudo comment reply
                 CommentModel reply = new CommentModel();
                 reply.setContent(mReplyText);
-
-                // keep the local CommentId, we'll use it later to know whether to trigger the end processing
-                // notificatio or not
-                keepLocalCommentIdForPostProcessing(site, mNote.getCommentId());
 
                 // Push the reply
                 RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
@@ -646,16 +636,28 @@ public class NotificationsProcessingService extends Service {
             return;
         }
 
-        if (Collections.disjoint(event.changedCommentsLocalIds, mActionedCommentsLocalIds)) {
-            // exit if these FluxC events have nothing to do with what has been triggered from this Service
-            return;
-        }
-
         if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
             if (event.isError()) {
                 mQuickActionProcessor.requestFailed(ARG_ACTION_APPROVE);
             } else {
-                mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
+                if (mActionedCommentsRemoteIds.size() > 0) {
+                    // here we need to check ids
+                    // CommentModel localComment = mCommentStore.getCommentBySiteAndRemoteId(site, remoteCommendId);
+                    int containedCount = 0;
+                    for (Integer commentLocalId : event.changedCommentsLocalIds) {
+                        CommentModel localComment = mCommentStore.getCommentByLocalId(commentLocalId);
+                        if (localComment != null) {
+                            if (mActionedCommentsRemoteIds.contains(localComment.getRemoteCommentId())) {
+                                containedCount++;
+                            }
+                        }
+                    }
+
+                    if (containedCount != mActionedCommentsRemoteIds.size()) {
+                        return;
+                    }
+                    mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
+                }
             }
         } else if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
             if (event.isError()) {
@@ -673,7 +675,7 @@ public class NotificationsProcessingService extends Service {
 
         // now remove any localIds for already processed actions
         for (Integer localId : event.changedCommentsLocalIds) {
-            mActionedCommentsLocalIds.remove(localId);
+            mActionedCommentsRemoteIds.remove(localId);
         }
     }
 }
