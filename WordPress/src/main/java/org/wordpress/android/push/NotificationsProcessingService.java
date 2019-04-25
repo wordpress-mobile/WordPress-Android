@@ -646,7 +646,7 @@ public class NotificationsProcessingService extends Service {
             return;
         }
 
-        if (!Collections.disjoint(event.changedCommentsLocalIds, mActionedCommentsLocalIds)) {
+        if (Collections.disjoint(event.changedCommentsLocalIds, mActionedCommentsLocalIds)) {
             // exit if these FluxC events have nothing to do with what has been triggered from this Service
             return;
         }
