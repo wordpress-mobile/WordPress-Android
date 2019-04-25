@@ -42,7 +42,8 @@ class DomainSuggestionsViewModel @Inject constructor(
     private val _selectedSuggestion = MutableLiveData<DomainSuggestionResponse?>()
     val selectedSuggestion: LiveData<DomainSuggestionResponse?>
         get() = _selectedSuggestion
-    val shouldEnableChooseDomain: LiveData<Boolean>
+
+    val choseDomainButtonEnabledState: LiveData<Boolean>
         get() = Transformations.map(_selectedSuggestion) { it is DomainSuggestionResponse }
 
     private val _selectedPosition = MutableLiveData<Int>()

@@ -39,10 +39,13 @@ class DomainSuggestionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        checkNotNull((activity?.application as WordPress).component())
-        (activity?.application as WordPress).component().inject(this)
+        val nonNullActivity = checkNotNull(activity)
+        (nonNullActivity.application as WordPress).component().inject(this)
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DomainSuggestionsViewModel::class.java)
-        val site = activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+
+        val nonNullIntent = checkNotNull(nonNullActivity.intent)
+        val site = nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
 
         setupViews()
         setupObservers()
@@ -82,7 +85,9 @@ class DomainSuggestionsFragment : Fragment() {
                 domainSuggestionsListContainer.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
                 suggestionsProgressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
 
-                reloadSuggestions(listState.data)
+                if (!isLoading) {
+                    reloadSuggestions(listState.data)
+                }
 
                 if (listState is ListState.Error<*>) {
                     val errorMessage = if (TextUtils.isEmpty(listState.errorMessage)) {
@@ -94,7 +99,7 @@ class DomainSuggestionsFragment : Fragment() {
                 }
             }
         })
-        viewModel.shouldEnableChooseDomain.observe(this, Observer {
+        viewModel.choseDomainButtonEnabledState.observe(this, Observer {
             chooseDomainButton.isEnabled = it ?: false
         })
     }
