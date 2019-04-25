@@ -106,6 +106,7 @@ class PostListFragment : Fragment() {
 
         mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
+                recyclerView?.scrollToPosition(0)
                 postListAdapter.updateItemLayoutType(layoutType)
             }
         })
