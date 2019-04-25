@@ -97,7 +97,8 @@ sealed class PostListItemViewHolder(
             setBasicValues(item.data)
 
             itemView.setOnClickListener { item.onSelected.invoke() }
-            moreButton.setOnClickListener { onMoreClicked(item.compactActions, moreButton) }
+
+            moreButton.setOnClickListener { onMoreClicked(item.compactActions.actions, moreButton) }
         }
     }
 
