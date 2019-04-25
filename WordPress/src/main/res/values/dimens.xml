@@ -22,7 +22,6 @@
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
-    <dimen name="card_gutters">12dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
@@ -45,10 +44,7 @@
     <dimen name="default_cardview_elevation">2dp</dimen>
 
     <!-- featured image in post list -->
-    <dimen name="postlist_featured_image_height_normal">128dp</dimen>
-    <dimen name="postlist_featured_image_height_tablet">220dp</dimen>
-    <dimen name="postlist_featured_image_height_tablet_large">280dp</dimen>
-    <dimen name="postlist_featured_image_height">@dimen/postlist_featured_image_height_normal</dimen>
+    <dimen name="postlist_featured_image_height">98dp</dimen>
 
     <!-- left/right margin for content such as Me fragment, My Site fragment -->
     <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
@@ -365,11 +361,16 @@
     <dimen name="quota_bar_text_minimum_height">36dp</dimen>
 
     <!--post skeleton-->
-    <dimen name="post_list_row_skeleton_view_title_width">160dp</dimen>
-    <dimen name="post_list_row_skeleton_view_title_height">@dimen/margin_extra_medium_large</dimen>
-    <dimen name="post_list_row_skeleton_view_excerpt_height">@dimen/margin_extra_medium_large</dimen>
-    <dimen name="post_list_row_skeleton_view_date_width">80dp</dimen>
-    <dimen name="post_list_row_skeleton_view_date_height">@dimen/margin_extra_large</dimen>
+    <dimen name="post_list_row_skeleton_view_title_height">20dp</dimen>
+    <dimen name="post_list_row_skeleton_view_excerpt_height">16dp</dimen>
+    <dimen name="post_list_row_skeleton_view_date_height">16dp</dimen>
+
+    <!--posts list-->
+    <dimen name="posts_list_spinner_width">56dp</dimen>
+    <dimen name="posts_list_spinner_avatar_size">30dp</dimen>
+    <dimen name="posts_list_spinner_avatar_padding">1dp</dimen>
+    <dimen name="posts_list_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
+    <dimen name="posts_list_tab_layout_fading_edge_width">16dp</dimen>
 
     <!--site creation-->
     <dimen name="site_creation_segments_icon_size">24dp</dimen>

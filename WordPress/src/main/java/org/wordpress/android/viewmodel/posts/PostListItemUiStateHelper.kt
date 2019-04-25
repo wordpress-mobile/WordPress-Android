@@ -1,0 +1,305 @@
+package org.wordpress.android.viewmodel.posts
+
+import android.support.annotation.ColorRes
+import org.apache.commons.text.StringEscapeUtils
+import org.wordpress.android.BuildConfig
+import org.wordpress.android.R
+import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
+import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
+import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
+import org.wordpress.android.fluxc.store.UploadStore.UploadError
+import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.POSTS
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
+import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
+import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.NothingToUpload
+import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadQueued
+import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingMedia
+import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingPost
+import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
+import javax.inject.Inject
+
+private const val MAX_NUMBER_OF_VISIBLE_ACTIONS = 3
+const val ERROR_COLOR = R.color.error
+const val PROGRESS_INFO_COLOR = R.color.neutral_500
+const val STATE_INFO_COLOR = R.color.warning_dark
+
+/**
+ * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
+ */
+class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) {
+    fun createPostListItemUiState(
+        post: PostModel,
+        uploadStatus: PostListItemUploadStatus,
+        unhandledConflicts: Boolean,
+        capabilitiesToPublish: Boolean,
+        statsSupported: Boolean,
+        featuredImageUrl: String?,
+        formattedDate: String,
+        performingCriticalAction: Boolean,
+        onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
+    ): PostListItemUiState {
+        val postStatus: PostStatus = PostStatus.fromPost(post)
+        val uploadUiState = createUploadUiState(uploadStatus)
+        return PostListItemUiState(
+                data = PostListItemUiStateData(
+                        remotePostId = RemotePostId(RemoteId(post.remotePostId)),
+                        localPostId = LocalPostId(LocalId(post.id)),
+                        title = getTitle(post = post),
+                        excerpt = getExcerpt(post = post),
+                        imageUrl = featuredImageUrl,
+                        dateAndAuthor = UiStringText(text = formattedDate),
+                        statuses = getStatuses(
+                                postStatus = postStatus,
+                                isLocalDraft = post.isLocalDraft,
+                                isLocallyChanged = post.isLocallyChanged,
+                                uploadUiState = uploadUiState,
+                                hasUnhandledConflicts = unhandledConflicts
+                        ),
+                        statusesColor = getStatusesColor(
+                                postStatus = postStatus,
+                                isLocalDraft = post.isLocalDraft,
+                                isLocallyChanged = post.isLocallyChanged,
+                                uploadUiState = uploadUiState,
+                                hasUnhandledConflicts = unhandledConflicts
+                        ),
+                        statusesDelimiter = UiStringRes(R.string.multiple_status_label_delimiter),
+                        showProgress = shouldShowProgress(
+                                uploadUiState = uploadUiState,
+                                performingCriticalAction = performingCriticalAction
+                        ),
+                        showOverlay = shouldShowOverlay(
+                                uploadUiState = uploadUiState,
+                                performingCriticalAction = performingCriticalAction
+                        )
+                ),
+                actions = createActions(
+                        postStatus = postStatus,
+                        isLocalDraft = post.isLocalDraft,
+                        isLocallyChanged = post.isLocallyChanged,
+                        uploadUiState = uploadUiState,
+                        siteHasCapabilitiesToPublish = capabilitiesToPublish,
+                        statsSupported = statsSupported,
+                        onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) }
+                ),
+                onSelected = {
+                    onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
+                }
+        )
+    }
+
+    private fun getTitle(post: PostModel): UiString {
+        return if (post.title.isNotBlank()) {
+            UiStringText(StringEscapeUtils.unescapeHtml4(post.title))
+        } else UiStringRes(string.untitled_in_parentheses)
+    }
+
+    private fun getExcerpt(post: PostModel): UiString? =
+            PostUtils.getPostListExcerptFromPost(post)
+                    .takeIf { !it.isNullOrBlank() }
+                    ?.let { StringEscapeUtils.unescapeHtml4(it) }
+                    ?.let { PostUtils.collapseShortcodes(it) }
+                    ?.let { UiStringText(it) }
+
+    private fun shouldShowProgress(uploadUiState: PostUploadUiState, performingCriticalAction: Boolean): Boolean {
+        return performingCriticalAction || uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
+                uploadUiState is UploadQueued
+    }
+
+    private fun getStatuses(
+        postStatus: PostStatus,
+        isLocalDraft: Boolean,
+        isLocallyChanged: Boolean,
+        uploadUiState: PostUploadUiState,
+        hasUnhandledConflicts: Boolean
+    ): List<UiString> {
+        val labels: MutableList<UiString> = ArrayList()
+        when {
+            uploadUiState is PostUploadUiState.UploadFailed -> {
+                getErrorLabel(uploadUiState.error)?.let { labels.add(it) }
+            }
+            uploadUiState is UploadingPost -> labels.add(UiStringRes(string.post_uploading))
+            uploadUiState is UploadingMedia -> labels.add(UiStringRes(string.uploading_media))
+            uploadUiState is UploadQueued -> labels.add(UiStringRes(string.post_queued))
+            hasUnhandledConflicts -> labels.add(UiStringRes(string.local_post_is_conflicted))
+        }
+
+        // we want to show either single error/progress label or 0-n info labels.
+        if (labels.isEmpty()) {
+            if (isLocalDraft) {
+                labels.add(UiStringRes(string.local_draft))
+            }
+            if (isLocallyChanged) {
+                labels.add(UiStringRes(string.local_changes))
+            }
+            if (postStatus == PRIVATE) {
+                labels.add(UiStringRes(string.post_status_post_private))
+            }
+            if (postStatus == PENDING) {
+                labels.add(UiStringRes(string.post_status_pending_review))
+            }
+        }
+        return labels
+    }
+
+    private fun getErrorLabel(uploadError: UploadError): UiString? {
+        return when {
+            uploadError.mediaError != null -> UiStringRes(string.error_media_recover_post)
+            uploadError.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
+                    false,
+                    uploadError.postError
+            )
+            else -> {
+                val errorMsg = "MediaError and postError are both null."
+                if (BuildConfig.DEBUG) {
+                    throw IllegalStateException(errorMsg)
+                } else {
+                    AppLog.e(POSTS, errorMsg)
+                }
+                UiStringRes(R.string.error_generic)
+            }
+        }
+    }
+
+    @ColorRes private fun getStatusesColor(
+        postStatus: PostStatus,
+        isLocalDraft: Boolean,
+        isLocallyChanged: Boolean,
+        uploadUiState: PostUploadUiState,
+        hasUnhandledConflicts: Boolean
+    ): Int? {
+        val isError = uploadUiState is PostUploadUiState.UploadFailed || hasUnhandledConflicts
+        val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
+                uploadUiState is UploadQueued
+        val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
+
+        return when {
+            isError -> ERROR_COLOR
+            isProgressInfo -> PROGRESS_INFO_COLOR
+            isStateInfo -> STATE_INFO_COLOR
+            else -> null
+        }
+    }
+
+    private fun shouldShowOverlay(uploadUiState: PostUploadUiState, performingCriticalAction: Boolean): Boolean {
+        // show overlay when post upload is in progress or (media upload is in progress and the user is not using Aztec)
+        return performingCriticalAction ||
+                (uploadUiState is UploadingPost ||
+                        (!appPrefsWrapper.isAztecEditorEnabled && uploadUiState is UploadingMedia))
+    }
+
+    private fun createActions(
+        postStatus: PostStatus,
+        isLocalDraft: Boolean,
+        isLocallyChanged: Boolean,
+        uploadUiState: PostUploadUiState,
+        siteHasCapabilitiesToPublish: Boolean,
+        statsSupported: Boolean,
+        onButtonClicked: (PostListButtonType) -> Unit
+    ): List<PostListItemAction> {
+        val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
+        val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload) &&
+                (isLocallyChanged || isLocalDraft || postStatus == PostStatus.DRAFT)
+        val canShowStats = statsSupported &&
+                postStatus == PostStatus.PUBLISHED &&
+                !isLocalDraft &&
+                !isLocallyChanged
+        val canShowViewButton = !canRetryUpload
+        val canShowPublishButton = canRetryUpload || canPublishPost
+        val buttonTypes = ArrayList<PostListButtonType>()
+
+        buttonTypes.add(PostListButtonType.BUTTON_EDIT)
+        if (canShowPublishButton) {
+            buttonTypes.add(
+                    if (!siteHasCapabilitiesToPublish) {
+                        BUTTON_SUBMIT
+                    } else if (canRetryUpload) {
+                        BUTTON_RETRY
+                    } else if (postStatus == SCHEDULED && isLocallyChanged) {
+                        BUTTON_SYNC
+                    } else {
+                        BUTTON_PUBLISH
+                    }
+            )
+        }
+
+        if (canShowViewButton) {
+            buttonTypes.add(
+                    if (isLocalDraft || isLocallyChanged) {
+                        BUTTON_PREVIEW
+                    } else {
+                        BUTTON_VIEW
+                    }
+            )
+        }
+
+        when {
+            isLocalDraft -> buttonTypes.add(PostListButtonType.BUTTON_DELETE)
+            postStatus == PostStatus.TRASHED -> {
+                buttonTypes.add(PostListButtonType.BUTTON_DELETE)
+                buttonTypes.add(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+            }
+            postStatus != PostStatus.TRASHED -> buttonTypes.add(PostListButtonType.BUTTON_TRASH)
+        }
+
+        if (canShowStats) {
+            buttonTypes.add(PostListButtonType.BUTTON_STATS)
+        }
+
+        val createSinglePostListItem = { buttonType: PostListButtonType ->
+            PostListItemAction.SingleItem(buttonType, onButtonClicked)
+        }
+
+        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS) {
+            val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1)
+                    .map(createSinglePostListItem)
+            val itemsUnderMore = buttonTypes.subList(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1, buttonTypes.size)
+                    .map(createSinglePostListItem)
+
+            visibleItems.plus(PostListItemAction.MoreItem(itemsUnderMore, onButtonClicked))
+        } else {
+            buttonTypes.map(createSinglePostListItem)
+        }
+    }
+
+    private sealed class PostUploadUiState {
+        object UploadingMedia : PostUploadUiState()
+        object UploadingPost : PostUploadUiState()
+        data class UploadFailed(val error: UploadError) : PostUploadUiState()
+        object UploadQueued : PostUploadUiState()
+        object NothingToUpload : PostUploadUiState()
+    }
+
+    private fun createUploadUiState(status: PostListItemUploadStatus): PostUploadUiState {
+        return when {
+            status.hasInProgressMediaUpload -> UploadingMedia
+            status.isUploading -> UploadingPost
+            // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
+            status.uploadError != null -> PostUploadUiState.UploadFailed(status.uploadError)
+            status.hasPendingMediaUpload || status.isQueued || status.isUploadingOrQueued -> UploadQueued
+            else -> NothingToUpload
+        }
+    }
+}
