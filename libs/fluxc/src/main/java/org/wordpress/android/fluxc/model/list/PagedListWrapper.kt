@@ -3,16 +3,23 @@ package org.wordpress.android.fluxc.model.list
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.paging.PagedList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListDataInvalidated
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
+import kotlin.coroutines.CoroutineContext
 
 /**
  * This is a wrapper class to consume lists from `ListStore`.
@@ -26,14 +33,19 @@ import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
  * to either let the user know of each error or present the error in the empty view when it's visible.
  */
 class PagedListWrapper<T>(
-    val data: LiveData<PagedList<PagedListItemType<T>>>,
+    val data: LiveData<PagedList<T>>,
     private val dispatcher: Dispatcher,
     private val listDescriptor: ListDescriptor,
     private val lifecycle: Lifecycle,
     private val refresh: () -> Unit,
     private val invalidate: () -> Unit,
-    private val isListEmpty: () -> Boolean
-) : LifecycleObserver {
+    private val parentCoroutineContext: CoroutineContext
+) : LifecycleObserver, CoroutineScope {
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = parentCoroutineContext + job
+
     private val _isFetchingFirstPage = MutableLiveData<Boolean>()
     val isFetchingFirstPage: LiveData<Boolean> = _isFetchingFirstPage
 
@@ -43,7 +55,7 @@ class PagedListWrapper<T>(
     private val _listError = MutableLiveData<ListError?>()
     val listError: LiveData<ListError?> = _listError
 
-    private val _isEmpty = MutableLiveData<Boolean>()
+    private val _isEmpty = MediatorLiveData<Boolean>()
     val isEmpty: LiveData<Boolean> = _isEmpty
 
     /**
@@ -51,11 +63,11 @@ class PagedListWrapper<T>(
      * cleanup properly in `onDestroy`.
      */
     init {
+        _isEmpty.addSource(data) {
+            _isEmpty.value = it?.isEmpty()
+        }
         dispatcher.register(this)
         lifecycle.addObserver(this)
-
-        // We need to update the initial value for isEmpty, so we can immediately hide/show the empty view
-        updateIsEmpty()
     }
 
     /**
@@ -66,13 +78,16 @@ class PagedListWrapper<T>(
     private fun onDestroy() {
         lifecycle.removeObserver(this)
         dispatcher.unregister(this)
+        job.cancel()
     }
 
     /**
      * A method to be used by clients to refresh the first page of a list from network.
      */
     fun fetchFirstPage() {
-        refresh()
+        launch {
+            refresh()
+        }
     }
 
     /**
@@ -111,7 +126,6 @@ class PagedListWrapper<T>(
             return
         }
         invalidateData()
-        updateIsEmpty()
     }
 
     /**
@@ -125,13 +139,29 @@ class PagedListWrapper<T>(
             return
         }
         invalidateData()
-        updateIsEmpty()
     }
 
     /**
-     * A helper function that checks and post if a list is empty.
+     * Handles the [OnListRequiresRefresh] `ListStore` event. It'll refresh the list if the type of this list matches
+     * the type of list that requires a refresh.
      */
-    private fun updateIsEmpty() {
-        _isEmpty.postValue(isListEmpty())
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onListRequiresRefresh(event: OnListRequiresRefresh) {
+        if (listDescriptor.typeIdentifier == event.type) {
+            fetchFirstPage()
+        }
+    }
+
+    /**
+     * Handles the [OnListDataInvalidated] `ListStore` event. It'll invalidate the list if the type of this list matches
+     * the type of list that is invalidated.
+     */
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onListDataInvalidated(event: OnListDataInvalidated) {
+        if (listDescriptor.typeIdentifier == event.type) {
+            invalidateData()
+        }
     }
 }

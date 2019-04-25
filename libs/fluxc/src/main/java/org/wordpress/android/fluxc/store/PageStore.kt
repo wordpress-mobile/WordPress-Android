@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.ERROR_NON
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.SUCCESS
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.DELETE
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
@@ -154,7 +155,13 @@ class PageStore @Inject constructor(
             val payload = RemotePostPayload(post, page.site)
             dispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload))
         } else {
-            val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(page.pageId, page.remoteId), 0)
+            val event = OnPostChanged(
+                    CauseOfOnPostChanged.DeletePost(
+                            localPostId = page.pageId,
+                            remotePostId = page.remoteId,
+                            postDeleteActionType = DELETE
+                    ), 0
+            )
             event.error = PostError(PostErrorType.UNKNOWN_POST)
             cont.resume(event)
         }
