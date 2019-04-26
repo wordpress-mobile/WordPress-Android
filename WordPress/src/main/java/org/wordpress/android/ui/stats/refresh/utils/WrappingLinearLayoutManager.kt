@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.utils
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.Adapter
 
 /**
  * This class should be used only when the RecyclerView's height is set to wrap_content.
@@ -28,14 +27,8 @@ class WrappingLinearLayoutManager(
         enableAutoMeasure = true
     }
 
-    override fun onAdapterChanged(oldAdapter: Adapter<*>?, newAdapter: Adapter<*>?) {
-        newAdapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-                super.onItemRangeRemoved(positionStart, itemCount)
-                enableAutoMeasure = false
-            }
-        })
-        removeAllViews()
+    fun onItemRangeRemoved() {
+        enableAutoMeasure = false
     }
 
     override fun onMeasure(
@@ -45,7 +38,8 @@ class WrappingLinearLayoutManager(
         heightSpec: Int
     ) {
         super.onMeasure(recycler, state, widthSpec, heightSpec)
-        if (!isAutoMeasureEnabled) {
+        if (!enableAutoMeasure) {
+            super.requestLayout()
             requestSimpleAnimationsInNextLayout()
             setMeasuredDimension(width, height)
         }

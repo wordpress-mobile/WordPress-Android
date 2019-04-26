@@ -19,8 +19,20 @@ class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : B
         super.bind(statsTypes, items)
         list.isNestedScrollingEnabled = false
         if (list.adapter == null) {
-            list.adapter = BlockListAdapter(imageManager)
-            list.layoutManager = WrappingLinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
+            val blockListAdapter = BlockListAdapter(imageManager)
+            val layoutManager = WrappingLinearLayoutManager(
+                    list.context,
+                    LinearLayoutManager.VERTICAL,
+                    false
+            )
+            list.adapter = blockListAdapter
+            blockListAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                    super.onItemRangeRemoved(positionStart, itemCount)
+                    layoutManager.onItemRangeRemoved()
+                }
+            })
+            list.layoutManager = layoutManager
         }
         (list.layoutManager as WrappingLinearLayoutManager).init()
         (list.adapter as BlockListAdapter).update(items)
