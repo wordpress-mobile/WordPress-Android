@@ -403,6 +403,10 @@
     <dimen name="stats_list_item_left_margin">56dp</dimen>
     <dimen name="stats_activity_spacing">1dp</dimen>
 
+    <dimen name="stats_percentage_bar_height">4dp</dimen>
+    <dimen name="stats_percentage_bar_margin_top">10dp</dimen>
+    <dimen name="stats_percentage_bar_margin_bottom">14dp</dimen>
+
     <dimen name="settings_icon_size">24dp</dimen>
 
     <dimen name="icon_size_075">18dp</dimen>
