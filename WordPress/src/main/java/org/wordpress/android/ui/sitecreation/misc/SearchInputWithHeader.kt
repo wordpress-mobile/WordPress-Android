@@ -36,7 +36,6 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
         clearButtonDrawable?.setTint(greyColor)
         clearAllButton.background = clearButtonDrawable
 
-        val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
         clearAllLayout.setOnClickListener {
             onClear()
         }
