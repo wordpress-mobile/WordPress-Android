@@ -62,13 +62,13 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
@@ -406,13 +406,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onSignupSheetTermsOfServiceClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
-        // Get device locale and remove region to pass only language.
-        String locale = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
-        int pos = locale.indexOf("_");
-        if (pos > -1) {
-            locale = locale.substring(0, pos);
-        }
-        ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url, locale));
+        ActivityLauncher.openUrlExternal(this, WPUrlUtils.buildTermsOfServiceUrl(this));
     }
 
     @Override
