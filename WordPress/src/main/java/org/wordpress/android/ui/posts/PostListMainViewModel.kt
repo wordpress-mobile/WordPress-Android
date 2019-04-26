@@ -247,7 +247,7 @@ class PostListMainViewModel @Inject constructor(
         AnalyticsUtils.trackWithSiteDetails(
                 POST_LIST_TAB_CHANGED,
                 site,
-                mapOf(TRACKS_SELECTED_TAB to currentPage.toString())
+                mutableMapOf(TRACKS_SELECTED_TAB to currentPage.toString() as Any)
         )
     }
 
@@ -325,7 +325,7 @@ class PostListMainViewModel @Inject constructor(
             AnalyticsUtils.trackWithSiteDetails(
                     POST_LIST_AUTHOR_FILTER_CHANGED,
                     site,
-                    mapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString())
+                    mutableMapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString() as Any)
             )
         }
     }

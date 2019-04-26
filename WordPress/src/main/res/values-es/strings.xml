@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-26 17:06:50+0000
+Translation-Revision-Date: 2019-04-15 14:29:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Fallo al comprobar los créditos de dominio disponibles</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Comprobando créditos de dominio</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrar dominio</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Para instalar plugins necesitas tener un dominio personalizado asociado a tu sitio.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Instalar plugin</string>
     <string name="new_site_creation_preview_subtitle">Podrás personalizar la apariencia de tu sitio más adelante</string>
     <string name="publish_on">Publicar el: %s</string>
     <string name="schedule_for">Programa para el: %s</string>
@@ -1497,7 +1502,7 @@ Language: es
     <string name="site_settings_default_format_title">Formato por defecto</string>
     <string name="site_settings_default_category_title">Categoría por defecto</string>
     <string name="site_settings_address_title">Dirección</string>
-    <string name="site_settings_tagline_title">Lema</string>
+    <string name="site_settings_tagline_title">Descripción corta</string>
     <string name="site_settings_title_title">Título del sitio</string>
     <string name="site_settings_discussion_new_posts_header">Por defecto para nuevas entradas</string>
     <string name="site_settings_writing_header">Escribiendo</string>

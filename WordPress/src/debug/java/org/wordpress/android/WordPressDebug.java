@@ -3,6 +3,7 @@ package org.wordpress.android;
 import android.os.StrictMode;
 
 import com.facebook.stetho.Stetho;
+import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.modules.DaggerAppComponentDebug;
 import org.wordpress.android.util.AppLog;
@@ -14,6 +15,11 @@ public class WordPressDebug extends WordPress {
         super.onCreate();
         // enableStrictMode()
         Stetho.initializeWithDefaults(this);
+    }
+
+    @Override
+    protected void initWellSql() {
+        WellSql.init(new WPWellSqlConfig(getApplicationContext()));
     }
 
     @Override

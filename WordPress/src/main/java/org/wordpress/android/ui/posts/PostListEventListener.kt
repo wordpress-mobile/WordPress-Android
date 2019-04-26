@@ -134,6 +134,7 @@ private class PostListEventListener(
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
             featuredMediaChanged(*event.mediaList.map { it.mediaId }.toLongArray())
+            uploadStatusChanged(*event.mediaList.map { it.localPostId }.toIntArray())
         }
     }
 

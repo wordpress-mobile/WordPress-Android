@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-03 09:54:09+0000
+Translation-Revision-Date: 2019-04-16 08:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">사용 가능한 도메인 크레딧을 확인하지 못함</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">도메인 크레딧 확인 중</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">도메인 등록</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">플러그인을 설치하려면 사이트와 연결된 사용자 정의 도메인이 있어야 합니다.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">플러그인 설치</string>
     <string name="new_site_creation_preview_subtitle">나중에 사이트 디자인의 모양과 느낌을 원하는 대로 변경할 수 있습니다.</string>
     <string name="publish_on">공개하기: %s</string>
     <string name="schedule_for">예약됨: %s</string>
