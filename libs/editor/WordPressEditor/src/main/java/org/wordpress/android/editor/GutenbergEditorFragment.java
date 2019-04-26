@@ -644,9 +644,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            getGutenbergContainerFragment().appendMediaFile(Integer.valueOf(mediaFile.getMediaId()), mediaUrl, mediaFile.isVideo());
+            getGutenbergContainerFragment().appendMediaFile(
+                    Integer.valueOf(mediaFile.getMediaId()),
+                    mediaUrl,
+                    mediaFile.isVideo());
         } else {
-            getGutenbergContainerFragment().appendUploadMediaFile(mediaFile.getId(), "file://" + mediaUrl, mediaFile.isVideo());
+            getGutenbergContainerFragment().appendUploadMediaFile(
+                    mediaFile.getId(),
+                    "file://" + mediaUrl,
+                    mediaFile.isVideo());
             mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
         }
     }

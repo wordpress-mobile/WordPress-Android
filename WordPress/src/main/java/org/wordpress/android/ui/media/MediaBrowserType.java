@@ -23,7 +23,10 @@ public enum MediaBrowserType {
     }
 
     public boolean canMultiselect() {
-        return this == EDITOR_PICKER || this == AZTEC_EDITOR_PICKER || this == GUTENBERG_IMAGE_PICKER || this == GUTENBERG_VIDEO_PICKER;
+        return this == EDITOR_PICKER
+                || this == AZTEC_EDITOR_PICKER
+                || this == GUTENBERG_IMAGE_PICKER
+                || this == GUTENBERG_VIDEO_PICKER;
     }
 
     public boolean canFilter() {
