@@ -55,6 +55,7 @@
         android:layout_alignBottom="@+id/input"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/input"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center">
 
         <View
