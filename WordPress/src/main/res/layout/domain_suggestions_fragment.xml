@@ -45,7 +45,7 @@
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
-            android:textColorHint="@color/grey_darken_10"
+            android:textColorHint="@color/neutral_400"
             android:textSize="@dimen/text_sz_medium"/>
     </LinearLayout>
 
