@@ -315,10 +315,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         buttonTypes: List<PostListButtonType>,
         onButtonClicked: (PostListButtonType) -> Unit
     ): MoreItem {
-        val createSinglePostListItem = { buttonType: PostListButtonType ->
+        val allItems = buttonTypes.map { buttonType: PostListButtonType ->
             PostListItemAction.SingleItem(buttonType, onButtonClicked)
         }
-        val allItems = buttonTypes.map(createSinglePostListItem)
         return PostListItemAction.MoreItem(allItems, onButtonClicked)
     }
 }
