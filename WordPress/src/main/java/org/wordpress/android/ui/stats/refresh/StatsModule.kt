@@ -36,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.V
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase.CommentsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
@@ -83,6 +84,7 @@ class StatsModule {
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
+        followerTotalsUseCase: FollowerTotalsUseCase,
         annualSiteStatsUseCase: AnnualSiteStatsUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
@@ -95,6 +97,7 @@ class StatsModule {
                 tagsAndCategoriesUseCaseFactory.build(BLOCK),
                 publicizeUseCaseFactory.build(BLOCK),
                 postingActivityUseCase,
+                followerTotalsUseCase,
                 annualSiteStatsUseCase
         )
     }
@@ -107,29 +110,19 @@ class StatsModule {
     @Singleton
     @Named(VIEW_ALL_INSIGHTS_USE_CASES)
     fun provideViewAllInsightsUseCases(
-        allTimeStatsUseCase: AllTimeStatsUseCase,
-        latestPostSummaryUseCase: LatestPostSummaryUseCase,
-        todayStatsUseCase: TodayStatsUseCase,
         followersUseCaseFactory: FollowersUseCaseFactory,
         commentsUseCaseFactory: CommentsUseCaseFactory,
-        mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
-        postingActivityUseCase: PostingActivityUseCase,
         postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
         postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
         postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                allTimeStatsUseCase,
-                latestPostSummaryUseCase,
-                todayStatsUseCase,
                 followersUseCaseFactory.build(VIEW_ALL),
                 commentsUseCaseFactory.build(VIEW_ALL),
-                mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCaseFactory.build(VIEW_ALL),
                 publicizeUseCaseFactory.build(VIEW_ALL),
-                postingActivityUseCase,
                 postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
                 postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
                 postRecentWeeksUseCaseFactory.build(VIEW_ALL)

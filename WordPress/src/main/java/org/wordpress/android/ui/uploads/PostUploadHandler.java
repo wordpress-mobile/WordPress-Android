@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
@@ -72,6 +73,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
+    @Inject UiHelpers mUiHelpers;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -569,7 +571,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             AppLog.w(T.POSTS, "PostUploadHandler > Post upload failed. " + event.error.type + ": "
                               + event.error.message);
             Context context = WordPress.getContext();
-            String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post.isPage(), event.error);
+            String errorMessage = mUiHelpers.getTextOfUiString(context,
+                    UploadUtils.getErrorMessageResIdFromPostError(event.post.isPage(), event.error));
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);

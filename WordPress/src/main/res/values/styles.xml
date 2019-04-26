@@ -612,12 +612,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="UploadProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:indeterminateOnly">false</item>
-        <item name="android:minHeight">8dip</item>
-        <item name="android:maxHeight">8dip</item>
-    </style>
-
     <!--Plugin Styles-->
     <style name="PluginCardView">
         <item name="android:layout_width">match_parent</item>
@@ -833,14 +827,6 @@
 
     <style name="SiteCreationPreviewHeaderSubtitle" parent="SiteCreationHeaderSubtitle">
         <item name="android:text">@string/new_site_creation_preview_subtitle</item>
-    </style>
-
-    <style name="SitePreviewOkButton">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/new_site_creation_preview_ok_button_height</item>
-        <item name="android:background">@color/primary_400</item>
-        <item name="android:text">@string/dialog_button_ok</item>
-        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="SitePreviewSkeletonView">

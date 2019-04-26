@@ -754,10 +754,14 @@ public class EditPostSettingsFragment extends Fragment {
                 labelToUse = getString(R.string.scheduled_for, formattedDate);
             } else if (status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE) {
                 labelToUse = getString(R.string.published_on, formattedDate);
-            } else if (postModel.isLocalDraft() && PostUtils.shouldPublishImmediately(postModel)) {
-                // only show Publish "Immediate" label if it's a local draft. If it's also saved online,
-                // then show the back-date appropriately.
-                labelToUse = getString(R.string.immediately);
+            } else if (postModel.isLocalDraft()) {
+                if (PostUtils.isPublishDateInThePast(postModel)) {
+                    labelToUse = getString(R.string.backdated_for, formattedDate);
+                } else if (PostUtils.shouldPublishImmediately(postModel)) {
+                    labelToUse = getString(R.string.immediately);
+                } else {
+                    labelToUse = getString(R.string.publish_on, formattedDate);
+                }
             } else if (PostUtils.isPublishDateInTheFuture(postModel)) {
                 labelToUse = getString(R.string.schedule_for, formattedDate);
             } else {
