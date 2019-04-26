@@ -13,6 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.Calendar;
@@ -64,7 +65,7 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
         if (id == R.id.about_url) {
             url = Constants.URL_AUTOMATTIC;
         } else if (id == R.id.about_tos) {
-            url = Constants.URL_TOS;
+            url = WPUrlUtils.buildTermsOfServiceUrl(this);
         } else if (id == R.id.about_privacy) {
             url = Constants.URL_PRIVACY_POLICY;
         } else {

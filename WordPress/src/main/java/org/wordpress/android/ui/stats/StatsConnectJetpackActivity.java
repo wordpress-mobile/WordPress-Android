@@ -27,6 +27,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.WPUrlUtils;
 
 import javax.inject.Inject;
 
@@ -40,7 +41,6 @@ import static org.wordpress.android.ui.JetpackConnectionSource.STATS;
 public class StatsConnectJetpackActivity extends AppCompatActivity {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String FAQ_URL = "https://wordpress.org/plugins/jetpack/#faq";
-    public static final String TERMS_URL = "https://en.wordpress.com/tos/";
 
     private boolean mIsJetpackConnectStarted;
 
@@ -98,7 +98,8 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
         View jetpackTermsAndConditions = findViewById(R.id.jetpack_terms_and_conditions);
         jetpackTermsAndConditions.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                WPWebViewActivity.openURL(StatsConnectJetpackActivity.this, TERMS_URL);
+                WPWebViewActivity.openURL(StatsConnectJetpackActivity.this,
+                        WPUrlUtils.buildTermsOfServiceUrl(StatsConnectJetpackActivity.this));
             }
         });
     }
