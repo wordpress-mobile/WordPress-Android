@@ -32,7 +32,7 @@
                 android:id="@+id/suggestionsProgressBar"
                 android:layout_width="@dimen/progress_spinner_small"
                 android:layout_height="@dimen/progress_spinner_small"
-                android:background="@color/white"/>
+                android:background="@android:color/white"/>
         </FrameLayout>
 
         <android.support.v7.widget.AppCompatEditText
