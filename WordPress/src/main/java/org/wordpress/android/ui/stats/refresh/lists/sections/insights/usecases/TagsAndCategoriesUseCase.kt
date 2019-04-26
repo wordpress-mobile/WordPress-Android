@@ -8,6 +8,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
+import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.modules.UI_THREAD
@@ -74,6 +75,8 @@ class TagsAndCategoriesUseCase
     override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
+        val maxViews = getMaxViews(domainModel.tags)
+
         if (useCaseMode == BLOCK) {
             items.add(Title(R.string.stats_insights_tags_and_categories))
         }
@@ -91,12 +94,12 @@ class TagsAndCategoriesUseCase
             domainModel.tags.forEachIndexed { index, tag ->
                 when {
                     tag.items.size == 1 -> {
-                        tagsList.add(mapTag(tag, index, domainModel.tags.size))
+                        tagsList.add(mapTag(tag, index, domainModel.tags.size, maxViews))
                     }
                     else -> {
                         val isExpanded = areTagsEqual(tag, uiState.expandedTag)
                         tagsList.add(ExpandableItem(
-                                mapCategory(tag, index, domainModel.tags.size),
+                                mapCategory(tag, index, domainModel.tags.size, maxViews),
                                 isExpanded
                         ) { changedExpandedState ->
                             onUiState(uiState.copy(expandedTag = if (changedExpandedState) tag else null))
@@ -122,22 +125,33 @@ class TagsAndCategoriesUseCase
         return items
     }
 
+    private fun getMaxViews(views: List<TagModel>): Int {
+        var max = -1
+
+        views.forEach {
+            if(it.views > max) max = it.views.toInt()
+        }
+
+        return max
+    }
+
     private fun areTagsEqual(tagA: TagModel, tagB: TagModel?): Boolean {
         return tagA.items == tagB?.items && tagA.views == tagB.views
     }
 
-    private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int): ListItemWithIcon {
+    private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int, maxViews: Int): ListItemWithIcon {
         val item = tag.items.first()
         return ListItemWithIcon(
                 icon = getIcon(item.type),
                 text = item.name,
                 value = tag.views.toFormattedString(),
+                percentageOfMaxValue = tag.views.toDouble() / maxViews.toDouble(),
                 showDivider = index < listSize - 1,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick)
         )
     }
 
-    private fun mapCategory(tag: TagsModel.TagModel, index: Int, listSize: Int): ListItemWithIcon {
+    private fun mapCategory(tag: TagsModel.TagModel, index: Int, listSize: Int, maxViews: Int): ListItemWithIcon {
         val text = tag.items.foldIndexed("") { itemIndex, acc, item ->
             when (itemIndex) {
                 0 -> item.name
@@ -147,6 +161,7 @@ class TagsAndCategoriesUseCase
         return ListItemWithIcon(
                 icon = R.drawable.ic_folder_multiple_white_24dp,
                 text = text,
+                percentageOfMaxValue = tag.views.toDouble() / maxViews.toDouble(),
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1
         )

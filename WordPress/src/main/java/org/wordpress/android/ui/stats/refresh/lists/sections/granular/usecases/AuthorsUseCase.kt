@@ -7,6 +7,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
+import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Author
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
@@ -95,6 +96,8 @@ constructor(
     override fun buildStatefulUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
+        val maxViews: Int = getMaxViews(domainModel.authors)
+
         if (useCaseMode == BLOCK) {
             items.add(Title(R.string.stats_authors))
         }
@@ -109,6 +112,7 @@ constructor(
                         iconStyle = AVATAR,
                         text = author.name,
                         value = author.views.toFormattedString(),
+                        percentageOfMaxValue = author.views.toDouble() / maxViews.toDouble(),
                         showDivider = index < domainModel.authors.size - 1
                 )
                 if (author.posts.isEmpty()) {
@@ -147,6 +151,16 @@ constructor(
             }
         }
         return items
+    }
+
+    private fun getMaxViews(authors: List<Author>): Int {
+        var max = -1
+
+        authors.forEach {
+            if(it.views > max) max = it.views
+        }
+
+        return max
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {

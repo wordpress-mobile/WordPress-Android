@@ -7,6 +7,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
+import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.PAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.POST
@@ -95,6 +96,8 @@ constructor(
     override fun buildUiModel(domainModel: PostAndPageViewsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
+        val maxViews: Int = getMaxViews(domainModel.views)
+
         if (useCaseMode == BLOCK) {
             items.add(Title(string.stats_posts_and_pages))
         }
@@ -112,6 +115,7 @@ constructor(
                         icon = icon,
                         text = viewsModel.title,
                         value = viewsModel.views.toFormattedString(),
+                        percentageOfMaxValue = viewsModel.views.toDouble() / maxViews.toDouble(),
                         showDivider = index < domainModel.views.size - 1,
                         navigationAction = create(
                                 LinkClickParams(viewsModel.id, viewsModel.url, viewsModel.title, viewsModel.type),
@@ -129,6 +133,16 @@ constructor(
             }
         }
         return items
+    }
+
+    private fun getMaxViews(views: List<ViewsModel>): Int {
+        var max = -1
+
+        views.forEach {
+            if(it.views > max) max = it.views
+        }
+
+        return max
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
