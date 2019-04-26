@@ -15,8 +15,8 @@ class DomainSuggestionsViewHolder(
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.domain_suggestion_list_item, parent, false)
 ) {
-    private val domainName: TextView = itemView.findViewById(R.id.domainSuggestionsName)
-    private val selectionRadioButton: RadioButton = itemView.findViewById(R.id.domainSelectionRadioButton)
+    private val domainName: TextView = itemView.findViewById(R.id.domain_name)
+    private val selectionRadioButton: RadioButton = itemView.findViewById(R.id.domain_selection_radio_button)
     private val container: View = itemView.findViewById(R.id.domainSuggestionContainer)
 
     fun bind(suggestion: DomainSuggestionResponse, position: Int, isSelectedPosition: Boolean) {

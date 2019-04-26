@@ -5,18 +5,19 @@
               android:layout_height="wrap_content"
               android:layout_gravity="center_vertical"
               android:background="?android:selectableItemBackground"
+              android:minHeight="@dimen/min_touch_target_sz"
               android:orientation="horizontal"
               android:padding="@dimen/margin_large">
 
     <RadioButton
-        android:id="@+id/domainSelectionRadioButton"
+        android:id="@+id/domain_selection_radio_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_large"
         android:clickable="false"/>
 
     <TextView
-        android:id="@+id/domainSuggestionsName"
+        android:id="@+id/domain_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/neutral_700"
