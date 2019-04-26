@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_search_white_24dp"
-                app:tint="@color/grey_text_min"/>
+                app:tint="@color/neutral"/>
 
             <ProgressBar
                 android:id="@+id/suggestionsProgressBar"
