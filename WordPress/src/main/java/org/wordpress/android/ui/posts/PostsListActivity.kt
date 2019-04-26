@@ -17,6 +17,7 @@ import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.Toolbar
 import android.view.HapticFeedbackConstants
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -306,12 +307,10 @@ class PostsListActivity : AppCompatActivity(),
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
         menu?.clear()
-        menu?.add(Menu.FIRST, R.id.post_menu_item_view_layout_type, 3, "")?.let { item ->
-            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-            toggleViewLayoutMenuItem = item
-            viewModel.viewLayoutMenuIcon.value?.let {
-                updateMenuIconForViewLayoutType(it)
-            }
+        menu?.let {
+            val inflater = MenuInflater(this)
+            inflater.inflate(R.menu.posts_list_layout_change, it)
+            toggleViewLayoutMenuItem = menu.findItem(R.id.post_menu_item_view_layout_type)
         }
         return true
     }

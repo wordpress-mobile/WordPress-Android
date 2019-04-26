@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item type="id" name="row_post_id" />
-    <item type="id" name="drag_handle" />
-    <item type="id" name="click_remove" />
-    <item type="id" name="stats_tags" />
-    <item type="id" name="stats_geoviews" />
-    <item type="id" name="stats_comments" />
-    <item type="id" name="stats_referrers" />
-    <item type="id" name="stats_clicks" />
-    <item type="id" name="stats_search" />
-    <item type="id" name="stats_top_authors" />
-    <item type="id" name="stats_top_posts" />
-    <item type="id" name="note_block_tag_id" />
-    <item type="id" name="bottom_nav_reader_button" />
-    <item type="id" name="bottom_nav_new_post_button" />
-    <item type="id" name="media_grid_file_path_id" />
-    <item type="id" name="post_menu_item_view_layout_type" />
+    <item name="row_post_id" type="id"/>
+    <item name="drag_handle" type="id"/>
+    <item name="click_remove" type="id"/>
+    <item name="stats_tags" type="id"/>
+    <item name="stats_geoviews" type="id"/>
+    <item name="stats_comments" type="id"/>
+    <item name="stats_referrers" type="id"/>
+    <item name="stats_clicks" type="id"/>
+    <item name="stats_search" type="id"/>
+    <item name="stats_top_authors" type="id"/>
+    <item name="stats_top_posts" type="id"/>
+    <item name="note_block_tag_id" type="id"/>
+    <item name="bottom_nav_reader_button" type="id"/>
+    <item name="bottom_nav_new_post_button" type="id"/>
+    <item name="media_grid_file_path_id" type="id"/>
 </resources>
