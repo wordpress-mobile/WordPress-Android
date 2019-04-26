@@ -240,12 +240,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override
                     public void onCaptureVideoButtonClicked() {
-                        checkAndRequestCameraAndStoragePermissions(CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
+                        checkAndRequestCameraAndStoragePermissions(CAPTURE_VIDEO_PERMISSION_REQUEST_CODE);
                     }
 
                     @Override
                     public void onCapturePhotoButtonClicked() {
-                        checkAndRequestCameraAndStoragePermissions(CAPTURE_VIDEO_PERMISSION_REQUEST_CODE);
+                        checkAndRequestCameraAndStoragePermissions(CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
                     }
 
                     @Override public void onRetryUploadForMediaClicked(int mediaId) {
