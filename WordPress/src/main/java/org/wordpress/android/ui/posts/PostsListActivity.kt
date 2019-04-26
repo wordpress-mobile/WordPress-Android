@@ -16,10 +16,12 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.Toolbar
 import android.view.HapticFeedbackConstants
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -60,6 +62,8 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var pager: ViewPager
     private lateinit var fab: FloatingActionButton
+
+    private var toggleViewLayoutMenuItem: MenuItem? = null
 
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -203,6 +207,11 @@ class PostsListActivity : AppCompatActivity(),
                 pager.addOnPageChangeListener(onPageChangeListener)
             }
         })
+        viewModel.viewLayoutMenuIcon.observe(this, Observer {
+            it?.let { icon ->
+                updateMenuIconForViewLayoutType(icon)
+            }
+        })
         viewModel.selectTab.observe(this, Observer { tabIndex ->
             tabIndex?.let {
                 tabLayout.getTabAt(tabIndex)?.select()
@@ -287,8 +296,24 @@ class PostsListActivity : AppCompatActivity(),
         if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
+        } else if (item.itemId == R.id.post_menu_item_view_layout_type) {
+            viewModel.toggleViewLayout()
+            return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menu?.clear()
+        menu?.add(Menu.FIRST, R.id.post_menu_item_view_layout_type, 3, "")?.let { item ->
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            toggleViewLayoutMenuItem = item
+            viewModel.viewLayoutMenuIcon.value?.let {
+                updateMenuIconForViewLayoutType(it)
+            }
+        }
+        return true
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
@@ -308,5 +333,13 @@ class PostsListActivity : AppCompatActivity(),
 
     override fun onDismissByOutsideTouch(instanceTag: String) {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
+    }
+
+    // Menu PostListViewLayoutType handling
+
+    private fun updateMenuIconForViewLayoutType(@DrawableRes iconId: Int) {
+        getDrawable(iconId)?.let { drawable ->
+            toggleViewLayoutMenuItem?.setIcon(drawable)
+        }
     }
 }

@@ -24,6 +24,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
+import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
@@ -35,9 +36,10 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
+import java.lang.Math.max
 import javax.inject.Inject
 
-private const val MAX_NUMBER_OF_VISIBLE_ACTIONS = 3
+private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
 const val ERROR_COLOR = R.color.error
 const val PROGRESS_INFO_COLOR = R.color.neutral_500
 const val STATE_INFO_COLOR = R.color.warning_dark
@@ -59,50 +61,67 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
 
-        return PostListItemUiState(
-                data = PostListItemUiStateData(
-                        remotePostId = RemotePostId(RemoteId(post.remotePostId)),
-                        localPostId = LocalPostId(LocalId(post.id)),
-                        title = getTitle(post = post),
-                        excerpt = getExcerpt(post = post),
-                        imageUrl = featuredImageUrl,
-                        dateAndAuthor = UiStringText(text = formattedDate),
-                        statuses = getStatuses(
-                                postStatus = postStatus,
-                                isLocalDraft = post.isLocalDraft,
-                                isLocallyChanged = post.isLocallyChanged,
-                                uploadStatus = uploadStatus,
-                                hasUnhandledConflicts = unhandledConflicts
-                        ),
-                        statusesColor = getStatusesColor(
-                                postStatus = postStatus,
-                                isLocalDraft = post.isLocalDraft,
-                                isLocallyChanged = post.isLocallyChanged,
-                                uploadStatus = uploadStatus,
-                                hasUnhandledConflicts = unhandledConflicts
-                        ),
-                        statusesDelimiter = UiStringRes(R.string.multiple_status_label_delimiter),
-                        showProgress = shouldShowProgress(
-                                uploadStatus = uploadStatus,
-                                performingCriticalAction = performingCriticalAction
-                        ),
-                        showOverlay = shouldShowOverlay(
-                                uploadStatus = uploadStatus,
-                                performingCriticalAction = performingCriticalAction
-                        )
-                ),
-                actions = createActions(
-                        postStatus = postStatus,
-                        isLocalDraft = post.isLocalDraft,
-                        isLocallyChanged = post.isLocallyChanged,
+        val onButtonClicked = { buttonType: PostListButtonType ->
+            onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
+        }
+        val buttonTypes = createButtonTypes(
+                postStatus = postStatus,
+                isLocalDraft = post.isLocalDraft,
+                isLocallyChanged = post.isLocallyChanged,
+                uploadStatus = uploadStatus,
+                siteHasCapabilitiesToPublish = capabilitiesToPublish,
+                statsSupported = statsSupported
+        )
+        val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
+        val compactActions = createCompactViewActions(buttonTypes, onButtonClicked)
+
+        val remotePostId = RemotePostId(RemoteId(post.remotePostId))
+        val localPostId = LocalPostId(LocalId(post.id))
+        val title = getTitle(post = post)
+        val date = UiStringText(text = formattedDate)
+        val statuses = getStatuses(
+                postStatus = postStatus,
+                isLocalDraft = post.isLocalDraft,
+                isLocallyChanged = post.isLocallyChanged,
+                uploadStatus = uploadStatus,
+                hasUnhandledConflicts = unhandledConflicts
+        )
+        val statusesColor = getStatusesColor(
+                postStatus = postStatus,
+                isLocalDraft = post.isLocalDraft,
+                isLocallyChanged = post.isLocallyChanged,
+                uploadStatus = uploadStatus,
+                hasUnhandledConflicts = unhandledConflicts
+        )
+        val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
+        val onSelected = {
+            onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
+        }
+        val itemUiData = PostListItemUiStateData(
+                remotePostId = remotePostId,
+                localPostId = localPostId,
+                title = title,
+                excerpt = getExcerpt(post = post),
+                imageUrl = featuredImageUrl,
+                date = date,
+                statuses = statuses,
+                statusesColor = statusesColor,
+                statusesDelimiter = statusesDelimeter,
+                showProgress = shouldShowProgress(
                         uploadStatus = uploadStatus,
-                        siteHasCapabilitiesToPublish = capabilitiesToPublish,
-                        statsSupported = statsSupported,
-                        onButtonClicked = { btnType -> onAction.invoke(post, btnType, POST_LIST_BUTTON_PRESSED) }
+                        performingCriticalAction = performingCriticalAction
                 ),
-                onSelected = {
-                    onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
-                }
+                showOverlay = shouldShowOverlay(
+                        uploadStatus = uploadStatus,
+                        performingCriticalAction = performingCriticalAction
+                )
+        )
+
+        return PostListItemUiState(
+                data = itemUiData,
+                actions = defaultActions,
+                compactActions = compactActions,
+                onSelected = onSelected
         )
     }
 
@@ -210,15 +229,14 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         (!appPrefsWrapper.isAztecEditorEnabled && uploadStatus.isUploadingOrQueued))
     }
 
-    private fun createActions(
+    private fun createButtonTypes(
         postStatus: PostStatus,
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
         uploadStatus: PostListItemUploadStatus,
         siteHasCapabilitiesToPublish: Boolean,
-        statsSupported: Boolean,
-        onButtonClicked: (PostListButtonType) -> Unit
-    ): List<PostListItemAction> {
+        statsSupported: Boolean
+    ): List<PostListButtonType> {
         val canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload
         val canPublishPost = !uploadStatus.isUploadingOrQueued &&
                 (isLocallyChanged || isLocalDraft || postStatus == PostStatus.DRAFT)
@@ -268,19 +286,39 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             buttonTypes.add(PostListButtonType.BUTTON_STATS)
         }
 
+        return buttonTypes
+    }
+
+    private fun createDefaultViewActions(
+        buttonTypes: List<PostListButtonType>,
+        onButtonClicked: (PostListButtonType) -> Unit
+    ): List<PostListItemAction> {
         val createSinglePostListItem = { buttonType: PostListButtonType ->
             PostListItemAction.SingleItem(buttonType, onButtonClicked)
         }
-
-        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS) {
-            val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1)
+        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD) {
+            val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1)
                     .map(createSinglePostListItem)
-            val itemsUnderMore = buttonTypes.subList(MAX_NUMBER_OF_VISIBLE_ACTIONS - 1, buttonTypes.size)
+            val itemsUnderMore = buttonTypes.subList(
+                    max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
+                    buttonTypes.size
+            )
                     .map(createSinglePostListItem)
 
             visibleItems.plus(PostListItemAction.MoreItem(itemsUnderMore, onButtonClicked))
         } else {
             buttonTypes.map(createSinglePostListItem)
         }
+    }
+
+    private fun createCompactViewActions(
+        buttonTypes: List<PostListButtonType>,
+        onButtonClicked: (PostListButtonType) -> Unit
+    ): MoreItem {
+        val createSinglePostListItem = { buttonType: PostListButtonType ->
+            PostListItemAction.SingleItem(buttonType, onButtonClicked)
+        }
+        val allItems = buttonTypes.map(createSinglePostListItem)
+        return PostListItemAction.MoreItem(allItems, onButtonClicked)
     }
 }
