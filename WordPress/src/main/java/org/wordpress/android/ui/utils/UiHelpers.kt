@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.utils
 
 import android.content.Context
+import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.ui.utils.UiDimen.UIDimenDPInt
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
@@ -28,6 +30,11 @@ class UiHelpers @Inject constructor() {
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
+    fun setTextOrHide(view: TextView, uiString: UiString?) {
+        val text = uiString?.let { getTextOfUiString(view.context, uiString) }
+        setTextOrHide(view, text)
+    }
+
     fun setTextOrHide(view: TextView, @StringRes resId: Int?) {
         val text = resId?.let { view.context.getString(resId) }
         setTextOrHide(view, text)
@@ -37,6 +44,13 @@ class UiHelpers @Inject constructor() {
         updateVisibility(view, text != null)
         text?.let {
             view.text = text
+        }
+    }
+
+    fun setImageOrHide(imageView: ImageView, @DrawableRes resId: Int?) {
+        updateVisibility(imageView, resId != null)
+        resId?.let {
+            imageView.setImageResource(resId)
         }
     }
 }
