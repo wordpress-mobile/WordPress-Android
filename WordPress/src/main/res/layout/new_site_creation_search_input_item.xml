@@ -63,7 +63,8 @@
             android:layout_width="@dimen/site_creation_verticals_clear_search_icon_size"
             android:layout_height="@dimen/site_creation_verticals_clear_search_icon_size"
             android:background="@drawable/ic_close_white_24dp"
-            android:contentDescription="@string/new_site_creation_clear_all_content_description"/>
+            android:contentDescription="@string/new_site_creation_clear_all_content_description"
+            tools:backgroundTint="@color/neutral_300"/>
 
     </LinearLayout>
 
