@@ -6,16 +6,16 @@
               android:layout_gravity="center_vertical"
               android:background="?android:selectableItemBackground"
               android:orientation="horizontal"
-              android:padding="@dimen/margin_medium">
+              android:padding="@dimen/margin_large">
 
-    <android.support.v7.widget.AppCompatRadioButton
+    <RadioButton
         android:id="@+id/domainSelectionRadioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_large"
         android:clickable="false"/>
 
-    <android.support.v7.widget.AppCompatTextView
+    <TextView
         android:id="@+id/domainSuggestionsName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

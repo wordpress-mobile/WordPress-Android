@@ -559,7 +559,7 @@
         <activity
             android:name=".ui.domains.DomainRegistrationActivity"
             android:label="@string/register_domain"
-            android:theme="@style/DomainRegistrationTheme"/>
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Me activities -->
         <activity

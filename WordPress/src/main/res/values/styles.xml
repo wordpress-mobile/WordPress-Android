@@ -841,6 +841,4 @@
         <item name="android:background">@color/neutral_0</item>
     </style>
 
-    <!-- Domain Registration styles -->
-    <style name="DomainRegistrationTheme" parent="LoginTheme"/>
 </resources>
