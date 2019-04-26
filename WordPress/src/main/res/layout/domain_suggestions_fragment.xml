@@ -52,7 +52,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:background="@color/grey_lighten_30"/>
+        android:background="@color/divider"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
