@@ -30,10 +30,14 @@ class ListItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             View.GONE
         }
 
-        percentageBar.visibility = View.VISIBLE
+        if(item.percentageOfMaxValue != null) {
+            percentageBar.visibility = View.VISIBLE
 
-        val globalLayoutListener = PercentageBarGlobalListener(constraintLayout, text, value, percentageBar, item.percentageOfMaxValue)
+            val globalLayoutListener = PercentageBarGlobalListener(constraintLayout, text, value, percentageBar, item.percentageOfMaxValue)
 
-        constraintLayout.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
+            constraintLayout.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
+        } else {
+            percentageBar.visibility = View.GONE
+        }
     }
 }

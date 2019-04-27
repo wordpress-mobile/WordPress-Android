@@ -126,6 +126,7 @@ class CommentsUseCase
                 ListItem(
                         post.name,
                         post.comments.toFormattedString(),
+                        null,
                         index < posts.size - 1
                 )
             })
