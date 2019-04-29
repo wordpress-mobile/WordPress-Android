@@ -212,16 +212,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         return fragment == null ? null : (LoginEmailFragment) fragment;
     }
 
-    private LoginEmailPasswordFragment getLoginEmailPasswordFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginEmailPasswordFragment.TAG);
-        return fragment == null ? null : (LoginEmailPasswordFragment) fragment;
-    }
-
-    private LoginMagicLinkRequestFragment getLoginMagicLinkRequestFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginMagicLinkRequestFragment.TAG);
-        return fragment == null ? null : (LoginMagicLinkRequestFragment) fragment;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -353,9 +343,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void startLogin() {
-        if (getLoginEmailFragment() != null || getLoginEmailPasswordFragment() != null
-            || getLoginMagicLinkRequestFragment() != null) {
-            // login has already started. Just bail.
+        if (getLoginEmailFragment() != null) {
+            // email screen is already shown so, login has already started. Just bail.
             return;
         }
 
