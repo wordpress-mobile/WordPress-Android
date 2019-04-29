@@ -22,7 +22,7 @@
         android:textAlignment="viewStart"
         android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toTopOf="@+id/subtext"
-        app:layout_constraintEnd_toStartOf="@+id/value"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="@+id/icon_container"
@@ -113,7 +113,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/percentage_bar_constraint_layout"
         android:layout_width="0dp"
-        android:layout_height="10dp"
+        android:layout_height="4dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintEnd_toStartOf="@id/barrier"
