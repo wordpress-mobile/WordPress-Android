@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import androidx.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore
@@ -74,11 +75,12 @@ class InsightsManagementViewModel @Inject constructor(
     }
 
     fun onSaveInsights() {
-        launch {
+        // This has to be GlobalScope because otherwise the coroutine gets killed with the ViewModel
+        GlobalScope.launch {
             val addedTypes = insights.filter { it.type == ADDED }.map { it.insightType }
             statsStore.updateTypes(siteProvider.siteModel, addedTypes)
 
-            insightsUseCase.refreshData(true)
+            insightsUseCase.loadData()
         }
         _closeInsightsManagement.call()
     }
