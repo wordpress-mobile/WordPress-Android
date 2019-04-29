@@ -65,14 +65,12 @@ import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivit
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
-import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
-import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -92,6 +90,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTI
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.stats.OldStatsActivity.LOGGED_INTO_JETPACK;
+import static org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.*;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
@@ -283,32 +282,20 @@ public class ActivityLauncher {
     }
 
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
-        context.startActivity(intent);
+        startForTabbedInsightsStats(context, statsType, selectedTab, null);
     }
 
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab,
                                                   int localSiteId) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
-        intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId);
-        context.startActivity(intent);
+        startForTabbedInsightsStats(context, statsType, selectedTab, localSiteId);
     }
 
     public static void viewAllInsightsStats(Context context, StatsViewType statsType) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        context.startActivity(intent);
+        startForInsights(context, statsType);
     }
 
     public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity);
-        context.startActivity(intent);
+        startForGranularStats(context, statsType, granularity);
     }
 
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {

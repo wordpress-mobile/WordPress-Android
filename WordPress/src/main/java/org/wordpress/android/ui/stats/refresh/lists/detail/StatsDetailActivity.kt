@@ -8,9 +8,11 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.util.analytics.AnalyticsUtils
 
 const val POST_ID = "POST_ID"
 const val POST_TYPE = "POST_TYPE"
@@ -54,6 +56,10 @@ class StatsDetailActivity : AppCompatActivity() {
             if (postUrl != null) {
                 statsPostViewIntent.putExtra(POST_URL, postUrl)
             }
+            AnalyticsUtils.trackWithSiteId(
+                    AnalyticsTracker.Stat.STATS_SINGLE_POST_ACCESSED,
+                    site.siteId
+            )
             context.startActivity(statsPostViewIntent)
         }
     }
