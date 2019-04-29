@@ -150,7 +150,7 @@ class PostListFragment : Fragment() {
             if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
                 swipeRefreshLayout?.isRefreshing = false
             } else {
-                viewModel.fetchFirstPage()
+                viewModel.swipeToRefresh()
             }
         }
         return view

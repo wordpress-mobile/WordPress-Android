@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.refresh.StatsFragment;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailFragment;
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
@@ -52,5 +53,10 @@ public abstract class ApplicationModule {
     @Provides
     public static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
         return new ConnectionStatusLiveData(context);
+    }
+
+    @Provides
+    static LocalDraftUploadStarter provideLocalDraftUploadStarter(Context context) {
+        return new LocalDraftUploadStarter(context);
     }
 }

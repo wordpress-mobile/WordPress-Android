@@ -5,6 +5,7 @@ import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,10 +35,12 @@ import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostFetcher
@@ -61,6 +64,8 @@ class PostListMainViewModel @Inject constructor(
     mediaStore: MediaStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
+    private val localDraftUploadStarter: LocalDraftUploadStarter,
+    connectionStatus: LiveData<ConnectionStatus>,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), LifecycleOwner, CoroutineScope {
@@ -156,6 +161,9 @@ class PostListMainViewModel @Inject constructor(
     }
 
     init {
+        connectionStatus.observe(this, Observer {
+            localDraftUploadStarter.uploadLocalDrafts()
+        })
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
