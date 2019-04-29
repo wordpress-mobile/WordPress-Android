@@ -96,7 +96,7 @@ To help ease the translation process we ask that you mark alias string resources
 
 # Drawable Resources
 
-Adding a vector drawable (to `WordPress/src/main/res/drawable/`) should be the first option when adding assets. Only if a vector drawable is not available should PNG files be added to the project. Also make sure to use `android:src` in place of `app:srcCompat` in XML files.
+Adding a vector drawable (to `WordPress/src/main/res/drawable/`) should be the first option when adding assets. Only if a vector drawable is not available should PNG files be added to the project. Also make sure to use `android:src` in place of `app:srcCompat` in XML files. Use existing white 24dp variations of vector drawables (i.e. `ic_*_white_24dp`) and tint the drawables statically (i.e. XML) or dynamically (i.e. Java or Kotlin) as necessary. Set values for `android:height` and `android:width` attributes for views with icons to scale the 24dp icon for that view.
 
 Some vector drawables may come from a SVG file and they are not the easiest file type to edit. If the SVG file is specific to the WPAndroid project (like a banner image or unlike a gridicon), then add the SVG source in `WordPress/src/future/svg/`. This will make sure we can find and edit the SVG file and then export it in vector drawable format.
 
