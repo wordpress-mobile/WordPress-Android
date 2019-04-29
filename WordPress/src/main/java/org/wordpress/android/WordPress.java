@@ -89,10 +89,8 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.io.File;
