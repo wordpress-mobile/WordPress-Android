@@ -6,8 +6,8 @@ import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostUtils
@@ -27,12 +28,14 @@ import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState.RefreshError
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias PagedPostList = PagedList<PostListItemType>
 
@@ -44,8 +47,9 @@ class PostListViewModel @Inject constructor(
     private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val localDraftUploadStarter: LocalDraftUploadStarter,
-    connectionStatus: LiveData<ConnectionStatus>
-) : ViewModel(), LifecycleOwner {
+    connectionStatus: LiveData<ConnectionStatus>,
+    @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher
+) : ScopedViewModel(bgDispatcher), LifecycleOwner {
     private val isStatsSupported: Boolean by lazy {
         SiteUtils.isAccessedViaWPComRest(connector.site) && connector.site.hasCapabilityViewStats
     }
