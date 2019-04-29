@@ -23,6 +23,9 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.utils.UiString;
+import org.wordpress.android.ui.utils.UiString.UiStringRes;
+import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -61,19 +64,24 @@ public class UploadUtils {
      * Returns an error message string for a failed post upload.
      */
     public static @NonNull
-    String getErrorMessageFromPostError(Context context, boolean isPage, PostError error) {
+    UiString getErrorMessageResIdFromPostError(boolean isPage, PostError error) {
         switch (error.type) {
             case UNKNOWN_POST:
-                return isPage ? context.getString(R.string.error_unknown_page)
-                        : context.getString(R.string.error_unknown_post);
+                return isPage ? new UiStringRes(R.string.error_unknown_page)
+                        : new UiStringRes(R.string.error_unknown_post);
             case UNKNOWN_POST_TYPE:
-                return context.getString(R.string.error_unknown_post_type);
+                return new UiStringRes(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
-                return isPage ? context.getString(R.string.error_refresh_unauthorized_pages)
-                        : context.getString(R.string.error_refresh_unauthorized_posts);
+                return isPage ? new UiStringRes(R.string.error_refresh_unauthorized_pages)
+                        : new UiStringRes(R.string.error_refresh_unauthorized_posts);
+            case UNSUPPORTED_ACTION:
+            case INVALID_RESPONSE:
+            case GENERIC_ERROR:
+            default:
+                // In case of a generic or uncaught error, return the message from the API response or the error type
+                return TextUtils.isEmpty(error.message) ? new UiStringText(error.type.toString())
+                        : new UiStringText(error.message);
         }
-        // In case of a generic or uncaught error, return the message from the API response or the error type
-        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
     }
 
     /**

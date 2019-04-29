@@ -229,7 +229,7 @@ public class PostUtils {
     }
 
     private static String makeExcerpt(String description) {
-        if (TextUtils.isEmpty(description)) {
+        if (StringUtils.isEmpty(description)) {
             return null;
         }
 
