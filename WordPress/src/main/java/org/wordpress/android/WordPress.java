@@ -75,12 +75,9 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.uploads.UploadService;
-<<<<<<< HEAD
-=======
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
->>>>>>> release/12.3
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
