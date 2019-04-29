@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-26 18:19:54+0000
+Translation-Revision-Date: 2019-04-11 20:23:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">S’u arrit të kontrollohet kredit përkatësie gjendje</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Po kontrollohet kredit përkatësie </string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Regjistroje përkatësinë</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Që të instaloni shtojca, lypset të keni një përkatësi vetjake përshoqëruar sajtit tuaj.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Instaloni shtojcë</string>
     <string name="new_site_creation_preview_subtitle">Do të jeni në gjendje të përshtatni më vonë pamjen dhe ndjesitë që jep sajti juaj</string>
     <string name="publish_on">Botoje më: %s</string>
     <string name="schedule_for">Planifikoje për: %s</string>

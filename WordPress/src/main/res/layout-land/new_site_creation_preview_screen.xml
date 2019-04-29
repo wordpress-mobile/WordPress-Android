@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,6 +25,7 @@
             android:id="@+id/sitePreviewTitleAndButtonContainer"
             android:layout_width="@dimen/new_site_creation_preview_landscape_title_and_button_container_width"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:gravity="center"
@@ -35,10 +35,13 @@
 
             <include layout="@layout/new_site_creation_preview_header_item"/>
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/okButton"
-                style="@style/SitePreviewOkButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
+                android:text="@string/dialog_button_ok"
+                android:theme="@style/WordPress.Button.Primary"
                 tools:ignore="InconsistentLayout"/>
         </LinearLayout>
 

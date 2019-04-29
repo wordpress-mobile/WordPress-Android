@@ -17,5 +17,6 @@ enum class ImageType {
     THEME,
     UNKNOWN,
     VIDEO,
-    ICON
+    ICON,
+    MULTI_USER_AVATAR_GREY_BACKGROUND
 }

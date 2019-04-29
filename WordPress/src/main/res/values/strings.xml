@@ -251,6 +251,11 @@
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="posts_empty_list_button">Create a post</string>
     <string name="empty_list_default">This list is empty</string>
+    <string name="posts_published_empty">You haven\'t published any posts yet</string>
+    <string name="posts_scheduled_empty">You don\'t have any scheduled posts</string>
+    <string name="posts_draft_empty">You don\'t have any draft posts</string>
+    <string name="posts_trashed_empty">You don\'t have any binned posts</string>
+    <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
 
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
@@ -262,10 +267,10 @@
     <string name="button_trash">Trash</string>
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
-    <string name="button_back">Back</string>
     <string name="button_discard">Discard</string>
     <string name="button_discard_changes">Discard Changes</string>
     <string name="button_retry">Retry</string>
+    <string name="button_move_to_draft">Move to Draft</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
@@ -311,12 +316,10 @@
     <string name="width">Width</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
     <string name="delete_post">Delete post?</string>
     <string name="delete_page">Delete page?</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
-    <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
     <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
@@ -333,6 +336,10 @@
     <string name="snackbar_conflict_local_version_discarded">Local version discarded</string>
     <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
     <string name="snackbar_conflict_undo">Undo</string>
+
+    <!-- trash post with local changes dialog -->
+    <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will discard local changes, are you sure you want to continue?</string>
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
@@ -433,8 +440,12 @@
 
     <!-- post actions -->
     <string name="preview_post">Preview post</string>
-    <string name="post_deleted">Post deleted</string>
     <string name="post_trashed">Post sent to trash</string>
+    <string name="post_trashing">Post is being trashed</string>
+    <string name="post_restored">Post restored</string>
+    <string name="post_restoring">Post is being restored</string>
+    <string name="post_moving_to_draft">Post is being moved to draft</string>
+
     <string name="share_link">Share link</string>
     <string name="view_in_browser">View in browser</string>
     <string name="preview">Preview</string>
@@ -822,14 +833,14 @@
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>
-    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack</string>
+    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
     <string name="installing_jetpack">Installing Jetpack</string>
-    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete</string>
+    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
     <string name="jetpack_installed">Jetpack installed</string>
-    <string name="jetpack_installed_message">You have Jetpack installed on your site. Congratulations!</string>
+    <string name="jetpack_installed_message">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
     <string name="jetpack_installation_problem">There was a problem</string>
-    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time</string>
-    <string name="install_jetpack_continue">Continue</string>
+    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
+    <string name="install_jetpack_continue">Set up</string>
     <string name="install_jetpack_retry">Retry</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
@@ -1034,6 +1045,7 @@
     <string name="stats_insights_tumblr">Tumblr</string>
     <string name="stats_insights_google_plus">Google+</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_social">Social</string>
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
@@ -1262,6 +1274,7 @@
     <string name="immediately">Immediately</string>
     <string name="now">Now</string>
     <string name="scheduled_for">Scheduled for: %s</string>
+    <string name="backdated_for">Backdated for: %s</string>
     <string name="published_on">Published on: %s</string>
     <string name="schedule_for">Schedule for: %s</string>
     <string name="publish_on">Publish on: %s</string>
@@ -1278,8 +1291,6 @@
     <string name="post_status_pending_review">Pending review</string>
     <string name="post_status_draft">Draft</string>
     <string name="post_status_post_private">Private</string>
-    <string name="post_status_scheduled">Scheduled</string>
-    <string name="post_status_trashed">Trashed</string>
     <string-array name="post_settings_statuses" translatable="false">
         <item>@string/post_status_publish_post</item>
         <item>@string/post_status_draft</item>
@@ -1407,7 +1418,6 @@
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="automattic_url" translatable="false">automattic.com</string>
-    <string name="wordpresscom_tos_url" translatable="false">https://%s.wordpress.com/tos</string>
     <string name="version">Version</string>
     <string name="version_with_name_param">Version %s</string>
     <string name="tos">Terms of Service</string>
@@ -1445,6 +1455,7 @@
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
     <string name="error_deleting_post">An error occurred while deleting the post</string>
+    <string name="error_restoring_post">An error occurred while restoring the post</string>
 
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
@@ -2511,6 +2522,16 @@
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
+
+
+    <!-- Posts -->
+    <string name="post_list_author_me">Me</string>
+    <string name="post_list_author_everyone">Everyone</string>
+    <string name="post_list_published">Published</string>
+    <string name="post_list_drafts">Drafts</string>
+    <string name="post_list_scheduled">Scheduled</string>
+    <string name="post_list_trashed">Trashed</string>
+
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->

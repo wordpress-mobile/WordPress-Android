@@ -13,19 +13,16 @@
                 android:color="@color/neutral_300" >
             </solid>
 
-            <padding
-                android:bottom="8dp"
-                android:left="8dp"
-                android:right="8dp"
-                android:top="8dp" >
-            </padding>
-
         </shape>
 
     </item>
 
     <item
-        android:drawable="@drawable/ic_customize_white_24dp" >
+        android:drawable="@drawable/ic_customize_white_24dp"
+        android:bottom="8dp"
+        android:left="8dp"
+        android:right="8dp"
+        android:top="8dp">
     </item>
 
 </layer-list>

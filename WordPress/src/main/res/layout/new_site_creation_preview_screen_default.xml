@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/neutral_50"
+    android:background="@color/neutral_0"
     android:orientation="vertical">
 
     <include
@@ -48,14 +48,19 @@
             android:layout_height="@dimen/new_site_creation_preview_ok_button_container_height"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/margin_medium"
-            app:cardBackgroundColor="@color/neutral_50"
+            app:cardBackgroundColor="@color/neutral_0"
             app:cardElevation="@dimen/new_site_creation_container_elevation"
             tools:ignore="InconsistentLayout">
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/okButton"
-                style="@style/SitePreviewOkButton"
-                android:layout_margin="@dimen/margin_extra_large"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:text="@string/dialog_button_ok"
+                android:theme="@style/WordPress.Button.Primary"/>
         </android.support.v7.widget.CardView>
     </RelativeLayout>
 </RelativeLayout>

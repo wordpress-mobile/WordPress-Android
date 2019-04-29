@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-03 08:54:10+0000
+Translation-Revision-Date: 2019-04-17 01:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">登録可能なドメインクレジットの確認に失敗しました</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">ドメインクレジットの確認</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">ドメインを登録</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">プラグインをインストールするには、カスタムドメインをサイトに関連付ける必要があります。</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">プラグインをインストール</string>
     <string name="new_site_creation_preview_subtitle">サイトの外見は後でカスタマイズできます。</string>
     <string name="publish_on">公開日:%s</string>
     <string name="schedule_for">予約:%s</string>
