@@ -99,6 +99,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private enum SmartLockHelperState {
         NOT_TRIGGERED,
         TRIGGER_FILL_IN_ON_CONNECT,
+        FINISH_ON_CONNECT,
         FINISHED
     }
 
@@ -324,17 +325,26 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void checkSmartLockPasswordAndStartLogin() {
-        checkSmartLockPassword();
+        initSmartLockIfNotFinished(true);
 
         if (mSmartLockHelperState == SmartLockHelperState.FINISHED) {
             startLogin();
         }
     }
 
-    private void checkSmartLockPassword() {
+    /**
+     * @param triggerFillInOnConnect set to true, if you want to show an account chooser dialog when the user has
+     *                               stored their credentials in the past. Set to false, if you just want to
+     *                               initialize SmartLock eg. when you want to use it just to save users credentials.
+     */
+    private void initSmartLockIfNotFinished(boolean triggerFillInOnConnect) {
         if (mSmartLockHelperState == SmartLockHelperState.NOT_TRIGGERED) {
             if (initSmartLockHelperConnection()) {
-                mSmartLockHelperState = SmartLockHelperState.TRIGGER_FILL_IN_ON_CONNECT;
+                if (triggerFillInOnConnect) {
+                    mSmartLockHelperState = SmartLockHelperState.TRIGGER_FILL_IN_ON_CONNECT;
+                } else {
+                    mSmartLockHelperState = SmartLockHelperState.FINISH_ON_CONNECT;
+                }
             } else {
                 // just shortcircuit the attempt to use SmartLockHelper
                 mSmartLockHelperState = SmartLockHelperState.FINISHED;
@@ -435,7 +445,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void gotWpcomEmail(String email) {
-        checkSmartLockPassword();
+        initSmartLockIfNotFinished(false);
         if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
                     email, AuthEmailPayloadScheme.WORDPRESS, mIsJetpackConnect,
@@ -715,6 +725,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 mSmartLockHelper.disableAutoSignIn();
 
                 mSmartLockHelper.smartLockAutoFill(this);
+                break;
+            case FINISH_ON_CONNECT:
+                mSmartLockHelperState = SmartLockHelperState.FINISHED;
                 break;
             case FINISHED:
                 // don't do anything special. We're reconnecting the GoogleApiClient on rotation.
