@@ -537,6 +537,22 @@ public class WellSqlConfig extends DefaultWellConfig {
         }
     }
 
+    /**
+     * Recreates all the tables in this database - similar to the above but can be used from onDowngrade where we can't
+     * call giveMeWritableDb (attempting to do so results in "IllegalStateException: getDatabase called recursively")
+     */
+    @SuppressWarnings("unused")
+    public void reset(WellTableManager helper) {
+        AppLog.d(T.DB, "resetting tables");
+        for (Class<? extends Identifiable> table : mTables) {
+            AppLog.d(T.DB, "dropping table " + table.getSimpleName());
+            helper.dropTable(table);
+            AppLog.d(T.DB, "creating table " + table.getSimpleName());
+            helper.createTable(table);
+        }
+    }
+
+
     private void migrateAddOn(@AddOn String addOnName, SQLiteDatabase db, int oldDbVersion) {
         if (mActiveAddOns.contains(addOnName)) {
             switch (oldDbVersion) {

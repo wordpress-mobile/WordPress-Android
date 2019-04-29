@@ -1,20 +1,26 @@
 package org.wordpress.android.fluxc.store
 
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedList.BoundaryCallback
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.action.ListAction.FETCHED_LIST_ITEMS
+import org.wordpress.android.fluxc.action.ListAction.LIST_DATA_INVALIDATED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_CHANGED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
+import org.wordpress.android.fluxc.action.ListAction.LIST_REQUIRES_REFRESH
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_ALL_LISTS
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_EXPIRED_LISTS
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
@@ -23,9 +29,9 @@ import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.ListState.FETCHED
 import org.wordpress.android.fluxc.model.list.PagedListFactory
-import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
-import org.wordpress.android.fluxc.model.list.datastore.ListDataStoreInterface
+import org.wordpress.android.fluxc.model.list.datasource.InternalPagedListDataSource
+import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
@@ -34,6 +40,7 @@ import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.CoroutineContext
 
 // How long a list should stay in DB if it hasn't been updated
 const val DEFAULT_EXPIRATION_DURATION = 1000L * 60 * 60 * 24 * 7
@@ -47,6 +54,7 @@ const val DEFAULT_EXPIRATION_DURATION = 1000L * 60 * 60 * 24 * 7
 class ListStore @Inject constructor(
     private val listSqlUtils: ListSqlUtils,
     private val listItemSqlUtils: ListItemSqlUtils,
+    private val coroutineContext: CoroutineContext,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -57,6 +65,8 @@ class ListStore @Inject constructor(
             FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
             LIST_ITEMS_CHANGED -> handleListItemsChanged(action.payload as ListItemsChangedPayload)
             LIST_ITEMS_REMOVED -> handleListItemsRemoved(action.payload as ListItemsRemovedPayload)
+            LIST_REQUIRES_REFRESH -> handleListRequiresRefresh(action.payload as ListDescriptorTypeIdentifier)
+            LIST_DATA_INVALIDATED -> handleListDataInvalidated(action.payload as ListDescriptorTypeIdentifier)
             REMOVE_EXPIRED_LISTS -> handleRemoveExpiredLists(action.payload as RemoveExpiredListsPayload)
             REMOVE_ALL_LISTS -> handleRemoveAllLists()
         }
@@ -70,60 +80,86 @@ class ListStore @Inject constructor(
      * This is the function that'll be used to consume lists.
      *
      * @param listDescriptor Describes which list will be consumed
-     * @param dataStore Describes how to take certain actions such as fetching list for the item type [T].
+     * @param dataSource Describes how to take certain actions such as fetching a list for the item type [LIST_ITEM].
      * @param lifecycle The lifecycle of the client that'll be consuming this list. It's used to make sure everything
      * is cleaned up properly once the client is destroyed.
-     * @param transform A transform function from the actual item type [T], to the resulting item type [R]. In many
-     * cases there are a lot of expensive calculations that needs to be made before an item can be used. This function
-     * provides a way to do that during the pagination step in a background thread, so the clients won't need to
-     * worry about these expensive operations.
      *
      * @return A [PagedListWrapper] that provides all the necessary information to consume a list such as its data,
      * whether the first page is being fetched, whether there are any errors etc. in `LiveData` format.
      */
-    fun <T, R> getList(
-        listDescriptor: ListDescriptor,
-        dataStore: ListDataStoreInterface<T>,
-        lifecycle: Lifecycle,
-        transform: (T) -> R
-    ): PagedListWrapper<R> {
-        // Helper functions
-        val getList = { descriptor: ListDescriptor -> getListItems(descriptor) }
-        val isListFullyFetched = { descriptor: ListDescriptor -> getListState(descriptor) == FETCHED }
-        val fetchFirstPage = {
-            handleFetchList(listDescriptor, false) { offset ->
-                dataStore.fetchList(listDescriptor, offset)
-            }
-        }
-        val isEmpty = { getListItemsCount(listDescriptor) == 0L }
+    fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> getList(
+        listDescriptor: LIST_DESCRIPTOR,
+        dataSource: ListItemDataSourceInterface<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>,
+        lifecycle: Lifecycle
+    ): PagedListWrapper<LIST_ITEM> {
+        val factory = createPagedListFactory(listDescriptor, dataSource)
+        val pagedListData = createPagedListLiveData(
+                listDescriptor = listDescriptor,
+                dataSource = dataSource,
+                pagedListFactory = factory
+        )
+        return PagedListWrapper(
+                data = pagedListData,
+                dispatcher = mDispatcher,
+                listDescriptor = listDescriptor,
+                lifecycle = lifecycle,
+                refresh = {
+                    handleFetchList(listDescriptor, loadMore = false) { offset ->
+                        dataSource.fetchList(listDescriptor, offset)
+                    }
+                },
+                invalidate = factory::invalidate,
+                parentCoroutineContext = coroutineContext
+        )
+    }
 
-        // Create the PagedList
-        val factory = PagedListFactory(dataStore, listDescriptor, getList, isListFullyFetched, transform)
-        val callback = object : BoundaryCallback<PagedListItemType<R>>() {
-            override fun onItemAtEndLoaded(itemAtEnd: PagedListItemType<R>) {
-                // Load more items if we are near the end of list
-                handleFetchList(listDescriptor, true) { offset ->
-                    dataStore.fetchList(listDescriptor, offset)
-                }
-                super.onItemAtEndLoaded(itemAtEnd)
-            }
-        }
+    /**
+     * A helper function that creates a [PagedList] [LiveData] for the given [LIST_DESCRIPTOR], [dataSource] and the
+     * [PagedListFactory].
+     */
+    private fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> createPagedListLiveData(
+        listDescriptor: LIST_DESCRIPTOR,
+        dataSource: ListItemDataSourceInterface<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>,
+        pagedListFactory: PagedListFactory<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>
+    ): LiveData<PagedList<LIST_ITEM>> {
         val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
                 .setInitialLoadSizeHint(listDescriptor.config.initialLoadSize)
                 .setPageSize(listDescriptor.config.dbPageSize)
                 .build()
-        val listData = LivePagedListBuilder<Int, PagedListItemType<R>>(factory, pagedListConfig)
-                .setBoundaryCallback(callback).build()
-        return PagedListWrapper(
-                data = listData,
-                dispatcher = mDispatcher,
-                listDescriptor = listDescriptor,
-                lifecycle = lifecycle,
-                refresh = fetchFirstPage,
-                invalidate = factory::invalidate,
-                isListEmpty = isEmpty
-        )
+        val boundaryCallback = object : BoundaryCallback<LIST_ITEM>() {
+            override fun onItemAtEndLoaded(itemAtEnd: LIST_ITEM) {
+                // Load more items if we are near the end of list
+                GlobalScope.launch(coroutineContext) {
+                    handleFetchList(listDescriptor, loadMore = true) { offset ->
+                        dataSource.fetchList(listDescriptor, offset)
+                    }
+                }
+                super.onItemAtEndLoaded(itemAtEnd)
+            }
+        }
+        return LivePagedListBuilder<Int, LIST_ITEM>(pagedListFactory, pagedListConfig)
+                .setBoundaryCallback(boundaryCallback).build()
+    }
+
+    /**
+     * A helper function that creates a [PagedListFactory] for the given [LIST_DESCRIPTOR] and [dataSource].
+     */
+    private fun <LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM> createPagedListFactory(
+        listDescriptor: LIST_DESCRIPTOR,
+        dataSource: ListItemDataSourceInterface<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM>
+    ): PagedListFactory<LIST_DESCRIPTOR, ITEM_IDENTIFIER, LIST_ITEM> {
+        val getRemoteItemIds = { getListItems(listDescriptor).map { RemoteId(value = it) } }
+        val getIsListFullyFetched = { getListState(listDescriptor) == FETCHED }
+        return PagedListFactory(
+                createDataSource = {
+                    InternalPagedListDataSource(
+                            listDescriptor = listDescriptor,
+                            remoteItemIds = getRemoteItemIds(),
+                            isListFullyFetched = getIsListFullyFetched(),
+                            itemDataSource = dataSource
+                    )
+                })
     }
 
     /**
@@ -134,14 +170,6 @@ class ListStore @Inject constructor(
         return if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id).map { it.remoteItemId }
         } else emptyList()
-    }
-
-    /**
-     * A helper function that returns the number of records a list has for the given [ListDescriptor].
-     */
-    private fun getListItemsCount(listDescriptor: ListDescriptor): Long {
-        val listModel = listSqlUtils.getList(listDescriptor)
-        return if (listModel != null) listItemSqlUtils.getListItemsCount(listModel.id) else 0L
     }
 
     /**
@@ -248,6 +276,26 @@ class ListStore @Inject constructor(
     }
 
     /**
+     * Handles the [ListAction.LIST_REQUIRES_REFRESH] action.
+     *
+     * Whenever a type of list needs to be refreshed, [OnListRequiresRefresh] event will be emitted so the listening
+     * lists can refresh themselves.
+     */
+    private fun handleListRequiresRefresh(typeIdentifier: ListDescriptorTypeIdentifier) {
+        emitChange(OnListRequiresRefresh(type = typeIdentifier))
+    }
+
+    /**
+     * Handles the [ListAction.LIST_DATA_INVALIDATED] action.
+     *
+     * Whenever the data of a list is invalidated, [OnListDataInvalidated] event will be emitted so the listening
+     * lists can invalidate their data.
+     */
+    private fun handleListDataInvalidated(typeIdentifier: ListDescriptorTypeIdentifier) {
+        emitChange(OnListDataInvalidated(type = typeIdentifier))
+    }
+
+    /**
      * Handles the [ListAction.REMOVE_EXPIRED_LISTS] action.
      *
      * It deletes [ListModel]s that hasn't been updated for the given [RemoveExpiredListsPayload.expirationDuration].
@@ -345,6 +393,16 @@ class ListStore @Inject constructor(
             this.error = error
         }
     }
+
+    /**
+     * The event to be emitted when a list needs to be refresh for a specific [ListDescriptorTypeIdentifier].
+     */
+    class OnListRequiresRefresh(val type: ListDescriptorTypeIdentifier) : Store.OnChanged<ListError>()
+
+    /**
+     * The event to be emitted when a list's data is invalidated for a specific [ListDescriptorTypeIdentifier].
+     */
+    class OnListDataInvalidated(val type: ListDescriptorTypeIdentifier) : Store.OnChanged<ListError>()
 
     /**
      * This is the payload for [ListAction.LIST_ITEMS_CHANGED].
