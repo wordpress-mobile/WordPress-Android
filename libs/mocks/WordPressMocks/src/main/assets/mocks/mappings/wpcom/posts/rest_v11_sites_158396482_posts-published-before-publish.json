@@ -10,28 +10,18 @@
                 "equalTo": "ID,modified,status"
             },
             "status": {
-                "equalTo": "draft,pending,private,publish,future"
+                "equalTo": "publish,private"
             }
         }
     },
     "response": {
         "status": 200,
         "jsonBody": {
-            "found": 3,
+            "found": 1,
             "posts": [
                 {
-                    "ID": 3,
-                    "modified": "2019-03-07T14:11:34+00:00",
-                    "status": "publish"
-                },
-                {
-                    "ID": 2,
-                    "modified": "2019-03-05T14:48:47+00:00",
-                    "status": "publish"
-                },
-                {
-                    "ID": 1,
-                    "modified": "2019-03-05T14:46:38+00:00",
+                    "ID": 4,
+                    "modified": "2018-03-23T00:20:36+00:00",
                     "status": "publish"
                 }
             ],
@@ -50,5 +40,5 @@
         }
     },
     "scenarioName": "new-post",
-    "requiredScenarioState": "Post Published"
+    "requiredScenarioState": "Started"
 }

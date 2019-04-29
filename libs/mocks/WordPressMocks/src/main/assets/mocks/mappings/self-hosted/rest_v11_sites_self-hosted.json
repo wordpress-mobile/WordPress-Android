@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.1/sites/.*(?!\\.wordpress.com).*/?.*"
+        "urlPattern": "/rest/v1.1/sites/([0-9]+(\\.[0-9]+)+|localhost)%3A[0-9]*/.*"
     },
     "response": {
         "status": 403,
@@ -13,7 +13,7 @@
             "Content-Type": "application/json",
             "Connection": "keep-alive",
             "Cache-Control": "no-cache, must-revalidate, max-age=0",
-            "Link": "<{{ request.requestLine.baseUrl }}/wp-json/>; rel=\"https://api.w.org/\""
+            "Link": "<{{request.requestLine.baseUrl}}/wp-json/>; rel=\"https://api.w.org/\""
         }
     }
 }
