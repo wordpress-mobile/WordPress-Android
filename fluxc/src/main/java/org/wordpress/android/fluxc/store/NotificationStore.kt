@@ -72,6 +72,7 @@ constructor(
     ) : OnChangedError
 
     enum class DeviceRegistrationErrorType {
+        RESPONSE_NULL,
         MISSING_DEVICE_ID,
         GENERIC_ERROR;
 
