@@ -89,7 +89,7 @@ sealed class PostListItemViewHolder(
     class Compact(
         parent: ViewGroup,
         config: PostViewHolderConfig,
-        uiHelpers: UiHelpers
+        private val uiHelpers: UiHelpers
     ) : PostListItemViewHolder(R.layout.post_list_item_compact, parent, config, uiHelpers) {
         private val moreButton: ImageButton = itemView.findViewById(R.id.more_button)
 
@@ -97,10 +97,8 @@ sealed class PostListItemViewHolder(
             setBasicValues(item.data)
 
             itemView.setOnClickListener { item.onSelected.invoke() }
-
-            if (item.compactActions.actions.isNotEmpty()) {
-                moreButton.setOnClickListener { onMoreClicked(item.compactActions.actions, moreButton) }
-            }
+            uiHelpers.updateVisibility(moreButton, item.compactActions.actions.isNotEmpty())
+            moreButton.setOnClickListener { onMoreClicked(item.compactActions.actions, moreButton) }
         }
     }
 

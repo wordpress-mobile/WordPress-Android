@@ -24,7 +24,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
-import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
@@ -314,11 +313,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     private fun createCompactViewActions(
         buttonTypes: List<PostListButtonType>,
         onButtonClicked: (PostListButtonType) -> Unit
-    ): MoreItem {
-        val createSinglePostListItem = { buttonType: PostListButtonType ->
+    ): PostListItemAction.MoreItem {
+        val allItems = buttonTypes.map { buttonType: PostListButtonType ->
             PostListItemAction.SingleItem(buttonType, onButtonClicked)
         }
-        val allItems = buttonTypes.map(createSinglePostListItem)
         return PostListItemAction.MoreItem(allItems, onButtonClicked)
     }
 }
