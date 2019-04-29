@@ -34,7 +34,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             if (index == R.styleable.SummaryEditTextPreference_longClickHint) {
                 mHint = array.getString(index);
             } else if (index == R.styleable.SummaryEditTextPreference_iconTint) {
-                mTint = array.getResourceId(index, R.color.grey_text_min);
+                mTint = array.getResourceId(index, R.color.neutral);
             }
         }
 
@@ -54,7 +54,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         if (titleView != null) {
             Resources res = getContext().getResources();
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
-            titleView.setTextColor(res.getColor(isEnabled() ? R.color.grey_dark : R.color.grey_lighten_10));
+            titleView.setTextColor(res.getColor(isEnabled() ? R.color.neutral_700 : R.color.neutral_200));
 
             // add padding to the start of nested preferences
             if (!TextUtils.isEmpty(getDependency())) {
@@ -67,9 +67,9 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             Switch switchControl = getSwitch((ViewGroup) view);
             if (switchControl != null) {
                 switchControl.setThumbTintList(ContextCompat.getColorStateList(this.getContext(),
-                        R.color.dialog_compound_button_thumb));
+                        R.color.primary_400_gray_200_gray_400_selector));
                 switchControl.setTrackTintList(ContextCompat.getColorStateList(this.getContext(),
-                        R.color.dialog_compound_button_track));
+                        R.color.primary_400_gray_900_gray_500_selector));
             }
         }
 

@@ -11,7 +11,7 @@
         android:layout_width="@dimen/avatar_sz_small"
         android:layout_height="@dimen/avatar_sz_small"
         android:layout_centerVertical="true"
-        tools:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
+        tools:src="@drawable/bg_rectangle_neutral_100_user_32dp"
         android:layout_marginEnd="@dimen/margin_large"
         android:contentDescription="@null"/>
 
@@ -19,7 +19,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:background="@color/divider_grey"
+        android:background="@color/divider"
         android:layout_toEndOf="@+id/image_avatar"/>
 
     <org.wordpress.android.widgets.WPTextView
@@ -30,7 +30,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
         android:ellipsize="end"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/neutral_700"
         android:textSize="@dimen/text_sz_large"
         tools:text="text_user"
         android:layout_marginEnd="@dimen/margin_large"

@@ -107,7 +107,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        mBackgroundColor = getResources().getColor(R.color.white);
+        mBackgroundColor = getResources().getColor(android.R.color.white);
 
         ListView listView = getListView();
         listView.setDivider(null);
@@ -415,7 +415,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         // Badge notifications apply different colors and formatting
                         if (isAdded() && noteBlock.containsBadgeMediaType()) {
                             mIsBadgeView = true;
-                            mBackgroundColor = getActivity().getResources().getColor(R.color.transparent);
+                            mBackgroundColor = getActivity().getResources().getColor(android.R.color.transparent);
                         }
 
                         if (mIsBadgeView) {

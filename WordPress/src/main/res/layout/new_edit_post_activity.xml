@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/photo_fragment_container"
         android:layout_marginBottom="@dimen/format_bar_height"
-        android:background="@color/grey_lighten_10_translucent_50"
+        android:background="@color/black_translucent_40"
         android:clickable="true"
         android:focusable="true"
         android:visibility="gone"/>

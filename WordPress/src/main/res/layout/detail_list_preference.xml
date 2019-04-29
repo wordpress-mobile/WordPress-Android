@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:paddingStart="@dimen/dlp_padding_start"
     android:paddingEnd="@dimen/dlp_padding_end"
     android:paddingTop="@dimen/dlp_padding_top"
@@ -16,7 +16,7 @@
     android:focusable="true" >
 
     <RadioButton
-        android:buttonTint="@color/dialog_compound_button_thumb"
+        android:buttonTint="@color/primary_400_gray_200_gray_400_selector"
         android:id="@+id/radio"
         android:focusable="false"
         android:clickable="false"
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_large"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:gravity="start"
             android:textAlignment="viewStart"
             tools:text="Main Text" />
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_small"
-            android:textColor="@color/grey_text_min"
+            android:textColor="@color/neutral"
             android:gravity="start"
             android:textAlignment="viewStart"
             tools:text="Detail Text" />

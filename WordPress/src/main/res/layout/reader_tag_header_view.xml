@@ -16,7 +16,7 @@
         android:id="@+id/view_overlay"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_tag_header_image_height"
-        android:background="@color/grey_dark_translucent_50" />
+        android:background="@color/black_translucent_50" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_tag"
@@ -27,11 +27,11 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:shadowColor="@color/grey_dark"
+        android:shadowColor="@color/neutral_700"
         android:shadowDx="@dimen/reader_photo_title_shadow_offset"
         android:shadowDy="@dimen/reader_photo_title_shadow_offset"
         android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/text_sz_double_extra_large"
         tools:text="text_tag"
         android:drawableStart="@drawable/ic_tag_white_24dp"/>
@@ -45,11 +45,11 @@
         android:background="?android:selectableItemBackground"
         android:ellipsize="end"
         android:maxLines="1"
-        android:shadowColor="@color/grey_dark"
+        android:shadowColor="@color/neutral_700"
         android:shadowDx="@dimen/reader_photo_title_shadow_offset"
         android:shadowDy="@dimen/reader_photo_title_shadow_offset"
         android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/text_sz_medium"
         tools:text="text_attribution"
         android:layout_marginEnd="@dimen/margin_medium"

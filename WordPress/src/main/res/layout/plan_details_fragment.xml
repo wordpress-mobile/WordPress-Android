@@ -6,7 +6,7 @@
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:layout_height="@dimen/plan_icon_size"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@null"
-            tools:src="@drawable/bg_oval_grey_plans_32dp"/>
+            tools:src="@drawable/bg_oval_neutral_300_plans_32dp"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/plan_name"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_medium"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_extra_large"
             tools:text="Personal Plan"/>
 
@@ -44,7 +44,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_large"
             android:gravity="center_horizontal"
-            android:textColor="@color/grey_darken_10"
+            android:textColor="@color/neutral_400"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="italic"
             tools:text="Best for beginners"/>
@@ -54,7 +54,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:background="@color/divider_grey"/>
+            android:background="@color/divider"/>
 
         <LinearLayout
             android:id="@+id/plan_features_container"

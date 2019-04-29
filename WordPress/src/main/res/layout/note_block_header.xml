@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@android:color/white">
 
         <LinearLayout
             android:id="@+id/header_root_view"
@@ -43,7 +43,7 @@
                     android:ellipsize="end"
                     android:includeFontPadding="false"
                     android:singleLine="true"
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/neutral_700"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="Bob Ross" />
 
@@ -54,7 +54,7 @@
                     android:ellipsize="end"
                     android:includeFontPadding="false"
                     android:singleLine="true"
-                    android:textColor="@color/blue_wordpress"
+                    android:textColor="@color/primary_500"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="www.bobross.com" />
 
@@ -87,14 +87,14 @@
         android:id="@+id/header_footer_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:orientation="vertical"
         android:visibility="gone">
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:background="@color/grey_lighten_30"
+            android:background="@color/neutral_0"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginEnd="@dimen/margin_extra_large"/>
     </LinearLayout>

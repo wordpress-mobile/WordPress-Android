@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-17 21:29:19+0000
+Translation-Revision-Date: 2019-04-14 21:35:31+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Kullanılabilir alan adı kredisi kontrol edilemedi</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Alan adı kredileri kontrol ediliyor</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Alan adı kaydet</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Eklentileri yüklemek için sitenizle ilişkili özel bir alan adına sahip olmanız gerekir.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Eklenti yükle</string>
+    <string name="new_site_creation_preview_subtitle">Daha sonra sitenizin görünümünü kişiselleştirebileceksiniz</string>
+    <string name="publish_on">Yayın tarihi: %s</string>
+    <string name="schedule_for">Zamanlanan: %s</string>
+    <string name="published_on">Yayınlanma tarihi: %s</string>
+    <string name="scheduled_for">Zamanlanmış: %s</string>
+    <string name="stats_detail_recent_weeks">Güncel haftalar</string>
+    <string name="stats_detail_average_views_per_day">Günlük ortalama gösterim</string>
+    <string name="stats_months_and_years_views_label">Gösterimler</string>
+    <string name="stats_months_and_years_period_label">Dönem</string>
+    <string name="stats_detail_months_and_years">Ay ve Yıl</string>
+    <string name="stats_insights_load_more">Daha fazla yükle</string>
+    <string name="stats_insights_today_stats">Bugün</string>
+    <string name="stats_insights_best_hour">En iyi saat</string>
+    <string name="stats_insights_best_day">En iyi gün</string>
+    <string name="showing_stats_for">Gösterilen istatistik:</string>
     <string name="app_rating_rate_never">Hayır teşekkürler</string>
     <string name="app_rating_rate_later">Sonra</string>
     <string name="app_rating_rate_now">Şimdi puanla</string>
@@ -182,8 +202,7 @@ Language: tr
     <string name="stats_insights_latest_post_with_no_engagement">%2$s yayımlandığından beri %1$s geçti. Şimdi işe başlayın ve yazılarınızı paylaşarak yazı görüntülemenizi arttırın:</string>
     <string name="stats_insights_latest_post_empty">Henüz hiç yazı yayımnlamadınız. Yayımlamaya başladığınızda en son yazınızın özeti burada görünecektir:</string>
     <string name="stats_insights_tags_and_categories">Etiketler ve kategoriler</string>
-    <string name="stats_insights_all_time_stats">Tüm zamanlar istatistiği</string>
-    <string name="stats_insights_today_stats">Bugünün İstatistikleri</string>
+    <string name="stats_insights_all_time_stats">Tüm zamanlar</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Takipçiler</string>
     <string name="stats_publicize_service_label">Hizmet</string>

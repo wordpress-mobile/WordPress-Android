@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
     android:minHeight="?attr/listPreferredItemHeight"
@@ -24,7 +24,7 @@
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/activity_log_icon_margin"
             android:contentDescription="@string/description_user"
-            tools:src="@drawable/bg_oval_grey_plans_32dp"/>
+            tools:src="@drawable/bg_oval_neutral_300_plans_32dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                 android:singleLine="true"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 tools:text="Free Plan"/>
 
             <org.wordpress.android.widgets.WPTextView
@@ -54,7 +54,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 tools:text="Best for beginners"/>
 
         </LinearLayout>

@@ -25,7 +25,6 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
 
 class StatsListFragment : DaggerFragment() {
@@ -170,15 +169,17 @@ class StatsListFragment : DaggerFragment() {
             }
         })
 
-        viewModel.navigationTarget.observeEvent(this) { target ->
-            navigator.navigate(activity, target)
-            return@observeEvent true
-        }
+        viewModel.navigationTarget.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { target ->
+                navigator.navigate(activity, target)
+            }
+        })
 
-        viewModel.selectedDate.observeEvent(this) {
-            viewModel.onDateChanged()
-            true
-        }
+        viewModel.selectedDate.observe(this, Observer { event ->
+            if (event?.hasBeenHandled == false) {
+                viewModel.onDateChanged()
+            }
+        })
 
         viewModel.listSelected.observe(this, Observer {
             viewModel.onListSelected()

@@ -23,7 +23,7 @@
             android:layout_width="@dimen/settings_icon_size"
             android:visibility="invisible"
             tools:src="@drawable/ic_info_outline_white_24dp"
-            tools:tint="@color/grey_text_min"
+            tools:tint="@color/neutral"
             tools:visibility="visible" >
         </ImageView>
 
@@ -31,7 +31,7 @@
             android:id="@+id/learn_more_caption"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:textColor="@color/calypso_title_text"
+            android:textColor="@color/neutral_700_neutral_200_selector"
             android:visibility="invisible"
             tools:text="Learn more text"
             tools:visibility="visible"
@@ -48,7 +48,7 @@
         android:layout_marginBottom="@dimen/margin_extra_small"
         android:layout_marginTop="@dimen/margin_extra_small"
         android:layout_width="wrap_content"
-        android:textColor="@color/color_primary"
+        android:textColor="@color/primary"
         android:visibility="gone"
         tools:text="@string/learn_more"
         tools:visibility="visible"

@@ -15,7 +15,7 @@
         android:layout_above="@+id/layout_bottom"
         android:layout_below="@+id/toolbar"
         android:text="@string/reader_empty_comments"
-        android:textColor="@color/grey_darken_10"
+        android:textColor="@color/neutral_400"
         android:visibility="gone"
         app:fixWidowWords="true"
         tools:visibility="visible" />
@@ -55,7 +55,7 @@
             style="@style/ReaderTextView.Label.Large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@android:color/white"
             android:gravity="center_horizontal"
             android:paddingBottom="@dimen/margin_large"
             android:paddingTop="@dimen/margin_large"

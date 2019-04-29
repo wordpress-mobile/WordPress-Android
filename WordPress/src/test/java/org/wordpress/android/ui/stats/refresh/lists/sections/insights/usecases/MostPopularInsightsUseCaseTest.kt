@@ -115,12 +115,12 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     private fun assertDayAndHour(blockListItem: BlockListItem) {
         assertThat(blockListItem.type).isEqualTo(QUICK_SCAN_ITEM)
         val item = blockListItem as QuickScanItem
-        assertThat(item.leftColumn.label).isEqualTo(R.string.stats_insights_best_day)
-        assertThat(item.leftColumn.value).isEqualTo(dayString)
-        assertThat(item.leftColumn.tooltip).isEqualTo("${highestDayPercent.roundToInt()}% of views")
-        assertThat(item.rightColumn.label).isEqualTo(R.string.stats_insights_best_hour)
-        assertThat(item.rightColumn.value).isEqualTo(hourString)
-        assertThat(item.rightColumn.tooltip).isEqualTo("${highestHourPercent.roundToInt()}% of views")
+        assertThat(item.startColumn.label).isEqualTo(R.string.stats_insights_best_day)
+        assertThat(item.startColumn.value).isEqualTo(dayString)
+        assertThat(item.startColumn.tooltip).isEqualTo("${highestDayPercent.roundToInt()}% of views")
+        assertThat(item.endColumn.label).isEqualTo(R.string.stats_insights_best_hour)
+        assertThat(item.endColumn.value).isEqualTo(hourString)
+        assertThat(item.endColumn.tooltip).isEqualTo("${highestHourPercent.roundToInt()}% of views")
     }
 
     private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): UseCaseModel {

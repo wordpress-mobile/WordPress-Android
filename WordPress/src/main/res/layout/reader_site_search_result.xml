@@ -4,7 +4,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:background="@color/white"
+             android:background="@android:color/white"
              android:gravity="center_vertical">
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
             android:contentDescription="@null"
-            tools:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"/>
+            tools:src="@drawable/bg_rectangle_neutral_100_globe_32dp"/>
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_title"/>
 
@@ -46,7 +46,7 @@
                 android:layout_below="@+id/text_title"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/reader_hyperlink"
+                android:textColor="@color/link_reader"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="text_url"/>
 

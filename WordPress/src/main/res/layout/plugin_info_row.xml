@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/neutral_700"
         android:textSize="@dimen/text_sz_large"
         tools:text="text1" />
 
@@ -25,7 +25,7 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:gravity="end"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/neutral_700"
         android:textSize="@dimen/text_sz_large"
         android:textStyle="bold"
         tools:text="text2" />

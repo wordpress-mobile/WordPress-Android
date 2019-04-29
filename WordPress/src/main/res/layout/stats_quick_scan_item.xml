@@ -9,19 +9,19 @@
 
 
     <TextView
-        android:id="@+id/left_label"
+        android:id="@+id/start_label"
         style="@style/StatsBlockQuickScanLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/unknown"
-        app:layout_constraintBottom_toTopOf="@id/left_value"
+        app:layout_constraintBottom_toTopOf="@id/start_value"
         app:layout_constraintEnd_toStartOf="@+id/horizontal_divider"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/left_value"
+        android:id="@+id/start_value"
         style="@style/StatsBlockQuickScanValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -45,19 +45,19 @@
 
 
     <TextView
-        android:id="@+id/right_label"
+        android:id="@+id/end_label"
         style="@style/StatsBlockQuickScanLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/unknown"
-        app:layout_constraintBottom_toTopOf="@id/right_value"
+        app:layout_constraintBottom_toTopOf="@id/end_value"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/horizontal_divider"/>
 
     <TextView
-        android:id="@+id/right_value"
+        android:id="@+id/end_value"
         style="@style/StatsBlockQuickScanValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

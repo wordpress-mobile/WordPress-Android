@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-20 10:54:08+0000
+Translation-Revision-Date: 2019-04-16 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">לא הייתה אפשרות לבדוק את נקודות הזיכוי הזמינות בדומיין</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">בודק נקודות זיכוי בדומיין</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">רישום הדומיין</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">כדי להתקין תוספים, עליך לספק דומיין מותאם אישית שמקושר לאתר שלך.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">התקנת תוסף</string>
+    <string name="new_site_creation_preview_subtitle">תהיה לך אפשרות להתאים אישית את המראה והאווירה של האתר שלך בשלב מאוחר יותר</string>
+    <string name="publish_on">פרסום בתאריך: %s</string>
+    <string name="schedule_for">תזמון לתאריך: %s</string>
+    <string name="published_on">פורסם בתאריך: %s</string>
+    <string name="scheduled_for">תוזמן לתאריך: %s</string>
+    <string name="stats_detail_recent_weeks">שבועות אחרונים</string>
+    <string name="stats_detail_average_views_per_day">ממוצע צפיות ליום</string>
+    <string name="stats_months_and_years_views_label">צפיות</string>
+    <string name="stats_months_and_years_period_label">תקופה</string>
+    <string name="stats_detail_months_and_years">חודשים ושנים</string>
+    <string name="stats_insights_load_more">טעינת פריטים נוספים</string>
+    <string name="stats_insights_today_stats">היום</string>
+    <string name="stats_insights_best_hour">השעה הטובה ביותר</string>
+    <string name="stats_insights_best_day">היום הטוב ביותר</string>
+    <string name="showing_stats_for">מציג נתונים סטטיסטיים עבור:</string>
     <string name="app_rating_rate_never">לא תודה</string>
     <string name="app_rating_rate_later">מאוחר יותר</string>
     <string name="app_rating_rate_now">לדרג כעת</string>
@@ -179,8 +199,6 @@ Language: he_IL
     <string name="stats_insights_share_post">שיתוף פוסט</string>
     <string name="stats_insights_create_post">יצירת פוסט</string>
     <string name="stats_insights_tags_and_categories">תגיות וקטגוריות</string>
-    <string name="stats_insights_all_time_stats">נתונים סטטיסטיים של כל הזמנים</string>
-    <string name="stats_insights_today_stats">הנתונים הסטטיסטיים של היום</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">עוקבים</string>
     <string name="stats_publicize_service_label">שירות</string>

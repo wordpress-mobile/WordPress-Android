@@ -21,10 +21,10 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ViewUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 
 import java.util.ArrayList;
@@ -169,7 +169,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
                                 if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
                                     mBottomShadow.setVisibility(View.VISIBLE);
-                                    mBottomButtonsContainer.setBackgroundResource(R.color.white);
+                                    mBottomButtonsContainer.setBackgroundResource(android.R.color.white);
                                     ViewUtils.setButtonBackgroundColor(getContext(), mConnectMore,
                                                                        R.style.WordPress_Button_Grey,
                                                                        R.attr.colorButtonNormal);

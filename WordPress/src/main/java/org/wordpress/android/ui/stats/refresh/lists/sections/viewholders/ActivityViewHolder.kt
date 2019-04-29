@@ -82,20 +82,22 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
                     false
             )
         }
-        val offsets = recyclerView.resources.getDimensionPixelSize(R.dimen.stats_activity_spacing)
-        recyclerView.addItemDecoration(
-                object : RecyclerView.ItemDecoration() {
-                    override fun getItemOffsets(
-                        outRect: Rect,
-                        view: View,
-                        parent: RecyclerView,
-                        state: RecyclerView.State
-                    ) {
-                        super.getItemOffsets(outRect, view, parent, state)
-                        outRect.set(offsets, offsets, offsets, offsets)
+        if (recyclerView.itemDecorationCount == 0) {
+            val offsets = recyclerView.resources.getDimensionPixelSize(R.dimen.stats_activity_spacing)
+            recyclerView.addItemDecoration(
+                    object : RecyclerView.ItemDecoration() {
+                        override fun getItemOffsets(
+                            outRect: Rect,
+                            view: View,
+                            parent: RecyclerView,
+                            state: RecyclerView.State
+                        ) {
+                            super.getItemOffsets(outRect, view, parent, state)
+                            outRect.set(offsets, offsets, offsets, offsets)
+                        }
                     }
-                }
-        )
+            )
+        }
         (recyclerView.adapter as MonthActivityAdapter).update(boxes)
     }
 }

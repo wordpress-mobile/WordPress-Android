@@ -31,7 +31,7 @@
             android:contentDescription="@null"
             android:visibility="gone"
             tools:src="@drawable/ic_info_white_24dp"
-            tools:tint="@color/grey_800"
+            tools:tint="@color/gray_800"
             tools:visibility="visible"/>
 
         <LinearLayout
@@ -43,14 +43,14 @@
                 android:id="@+android:id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/calypso_title_text"
+                android:textColor="@color/neutral_700_neutral_200_selector"
                 android:textSize="@dimen/text_sz_large"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+android:id/summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/calypso_subtitle_text"
+                android:textColor="@color/neutral_neutral_200_selector"
                 android:textSize="@dimen/text_sz_medium"/>
         </LinearLayout>
 

@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-12 11:08:05+0000
+Translation-Revision-Date: 2019-04-12 22:52:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Die Überprüfung des verfügbaren Domain-Guthabens konnte nicht durchgeführt werden</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Überprüfen von Domain-Guthaben</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Domain registrieren</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Um Plugins zu installieren, benötigst du eine individuelle Domain, die deiner Website zugeordnet ist.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Plugin installieren</string>
+    <string name="new_site_creation_preview_subtitle">Du kannst das Erscheinungsbild deiner Website später anpassen</string>
+    <string name="publish_on">Veröffentlichen auf: %s</string>
+    <string name="schedule_for">Planen für: %s</string>
+    <string name="published_on">Veröffentlicht am: %s</string>
+    <string name="scheduled_for">Geplant für: %s</string>
+    <string name="stats_detail_recent_weeks">Letzte Wochen</string>
+    <string name="stats_detail_average_views_per_day">Durchschnittliche Aufrufe pro Tag</string>
+    <string name="stats_months_and_years_views_label">Ansichten</string>
+    <string name="stats_months_and_years_period_label">Zeitraum</string>
+    <string name="stats_detail_months_and_years">Monate und Jahre</string>
+    <string name="stats_insights_load_more">Mehr laden</string>
+    <string name="stats_insights_today_stats">Heute</string>
+    <string name="stats_insights_best_hour">Beste Uhrzeit</string>
+    <string name="stats_insights_best_day">Bester Tag</string>
+    <string name="showing_stats_for">Anzeigen von Statistiken für:</string>
     <string name="app_rating_rate_never">Nein, danke</string>
     <string name="app_rating_rate_later">Später</string>
     <string name="app_rating_rate_now">Jetzt bewerten</string>
@@ -182,8 +202,7 @@ Language: de
     <string name="stats_insights_latest_post_with_no_engagement">%2$s wurde vor %1$s veröffentlicht. Erhalte mehr Aufrufe deines Beitrags, indem du ihn teilst:</string>
     <string name="stats_insights_latest_post_empty">Du hast noch keine Beiträge veröffentlicht. Sobald du Beiträge veröffentlichst, wird hier eine Übersicht zum aktuellsten Beitrag angezeigt:</string>
     <string name="stats_insights_tags_and_categories">Schlagwörter und Kategorien</string>
-    <string name="stats_insights_all_time_stats">Gesamtstatistik</string>
-    <string name="stats_insights_today_stats">Statistiken von heute</string>
+    <string name="stats_insights_all_time_stats">Gesamte Zeit</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Follower</string>
     <string name="stats_publicize_service_label">Dienst</string>

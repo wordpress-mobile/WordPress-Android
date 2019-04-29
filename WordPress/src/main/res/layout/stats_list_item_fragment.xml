@@ -48,7 +48,7 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_totals_label"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
             android:id="@+id/stats_list_empty_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey_text_min"
+            android:textColor="@color/neutral"
             android:textSize="@dimen/text_sz_small"
             android:padding="@dimen/margin_large"
             android:textAlignment="viewStart"

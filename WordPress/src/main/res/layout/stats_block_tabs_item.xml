@@ -8,18 +8,20 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        app:tabGravity="center"
-        app:tabIndicatorColor="@color/wp_blue"
-        app:tabSelectedTextColor="@color/wp_blue"
-        app:tabPaddingStart="@dimen/margin_extra_large"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/primary"
+        app:tabMode="scrollable"
         app:tabPaddingEnd="@dimen/margin_extra_large"
-        app:tabTextColor="@color/wp_grey_darken_20"/>
+        app:tabPaddingStart="@dimen/margin_extra_large"
+        app:tabSelectedTextColor="@color/primary"
+        app:tabTextColor="@color/neutral_500"
+        app:theme="@style/Base.Widget.Design.TabLayout"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/grey_lighten_30"/>
+        android:background="@color/neutral_0"/>
 </LinearLayout>

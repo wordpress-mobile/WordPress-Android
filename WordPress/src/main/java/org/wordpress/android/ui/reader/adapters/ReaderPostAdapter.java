@@ -252,7 +252,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
             if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
-                int color = itemView.getContext().getResources().getColor(R.color.grey_dark);
+                int color = itemView.getContext().getResources().getColor(R.color.neutral_700);
                 mTxtAuthorAndBlogName.setTextColor(color);
                 // remove the ripple background
                 postHeaderView.setBackground(null);
@@ -419,7 +419,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
         Drawable drawable =
-                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp, R.color.blue_medium);
+                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp, R.color.primary_400);
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override

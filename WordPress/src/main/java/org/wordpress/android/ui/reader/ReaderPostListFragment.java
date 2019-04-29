@@ -101,7 +101,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -117,6 +116,7 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPDialogSnackbar;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -551,9 +551,8 @@ public class ReaderPostListFragment extends Fragment
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_white_24dp);
 
-            WPDialogSnackbar snackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator),
-                    title, AccessibilityUtils.getSnackbarDuration(requireContext(),
-                            getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
+            WPDialogSnackbar snackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator), title,
+                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
 
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
         }
@@ -704,8 +703,8 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.color_primary));
-        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
+        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.primary));
+        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, android.R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium),
@@ -1196,8 +1195,7 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
             }
         };
-        Snackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked),
-                AccessibilityUtils.getSnackbarDuration(getActivity()))
+        WPSnackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener)
                 .show();
     }
@@ -1490,18 +1488,18 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        Snackbar.make(getView(), R.string.reader_bookmark_snack_title,
-                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
-                new View.OnClickListener() {
-                    @Override public void onClick(View view) {
-                        AnalyticsTracker
-                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
-                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                        if (getActivity() instanceof WPMainActivity) {
-                            getActivity().overridePendingTransition(0, 0);
+        WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
+                .setAction(R.string.reader_bookmark_snack_btn,
+                    new View.OnClickListener() {
+                        @Override public void onClick(View view) {
+                            AnalyticsTracker
+                                    .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
+                            ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                            if (getActivity() instanceof WPMainActivity) {
+                                getActivity().overridePendingTransition(0, 0);
+                            }
                         }
-                    }
-                })
+                    })
                 .show();
     }
 
@@ -2208,8 +2206,8 @@ public class ReaderPostListFragment extends Fragment
                 ? getString(R.string.reader_followed_blog_notifications_this)
                 : blogName;
 
-        Snackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
+        WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+                "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.reader_followed_blog_notifications_action),
                         new View.OnClickListener() {
                             @Override public void onClick(View view) {
@@ -2220,7 +2218,6 @@ public class ReaderPostListFragment extends Fragment
                                 ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
                             }
                         })
-                .setActionTextColor(getResources().getColor(R.color.color_accent))
                 .show();
     }
 

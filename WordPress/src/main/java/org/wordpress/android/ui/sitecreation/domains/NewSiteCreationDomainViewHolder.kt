@@ -28,7 +28,7 @@ sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @La
         init {
             suggestion.buttonTintList = ContextCompat.getColorStateList(
                     parentView.context,
-                    R.color.grey_blue_radio_button_state_list
+                    R.color.neutral_100_primary_400_selector
             )
             container.setOnClickListener {
                 onDomainSelected?.invoke()
@@ -55,7 +55,7 @@ sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @La
 
         private fun addRetryCompoundDrawable() {
             val drawable = itemView.context.getDrawable(drawable.retry_icon)
-            drawable.setTint(ContextCompat.getColor(itemView.context, color.wp_blue))
+            drawable.setTint(ContextCompat.getColor(itemView.context, color.primary))
             retry.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         }
 

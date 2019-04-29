@@ -26,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.throttle
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -52,7 +53,7 @@ abstract class StatsListViewModel(
 
     val selectedDate = dateSelector.selectedDate
 
-    val navigationTarget: LiveData<NavigationTarget> = statsUseCase.navigationTarget
+    val navigationTarget: LiveData<Event<NavigationTarget>> = statsUseCase.navigationTarget
 
     val listSelected = statsUseCase.listSelected
 

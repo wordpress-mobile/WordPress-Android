@@ -17,7 +17,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey_lighten_30"
+        android:background="@color/neutral_0"
         android:paddingTop="@dimen/margin_large"
         android:paddingStart="@dimen/reader_card_margin"
         android:paddingEnd="@dimen/reader_card_margin">
@@ -41,7 +41,7 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
-                    tools:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
+                    tools:src="@drawable/bg_rectangle_neutral_100_user_32dp"
                     android:layout_marginEnd="@dimen/margin_medium"
                     android:contentDescription="@null"/>
 
@@ -52,7 +52,7 @@
                     android:layout_gravity="center_vertical"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/neutral_700"
                     android:textSize="@dimen/text_sz_small"
                     tools:text="text_blog_name" />
 
@@ -66,7 +66,7 @@
                 android:maxLines="2"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_medium"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_large"
                 android:fontFamily="serif"
                 tools:text="text_post_title" />
@@ -78,7 +78,7 @@
                 android:layout_marginBottom="@dimen/margin_large"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/grey_text_min"
+                android:textColor="@color/neutral"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="text_post_date" />
 

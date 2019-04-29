@@ -60,6 +60,7 @@ public class ReaderConstants {
     static final String KEY_TRACKED_POSITIONS = "tracked_positions";
     static final String KEY_IS_REFRESHING = "is_refreshing";
     static final String KEY_ACTIVE_SEARCH_TAB = "active_search_tab";
+    static final String KEY_SITE_ID = "site_id";
 
     static final String KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS = "already_tracked_global_related_posts";
     static final String KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS = "already_tracked_local_related_posts";

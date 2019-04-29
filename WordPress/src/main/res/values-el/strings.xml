@@ -60,7 +60,6 @@ Language: el_GR
     <string name="stats_insights_share_post">Μοιραστείτε το άρθρο</string>
     <string name="stats_insights_create_post">Δημιουργία άρθρου</string>
     <string name="stats_insights_tags_and_categories">Ετικέτες και Κατηγορίες</string>
-    <string name="stats_insights_today_stats">Στατιστικά Ημέρας</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Ακόλουθοι</string>
     <string name="stats_publicize_service_label">Υπηρεσία</string>

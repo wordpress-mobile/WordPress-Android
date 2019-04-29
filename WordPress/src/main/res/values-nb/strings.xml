@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-01 13:34:39+0000
+Translation-Revision-Date: 2019-03-31 18:27:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="publish_on">Publiser på: %s</string>
+    <string name="schedule_for">Planlegg for: %s</string>
+    <string name="published_on">Publisert på: %s</string>
+    <string name="scheduled_for">Planlagt for: %s</string>
+    <string name="stats_detail_recent_weeks">Siste uker</string>
+    <string name="stats_detail_average_views_per_day">Gj.snitt visninger pr dag</string>
+    <string name="stats_months_and_years_views_label">Visninger</string>
+    <string name="stats_months_and_years_period_label">Periode</string>
+    <string name="stats_detail_months_and_years">Måneder og år</string>
+    <string name="stats_insights_load_more">Last mer</string>
+    <string name="stats_insights_today_stats">I dag</string>
+    <string name="stats_insights_best_hour">Beste time</string>
+    <string name="stats_insights_best_day">Beste dag</string>
+    <string name="showing_stats_for">Vis statistikk for:</string>
+    <string name="app_rating_rate_never">Nei takk</string>
+    <string name="app_rating_rate_later">Senere</string>
+    <string name="app_rating_rate_now">Vurder nå</string>
+    <string name="stats_insights_posting_activity">Publiseringsaktivitet</string>
+    <string name="stats_more_posts">Flere innlegg</string>
+    <string name="stats_fewer_posts">Færre innlegg</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Fjern innhold</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Flytt blokk ned</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Flytt blokk opp</string>
@@ -57,6 +77,7 @@ Language: nb_NO
     <string name="quick_start_dialog_check_stats_message_short">Trykk %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
     <string name="quick_start_dialog_publish_post_message">Kladd og publiser ditt første innlegg.</string>
+    <string name="quick_start_dialog_migration_title">Vi har gjort noen endringer i sjekklisten din</string>
     <string name="quick_start_dialog_explore_plans_title">Utforsk pakker</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktiver deling av innlegg</string>
     <string name="quick_start_dialog_enable_sharing_message">Del dine innlegg automatisk på sosiale media.</string>
@@ -160,8 +181,7 @@ Language: nb_NO
     <string name="stats_insights_latest_post_with_no_engagement">Det har gått %1$s siden %2$s ble publisert. Få ballen til å rulle og øk ditt antall visninger ved å dele ditt innlegg:</string>
     <string name="stats_insights_latest_post_empty">Du har ikke publisert noe innlegg ennå. Straks du starter publisere vil sammendraget av dine siste innlegg dukke opp her:</string>
     <string name="stats_insights_tags_and_categories">Stikkord og kategorier</string>
-    <string name="stats_insights_all_time_stats">Statistikk til alle tider</string>
-    <string name="stats_insights_today_stats">Dagens statistikk</string>
+    <string name="stats_insights_all_time_stats">Til all tid</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Følgere</string>
     <string name="stats_publicize_service_label">Tjeneste</string>
@@ -404,11 +424,13 @@ Language: nb_NO
     <string name="activity">Aktivitet</string>
     <string name="privacy_policy_read">Les personvernerklæringen</string>
     <string name="privacy_policy_learn_more_header">Personvernerklæring</string>
+    <string name="cookie_policy_learn_more_header">Policy for informasjonskapsler</string>
     <string name="preference_privacy_settings">Innstillinger for personvern</string>
     <string name="preference_collect_information">Samle informasjon</string>
     <string name="post_submitted">Innlegg sendt inn</string>
     <string name="write_post">Skriv innlegg</string>
     <string name="login_email_button_signup">Har du ingen konto? %1$sRegistrer deg%2$s</string>
+    <string name="plugin_install_site_ineligible_site_graylisted">Utvidelsesfunksjonen krever at nettstedet er i god stand.</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Installlerer utvidelse…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installer</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">Installering av den første utvidelsen på ditt nettsted kan ta opp til 1 minutt. I løpet av denne tiden vil du ikke kunne gjøre endringer på ditt nettsted.</string>

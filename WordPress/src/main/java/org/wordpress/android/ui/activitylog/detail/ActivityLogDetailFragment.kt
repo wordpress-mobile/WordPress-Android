@@ -6,11 +6,9 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.text.Spannable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -19,6 +17,7 @@ import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
@@ -31,6 +30,7 @@ class ActivityLogDetailFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
     @Inject lateinit var formattableContentClickHandler: FormattableContentClickHandler
+    @Inject lateinit var uiHelpers: UiHelpers
 
     private lateinit var viewModel: ActivityLogDetailViewModel
 
@@ -68,8 +68,8 @@ class ActivityLogDetailFragment : Fragment() {
 
             viewModel.activityLogItem.observe(this, Observer { activityLogModel ->
                 setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
-                activityActorName.setTextOrHide(activityLogModel?.actorName)
-                activityActorRole.setTextOrHide(activityLogModel?.actorRole)
+                uiHelpers.setTextOrHide(activityActorName, activityLogModel?.actorName)
+                uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
 
                 val spannable = activityLogModel?.content?.let {
                     notificationsUtilsWrapper.getSpannableContentForRanges(it, activityMessage, { range ->
@@ -77,8 +77,8 @@ class ActivityLogDetailFragment : Fragment() {
                     }, false)
                 }
 
-                activityMessage.setTextOrHide(spannable)
-                activityType.setTextOrHide(activityLogModel?.summary)
+                uiHelpers.setTextOrHide(activityMessage, spannable)
+                uiHelpers.setTextOrHide(activityType, activityLogModel?.summary)
 
                 activityCreatedDate.text = activityLogModel?.createdDate
                 activityCreatedTime.text = activityLogModel?.createdTime
@@ -140,24 +140,6 @@ class ActivityLogDetailFragment : Fragment() {
                 activityActorIcon.visibility = View.GONE
                 activityJetpackActorIcon.visibility = View.GONE
             }
-        }
-    }
-
-    private fun TextView.setTextOrHide(text: String?) {
-        if (text != null) {
-            this.text = text
-            this.visibility = View.VISIBLE
-        } else {
-            this.visibility = View.GONE
-        }
-    }
-
-    private fun TextView.setTextOrHide(text: Spannable?) {
-        if (text != null) {
-            this.text = text
-            this.visibility = View.VISIBLE
-        } else {
-            this.visibility = View.GONE
         }
     }
 

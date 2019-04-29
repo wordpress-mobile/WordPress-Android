@@ -7,13 +7,13 @@
     <style name="Calypso.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/blue_medium</item>
         <item name="colorPrimary">@color/blue_wordpress</item>
-        <item name="colorPrimaryDark">@color/status_bar_tint</item>
+        <item name="colorPrimaryDark">@color/status_bar</item>
     </style>
 
     <style name="Calypso.Dialog.Alert" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/blue_medium</item>
         <item name="colorPrimary">@color/blue_wordpress</item>
-        <item name="colorPrimaryDark">@color/status_bar_tint</item>
+        <item name="colorPrimaryDark">@color/status_bar</item>
     </style>
 
     <style name="LegacyToggleButton">

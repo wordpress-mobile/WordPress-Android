@@ -23,12 +23,12 @@ import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareIntentFragmentL
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPPermissionUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,7 +85,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         super.onResume();
         // keep setBackground in the onResume, otherwise the transition between activities is visible to the user when
         // sharing text with an account with one visible site
-        findViewById(R.id.main_view).setBackgroundResource(R.color.login_background_color);
+        findViewById(R.id.main_view).setBackgroundResource(R.color.background_default);
     }
 
     private void refreshContent() {

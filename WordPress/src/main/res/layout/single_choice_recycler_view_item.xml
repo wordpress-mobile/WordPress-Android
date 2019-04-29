@@ -3,7 +3,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -17,7 +17,7 @@
 
     <RadioButton
         android:id="@+id/radio"
-        android:buttonTint="@color/dialog_compound_button_thumb"
+        android:buttonTint="@color/primary_400_gray_200_gray_400_selector"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_toEndOf="@id/radio"
         android:maxLines="1"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/neutral_700"
         android:textSize="@dimen/text_sz_large"
         tools:text="Text" >
     </TextView>

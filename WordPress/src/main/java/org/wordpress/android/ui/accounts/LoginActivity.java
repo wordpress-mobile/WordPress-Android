@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.common.ConnectionResult;
@@ -63,13 +62,14 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -420,13 +420,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onSignupSheetTermsOfServiceClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
-        // Get device locale and remove region to pass only language.
-        String locale = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
-        int pos = locale.indexOf("_");
-        if (pos > -1) {
-            locale = locale.substring(0, pos);
-        }
-        ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url, locale));
+        ActivityLauncher.openUrlExternal(this, WPUrlUtils.buildTermsOfServiceUrl(this));
     }
 
     @Override
@@ -760,11 +754,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void showSignupToLoginMessage() {
-        Snackbar snackbar =
-                Snackbar.make(findViewById(R.id.main_view), R.string.signup_user_exists, Snackbar.LENGTH_LONG);
-        TextView snackbarText = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
-        snackbarText.setMaxLines(2);
-        snackbar.show();
+        WPSnackbar.make(findViewById(R.id.main_view), R.string.signup_user_exists, Snackbar.LENGTH_LONG).show();
     }
 
     // GoogleListener

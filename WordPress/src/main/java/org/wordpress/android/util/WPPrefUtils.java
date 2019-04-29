@@ -60,7 +60,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsLightTitle(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_extra_large);
-        setTextViewAttributes(view, size, R.color.white);
+        setTextViewAttributes(view, size, android.R.color.white);
     }
 
     /**
@@ -68,14 +68,14 @@ public class WPPrefUtils {
      */
     public static void layoutAsDarkTitle(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_extra_large);
-        setTextViewAttributes(view, size, R.color.grey_dark);
+        setTextViewAttributes(view, size, R.color.neutral_700);
     }
 
     /**
      * Styles a {@link TextView} to display medium sized text as a header with sub-elements.
      */
     public static void layoutAsSubhead(TextView view) {
-        int color = view.isEnabled() ? R.color.grey_dark : R.color.grey_lighten_10;
+        int color = view.isEnabled() ? R.color.neutral_700 : R.color.neutral_200;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
         setTextViewAttributes(view, size, color);
     }
@@ -84,7 +84,7 @@ public class WPPrefUtils {
      * Styles a {@link TextView} to display smaller text.
      */
     public static void layoutAsBody1(TextView view) {
-        int color = view.isEnabled() ? R.color.grey_text_min : R.color.grey_lighten_10;
+        int color = view.isEnabled() ? R.color.neutral : R.color.neutral_200;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
         setTextViewAttributes(view, size, color);
     }
@@ -94,7 +94,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsBody2(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, R.color.grey_text_min);
+        setTextViewAttributes(view, size, R.color.neutral);
     }
 
     /**
@@ -102,7 +102,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsCaption(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_small);
-        setTextViewAttributes(view, size, R.color.grey_darken_10);
+        setTextViewAttributes(view, size, R.color.neutral_400);
     }
 
     /**
@@ -110,7 +110,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsFlatButton(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, R.color.blue_medium);
+        setTextViewAttributes(view, size, R.color.primary_400);
     }
 
     /**
@@ -118,7 +118,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsRaisedButton(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, R.color.white);
+        setTextViewAttributes(view, size, android.R.color.white);
     }
 
     /**
@@ -126,9 +126,9 @@ public class WPPrefUtils {
      */
     public static void layoutAsInput(EditText view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size, R.color.grey_dark);
-        view.setHintTextColor(view.getResources().getColor(R.color.grey_lighten_10));
-        view.setTextColor(view.getResources().getColor(R.color.grey_dark));
+        setTextViewAttributes(view, size, R.color.neutral_700);
+        view.setHintTextColor(view.getResources().getColor(R.color.neutral_200));
+        view.setTextColor(view.getResources().getColor(R.color.neutral_700));
         view.setSingleLine(true);
     }
 
@@ -137,7 +137,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsNumberPickerSelected(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_triple_extra_large);
-        setTextViewAttributes(view, size, R.color.blue_medium);
+        setTextViewAttributes(view, size, R.color.primary_400);
     }
 
     /**
@@ -145,7 +145,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsNumberPickerPeek(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size, R.color.grey_dark);
+        setTextViewAttributes(view, size, R.color.neutral_700);
     }
 
     /**
@@ -153,7 +153,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsDialogMessage(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_small);
-        setTextViewAttributes(view, size, R.color.grey_text_min);
+        setTextViewAttributes(view, size, R.color.neutral);
     }
 
     public static void setTextViewAttributes(TextView textView, int size, int colorRes) {

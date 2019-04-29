@@ -85,11 +85,11 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         data = BarData(dataSets)
         val greyColor = ContextCompat.getColor(
                 context,
-                color.wp_grey
+                color.neutral_300
         )
         val lightGreyColor = ContextCompat.getColor(
                 context,
-                color.wp_grey_lighten_30
+                color.neutral_50
         )
         axisLeft.apply {
             valueFormatter = object : LargeValueFormatter() {
@@ -203,10 +203,10 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.stats_bar_chart_gradient_start_color
+                        R.color.primary_50
                 ), ContextCompat.getColor(
                 context,
-                R.color.transparent
+                android.R.color.transparent
         )
         )
         dataSet.formLineWidth = 0f
@@ -218,14 +218,14 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Data")
-        dataSet.color = ContextCompat.getColor(context, R.color.blue_wordpress)
+        dataSet.color = ContextCompat.getColor(context, R.color.blue_400)
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.blue_wordpress
+                        R.color.blue_400
                 ), ContextCompat.getColor(
                 context,
-                R.color.blue_wordpress
+                R.color.blue_400
         )
         )
         dataSet.formLineWidth = 0f
@@ -233,7 +233,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                color.orange_active
+                color.accent_400
         )
         dataSet.highLightAlpha = 255
         return dataSet
@@ -241,14 +241,14 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildOverlappingDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Overlapping data")
-        dataSet.color = ContextCompat.getColor(context, R.color.blue_dark)
+        dataSet.color = ContextCompat.getColor(context, R.color.primary_700)
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.blue_dark
+                        R.color.primary_700
                 ), ContextCompat.getColor(
                 context,
-                R.color.blue_dark
+                R.color.primary_700
         )
         )
         dataSet.formLineWidth = 0f
@@ -256,7 +256,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                color.orange_dark_active
+                color.accent_700
         )
         dataSet.highLightAlpha = 255
         return dataSet
@@ -268,21 +268,21 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             BarEntry(it.x, maxEntry.y, it.data)
         }
         val dataSet = BarDataSet(highlightedDataSet, "Highlight")
-        dataSet.color = ContextCompat.getColor(context, R.color.transparent)
+        dataSet.color = ContextCompat.getColor(context, android.R.color.transparent)
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.transparent
+                        android.R.color.transparent
                 ), ContextCompat.getColor(
                 context,
-                R.color.transparent
+                android.R.color.transparent
         )
         )
         dataSet.formLineWidth = 0f
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                color.orange_active
+                color.accent_400
         )
         dataSet.setDrawValues(false)
         dataSet.highLightAlpha = 51

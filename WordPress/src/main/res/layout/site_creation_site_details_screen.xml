@@ -48,7 +48,7 @@
             android:imeOptions="actionNext"
             android:inputType="textNoSuggestions"
             app:wpIconDrawable="@drawable/ic_globe_white_24dp"
-            app:wpIconDrawableTint="@color/grey"/>
+            app:wpIconDrawableTint="@color/neutral_300"/>
 
         <org.wordpress.android.login.widgets.WPLoginInputRow
             android:id="@+id/site_creation_site_tagline_row"
@@ -58,7 +58,7 @@
             android:hint="@string/site_creation_tagline_hint"
             android:inputType="textNoSuggestions"
             app:wpIconDrawable="@drawable/ic_aside_white_24dp"
-            app:wpIconDrawableTint="@color/grey"/>
+            app:wpIconDrawableTint="@color/neutral_300"/>
 
         <TextView
             android:layout_width="match_parent"

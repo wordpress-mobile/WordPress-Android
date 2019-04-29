@@ -24,6 +24,7 @@ import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.PostsListActivityKt;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
@@ -80,7 +81,7 @@ class PostUploadNotifier {
         mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(),
                 context.getString(R.string.notification_channel_transient_id));
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
-                            .setColor(context.getResources().getColor(R.color.blue_wordpress))
+                            .setColor(context.getResources().getColor(R.color.primary_500))
                             .setOnlyAlertOnce(true);
     }
 
@@ -319,7 +320,7 @@ class PostUploadNotifier {
         }
 
         notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_white_24dp);
-        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_500));
 
         notificationBuilder.setContentTitle(notificationTitle);
         notificationBuilder.setContentText(notificationMessage);
@@ -390,7 +391,7 @@ class PostUploadNotifier {
                                                                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
         notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_white_24dp);
-        notificationBuilder.setColor(mContext.getResources().getColor(R.color.blue_wordpress));
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_500));
 
         String notificationTitle = buildSuccessMessageForMedia(mediaList.size());
         String notificationMessage =
@@ -471,7 +472,6 @@ class PostUploadNotifier {
 
         long notificationId = getNotificationIdForPost(post);
         Intent notificationIntent = getNotificationIntent(post, site, notificationId);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         notificationIntent.setAction(String.valueOf(notificationId));
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
@@ -502,7 +502,7 @@ class PostUploadNotifier {
                                                                          PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
                                           actionPendingIntent)
-                               .setColor(mContext.getResources().getColor(R.color.orange_jazzy));
+                               .setColor(mContext.getResources().getColor(R.color.accent));
         }
 
         EventBus.getDefault().postSticky(new UploadService.UploadErrorEvent(post, snackbarMessage));
@@ -519,6 +519,7 @@ class PostUploadNotifier {
             notificationIntent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, post.getRemotePostId());
         } else {
             notificationIntent = new Intent(mContext, PostsListActivity.class);
+            notificationIntent.putExtra(PostsListActivityKt.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         }
 
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -571,7 +572,7 @@ class PostUploadNotifier {
                                                                          PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
                                           actionPendingIntent)
-                               .setColor(mContext.getResources().getColor(R.color.orange_jazzy));
+                               .setColor(mContext.getResources().getColor(R.color.accent));
         }
 
         EventBus.getDefault().postSticky(new UploadService.UploadErrorEvent(mediaList, snackbarMessage));

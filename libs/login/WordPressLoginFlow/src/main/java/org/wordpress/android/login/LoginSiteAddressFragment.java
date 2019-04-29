@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -146,12 +147,19 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             return;
         }
 
-        if (TextUtils.isEmpty(mSiteAddressInput.getEditText().getText())) {
+        String cleanedSiteAddress = getCleanedSiteAddress();
+
+        if (TextUtils.isEmpty(cleanedSiteAddress)) {
             showError(R.string.login_empty_site_url);
             return;
         }
 
-        mRequestedSiteAddress = getCleanedSiteAddress();
+        if (!Patterns.WEB_URL.matcher(cleanedSiteAddress).matches()) {
+            showError(R.string.login_invalid_site_url);
+            return;
+        }
+
+        mRequestedSiteAddress = cleanedSiteAddress;
 
         String cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(mRequestedSiteAddress);
         mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(cleanedXmlrpcSuffix));

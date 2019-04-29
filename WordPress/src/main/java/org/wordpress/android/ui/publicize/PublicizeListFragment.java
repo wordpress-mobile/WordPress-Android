@@ -24,7 +24,6 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -132,8 +131,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
                     R.string.quick_start_dialog_enable_sharing_message_short_connections);
 
-            WPDialogSnackbar.make(getView(), title, AccessibilityUtils.getSnackbarDuration(getActivity(),
-                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms))).show();
+            WPDialogSnackbar.make(getView(), title,
+                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)).show();
         }
     }
 

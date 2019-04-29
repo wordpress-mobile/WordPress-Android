@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-20 09:54:07+0000
+Translation-Revision-Date: 2019-04-16 08:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">사용 가능한 도메인 크레딧을 확인하지 못함</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">도메인 크레딧 확인 중</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">도메인 등록</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">플러그인을 설치하려면 사이트와 연결된 사용자 정의 도메인이 있어야 합니다.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">플러그인 설치</string>
+    <string name="new_site_creation_preview_subtitle">나중에 사이트 디자인의 모양과 느낌을 원하는 대로 변경할 수 있습니다.</string>
+    <string name="publish_on">공개하기: %s</string>
+    <string name="schedule_for">예약됨: %s</string>
+    <string name="published_on">공개됨: %s</string>
+    <string name="scheduled_for">예약된 날짜: %s</string>
+    <string name="stats_detail_recent_weeks">최근 몇 주</string>
+    <string name="stats_detail_average_views_per_day">평균 하루당 조회수</string>
+    <string name="stats_months_and_years_views_label">조회수</string>
+    <string name="stats_months_and_years_period_label">기간</string>
+    <string name="stats_detail_months_and_years">월 및 연도</string>
+    <string name="stats_insights_load_more">더 보기</string>
+    <string name="stats_insights_today_stats">오늘</string>
+    <string name="stats_insights_best_hour">최고의 시간</string>
+    <string name="stats_insights_best_day">안녕히 계세요.</string>
+    <string name="showing_stats_for">다음에 대한 통계 표시:</string>
     <string name="app_rating_rate_never">안 함</string>
     <string name="app_rating_rate_later">나중에</string>
     <string name="app_rating_rate_now">지금 평가</string>
@@ -175,8 +195,6 @@ Language: ko_KR
     <string name="stats_insights_share_post">게시글 공유</string>
     <string name="stats_insights_create_post">게시글 작성</string>
     <string name="stats_insights_tags_and_categories">태그 및 카테고리</string>
-    <string name="stats_insights_all_time_stats">전체 시간대 통계</string>
-    <string name="stats_insights_today_stats">오늘의 통계</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">팔로워</string>
     <string name="stats_publicize_service_label">서비스</string>

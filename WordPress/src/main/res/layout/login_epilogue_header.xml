@@ -26,7 +26,7 @@
         android:layout_marginStart="@dimen/margin_large"
         android:layout_marginEnd="@dimen/margin_large"
         android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@android:color/white"
         app:cardElevation="@dimen/card_elevation"
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="@dimen/default_cardview_radius">

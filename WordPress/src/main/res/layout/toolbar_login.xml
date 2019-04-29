@@ -5,7 +5,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/blue_wordpress"
+    android:background="@color/primary_500"
     android:elevation="@dimen/appbar_elevation"
     app:contentInsetLeft="@dimen/toolbar_content_offset"
     app:contentInsetStart="@dimen/toolbar_content_offset"

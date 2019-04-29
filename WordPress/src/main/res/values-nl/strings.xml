@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-19 14:54:08+0000
+Translation-Revision-Date: 2019-04-15 12:54:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Fout bij het controleren van beschikbaar domeinkrediet</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Domeinkrediet wordt gecontroleerd</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Domein registreren</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Om plugins te installeren, moet er een aangepast domein aan je site zijn gekoppeld.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Plugin installeren</string>
+    <string name="new_site_creation_preview_subtitle">Je kunt de uitstraling van je site later aanpassen</string>
+    <string name="publish_on">Publiceren op: %s</string>
+    <string name="schedule_for">Ingepland voor: %s</string>
+    <string name="published_on">Gepubliceerd op: %s</string>
+    <string name="scheduled_for">Gepland voor: %s</string>
+    <string name="stats_detail_recent_weeks">Afgelopen weken</string>
+    <string name="stats_detail_average_views_per_day">Gem. Weergaven per dag</string>
+    <string name="stats_months_and_years_views_label">Weergaven</string>
+    <string name="stats_months_and_years_period_label">Periode</string>
+    <string name="stats_detail_months_and_years">Maanden en jaren</string>
+    <string name="stats_insights_load_more">Laad meer</string>
+    <string name="stats_insights_today_stats">Vandaag</string>
+    <string name="stats_insights_best_hour">Beste uur</string>
+    <string name="stats_insights_best_day">Beste dag</string>
+    <string name="showing_stats_for">Toon statistieken voor:</string>
     <string name="app_rating_rate_never">Nee, liever niet</string>
     <string name="app_rating_rate_later">Later</string>
     <string name="app_rating_rate_now">Nu beoordelen</string>

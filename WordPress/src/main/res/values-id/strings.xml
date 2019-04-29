@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-20 06:54:08+0000
+Translation-Revision-Date: 2019-04-16 07:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Gagal memeriksa kredit domain yang tersedia</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Memeriksa kredit domain</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Daftarkan domain</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Untuk menginstal plugin, Anda harus memiliki domain kustom yang terkait dengan situs Anda.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Instal plugin</string>
+    <string name="new_site_creation_preview_subtitle">Anda nanti dapat menyesuaikan tampilan dan nuansa situs</string>
+    <string name="publish_on">Terbitkan pada: %s</string>
+    <string name="schedule_for">Jadwalkan untuk: %s</string>
+    <string name="published_on">Diterbitkan pada: %s</string>
+    <string name="scheduled_for">Dijadwalkan untuk: %s</string>
+    <string name="stats_detail_recent_weeks">Beberapa Minggu Terakhir</string>
+    <string name="stats_detail_average_views_per_day">Rata-rata Kunjungan Per Hari</string>
+    <string name="stats_months_and_years_views_label">Tampilan</string>
+    <string name="stats_months_and_years_period_label">Periode</string>
+    <string name="stats_detail_months_and_years">Bulan dan Tahun</string>
+    <string name="stats_insights_load_more">Muat lainnya</string>
+    <string name="stats_insights_today_stats">Hari Ini</string>
+    <string name="stats_insights_best_hour">Jam Terbaik</string>
+    <string name="stats_insights_best_day">Hari Terbaik</string>
+    <string name="showing_stats_for">Menampilkan statistik untuk:</string>
     <string name="app_rating_rate_never">Tidak, terima kasih</string>
     <string name="app_rating_rate_later">Nanti</string>
     <string name="app_rating_rate_now">Beri penilaian sekarang</string>
@@ -179,8 +199,6 @@ Language: id
     <string name="stats_insights_share_post">Bagikan pos</string>
     <string name="stats_insights_create_post">Buat pos</string>
     <string name="stats_insights_tags_and_categories">Tag dan Kategori</string>
-    <string name="stats_insights_all_time_stats">Statistik Sepanjang Waktu</string>
-    <string name="stats_insights_today_stats">Statistik Hari Ini</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Pengikut</string>
     <string name="stats_publicize_service_label">Layanan</string>

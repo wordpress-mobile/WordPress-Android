@@ -8,7 +8,7 @@
     tools:ignore="UnusedResources">
 
 <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M20 4H4c-1.105 0-2 0.895-2 2v12c0 1.105 0.895 2 2 2h16c1.105 0 2-0.895 2-2V6c0-1.105-0.895-2-2-2zm0 4.236l-8 4.882-8-4.882V6h16v2.236z" >
     </path>
 

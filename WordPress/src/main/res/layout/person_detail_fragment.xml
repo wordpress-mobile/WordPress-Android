@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true">
 
     <RelativeLayout
         android:id="@+id/person_details"
-        android:background="@color/color_primary"
+        android:background="@color/primary"
         android:elevation="@dimen/card_elevation"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                 android:id="@+id/person_display_name"
                 style="@style/PersonTextView"
                 android:fontFamily="sans-serif-light"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/text_sz_extra_large"
                 android:textStyle="bold"
                 tools:text="display_name"/>
@@ -41,7 +41,7 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/person_username"
                 style="@style/PersonTextView"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="username"/>
 
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:text="@string/role"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_large"
             tools:text="@string/role"/>
 
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/grey_darken_10"
+            android:textColor="@color/neutral_400"
             android:textSize="@dimen/text_sz_medium"
             tools:text="@string/role"/>
 
@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:textColor="@color/grey_text_min"
+            android:textColor="@color/neutral"
             android:textSize="@dimen/text_sz_medium"
             tools:text="@string/title_follower"/>
 
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/grey_text_min"
+            android:textColor="@color/neutral"
             android:textSize="@dimen/text_sz_medium"
             tools:text="Since {date}"/>
 
@@ -119,6 +119,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/people_list_divider_height"
         android:layout_below="@id/person_role_container"
-        android:background="@color/grey_lighten_20"/>
+        android:background="@color/neutral_100"/>
 
 </RelativeLayout>

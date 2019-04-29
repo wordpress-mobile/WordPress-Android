@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-21 11:54:10+0000
+Translation-Revision-Date: 2019-04-17 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">無法查看可用的網域額度</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">正在查看網域額度</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">註冊網域</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">若要安裝外掛程式，你的自訂網域必須與你的網站建立關聯。</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">安裝外掛程式</string>
+    <string name="new_site_creation_preview_subtitle">你可以稍後自訂網站的外觀和風格</string>
+    <string name="publish_on">發表於：%s</string>
+    <string name="schedule_for">排程於：%s</string>
+    <string name="published_on">已發表於：%s</string>
+    <string name="scheduled_for">已排程於：%s</string>
+    <string name="stats_detail_recent_weeks">最近幾星期</string>
+    <string name="stats_detail_average_views_per_day">平均每天的瀏覽次數</string>
+    <string name="stats_months_and_years_views_label">瀏覽次數</string>
+    <string name="stats_months_and_years_period_label">期間</string>
+    <string name="stats_detail_months_and_years">月份與年份</string>
+    <string name="stats_insights_load_more">載入更多</string>
+    <string name="stats_insights_today_stats">今天</string>
+    <string name="stats_insights_best_hour">最佳時段</string>
+    <string name="stats_insights_best_day">最好的一天</string>
+    <string name="showing_stats_for">顯示以下統計資料內容：</string>
     <string name="app_rating_rate_never">不用了，謝謝</string>
     <string name="app_rating_rate_later">稍後再做</string>
     <string name="app_rating_rate_now">立即評分</string>
@@ -137,8 +157,6 @@ Language: zh_TW
     <string name="stats_insights_share_post">分享文章</string>
     <string name="stats_insights_create_post">建立文章</string>
     <string name="stats_insights_tags_and_categories">標籤和類別</string>
-    <string name="stats_insights_all_time_stats">所有時間的統計</string>
-    <string name="stats_insights_today_stats">本日統計</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">關注者</string>
     <string name="stats_publicize_service_label">服務</string>

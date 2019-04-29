@@ -17,7 +17,7 @@
         android:lines="1"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/neutral_700"
         tools:text="Suggestion"
         android:layout_toStartOf="@+id/image_delete"/>
 
@@ -32,5 +32,5 @@
         android:contentDescription="@string/reader_list_item_suggestion_remove_desc"
         android:padding="@dimen/margin_small"
         android:src="@drawable/ic_cross_white_24dp"
-        android:tint="@color/grey_600"/>
+        android:tint="@color/gray_600"/>
 </RelativeLayout>

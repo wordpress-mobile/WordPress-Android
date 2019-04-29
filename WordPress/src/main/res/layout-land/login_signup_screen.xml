@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/grey_lighten_30"
+        android:background="@color/neutral_0"
         android:orientation="horizontal"
         android:clipToPadding="false"
         android:padding="@dimen/margin_large">

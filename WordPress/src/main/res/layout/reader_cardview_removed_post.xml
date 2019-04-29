@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:stateListAnimator="@anim/pressed_card"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="@dimen/default_cardview_radius"
     app:cardElevation="@dimen/reader_card_elevation" >
 
@@ -28,7 +28,7 @@
             android:layout_toStartOf="@+id/undo_remove"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:textColor="@color/grey_text_min"
+            android:textColor="@color/neutral"
             android:textSize="@dimen/text_sz_large"
             tools:text="Removed Best post ever"/>
 
@@ -39,7 +39,7 @@
             android:layout_alignParentEnd="true"
             android:drawablePadding="@dimen/margin_small"
             android:text="@string/undo"
-            android:textColor="@color/blue_medium"
+            android:textColor="@color/primary_400"
             android:textSize="@dimen/text_sz_large"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

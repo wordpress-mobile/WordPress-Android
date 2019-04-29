@@ -31,12 +31,12 @@ import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stats.service.StatsServiceStarter;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.ArrayList;
 
@@ -95,7 +95,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
         remoteViews.setTextViewText(viewId, FormatUtils.formatDecimal(value));
         if (text.equals("0")) {
-            remoteViews.setTextColor(viewId, context.getResources().getColor(R.color.grey));
+            remoteViews.setTextColor(viewId, context.getResources().getColor(R.color.neutral_300));
         }
     }
 

@@ -42,7 +42,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
 
 private const val SUB_DOMAIN = "test"
-private const val DOMAIN = ".com"
+private const val DOMAIN = ".wordpress.com"
 private const val URL = "$SUB_DOMAIN$DOMAIN"
 private const val REMOTE_SITE_ID = 1L
 private const val LOCAL_SITE_ID = 2

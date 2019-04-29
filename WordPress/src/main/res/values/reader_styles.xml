@@ -5,17 +5,17 @@
 -->
 <resources>
     <style name="ReaderMediaViewerTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorAccent">@color/reader_accent_material_dark</item>
+        <item name="colorAccent">@color/accent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
 
     <!-- TextViews -->
     <style name="ReaderTextView" parent="android:Widget.TextView">
-        <item name="android:textColorLink">@color/reader_hyperlink</item>
+        <item name="android:textColorLink">@color/link_reader</item>
     </style>
     <style name="ReaderTextView.Label" parent="ReaderTextView">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
@@ -25,7 +25,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
         <item name="android:fontFamily">serif</item>
@@ -38,7 +38,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
@@ -47,31 +47,31 @@
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/grey_text_min</item>
-        <item name="android:drawableTint">@color/grey_text_min</item>
-        <item name="android:drawableStart">@drawable/ic_time_grey_darken_10_16dp</item>
+        <item name="android:textColor">@color/neutral</item>
+        <item name="android:drawableTint">@color/neutral</item>
+        <item name="android:drawableStart">@drawable/ic_time_neutral_400_16dp</item>
     </style>
     <style name="ReaderTextView.EmptyList" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/neutral_700</item>
     </style>
 
     <!-- EditTexts -->
     <style name="ReaderEditText" parent="android:Widget.EditText">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColorHint">@color/grey_darken_10</item>
+        <item name="android:textColorHint">@color/neutral_400</item>
     </style>
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
-        <item name="android:background">@color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:padding">@dimen/margin_medium</item>
         <item name="android:inputType">text</item>
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:maxLength">@integer/max_length_reader_topic_name</item>
-        <item name="android:textColorHint">@color/grey_darken_10</item>
+        <item name="android:textColorHint">@color/neutral_400</item>
     </style>
 
     <!-- images -->

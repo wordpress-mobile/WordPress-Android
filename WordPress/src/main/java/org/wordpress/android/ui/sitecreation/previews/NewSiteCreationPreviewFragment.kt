@@ -208,14 +208,14 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
 
     private fun updateLoadingLayout(progressUiState: SitePreviewFullscreenProgressUiState) {
         progressUiState.apply {
-            setTextOrHide(fullscreenProgressLayout.findViewById(R.id.progress_text), loadingTextResId)
+            uiHelpers.setTextOrHide(fullscreenProgressLayout.findViewById(R.id.progress_text), loadingTextResId)
         }
     }
 
     private fun updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
         errorUiStateState.apply {
-            setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_title), titleResId)
-            setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_subtitle), subtitleResId)
+            uiHelpers.setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_title), titleResId)
+            uiHelpers.setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_subtitle), subtitleResId)
             uiHelpers.updateVisibility(
                     fullscreenErrorLayout.findViewById(R.id.contact_support),
                     errorUiStateState.showContactSupport
@@ -224,13 +224,6 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
                     fullscreenErrorLayout.findViewById(R.id.cancel_wizard_button),
                     errorUiStateState.showCancelWizardButton
             )
-        }
-    }
-
-    private fun setTextOrHide(textView: TextView, resId: Int?) {
-        textView.visibility = if (resId == null) View.GONE else View.VISIBLE
-        resId?.let {
-            textView.text = resources.getString(resId)
         }
     }
 
@@ -262,13 +255,13 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
     ): Spannable {
         val spannableTitle = SpannableString(url)
         spannableTitle.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(context, R.color.wp_grey_dark)),
+                ForegroundColorSpan(ContextCompat.getColor(context, R.color.neutral_800)),
                 subdomainSpan.first,
                 subdomainSpan.second,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         spannableTitle.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(context, R.color.wp_grey_darken_20)),
+                ForegroundColorSpan(ContextCompat.getColor(context, R.color.neutral_500)),
                 domainSpan.first,
                 domainSpan.second,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

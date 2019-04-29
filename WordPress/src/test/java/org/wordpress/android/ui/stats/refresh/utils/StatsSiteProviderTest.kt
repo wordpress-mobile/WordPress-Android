@@ -11,54 +11,69 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SelectedSiteStorage
 
 class StatsSiteProviderTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var localSite: SiteModel
-    @Mock lateinit var remoteSite: SiteModel
+    @Mock lateinit var firstSite: SiteModel
+    @Mock lateinit var secondSite: SiteModel
+    @Mock lateinit var selectedSite: SiteModel
+    @Mock lateinit var siteStorage: SelectedSiteStorage
     private lateinit var statsSiteProvider: StatsSiteProvider
-    private val localId = 1
-    private val remoteId = 2L
+    private val firstSiteLocalId = 1
+    private val secondSiteLocalId = 2
+    private val selectedSiteId = 3
+
     @Before
     fun setUp() {
-        statsSiteProvider = StatsSiteProvider(siteStore, dispatcher)
-        whenever(localSite.id).thenReturn(localId)
-        whenever(localSite.siteId).thenReturn(0L)
-        whenever(remoteSite.siteId).thenReturn(remoteId)
+        statsSiteProvider = StatsSiteProvider(siteStore, siteStorage, dispatcher)
+        whenever(firstSite.siteId).thenReturn(1L)
+        whenever(siteStorage.currentLocalSiteId).thenReturn(selectedSiteId)
+        whenever(siteStore.getSiteByLocalId(firstSiteLocalId)).thenReturn(firstSite)
+        whenever(siteStore.getSiteByLocalId(secondSiteLocalId)).thenReturn(secondSite)
+        whenever(siteStore.getSiteByLocalId(selectedSiteId)).thenReturn(selectedSite)
     }
 
     @Test
     fun `on start attaches provider to dispatcher and sets default site`() {
-        statsSiteProvider.start(localSite)
+        statsSiteProvider.start(firstSiteLocalId)
 
         verify(dispatcher).register(statsSiteProvider)
-        assertThat(statsSiteProvider.siteModel).isEqualTo(localSite)
+        assertThat(statsSiteProvider.siteModel).isEqualTo(firstSite)
     }
 
     @Test
     fun `hasLoadedSite returns false when current site ID == 0`() {
-        statsSiteProvider.start(localSite)
-
         assertThat(statsSiteProvider.hasLoadedSite()).isFalse()
-        assertThat(statsSiteProvider.siteModel).isEqualTo(localSite)
+        assertThat(statsSiteProvider.siteModel.id).isEqualTo(0)
     }
 
     @Test
     fun `hasLoadedSite returns true when current site ID != 0`() {
-        statsSiteProvider.start(remoteSite)
+        statsSiteProvider.start(firstSiteLocalId)
 
         assertThat(statsSiteProvider.hasLoadedSite()).isTrue()
-        assertThat(statsSiteProvider.siteModel).isEqualTo(remoteSite)
+        assertThat(statsSiteProvider.siteModel).isEqualTo(firstSite)
     }
 
     @Test
     fun `updates site onSiteChange and triggers live data update`() {
-        statsSiteProvider.start(localSite)
+        statsSiteProvider.start(secondSiteLocalId)
 
-        whenever(siteStore.getSiteByLocalId(localId)).thenReturn(remoteSite)
         statsSiteProvider.onSiteChanged(OnSiteChanged(1))
 
-        assertThat(statsSiteProvider.siteModel).isEqualTo(remoteSite)
+        assertThat(statsSiteProvider.siteModel).isEqualTo(selectedSite)
+    }
+
+    @Test
+    fun `initialize a site, then reset it`() {
+        statsSiteProvider.start(firstSiteLocalId)
+
+        assertThat(statsSiteProvider.siteModel).isEqualTo(firstSite)
+
+        statsSiteProvider.reset()
+
+        assertThat(statsSiteProvider.siteModel).isEqualTo(selectedSite)
     }
 }

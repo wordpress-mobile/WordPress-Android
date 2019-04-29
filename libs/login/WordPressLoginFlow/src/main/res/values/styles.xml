@@ -4,7 +4,7 @@
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/login_theme_accent_color</item>
 
-        <item name="android:statusBarColor" tools:targetApi="21">@color/status_bar_tint</item>
+        <item name="android:statusBarColor" tools:targetApi="21">@color/status_bar</item>
         <item name="android:windowBackground">@color/login_background_color</item>
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>

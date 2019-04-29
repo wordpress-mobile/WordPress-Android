@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-23 10:29:22+0000
+Translation-Revision-Date: 2019-04-11 16:32:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Lyckades inte kontrollera domänens saldo</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Kontrollerar domänens saldo</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrera domän</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">För att installera tillägg måste du ha en anpassad domän som är associerad med din webbplats.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Installera tillägg</string>
+    <string name="new_site_creation_preview_subtitle">Senare kommer du att kunna anpassa utseendet och känslan hos din webbplats</string>
+    <string name="publish_on">Publicera den: %s</string>
+    <string name="schedule_for">Schemalägg till: %s</string>
+    <string name="published_on">Publicerat: %s</string>
+    <string name="scheduled_for">Schemalagt för: %s</string>
+    <string name="stats_detail_recent_weeks">Senaste veckorna</string>
+    <string name="stats_detail_average_views_per_day">Snitt visningar/dag</string>
+    <string name="stats_months_and_years_views_label">Visningar</string>
+    <string name="stats_months_and_years_period_label">Period</string>
+    <string name="stats_detail_months_and_years">Månader och år</string>
+    <string name="stats_insights_load_more">Hämta mer</string>
+    <string name="stats_insights_today_stats">Idag</string>
+    <string name="stats_insights_best_hour">Bästa timme</string>
+    <string name="stats_insights_best_day">Bästa dag</string>
+    <string name="showing_stats_for">Visar statistik för:</string>
     <string name="app_rating_rate_never">Nej tack</string>
     <string name="app_rating_rate_later">Senare</string>
     <string name="app_rating_rate_now">Betygsätt nu</string>
@@ -182,8 +202,7 @@ Language: sv_SE
     <string name="stats_insights_latest_post_with_no_engagement">Nu har det gått %1$s sedan ”%2$s” publicerades. Sätt bollen i rullning och skaffa fler visningar genom att dela ditt inlägg:</string>
     <string name="stats_insights_latest_post_empty">Du har inte publicerat några inlägg än. När du börjar publicera kommer en sammanfattning för ditt senaste inlägg att visas här:</string>
     <string name="stats_insights_tags_and_categories">Etiketter och kategorier</string>
-    <string name="stats_insights_all_time_stats">Total statistik</string>
-    <string name="stats_insights_today_stats">Dagens statistik</string>
+    <string name="stats_insights_all_time_stats">Sedan starten</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Följare</string>
     <string name="stats_publicize_service_label">Tjänst</string>

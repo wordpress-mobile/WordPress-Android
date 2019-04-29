@@ -219,7 +219,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             mStatsForLabel.setText(mItemTitle != null ? mItemTitle : mItemURL);
             // make the label clickable if the URL is available
             if (mItemURL != null) {
-                mStatsForLabel.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+                mStatsForLabel.setTextColor(getResources().getColor(R.color.link_stats));
                 mStatsForLabel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -232,7 +232,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                     }
                 });
             } else {
-                mStatsForLabel.setTextColor(getResources().getColor(R.color.grey_darken_20));
+                mStatsForLabel.setTextColor(getResources().getColor(R.color.neutral_500));
             }
         } else {
             mStatsForLabel.setVisibility(View.GONE);
@@ -442,11 +442,11 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         }
 
         GraphViewSeries mCurrentSeriesOnScreen = new GraphViewSeries(views);
-        mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
+        mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.primary);
         mCurrentSeriesOnScreen.getStyle().highlightColor =
-                getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
+                getResources().getColor(R.color.accent);
         mCurrentSeriesOnScreen.getStyle().outerhighlightColor =
-                getResources().getColor(R.color.stats_bar_graph_outer_highlight);
+                getResources().getColor(R.color.accent_100);
         mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(this, 5);
 
         StatsBarGraph mGraphView;
@@ -463,7 +463,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mGraphView.addSeries(mCurrentSeriesOnScreen);
         // mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
-        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.grey_darken_30));
+        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.neutral_600));
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
                 DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
         mGraphView.getGraphViewStyle().setTextSize(
@@ -597,7 +597,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             if (currentDay.getCount() == maxReachedValue && maxReachedValue > 0) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
-                        R.color.alert_yellow);
+                        R.color.warning_500);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -674,7 +674,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                         StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
             }
 
-            holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+            holder.setEntryText(name, getResources().getColor(R.color.link_stats));
 
             holder.networkImageView.setVisibility(View.GONE);
 
@@ -690,7 +690,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
-                        R.color.alert_yellow);
+                        R.color.warning_500);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -782,7 +782,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             if (currentMonth.getCount() == maxReachedValue && maxReachedValue > 0) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
-                        R.color.alert_yellow);
+                        R.color.warning_500);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -846,12 +846,12 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 }
             }
 
-            holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+            holder.setEntryText(name, getResources().getColor(R.color.link_stats));
 
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
-                        R.color.alert_yellow);
+                        R.color.warning_500);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);

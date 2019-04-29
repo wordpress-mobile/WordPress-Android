@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:stateListAnimator="@anim/pressed_card"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="@dimen/default_cardview_radius"
     app:cardElevation="@dimen/reader_card_elevation" >
 
@@ -34,7 +34,7 @@
                 android:layout_height="@dimen/blavatar_sz"
                 android:layout_gravity="top|start"
                 android:contentDescription="@string/reader_blavatar_desc"
-                android:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp" />
+                android:src="@drawable/bg_rectangle_neutral_100_globe_32dp" />
 
             <ImageView
                 android:id="@+id/image_avatar"
@@ -42,7 +42,7 @@
                 android:layout_gravity="bottom|end"
                 android:layout_marginTop="14dp"
                 android:contentDescription="@string/reader_avatar_desc"
-                android:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
+                android:src="@drawable/bg_rectangle_neutral_100_user_32dp"
                 android:layout_marginStart="14dp"/>
         </FrameLayout>
 
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 android:fontFamily="serif"
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/grey"
+                android:textColor="@color/neutral_300"
                 android:textSize="@dimen/text_sz_small"
                 app:fixWidowWords="true"
                 tools:text="text_subtitle" />

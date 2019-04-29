@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:textSize="@dimen/text_sz_small"
-        android:textColor="@color/grey_darken_10" />
+        android:textColor="@color/neutral_400" />
 
     <Button
         android:id="@+id/learn_more_button"
@@ -23,12 +23,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="-12dp"
         android:gravity="start|center_vertical"
-        android:background="@color/transparent"
+        android:background="@android:color/transparent"
         android:textStyle="bold"
         android:textAllCaps="true"
         android:text="@string/learn_more"
         android:textSize="@dimen/text_sz_medium"
-        android:textColor="@color/blue_medium"
+        android:textColor="@color/primary_400"
         android:focusable="false"
         android:clickable="false"
         android:fontFamily="sans-serif-light" />

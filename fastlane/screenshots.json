@@ -1,0 +1,234 @@
+{
+	"version": 0.1,
+	"shadow_offset": 40,
+	"background_color": "#016087",
+	"stylesheet": "playstoreres/assets/style.css",
+	"devices": [
+		{
+			"name": "Pixel 2 XL",
+			"canvas_size": [1080,1920],
+			"text_size": [1024, 313],
+			"text_offset": [0, 48],
+			"font_size": "70px",
+			"screenshot_size": [741, 1482],
+			"screenshot_offset": [170, 536],
+			"device_frame": "playstoreres/assets/pixel-2-xl.svg",
+			"device_frame_size": [813, 1539],
+			"device_frame_offset": [142, 452]
+		},
+		{
+			"name": "Nexus 9",
+			"canvas_size": [3000,2000],
+			"text_size": [3000, 317],
+			"text_offset": [0, 48],
+			"font_size": "70px",
+			"screenshot_size": [2107, 1581],
+			"screenshot_offset": [446, 520],
+			"device_frame": "playstoreres/assets/nexus-9.svg",
+			"device_frame_size": [2642, 1778],
+			"device_frame_offset": [179, 419]
+		}
+	],
+	"entries": [
+		{
+			"device": "Pixel 2 XL",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_1.html",
+			"screenshot": "images/phoneScreenshots/1-posteditor.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/1-top.png",
+					"size": [767,483],
+					"position": [107, 967]
+				},
+				{
+					"file": "playstoreres/assets/attachments/1-bottom.png",
+					"size": [767,483],
+					"position": [200, 1488]
+				}
+			]
+		},
+		{
+			"device": "Pixel 2 XL",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_2.html",
+			"screenshot": "images/phoneScreenshots/2-stats.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/2-chart.png",
+					"size": [860,744],
+					"position": [110, 732]
+				}
+			]
+		},
+		{
+			"device": "Pixel 2 XL",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_3.html",
+			"screenshot": "images/phoneScreenshots/3-notifications.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/3-1.png",
+					"size": [784,233],
+					"position": [94, 813]
+				},
+				{
+					"file": "playstoreres/assets/attachments/3-2.png",
+					"size": [784,233],
+					"position": [193, 1212]
+				},
+				{
+					"file": "playstoreres/assets/attachments/3-3.png",
+					"size": [784,233],
+					"position": [107, 1594]
+				}
+			]
+		},
+		{
+			"device": "Pixel 2 XL",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_4.html",
+			"screenshot": "images/phoneScreenshots/4-media.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/4-1.png",
+					"size": [392,312],
+					"position": [349, 1665]
+				},
+				{
+					"file": "playstoreres/assets/attachments/4-2.png",
+					"size": [392,312],
+					"position": [88, 1216]
+				},
+				{
+					"file": "playstoreres/assets/attachments/4-3.png",
+					"size": [517,394],
+					"position": [480, 731]
+				},
+				{
+					"file": "playstoreres/assets/attachments/4-4.png",
+					"size": [326,256],
+					"position": [623, 1336]
+				},
+				{
+					"file": "playstoreres/assets/attachments/4-5.png",
+					"size": [314,246],
+					"position": [71, 701]
+				}
+			]
+		},
+		{
+			"device": "Pixel 2 XL",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_5.html",
+			"screenshot": "images/phoneScreenshots/5-drafteditor.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/5-1.png",
+					"size": [662,564],
+					"position": [210, 1316]
+				},
+				{
+					"file": "playstoreres/assets/attachments/5-2.png",
+					"size": [902,151],
+					"position": [89, 1372]
+				}
+			]
+		},
+		{
+			"device": "Nexus 9",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_1.html",
+			"screenshot": "images/tenInchScreenshots/1-posteditor.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/1-top.png",
+					"size": [980,571],
+					"position": [518, 1110]
+				},
+				{
+					"file": "playstoreres/assets/attachments/1-bottom.png",
+					"size": [906,571],
+					"position": [1575, 1110]
+				}
+			]
+		},
+		{
+			"device": "Nexus 9",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_2.html",
+			"screenshot": "images/tenInchScreenshots/2-stats.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/2-chart-tablet.png",
+					"size": [1578,864],
+					"position": [711, 687]
+				}
+			]
+		},
+		{
+			"device": "Nexus 9",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_3.html",
+			"screenshot": "images/tenInchScreenshots/3-notifications.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/3-1-tablet.png",
+					"size": [1345,233],
+					"position": [748, 825]
+				},
+				{
+					"file": "playstoreres/assets/attachments/3-2-tablet.png",
+					"size": [1345,233],
+					"position": [870, 1205]
+				},
+				{
+					"file": "playstoreres/assets/attachments/3-3-tablet.png",
+					"size": [1345,233],
+					"position": [788, 1598]
+				}
+			]
+		},
+		{
+			"device": "Nexus 9",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_4.html",
+			"screenshot": "images/tenInchScreenshots/4-media.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/4-1.png",
+					"size": [809,644],
+					"position": [1100, 1343]
+				},
+				{
+					"file": "playstoreres/assets/attachments/4-2.png",
+					"size": [392,312],
+					"position": [368, 1343]
+				},
+				{
+					"file": "playstoreres/assets/attachments/4-3.png",
+					"size": [688,524],
+					"position": [1342, 657]
+				},
+				{
+					"file": "playstoreres/assets/attachments/4-4.png",
+					"size": [530,416],
+					"position": [2083, 1249]
+				},
+				{
+					"file": "playstoreres/assets/attachments/4-5.png",
+					"size": [530,415],
+					"position": [668, 712]
+				}
+			]
+		},
+		{
+			"device": "Nexus 9",
+			"text": "playstoreres/metadata/%s/play_store_screenshot_6.html",
+			"screenshot": "images/tenInchScreenshots/6-writing.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/6-1.png",
+					"size": [2027,649],
+					"position": [486, 1386]
+				},
+				{
+					"file": "playstoreres/assets/attachments/6-2.png",
+					"size": [925,126],
+					"position": [416, 1288]
+				}
+			]
+		}
+	]
+}

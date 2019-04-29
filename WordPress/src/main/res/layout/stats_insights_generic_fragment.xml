@@ -48,7 +48,7 @@
             android:id="@+id/stats_error_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_small"
             android:padding="@dimen/margin_large"
             android:visibility="gone" />

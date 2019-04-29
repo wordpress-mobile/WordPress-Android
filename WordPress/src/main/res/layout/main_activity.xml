@@ -24,13 +24,13 @@
             android:id="@+id/connection_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/alert_yellow"
+            android:background="@color/warning_500"
             android:gravity="center"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingTop="@dimen/margin_medium"
             android:text="@string/connectionbar_no_connection"
             android:textAllCaps="true"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_sz_small"
             android:visibility="gone"
             tools:visibility="visible"/>
@@ -45,13 +45,13 @@
             android:id="@+id/navbar_separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grey_lighten_20"/>
+            android:background="@color/neutral_100"/>
 
         <org.wordpress.android.ui.main.WPMainNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@android:color/white"
             app:elevation="0dp"
             app:menu="@menu/bottom_nav_main"/>
     </LinearLayout>

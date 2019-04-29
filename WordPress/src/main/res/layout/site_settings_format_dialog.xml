@@ -49,7 +49,7 @@
             android:background="?android:selectableItemBackground"
             android:gravity="center_vertical|start"
             android:text="@string/site_settings_format_help"
-            android:textColor="@color/link"
+            android:textColor="@color/primary"
             android:textSize="@dimen/text_sz_small"
             android:textAlignment="viewStart"
             android:paddingStart="@dimen/margin_small"/>

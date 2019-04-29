@@ -23,7 +23,7 @@
     </org.wordpress.android.widgets.WPTextView>
 
     <View
-        android:background="@color/divider_grey"
+        android:background="@color/divider"
         android:layout_height="@dimen/list_divider_height"
         android:layout_width="match_parent" >
     </View>

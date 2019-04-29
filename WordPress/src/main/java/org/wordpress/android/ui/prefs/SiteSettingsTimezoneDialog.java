@@ -326,7 +326,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
 
             boolean isSelected = mSelectedTimezone != null
                                  && mSelectedTimezone.equals(mFilteredTimezones.get(position).mValue);
-            int colorRes = isSelected ? R.color.color_control_activated : R.color.transparent;
+            int colorRes = isSelected ? R.color.primary_300 : android.R.color.transparent;
             holder.mTxtLabel.setBackgroundColor(getResources().getColor(colorRes));
             holder.mTxtLabel.setText(mFilteredTimezones.get(position).mLabel);
 

@@ -51,7 +51,7 @@ public class StatsViewHolder {
 
         entryTextView.setText(linkName);
         if (TextUtils.isEmpty(linkURL)) {
-            entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_text_color));
+            entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.text));
             rowContent.setClickable(false);
             return;
         }
@@ -85,7 +85,7 @@ public class StatsViewHolder {
                 }
         );
 
-        entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_link_text_color));
+        entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.link_stats));
     }
 
     public void setEntryText(String text) {
@@ -116,7 +116,7 @@ public class StatsViewHolder {
                         ActivityLauncher.viewStatsSinglePostDetails(view.getContext(), currentItem);
                     }
                 });
-        entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_link_text_color));
+        entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.link_stats));
     }
 
     /*

@@ -125,7 +125,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         for (int i = 0; i < mEntries.length; i++) {
             RadioButton radio = new RadioButton(getActivity());
             CompoundButtonCompat.setButtonTintList(radio,
-                    getResources().getColorStateList(R.color.dialog_compound_button_thumb));
+                    getResources().getColorStateList(R.color.primary_400_gray_200_gray_400_selector));
             radio.setText(mEntries[i]);
             radio.setId(i);
             mRadioGroup.addView(radio);

@@ -196,7 +196,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
                 holder.setEntryTextOrLink(UNKNOWN_SEARCH_TERMS_HELP_PAGE,
                                           getString(R.string.stats_search_terms_unknown_search_terms));
             } else {
-                holder.setEntryText(term, getResources().getColor(R.color.stats_text_color));
+                holder.setEntryText(term, getResources().getColor(R.color.text));
             }
 
             // totals

@@ -10,21 +10,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    tools:background="@color/white">
+    tools:background="@android:color/white">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:background="@color/grey_lighten_20" />
+        android:background="@color/neutral_100" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:src="@drawable/ic_my_sites_white_24dp"
-        android:tint="@color/grey"
+        android:tint="@color/neutral_300"
         android:contentDescription="@null"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_medium"/>
@@ -34,6 +34,6 @@
         android:layout_height="1dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:background="@color/grey_lighten_20" />
+        android:background="@color/neutral_100" />
 
 </LinearLayout>

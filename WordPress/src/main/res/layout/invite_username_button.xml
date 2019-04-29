@@ -14,7 +14,7 @@
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/neutral_700"
         android:textSize="@dimen/text_sz_medium"
         android:layout_marginEnd="5dp"/>
 
@@ -26,5 +26,5 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/remove"
         android:src="@drawable/ic_cross_white_24dp"
-        android:tint="@color/grey_600"/>
+        android:tint="@color/gray_600"/>
 </LinearLayout>

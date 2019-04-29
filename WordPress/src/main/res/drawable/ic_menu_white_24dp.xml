@@ -8,6 +8,6 @@
     tools:ignore="UnusedResources">
 
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@android:color/white"
         android:pathData="M21 6v2H3V6h18zM3 18h18v-2H3v2zm0-5h18v-2H3v2z" />
 </vector>

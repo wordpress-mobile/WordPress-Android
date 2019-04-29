@@ -199,7 +199,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         val emptyView: ActionableEmptyView = actionable_empty_view
         emptyView.run {
             image.setImageResource(R.drawable.img_illustration_media_105dp)
-            bottomImage.setImageResource(R.drawable.giphy_attribution_100dp)
+            bottomImage.setImageResource(R.drawable.img_giphy_100dp)
             bottomImage.contentDescription = getString(string.giphy_powered_by_giphy)
         }
 

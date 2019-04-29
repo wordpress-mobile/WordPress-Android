@@ -18,6 +18,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
@@ -42,6 +44,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker.Formatter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -65,7 +68,6 @@ import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -77,6 +79,8 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ValidationUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
 import java.util.List;
@@ -822,7 +826,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // customize list dividers
         //noinspection deprecation
-        prefList.setDivider(res.getDrawable(R.drawable.preferences_divider));
+        prefList.setDivider(res.getDrawable(R.drawable.bg_rectangle_divider));
         prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);
@@ -831,7 +835,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // remove footer divider bar
         prefList.setFooterDividersEnabled(false);
         //noinspection deprecation
-        prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
+        prefList.setOverscrollFooter(res.getDrawable(android.R.color.transparent));
     }
 
     /**
@@ -1508,7 +1512,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                         }
                 )
         );
-        view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton button = view.findViewById(R.id.fab_button);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -1565,6 +1570,16 @@ public class SiteSettingsFragment extends PreferenceFragment
                 if (negative != null) {
                     WPPrefUtils.layoutAsFlatButton(negative);
                 }
+            }
+        });
+        button.setOnLongClickListener(new OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+
+                Toast.makeText(view.getContext(), R.string.add, Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
 
@@ -1726,7 +1741,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                         AnalyticsUtils.trackWithSiteDetails(
                                 AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK, mSite);
                         dismissProgressDialog(progressDialog);
-                        Snackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
+                        WPSnackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
                     }
                 }
             }, new RestRequest.ErrorListener() {
@@ -1841,7 +1856,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.action_mode_status_bar_tint);
+            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.status_bar_action_mode);
             mActionMode = actionMode;
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.list_editor, menu);
@@ -1850,7 +1865,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.status_bar_tint);
+            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.status_bar);
             getAdapter().removeItemsSelected();
             mActionMode = null;
         }

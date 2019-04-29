@@ -6,6 +6,7 @@ import android.support.test.espresso.AmbiguousViewMatcherException;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -28,9 +29,11 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
@@ -53,6 +56,15 @@ public class WPSupportUtils {
         }
     }
 
+    public static boolean isElementCompletelyDisplayed(ViewInteraction element) {
+        try {
+            element.check(matches(isCompletelyDisplayed()));
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
+    }
+
     public static void scrollToThenClickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
         onView(withId(elementID))
@@ -68,12 +80,13 @@ public class WPSupportUtils {
 
     public static void clickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
-        onView(withId(elementID)).perform(click());
+        clickOn(onView(withId(elementID)));
     }
 
-    public static void clickOn(ViewInteraction element) {
-        waitForElementToBeDisplayed(element);
-        element.perform(click());
+    public static void clickOn(ViewInteraction viewInteraction) {
+        waitForElementToBeDisplayed(viewInteraction);
+        viewInteraction.perform(click());
+        idleFor(500);   // allow for transitions
     }
 
     public static void longClickOn(Integer elementID) {
@@ -140,6 +153,32 @@ public class WPSupportUtils {
         waitOneFrame();
     }
 
+    public static void scrollToAndClickOnTextInRecyclerView(String text, final RecyclerView recyclerView) {
+        ViewInteraction view = onView(withText(text));
+
+        // Prevent java.lang.IllegalStateException:
+        // Cannot call this method while RecyclerView is computing a layout or scrolling
+        waitForConditionToBeTrue(new Supplier<Boolean>() {
+            @Override public Boolean get() {
+                return !recyclerView.isComputingLayout();
+            }
+        });
+
+        // Let the layout settle down before attempting to scroll
+        idleFor(100);
+        
+        while (recyclerView.getLayoutManager().canScrollVertically() && !isElementCompletelyDisplayed(view)) {
+            getCurrentActivity().runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    // 40 pts is the minimum suggested tappable view size, so it makes a good minimum
+                    recyclerView.scrollBy(0, 40);
+                }
+            });
+        }
+
+        clickOn(view);
+    }
+
     public static void selectItemAtIndexInSpinner(Integer index, Integer spinnerElementID) {
         clickOn(spinnerElementID);
         clickOnSpinnerItemAtIndex(index);
@@ -188,10 +227,18 @@ public class WPSupportUtils {
     }
 
     public static void waitForConditionToBeTrue(Supplier<Boolean> supplier) {
+        if (supplier.get()) {
+            return;
+        }
+
         new SupplierIdler(supplier).idleUntilReady();
     }
 
     public static void waitForConditionToBeTrueWithoutFailure(Supplier<Boolean> supplier) {
+        if (supplier.get()) {
+            return;
+        }
+
         new SupplierIdler(supplier).idleUntilReady(false);
     }
 
@@ -253,8 +300,12 @@ public class WPSupportUtils {
     // a different thread than the UI, the UI sometimes reports completion of an operation before repainting the
     // screen to reflect the change. Delaying by one frame ensures we're not taking a screenshot of a stale UI.
     public static void waitOneFrame() {
+        idleFor(17);
+    }
+
+    public static void idleFor(int milliseconds) {
         try {
-            Thread.sleep(17);
+            Thread.sleep(milliseconds);
         } catch (Exception ex) {
             // do nothing
         }

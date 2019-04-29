@@ -182,8 +182,6 @@ Language: en_GB
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
-    <string name="stats_insights_all_time_stats">All Time Stats</string>
-    <string name="stats_insights_today_stats">Today\'s Stats</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Followers</string>
     <string name="stats_publicize_service_label">Service</string>

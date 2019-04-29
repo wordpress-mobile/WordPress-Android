@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-18 19:41:05+0000
+Translation-Revision-Date: 2019-04-11 11:22:54+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Verificarea reputației domeniului disponibil a eșuat</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Verific reputația domeniului</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Înregistrează domeniul</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Pentru a instala module, trebuie să ai un domeniu personalizat asociat cu situl tău.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Instalează modulul</string>
+    <string name="new_site_creation_preview_subtitle">Vei putea să personalizezi mai târziu aspectul sitului și cum va apărea el pentru vizitatori</string>
+    <string name="publish_on">Publică pe: %s</string>
+    <string name="schedule_for">Programează pentru: %s</string>
+    <string name="published_on">Publicat pe: %s</string>
+    <string name="scheduled_for">Programat pentru: %s</string>
+    <string name="stats_detail_recent_weeks">Ultimele săptămâni</string>
+    <string name="stats_detail_average_views_per_day">Medie de vizualizări pe zi</string>
+    <string name="stats_months_and_years_views_label">Vizualizări</string>
+    <string name="stats_months_and_years_period_label">Perioadă</string>
+    <string name="stats_detail_months_and_years">Luni și ani</string>
+    <string name="stats_insights_load_more">Încarcă mai multe</string>
+    <string name="stats_insights_today_stats">Azi</string>
+    <string name="stats_insights_best_hour">Ora cu cele mai multe vizualizări</string>
+    <string name="stats_insights_best_day">Ziua cu cele mai multe vizualizări</string>
+    <string name="showing_stats_for">Afișez statisticile pentru:</string>
     <string name="app_rating_rate_never">Nu, mulțumesc</string>
     <string name="app_rating_rate_later">Mai târziu</string>
     <string name="app_rating_rate_now">Evaluează acum</string>
@@ -182,8 +202,7 @@ Language: ro
     <string name="stats_insights_latest_post_with_no_engagement">Au trecut %1$s de când a fost publicat %2$s. Începe să-ți mărești vizualizările articolului prin partajarea lui:</string>
     <string name="stats_insights_latest_post_empty">Nu ai publicat încă niciun articol. După ce începi să publici, rezumatul ultimului articol va apărea aici:</string>
     <string name="stats_insights_tags_and_categories">Etichete și categorii</string>
-    <string name="stats_insights_all_time_stats">Toate vizualizările</string>
-    <string name="stats_insights_today_stats">Statisticile zilei</string>
+    <string name="stats_insights_all_time_stats">Total general</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Urmăritori</string>
     <string name="stats_publicize_service_label">Serviciu</string>
@@ -1655,7 +1674,7 @@ Language: ro
     <string name="stats_months_and_years">Luni și ani</string>
     <string name="reader_page_recommended_blogs">Situri care s-ar putea să-ți placă</string>
     <string name="error_copy_to_clipboard">A apărut o eroare în timp ce copiam textul în clipbord</string>
-    <string name="stats_recent_weeks">Săptămâni recente</string>
+    <string name="stats_recent_weeks">Ultimele săptămâni</string>
     <string name="stats_average_per_day">Medie pe zi</string>
     <string name="reader_empty_posts_in_blog">Acest sit este gol</string>
     <string name="reader_label_new_posts">Articole noi</string>
@@ -1913,7 +1932,7 @@ Language: ro
     <string name="media_edit_title_text">Titlu</string>
     <string name="media_gallery_type_slideshow">Carusel</string>
     <string name="media_gallery_type_circles">Cercuri</string>
-    <string name="media_gallery_type_tiled">Placat</string>
+    <string name="media_gallery_type_tiled">Placată</string>
     <string name="media_gallery_type_squares">Pătrate</string>
     <string name="themes">Teme</string>
     <string name="discard">Renunță</string>

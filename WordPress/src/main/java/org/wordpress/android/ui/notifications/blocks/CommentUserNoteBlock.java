@@ -133,9 +133,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         if (mCommentStatus == CommentStatus.UNAPPROVED) {
             if (hasCommentNestingLevel()) {
                 paddingStart = mIndentedLeftPadding;
-                view.setBackgroundResource(R.drawable.comment_reply_unapproved_background);
+                view.setBackgroundResource(R.drawable.bg_rectangle_warning_0_warning_white);
             } else {
-                view.setBackgroundResource(R.drawable.comment_unapproved_background);
+                view.setBackgroundResource(R.drawable.bg_rectangle_warning_0_warning);
             }
 
             noteBlockHolder.mDividerView.setVisibility(View.INVISIBLE);
@@ -249,10 +249,10 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             return;
         }
 
-        mNormalTextColor = context.getResources().getColor(R.color.grey_dark);
-        mNormalBackgroundColor = context.getResources().getColor(R.color.white);
-        mAgoTextColor = context.getResources().getColor(R.color.grey_text_min);
-        mUnapprovedTextColor = context.getResources().getColor(R.color.notification_status_unapproved_dark);
+        mNormalTextColor = context.getResources().getColor(R.color.neutral_700);
+        mNormalBackgroundColor = context.getResources().getColor(android.R.color.white);
+        mAgoTextColor = context.getResources().getColor(R.color.neutral);
+        mUnapprovedTextColor = context.getResources().getColor(R.color.warning_600);
         // Double margin_extra_large for increased indent in comment replies
         mIndentedLeftPadding = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large) * 2;
     }

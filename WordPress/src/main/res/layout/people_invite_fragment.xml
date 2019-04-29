@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
     android:clipToPadding="false"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/invite_names_title"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:labelFor="@+id/invite_usernames"
             android:textSize="@dimen/text_sz_large" />
 
@@ -52,14 +52,14 @@
                     android:id="@+id/invite_usernames"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/transparent"
+                    android:background="@android:color/transparent"
                     android:imeOptions="actionDone"
                     android:inputType="text"
                     android:minWidth="40dp"
                     android:paddingBottom="0dp"
                     android:paddingTop="@dimen/margin_large"
                     android:singleLine="true"
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/neutral_700"
                     android:textColorHint="#AAAAAA"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="sdfwefef"
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:textColor="@color/grey_text_min"
+                android:textColor="@color/neutral"
                 android:textSize="@dimen/text_sz_small"
                 android:textStyle="italic"
                 android:text="@string/invite_message_usernames_limit"/>
@@ -106,7 +106,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:text="@string/role"
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/neutral_700"
                     android:labelFor="@+id/role"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="@string/role" />
@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/people_invite_role_info_desc"
                     android:src="@drawable/ic_info_outline_white_24dp"
-                    android:tint="@color/grey_dark"
+                    android:tint="@color/neutral_700"
                     android:paddingEnd="@dimen/margin_small"
                     android:paddingStart="@dimen/margin_small"/>
             </LinearLayout>
@@ -130,8 +130,8 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@color/grey_text_min"
-                android:drawableTint="@color/blue_wordpress"
+                android:textColor="@color/neutral"
+                android:drawableTint="@color/primary_500"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="@string/role"
                 android:layout_marginStart="1dp"
@@ -145,7 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/invite_message_title"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:labelFor="@+id/message"
             android:textSize="@dimen/text_sz_large" />
 
@@ -175,7 +175,7 @@
                 android:layout_below="@+id/message"
                 android:gravity="end"
                 android:padding="5dp"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 android:textSize="@dimen/text_sz_small" />
         </RelativeLayout>
 
@@ -185,7 +185,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/invite_message_info"
-            android:textColor="@color/grey_text_min"
+            android:textColor="@color/neutral"
             android:textSize="@dimen/text_sz_small"
             android:textStyle="italic" />
     </LinearLayout>

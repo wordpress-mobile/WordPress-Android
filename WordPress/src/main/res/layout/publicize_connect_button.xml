@@ -16,7 +16,7 @@
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_large"
         android:textAllCaps="true"
-        android:textColor="@color/blue_wordpress"
+        android:textColor="@color/primary_500"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
         tools:text="Connect" >

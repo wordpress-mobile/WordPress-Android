@@ -15,7 +15,7 @@
         android:layout_weight="1"
         android:background="?android:selectableItemBackground"
         android:text="@string/previous_button"
-        android:textColor="@color/stats_link_text_color" />
+        android:textColor="@color/link_stats" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/stats_pagination_text"
@@ -30,6 +30,6 @@
         android:layout_weight="1"
         android:background="?android:selectableItemBackground"
         android:text="@string/next_button"
-        android:textColor="@color/stats_link_text_color" />
+        android:textColor="@color/link_stats" />
 
 </LinearLayout>

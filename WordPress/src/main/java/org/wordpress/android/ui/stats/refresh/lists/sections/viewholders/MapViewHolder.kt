@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.net.http.SslError
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.wordpress.android.R.color
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
@@ -31,6 +33,8 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             // Loading the v42 of the Google Charts API, since the latest stable version has a problem with
             // the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
             // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
+            val colorLow = Integer.toHexString(ContextCompat.getColor(itemView.context, color.accent_50) and 0xffffff)
+            val colorHigh = Integer.toHexString(ContextCompat.getColor(itemView.context, color.accent) and 0xffffff)
             val htmlPage = ("<html>" +
                     "<head>" +
                     "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
@@ -43,7 +47,8 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     " [" +
                     " ['Country', '${itemView.resources.getString(item.label)}'],${item.mapData}]);" +
                     " var options = {keepAspectRatio: true, region: 'world', colorAxis:" +
-                    " { colors: [ '#FFF088', '#F24606' ] }, enableRegionInteractivity: false};" +
+                    " { colors: [ '#" + colorLow + "', '#" + colorHigh + "' ] }," +
+                    " enableRegionInteractivity: false};" +
                     " var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
                     " chart.draw(data, options);" +
                     " }" +

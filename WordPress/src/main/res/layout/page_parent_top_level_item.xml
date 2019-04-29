@@ -6,7 +6,7 @@
     android:id="@+id/page_item"
     android:layout_width="match_parent"
     android:layout_height="@dimen/one_line_list_item_height"
-    android:background="@color/white">
+    android:background="@android:color/white">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

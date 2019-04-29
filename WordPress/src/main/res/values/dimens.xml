@@ -22,10 +22,11 @@
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
-    <dimen name="card_gutters">12dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
+    <dimen name="snackbar_height_minimum">48dp</dimen>
+    <dimen name="snackbar_radius">4dp</dimen>
 
     <dimen name="media_grid_progress_height">24dp</dimen>
     <dimen name="media_settings_margin_normal">@dimen/margin_extra_large</dimen>
@@ -43,10 +44,7 @@
     <dimen name="default_cardview_elevation">2dp</dimen>
 
     <!-- featured image in post list -->
-    <dimen name="postlist_featured_image_height_normal">128dp</dimen>
-    <dimen name="postlist_featured_image_height_tablet">220dp</dimen>
-    <dimen name="postlist_featured_image_height_tablet_large">280dp</dimen>
-    <dimen name="postlist_featured_image_height">@dimen/postlist_featured_image_height_normal</dimen>
+    <dimen name="postlist_featured_image_height">98dp</dimen>
 
     <!-- left/right margin for content such as Me fragment, My Site fragment -->
     <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
@@ -107,6 +105,7 @@
 
     <dimen name="reader_card_gutters">1px</dimen>
     <dimen name="reader_card_elevation">0dp</dimen>
+    <dimen name="reader_card_avatar_margin_end">18dp</dimen>
 
     <dimen name="reader_video_overlay_size">56dp</dimen>
 
@@ -180,6 +179,7 @@
     <dimen name="notifications_content_margin">0dp</dimen>
     <dimen name="notifications_avatar_sz">48dp</dimen>
     <dimen name="notifications_text_indent_sz">22dp</dimen>
+    <dimen name="notifications_note_icon_margin">28dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="activity_progress_bar_height">5dp</dimen>
@@ -361,11 +361,16 @@
     <dimen name="quota_bar_text_minimum_height">36dp</dimen>
 
     <!--post skeleton-->
-    <dimen name="post_list_row_skeleton_view_title_width">160dp</dimen>
-    <dimen name="post_list_row_skeleton_view_title_height">@dimen/margin_extra_medium_large</dimen>
-    <dimen name="post_list_row_skeleton_view_excerpt_height">@dimen/margin_extra_medium_large</dimen>
-    <dimen name="post_list_row_skeleton_view_date_width">80dp</dimen>
-    <dimen name="post_list_row_skeleton_view_date_height">@dimen/margin_extra_large</dimen>
+    <dimen name="post_list_row_skeleton_view_title_height">20dp</dimen>
+    <dimen name="post_list_row_skeleton_view_excerpt_height">16dp</dimen>
+    <dimen name="post_list_row_skeleton_view_date_height">16dp</dimen>
+
+    <!--posts list-->
+    <dimen name="posts_list_spinner_width">56dp</dimen>
+    <dimen name="posts_list_spinner_avatar_size">30dp</dimen>
+    <dimen name="posts_list_spinner_avatar_padding">1dp</dimen>
+    <dimen name="posts_list_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
+    <dimen name="posts_list_tab_layout_fading_edge_width">16dp</dimen>
 
     <!--site creation-->
     <dimen name="site_creation_segments_icon_size">24dp</dimen>
@@ -381,13 +386,11 @@
     <dimen name="new_site_creation_container_elevation">6dp</dimen>
     <dimen name="new_site_creation_verticals_search_input_text_padding">24dp</dimen>
 
-    <dimen name="new_site_creation_domains_create_site_button_height">36dp</dimen>
     <dimen name="new_site_creation_domains_radio_button_padding_start">20dp</dimen>
 
     <dimen name="new_site_creation_preview_skeleton_mid_size_width">174dp</dimen>
     <dimen name="new_site_creation_preview_skeleton_large_block_height">136dp</dimen>
     <dimen name="new_site_creation_preview_landscape_title_and_button_container_width">220dp</dimen>
-    <dimen name="new_site_creation_preview_ok_button_height">36dp</dimen>
 
     <!-- stats -->
     <dimen name="stats_header_height">32dp</dimen>

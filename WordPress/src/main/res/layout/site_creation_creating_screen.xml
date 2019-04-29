@@ -24,7 +24,7 @@
                 android:layout_height="@dimen/site_creation_creating_illustration_height"
                 android:scaleType="centerInside"
                 android:importantForAccessibility="no"
-                android:src="@drawable/img_site_wordpress_camera_pencils_226dp"/>
+                android:src="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"/>
 
             <LinearLayout
                 android:id="@+id/progress_container"
@@ -139,7 +139,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_buttons"
-            android:background="@color/blue_wordpress">
+            android:background="@color/primary_500">
 
             <View
                 android:id="@+id/centerline"

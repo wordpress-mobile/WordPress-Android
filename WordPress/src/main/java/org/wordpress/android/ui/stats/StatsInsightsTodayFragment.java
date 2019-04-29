@@ -46,7 +46,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         TextView moduleTitle = view.findViewById(R.id.stats_module_title);
         moduleTitle.setTag(StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
         moduleTitle.setOnClickListener(mButtonsOnClickListener);
-        moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+        moduleTitle.setTextColor(getResources().getColor(R.color.link_stats));
         return view;
     }
 
@@ -152,12 +152,12 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         value = currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
-            value.setTextColor(getResources().getColor(R.color.grey_text_min));
+            value.setTextColor(getResources().getColor(R.color.neutral));
         } else {
-            value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+            value.setTextColor(getResources().getColor(R.color.primary_500));
         }
         icon = currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
-        ColorUtils.INSTANCE.setImageResourceWithTint(icon, getTabIcon(itemType), R.color.grey_dark);
+        ColorUtils.INSTANCE.setImageResourceWithTint(icon, getTabIcon(itemType), R.color.neutral_700);
 
         if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS) {
             currentTab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_white);

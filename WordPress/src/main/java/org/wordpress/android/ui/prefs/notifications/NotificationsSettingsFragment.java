@@ -715,7 +715,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         );
 
         timelinePreference.setIcon(ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_bell_white_24dp,
-                R.color.grey_darken_30));
+                R.color.neutral_600));
         timelinePreference.setTitle(R.string.notifications_tab);
         timelinePreference.setDialogTitle(R.string.notifications_tab);
         timelinePreference.setSummary(R.string.notifications_tab_summary);
@@ -727,7 +727,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         );
 
         emailPreference.setIcon(ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_mail_white_24dp,
-                R.color.grey_darken_30));
+                R.color.neutral_600));
         emailPreference.setTitle(R.string.email);
         emailPreference.setDialogTitle(R.string.email);
         emailPreference.setSummary(R.string.notifications_email_summary);
@@ -742,7 +742,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             );
 
             devicePreference.setIcon(ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_phone_white_24dp,
-                    R.color.grey_darken_30));
+                    R.color.neutral_600));
             devicePreference.setTitle(R.string.app_notifications);
             devicePreference.setDialogTitle(R.string.app_notifications);
             devicePreference.setSummary(R.string.notifications_push_summary);

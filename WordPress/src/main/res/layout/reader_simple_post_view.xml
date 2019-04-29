@@ -42,7 +42,7 @@
             android:id="@+id/image_avatar"
             style="@style/ReaderImageView.Avatar.ExtraSmall"
             android:layout_centerVertical="true"
-            tools:src="@drawable/bg_rectangle_grey_lighten_20_user_32dp"
+            tools:src="@drawable/bg_rectangle_neutral_100_user_32dp"
             android:layout_marginEnd="@dimen/margin_medium"
             android:contentDescription="@null"/>
 
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="text_author_name" />
 
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/neutral_400"
                 android:textSize="@dimen/text_sz_extra_small"
                 tools:text="text_site_name" />
         </LinearLayout>
@@ -88,7 +88,7 @@
         android:layout_below="@+id/layout_simple_post_site_header"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/grey_dark"
+        android:textColor="@color/neutral_700"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
         android:fontFamily="serif"
@@ -103,7 +103,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:ellipsize="end"
         android:maxLines="3"
-        android:textColor="@color/grey_darken_20"
+        android:textColor="@color/neutral_500"
         android:textSize="@dimen/text_sz_medium"
         android:fontFamily="serif"
         tools:text="text_simple_post_excerpt\ntext_simple_post_excerpt\ntext_simple_post_excerpt"

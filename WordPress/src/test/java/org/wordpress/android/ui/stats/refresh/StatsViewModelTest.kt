@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.MutableLiveData
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +54,7 @@ class StatsViewModelTest : BaseUnitTest() {
         )
         whenever(statsSectionManager.getSelectedSection()).thenReturn(INSIGHTS)
 
-        viewModel.start(site, false, null)
+        viewModel.start(false, null)
     }
 
     @Test

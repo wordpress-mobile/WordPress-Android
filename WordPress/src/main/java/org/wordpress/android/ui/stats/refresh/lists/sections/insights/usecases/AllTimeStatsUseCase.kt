@@ -66,13 +66,18 @@ class AllTimeStatsUseCase
                             Column(string.stats_visitors, domainModel.visitors.toFormattedString())
                     )
             )
+            val tooltip = if (domainModel.viewsBestDay.isNotEmpty()) {
+                statsDateFormatter.printDate(domainModel.viewsBestDay)
+            } else {
+                null
+            }
             items.add(
                     QuickScanItem(
                             Column(string.posts, domainModel.posts.toFormattedString()),
                             Column(
                                     string.stats_insights_best_ever,
                                     domainModel.viewsBestDayTotal.toFormattedString(),
-                                    statsDateFormatter.printDate(domainModel.viewsBestDay)
+                                    tooltip
                             )
                     )
             )

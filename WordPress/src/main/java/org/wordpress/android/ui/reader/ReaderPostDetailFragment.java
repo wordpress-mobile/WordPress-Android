@@ -67,7 +67,6 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -82,6 +81,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
+import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.EnumSet;
@@ -446,8 +446,8 @@ public class ReaderPostDetailFragment extends Fragment
                     ? getString(R.string.reader_followed_blog_notifications_this)
                     : blogName;
 
-            Snackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                    "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
+            WPSnackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+                    "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
                     .setAction(getString(R.string.reader_followed_blog_notifications_action),
                         new View.OnClickListener() {
                             @Override public void onClick(View view) {
@@ -458,7 +458,6 @@ public class ReaderPostDetailFragment extends Fragment
                                 ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
                             }
                         })
-                    .setActionTextColor(getResources().getColor(R.color.color_accent))
                     .show();
         }
     }
@@ -566,15 +565,15 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        Snackbar.make(getView(), R.string.reader_bookmark_snack_title,
-                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
-                new View.OnClickListener() {
-                    @Override public void onClick(View view) {
-                        AnalyticsTracker
-                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE);
-                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                    }
-                })
+        WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
+                .setAction(R.string.reader_bookmark_snack_btn,
+                    new View.OnClickListener() {
+                        @Override public void onClick(View view) {
+                            AnalyticsTracker
+                                    .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE);
+                            ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                        }
+                    })
                 .show();
     }
 
@@ -891,7 +890,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         if (!mAccountStore.hasAccessToken()) {
-            Snackbar.make(getView(), R.string.reader_snackbar_err_cannot_like_post_logged_out,
+            WPSnackbar.make(getView(), R.string.reader_snackbar_err_cannot_like_post_logged_out,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.sign_in, mSignInClickListener).show();
             return;
@@ -1211,7 +1210,7 @@ public class ReaderPostDetailFragment extends Fragment
                 excerptFooter.setVisibility(View.VISIBLE);
 
                 String blogName = "<font color='" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color
-                        .reader_hyperlink) + "'>" + mPost.getBlogName() + "</font>";
+                        .link_reader) + "'>" + mPost.getBlogName() + "</font>";
                 String linkText = String.format(WordPress.getContext().
                         getString(R.string.reader_excerpt_link), blogName);
 

@@ -22,7 +22,7 @@ public class JobServiceId {
     public static final int JOB_GCM_REG_SERVICE_ID = 1000;
 
     /*
-     * This method checks that a spefic bundle for a given JobServie matches perfectly (all extras and all of its
+     * This method checks that a bundle for a given JobService matches perfectly (all extras and all of its
      * values match) to check if it is already scheduled or not.
      * TODO IMPORTANT: note that this particular method checks for int[] and compares within the array, as that's
      * a case we needed to implement. In the future, if you need to compare other kind of arrays, you'll need to

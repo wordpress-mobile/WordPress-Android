@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.test
 
 private const val SEARCH_QUERY = "test"
+private const val SEGMENT_ID = 123L
 
 @RunWith(MockitoJUnitRunner::class)
 class FetchDomainsUseCaseTest {
@@ -43,7 +44,7 @@ class FetchDomainsUseCaseTest {
     fun coroutineResumedWhenResultEventDispatched() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onSuggestedDomains(event) }
 
-        val resultEvent = useCase.fetchDomains(SEARCH_QUERY)
+        val resultEvent = useCase.fetchDomains(SEARCH_QUERY, SEGMENT_ID)
 
         verify(dispatcher).dispatch(dispatchCaptor.capture())
         assertEquals(dispatchCaptor.lastValue.payload.query, SEARCH_QUERY)

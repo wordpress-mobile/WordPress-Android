@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:background="@color/transparent"
+        android:background="@android:color/transparent"
         app:tabBackground="@drawable/indicator_selector"
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp"
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/grey_lighten_30"
+        android:background="@color/neutral_0"
         android:orientation="vertical"
         android:clipToPadding="false"
         android:padding="@dimen/margin_extra_large">

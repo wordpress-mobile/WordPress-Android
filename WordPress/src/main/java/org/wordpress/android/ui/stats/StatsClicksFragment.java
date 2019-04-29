@@ -229,7 +229,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             int children = getChildrenCount(groupPosition);
 
             if (children > 0) {
-                holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+                holder.setEntryText(name, getResources().getColor(R.color.link_stats));
             } else {
                 holder.setEntryTextOrLink(url, name);
             }

@@ -113,17 +113,43 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         (items[1] as QuickScanItem).apply {
-            assertThat(this.leftColumn.label).isEqualTo(R.string.stats_views)
-            assertThat(this.leftColumn.value).isEqualTo(views.toString())
-            assertThat(this.rightColumn.label).isEqualTo(R.string.stats_visitors)
-            assertThat(this.rightColumn.value).isEqualTo(visitors.toString())
+            assertThat(this.startColumn.label).isEqualTo(R.string.stats_views)
+            assertThat(this.startColumn.value).isEqualTo(views.toString())
+            assertThat(this.endColumn.label).isEqualTo(R.string.stats_visitors)
+            assertThat(this.endColumn.value).isEqualTo(visitors.toString())
         }
         (items[2] as QuickScanItem).apply {
-            assertThat(this.leftColumn.label).isEqualTo(R.string.posts)
-            assertThat(this.leftColumn.value).isEqualTo(posts.toString())
-            assertThat(this.rightColumn.label).isEqualTo(R.string.stats_insights_best_ever)
-            assertThat(this.rightColumn.value).isEqualTo(viewsBestDayTotal.toString())
-            assertThat(this.rightColumn.tooltip).isEqualTo(bestDayTransformed)
+            assertThat(this.startColumn.label).isEqualTo(R.string.posts)
+            assertThat(this.startColumn.value).isEqualTo(posts.toString())
+            assertThat(this.endColumn.label).isEqualTo(R.string.stats_insights_best_ever)
+            assertThat(this.endColumn.value).isEqualTo(viewsBestDayTotal.toString())
+            assertThat(this.endColumn.tooltip).isEqualTo(bestDayTransformed)
+        }
+    }
+
+    @Test
+    fun `best day is null when it's empty`() = test {
+        val forced = false
+        val refresh = true
+        val model = InsightsAllTimeModel(1L, null, 1, 0, 0, "", 0)
+        whenever(insightsStore.getAllTimeInsights(site)).thenReturn(model)
+        whenever(
+                insightsStore.fetchAllTimeInsights(
+                        site,
+                        forced
+                )
+        ).thenReturn(OnStatsFetched(model))
+
+        val result = loadAllTimeInsights(refresh, forced)
+
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        val items = result.data!!
+        assertEquals(items.size, 3)
+        assertTrue(items[0] is Title)
+        assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
+        (items[2] as QuickScanItem).apply {
+            assertThat(this.endColumn.tooltip).isNull()
         }
     }
 

@@ -240,7 +240,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
             String icon = group.getAvatar();
             int children = getChildrenCount(groupPosition);
 
-            holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
+            holder.setEntryText(name, getResources().getColor(R.color.link_stats));
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));

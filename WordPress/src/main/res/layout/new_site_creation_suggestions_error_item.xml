@@ -5,7 +5,7 @@
                                              android:id="@+id/container"
                                              android:layout_width="match_parent"
                                              android:layout_height="wrap_content"
-                                             android:background="@color/white"
+                                             android:background="@android:color/white"
                                              android:foreground="?selectableItemBackground"
                                              android:minHeight="@dimen/one_line_list_item_height">
 
@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_extra_large"
-        android:textColor="@color/wp_grey_darken_10"
+        android:textColor="@color/neutral_400"
         android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/retry"
@@ -32,7 +32,7 @@
         android:drawablePadding="@dimen/margin_large"
         android:gravity="center"
         android:text="@string/retry"
-        android:textColor="@color/wp_blue"
+        android:textColor="@color/primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

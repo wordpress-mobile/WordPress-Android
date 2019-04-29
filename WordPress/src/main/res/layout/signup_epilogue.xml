@@ -39,7 +39,7 @@
                 android:layout_marginEnd="@dimen/margin_large"
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="match_parent"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation"
                 app:cardUseCompatPadding="true" >
@@ -69,7 +69,7 @@
                             android:layout_width="match_parent"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_user_circle_white_24dp"
-                            android:tint="@color/grey_lighten_10"/>
+                            android:tint="@color/neutral_200"/>
 
                         <ImageButton
                             android:id="@+id/signup_epilogue_header_avatar_add"
@@ -78,7 +78,7 @@
                             android:layout_alignParentTop="true"
                             android:layout_height="@dimen/add_avatar_button_size"
                             android:layout_width="@dimen/add_avatar_button_size"
-                            android:tint="@color/grey_lighten_10"
+                            android:tint="@color/neutral_200"
                             android:importantForAccessibility="no"
                             android:visibility="gone"
                             android:src="@drawable/ic_add_white_24dp"
@@ -122,7 +122,7 @@
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
                 app:wpIconDrawable="@drawable/ic_user_white_24dp"
-                app:wpIconDrawableTint="@color/grey" >
+                app:wpIconDrawableTint="@color/neutral_300" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>
 
             <org.wordpress.android.login.widgets.WPLoginInputRow
@@ -135,7 +135,7 @@
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
                 app:wpIconDrawable="@drawable/ic_mention_white_24dp"
-                app:wpIconDrawableTint="@color/grey" >
+                app:wpIconDrawableTint="@color/neutral_300" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>
 
             <org.wordpress.android.login.widgets.WPLoginInputRow
@@ -149,9 +149,9 @@
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:visibility="gone"
                 app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@color/grey"
+                app:passwordToggleTint="@color/neutral_300"
                 app:wpIconDrawable="@drawable/ic_lock_white_24dp"
-                app:wpIconDrawableTint="@color/grey"
+                app:wpIconDrawableTint="@color/neutral_300"
                 tools:visibility="visible" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>
 
@@ -183,7 +183,7 @@
 
     <RelativeLayout
         android:id="@+id/bottom_buttons"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:clipToPadding="false"
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"

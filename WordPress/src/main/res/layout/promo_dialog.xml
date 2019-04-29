@@ -3,7 +3,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:layout_gravity="center"
     android:layout_height="wrap_content"
     android:layout_width="@dimen/default_dialog_width" >
@@ -15,14 +15,14 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:background="@color/grey_light" >
+        android:background="@color/neutral_0" >
 
         <ImageView
             android:id="@+id/promo_dialog_image"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/grey_light"
+            android:background="@color/neutral_0"
             android:contentDescription="@null"
             android:src="@drawable/img_promo_editor" >
         </ImageView>
@@ -74,7 +74,7 @@
             android:minHeight="@dimen/default_dialog_button_height"
             android:minWidth="@dimen/min_touch_target_sz"
             android:textAllCaps="true"
-            android:textColor="@color/blue_medium"
+            android:textColor="@color/primary_400"
             tools:text="Yes"
             style="@style/Widget.AppCompat.Button.Borderless" >
         </android.support.v7.widget.AppCompatButton>
@@ -88,7 +88,7 @@
             android:minHeight="@dimen/default_dialog_button_height"
             android:minWidth="@dimen/min_touch_target_sz"
             android:textAllCaps="true"
-            android:textColor="@color/blue_medium"
+            android:textColor="@color/primary_400"
             android:visibility="gone"
             tools:text="No"
             tools:visibility="visible"
@@ -104,7 +104,7 @@
             android:minHeight="@dimen/default_dialog_button_height"
             android:minWidth="@dimen/min_touch_target_sz"
             android:textAllCaps="true"
-            android:textColor="@color/blue_medium"
+            android:textColor="@color/primary_400"
             android:visibility="gone"
             tools:text="Maybe"
             tools:visibility="visible"

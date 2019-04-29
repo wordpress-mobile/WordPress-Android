@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:animateLayoutChanges="true"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:paddingBottom="@dimen/related_posts_dialog_padding_bottom"
@@ -30,7 +30,7 @@
             android:paddingTop="@dimen/margin_large"
             android:text="@string/notification_settings_followed_dialog_notification_posts_switch"
             android:textAlignment="viewStart"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_large"
             android:theme="@style/SwitchBlueMedium"
             tools:checked="true"
@@ -44,7 +44,7 @@
             android:paddingBottom="@dimen/margin_large"
             android:paddingTop="@dimen/margin_large"
             android:text="@string/notification_settings_followed_dialog_notification_posts_description"
-            android:textColor="@color/grey_darken_10"
+            android:textColor="@color/neutral_400"
             android:textSize="@dimen/text_sz_medium" >
         </org.wordpress.android.widgets.WPTextView>
 
@@ -66,7 +66,7 @@
             android:paddingTop="@dimen/margin_large"
             android:text="@string/notification_settings_followed_dialog_email_posts_switch"
             android:textAlignment="viewStart"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_large"
             android:theme="@style/SwitchBlueMedium"
             tools:checked="true"
@@ -92,7 +92,7 @@
                 android:paddingTop="@dimen/margin_large"
                 android:text="@string/notification_settings_followed_dialog_email_posts_instantly"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_large"
                 tools:checked="true"
                 style="@style/TextAppearance.AppCompat.Body2" >
@@ -108,7 +108,7 @@
                 android:paddingTop="@dimen/margin_large"
                 android:text="@string/notification_settings_followed_dialog_email_posts_daily"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_large"
                 style="@style/TextAppearance.AppCompat.Body2" >
             </RadioButton>
@@ -123,7 +123,7 @@
                 android:paddingTop="@dimen/margin_large"
                 android:text="@string/notification_settings_followed_dialog_email_posts_weekly"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_large"
                 style="@style/TextAppearance.AppCompat.Body2" >
             </RadioButton>
@@ -148,7 +148,7 @@
             android:paddingTop="@dimen/margin_large"
             android:text="@string/notification_settings_followed_dialog_email_comments"
             android:textAlignment="viewStart"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_large"
             android:theme="@style/SwitchBlueMedium"
             style="@style/TextAppearance.AppCompat.Body2" >

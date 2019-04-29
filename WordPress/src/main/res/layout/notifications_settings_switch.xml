@@ -55,7 +55,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/notifications_settings_divider_color"
+        android:background="@color/divider"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"/>
 

@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-12 12:07:12+0000
+Translation-Revision-Date: 2019-04-15 14:29:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Fallo al comprobar los créditos de dominio disponibles</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Comprobando créditos de dominio</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrar dominio</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Para instalar plugins necesitas tener un dominio personalizado asociado a tu sitio.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Instalar plugin</string>
+    <string name="new_site_creation_preview_subtitle">Podrás personalizar la apariencia de tu sitio más adelante</string>
+    <string name="publish_on">Publicar el: %s</string>
+    <string name="schedule_for">Programa para el: %s</string>
+    <string name="published_on">Publicado el: %s</string>
+    <string name="scheduled_for">Programado para el: %s</string>
+    <string name="stats_detail_recent_weeks">Últimas semanas</string>
+    <string name="stats_detail_average_views_per_day">Vistas medias por dia</string>
+    <string name="stats_months_and_years_views_label">Vistas</string>
+    <string name="stats_months_and_years_period_label">Período</string>
+    <string name="stats_detail_months_and_years">Meses y años</string>
+    <string name="stats_insights_load_more">Cargar más</string>
+    <string name="stats_insights_today_stats">Hoy</string>
+    <string name="stats_insights_best_hour">Mejor hora</string>
+    <string name="stats_insights_best_day">Mejor día</string>
+    <string name="showing_stats_for">Estadísticas del:</string>
     <string name="app_rating_rate_never">No, gracias</string>
     <string name="app_rating_rate_later">Más tarde</string>
     <string name="app_rating_rate_now">Valorar ahora</string>
@@ -182,8 +202,7 @@ Language: es
     <string name="stats_insights_latest_post_with_no_engagement">Han pasado %1$s desde que se publicó %2$s. Pon la bola a rodar y aumenta las vistas de las entradas compartiendo tu entrada:</string>
     <string name="stats_insights_latest_post_empty">Aún no has publicado ninguna entrada. Una vez que empieces a publicar, el resumen de tu última entrada aparecerá aquí:</string>
     <string name="stats_insights_tags_and_categories">Etiquetas y categorías</string>
-    <string name="stats_insights_all_time_stats">Histórico de estadísticas</string>
-    <string name="stats_insights_today_stats">Estadísticas de hoy</string>
+    <string name="stats_insights_all_time_stats">Histórico</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Seguidores</string>
     <string name="stats_publicize_service_label">Servicio</string>
@@ -1483,7 +1502,7 @@ Language: es
     <string name="site_settings_default_format_title">Formato por defecto</string>
     <string name="site_settings_default_category_title">Categoría por defecto</string>
     <string name="site_settings_address_title">Dirección</string>
-    <string name="site_settings_tagline_title">Lema</string>
+    <string name="site_settings_tagline_title">Descripción corta</string>
     <string name="site_settings_title_title">Título del sitio</string>
     <string name="site_settings_discussion_new_posts_header">Por defecto para nuevas entradas</string>
     <string name="site_settings_writing_header">Escribiendo</string>

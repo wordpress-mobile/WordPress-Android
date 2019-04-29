@@ -112,19 +112,19 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     private fun assertViewsAndVisitors(blockListItem: BlockListItem) {
         assertThat(blockListItem.type).isEqualTo(QUICK_SCAN_ITEM)
         val item = blockListItem as QuickScanItem
-        assertThat(item.leftColumn.label).isEqualTo(R.string.stats_views)
-        assertThat(item.leftColumn.value).isEqualTo(views.toString())
-        assertThat(item.rightColumn.label).isEqualTo(R.string.stats_visitors)
-        assertThat(item.rightColumn.value).isEqualTo(visitors.toString())
+        assertThat(item.startColumn.label).isEqualTo(R.string.stats_views)
+        assertThat(item.startColumn.value).isEqualTo(views.toString())
+        assertThat(item.endColumn.label).isEqualTo(R.string.stats_visitors)
+        assertThat(item.endColumn.value).isEqualTo(visitors.toString())
     }
 
     private fun assertLikesAndComments(blockListItem: BlockListItem) {
         assertThat(blockListItem.type).isEqualTo(QUICK_SCAN_ITEM)
         val item = blockListItem as QuickScanItem
-        assertThat(item.leftColumn.label).isEqualTo(R.string.stats_likes)
-        assertThat(item.leftColumn.value).isEqualTo(likes.toString())
-        assertThat(item.rightColumn.label).isEqualTo(R.string.stats_comments)
-        assertThat(item.rightColumn.value).isEqualTo(comments.toString())
+        assertThat(item.startColumn.label).isEqualTo(R.string.stats_likes)
+        assertThat(item.startColumn.value).isEqualTo(likes.toString())
+        assertThat(item.endColumn.label).isEqualTo(R.string.stats_comments)
+        assertThat(item.endColumn.value).isEqualTo(comments.toString())
     }
 
     private suspend fun loadTodayStats(refresh: Boolean, forced: Boolean): UseCaseModel {

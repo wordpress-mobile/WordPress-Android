@@ -47,7 +47,8 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
                 }
             });
 
-            positiveButton.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.dialog_button_selector));
+            positiveButton.setTextColor(ContextCompat.getColorStateList(getContext(),
+                    R.color.primary_400_neutral_400_selector));
 
             getEditText().addTextChangedListener(new TextWatcher() {
                 @Override

@@ -446,7 +446,7 @@
                 android:title="@string/let_us_help"
                 app:buttonText="@string/contact_support"
                 app:buttonTextAllCaps="true"
-                app:buttonTextColor="@color/grey_dark"
+                app:buttonTextColor="@color/neutral_700"
                 app:longClickHint="@string/site_settings_start_over_hint"
                 app:preficon="@drawable/ic_history_white_24dp"/>
 

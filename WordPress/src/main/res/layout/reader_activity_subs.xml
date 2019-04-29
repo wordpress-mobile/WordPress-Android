@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@android:color/white">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -20,8 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
-            android:background="@color/tab_background"
-            app:tabIndicatorColor="@color/tab_indicator" />
+            android:background="@color/primary"
+            app:tabIndicatorColor="@android:color/white" />
     </android.support.design.widget.AppBarLayout>
 
     <org.wordpress.android.widgets.WPViewPager
@@ -37,7 +37,7 @@
         android:layout_height="1dp"
         android:layout_above="@+id/layout_bottom"
         android:layout_alignWithParentIfMissing="true"
-        android:background="@color/reader_divider_grey" />
+        android:background="@color/divider" />
 
     <LinearLayout
         android:id="@+id/layout_bottom"
@@ -70,7 +70,7 @@
             android:padding="@dimen/margin_small"
             android:contentDescription="@string/add"
             android:src="@drawable/ic_reader_follow_white_24dp"
-            android:tint="@color/blue_medium" />
+            android:tint="@color/primary_400" />
 
     </LinearLayout>
 

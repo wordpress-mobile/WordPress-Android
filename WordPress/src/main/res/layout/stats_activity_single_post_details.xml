@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginBottom="@dimen/margin_medium"
-                android:textColor="@color/grey_darken_20"
+                android:textColor="@color/neutral_500"
                 android:gravity="center"
                 tools:text="Title"
                 android:layout_marginStart="@dimen/content_margin"
@@ -67,7 +67,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/stats_default_number_zero"
-                        android:textColor="@color/grey_dark"
+                        android:textColor="@color/neutral_700"
                         android:layout_alignParentStart="true"/>
 
                     <org.wordpress.android.widgets.WPTextView
@@ -75,7 +75,7 @@
                         style="@style/StatsInsightsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/notification_status_unapproved_dark"
+                        android:textColor="@color/warning_600"
                         android:text="@string/stats_default_number_zero"
                         android:layout_alignParentEnd="true"/>
 

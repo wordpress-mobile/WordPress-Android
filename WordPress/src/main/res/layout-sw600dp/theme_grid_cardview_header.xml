@@ -29,7 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/neutral_300"
                     android:textSize="@dimen/text_sz_small"
                     android:textAllCaps="true"
                     android:text="@string/current_theme" />
@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="@android:color/black"
                     android:text="@string/current_theme" />
 
             </LinearLayout>
@@ -53,7 +53,7 @@
                 <View
                     android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="@color/reader_divider_grey" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/customize"
@@ -69,13 +69,13 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/customize"
                         android:src="@drawable/ic_customize_white_24dp"
-                        android:tint="@color/grey_dark" />
+                        android:tint="@color/neutral_700" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/grey_dark"
+                        android:textColor="@color/neutral_700"
                         android:text="@string/customize" />
 
                 </LinearLayout>
@@ -83,7 +83,7 @@
                 <View
                     android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="@color/reader_divider_grey" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/details"
@@ -99,13 +99,13 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/details"
                         android:src="@drawable/ic_info_outline_white_24dp"
-                        android:tint="@color/grey_dark" />
+                        android:tint="@color/neutral_700" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/grey_dark"
+                        android:textColor="@color/neutral_700"
                         android:text="@string/details" />
 
                 </LinearLayout>
@@ -113,7 +113,7 @@
                 <View
                     android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="@color/reader_divider_grey" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/support"
@@ -129,13 +129,13 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/support"
                         android:src="@drawable/ic_help_outline_white_24dp"
-                        android:tint="@color/grey_dark" />
+                        android:tint="@color/neutral_700" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/grey_dark"
+                        android:textColor="@color/neutral_700"
                         android:text="@string/support" />
 
                 </LinearLayout>

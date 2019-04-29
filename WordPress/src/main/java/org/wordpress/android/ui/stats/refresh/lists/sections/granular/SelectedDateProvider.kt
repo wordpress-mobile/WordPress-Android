@@ -9,8 +9,8 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
-import org.wordpress.android.util.Event
 import org.wordpress.android.util.filter
+import org.wordpress.android.viewmodel.Event
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,15 +25,15 @@ class SelectedDateProvider
             YEARS to SelectedDate(loading = true)
     )
 
-    private val mutableSelectedDateChanged = MutableLiveData<SectionChange>()
-    val selectedDateChanged: LiveData<SectionChange> = mutableSelectedDateChanged
+    private val mutableSelectedDateChanged = MutableLiveData<Event<SectionChange>>()
+    val selectedDateChanged: LiveData<Event<SectionChange>> = mutableSelectedDateChanged
 
-    fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<SectionChange> {
-        return selectedDateChanged.filter { it.selectedSection == statsGranularity.toStatsSection() }
+    fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<Event<SectionChange>> {
+        return selectedDateChanged.filter { it.peekContent().selectedSection == statsGranularity.toStatsSection() }
     }
 
-    fun granularSelectedDateChanged(statsSection: StatsSection): LiveData<SectionChange> {
-        return selectedDateChanged.filter { it.selectedSection == statsSection }
+    fun granularSelectedDateChanged(statsSection: StatsSection): LiveData<Event<SectionChange>> {
+        return selectedDateChanged.filter { it.peekContent().selectedSection == statsSection }
     }
 
     fun selectDate(date: Date, statsSection: StatsSection) {
@@ -65,7 +65,7 @@ class SelectedDateProvider
     private fun updateSelectedDate(selectedDate: SelectedDate, statsSection: StatsSection) {
         if (mutableDates[statsSection] != selectedDate) {
             mutableDates[statsSection] = selectedDate
-            mutableSelectedDateChanged.postValue(SectionChange(statsSection))
+            mutableSelectedDateChanged.postValue(Event(SectionChange(statsSection)))
         }
     }
 
@@ -165,5 +165,5 @@ class SelectedDateProvider
         fun getDate(): Date = availableDates[index!!]
     }
 
-    data class SectionChange(val selectedSection: StatsSection) : Event()
+    data class SectionChange(val selectedSection: StatsSection)
 }

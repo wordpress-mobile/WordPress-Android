@@ -1,5 +1,3 @@
-* The editor now opens faster for large posts.
-* Now, new posts are created as drafts to make sure they won’t be published accidentally.
-* A new section in stats shows your site’s posting activity.
-* Fixed a bug where headings inserted in the block editor would appear without formatting.
-* Updated the notification screen’s design.
+* Better sharing: You can now share entire sites from the Reader, not just posts.
+* Better Stats: Insights includes a new “This Year” section, and stats have better RTL support.
+* Fixes: Issues with missing posts in the Reader and site icons that didn’t updating properly when switching sites have been resolved.

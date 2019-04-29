@@ -134,7 +134,6 @@ import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -167,6 +166,7 @@ import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.util.AztecLog;
@@ -177,6 +177,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -596,9 +597,21 @@ public class EditPostActivity extends AppCompatActivity implements
             mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
             if (mShowAztecEditor) {
-                mMediaMarkedUploadingOnStartIds =
-                        AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
-                Collections.sort(mMediaMarkedUploadingOnStartIds);
+                try {
+                    mMediaMarkedUploadingOnStartIds =
+                            AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+                    Collections.sort(mMediaMarkedUploadingOnStartIds);
+                } catch (NumberFormatException err) {
+                    // see: https://github.com/wordpress-mobile/AztecEditor-Android/issues/805
+                    if (getSite() != null && getSite().isWPCom() && !getSite().isPrivate()
+                            && TextUtils.isEmpty(mPost.getPassword())
+                            && !PostStatus.PRIVATE.toString().equals(mPost.getStatus())) {
+                        AppLog.e(T.EDITOR, "There was an error initializing post object!");
+                        AppLog.e(AppLog.T.EDITOR, "HTML content of the post before the crash:");
+                        AppLog.e(AppLog.T.EDITOR, mPost.getContent());
+                        throw err;
+                    }
+                }
             }
             mIsPage = mPost.isPage();
 
@@ -758,7 +771,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         if (!mIsConfigChange && (mRestartEditorOption == RestartEditorOptions.NO_RESTART)) {
-            mPostEditorAnalyticsSession.end();
+            if (mPostEditorAnalyticsSession != null) {
+                mPostEditorAnalyticsSession.end();
+            }
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
@@ -1284,11 +1299,9 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         hidePhotoPicker();
-        boolean userCanPublishPosts = userCanPublishPosts();
 
-        if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts)) {
-            if (AppPrefs.isAsyncPromoRequired() && userCanPublishPosts
-                && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
+        if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts())) {
+            if (shouldShowAsyncPromoDialog()) {
                 showAsyncPromoDialog(mPost.isPage(), PostStatus.fromPost(mPost) == PostStatus.SCHEDULED);
             } else {
                 showPublishConfirmationOrUpdateIfNotLocalDraft();
@@ -1343,12 +1356,19 @@ public class EditPostActivity extends AppCompatActivity implements
                         return false;
                     }
 
-                    if (status == PostStatus.SCHEDULED && isNewPost()) {
-                        // if user pressed `Save as draft` on a new, Scheduled Post, re-convert it to draft.
-                        if (mEditPostSettingsFragment != null) {
-                            mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
-                            ToastUtils.showToast(EditPostActivity.this,
-                                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
+                    if (status == PostStatus.SCHEDULED || status == PostStatus.PUBLISHED) {
+                        if (isNewPost()) {
+                            // if user pressed `Save as draft` on a new, Scheduled (or set to Publish) Post,
+                            // so re-convert it to draft.
+                            if (mEditPostSettingsFragment != null) {
+                                mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
+                                ToastUtils.showToast(EditPostActivity.this,
+                                        getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
+                            }
+                        } else {
+                            // user pressed `Publish Now` on a non-new, Scheduled Post. Let's confirm and publish!
+                            showPublishConfirmationDialog();
+                            return false;
                         }
                     }
                     UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
@@ -1478,7 +1498,7 @@ public class EditPostActivity extends AppCompatActivity implements
             showPublishConfirmationDialog();
         } else {
             // otherwise, if they're updating a Post, just go ahead and save it to the server
-            publishPost();
+            publishPost(false);
         }
     }
 
@@ -1727,9 +1747,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
-                mPost.setStatus(PostStatus.PUBLISHED.toString());
-                mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
-                publishPost();
+                publishPost(true);
                 AppRatingDialog.INSTANCE
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
@@ -1738,7 +1756,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mEditorFragment.removeAllFailedMediaUploads();
                 break;
             case ASYNC_PROMO_DIALOG_TAG:
-                publishPost();
+                publishPost(true);
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
                 // no op
@@ -1824,8 +1842,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         refreshEditorContent();
 
-        Snackbar.make(mViewPager, getString(R.string.history_loaded_revision),
-                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, 4000))
+        WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
                 .setAction(getString(R.string.undo), new OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -1957,7 +1974,7 @@ public class EditPostActivity extends AppCompatActivity implements
         setResult(RESULT_OK, i);
     }
 
-    private void publishPost() {
+    private void publishPost(final boolean isPublishConfirmed) {
         AccountModel account = mAccountStore.getAccount();
         // prompt user to verify e-mail before publishing
         if (!account.getEmailVerified()) {
@@ -2001,6 +2018,16 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 boolean isFirstTimePublish = isFirstTimePublish();
+                if (isPublishConfirmed) {
+                    // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
+                    // otherwise we'd have an incorrect value
+                    // also re-set the published date in case it was SCHEDULED and they want to publish NOW
+                    if (PostStatus.fromPost(mPost) == PostStatus.SCHEDULED) {
+                        mPost.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
+                    }
+                    mPost.setStatus(PostStatus.PUBLISHED.toString());
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
+                }
 
                 boolean postUpdateSuccessful = updatePostObject();
                 if (!postUpdateSuccessful) {
@@ -2223,7 +2250,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 3:
                     return HistoryListFragment.Companion.newInstance(mPost, mSite);
                 default:
-                    return EditPostPreviewFragment.newInstance(mPost);
+                    return EditPostPreviewFragment.newInstance(mPost, mSite);
             }
         }
 
@@ -3849,8 +3876,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     refreshEditorContent();
 
                     if (mViewPager != null) {
-                        Snackbar.make(mViewPager, getString(R.string.local_changes_discarded),
-                                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, Snackbar.LENGTH_LONG))
+                        WPSnackbar.make(mViewPager, getString(R.string.local_changes_discarded), Snackbar.LENGTH_LONG)
                                 .setAction(getString(R.string.undo), new OnClickListener() {
                                     @Override public void onClick(View view) {
                                         AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
@@ -3927,6 +3953,30 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    private boolean shouldShowAsyncPromoDialog() {
+        // To make sure the behavior matches what we're communicating to the user as available options,
+        // the same conditions as per `getSaveButtonText()` apply:
+        //  if status is DRAFT and isNewPost() && mPost.isLocalDraft() --> PUBLISH;
+        //  else if UNKNOWN and mPost.isLocalDraft() --> PUBLISH
+        if (!AppPrefs.isAsyncPromoRequired() || !userCanPublishPosts()) return false;
+
+        switch (PostStatus.fromPost(mPost)) {
+            case DRAFT:
+            case PUBLISHED:
+                // we check for both DRAFT _AND_ PUBLISHED posts here because the user can have a isNewPost() and
+                // they may edit the Post settings and change the status to Publish
+                return isNewPost() && mPost.isLocalDraft();
+            case UNKNOWN:
+                return mPost.isLocalDraft();
+            case SCHEDULED:
+            case PRIVATE:
+            case PENDING:
+            case TRASHED:
+            default:
+                return false;
+        }
+    }
+
     private void showAsyncPromoDialog(boolean isPage, boolean isScheduled) {
         int title = isScheduled ? R.string.async_promo_title_schedule : R.string.async_promo_title_publish;
         int description = isScheduled
@@ -3939,7 +3989,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(title),
                 getString(description),
                 getString(button),
-                R.drawable.img_publish_button_124dp,
+                R.drawable.img_illustration_hand_checkmark_button_124dp,
                 getString(R.string.keep_editing),
                 getString(R.string.async_promo_link));
 

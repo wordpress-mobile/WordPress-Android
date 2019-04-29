@@ -40,7 +40,7 @@
         android:id="@+id/selector"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/wp_blue"
+        android:background="@color/primary"
         android:visibility="gone"/>
 
 </LinearLayout>

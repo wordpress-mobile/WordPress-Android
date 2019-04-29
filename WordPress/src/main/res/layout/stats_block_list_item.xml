@@ -59,7 +59,7 @@
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
             android:contentDescription="@string/reader_avatar_desc"
-            android:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"
+            android:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
             android:visibility="gone"/>
     </LinearLayout>
 
@@ -84,7 +84,7 @@
         android:layout_marginStart="8dp"
         android:contentDescription="@string/icon"
         android:src="@drawable/ic_chevron_down_white_16dp"
-        android:tint="@color/grey_darken_20"
+        android:tint="@color/neutral_500"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -113,7 +113,7 @@
         android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="@color/grey_lighten_30"
+        android:background="@color/neutral_0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/text"/>

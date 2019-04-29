@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
+import org.wordpress.android.util.LocaleManager
 
 class StatsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +19,10 @@ class StatsActivity : AppCompatActivity() {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -24,7 +24,7 @@
         android:elevation="4dp"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/text_sz_small"
         tools:text="5"
         tools:ignore="UnusedAttribute"/>

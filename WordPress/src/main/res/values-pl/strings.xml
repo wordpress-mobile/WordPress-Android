@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-28 16:06:52+0000
+Translation-Revision-Date: 2019-03-26 18:17:46+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="new_site_creation_preview_subtitle">Będziesz mógł/mogła później spersonalizować wygląd swojej witryny </string>
+    <string name="publish_on">Publikuj dnia: %s</string>
+    <string name="schedule_for">Zaplanuj na dzień: %s</string>
+    <string name="published_on">Opublikowano dnia: %s</string>
+    <string name="scheduled_for">Zaplanowano na dzień: %s</string>
+    <string name="stats_detail_recent_weeks">Ostatnie tygodnie</string>
+    <string name="stats_detail_average_views_per_day">Średnio wyświetleń na dzień</string>
+    <string name="stats_months_and_years_views_label">Wyświetleń</string>
+    <string name="stats_months_and_years_period_label">Okres</string>
+    <string name="stats_detail_months_and_years">Miesiące i lata</string>
+    <string name="stats_insights_load_more">Wczytaj więcej</string>
+    <string name="stats_insights_today_stats">Dziś</string>
+    <string name="stats_insights_best_hour">Najlepsza godzina</string>
+    <string name="stats_insights_best_day">Najlepszy Dzień</string>
+    <string name="showing_stats_for">Pokazywanie statystyk dla:</string>
+    <string name="app_rating_rate_never">Nie dziękuję</string>
+    <string name="app_rating_rate_later">Później</string>
+    <string name="app_rating_rate_now">Oceń teraz</string>
+    <string name="app_rating_message">Miło widzieć ciebie ponownie! Jeśli używasz aplikacji, prosimy o ocenę w sklepie Google Play.</string>
+    <string name="app_rating_title">Lubisz WordPressa?</string>
+    <string name="editor_post_converted_back_to_draft">Wpis z powrotem zamieniony na wpis</string>
+    <string name="stats_insights_posting_activity">Aktywność publikowania wpisów</string>
+    <string name="stats_site_not_loaded_yet">Witryna jeszcze nie załadowana</string>
+    <string name="stats_more_posts">Więcej wpisów</string>
+    <string name="stats_fewer_posts">Mniej wpisów</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Usuń treści</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Przesuń blok w dół</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Przesuń blok w górę</string>
@@ -172,8 +197,7 @@ Language: pl
     <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis:</string>
     <string name="stats_insights_latest_post_empty">Nie opublikowałeś jeszcze żadnych wpisów. Kiedy zaczniesz publikować, podsumowanie twojego ostatniego wpisu pojawi się tu:</string>
     <string name="stats_insights_tags_and_categories">Tagi i kategorie</string>
-    <string name="stats_insights_all_time_stats">Statystyki od początku</string>
-    <string name="stats_insights_today_stats">Dzisiejsze statystyki</string>
+    <string name="stats_insights_all_time_stats">Od początku</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Obserwujący</string>
     <string name="stats_publicize_service_label">Usługa</string>

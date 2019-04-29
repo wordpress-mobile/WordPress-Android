@@ -35,9 +35,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ContextThemeWrapper;
+import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -46,6 +48,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -304,9 +307,19 @@ public class MediaSettingsActivity extends AppCompatActivity
                     showFullScreen();
                 }
             };
-            mFabView.setOnClickListener(listener);
             mImageView.setOnClickListener(listener);
             mImagePlay.setOnClickListener(listener);
+            mFabView.setOnClickListener(listener);
+            mFabView.setOnLongClickListener(new OnLongClickListener() {
+                @Override public boolean onLongClick(View view) {
+                    if (view.isHapticFeedbackEnabled()) {
+                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    }
+
+                    Toast.makeText(view.getContext(), R.string.button_preview, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
         }
     }
 
@@ -364,7 +377,7 @@ public class MediaSettingsActivity extends AppCompatActivity
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
             @DrawableRes int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
             ColorUtils.INSTANCE.setImageResourceWithTint(mImageView,
-                    imageRes != 0 ? imageRes : R.drawable.ic_pages_white_24dp, R.color.grey);
+                    imageRes != 0 ? imageRes : R.drawable.ic_pages_white_24dp, R.color.neutral_300);
             mImageView.setPadding(padding, padding * 2, padding, padding);
             mImageView.setImageResource(imageRes);
         } else {

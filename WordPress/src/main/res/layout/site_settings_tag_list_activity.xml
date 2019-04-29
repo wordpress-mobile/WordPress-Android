@@ -24,7 +24,6 @@
         android:layout_width="wrap_content"
         android:visibility="invisible"
         app:borderWidth="0dp"
-        app:rippleColor="@color/fab_pressed"
         android:src="@drawable/ic_plus_white_24dp"
         tools:visibility="visible" >
     </android.support.design.widget.FloatingActionButton>

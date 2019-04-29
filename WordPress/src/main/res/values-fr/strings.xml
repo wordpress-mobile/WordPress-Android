@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-12 12:19:32+0000
+Translation-Revision-Date: 2019-04-18 09:24:56+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Impossible de vérifier les crédits de domaine disponibles</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Vérification des crédits de domaine</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Enregistrer le domaine</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Pour installer des extensions, un nom de domaine personnalisé doit être associé à votre site.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Installer l\'extension</string>
+    <string name="new_site_creation_preview_subtitle">Vous pourrez personnaliser l’apparence de votre site plus tard</string>
+    <string name="publish_on">Publier le : %s</string>
+    <string name="schedule_for">Planifier pour le : %s</string>
+    <string name="published_on">Publié le : %s</string>
+    <string name="scheduled_for">Planifié pour le : %s</string>
+    <string name="stats_detail_recent_weeks">Dernières semaines</string>
+    <string name="stats_detail_average_views_per_day">Nbr. moy. de vues par jour</string>
+    <string name="stats_months_and_years_views_label">Vues</string>
+    <string name="stats_months_and_years_period_label">Période</string>
+    <string name="stats_detail_months_and_years">Mois et années</string>
+    <string name="stats_insights_load_more">En afficher plus</string>
+    <string name="stats_insights_today_stats">Aujourd’hui</string>
+    <string name="stats_insights_best_hour">Meilleure heure</string>
+    <string name="stats_insights_best_day">Meilleur jour</string>
+    <string name="showing_stats_for">Afficher les stats pour :</string>
     <string name="app_rating_rate_never">Non merci</string>
     <string name="app_rating_rate_later">Plus tard</string>
     <string name="app_rating_rate_now">Évaluer maintenant</string>
@@ -19,10 +39,10 @@ Language: fr
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66">Retirer le contenu</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55">Descendre le bloc</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48">Monter le bloc</string>
-    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">AJOUTER BLOC ICI</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Non reconnu</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Type de bloc non reconnu.</string>
-    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Bloc non reconnu</string>
+    <string name="gutenberg_mobile_src_block_management_block_manager_js_285">AJOUTER UN BLOC ICI</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Non pris en charge</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_23">Type de bloc non pris en charge.</string>
+    <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Bloc non pris en charge</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Coller l’URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">CHOISIR IMAGE</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Échec de l’insertion du média.\nAppuyez pour voir les options.</string>
@@ -141,7 +161,7 @@ Language: fr
     <string name="dialog_confirm_load_remote_post_title">Résoudre le conflit de synchronisation</string>
     <string name="local_changes_discarding_no_connection">Une connexion est obligatoire pour exécuter cette action. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="stats_no_data_for_period">Aucune donnée pour cette période</string>
-    <string name="preference_strip_image_location">Supprimer l\'emplacement du média</string>
+    <string name="preference_strip_image_location">Supprimer les données de localisation des photos et vidéos</string>
     <string name="stats_cannot_be_started">Nous ne pouvons pas ouvrir les statistiques pour le moment. Veuillez réessayer plus tard</string>
     <string name="site_creation_label_domain_selection">Choisissez une adresse disponible pour que tout le monde puisse vous trouver sur le Web.</string>
     <string name="giphy_powered_by_giphy">Optimisé par GIPHY</string>
@@ -182,8 +202,7 @@ Language: fr
     <string name="stats_insights_latest_post_with_no_engagement">%2$s est publié depuis %1$s. Lancez-vous et augmentez le nombre de vues de votre article en le partageant :</string>
     <string name="stats_insights_latest_post_empty">Vous n’avez pas encore publié d’articles. Lorsque vous commencez à publier, le résumé de votre dernier article apparaît ici :</string>
     <string name="stats_insights_tags_and_categories">Étiquettes et catégories</string>
-    <string name="stats_insights_all_time_stats">Statistiques globales</string>
-    <string name="stats_insights_today_stats">Statistiques du jour</string>
+    <string name="stats_insights_all_time_stats">Depuis le début</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Abonnés</string>
     <string name="stats_publicize_service_label">Service</string>
@@ -980,7 +999,7 @@ Language: fr
     <string name="menu_redo">Refaire</string>
     <string name="menu_undo">Annuler</string>
     <string name="error_media_small">Le média est trop petit pour s’afficher</string>
-    <string name="editor_dropped_unsupported_files">Attention : les éléments glissés ne sont pas tous gérés !</string>
+    <string name="editor_dropped_unsupported_files">Attention : les éléments glissés ne sont pas tous pris en charge !</string>
     <string name="editor_dropped_title_images_not_allowed">Il n\'est pas permis de glisser des images dans le champ Titre</string>
     <string name="editor_dropped_text_error">Erreur survenue pendant le glisser-déposer du texte</string>
     <string name="editor_dropped_html_images_not_allowed">Il n\'est pas permis de glisser des images en mode HTML</string>
@@ -1190,7 +1209,7 @@ Language: fr
     <string name="sign_in_wpcom">Se connecter à WordPress.com</string>
     <string name="reader_label_global_related_posts">Articles connexes sur WordPress.com</string>
     <string name="reader_label_local_related_posts">Articles connexes dans %s</string>
-    <string name="preference_open_device_settings">Réglages des appareils ouverts</string>
+    <string name="preference_open_device_settings">Accéder aux paramètres système</string>
     <string name="invite_invalid_email">%s : Email invalide</string>
     <string name="invite_user_blocked_invites">%s: L\'utilisateur a bloqué les invitations</string>
     <string name="invite_already_following">%s: Vous suit déjà</string>
@@ -1458,7 +1477,7 @@ Language: fr
     <string name="site_settings_username_hint">Compte utilisateur actuel</string>
     <string name="site_settings_language_hint">La langue d\'écriture de ce blog est principalement en</string>
     <string name="site_settings_privacy_hint">Contrôler qui peut voir votre site.</string>
-    <string name="site_settings_address_hint">Changer votre adresse n\'est actuellement pas supporté.</string>
+    <string name="site_settings_address_hint">Changer votre adresse n\'est actuellement pas pris en charge.</string>
     <string name="site_settings_tagline_hint">Une brève description ou une phrase accrocheuse pour décrire votre blog</string>
     <string name="site_settings_title_hint">En quelques mots, décrivez la raison d\'être de ce site.</string>
     <string name="site_settings_whitelist_known_summary">Commentaires des utilisateurs anonymes</string>

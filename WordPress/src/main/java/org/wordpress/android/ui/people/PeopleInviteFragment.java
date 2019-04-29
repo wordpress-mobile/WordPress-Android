@@ -512,9 +512,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         TextView textView = (TextView) mUsernameButtons.get(username).findViewById(R.id.username);
         textView.setTextColor(ContextCompat.getColor(getActivity(),
-                                                     validationResultMessage == null ? R.color.grey_dark
-                                                             : (validationResultMessage.equals(FLAG_SUCCESS)
-                                                                     ? R.color.blue_wordpress : R.color.alert_red)));
+                validationResultMessage == null ? R.color.neutral_700
+                        : (validationResultMessage.equals(FLAG_SUCCESS) ? R.color.primary_500 : R.color.error_500)));
     }
 
     private

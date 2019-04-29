@@ -28,7 +28,7 @@
             android:textSize="@dimen/stats_widget_text_sz"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:orientation="horizontal"
-        android:background="@color/grey_lighten_30" />
+        android:background="@color/neutral_0" />
 
     <LinearLayout
         android:id="@+id/stats_widget_values_container"
@@ -72,10 +72,10 @@
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_visible_on_white_24dp"
-                    android:tint="@color/grey_dark" />
+                    android:tint="@color/neutral_700" />
 
                 <TextView
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/neutral_700"
                     android:textSize="@dimen/stats_widget_text_sz_small"
                     android:textAllCaps="true"
                     android:maxLines="1"
@@ -87,7 +87,7 @@
 
             <TextView
                 android:id="@+id/stats_widget_views"
-                android:textColor="@color/blue_wordpress"
+                android:textColor="@color/primary_500"
                 android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
@@ -119,10 +119,10 @@
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_user_white_24dp"
-                    android:tint="@color/grey_dark" />
+                    android:tint="@color/neutral_700" />
 
                 <TextView
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/neutral_700"
                     android:textSize="@dimen/stats_widget_text_sz_small"
                     android:textAllCaps="true"
                     android:maxLines="1"
@@ -134,7 +134,7 @@
 
             <TextView
                 android:id="@+id/stats_widget_visitors"
-                android:textColor="@color/blue_wordpress"
+                android:textColor="@color/primary_500"
                 android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
@@ -166,10 +166,10 @@
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_star_white_24dp"
-                    android:tint="@color/grey_dark" />
+                    android:tint="@color/neutral_700" />
 
                 <TextView
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/neutral_700"
                     android:textSize="@dimen/stats_widget_text_sz_small"
                     android:textAllCaps="true"
                     android:maxLines="1"
@@ -181,7 +181,7 @@
 
             <TextView
                 android:id="@+id/stats_widget_likes"
-                android:textColor="@color/blue_wordpress"
+                android:textColor="@color/primary_500"
                 android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
@@ -213,10 +213,10 @@
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_comment_white_24dp"
-                    android:tint="@color/grey_dark" />
+                    android:tint="@color/neutral_700" />
 
                 <TextView
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/neutral_700"
                     android:textSize="@dimen/stats_widget_text_sz_small"
                     android:textAllCaps="true"
                     android:maxLines="1"
@@ -228,7 +228,7 @@
 
             <TextView
                 android:id="@+id/stats_widget_comments"
-                android:textColor="@color/blue_wordpress"
+                android:textColor="@color/primary_500"
                 android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
@@ -252,7 +252,7 @@
         <TextView
             android:id="@+id/stats_widget_error_text"
             android:textSize="@dimen/stats_widget_text_sz"
-            android:textColor="@color/grey_darken_20"
+            android:textColor="@color/neutral_500"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -13,13 +13,13 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_large"
         android:contentDescription="@null"
-        tools:src="@drawable/bg_rectangle_grey_lighten_20_globe_32dp"/>
+        tools:src="@drawable/bg_rectangle_neutral_100_globe_32dp"/>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:background="@color/divider_grey"
+        android:background="@color/divider"
         android:layout_toEndOf="@+id/image_icon"/>
 
     <LinearLayout
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/neutral_700"
             android:textSize="@dimen/text_sz_large"
             android:textAlignment="viewStart"
             android:layout_gravity="start"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/grey"
+            android:textColor="@color/neutral_300"
             android:textSize="@dimen/text_sz_medium"
             android:textAlignment="viewStart"
             android:layout_gravity="start"

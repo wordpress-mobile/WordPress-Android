@@ -12,14 +12,14 @@ class QuickScanItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         layout.stats_quick_scan_item
 ) {
-    private val leftLabel = itemView.findViewById<TextView>(id.left_label)
-    private val leftValue = itemView.findViewById<TextView>(id.left_value)
-    private val rightLabel = itemView.findViewById<TextView>(id.right_label)
-    private val rightValue = itemView.findViewById<TextView>(id.right_value)
+    private val startLabel = itemView.findViewById<TextView>(id.start_label)
+    private val startValue = itemView.findViewById<TextView>(id.start_value)
+    private val endLabel = itemView.findViewById<TextView>(id.end_label)
+    private val endValue = itemView.findViewById<TextView>(id.end_value)
 
     fun bind(item: QuickScanItem) {
-        bindColumn(item.leftColumn, leftLabel, leftValue)
-        bindColumn(item.rightColumn, rightLabel, rightValue)
+        bindColumn(item.startColumn, startLabel, startValue)
+        bindColumn(item.endColumn, endLabel, endValue)
     }
 
     private fun bindColumn(column: Column, label: TextView, value: TextView) {

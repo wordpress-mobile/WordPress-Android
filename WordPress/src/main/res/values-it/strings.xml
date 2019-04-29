@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-19 18:54:08+0000
+Translation-Revision-Date: 2019-04-15 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Impossibile controllare i crediti di dominio disponibili</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Controllo dei crediti di dominio</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Registra dominio</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Per installare i plugin, il dominio personalizzato deve essere associato al tuo sito.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Installa plugin</string>
+    <string name="new_site_creation_preview_subtitle">Potrai personalizzare l’aspetto e il tono del tuo sito in un secondo momento</string>
+    <string name="publish_on">Pubblica il: %s</string>
+    <string name="schedule_for">Programmato per: %s</string>
+    <string name="published_on">Pubblicato il: %s</string>
+    <string name="scheduled_for">Pianificato per: %s</string>
+    <string name="stats_detail_recent_weeks">Ultime settimane</string>
+    <string name="stats_detail_average_views_per_day">Medio Visite al giorno</string>
+    <string name="stats_months_and_years_views_label">Visualizzazioni</string>
+    <string name="stats_months_and_years_period_label">Periodo</string>
+    <string name="stats_detail_months_and_years">Mesi e anni</string>
+    <string name="stats_insights_load_more">Carica di più</string>
+    <string name="stats_insights_today_stats">Oggi</string>
+    <string name="stats_insights_best_hour">Orario migliore</string>
+    <string name="stats_insights_best_day">Giorno migliore</string>
+    <string name="showing_stats_for">Mostra statistiche per:</string>
     <string name="app_rating_rate_never">No, grazie</string>
     <string name="app_rating_rate_later">Più tardi</string>
     <string name="app_rating_rate_now">Valuta ora</string>
@@ -163,8 +183,6 @@ Language: it
     <string name="stats_insights_share_post">Condividi articolo</string>
     <string name="stats_insights_create_post">Crea articolo</string>
     <string name="stats_insights_tags_and_categories">Tag e Categorie</string>
-    <string name="stats_insights_all_time_stats">Tutte le statistiche</string>
-    <string name="stats_insights_today_stats">Statistiche odierne</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Follower</string>
     <string name="stats_publicize_service_label">Servizio</string>

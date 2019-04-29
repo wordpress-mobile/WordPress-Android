@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-20 10:54:09+0000
+Translation-Revision-Date: 2019-04-17 01:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">登録可能なドメインクレジットの確認に失敗しました</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">ドメインクレジットの確認</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">ドメインを登録</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">プラグインをインストールするには、カスタムドメインをサイトに関連付ける必要があります。</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">プラグインをインストール</string>
+    <string name="new_site_creation_preview_subtitle">サイトの外見は後でカスタマイズできます。</string>
+    <string name="publish_on">公開日:%s</string>
+    <string name="schedule_for">予約:%s</string>
+    <string name="published_on">公開日時:%s</string>
+    <string name="scheduled_for">予約済み:%s</string>
+    <string name="stats_detail_recent_weeks">最近の週</string>
+    <string name="stats_detail_average_views_per_day">平均表示数/日</string>
+    <string name="stats_months_and_years_views_label">表示回数</string>
+    <string name="stats_months_and_years_period_label">期間</string>
+    <string name="stats_detail_months_and_years">月と年</string>
+    <string name="stats_insights_load_more">さらに読み込む</string>
+    <string name="stats_insights_today_stats">今日</string>
+    <string name="stats_insights_best_hour">最高記録達成時間</string>
+    <string name="stats_insights_best_day">最高記録達成日</string>
+    <string name="showing_stats_for">統計を表示:</string>
     <string name="app_rating_rate_never">評価しない</string>
     <string name="app_rating_rate_later">後で評価する</string>
     <string name="app_rating_rate_now">今すぐ評価する</string>
@@ -182,8 +202,6 @@ Language: ja_JP
     <string name="stats_insights_latest_post_with_no_engagement">「%2$s」を公開してから%1$sが経過しました。投稿をシェアして閲覧数を増やしましょう。</string>
     <string name="stats_insights_latest_post_empty">公開投稿はまだありません。公開すると、最新の投稿の概要がここに表示されます</string>
     <string name="stats_insights_tags_and_categories">タグとカテゴリー</string>
-    <string name="stats_insights_all_time_stats">一般的な統計</string>
-    <string name="stats_insights_today_stats">本日の統計情報</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">フォロワー</string>
     <string name="stats_publicize_service_label">サービス</string>

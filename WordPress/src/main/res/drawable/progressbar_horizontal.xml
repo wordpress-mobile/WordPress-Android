@@ -4,7 +4,7 @@
         <clip>
             <shape>
                 <solid
-                    android:color="@color/blue_dark" />
+                    android:color="@color/primary_700" />
             </shape>
         </clip>
     </item>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:gravity="center_vertical">
 
     <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/neutral_700"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_name" />
 
@@ -45,7 +45,7 @@
                 android:layout_below="@+id/text_name"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/reader_hyperlink"
+                android:textColor="@color/link_reader"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="text_url" />
 

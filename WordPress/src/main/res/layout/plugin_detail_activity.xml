@@ -34,7 +34,7 @@
                     android:id="@+id/image_banner"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/plugin_banner_size"
-                    android:background="@color/grey_lighten_20"
+                    android:background="@color/neutral_100"
                     android:contentDescription="@string/plugin_detail_banner_desc" />
 
                 <ImageView
@@ -72,7 +72,7 @@
 
             <android.support.v7.widget.CardView
                 style="@style/PluginCardView"
-                card_view:cardBackgroundColor="@color/white"
+                card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
@@ -80,7 +80,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/grey_lighten_30"
+                        android:background="@color/neutral_0"
                         android:padding="@dimen/margin_extra_large">
 
                         <ImageView
@@ -102,7 +102,7 @@
                                 android:id="@+id/text_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/grey_dark"
+                                android:textColor="@color/neutral_700"
                                 android:textSize="@dimen/text_sz_large"
                                 android:textStyle="bold"
                                 tools:text="text_title"
@@ -113,8 +113,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:linksClickable="true"
-                                android:textColor="@color/grey_dark"
-                                android:textColorLink="@color/blue_wordpress"
+                                android:textColor="@color/neutral_700"
+                                android:textColorLink="@color/primary_500"
                                 android:textSize="@dimen/text_sz_medium"
                                 tools:text="text_byline"
                                 android:layout_marginStart="@dimen/margin_extra_large"/>
@@ -154,7 +154,7 @@
                                 android:id="@+id/plugin_version_bottom"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:textColor="@color/grey_darken_10"
+                                android:textColor="@color/neutral_400"
                                 tools:text="plugin_version_bottom"
                                 style="@style/PluginCardViewSecondaryText" />
                         </LinearLayout>
@@ -220,7 +220,7 @@
             <android.support.v7.widget.CardView
                 android:id="@+id/plugin_card_site"
                 style="@style/PluginCardView"
-                card_view:cardBackgroundColor="@color/white"
+                card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
@@ -259,7 +259,7 @@
 
             <android.support.v7.widget.CardView
                 style="@style/PluginCardView"
-                card_view:cardBackgroundColor="@color/white"
+                card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
@@ -318,7 +318,7 @@
             <android.support.v7.widget.CardView
                 style="@style/PluginCardView"
                 android:id="@+id/plugin_wp_org_details_container"
-                card_view:cardBackgroundColor="@color/white"
+                card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">

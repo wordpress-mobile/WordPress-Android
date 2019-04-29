@@ -83,7 +83,6 @@ Language: sk
     <string name="stats_insights_share_post">Zdieľať článok</string>
     <string name="stats_insights_create_post">Vytvoriť článok</string>
     <string name="stats_insights_tags_and_categories">Značky a kategórie</string>
-    <string name="stats_insights_today_stats">Dnešné štatistiky</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Zobrazenia</string>

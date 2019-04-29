@@ -41,7 +41,6 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -50,10 +49,12 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.List;
 import java.util.Locale;
@@ -440,7 +441,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 case COMMENT_LIKE:
                     getCommentAdapter().setHighlightCommentId(mCommentId, false);
                     if (!mAccountStore.hasAccessToken()) {
-                        Snackbar.make(mRecyclerView,
+                        WPSnackbar.make(mRecyclerView,
                                       R.string.reader_snackbar_err_cannot_like_post_logged_out,
                                       Snackbar.LENGTH_INDEFINITE)
                                 .setAction(R.string.sign_in, mSignInClickListener)

@@ -6,11 +6,11 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/margin_large"
     android:layout_marginStart="@dimen/margin_large"
-    android:buttonTint="@color/dialog_compound_button_thumb"
+    android:buttonTint="@color/primary_400_gray_200_gray_400_selector"
     android:minHeight="@dimen/min_touch_target_sz"
     android:paddingStart="@dimen/margin_extra_large"
     android:paddingEnd="@dimen/margin_extra_large"
     android:maxLines="2"
     tools:text="yourname.wordpress.com"
-    android:textColor="@color/grey_dark"
+    android:textColor="@color/neutral_700"
     tools:ignore="UnusedAttribute"/>

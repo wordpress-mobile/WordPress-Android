@@ -85,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|end"
-                    android:tint="@color/grey_darken_10"
+                    android:tint="@color/neutral_400"
                     android:contentDescription="@null"
                     tools:src="@drawable/gallery_icon_thumbnailgrid"
                     android:layout_marginEnd="@dimen/margin_extra_large"/>

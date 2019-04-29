@@ -6,7 +6,7 @@
     android:clipToPadding="false"
     android:paddingBottom="@dimen/margin_large"
     android:paddingTop="@dimen/margin_large"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:scrollbarStyle="outsideInset"
     android:paddingStart="@dimen/margin_extra_large"
     android:paddingEnd="@dimen/margin_extra_large">
@@ -31,7 +31,7 @@
                 android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
                 android:minLines="4"
                 android:typeface="serif"
-                android:textColorLink="@color/reader_hyperlink" />
+                android:textColorLink="@color/link_reader" />
 
         </LinearLayout>
 

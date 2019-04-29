@@ -131,7 +131,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
                                                        titleString,
                                                        stepString,
                                                        R.drawable.ic_my_sites_white_24dp,
-                                                       R.color.blue_wordpress);
+                                                       R.color.primary_500);
         }
 
         static Notification success(Context context) {
@@ -140,7 +140,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
                                                       R.string.notification_site_creation_title_success,
                                                       R.string.notification_site_creation_created,
                                                       R.drawable.ic_my_sites_white_24dp,
-                                                      R.color.blue_wordpress);
+                                                      R.color.primary_500);
         }
 
         static Notification failure(Context context, @StringRes int content) {
@@ -149,7 +149,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
                                                       R.string.notification_site_creation_title_stopped,
                                                       content,
                                                       R.drawable.ic_my_sites_white_24dp,
-                                                      R.color.blue_wordpress);
+                                                      R.color.primary_500);
         }
     }
 

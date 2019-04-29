@@ -1,29 +1,42 @@
 package org.wordpress.android.widgets;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.Snackbar.SnackbarLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AccessibilityUtils;
 
 /**
- * {@link Snackbar} with {@link android.app.Dialog}-like layout.  The layout views include title, message,
- * positive button, and negative button.  Any empty or null view is hidden.  The only required view is message.
+ * {@link Snackbar} with {@link android.app.Dialog}-like layout mimicking the updated design pattern defined in the
+ * Material Design guidelines <a href="https://material.io/design/components/snackbars.html#spec">specifications</a>.
+ * The view include title, message, positive button, negative button, and neutral button.  Any empty or null view is
+ * hidden.  The only required view is message.
  */
 public class WPDialogSnackbar {
     private Snackbar mSnackbar;
     private View mContentView;
 
     private WPDialogSnackbar(@NonNull View view, @NonNull CharSequence text, int duration) {
-        mSnackbar = Snackbar.make(view, "", duration);
+        mSnackbar = Snackbar.make(view, "", // CHECKSTYLE IGNORE
+                AccessibilityUtils.getSnackbarDuration(view.getContext(), duration));
 
         // Set underlying snackbar layout.
         SnackbarLayout snackbarLayout = (SnackbarLayout) mSnackbar.getView();
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) snackbarLayout.getLayoutParams();
+        Context context = view.getContext();
+        int margin = (int) context.getResources().getDimension(R.dimen.margin_medium);
+        params.setMargins(margin, margin, margin, margin);
+        snackbarLayout.setLayoutParams(params);
         snackbarLayout.setPadding(0, 0, 0, 0);
+        snackbarLayout.setBackground(context.getDrawable(R.drawable.bg_snackbar));
 
         // Hide underlying snackbar text and action.
         TextView snackbarText = snackbarLayout.findViewById(android.support.design.R.id.snackbar_text);
@@ -60,7 +73,7 @@ public class WPDialogSnackbar {
         return new WPDialogSnackbar(view, text, duration);
     }
 
-    private void setButtonTextAndVisibility(TextView button, CharSequence text, final View.OnClickListener listener) {
+    private void setButtonTextAndVisibility(Button button, CharSequence text, final View.OnClickListener listener) {
         // Hide button when text is empty or listener is null.
         if (TextUtils.isEmpty(text) || listener == null) {
             button.setVisibility(View.GONE);
@@ -79,17 +92,17 @@ public class WPDialogSnackbar {
     }
 
     public WPDialogSnackbar setNegativeButton(CharSequence text, View.OnClickListener listener) {
-        setButtonTextAndVisibility((TextView) mContentView.findViewById(R.id.button_negative), text, listener);
+        setButtonTextAndVisibility((Button) mContentView.findViewById(R.id.button_negative), text, listener);
         return this;
     }
 
     public WPDialogSnackbar setNeutralButton(CharSequence text, View.OnClickListener listener) {
-        setButtonTextAndVisibility((TextView) mContentView.findViewById(R.id.button_neutral), text, listener);
+        setButtonTextAndVisibility((Button) mContentView.findViewById(R.id.button_neutral), text, listener);
         return this;
     }
 
     public WPDialogSnackbar setPositiveButton(CharSequence text, View.OnClickListener listener) {
-        setButtonTextAndVisibility((TextView) mContentView.findViewById(R.id.button_positive), text, listener);
+        setButtonTextAndVisibility((Button) mContentView.findViewById(R.id.button_positive), text, listener);
         return this;
     }
 

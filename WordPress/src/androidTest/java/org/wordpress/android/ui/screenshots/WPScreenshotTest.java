@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.screenshots;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.CardView;
 import android.support.test.filters.LargeTest;
 
 import org.junit.ClassRule;
@@ -10,37 +10,33 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.e2e.pages.PostsListPage;
+import org.wordpress.android.e2e.pages.SitePickerPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.image.ImageType;
 
-import java.util.function.Supplier;
 
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
+
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
-import static org.wordpress.android.support.WPSupportUtils.clickOnChildAtIndex;
-import static org.wordpress.android.support.WPSupportUtils.focusEditPostTitle;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
+import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
-import static org.wordpress.android.support.WPSupportUtils.selectItemAtIndexInSpinner;
-import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementOfTypeToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
-import static org.wordpress.android.support.WPSupportUtils.waitForConditionToBeTrue;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
-import static org.wordpress.android.support.WPSupportUtils.waitForElementToNotBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
-import static org.wordpress.android.support.WPSupportUtils.waitForRecyclerViewToStopReloading;
 import static org.wordpress.android.support.WPSupportUtils.waitForSwipeRefreshLayoutToStopReloading;
+import static org.wordpress.android.test.BuildConfig.SCREENSHOT_LOGINPASSWORD;
+import static org.wordpress.android.test.BuildConfig.SCREENSHOT_LOGINUSERNAME;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -59,65 +55,109 @@ public class WPScreenshotTest extends BaseTest {
         Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
         wpLogin();
+
+        // Never show the Gutenberg dialog when opening a post
+        AppPrefs.setGutenbergInformativeDialogDisabled(true);
+
+        tmpWPLogin();
         editBlogPost();
-        navigateReader();
-        navigateNotifications();
+        manageMedia();
         navigateStats();
-        wpLogout();
+        navigateNotifications();
+        tmpWpLogout();
     }
 
-    private void navigateReader() {
-        // Choose the "Reader" tab in the nav
-        clickOn(R.id.nav_reader);
+    private void tmpWPLogin() {
+        // If we're already logged in, log out before starting
+        if (!isElementDisplayed(R.id.login_button)) {
+            this.tmpWpLogout();
+        }
 
-        // Choose "Discover" from the spinner, but first, choose another item
-        // to force a re-load – this avoids locale issues
-        selectItemAtIndexInSpinner(getDiscoverTagIndex() == 0 ? 1 : 0, R.id.filter_spinner);
-        selectItemAtIndexInSpinner(getDiscoverTagIndex(), R.id.filter_spinner);
+        // Login Prologue – We want to log in, not sign up
+        // See LoginPrologueFragment
+        clickOn(R.id.login_button);
 
-        // Wait for the blog articles to load
-        waitForAtLeastOneElementOfTypeToBeDisplayed(ReaderSiteHeaderView.class);
-        waitForAtLeastOneElementOfTypeToBeDisplayed(CardView.class);
-        waitForImagesOfTypeWithPlaceholder(R.id.image_featured, ImageType.PHOTO);
-        waitForImagesOfTypeWithPlaceholder(R.id.image_avatar, ImageType.AVATAR);
-        waitForImagesOfTypeWithPlaceholder(R.id.image_blavatar, ImageType.BLAVATAR);
+        // Email Address Screen – Fill it in and click "Next"
+        // See LoginEmailFragment
+        populateTextField(R.id.input, SCREENSHOT_LOGINUSERNAME);
+        clickOn(R.id.primary_button);
 
-        waitForRecyclerViewToStopReloading();
+        // Receive Magic Link or Enter Password Screen – Choose "Enter Password"
+        // See LoginMagicLinkRequestFragment
+        clickOn(R.id.login_enter_password);
 
-        Screengrab.screenshot("screenshot_2");
+        // Password Screen – Fill it in and click "Next"
+        // See LoginEmailPasswordFragment
+        populateTextField(R.id.input, SCREENSHOT_LOGINPASSWORD);
+        clickOn(R.id.primary_button);
+
+        // Login Confirmation Screen – Click "Continue"
+        // See LoginEpilogueFragment
+        clickOn(R.id.primary_button);
+    }
+
+    private void tmpWpLogout() {
+        // Click on the "Me" tab in the nav, then choose "Log Out"
+        clickOn(R.id.nav_me);
+        scrollToThenClickOn(R.id.row_logout);
+
+        // Confirm that we want to log out
+        clickOn(android.R.id.button1);
     }
 
     private void editBlogPost() {
         // Choose the "sites" tab in the nav
         clickOn(R.id.nav_sites);
 
-        waitForImagesOfTypeWithPlaceholder(R.id.my_site_blavatar, ImageType.BLAVATAR);
-        Screengrab.screenshot("screenshot_3");
+        // Choose "Switch Site"
+        clickOn(R.id.switch_site);
 
+        (new SitePickerPage()).chooseSiteWithURL("infocusphotographers.com");
+
+        // Get a screenshot of the post editor
+        screenshotPostWithName("Summer Band Jam", "1-PostEditor", true);
+
+        // Get a screenshot of the drafts feature
+        screenshotPostWithName("Ideas", "5-DraftEditor", false);
+
+        // Get a screenshot of the writing feature (without image)
+        screenshotPostWithName("Time to Book Summer Sessions", "6-Writing", true);
+
+        // Exit back to the main activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void screenshotPostWithName(String name, String screenshotName, boolean hideKeyboard) {
         // Click on the "Blog Posts" row
         scrollToThenClickOn(R.id.row_blog_posts);
 
         // Wait for the blog posts to load, then edit the first post
         waitForSwipeRefreshLayoutToStopReloading();
-        waitForAtLeastOneElementWithIdToBeDisplayed(R.id.card_view);
-        clickOnChildAtIndex(0, R.id.recycler_view, R.id.card_view);
 
-        // Wait for the editor to appear and load all images
-        waitForElementToBeDisplayed(R.id.aztec);
-        waitForConditionToBeTrue(new Supplier<Boolean>() {
-            @Override
-            public Boolean get() {
-                return editPostActivityIsNoLongerLoadingImages();
-            }
-        });
+        PostsListPage.tapPostWithName(name);
 
-        // Click in the post title editor and ensure the caret is at the end of the title editor
-        focusEditPostTitle();
+        waitForElementToBeDisplayed(R.id.editor_activity);
 
-        Screengrab.screenshot("screenshot_1");
+        // Wait for the editor to load all images
+        idleFor(5000);
 
-        // Exit back to the main activity
-        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+        if (hideKeyboard) {
+            Espresso.closeSoftKeyboard();
+        }
+
+        Screengrab.screenshot(screenshotName);
+        pressBackUntilElementIsDisplayed(R.id.row_blog_posts);
+    }
+
+    private void manageMedia() {
+        // Click on the "Sites" tab in the nav, then choose "Media"
+        clickOn(R.id.nav_sites);
+        clickOn(R.id.row_media);
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
+
+        Screengrab.screenshot("4-media");
+        pressBackUntilElementIsDisplayed(R.id.row_media);
     }
 
     private void navigateNotifications() {
@@ -127,42 +167,23 @@ public class WPScreenshotTest extends BaseTest {
         waitForAtLeastOneElementWithIdToBeDisplayed(R.id.note_content_container);
         waitForImagesOfTypeWithPlaceholder(R.id.note_avatar, ImageType.AVATAR);
 
-        Screengrab.screenshot("screenshot_5");
+        Screengrab.screenshot("3-notifications");
+
+        // Exit the notifications activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
     private void navigateStats() {
         // Click on the "Sites" tab in the nav, then choose "Stats"
         clickOn(R.id.nav_sites);
-        scrollToThenClickOn(R.id.row_stats);
-
-        // Wait for the dialog, but don't fai if its not there
-        waitForElementToBeDisplayedWithoutFailure(R.id.promo_dialog_button_positive);
-        // If there's a pop-up message, dismiss it
-        if (isElementDisplayed(R.id.promo_dialog_button_positive)) {
-            clickOn(R.id.promo_dialog_button_positive);
-        }
-
-        // Select "Days" from the spinner
-        selectItemAtIndexInSpinner(1, R.id.filter_spinner);
+        clickOn(R.id.row_stats);
 
         // Wait for the stats to load
-        waitForElementToNotBeDisplayed(R.id.stats_empty_module_placeholder);
-
-        Screengrab.screenshot("screenshot_4");
+        waitForAtLeastOneElementWithIdToBeDisplayed(R.id.stats_block_list);
+        Screengrab.screenshot("2-stats");
 
         // Exit the Stats Activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
-    }
-
-    private static int getDiscoverTagIndex() {
-        ReaderTagList tagList = ReaderTagTable.getDefaultTags();
-        for (int i = 0; i < tagList.size(); i++) {
-            ReaderTag tag = tagList.get(i);
-            if (tag.isDiscover()) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     private boolean editPostActivityIsNoLongerLoadingImages() {

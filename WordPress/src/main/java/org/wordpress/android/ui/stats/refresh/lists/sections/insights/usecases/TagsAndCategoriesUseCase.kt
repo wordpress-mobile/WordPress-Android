@@ -167,7 +167,7 @@ class TagsAndCategoriesUseCase
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED)
-        navigateTo(ViewTagsAndCategoriesStats())
+        navigateTo(ViewTagsAndCategoriesStats)
     }
 
     private fun onTagClick(link: String) {

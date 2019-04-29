@@ -23,11 +23,14 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.util.AccessibilityUtils;
+import org.wordpress.android.ui.utils.UiString;
+import org.wordpress.android.ui.utils.UiString.UiStringRes;
+import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,19 +64,24 @@ public class UploadUtils {
      * Returns an error message string for a failed post upload.
      */
     public static @NonNull
-    String getErrorMessageFromPostError(Context context, boolean isPage, PostError error) {
+    UiString getErrorMessageResIdFromPostError(boolean isPage, PostError error) {
         switch (error.type) {
             case UNKNOWN_POST:
-                return isPage ? context.getString(R.string.error_unknown_page)
-                        : context.getString(R.string.error_unknown_post);
+                return isPage ? new UiStringRes(R.string.error_unknown_page)
+                        : new UiStringRes(R.string.error_unknown_post);
             case UNKNOWN_POST_TYPE:
-                return context.getString(R.string.error_unknown_post_type);
+                return new UiStringRes(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
-                return isPage ? context.getString(R.string.error_refresh_unauthorized_pages)
-                        : context.getString(R.string.error_refresh_unauthorized_posts);
+                return isPage ? new UiStringRes(R.string.error_refresh_unauthorized_pages)
+                        : new UiStringRes(R.string.error_refresh_unauthorized_posts);
+            case UNSUPPORTED_ACTION:
+            case INVALID_RESPONSE:
+            case GENERIC_ERROR:
+            default:
+                // In case of a generic or uncaught error, return the message from the API response or the error type
+                return TextUtils.isEmpty(error.message) ? new UiStringText(error.type.toString())
+                        : new UiStringText(error.message);
         }
-        // In case of a generic or uncaught error, return the message from the API response or the error type
-        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
     }
 
     /**
@@ -191,49 +199,35 @@ public class UploadUtils {
 
     private static void showSnackbarError(View view, String message, int buttonTitleRes,
                                           View.OnClickListener onClickListener) {
-        Snackbar.make(view, message, AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener).show();
+        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
     }
 
     public static void showSnackbarError(View view, String message) {
-        Snackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).show();
+        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).show();
     }
 
     private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
                                      View.OnClickListener onClickListener) {
-        Snackbar.make(view, messageRes,
-                AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener).show();
+        WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
     }
 
     public static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        Snackbar.make(view, messageRes,
-                AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener).
-                        setActionTextColor(view.getResources().getColor(R.color.blue_medium))
-                .show();
+        WPSnackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
     }
 
     private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        Snackbar.make(view, message, AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
-                .setAction(buttonTitleRes, onClickListener).
-                        setActionTextColor(view.getResources().getColor(R.color.blue_medium))
-                .show();
+        WPSnackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).setAction(buttonTitleRes, onClickListener).show();
     }
 
     public static void showSnackbarSuccessActionOrange(View view, int messageRes, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
-                .setAction(buttonTitleRes, onClickListener).
-                        setActionTextColor(view.getResources().getColor(R.color.orange_jazzy))
-                .show();
+        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).setAction(buttonTitleRes, onClickListener).show();
     }
 
     public static void showSnackbar(View view, int messageRes) {
-        Snackbar.make(view,
-                      messageRes, Snackbar.LENGTH_LONG).show();
+        WPSnackbar.make(view, messageRes, Snackbar.LENGTH_LONG).show();
     }
 
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
@@ -252,8 +246,7 @@ public class UploadUtils {
         }
 
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
-        boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
-                                     || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
+        boolean isFirstTimePublish = PostUtils.isFirstTimePublish(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
         // save the post in the DB so the UploadService will get the latest change

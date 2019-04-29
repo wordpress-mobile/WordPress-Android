@@ -34,7 +34,6 @@ import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -42,6 +41,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -149,9 +149,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
-        mColorAuthor = ContextCompat.getColor(context, R.color.blue_medium);
-        mColorNotAuthor = ContextCompat.getColor(context, R.color.grey_dark);
-        mColorHighlight = ContextCompat.getColor(context, R.color.grey_lighten_30);
+        mColorAuthor = ContextCompat.getColor(context, R.color.primary_400);
+        mColorNotAuthor = ContextCompat.getColor(context, R.color.neutral_700);
+        mColorHighlight = ContextCompat.getColor(context, R.color.neutral_0);
 
         setHasStableIds(true);
     }

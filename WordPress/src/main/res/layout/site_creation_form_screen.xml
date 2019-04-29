@@ -3,7 +3,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/grey_lighten_30">
+                android:background="@color/neutral_0">
 
     <include
         android:id="@+id/toolbar"
@@ -34,7 +34,7 @@
         android:paddingTop="@dimen/margin_medium_large"
         android:paddingBottom="@dimen/margin_medium_large"
         android:layout_alignParentBottom="true"
-        android:background="@color/grey_lighten_30"
+        android:background="@color/neutral_0"
         android:clipToPadding="false"
         android:visibility="gone"
         tools:visibility="visible">

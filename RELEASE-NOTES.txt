@@ -1,6 +1,33 @@
 12.2
 -----
 * Fixed minor issue with Google SmartLock
+12.4
+-----
+* Added support for displaying posts in tabs based on their status
+* Added ability to filter posts by their author
+* Fixed several bugs on the blog posts screen
+* Fixed bug that prevented audio playing in the reader
+
+12.3
+-----
+* Updated primary button color to pink
+* Redirect to username/password login when WordPress.com reports email login not allowed
+* Updated notifications list to Material guidelines
+* Updated snackbar design to Material guidelines
+* New Follower totals insights in the Stats
+* Fixed crash when viewing Notifications tab
+* Add "This Year" card to Stats Insights screen
+* The Site → Blog Posts → View WebView will no longer show any Calypso UI
+* Fixed an issue with Twitter publicize connections
+* Fixed an issue where the site icon wasn't updating correctly after switching to another site
+* Fixes an issue which can result in missing posts in the Reader
+
+12.2
+-----
+* Fixed padding of some icons on devices running Android Lollipop
+* Added an action to share sites in the Reader
+* Updated color scheme to Classic Bright
+* Adds support for .blog subdomains for the new site creation flow
 
 12.1
 -----
@@ -10,6 +37,8 @@
 * Refreshed View all Stats screens, when digging into stats data
 * Visual update to Today's stats, All-time stats and Most popular stats blocks
 * Now sharing pictures to WordPress opens the Block editor
+* Fixed crash when inserting text right before an Image
+* Now sharing pictures to WordPress opens the block editor
 
 12.0
 -----
