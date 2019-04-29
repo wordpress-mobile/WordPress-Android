@@ -1,6 +1,6 @@
 {
     "request": {
-        "urlPath": "/rest/v1.1/me/settings/",
+        "urlPattern": "/rest/v1.1/me/settings.*",
         "method": "GET"
     },
     "response": {

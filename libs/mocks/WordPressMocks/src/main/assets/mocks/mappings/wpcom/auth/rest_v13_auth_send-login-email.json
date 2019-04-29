@@ -1,18 +1,7 @@
 {
     "request": {
         "urlPath": "/rest/v1.3/auth/send-login-email/",
-        "method": "POST",
-        "bodyPatterns": [
-            {
-                "matchesJsonPath": "$.email"
-            },
-            {
-                "matchesJsonPath": "$.client_id"
-            },
-            {
-                "matchesJsonPath": "$.client_secret"
-            }
-        ]
+        "method": "POST"
     },
     "response": {
         "status": 200,

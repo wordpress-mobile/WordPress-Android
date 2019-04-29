@@ -67,6 +67,7 @@ public class BaseTest {
         }
     }
     protected void wpLogin() {
+        logoutIfNecessary();
         new LoginFlow().loginEmailPassword();
     }
 

@@ -1,14 +1,11 @@
 {
     "request": {
-        "urlPattern": "/rest/v1.1/sites/158396482/post/0/diffs.*",
-        "method": "GET"
+        "urlPattern": "/rest/v1.1/me/settings.*",
+        "method": "POST"
     },
     "response": {
-        "status": 400,
-        "jsonBody": {
-            "error": "User cannot edit this post",
-            "message": 403
-        },
+        "status": 200,
+        "jsonBody": {},
         "headers": {
             "Content-Type": "application/json",
             "Connection": "keep-alive",
