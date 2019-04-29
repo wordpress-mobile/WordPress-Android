@@ -1,12 +1,10 @@
-12.2
------
-* Fixed minor issue with Google SmartLock
 12.4
 -----
 * Added support for displaying posts in tabs based on their status
 * Added ability to filter posts by their author
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
+* Fixed minor issue with Google SmartLock
 
 12.3
 -----
