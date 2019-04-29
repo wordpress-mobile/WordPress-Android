@@ -47,7 +47,7 @@ public class EndpointProcessor extends AbstractProcessor {
             "plugins/woocommerce/src/main/tools/wc-wp-api-endpoints.txt";
 
     private static final Pattern WPCOMREST_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("\\$");
-    private static final Pattern WPAPI_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("^<.*>/$");
+    private static final Pattern WPAPI_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("^<.*>");
     private static final Pattern WPORG_API_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("^\\{.*\\}");
 
     private static final Map<String, List<String>> XML_RPC_ALIASES;

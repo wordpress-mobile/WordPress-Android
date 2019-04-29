@@ -22,6 +22,8 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoveAllPosts;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -163,6 +165,33 @@ public class PostStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
+    public static class DeletedPostPayload extends Payload<PostError> {
+        @NonNull public PostModel postToBeDeleted;
+        @NonNull public SiteModel site;
+        @NonNull public PostDeleteActionType postDeleteActionType;
+        @Nullable public PostModel deletedPostResponse;
+
+        public DeletedPostPayload(@NonNull PostModel postToBeDeleted, @NonNull SiteModel site,
+                                  @NonNull PostDeleteActionType postDeleteActionType,
+                                  @Nullable PostModel deletedPostResponse) {
+            this.postToBeDeleted = postToBeDeleted;
+            this.site = site;
+            this.postDeleteActionType = postDeleteActionType;
+            this.deletedPostResponse = deletedPostResponse;
+        }
+
+        public DeletedPostPayload(@NonNull PostModel postToBeDeleted, @NonNull SiteModel site,
+                                  @NonNull PostDeleteActionType postDeleteActionType,
+                                  @NonNull PostError deletePostError) {
+            this.postToBeDeleted = postToBeDeleted;
+            this.site = site;
+            this.postDeleteActionType = postDeleteActionType;
+            this.deletedPostResponse = null;
+            this.error = deletePostError;
+        }
+    }
+
     public static class FetchRevisionsPayload extends Payload<BaseNetworkError> {
         public PostModel post;
         public SiteModel site;
@@ -255,6 +284,11 @@ public class PostStore extends Store {
             this.post = post;
             this.revisionsModel = revisionsModel;
         }
+    }
+
+    public enum PostDeleteActionType {
+        TRASH,
+        DELETE
     }
 
     public enum PostErrorType {
@@ -403,11 +437,19 @@ public class PostStore extends Store {
         }
     }
 
+    public List<PostModel> getPostsByLocalOrRemotePostIds(List<? extends LocalOrRemoteId> localOrRemoteIds,
+                                                          SiteModel site) {
+        if (localOrRemoteIds == null || site == null) {
+            return Collections.emptyList();
+        }
+        return PostSqlUtils.getPostsByLocalOrRemotePostIds(localOrRemoteIds, site.getId());
+    }
+
     /**
      * Given a list of remote IDs for a post and the site to which it belongs, returns the posts as map where the
      * key is the remote post ID and the value is the {@link PostModel}.
      */
-    public Map<Long, PostModel> getPostsByRemotePostIds(List<Long> remoteIds, SiteModel site) {
+    private Map<Long, PostModel> getPostsByRemotePostIds(List<Long> remoteIds, SiteModel site) {
         if (site == null) {
             return Collections.emptyMap();
         }
@@ -438,7 +480,7 @@ public class PostStore extends Store {
     /**
      * Returns the local posts for the given post list descriptor.
      */
-    public List<PostModel> getLocalPostsForDescriptor(PostListDescriptor postListDescriptor) {
+    public @NonNull List<LocalId> getLocalPostIdsForDescriptor(PostListDescriptor postListDescriptor) {
         String searchQuery = null;
         if (postListDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) postListDescriptor;
@@ -473,7 +515,7 @@ public class PostStore extends Store {
         } else {
             order = SelectQuery.ORDER_DESCENDING;
         }
-        return PostSqlUtils.getLocalPostsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
+        return PostSqlUtils.getLocalPostIdsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
     }
 
     /**
@@ -526,7 +568,7 @@ public class PostStore extends Store {
                 deletePost((RemotePostPayload) action.getPayload());
                 break;
             case DELETED_POST:
-                handleDeletePostCompleted((RemotePostPayload) action.getPayload());
+                handleDeletePostCompleted((DeletedPostPayload) action.getPayload());
                 break;
             case RESTORE_POST:
                 handleRestorePost((RemotePostPayload) action.getPayload());
@@ -550,11 +592,13 @@ public class PostStore extends Store {
     }
 
     private void deletePost(RemotePostPayload payload) {
+        PostDeleteActionType postDeleteActionType = PostStatus.fromPost(payload.post) == PostStatus.TRASHED
+                ? PostDeleteActionType.DELETE : PostDeleteActionType.TRASH;
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.deletePost(payload.post, payload.site);
+            mPostRestClient.deletePost(payload.post, payload.site, postDeleteActionType);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.deletePost(payload.post, payload.site);
+            mPostXMLRPCClient.deletePost(payload.post, payload.site, postDeleteActionType);
         }
     }
 
@@ -665,21 +709,47 @@ public class PostStore extends Store {
         emitChange(onRevisionsFetched);
     }
 
-    private void handleDeletePostCompleted(RemotePostPayload payload) {
-        OnPostChanged event = new OnPostChanged(
-                new CauseOfOnPostChanged.DeletePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
-
+    private void handleDeletePostCompleted(DeletedPostPayload payload) {
+        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.DeletePost(payload.postToBeDeleted.getId(),
+                payload.postToBeDeleted.getRemotePostId(), payload.postDeleteActionType);
+        OnPostChanged event = new OnPostChanged(causeOfChange, 0);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ListItemsRemovedPayload listActionPayload = new ListItemsRemovedPayload(
-                    PostListDescriptor.calculateTypeIdentifier(payload.post.getLocalSiteId()),
-                    Collections.singletonList(payload.post.getRemotePostId()));
-            mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(listActionPayload));
-            PostSqlUtils.deletePost(payload.post);
+            if (payload.postDeleteActionType == PostDeleteActionType.TRASH) {
+                handlePostSuccessfullyTrashed(payload);
+            } else {
+                // If the post is completely removed from the server, remove it from the local DB as well
+                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(payload.postToBeDeleted));
+            }
         }
-
         emitChange(event);
+    }
+
+    /**
+     * Saves the changes for the trashed post in the DB, lets ListStore know about updated lists.
+     *
+     * If the trashed post is for an XML-RPC site, it'll also fetch the updated post from remote since XML-RPC delete
+     * call doesn't return the updated post.
+     */
+    private void handlePostSuccessfullyTrashed(DeletedPostPayload payload) {
+        mDispatcher.dispatch(ListActionBuilder.newListRequiresRefreshAction(
+                PostListDescriptor.calculateTypeIdentifier(payload.postToBeDeleted.getLocalSiteId())));
+
+        PostModel postToSave;
+        if (payload.deletedPostResponse != null) {
+            postToSave = payload.deletedPostResponse;
+        } else {
+            /*
+             * XML-RPC delete request doesn't return the updated post, so we need to manually change the status
+             * and then fetch the post from remote to ensure post is properly synced.
+             */
+            postToSave = payload.postToBeDeleted;
+            postToSave.setStatus(PostStatus.TRASHED.toString());
+            mDispatcher.dispatch(
+                    PostActionBuilder.newFetchPostAction(new RemotePostPayload(postToSave, payload.site)));
+        }
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postToSave);
     }
 
     private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
@@ -833,8 +903,8 @@ public class PostStore extends Store {
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
 
-        mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
-                new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(postModel.getLocalSiteId()))));
+        mDispatcher.dispatch(ListActionBuilder
+                .newListRequiresRefreshAction(PostListDescriptor.calculateTypeIdentifier(postModel.getLocalSiteId())));
     }
 
     public void setLocalRevision(RevisionModel model, SiteModel site, PostModel post) {
