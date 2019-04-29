@@ -305,7 +305,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         for (UserRoleWPComRestResponse roleResponse : response.roles) {
                             RoleModel roleModel = new RoleModel();
                             roleModel.setName(roleResponse.name);
-                            roleModel.setDisplayName(roleResponse.display_name);
+                            roleModel.setDisplayName(StringEscapeUtils.unescapeHtml4(roleResponse.display_name));
                             roleArray.add(roleModel);
                         }
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedUserRolesAction(new
