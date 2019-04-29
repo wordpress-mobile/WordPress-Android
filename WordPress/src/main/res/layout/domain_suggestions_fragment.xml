@@ -10,20 +10,25 @@
         android:id="@+id/search_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/margin_extra_small"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="@dimen/margin_extra_large">
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_extra_large">
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_large">
+            android:layout_marginEnd="@dimen/margin_extra_extra_medium_large">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_extra_extra_small"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_search_white_24dp"
                 android:tint="@color/neutral"/>
@@ -32,22 +37,25 @@
                 android:id="@+id/suggestion_progress_bar"
                 android:layout_width="@dimen/progress_spinner_small"
                 android:layout_height="@dimen/progress_spinner_small"
-                android:background="@android:color/white"/>
+                android:background="@android:color/white"
+                tools:visibility="gone"/>
         </FrameLayout>
 
         <EditText
             android:id="@+id/domain_suggestion_keyword_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_small"
             android:background="@android:color/transparent"
             android:clickable="false"
             android:hint="@string/suggestions_search_hint"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
+            android:paddingStart="@dimen/margin_extra_extra_small"
             android:textColorHint="@color/neutral_400"
             android:textSize="@dimen/text_sz_medium"
-            tools:ignore="Autofill"/>
+            tools:ignore="Autofill,RtlSymmetry"/>
     </LinearLayout>
 
     <View
@@ -109,6 +117,5 @@
             android:layout_height="wrap_content"
             android:text="@string/choose_domain">
         </android.support.v7.widget.AppCompatButton>
-
     </RelativeLayout>
 </RelativeLayout>

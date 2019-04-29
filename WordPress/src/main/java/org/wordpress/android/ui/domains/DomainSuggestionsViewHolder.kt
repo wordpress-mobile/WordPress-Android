@@ -17,7 +17,7 @@ class DomainSuggestionsViewHolder(
 ) {
     private val domainName: TextView = itemView.findViewById(R.id.domain_name)
     private val selectionRadioButton: RadioButton = itemView.findViewById(R.id.domain_selection_radio_button)
-    private val container: View = itemView.findViewById(R.id.domainSuggestionContainer)
+    private val container: View = itemView.findViewById(R.id.domain_suggestions_container)
 
     fun bind(suggestion: DomainSuggestionResponse, position: Int, isSelectedPosition: Boolean) {
         domainName.text = suggestion.domain_name
