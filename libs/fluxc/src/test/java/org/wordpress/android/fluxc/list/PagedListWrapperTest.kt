@@ -8,9 +8,9 @@ import android.arch.lifecycle.Observer
 import android.arch.paging.PagedList
 import com.nhaarman.mockitokotlin2.firstValue
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -18,10 +18,10 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.TEST_SCOPE
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListState
-import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.GENERIC_ERROR
@@ -29,11 +29,12 @@ import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERRO
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
+import org.wordpress.android.fluxc.store.ListStore.OnListDataInvalidated
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 
-private fun onlyOnce() = times(1)
-
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PagedListWrapperTest {
     @get:Rule
@@ -43,16 +44,15 @@ class PagedListWrapperTest {
     private val mockListDescriptor = mock<ListDescriptor>()
     private val mockRefresh = mock<() -> Unit>()
     private val mockInvalidate = mock<() -> Unit>()
-    private val mockIsListEmpty = mock<() -> Boolean>()
 
     private fun createPagedListWrapper(lifecycle: Lifecycle = mock()) = PagedListWrapper(
-            data = MutableLiveData<PagedList<PagedListItemType<String>>>(),
+            data = MutableLiveData<PagedList<String>>(),
             dispatcher = mockDispatcher,
             listDescriptor = mockListDescriptor,
             lifecycle = lifecycle,
             refresh = mockRefresh,
             invalidate = mockInvalidate,
-            isListEmpty = mockIsListEmpty
+            parentCoroutineContext = TEST_SCOPE.coroutineContext
     )
 
     @Test
@@ -61,15 +61,8 @@ class PagedListWrapperTest {
 
         val pagedListWrapper = createPagedListWrapper(mockLifecycle)
 
-        verify(mockDispatcher, onlyOnce()).register(pagedListWrapper)
-        verify(mockLifecycle, onlyOnce()).addObserver(pagedListWrapper)
-    }
-
-    @Test
-    fun `isListEmpty is updated in init`() {
-        createPagedListWrapper()
-
-        verify(mockIsListEmpty, onlyOnce()).invoke()
+        verify(mockDispatcher).register(pagedListWrapper)
+        verify(mockLifecycle).addObserver(pagedListWrapper)
     }
 
     @Test
@@ -82,8 +75,8 @@ class PagedListWrapperTest {
         assertThat(lifecycle.observerCount).isEqualTo(1)
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
 
-        verify(mockDispatcher, onlyOnce()).register(pagedListWrapper)
-        verify(mockDispatcher, onlyOnce()).unregister(pagedListWrapper)
+        verify(mockDispatcher).register(pagedListWrapper)
+        verify(mockDispatcher).unregister(pagedListWrapper)
         assertThat(lifecycle.observerCount).isEqualTo(0)
     }
 
@@ -93,7 +86,7 @@ class PagedListWrapperTest {
 
         pagedListWrapper.fetchFirstPage()
 
-        verify(mockRefresh, onlyOnce()).invoke()
+        verify(mockRefresh).invoke()
     }
 
     @Test
@@ -102,7 +95,7 @@ class PagedListWrapperTest {
 
         pagedListWrapper.invalidateData()
 
-        verify(mockInvalidate, onlyOnce()).invoke()
+        verify(mockInvalidate).invoke()
     }
 
     @Test
@@ -133,27 +126,25 @@ class PagedListWrapperTest {
     @Test
     fun `onListChanged invokes invalidate property`() {
         triggerOnListChanged()
-        verify(mockInvalidate, onlyOnce()).invoke()
-    }
-
-    @Test
-    fun `onListChanged invokes updates isEmpty`() {
-        triggerOnListChanged()
-        // PagedListWrapper.init will trigger `isEmpty` once
-        verify(mockIsListEmpty, times(2)).invoke()
+        verify(mockInvalidate).invoke()
     }
 
     @Test
     fun `onListItemsChanged invokes invalidate property`() {
         triggerOnListItemsChanged()
-        verify(mockInvalidate, onlyOnce()).invoke()
+        verify(mockInvalidate).invoke()
     }
 
     @Test
-    fun `onListItemsChanged invokes updates isEmpty`() {
-        triggerOnListItemsChanged()
-        // PagedListWrapper.init will trigger `isEmpty` once
-        verify(mockIsListEmpty, times(2)).invoke()
+    fun `onListRequiresRefresh invokes refresh`() {
+        triggerOnListRequiresRefresh()
+        verify(mockRefresh).invoke()
+    }
+
+    @Test
+    fun `onListDataInvalidated invokes invalidate property`() {
+        triggerOnListDataInvalidated()
+        verify(mockInvalidate).invoke()
     }
 
     private fun testListStateIsPropagatedCorrectly(listState: ListState, listError: ListError? = null) {
@@ -175,7 +166,7 @@ class PagedListWrapperTest {
 
     private inline fun <reified T> captureAndVerifySingleValue(observer: Observer<T>, result: T) {
         val captor = ArgumentCaptor.forClass(T::class.java)
-        verify(observer, onlyOnce()).onChanged(captor.capture())
+        verify(observer).onChanged(captor.capture())
         assertThat(captor.firstValue).isEqualTo(result)
     }
 
@@ -202,5 +193,19 @@ class PagedListWrapperTest {
                 error = error
         )
         pagedListWrapper.onListItemsChanged(event)
+    }
+
+    private fun triggerOnListRequiresRefresh() {
+        val pagedListWrapper = createPagedListWrapper()
+        whenever(mockListDescriptor.typeIdentifier).thenReturn(ListDescriptorTypeIdentifier(0))
+        val event = OnListRequiresRefresh(type = mockListDescriptor.typeIdentifier)
+        pagedListWrapper.onListRequiresRefresh(event)
+    }
+
+    private fun triggerOnListDataInvalidated() {
+        val pagedListWrapper = createPagedListWrapper()
+        whenever(mockListDescriptor.typeIdentifier).thenReturn(ListDescriptorTypeIdentifier(0))
+        val event = OnListDataInvalidated(type = mockListDescriptor.typeIdentifier)
+        pagedListWrapper.onListDataInvalidated(event)
     }
 }
