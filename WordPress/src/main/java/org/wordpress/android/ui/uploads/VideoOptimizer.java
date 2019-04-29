@@ -8,9 +8,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.FileUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.WPVideoUtils;
@@ -106,7 +106,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > composer started");
         } catch (IllegalStateException e) {
             AppLog.e(AppLog.T.MEDIA, "VideoOptimizer > failed to start composer", e);
-            CrashlyticsUtils.logException(e, AppLog.T.MEDIA);
+            CrashLoggingUtils.logException(e, AppLog.T.MEDIA);
             mListener.onVideoOptimizationCompleted(mMedia);
         }
     }
@@ -130,8 +130,8 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         if (isError) {
             properties.put("exception_name", exception.getClass().getCanonicalName());
             properties.put("exception_message", exception.getMessage());
-            // Track to CrashlyticsUtils where it's easier to keep track of errors
-            CrashlyticsUtils.logException(exception, AppLog.T.MEDIA);
+            // Track to crash reporting service where it's easier to keep track of errors
+            CrashLoggingUtils.logException(exception, AppLog.T.MEDIA);
         }
 
         AnalyticsTracker.Stat currentStatToTrack = isError ? MEDIA_VIDEO_OPTIMIZE_ERROR : MEDIA_VIDEO_OPTIMIZED;
