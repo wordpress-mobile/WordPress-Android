@@ -15,8 +15,6 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -32,9 +30,9 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -47,8 +45,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import io.fabric.sdk.android.Fabric;
 
 public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
@@ -96,15 +92,10 @@ public class AppSettingsFragment extends PreferenceFragment
                                 mDispatcher,
                                 mAccountStore,
                                 hasUserOptedOut);
-                        /*
-                         * Note that if tracking was just disabled, the only way to get Crashlytics to stop sending
-                         * crash reports is to alert the user that the app needs to be restarted and then we either
-                         * restart the app or expect the user to do it. This seemed user-unfriendly, especially
-                         * since the app would need to restart after the very next crash.
-                         */
-                        if (CrashlyticsUtils.shouldEnableCrashlytics(getActivity())) {
-                            Fabric.with(WordPress.getContext(), new Crashlytics());
-                        }
+
+
+                        CrashLoggingUtils.stopCrashLogging();
+
                         return true;
                     }
                 }
