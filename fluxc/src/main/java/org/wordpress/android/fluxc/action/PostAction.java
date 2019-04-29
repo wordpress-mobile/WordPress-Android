@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
@@ -42,7 +43,7 @@ public enum PostAction implements IAction {
     FETCHED_POST,
     @Action(payloadType = RemotePostPayload.class)
     PUSHED_POST,
-    @Action(payloadType = RemotePostPayload.class)
+    @Action(payloadType = DeletedPostPayload.class)
     DELETED_POST,
     @Action(payloadType = RemotePostPayload.class)
     RESTORED_POST,

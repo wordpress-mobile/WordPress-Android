@@ -13,6 +13,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.revisions.Diff;
@@ -430,5 +433,70 @@ public class PostStoreUnitTest {
 
         mPostStore.deleteLocalRevisionOfAPostOrPage(postModel);
         assertNull(mPostStore.getLocalRevision(site, postModel));
+    }
+
+    /**
+     * Tests that getPostsByLocalOrRemotePostIds works correctly in various situations.
+     *
+     * Normally it's not a good idea to combine multiple tests like this, however due to Java's verbosity the tests
+     * are combined to avoid having too much boilerplate code.
+     */
+    @Test
+    public void testGetPostsByLocalOrRemoteIdsForOnlyLocalIds() {
+        int localSiteId = 123;
+        SiteModel site = new SiteModel();
+        site.setId(localSiteId);
+        int numberOfLocalPosts = 12;
+        int numberOfRemotePosts = 129;
+
+        // Setup local and remote ids
+        List<LocalId> localIds = new ArrayList<>(numberOfLocalPosts);
+        for (int i = 1; i <= numberOfLocalPosts; i++) {
+            localIds.add(new LocalId(i));
+        }
+        ArrayList<RemoteId> remoteIds = new ArrayList<>(numberOfRemotePosts);
+        for (int i = 1; i <= numberOfRemotePosts; i++) {
+            remoteIds.add(new RemoteId(i));
+        }
+        List<LocalOrRemoteId> localAndRemoteIds = new ArrayList<>(localIds.size() + remoteIds.size());
+        localAndRemoteIds.addAll(localIds);
+        localAndRemoteIds.addAll(remoteIds);
+
+        // Insert the posts for the local and remote ids
+        generateAndInsertPosts(localSiteId, localIds, remoteIds);
+
+        // Assert that querying localIds will only return local posts
+        List<PostModel> retrievedLocalPosts = mPostStore.getPostsByLocalOrRemotePostIds(localIds, site);
+        assertEquals(localIds.size(), retrievedLocalPosts.size());
+        for (PostModel localPost : retrievedLocalPosts) {
+            assertTrue(localPost.isLocalDraft());
+        }
+
+        // Assert that querying remoteIds only return remote posts
+        List<PostModel> retrievedRemotePosts = mPostStore.getPostsByLocalOrRemotePostIds(remoteIds, site);
+        assertEquals(remoteIds.size(), retrievedRemotePosts.size());
+        for (PostModel remotePost : retrievedRemotePosts) {
+            assertFalse(remotePost.isLocalDraft());
+        }
+
+        // Assert that querying both local and remote ids we retrieve all the posts
+        List<PostModel> retrievedLocalAndRemotePosts =
+                mPostStore.getPostsByLocalOrRemotePostIds(localAndRemoteIds, site);
+        assertEquals(localIds.size() + remoteIds.size(), retrievedLocalAndRemotePosts.size());
+    }
+
+    private void generateAndInsertPosts(int localSiteId, List<LocalId> localIds, List<RemoteId> remoteIds) {
+        for (int i = 1; i <= localIds.size(); i++) {
+            PostModel post = PostTestUtils.generateSampleLocalDraftPost();
+            post.setLocalSiteId(localSiteId);
+            PostSqlUtils.insertOrUpdatePost(post, false);
+        }
+
+        for (RemoteId remoteId : remoteIds) {
+            PostModel post = PostTestUtils.generateSampleUploadedPost();
+            post.setLocalSiteId(localSiteId);
+            post.setRemotePostId(remoteId.getValue());
+            PostSqlUtils.insertOrUpdatePost(post, false);
+        }
     }
 }
