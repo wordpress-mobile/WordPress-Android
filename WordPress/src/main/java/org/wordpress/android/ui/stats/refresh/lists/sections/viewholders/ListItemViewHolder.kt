@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.support.constraint.ConstraintLayout
+import android.support.constraint.ConstraintLayout.LayoutParams
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,7 +14,6 @@ class ListItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         layout.stats_block_list_item
 ) {
-    private val constraintLayout = itemView.findViewById<ConstraintLayout>(id.stats_block_list_item_constraint_layout)
     private val icon = itemView.findViewById<ImageView>(id.icon)
     private val text = itemView.findViewById<TextView>(id.text)
     private val value = itemView.findViewById<TextView>(id.value)
@@ -33,9 +33,9 @@ class ListItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         if(item.percentageOfMaxValue != null) {
             percentageBar.visibility = View.VISIBLE
 
-            val globalLayoutListener = PercentageBarGlobalListener(constraintLayout, text, value, percentageBar, item.percentageOfMaxValue)
-
-            constraintLayout.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
+            val params: LayoutParams = percentageBar.layoutParams as LayoutParams
+            params.matchConstraintPercentWidth = item.percentageOfMaxValue.toFloat()
+            percentageBar.layoutParams = params
         } else {
             percentageBar.visibility = View.GONE
         }
