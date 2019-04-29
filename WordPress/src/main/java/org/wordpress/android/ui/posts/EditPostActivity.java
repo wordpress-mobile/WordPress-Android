@@ -2973,6 +2973,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
+                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                     handleMediaPickerResult(data);
                     // No need to bump analytics here. Bumped later in
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
@@ -3369,8 +3370,8 @@ public class EditPostActivity extends AppCompatActivity implements
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
         } else if (mShowGutenbergEditor) {
-            // show the WP media library only since that's the only mode integrated currently from Gutenberg-mobile
-            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+            // show the WP media library with pictures only, since that's the only mode integrated currently from Gutenberg-mobile
+            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_EDITOR_PICKER);
         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
         } else {
