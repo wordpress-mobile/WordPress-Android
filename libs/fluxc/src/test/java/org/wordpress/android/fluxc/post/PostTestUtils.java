@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.post;
 
+import android.support.annotation.NonNull;
+
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.PostModel;
@@ -29,9 +31,13 @@ public class PostTestUtils {
     }
 
     public static PostModel generateSampleLocalDraftPost() {
+        return generateSampleLocalDraftPost("A test post");
+    }
+
+    static PostModel generateSampleLocalDraftPost(@NonNull String title) {
         PostModel example = new PostModel();
         example.setLocalSiteId(6);
-        example.setTitle("A test post");
+        example.setTitle(title);
         example.setContent("Bunch of content here");
         example.setIsLocalDraft(true);
         return example;
