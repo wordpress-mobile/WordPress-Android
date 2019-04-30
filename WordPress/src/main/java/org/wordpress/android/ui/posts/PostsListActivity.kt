@@ -63,8 +63,6 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var pager: ViewPager
     private lateinit var fab: FloatingActionButton
 
-    private var toggleViewLayoutMenuItem: MenuItem? = null
-
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
@@ -207,11 +205,6 @@ class PostsListActivity : AppCompatActivity(),
                 pager.addOnPageChangeListener(onPageChangeListener)
             }
         })
-        viewModel.viewLayoutMenuIcon.observe(this, Observer {
-            it?.let { icon ->
-                updateMenuIconForViewLayoutType(icon)
-            }
-        })
         viewModel.selectTab.observe(this, Observer { tabIndex ->
             tabIndex?.let {
                 tabLayout.getTabAt(tabIndex)?.select()
@@ -296,7 +289,7 @@ class PostsListActivity : AppCompatActivity(),
         if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
-        } else if (item.itemId == R.id.post_menu_item_view_layout_type) {
+        } else if (item.itemId == R.id.toggle_post_list_item_layout) {
             viewModel.toggleViewLayout()
             return true
         }
@@ -305,13 +298,14 @@ class PostsListActivity : AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
-        menu?.clear()
-        menu?.add(Menu.FIRST, R.id.post_menu_item_view_layout_type, 3, "")?.let { item ->
-            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-            toggleViewLayoutMenuItem = item
-            viewModel.viewLayoutMenuIcon.value?.let {
-                updateMenuIconForViewLayoutType(it)
-            }
+        menu?.let {
+            menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
+            val toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
+            viewModel.viewLayoutMenuIcon.observe(this, Observer { iconRes ->
+                iconRes?.let { icon ->
+                    updateMenuIconForViewLayoutType(toggleViewLayoutMenuItem, icon)
+                }
+            })
         }
         return true
     }
@@ -337,9 +331,9 @@ class PostsListActivity : AppCompatActivity(),
 
     // Menu PostListViewLayoutType handling
 
-    private fun updateMenuIconForViewLayoutType(@DrawableRes iconId: Int) {
+    private fun updateMenuIconForViewLayoutType(menuItem: MenuItem, @DrawableRes iconId: Int) {
         getDrawable(iconId)?.let { drawable ->
-            toggleViewLayoutMenuItem?.setIcon(drawable)
+            menuItem.setIcon(drawable)
         }
     }
 }
