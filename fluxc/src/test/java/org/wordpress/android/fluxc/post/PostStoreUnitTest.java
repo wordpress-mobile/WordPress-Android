@@ -33,6 +33,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -433,6 +434,35 @@ public class PostStoreUnitTest {
 
         mPostStore.deleteLocalRevisionOfAPostOrPage(postModel);
         assertNull(mPostStore.getLocalRevision(site, postModel));
+    }
+
+    @Test
+    public void testGetLocalDraftsMethodOnlyReturnsLocalDrafts() {
+        // Arrange
+        final String baseTitle = "Alexandrine Thiel";
+        for (int i = 0; i < 3; i++) {
+            final String compoundTitle = baseTitle.concat(":").concat(UUID.randomUUID().toString());
+            final PostModel post = PostTestUtils.generateSampleLocalDraftPost(compoundTitle);
+            PostSqlUtils.insertPostForResult(post);
+        }
+
+        final PostModel uploadedPost = PostTestUtils.generateSampleUploadedPost();
+        PostSqlUtils.insertPostForResult(uploadedPost);
+
+        final SiteModel site = new SiteModel();
+        site.setId(PostTestUtils.DEFAULT_LOCAL_SITE_ID);
+
+        // Act
+        final List<PostModel> localDrafts = PostSqlUtils.getLocalDrafts(site.getId());
+
+        // Assert
+        assertEquals(3, localDrafts.size());
+        for (PostModel localDraft : localDrafts) {
+            assertTrue(localDraft.isLocalDraft());
+            assertTrue(localDraft.getTitle().startsWith(baseTitle));
+
+            assertNotEquals(uploadedPost.getId(), localDraft.getId());
+        }
     }
 
     /**
