@@ -118,7 +118,10 @@ constructor(
             }
             is WPComGsonRequestBuilder.Response.Error -> {
                 val payload = RedeemedShoppingCartPayload(false)
-                payload.error = RedeemShoppingCartError(TransactionErrorType.fromString(response.error.apiError), response.error.message)
+                payload.error = RedeemShoppingCartError(
+                        TransactionErrorType.fromString(response.error.apiError),
+                        response.error.message
+                )
                 payload
             }
         }
