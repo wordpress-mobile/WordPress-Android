@@ -113,7 +113,6 @@ class TransactionsStoreTest {
 
         verify(transactionsRestClient).redeemCartUsingCredits(CREATE_SHOPPING_CART_RESPONSE, DOMAIN_CONTACT_INFORMATION)
 
-
         val expectedEvent = TransactionsStore.OnShoppingCartRedeemed(true)
         verify(dispatcher).emitChange(eq(expectedEvent))
     }
