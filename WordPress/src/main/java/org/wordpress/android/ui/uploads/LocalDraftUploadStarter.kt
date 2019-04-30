@@ -18,7 +18,7 @@ class LocalDraftUploadStarter @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     fun uploadLocalDrafts(scope: CoroutineScope, site: SiteModel) = scope.launch(bgDispatcher) {
-        val localDrafts = postStore.getPostsForSite(site).filter { it.isLocalDraft }
+        val localDrafts = postStore.getLocalDrafts(site)
         localDrafts.forEach { UploadService.uploadPost(context, it) }
     }
 }
