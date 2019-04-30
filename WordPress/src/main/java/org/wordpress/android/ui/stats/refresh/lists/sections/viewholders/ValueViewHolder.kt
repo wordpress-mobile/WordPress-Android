@@ -27,7 +27,7 @@ class ValueViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         value.text = item.value
         unit.setText(item.unit)
         val hasChange = item.change != null
-        val color = when(item.state) {
+        val color = when (item.state) {
             POSITIVE -> R.color.success_500
             NEGATIVE -> R.color.error_500
             NEUTRAL -> R.color.gray_500
