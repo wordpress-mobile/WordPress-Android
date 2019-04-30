@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse
-import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.TransactionsStore.FetchSupportedCountriesErrorType.GENERIC_ERROR
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -59,7 +59,7 @@ class TransactionsStore @Inject constructor(
         } else {
             OnSupportedCountriesFetched(
                     FetchSupportedCountriesError(
-                            TransactionErrorType.GENERIC_ERROR,
+                            GENERIC_ERROR,
                             supportedCountriesPayload.error.message
                     )
             )
@@ -78,7 +78,7 @@ class TransactionsStore @Inject constructor(
             OnShoppingCartCreated(createdShoppingCartPayload.cartDetails)
         } else {
             OnShoppingCartCreated(
-                    CreateShoppingCartError(GENERIC_ERROR, createdShoppingCartPayload.error.message)
+                    CreateShoppingCartError(CreateCartErrorType.GENERIC_ERROR, createdShoppingCartPayload.error.message)
             )
         }
     }
@@ -92,9 +92,7 @@ class TransactionsStore @Inject constructor(
         return if (!cartRedeemedPayload.isError) {
             OnShoppingCartRedeemed(cartRedeemedPayload.success)
         } else {
-            OnShoppingCartRedeemed(
-                    RedeemShoppingCartError(GENERIC_ERROR, cartRedeemedPayload.error.message)
-            )
+            OnShoppingCartRedeemed(cartRedeemedPayload.error)
         }
     }
 
@@ -150,17 +148,55 @@ class TransactionsStore @Inject constructor(
 
     class RedeemedShoppingCartPayload(
         val success: Boolean
-    ) : Payload<BaseRequest.BaseNetworkError>()
+    ) : Payload<RedeemShoppingCartError>()
 
     // Errors
 
-    data class FetchSupportedCountriesError(val type: TransactionErrorType, val message: String = "") : OnChangedError
+    data class FetchSupportedCountriesError(val type: FetchSupportedCountriesErrorType, val message: String = "") :
+            OnChangedError
 
-    data class CreateShoppingCartError(var type: TransactionErrorType, val message: String = "") : OnChangedError
+    data class CreateShoppingCartError(var type: CreateCartErrorType, val message: String = "") : OnChangedError
 
-    data class RedeemShoppingCartError(var type: TransactionErrorType, val message: String = "") : OnChangedError
+    data class RedeemShoppingCartError(
+        var type: TransactionErrorType,
+        val message: String = ""
+    ) : OnChangedError
+
+    enum class FetchSupportedCountriesErrorType {
+        GENERIC_ERROR
+    }
+
+    enum class CreateCartErrorType {
+        GENERIC_ERROR
+    }
 
     enum class TransactionErrorType {
-        GENERIC_ERROR
+        FIRST_NAME,
+        LAST_NAME,
+        ORGANIZATION,
+        ADDRESS_1,
+        ADDRESS_2,
+        POSTAL_CODE,
+        CITY,
+        STATE,
+        COUNTRY_CODE,
+        EMAIL,
+        PHONE,
+        FAX,
+        INSUFFICIENT_FUNDS,
+        OTHER;
+
+        companion object {
+            fun fromString(string: String?): TransactionErrorType {
+                if (string != null) {
+                    for (v in values()) {
+                        if (string.equals(v.name, ignoreCase = true)) {
+                            return v
+                        }
+                    }
+                }
+                return OTHER
+            }
+        }
     }
 }
