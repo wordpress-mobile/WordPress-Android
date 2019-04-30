@@ -16,6 +16,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.NO_PLACEHOLDER
 import javax.inject.Inject
 
 class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
@@ -93,10 +94,28 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
 
         @CallSuper
         open fun bind(state: AuthorFilterListItemUIState, imageManager: ImageManager, uiHelpers: UiHelpers) {
-            val avatarSize = image.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
-            val url = GravatarUtils.fixGravatarUrl(state.avatarUrl, avatarSize)
-
-            imageManager.loadIntoCircle(image, state.imageType, url)
+            /**
+             * We can't use error/placeholder drawables as it causes an issue described here
+             * https://github.com/wordpress-mobile/WordPress-Android/issues/9745.
+             * It seems getView method always returns convertView == null when used with Spinner. When we invoke
+             * imageManager.load..(url..) in the view holder and the 'url' is empty or the requests fails
+             * an error/placeholder drawable is used. However, this results in another layout/measure phase
+             * -> getView(..) is called again. However, since the convertView == null we inflate a new view and
+             * imageManager.load..(..) is invoked again - this goes on forever.
+             * In order to prevent this issue we don't use placeholder/error drawables in this case.
+             * The cost of this solution is that an empty circle is shown if we don't have the avatar in the cache
+             * and the request fails.
+             */
+            when (state) {
+                is AuthorFilterListItemUIState.Everyone -> {
+                    imageManager.load(image, state.imageRes)
+                }
+                is AuthorFilterListItemUIState.Me -> {
+                    val avatarSize = image.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
+                    val url = GravatarUtils.fixGravatarUrl(state.avatarUrl, avatarSize)
+                    imageManager.loadIntoCircle(image, NO_PLACEHOLDER, url)
+                }
+            }
         }
     }
 
