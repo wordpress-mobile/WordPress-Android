@@ -57,7 +57,7 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsPostProvider.postId).thenReturn(postId)
-        whenever(mapper.buildTitle(any(), isNull())).thenReturn(title)
+        whenever(mapper.buildTitle(any(), isNull(), any())).thenReturn(title)
     }
 
     @Test

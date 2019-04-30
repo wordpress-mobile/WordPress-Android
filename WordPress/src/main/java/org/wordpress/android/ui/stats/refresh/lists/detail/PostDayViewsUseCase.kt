@@ -87,7 +87,13 @@ class PostDayViewsUseCase
         val previousItem = domainModel.dayViews.getOrNull(domainModel.dayViews.indexOf(selectedItem) - 1)
 
         val items = mutableListOf<BlockListItem>()
-        items.add(postDayViewsMapper.buildTitle(selectedItem, previousItem))
+        items.add(
+                postDayViewsMapper.buildTitle(
+                        selectedItem,
+                        previousItem,
+                        isLast = selectedItem == domainModel.dayViews.last()
+                )
+        )
         items.addAll(
                 postDayViewsMapper.buildChart(
                         domainModel.dayViews,
