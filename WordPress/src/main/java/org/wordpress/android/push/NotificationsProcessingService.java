@@ -593,10 +593,6 @@ public class NotificationsProcessingService extends Service {
                 CommentModel reply = new CommentModel();
                 reply.setContent(mReplyText);
 
-                // keep the CommentId, we'll use it later to know whether to trigger the end processing notification
-                // or not
-                keepRemoteCommentIdForPostProcessing(comment.getRemoteCommentId());
-
                 // Push the reply
                 RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
                 mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
@@ -630,13 +626,46 @@ public class NotificationsProcessingService extends Service {
         }
     }
 
-    private void processRequestResultFromFluxCEvent(OnCommentChanged event) {
-        // it is contained so, execute.
+    // OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCommentChanged(OnCommentChanged event) {
+        if (mQuickActionProcessor == null) {
+            return;
+        }
+
+        // LIKE_COMMENT events do not hold event.changedCommentsLocalIds info so, just process them
+        // also CREATE_NEW_COMMENT, which are received for REPLY quick actions won't have a matching id as FluxC
+        // only notifies us of _new_ comments (the actual reply) so, no way to connect one another in this place.
+        // Therefore, we only care and match for `PUSH_COMMENT` to make sure there's a corresponding initial APPROVE
+        // quick action that corresponds to the resulting FluxC event.
         if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
-            if (event.isError()) {
-                mQuickActionProcessor.requestFailed(ARG_ACTION_APPROVE);
-            } else {
-                mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
+            List<Long> eventChangedCommentsRemoteIds = new ArrayList<>();
+            if (mActionedCommentsRemoteIds.size() > 0) {
+                // prepare a comparable list of Ids
+                for (Integer commentLocalId : event.changedCommentsLocalIds) {
+                    CommentModel localComment = mCommentStore.getCommentByLocalId(commentLocalId);
+                    if (localComment != null) {
+                        eventChangedCommentsRemoteIds.add(localComment.getRemoteCommentId());
+                    }
+                }
+
+                // here we need to check ids: is an event corresponding to an action triggered from this Service?
+                for (Long oneEventCommentRemoteId : eventChangedCommentsRemoteIds) {
+                    if (mActionedCommentsRemoteIds.contains(oneEventCommentRemoteId)) {
+                        if (event.isError()) {
+                            mQuickActionProcessor.requestFailed(ARG_ACTION_APPROVE);
+                        } else {
+                            mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
+                        }
+                    }
+                }
+            }
+
+            // now remove any localIds for already processed actions
+            for (Long localId : eventChangedCommentsRemoteIds) {
+                mActionedCommentsRemoteIds.remove(localId);
             }
         } else if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
             if (event.isError()) {
@@ -650,46 +679,6 @@ public class NotificationsProcessingService extends Service {
             } else {
                 mQuickActionProcessor.requestCompleted(ARG_ACTION_REPLY);
             }
-        }
-    }
-
-
-    // OnChanged events
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCommentChanged(OnCommentChanged event) {
-        if (mQuickActionProcessor == null) {
-            return;
-        }
-
-        // LIKE_COMMENT events do not hold event.changedCommentsLocalIds info so, just process them
-        if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
-            processRequestResultFromFluxCEvent(event);
-            return;
-        }
-
-        if (mActionedCommentsRemoteIds.size() > 0) {
-            // prepare a comparable list of Ids
-            List<Long> eventChangedCommentsRemoteIds = new ArrayList<>();
-            for (Integer commentLocalId : event.changedCommentsLocalIds) {
-                CommentModel localComment = mCommentStore.getCommentByLocalId(commentLocalId);
-                if (localComment != null) {
-                    eventChangedCommentsRemoteIds.add(localComment.getRemoteCommentId());
-                }
-            }
-
-            // here we need to check ids: is an event corresponding to an action triggered from this Service?
-            for (Long oneEventCommentRemoteId : eventChangedCommentsRemoteIds) {
-                if (mActionedCommentsRemoteIds.contains(oneEventCommentRemoteId)) {
-                    processRequestResultFromFluxCEvent(event);
-                }
-            }
-        }
-
-        // now remove any localIds for already processed actions
-        for (Integer localId : event.changedCommentsLocalIds) {
-            mActionedCommentsRemoteIds.remove(localId);
         }
     }
 }
