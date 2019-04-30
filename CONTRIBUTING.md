@@ -108,8 +108,8 @@ Please use the following naming convention for drawables:
 * Use the width in dp (example: `ic_reply_white_24dp`).
 
 #### Valid
-`ic_reply_white_24dp` (black reply icon 24dp)  
-`ic_stats_black_32dp` (white stats icon 32dp)
+`ic_reply_white_24dp` (white reply icon 24dp)  
+`ic_stats_black_32dp` (black stats icon 32dp)
 #### Invalid
 `reply_black` (missing `ic_` and width)  
 `ic_confetti_284dp` (uses `ic_`, but should use `img_`)  
