@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintLayout.LayoutParams
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +21,7 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
     private val value = itemView.findViewById<TextView>(id.value)
     private val divider = itemView.findViewById<View>(id.divider)
     private val expandButton = itemView.findViewById<ImageView>(id.expand_button)
+    private val percentageBarConstraintLayout = itemView.findViewById<View>(id.percentage_bar_constraint_layout)
     private var percentageBar = itemView.findViewById<View>(id.percentage_bar)
 
     fun bind(
@@ -47,13 +47,13 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
         }
 
         if(header.percentageOfMaxValue != null) {
-            percentageBar.visibility = View.VISIBLE
+            percentageBarConstraintLayout.visibility = View.VISIBLE
 
             val params: LayoutParams = percentageBar.layoutParams as LayoutParams
             params.matchConstraintPercentWidth = header.percentageOfMaxValue.toFloat()
             percentageBar.layoutParams = params
         } else {
-            percentageBar.visibility = View.GONE
+            percentageBarConstraintLayout.visibility = View.GONE
         }
     }
 }
