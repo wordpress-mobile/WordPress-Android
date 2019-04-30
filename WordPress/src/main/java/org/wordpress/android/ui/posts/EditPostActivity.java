@@ -3146,7 +3146,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // if the user selected multiple items and they're all images, show the insert media
         // dialog so the user can choose whether to insert them individually or as a gallery
-        if (ids.size() > 1 && allAreImages) {
+        if (ids.size() > 1 && allAreImages && !mShowGutenbergEditor) {
             showInsertMediaDialog(ids);
         } else {
             for (Long id : ids) {
