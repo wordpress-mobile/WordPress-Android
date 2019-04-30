@@ -18,5 +18,5 @@ enum class ImageType {
     UNKNOWN,
     VIDEO,
     ICON,
-    MULTI_USER_AVATAR_GREY_BACKGROUND
+    NO_PLACEHOLDER
 }

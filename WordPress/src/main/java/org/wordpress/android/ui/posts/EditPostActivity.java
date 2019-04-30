@@ -139,7 +139,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
-import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -1690,22 +1690,20 @@ public class EditPostActivity extends AppCompatActivity implements
             aztecEditorFragment.setExternalLogger(new AztecLog.ExternalLogger() {
                 @Override
                 public void log(String s) {
-                    // For now, we're wrapping up the actual log into a Crashlytics exception to reduce possibility
-                    // of information not travelling to Crashlytics (Crashlytics rolls logs up to 8
-                    // entries and 64kb max, and they only travel with the next crash happening, so logging an
-                    // Exception assures us to have this information sent in the next batch).
+                    // For now, we're wrapping up the actual log into an exception to reduce possibility
+                    // of information not travelling to our Crash Logging Service.
                     // For more info: http://bit.ly/2oJHMG7 and http://bit.ly/2oPOtFX
-                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(s), T.EDITOR);
+                    CrashLoggingUtils.logException(new AztecEditorFragment.AztecLoggingException(s), T.EDITOR);
                 }
 
                 @Override
                 public void logException(Throwable throwable) {
-                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR);
+                    CrashLoggingUtils.logException(new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR);
                 }
 
                 @Override
                 public void logException(Throwable throwable, String s) {
-                    CrashlyticsUtils.logException(
+                    CrashLoggingUtils.logException(
                             new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR, s);
                 }
             });
@@ -2204,7 +2202,7 @@ public class EditPostActivity extends AppCompatActivity implements
      */
     @Override
     public void onReflectionFailure(ReflectionException e) {
-        CrashlyticsUtils.logException(e, T.EDITOR, "Reflection Failure on Visual Editor init");
+        CrashLoggingUtils.logException(e, T.EDITOR, "Reflection Failure on Visual Editor init");
         // Disable visual editor and show an error message
         AppPrefs.setVisualEditorEnabled(false);
         ToastUtils.showToast(this, R.string.new_editor_reflection_error, Duration.LONG);
@@ -2979,6 +2977,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
+                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                     handleMediaPickerResult(data);
                     // No need to bump analytics here. Bumped later in
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
@@ -3108,7 +3107,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 } catch (IllegalStateException e) {
                     // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
                     AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
-                    CrashlyticsUtils
+                    CrashLoggingUtils
                             .logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString()
                                                              + " See issue #5823");
                     didAnyFail = true;
@@ -3374,7 +3373,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onAddMediaClicked() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
-        } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
@@ -3714,7 +3713,7 @@ public class EditPostActivity extends AppCompatActivity implements
             ((EditorFragment) mEditorFragment).setWebViewErrorListener(new ErrorListener() {
                 @Override
                 public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
-                    CrashlyticsUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
+                    CrashLoggingUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
                                                   T.EDITOR,
                                                   String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber,
                                                                 message));
