@@ -4,6 +4,7 @@
 * Added ability to filter posts by their author
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
+* Make current day difference grey in Stats Overview
 
 12.3
 -----
