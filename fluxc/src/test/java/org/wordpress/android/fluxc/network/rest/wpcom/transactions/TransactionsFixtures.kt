@@ -25,8 +25,8 @@ val DOMAIN_CONTACT_INFORMATION = DomainContactModel(
         "Apt 404",
         "90210",
         "Best City",
-        "WP",
-        "Best Country",
+        "CA",
+        "USA",
         "wapu@wordpress.org",
         "+1.3120000000",
         null
