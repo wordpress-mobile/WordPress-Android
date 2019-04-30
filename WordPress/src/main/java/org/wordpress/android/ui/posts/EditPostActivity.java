@@ -3370,7 +3370,8 @@ public class EditPostActivity extends AppCompatActivity implements
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
         } else if (mShowGutenbergEditor) {
-            // show the WP media library with pictures only, since that's the only mode integrated currently from Gutenberg-mobile
+            // show the WP media library with pictures only, since that's the only mode currently
+            // integrated in Gutenberg-mobile
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_EDITOR_PICKER);
         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
