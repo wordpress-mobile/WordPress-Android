@@ -24,6 +24,7 @@ import org.wordpress.android.ui.people.utils.PeopleUtils
 import org.wordpress.android.ui.people.utils.PeopleUtils.FetchUsersCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -32,11 +33,13 @@ import javax.inject.Named
 class HistoryViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
+    private val networkUtils: NetworkUtilsWrapper,
     @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) : ViewModel() {
     enum class HistoryListStatus {
         DONE,
         ERROR,
+        NO_NETWORK,
         FETCHING
     }
 
@@ -126,10 +129,15 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun fetchRevisions() {
-        _listStatus.value = HistoryListStatus.FETCHING
-        val payload = FetchRevisionsPayload(post, site)
-        uiScope.launch {
-            dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
+        if (networkUtils.isNetworkAvailable()) {
+            _listStatus.value = HistoryListStatus.FETCHING
+            val payload = FetchRevisionsPayload(post, site)
+            uiScope.launch {
+                dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
+            }
+        } else {
+            _listStatus.value = HistoryListStatus.NO_NETWORK
+            createRevisionsList(emptyList())
         }
     }
 
@@ -180,8 +188,13 @@ class HistoryViewModel @Inject constructor(
     @SuppressWarnings("unused")
     fun onRevisionsFetched(event: OnRevisionsFetched) {
         if (event.isError) {
-            _listStatus.value = HistoryListStatus.ERROR
             AppLog.e(T.API, "An error occurred while fetching History revisions")
+            if (networkUtils.isNetworkAvailable()) {
+                _listStatus.value = HistoryListStatus.ERROR
+            } else {
+                _listStatus.value = HistoryListStatus.NO_NETWORK
+            }
+            createRevisionsList(emptyList())
         } else {
             _listStatus.value = HistoryListStatus.DONE
             createRevisionsList(event.revisionsModel.revisions)

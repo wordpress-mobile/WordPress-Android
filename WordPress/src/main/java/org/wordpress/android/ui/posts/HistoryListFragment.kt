@@ -22,7 +22,7 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.history.HistoryViewModel
-import org.wordpress.android.viewmodel.history.HistoryViewModel.HistoryListStatus.FETCHING
+import org.wordpress.android.viewmodel.history.HistoryViewModel.HistoryListStatus
 import javax.inject.Inject
 
 class HistoryListFragment : Fragment() {
@@ -82,13 +82,17 @@ class HistoryListFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
         viewModel.create(arguments?.get(KEY_POST) as PostModel, arguments?.get(KEY_SITE) as SiteModel)
 
-        actionable_empty_view.subtitle.text = if ((arguments?.get(KEY_POST) as PostModel).isPage) {
-            resources.getString(R.string.history_empty_subtitle_page)
-        } else {
-            resources.getString(R.string.history_empty_subtitle_post)
-        }
-
+        setPostOrPageEmptyText()
         setObservers()
+    }
+
+    private fun setPostOrPageEmptyText() {
+        actionable_empty_view.title.text = getString(R.string.history_empty_title)
+        actionable_empty_view.subtitle.text = if ((arguments?.get(KEY_POST) as PostModel).isPage) {
+            getString(R.string.history_empty_subtitle_page)
+        } else {
+            getString(R.string.history_empty_subtitle_post)
+        }
     }
 
     private fun reloadList(data: List<HistoryListItem>) {
@@ -115,7 +119,20 @@ class HistoryListFragment : Fragment() {
 
         viewModel.listStatus.observe(this, Observer { listStatus ->
             if (isAdded && view != null) {
-                swipeToRefreshHelper.isRefreshing = listStatus == FETCHING
+                swipeToRefreshHelper.isRefreshing = listStatus == HistoryListStatus.FETCHING
+            }
+            when (listStatus) {
+                HistoryListStatus.FETCHING, HistoryListStatus.DONE -> {
+                    setPostOrPageEmptyText()
+                }
+                HistoryListStatus.NO_NETWORK -> {
+                    actionable_empty_view.title.setText(R.string.no_network_title)
+                    actionable_empty_view.subtitle.setText(R.string.no_network_message)
+                }
+                HistoryListStatus.ERROR -> {
+                    actionable_empty_view.title.setText(R.string.no_network_title)
+                    actionable_empty_view.subtitle.setText(R.string.error_generic_network)
+                }
             }
         })
 
