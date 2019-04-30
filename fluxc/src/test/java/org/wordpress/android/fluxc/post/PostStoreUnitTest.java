@@ -467,7 +467,7 @@ public class PostStoreUnitTest {
 
     /**
      * Tests that getPostsByLocalOrRemotePostIds works correctly in various situations.
-     *
+     * <p>
      * Normally it's not a good idea to combine multiple tests like this, however due to Java's verbosity the tests
      * are combined to avoid having too much boilerplate code.
      */
