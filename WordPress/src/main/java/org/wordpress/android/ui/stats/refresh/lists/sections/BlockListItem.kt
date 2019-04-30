@@ -56,7 +56,11 @@ sealed class BlockListItem(val type: Type) {
 
     data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
 
-    data class ReferredItem(@StringRes val label: Int, val itemTitle: String) : BlockListItem(REFERRED_ITEM)
+    data class ReferredItem(
+        @StringRes val label: Int,
+        val itemTitle: String,
+        val navigationAction: NavigationAction? = null
+    ) : BlockListItem(REFERRED_ITEM)
 
     data class ValueItem(
         val value: String,
