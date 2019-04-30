@@ -26,6 +26,7 @@ private const val VIEW_TYPE_POST = 0
 private const val VIEW_TYPE_POST_COMPACT = 1
 private const val VIEW_TYPE_ENDLIST_INDICATOR = 2
 private const val VIEW_TYPE_LOADING = 3
+private const val VIEW_TYPE_LOADING_COMPACT = 4
 
 class PostListAdapter(
     context: Context,
@@ -38,14 +39,18 @@ class PostListAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is EndListIndicatorItem -> VIEW_TYPE_ENDLIST_INDICATOR
-            is LoadingItem -> VIEW_TYPE_LOADING
             is PostListItemUiState -> {
-                return when (itemLayoutType) {
+                when (itemLayoutType) {
                     STANDARD -> VIEW_TYPE_POST
                     COMPACT -> VIEW_TYPE_POST_COMPACT
                 }
             }
-            null -> VIEW_TYPE_LOADING // Placeholder by paged list
+            is LoadingItem, null -> {
+                when (itemLayoutType) {
+                    STANDARD -> VIEW_TYPE_LOADING
+                    COMPACT -> VIEW_TYPE_LOADING_COMPACT
+                }
+            }
         }
     }
 
@@ -58,6 +63,10 @@ class PostListAdapter(
             }
             VIEW_TYPE_LOADING -> {
                 val view = layoutInflater.inflate(R.layout.post_list_item_skeleton, parent, false)
+                LoadingViewHolder(view)
+            }
+            VIEW_TYPE_LOADING_COMPACT -> {
+                val view = layoutInflater.inflate(R.layout.post_list_item_skeleton_compact, parent, false)
                 LoadingViewHolder(view)
             }
             VIEW_TYPE_POST -> {
