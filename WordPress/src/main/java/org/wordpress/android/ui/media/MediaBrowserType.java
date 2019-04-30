@@ -3,7 +3,6 @@ package org.wordpress.android.ui.media;
 public enum MediaBrowserType {
     BROWSER, // browse & manage media
     EDITOR_PICKER, // select multiple images or videos to insert into a post
-    GUTENBERG_EDITOR_PICKER, // select a single image to insert into a post
     AZTEC_EDITOR_PICKER, // select multiple images or videos to insert into a post, hide source bar in portrait
     FEATURED_IMAGE_PICKER, // select a single image as a featured image
     GRAVATAR_IMAGE_PICKER, // select a single image as a gravatar
@@ -20,8 +19,7 @@ public enum MediaBrowserType {
     }
 
     public boolean isSingleImagePicker() {
-        return this == FEATURED_IMAGE_PICKER || this == GRAVATAR_IMAGE_PICKER
-               || this == SITE_ICON_PICKER || this == GUTENBERG_EDITOR_PICKER;
+        return this == FEATURED_IMAGE_PICKER || this == GRAVATAR_IMAGE_PICKER || this == SITE_ICON_PICKER;
     }
 
     public boolean canMultiselect() {
