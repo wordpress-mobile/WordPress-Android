@@ -663,9 +663,9 @@ public class NotificationsProcessingService extends Service {
                 }
             }
 
-            // now remove any localIds for already processed actions
-            for (Long localId : eventChangedCommentsRemoteIds) {
-                mActionedCommentsRemoteIds.remove(localId);
+            // now remove any remoteIds for already processed actions
+            for (Long remoteId : eventChangedCommentsRemoteIds) {
+                mActionedCommentsRemoteIds.remove(remoteId);
             }
         } else if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
             if (event.isError()) {
