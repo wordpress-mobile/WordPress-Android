@@ -111,7 +111,7 @@ Please use the following naming convention for drawables:
 `ic_reply_white_24dp` (white reply icon 24dp)  
 `ic_stats_black_32dp` (black stats icon 32dp)
 #### Invalid
-`reply_black` (missing `ic_` and width)  
+`reply_white` (missing `ic_` and width)  
 `ic_confetti_284dp` (uses `ic_`, but should use `img_`)  
 `img_confetti_98dp` (uses height, but should use width)
 
