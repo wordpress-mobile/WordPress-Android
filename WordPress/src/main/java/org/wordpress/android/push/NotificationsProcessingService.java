@@ -563,7 +563,7 @@ public class NotificationsProcessingService extends Service {
                 return;
             }
 
-            // keep the local CommentId, we'll use it later to know whether to trigger the end processing notification
+            // keep the CommentId, we'll use it later to know whether to trigger the end processing notification
             // or not
             keepRemoteCommentIdForPostProcessing(comment.getRemoteCommentId());
 
@@ -592,6 +592,10 @@ public class NotificationsProcessingService extends Service {
                 // Pseudo comment reply
                 CommentModel reply = new CommentModel();
                 reply.setContent(mReplyText);
+
+                // keep the CommentId, we'll use it later to know whether to trigger the end processing notification
+                // or not
+                keepRemoteCommentIdForPostProcessing(comment.getRemoteCommentId());
 
                 // Push the reply
                 RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
@@ -626,37 +630,13 @@ public class NotificationsProcessingService extends Service {
         }
     }
 
-    // OnChanged events
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCommentChanged(OnCommentChanged event) {
-        if (mQuickActionProcessor == null) {
-            return;
-        }
-
+    private void processRequestResultFromFluxCEvent(OnCommentChanged event) {
+        // it is contained so, execute.
         if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
             if (event.isError()) {
                 mQuickActionProcessor.requestFailed(ARG_ACTION_APPROVE);
             } else {
-                if (mActionedCommentsRemoteIds.size() > 0) {
-                    // here we need to check ids
-                    // CommentModel localComment = mCommentStore.getCommentBySiteAndRemoteId(site, remoteCommendId);
-                    int containedCount = 0;
-                    for (Integer commentLocalId : event.changedCommentsLocalIds) {
-                        CommentModel localComment = mCommentStore.getCommentByLocalId(commentLocalId);
-                        if (localComment != null) {
-                            if (mActionedCommentsRemoteIds.contains(localComment.getRemoteCommentId())) {
-                                containedCount++;
-                            }
-                        }
-                    }
-
-                    if (containedCount != mActionedCommentsRemoteIds.size()) {
-                        return;
-                    }
-                    mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
-                }
+                mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
             }
         } else if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
             if (event.isError()) {
@@ -669,6 +649,41 @@ public class NotificationsProcessingService extends Service {
                 mQuickActionProcessor.requestFailed(ARG_ACTION_REPLY);
             } else {
                 mQuickActionProcessor.requestCompleted(ARG_ACTION_REPLY);
+            }
+        }
+    }
+
+
+    // OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCommentChanged(OnCommentChanged event) {
+        if (mQuickActionProcessor == null) {
+            return;
+        }
+
+        // LIKE_COMMENT events do not hold event.changedCommentsLocalIds info so, just process them
+        if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
+            processRequestResultFromFluxCEvent(event);
+            return;
+        }
+
+        if (mActionedCommentsRemoteIds.size() > 0) {
+            // prepare a comparable list of Ids
+            List<Long> eventChangedCommentsRemoteIds = new ArrayList<>();
+            for (Integer commentLocalId : event.changedCommentsLocalIds) {
+                CommentModel localComment = mCommentStore.getCommentByLocalId(commentLocalId);
+                if (localComment != null) {
+                    eventChangedCommentsRemoteIds.add(localComment.getRemoteCommentId());
+                }
+            }
+
+            // here we need to check ids: is an event corresponding to an action triggered from this Service?
+            for (Long oneEventCommentRemoteId : eventChangedCommentsRemoteIds) {
+                if (mActionedCommentsRemoteIds.contains(oneEventCommentRemoteId)) {
+                    processRequestResultFromFluxCEvent(event);
+                }
             }
         }
 
