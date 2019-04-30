@@ -422,6 +422,10 @@ public class PostStore extends Store {
         return getUploadedPagesForSite(site).size();
     }
 
+    public List<PostModel> getLocalDrafts(@NonNull SiteModel site) {
+        return PostSqlUtils.getLocalDrafts(site.getId());
+    }
+
     /**
      * Given a local ID for a post, returns that post as a {@link PostModel}.
      */

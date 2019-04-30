@@ -125,6 +125,17 @@ public class PostSqlUtils {
                 .getAsModel();
     }
 
+    public static List<PostModel> getLocalDrafts(@NonNull Integer localSiteId) {
+        return WellSql.select(PostModel.class)
+                      .where()
+                      .beginGroup()
+                      .equals(PostModelTable.LOCAL_SITE_ID, localSiteId)
+                      .equals(PostModelTable.IS_LOCAL_DRAFT, true)
+                      .endGroup()
+                      .endWhere()
+                      .getAsModel();
+    }
+
     public static List<PostModel> getPostsByRemoteIds(@Nullable List<Long> remoteIds, int localSiteId) {
         if (remoteIds != null && remoteIds.size() > 0) {
             return WellSql.select(PostModel.class)
