@@ -395,7 +395,6 @@
     <dimen name="new_site_creation_preview_skeleton_mid_size_width">174dp</dimen>
     <dimen name="new_site_creation_preview_skeleton_large_block_height">136dp</dimen>
     <dimen name="new_site_creation_preview_landscape_title_and_button_container_width">220dp</dimen>
-    <dimen name="new_site_creation_preview_ok_button_height">36dp</dimen>
 
     <!-- stats -->
     <dimen name="stats_header_height">32dp</dimen>

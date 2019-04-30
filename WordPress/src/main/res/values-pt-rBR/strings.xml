@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-26 16:40:10+0000
+Translation-Revision-Date: 2019-04-12 07:20:42+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Falha ao verificar por créditos de domínio disponíveis</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Verificando créditos de domínios</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrar domínio</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Para instalar plugins, é necessário ter um domínio personalizado associado ao seu site.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Instalar plugin</string>
     <string name="new_site_creation_preview_subtitle">Você poderá personalizar a aparência de seu site mais tarde</string>
     <string name="publish_on">Publicar em: %s</string>
     <string name="schedule_for">Agendar para: %s</string>

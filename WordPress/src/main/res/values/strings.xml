@@ -474,8 +474,7 @@
     <string name="uploading_media">Uploading media…</string>
 
     <!-- new account view -->
-    <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
-        address. Check the site address (URL) you entered.</string>
+    <string name="no_site_error">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -831,14 +830,14 @@
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>
-    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack</string>
+    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
     <string name="installing_jetpack">Installing Jetpack</string>
-    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete</string>
+    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
     <string name="jetpack_installed">Jetpack installed</string>
-    <string name="jetpack_installed_message">You have Jetpack installed on your site. Congratulations!</string>
+    <string name="jetpack_installed_message">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
     <string name="jetpack_installation_problem">There was a problem</string>
-    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time</string>
-    <string name="install_jetpack_continue">Continue</string>
+    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
+    <string name="install_jetpack_continue">Set up</string>
     <string name="install_jetpack_retry">Retry</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
@@ -911,6 +910,7 @@
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
+    <string name="stats_view_follower_totals">Follower Totals</string>
 
     <!-- stats: label for the entries -->
     <string name="stats_entry_country">Country</string>
@@ -1010,6 +1010,15 @@
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
+    <string name="stats_insights_this_year_site_stats">This Year</string>
+    <string name="stats_insights_year">Year</string>
+    <string name="stats_insights_posts">Posts</string>
+    <string name="stats_insights_total_comments">Total comments</string>
+    <string name="stats_insights_average_comments">Avg comments/post</string>
+    <string name="stats_insights_total_likes">Total likes</string>
+    <string name="stats_insights_average_likes">Avg likes/post</string>
+    <string name="stats_insights_total_words">Total words</string>
+    <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_best_day">Best Day</string>
     <string name="stats_insights_best_hour">Best Hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
@@ -1033,6 +1042,7 @@
     <string name="stats_insights_tumblr">Tumblr</string>
     <string name="stats_insights_google_plus">Google+</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_social">Social</string>
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
@@ -1258,6 +1268,7 @@
     <string name="immediately">Immediately</string>
     <string name="now">Now</string>
     <string name="scheduled_for">Scheduled for: %s</string>
+    <string name="backdated_for">Backdated for: %s</string>
     <string name="published_on">Published on: %s</string>
     <string name="schedule_for">Schedule for: %s</string>
     <string name="publish_on">Publish on: %s</string>
@@ -1401,7 +1412,6 @@
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="automattic_url" translatable="false">automattic.com</string>
-    <string name="wordpresscom_tos_url" translatable="false">https://%s.wordpress.com/tos</string>
     <string name="version">Version</string>
     <string name="version_with_name_param">Version %s</string>
     <string name="tos">Terms of Service</string>
@@ -2193,6 +2203,7 @@
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
+    <string name="login_invalid_site_url">The site address you entered is invalid. Please re-enter it.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>

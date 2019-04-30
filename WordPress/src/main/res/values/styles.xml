@@ -829,14 +829,6 @@
         <item name="android:text">@string/new_site_creation_preview_subtitle</item>
     </style>
 
-    <style name="SitePreviewOkButton">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/new_site_creation_preview_ok_button_height</item>
-        <item name="android:background">@color/primary_400</item>
-        <item name="android:text">@string/dialog_button_ok</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
     <style name="SitePreviewSkeletonView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>

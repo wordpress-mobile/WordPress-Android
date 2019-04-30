@@ -37,6 +37,7 @@ import javax.inject.Inject
 
 private const val EXTRA_POST_LIST_AUTHOR_FILTER = "post_list_author_filter"
 private const val EXTRA_POST_LIST_TYPE = "post_list_type"
+private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 2
 
 class PostListFragment : Fragment() {
     @Inject internal lateinit var imageManager: ImageManager
@@ -161,8 +162,30 @@ class PostListFragment : Fragment() {
         return view
     }
 
+    /**
+     * Updates the data for the adapter while retaining visible item in certain cases.
+     *
+     * PagedList tries to keep the visible item by adding new items outside of the screen while modifying the scroll
+     * position. In most cases, this works out great because it doesn't interrupt to the user. However, after a new
+     * item is inserted at the top while the list is showing the very first items, it feels very weird to not have the
+     * inserted item shown. For example, if a new draft is added there is no indication of it except for the flash
+     * of the scroll bar which is not noticeable unless user is paying attention to it.
+     *
+     * In these cases, we try to keep the scroll position the same instead of keeping the visible item the same by
+     * first saving the state and re-applying it after the data updates are completed. Since `PagedListAdapter` uses
+     * bg thread to calculate the changes, we need to post the change in the bg thread as well so that it'll be applied
+     * after changes are reflected.
+     */
     private fun updatePagedListData(pagedListData: PagedPostList) {
+        val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         postListAdapter.submitList(pagedListData)
+        recyclerView?.post {
+            (recyclerView?.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
+                if (layoutManager.findFirstVisibleItemPosition() < MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
+                    layoutManager.onRestoreInstanceState(recyclerViewState)
+                }
+            }
+        }
     }
 
     private fun updateEmptyViewForState(state: PostListEmptyUiState) {
