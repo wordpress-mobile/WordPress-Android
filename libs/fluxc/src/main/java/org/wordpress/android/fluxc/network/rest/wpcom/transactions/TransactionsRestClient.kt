@@ -14,7 +14,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.TransactionsStore.CreatedShoppingCartPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.FetchedSupportedCountriesPayload
+import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartError
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemedShoppingCartPayload
+import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType
 import javax.inject.Singleton
 
 @Singleton
@@ -34,15 +36,14 @@ constructor(
     suspend fun fetchSupportedCountries(): FetchedSupportedCountriesPayload {
         val url = WPCOMREST.me.transactions.supported_countries.urlV1_1
 
-        val response = wpComGsonRequestBuilder.syncGetRequest(
+        return when (val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
                 emptyMap(),
                 Array<SupportedDomainCountry>::class.java,
                 enableCaching = false,
                 forced = true
-        )
-        return when (response) {
+        )) {
             is Success -> {
                 FetchedSupportedCountriesPayload(response.data)
             }
@@ -73,13 +74,12 @@ constructor(
                 "products" to arrayOf(domainProduct)
         )
 
-        val response = wpComGsonRequestBuilder.syncPostRequest(
+        return when (val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
                 url,
                 params,
                 CreateShoppingCartResponse::class.java
-        )
-        return when (response) {
+        )) {
             is Success -> {
                 CreatedShoppingCartPayload(response.data)
             }
@@ -107,19 +107,18 @@ constructor(
                 "payment" to paymentMethod
         )
 
-        val response = wpComGsonRequestBuilder.syncPostRequest(
+        return when (val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
                 url,
                 params,
                 CreateShoppingCartResponse::class.java
-        )
-        return when (response) {
+        )) {
             is Success -> {
                 RedeemedShoppingCartPayload(true)
             }
             is WPComGsonRequestBuilder.Response.Error -> {
                 val payload = RedeemedShoppingCartPayload(false)
-                payload.error = response.error
+                payload.error = RedeemShoppingCartError(TransactionErrorType.fromString(response.error.apiError), response.error.message)
                 payload
             }
         }
