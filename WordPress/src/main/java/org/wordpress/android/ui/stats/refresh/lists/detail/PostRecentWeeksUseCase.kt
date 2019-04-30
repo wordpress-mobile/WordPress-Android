@@ -88,7 +88,7 @@ class PostRecentWeeksUseCase(
     }
 
     private fun onLinkClick() {
-        navigateTo(ViewRecentWeeksStats())
+        navigateTo(ViewRecentWeeksStats)
     }
 
     override fun buildLoadingItem(): List<BlockListItem> {

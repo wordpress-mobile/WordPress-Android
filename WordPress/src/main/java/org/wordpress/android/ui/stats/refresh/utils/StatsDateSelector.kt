@@ -7,7 +7,6 @@ import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.util.filter
 import org.wordpress.android.util.perform
 import javax.inject.Inject
 
@@ -20,8 +19,7 @@ constructor(
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
     val dateSelectorData: LiveData<DateSelectorUiModel> = _dateSelectorUiModel
 
-    val selectedDate = selectedDateProvider.selectedDateChanged
-            .filter { sectionChange -> sectionChange.selectedSection == this.statsSection }
+    val selectedDate = selectedDateProvider.granularSelectedDateChanged(this.statsSection)
             .perform {
                 if (!it.hasBeenHandled) {
                     updateDateSelector()

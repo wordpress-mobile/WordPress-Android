@@ -11,6 +11,7 @@ import android.view.Window;
 import android.webkit.WebView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.LocaleManager;
 
 import java.util.Map;
@@ -45,11 +46,10 @@ public abstract class WebViewActivity extends AppCompatActivity {
 
         configureView();
 
-        // note: do NOT call mWebView.getSettings().setUserAgentString(WordPress.getUserAgent())
-        // here since it causes problems with the browser-sniffing that some sites rely on to
-        // format the page for mobile display
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        // Setting this user agent makes Calypso sites hide any WordPress UIs (e.g. Masterbar, banners, etc.).
+        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
         configureWebView();
 
         if (savedInstanceState == null) {

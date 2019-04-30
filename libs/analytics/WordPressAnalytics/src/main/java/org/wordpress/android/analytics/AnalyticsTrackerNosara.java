@@ -448,7 +448,7 @@ public class AnalyticsTrackerNosara extends Tracker {
         if (user == null) {
             try {
                 throw new AnalyticsException("Trying to track analytics with an null user!");
-                // TODO add CrashlyticsUtils.logException or track this error in Nosara by using a special test user.
+                // TODO add Crash Logging Exception or track this error in Nosara by using a special test user.
             } catch (AnalyticsException e) {
                 AppLog.e(AppLog.T.STATS, e);
             }
@@ -666,6 +666,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE:
             case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
                 return "reader_saved_list_viewed";
+            case READER_SITE_SHARED:
+                return "reader_site_shared";
             case EDITOR_CREATED_POST:
                 return "editor_post_created";
             case EDITOR_SAVED_DRAFT:
@@ -708,6 +710,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "post_list_button_pressed";
             case POST_LIST_ITEM_SELECTED:
                 return "post_list_item_selected";
+            case POST_LIST_AUTHOR_FILTER_CHANGED:
+                return "post_list_author_filter_changed";
+            case POST_LIST_TAB_CHANGED:
+                return "post_list_tab_changed";
             case EDITOR_OPENED:
                 return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:

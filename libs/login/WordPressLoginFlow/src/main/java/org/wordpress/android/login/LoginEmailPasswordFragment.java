@@ -26,6 +26,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 
 import java.util.ArrayList;
 
@@ -309,6 +311,14 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             case FAILURE_CANNOT_ADD_DUPLICATE_SITE:
                 onLoginFinished(false);
                 showError(getString(R.string.cannot_add_duplicate_site));
+                break;
+            case FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL:
+                onLoginFinished(false);
+                mLoginListener.loginViaWpcomUsernameInstead();
+                ToastUtils.showToast(getContext(), R.string.error_user_username_instead_of_email, Duration.LONG);
+
+                // consume the state so we don't re-redirect to username login if user backs up
+                LoginWpcomService.clearLoginServiceState();
                 break;
             case FAILURE:
                 onLoginFinished(false);

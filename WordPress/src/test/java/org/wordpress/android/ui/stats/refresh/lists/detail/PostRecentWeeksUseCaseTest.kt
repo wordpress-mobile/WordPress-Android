@@ -191,8 +191,8 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
 
     private fun assertHeader(item: BlockListItem) {
         assertThat(item.type).isEqualTo(HEADER)
-        assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_months_and_years_period_label)
-        assertThat(item.rightLabel).isEqualTo(R.string.stats_months_and_years_views_label)
+        assertThat((item as Header).startLabel).isEqualTo(R.string.stats_months_and_years_period_label)
+        assertThat(item.endLabel).isEqualTo(R.string.stats_months_and_years_views_label)
     }
 
     private fun assertDay(

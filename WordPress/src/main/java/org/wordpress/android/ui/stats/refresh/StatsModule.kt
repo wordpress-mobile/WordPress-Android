@@ -22,7 +22,6 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.PostHeaderUseCase
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUseCase.PostMonthsAndYearsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostRecentWeeksUseCase.PostRecentWeeksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -35,7 +34,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase.CommentsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
@@ -44,6 +45,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SelectedSiteStorage
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -81,18 +83,22 @@ class StatsModule {
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
-        postingActivityUseCase: PostingActivityUseCase
+        postingActivityUseCase: PostingActivityUseCase,
+        followerTotalsUseCase: FollowerTotalsUseCase,
+        annualSiteStatsUseCase: AnnualSiteStatsUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
                 latestPostSummaryUseCase,
                 todayStatsUseCase,
-                followersUseCaseFactory.build(UseCaseMode.BLOCK),
-                commentsUseCaseFactory.build(UseCaseMode.BLOCK),
+                followersUseCaseFactory.build(BLOCK),
+                commentsUseCaseFactory.build(BLOCK),
                 mostPopularInsightsUseCase,
-                tagsAndCategoriesUseCaseFactory.build(UseCaseMode.BLOCK),
-                publicizeUseCaseFactory.build(UseCaseMode.BLOCK),
-                postingActivityUseCase
+                tagsAndCategoriesUseCaseFactory.build(BLOCK),
+                publicizeUseCaseFactory.build(BLOCK),
+                postingActivityUseCase,
+                followerTotalsUseCase,
+                annualSiteStatsUseCase
         )
     }
 
@@ -104,29 +110,19 @@ class StatsModule {
     @Singleton
     @Named(VIEW_ALL_INSIGHTS_USE_CASES)
     fun provideViewAllInsightsUseCases(
-        allTimeStatsUseCase: AllTimeStatsUseCase,
-        latestPostSummaryUseCase: LatestPostSummaryUseCase,
-        todayStatsUseCase: TodayStatsUseCase,
         followersUseCaseFactory: FollowersUseCaseFactory,
         commentsUseCaseFactory: CommentsUseCaseFactory,
-        mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
-        postingActivityUseCase: PostingActivityUseCase,
         postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
         postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
         postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                allTimeStatsUseCase,
-                latestPostSummaryUseCase,
-                todayStatsUseCase,
-                followersUseCaseFactory.build(UseCaseMode.VIEW_ALL),
-                commentsUseCaseFactory.build(UseCaseMode.VIEW_ALL),
-                mostPopularInsightsUseCase,
-                tagsAndCategoriesUseCaseFactory.build(UseCaseMode.VIEW_ALL),
-                publicizeUseCaseFactory.build(UseCaseMode.VIEW_ALL),
-                postingActivityUseCase,
+                followersUseCaseFactory.build(VIEW_ALL),
+                commentsUseCaseFactory.build(VIEW_ALL),
+                tagsAndCategoriesUseCaseFactory.build(VIEW_ALL),
+                publicizeUseCaseFactory.build(VIEW_ALL),
                 postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
                 postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
                 postRecentWeeksUseCaseFactory.build(VIEW_ALL)
@@ -360,5 +356,11 @@ class StatsModule {
     @Singleton
     fun provideSharedPrefs(context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSelectedSiteStorage(): SelectedSiteStorage {
+        return SelectedSiteStorage()
     }
 }

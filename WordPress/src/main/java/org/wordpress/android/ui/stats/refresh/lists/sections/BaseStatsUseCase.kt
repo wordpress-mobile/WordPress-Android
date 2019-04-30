@@ -21,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
+import org.wordpress.android.viewmodel.Event
 
 /**
  * Do not override this class directly. Use StatefulUseCase or StatelessUseCase instead.
@@ -58,8 +59,8 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         }
     }.distinct()
 
-    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
+    private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
+    val navigationTarget: LiveData<Event<NavigationTarget>> = mutableNavigationTarget
 
     /**
      * Fetches data either from a local cache or from remote API
@@ -154,7 +155,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * Passes a navigation target to the View layer which uses the context to open the correct activity.
      */
     fun navigateTo(target: NavigationTarget) {
-        mutableNavigationTarget.value = target
+        mutableNavigationTarget.value = Event(target)
     }
 
     /**

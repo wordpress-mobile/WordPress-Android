@@ -5,7 +5,7 @@ import android.os.Looper;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashLoggingUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -116,7 +116,7 @@ public class GravatarApi {
                             properties.put("network_exception_class", exceptionClass);
                             properties.put("network_exception_message", exceptionMessage);
                             AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
-                            CrashlyticsUtils
+                            CrashLoggingUtils
                                     .logException(e, AppLog.T.API, "Network call failure trying to upload Gravatar!");
                         }
 

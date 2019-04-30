@@ -67,7 +67,6 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -448,7 +447,7 @@ public class ReaderPostDetailFragment extends Fragment
                     : blogName;
 
             WPSnackbar.make(view, Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                    "<b>", blog, "</b>")), AccessibilityUtils.getSnackbarDuration(getActivity()))
+                    "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
                     .setAction(getString(R.string.reader_followed_blog_notifications_action),
                         new View.OnClickListener() {
                             @Override public void onClick(View view) {
@@ -566,15 +565,15 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title,
-                AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.reader_bookmark_snack_btn,
-                new View.OnClickListener() {
-                    @Override public void onClick(View view) {
-                        AnalyticsTracker
-                                .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE);
-                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                    }
-                })
+        WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
+                .setAction(R.string.reader_bookmark_snack_btn,
+                    new View.OnClickListener() {
+                        @Override public void onClick(View view) {
+                            AnalyticsTracker
+                                    .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE);
+                            ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                        }
+                    })
                 .show();
     }
 

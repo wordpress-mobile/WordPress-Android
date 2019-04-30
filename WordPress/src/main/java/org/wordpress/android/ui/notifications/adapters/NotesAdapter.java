@@ -103,7 +103,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     public void setFilter(FILTERS newFilter) {
         mCurrentFilter = newFilter;
-        myNotifyDatasetChanged();
     }
 
     public FILTERS getCurrentFilter() {

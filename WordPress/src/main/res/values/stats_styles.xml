@@ -203,7 +203,7 @@
     <style name="StatsActivityBox">
         <item name="android:layout_width">@dimen/stats_activity_box_size</item>
         <item name="android:layout_height">@dimen/stats_activity_box_size</item>
-        <item name="android:layout_marginEnd">@dimen/stats_activity_box_end_margin</item>
+        <item name="android:layout_marginStart">@dimen/stats_activity_box_end_margin</item>
     </style>
 
     <style name="StatsReferredItemLabel" parent="TextAppearance.AppCompat.Body1">

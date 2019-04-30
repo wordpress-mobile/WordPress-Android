@@ -5,8 +5,10 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +50,12 @@ class JetpackRemoteInstallFragment : Fragment() {
                         AppLog.e(AppLog.T.JETPACK_REMOTE_INSTALL, "An error occurred while installing Jetpack")
                     }
                     jetpack_install_icon.setImageResource(viewState.icon)
+                    if (viewState.iconTint != null) {
+                        jetpack_install_icon.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(
+                                jetpack_install_icon.context, viewState.iconTint))
+                    } else {
+                        jetpack_install_icon.imageTintList = null
+                    }
                     jetpack_install_title.setText(viewState.titleResource)
                     jetpack_install_message.setText(viewState.messageResource)
                     if (viewState.buttonResource != null) {

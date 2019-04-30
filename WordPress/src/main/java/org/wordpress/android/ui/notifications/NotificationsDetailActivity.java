@@ -387,7 +387,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         if (rangeType == FormattableRangeType.FOLLOW) {
-            ActivityLauncher.viewAllTabbedInsightsStats(this, StatsViewType.FOLLOWERS, 0, site);
+            ActivityLauncher.viewAllTabbedInsightsStats(this, StatsViewType.FOLLOWERS, 0,
+                    site.getId());
         } else {
             ActivityLauncher.viewBlogStats(this, site);
         }

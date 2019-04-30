@@ -113,17 +113,17 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         (items[1] as QuickScanItem).apply {
-            assertThat(this.leftColumn.label).isEqualTo(R.string.stats_views)
-            assertThat(this.leftColumn.value).isEqualTo(views.toString())
-            assertThat(this.rightColumn.label).isEqualTo(R.string.stats_visitors)
-            assertThat(this.rightColumn.value).isEqualTo(visitors.toString())
+            assertThat(this.startColumn.label).isEqualTo(R.string.stats_views)
+            assertThat(this.startColumn.value).isEqualTo(views.toString())
+            assertThat(this.endColumn.label).isEqualTo(R.string.stats_visitors)
+            assertThat(this.endColumn.value).isEqualTo(visitors.toString())
         }
         (items[2] as QuickScanItem).apply {
-            assertThat(this.leftColumn.label).isEqualTo(R.string.posts)
-            assertThat(this.leftColumn.value).isEqualTo(posts.toString())
-            assertThat(this.rightColumn.label).isEqualTo(R.string.stats_insights_best_ever)
-            assertThat(this.rightColumn.value).isEqualTo(viewsBestDayTotal.toString())
-            assertThat(this.rightColumn.tooltip).isEqualTo(bestDayTransformed)
+            assertThat(this.startColumn.label).isEqualTo(R.string.posts)
+            assertThat(this.startColumn.value).isEqualTo(posts.toString())
+            assertThat(this.endColumn.label).isEqualTo(R.string.stats_insights_best_ever)
+            assertThat(this.endColumn.value).isEqualTo(viewsBestDayTotal.toString())
+            assertThat(this.endColumn.tooltip).isEqualTo(bestDayTransformed)
         }
     }
 
@@ -149,7 +149,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         (items[2] as QuickScanItem).apply {
-            assertThat(this.rightColumn.tooltip).isNull()
+            assertThat(this.endColumn.tooltip).isNull()
         }
     }
 

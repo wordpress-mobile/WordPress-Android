@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-03 11:54:09+0000
+Translation-Revision-Date: 2019-04-16 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">לא הייתה אפשרות לבדוק את נקודות הזיכוי הזמינות בדומיין</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">בודק נקודות זיכוי בדומיין</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">רישום הדומיין</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">כדי להתקין תוספים, עליך לספק דומיין מותאם אישית שמקושר לאתר שלך.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">התקנת תוסף</string>
     <string name="new_site_creation_preview_subtitle">תהיה לך אפשרות להתאים אישית את המראה והאווירה של האתר שלך בשלב מאוחר יותר</string>
     <string name="publish_on">פרסום בתאריך: %s</string>
     <string name="schedule_for">תזמון לתאריך: %s</string>

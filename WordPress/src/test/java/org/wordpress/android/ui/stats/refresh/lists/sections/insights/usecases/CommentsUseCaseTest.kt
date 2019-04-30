@@ -228,8 +228,8 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val headerItem = this[2]
         assertThat(headerItem.type).isEqualTo(HEADER)
-        assertThat((headerItem as Header).leftLabel).isEqualTo(R.string.stats_comments_title_label)
-        assertThat(headerItem.rightLabel).isEqualTo(R.string.stats_comments_label)
+        assertThat((headerItem as Header).startLabel).isEqualTo(R.string.stats_comments_title_label)
+        assertThat(headerItem.endLabel).isEqualTo(R.string.stats_comments_label)
 
         val userItem = this[3]
         assertThat(userItem.type).isEqualTo(LIST_ITEM)
@@ -251,8 +251,8 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val headerItem = this[2]
         assertThat(headerItem.type).isEqualTo(HEADER)
-        assertThat((headerItem as Header).leftLabel).isEqualTo(R.string.stats_comments_author_label)
-        assertThat(headerItem.rightLabel).isEqualTo(R.string.stats_comments_label)
+        assertThat((headerItem as Header).startLabel).isEqualTo(R.string.stats_comments_author_label)
+        assertThat(headerItem.endLabel).isEqualTo(R.string.stats_comments_label)
 
         val userItem = this[3]
         assertThat(userItem.type).isEqualTo(LIST_ITEM_WITH_ICON)

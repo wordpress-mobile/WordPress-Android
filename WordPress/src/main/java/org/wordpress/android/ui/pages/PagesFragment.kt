@@ -44,7 +44,6 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.quickstart.QuickStartEvent
-import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -395,10 +394,7 @@ class PagesFragment : Fragment() {
 
                 WPDialogSnackbar.make(
                         view!!.findViewById(R.id.coordinatorLayout), title,
-                        AccessibilityUtils.getSnackbarDuration(
-                                requireActivity(),
-                                resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
-                        )
+                        resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
                 ).show()
             }
         }

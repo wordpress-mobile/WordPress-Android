@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
@@ -22,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 class StatsViewAllViewModel(
@@ -32,7 +32,7 @@ class StatsViewAllViewModel(
     private val dateSelector: StatsDateSelector,
     @StringRes val title: Int
 ) : ScopedViewModel(mainDispatcher) {
-    private val mutableSnackbarMessage = MutableLiveData<Int>()
+    private val mutableSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
 
     val selectedDate = dateSelector.selectedDate
 
@@ -40,7 +40,7 @@ class StatsViewAllViewModel(
         it ?: DateSelectorUiModel(false)
     }
 
-    val navigationTarget: LiveData<NavigationTarget> = useCase.navigationTarget
+    val navigationTarget: LiveData<Event<NavigationTarget>> = useCase.navigationTarget
 
     val data: LiveData<StatsBlock> = useCase.liveData.map { useCaseModel ->
         when (useCaseModel.state) {
@@ -54,17 +54,11 @@ class StatsViewAllViewModel(
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    val showSnackbarMessage: LiveData<SnackbarMessageHolder> = mutableSnackbarMessage.map {
-        SnackbarMessageHolder(it)
-    }
+    val showSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = mutableSnackbarMessage
 
     val toolbarHasShadow = dateSelectorData.map { !it.isVisible }
 
-    fun start(site: SiteModel? = null) {
-        if (site != null) {
-            statsSiteProvider.start(site)
-        }
-
+    fun start() {
         launch {
             loadData(refresh = false, forced = false)
             dateSelector.updateDateSelector()
@@ -90,7 +84,7 @@ class StatsViewAllViewModel(
             if (statsSiteProvider.hasLoadedSite()) {
                 useCase.fetch(refresh, forced)
             } else {
-                mutableSnackbarMessage.postValue(R.string.stats_site_not_loaded_yet)
+                mutableSnackbarMessage.postValue(Event(SnackbarMessageHolder(R.string.stats_site_not_loaded_yet)))
             }
         }
     }
@@ -98,6 +92,7 @@ class StatsViewAllViewModel(
     override fun onCleared() {
         mutableSnackbarMessage.value = null
         useCase.clear()
+        statsSiteProvider.reset()
     }
 
     fun onRetryClick() {
@@ -122,7 +117,7 @@ class StatsViewAllViewModel(
         refreshData()
     }
 
-    fun refreshData() {
+    private fun refreshData() {
         loadData {
             loadData(refresh = true, forced = true)
         }

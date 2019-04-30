@@ -319,7 +319,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(items[3] is Link).isTrue()
 
         var navigationTarget: NavigationTarget? = null
-        useCase.navigationTarget.observeForever { navigationTarget = it }
+        useCase.navigationTarget.observeForever { navigationTarget = it?.getContentIfNotHandled() }
 
         (items[3] as Link).navigateAction.click()
 
@@ -330,8 +330,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
 
     private fun assertHeader(item: BlockListItem) {
         assertThat(item.type).isEqualTo(HEADER)
-        assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_posts_and_pages_title_label)
-        assertThat(item.rightLabel).isEqualTo(R.string.stats_posts_and_pages_views_label)
+        assertThat((item as Header).startLabel).isEqualTo(R.string.stats_posts_and_pages_title_label)
+        assertThat(item.endLabel).isEqualTo(R.string.stats_posts_and_pages_views_label)
     }
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean): UseCaseModel {
