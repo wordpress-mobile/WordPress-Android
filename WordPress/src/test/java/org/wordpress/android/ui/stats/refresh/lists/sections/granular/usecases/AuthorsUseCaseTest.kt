@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -211,6 +212,45 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.ERROR)
+    }
+
+    @Test
+    fun `percentage of max value correct`() = test {
+        val authors = mutableListOf<Author>()
+
+        authors.add(Author("Author 1", 10, "author1.avatar.com", listOf()))
+        authors.add(Author("Author 2", 20, "author2.avatar.com", listOf()))
+        authors.add(Author("Author 3", 15, "author3.avatar.com", listOf()))
+
+        val hasMore = false
+        val authorsModel = AuthorsModel(0, authors, hasMore)
+
+        val refresh = true
+        val forced = false
+
+        whenever(store.getAuthors(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate))
+                .thenReturn(authorsModel)
+
+        whenever(store.fetchAuthors(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
+                selectedDate, forced)).thenReturn(
+                OnStatsFetched(authorsModel)
+        )
+
+        val result = loadData(refresh, forced)
+
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.AUTHORS)
+        val items = result.data!!
+
+        assertThat(items.size).isEqualTo(5)
+
+        assertThat(items[2] is ListItemWithIcon).isTrue()
+        assertThat(items[3] is ListItemWithIcon).isTrue()
+        assertThat(items[4] is ListItemWithIcon).isTrue()
+
+        assertThat((items[2] as ListItemWithIcon).percentageOfMaxValue).isEqualTo(0.5)
+        assertThat((items[3] as ListItemWithIcon).percentageOfMaxValue).isEqualTo(1.0)
+        assertThat((items[4] as ListItemWithIcon).percentageOfMaxValue).isEqualTo(0.75)
     }
 
     private fun assertTitle(item: BlockListItem) {

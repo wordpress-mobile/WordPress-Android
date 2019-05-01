@@ -328,6 +328,55 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(viewPost.statsGranularity).isEqualTo(statsGranularity)
     }
 
+    @Test
+    fun `percentage of max value correct`() = test {
+        val posts = mutableListOf<ViewsModel>()
+
+        posts.add(ViewsModel(1L, "Post 1", 10, POST, "post1.com"))
+        posts.add(ViewsModel(2L, "Post 2", 20, POST, "post2.com"))
+        posts.add(ViewsModel(3L, "Post 3", 15, POST, "post3.com"))
+
+        val refresh = true
+        val forced = false
+        val hasMore = false
+
+        val postAndPageViewsModel = PostAndPageViewsModel(posts, hasMore)
+
+        whenever(
+                store.getPostAndPageViews(
+                        site,
+                        statsGranularity,
+                        LimitMode.Top(itemsToLoad),
+                        selectedDate
+                )
+        ).thenReturn(postAndPageViewsModel)
+        whenever(
+                store.fetchPostAndPageViews(
+                        site,
+                        statsGranularity,
+                        LimitMode.Top(itemsToLoad),
+                        selectedDate,
+                        forced
+                )
+        ).thenReturn(OnStatsFetched(postAndPageViewsModel))
+
+        val result = loadData(refresh, forced)
+
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        val items = result.data!!
+
+        assertThat(items.size).isEqualTo(5)
+
+        assertThat(items[2] is ListItemWithIcon).isTrue()
+        assertThat(items[3] is ListItemWithIcon).isTrue()
+        assertThat(items[4] is ListItemWithIcon).isTrue()
+
+        assertThat((items[2] as ListItemWithIcon).percentageOfMaxValue).isEqualTo(0.5)
+        assertThat((items[3] as ListItemWithIcon).percentageOfMaxValue).isEqualTo(1.0)
+        assertThat((items[4] as ListItemWithIcon).percentageOfMaxValue).isEqualTo(0.75)
+    }
+
     private fun assertHeader(item: BlockListItem) {
         assertThat(item.type).isEqualTo(HEADER)
         assertThat((item as Header).startLabel).isEqualTo(R.string.stats_posts_and_pages_title_label)

@@ -14,9 +14,12 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
+import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel.Item
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -174,6 +177,44 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         val result = loadTags(true, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.ERROR)
+    }
+
+    @Test
+    fun `percentage of max value correct`() = test {
+        val tagsAndCategoriesList = mutableListOf<TagModel>()
+
+        tagsAndCategoriesList.add(TagModel(listOf<Item>(), 10))
+        tagsAndCategoriesList.add(TagModel(listOf<Item>(), 20))
+        tagsAndCategoriesList.add(TagModel(listOf<Item>(), 15))
+
+        val refresh = true
+        val forced = false
+        val hasMore = false
+
+        val tagsModel = TagsModel(tagsAndCategoriesList, hasMore)
+
+        whenever(insightsStore.getTags(site, LimitMode.Top(blockItemCount))).thenReturn(tagsModel)
+        whenever(insightsStore.fetchTags(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
+                OnStatsFetched(
+                        tagsModel
+                )
+        )
+
+        val result = loadTags(refresh, forced)
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(InsightsTypes.TAGS_AND_CATEGORIES)
+
+        val items = result.data!!
+
+        assertThat(items.size).isEqualTo(5)
+
+        assertThat(items[2] is ExpandableItem).isTrue()
+        assertThat(items[3] is ExpandableItem).isTrue()
+        assertThat(items[4] is ExpandableItem).isTrue()
+
+        assertThat((items[2] as ExpandableItem).header.percentageOfMaxValue).isEqualTo(0.5)
+        assertThat((items[3] as ExpandableItem).header.percentageOfMaxValue).isEqualTo(1.0)
+        assertThat((items[4] as ExpandableItem).header.percentageOfMaxValue).isEqualTo(0.75)
     }
 
     private fun assertTitle(item: BlockListItem) {
