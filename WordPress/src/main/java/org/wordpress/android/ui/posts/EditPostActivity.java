@@ -2030,8 +2030,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     // update the status
                     if (!userCanPublishPosts()) {
                         mPost.setStatus(PostStatus.PENDING.toString());
-                        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                     }
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
 
                 boolean postUpdateSuccessful = updatePostObject();
@@ -2060,11 +2060,9 @@ public class EditPostActivity extends AppCompatActivity implements
                                 }
                             });
                         } else {
-                            mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                             savePostOnlineAndFinishAsync(isFirstTimePublish, true);
                         }
                     } else {
-                        mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                         savePostLocallyAndFinishAsync(true);
                     }
                 } else {
