@@ -8,6 +8,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
+import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -164,7 +165,12 @@ class PostListMainViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel) {
+    /**
+     * @param postListEventsListenerEnabled This is only provided to make this class testable in unit tests.
+     *   If `false`, this will not call [listenForPostListEvents]. That method uses `EventBus` which does not
+     *   work during unit tests.
+     */
+    fun start(site: SiteModel, @VisibleForTesting postListEventsListenerEnabled: Boolean = true) {
         this.site = site
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
@@ -173,26 +179,29 @@ class PostListMainViewModel @Inject constructor(
             AuthorFilterSelection.EVERYONE
         }
 
-        listenForPostListEvents(
-                lifecycle = lifecycle,
-                dispatcher = dispatcher,
-                postStore = postStore,
-                site = site,
-                postActionHandler = postActionHandler,
-                handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
-                handlePostUploadedWithoutError = {
-                    refreshAllLists()
-                },
-                triggerPostUploadAction = { _postUploadAction.postValue(it) },
-                invalidateUploadStatus = {
-                    uploadStatusTracker.invalidateUploadStatus(it)
-                    invalidateAllLists()
-                },
-                invalidateFeaturedMedia = {
-                    featuredImageTracker.invalidateFeaturedMedia(it)
-                    invalidateAllLists()
-                }
-        )
+        if (postListEventsListenerEnabled) {
+            listenForPostListEvents(
+                    lifecycle = lifecycle,
+                    dispatcher = dispatcher,
+                    postStore = postStore,
+                    site = site,
+                    postActionHandler = postActionHandler,
+                    handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
+                    handlePostUploadedWithoutError = {
+                        refreshAllLists()
+                    },
+                    triggerPostUploadAction = { _postUploadAction.postValue(it) },
+                    invalidateUploadStatus = {
+                        uploadStatusTracker.invalidateUploadStatus(it)
+                        invalidateAllLists()
+                    },
+                    invalidateFeaturedMedia = {
+                        featuredImageTracker.invalidateFeaturedMedia(it)
+                        invalidateAllLists()
+                    }
+            )
+        }
+
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
