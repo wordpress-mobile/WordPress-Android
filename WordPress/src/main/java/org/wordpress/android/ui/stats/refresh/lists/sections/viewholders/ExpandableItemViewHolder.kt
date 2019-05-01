@@ -46,7 +46,7 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
             expandableItem.onExpandClicked(!expandableItem.isExpanded)
         }
 
-        if(header.percentageOfMaxValue != null) {
+        if (header.percentageOfMaxValue != null) {
             percentageBarConstraintLayout.visibility = View.VISIBLE
 
             val params: LayoutParams = percentageBar.layoutParams as LayoutParams

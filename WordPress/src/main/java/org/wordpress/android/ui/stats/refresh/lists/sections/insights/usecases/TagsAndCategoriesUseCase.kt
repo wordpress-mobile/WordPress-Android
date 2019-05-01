@@ -8,7 +8,6 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
-import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.modules.UI_THREAD
@@ -129,7 +128,7 @@ class TagsAndCategoriesUseCase
         var max = -1
 
         views.forEach {
-            if(it.views > max) max = it.views.toInt()
+            if (it.views > max) max = it.views.toInt()
         }
 
         return max

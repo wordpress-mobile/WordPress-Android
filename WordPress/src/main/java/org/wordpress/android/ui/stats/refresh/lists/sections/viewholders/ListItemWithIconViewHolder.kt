@@ -44,7 +44,7 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
             View.GONE
         }
 
-        if(item.percentageOfMaxValue != null) {
+        if (item.percentageOfMaxValue != null) {
             percentageBarConstraintLayout.visibility = View.VISIBLE
 
             val params: LayoutParams = percentageBar.layoutParams as LayoutParams

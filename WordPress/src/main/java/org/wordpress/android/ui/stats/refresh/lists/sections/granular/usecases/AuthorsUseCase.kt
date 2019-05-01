@@ -157,7 +157,7 @@ constructor(
         var max = -1
 
         authors.forEach {
-            if(it.views > max) max = it.views
+            if (it.views > max) max = it.views
         }
 
         return max

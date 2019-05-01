@@ -139,7 +139,7 @@ constructor(
         var max = -1
 
         views.forEach {
-            if(it.views > max) max = it.views
+            if (it.views > max) max = it.views
         }
 
         return max
