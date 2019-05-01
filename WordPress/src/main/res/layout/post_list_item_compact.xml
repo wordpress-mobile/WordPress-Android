@@ -53,24 +53,6 @@
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:text="99 days ago "/>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/statuses_label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="textStart"
-            android:textColor="@color/warning_500"
-            app:layout_constraintBottom_toBottomOf="@+id/date"
-            app:layout_constraintEnd_toStartOf="@+id/image_featured"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@+id/date"
-            app:layout_constraintTop_toTopOf="@+id/date"
-            tools:text="Private · Local Changes"/>
-
-
         <ImageView
             android:id="@+id/image_featured"
             android:layout_width="@dimen/posts_list_compact_image_size"
@@ -112,6 +94,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/statuses_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="textStart"
+            android:textColor="@color/warning_500"
+            app:layout_constraintBottom_toBottomOf="@+id/date"
+            app:layout_constraintEnd_toStartOf="@+id/image_featured"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@+id/date"
+            app:layout_constraintTop_toTopOf="@+id/date"
+            tools:text="Private · Local Changes"/>
 
         <ProgressBar
             android:id="@+id/upload_progress"
