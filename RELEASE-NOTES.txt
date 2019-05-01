@@ -2,6 +2,7 @@
 -----
 * Added support for displaying posts in tabs based on their status
 * Added ability to filter posts by their author
+* Added ability to toggle to compact view type for blog posts list
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
 
@@ -11,7 +12,6 @@
 * Redirect to username/password login when WordPress.com reports email login not allowed
 * Updated notifications list to Material guidelines
 * Updated snackbar design to Material guidelines
-* Added ability to toggle to compact view type for blog posts list
 * New Follower totals insights in the Stats
 * Fixed crash when viewing Notifications tab
 * Add "This Year" card to Stats Insights screen
