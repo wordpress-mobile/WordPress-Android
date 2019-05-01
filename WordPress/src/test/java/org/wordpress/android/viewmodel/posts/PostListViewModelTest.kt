@@ -21,8 +21,8 @@ class PostListViewModelTest {
         val site = SiteModel()
         val localDraftUploadStarter = mock<LocalDraftUploadStarter>()
 
-        val viewModel = mockedPostListViewModel(localDraftUploadStarter = localDraftUploadStarter)
-        viewModel.start(mockedPostListViewModelConnector(site = site))
+        val viewModel = createPostListViewModel(localDraftUploadStarter = localDraftUploadStarter)
+        viewModel.start(createPostListViewModelConnector(site = site))
 
         // When
         viewModel.swipeToRefresh()
@@ -32,7 +32,7 @@ class PostListViewModelTest {
     }
 
     private companion object {
-        fun mockedPostListViewModelConnector(site: SiteModel) = PostListViewModelConnector(
+        fun createPostListViewModelConnector(site: SiteModel) = PostListViewModelConnector(
                 site = site,
                 postListType = DRAFTS,
                 authorFilter = mock(),
@@ -43,7 +43,7 @@ class PostListViewModelTest {
                 postFetcher = mock()
         )
 
-        fun mockedPostListViewModel(localDraftUploadStarter: LocalDraftUploadStarter): PostListViewModel {
+        fun createPostListViewModel(localDraftUploadStarter: LocalDraftUploadStarter): PostListViewModel {
             val listStore = mock<ListStore> {
                 on {
                     getList<PostListDescriptorForXmlRpcSite, PostListItemIdentifier, PostListItemType>(

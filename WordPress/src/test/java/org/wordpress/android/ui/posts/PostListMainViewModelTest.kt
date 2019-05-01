@@ -23,7 +23,7 @@ class PostListMainViewModelTest {
         val localDraftUploadStarter = mock<LocalDraftUploadStarter>()
         val connectionStatus = MutableLiveData<ConnectionStatus>().apply { value = ConnectionStatus.CONNECTED }
 
-        val viewModel = mockedPostListMainViewModel(
+        val viewModel = createPostListMainViewModel(
                 localDraftUploadStarter = localDraftUploadStarter,
                 connectionStatus = connectionStatus
         )
@@ -42,7 +42,7 @@ class PostListMainViewModelTest {
         val localDraftUploadStarter = mock<LocalDraftUploadStarter>()
         val connectionStatus = MutableLiveData<ConnectionStatus>().apply { value = ConnectionStatus.CONNECTED }
 
-        val viewModel = mockedPostListMainViewModel(
+        val viewModel = createPostListMainViewModel(
                 localDraftUploadStarter = localDraftUploadStarter,
                 connectionStatus = connectionStatus
         )
@@ -59,7 +59,7 @@ class PostListMainViewModelTest {
     }
 
     private companion object {
-        fun mockedPostListMainViewModel(
+        fun createPostListMainViewModel(
             localDraftUploadStarter: LocalDraftUploadStarter,
             connectionStatus: LiveData<ConnectionStatus>
         ): PostListMainViewModel {
