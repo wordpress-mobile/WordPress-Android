@@ -64,8 +64,6 @@ class PostListFragment : Fragment() {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
         PostViewHolderConfig(
-                // endList indicator height is hard-coded here so that its horizontal line is in the middle of the fab
-                endlistIndicatorHeight = DisplayUtils.dpToPx(context, 74),
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
                 isPhotonCapable = SiteUtils.isPhotonCapable(site),

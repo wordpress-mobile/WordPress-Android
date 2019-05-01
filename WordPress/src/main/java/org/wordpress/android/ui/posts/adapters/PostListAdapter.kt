@@ -58,7 +58,6 @@ class PostListAdapter(
         return when (viewType) {
             VIEW_TYPE_ENDLIST_INDICATOR -> {
                 val view = layoutInflater.inflate(R.layout.endlist_indicator, parent, false)
-                view.layoutParams.height = postViewHolderConfig.endlistIndicatorHeight
                 EndListViewHolder(view)
             }
             VIEW_TYPE_LOADING -> {
