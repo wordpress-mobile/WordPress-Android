@@ -367,6 +367,7 @@ class PostListMainViewModel @Inject constructor(
             COMPACT -> STANDARD
         }
         prefs.postListViewLayoutType = toggledValue
+        AnalyticsUtils.trackAnalyticsPostListToggleLayout(toggledValue)
         setViewLayoutAndIcon(toggledValue)
     }
 

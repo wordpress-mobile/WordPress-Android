@@ -714,6 +714,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "post_list_author_filter_changed";
             case POST_LIST_TAB_CHANGED:
                 return "post_list_tab_changed";
+            case POST_LIST_VIEW_LAYOUT_TOGGLED:
+                return "post_list_view_layout_toggled";
             case EDITOR_OPENED:
                 return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:
