@@ -17,14 +17,17 @@ import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 class PostListViewModelTest {
     @Test
     fun `when swiping to refresh, it uploads all local drafts`() {
+        // Given
         val site = SiteModel()
         val localDraftUploadStarter = mock<LocalDraftUploadStarter>()
 
         val viewModel = mockedPostListViewModel(localDraftUploadStarter = localDraftUploadStarter)
         viewModel.start(mockedPostListViewModelConnector(site = site))
 
+        // When
         viewModel.swipeToRefresh()
 
+        // Then
         verify(localDraftUploadStarter, times(1)).uploadLocalDrafts(scope = eq(viewModel), site = eq(site))
     }
 
