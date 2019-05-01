@@ -65,7 +65,7 @@ class PostListMainViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
     private val localDraftUploadStarter: LocalDraftUploadStarter,
-    connectionStatus: LiveData<ConnectionStatus>,
+    private val connectionStatus: LiveData<ConnectionStatus>,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), LifecycleOwner, CoroutineScope {
@@ -161,9 +161,6 @@ class PostListMainViewModel @Inject constructor(
     }
 
     init {
-        connectionStatus.observe(this, Observer {
-            localDraftUploadStarter.uploadLocalDrafts(scope = this@PostListMainViewModel, site = site)
-        })
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
@@ -204,6 +201,10 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
+
+        connectionStatus.observe(this, Observer {
+            localDraftUploadStarter.uploadLocalDrafts(scope = this@PostListMainViewModel, site = site)
+        })
     }
 
     override fun onCleared() {
