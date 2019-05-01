@@ -422,6 +422,9 @@ public class PostStore extends Store {
         return getUploadedPagesForSite(site).size();
     }
 
+    /**
+     * Returns all posts and pages that are local drafts for the given site.
+     */
     public List<PostModel> getLocalDrafts(@NonNull SiteModel site) {
         return PostSqlUtils.getLocalDrafts(site.getId());
     }
