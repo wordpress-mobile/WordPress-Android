@@ -110,7 +110,7 @@ class PostListFragment : Fragment() {
 
         mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
-                when(layoutType){
+                when (layoutType) {
                     STANDARD -> {
                         recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
                         recyclerView?.addItemDecoration(itemDecorationStandardLayout)
