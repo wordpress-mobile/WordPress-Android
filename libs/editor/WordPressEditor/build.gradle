@@ -66,9 +66,13 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'org.wordpress:utils:1.22'
 
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion")
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
+//    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion")
+//    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
+//    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
+
+    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:try~fix-dynamic-layout-crash2-SNAPSHOT")
+    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:try~fix-dynamic-layout-crash2-SNAPSHOT")
+    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:try~fix-dynamic-layout-crash2-SNAPSHOT")
 
     if (rootProject.ext.buildGutenbergFromSource) {
         implementation (project(':react-native-gutenberg-bridge')) {
