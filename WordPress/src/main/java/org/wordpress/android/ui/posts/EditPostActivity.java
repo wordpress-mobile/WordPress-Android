@@ -1498,13 +1498,6 @@ public class EditPostActivity extends AppCompatActivity implements
             showPublishConfirmationDialog();
         } else {
             // otherwise, if they're updating a Post, just go ahead and save it to the server
-
-            // particular case: if user is submitting for review (that is, can't publish posts directly to this site),
-            // update the status
-            if (!userCanPublishPosts()) {
-                mPost.setStatus(PostStatus.PENDING.toString());
-                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-            }
             publishPost(false);
         }
     }
@@ -2032,6 +2025,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     mPost.setStatus(PostStatus.PUBLISHED.toString());
                     mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
+                } else {
+                    // particular case: if user is submitting for review (that is, can't publish posts directly to this site),
+                    // update the status
+                    if (!userCanPublishPosts()) {
+                        mPost.setStatus(PostStatus.PENDING.toString());
+                        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+                    }
                 }
 
                 boolean postUpdateSuccessful = updatePostObject();
