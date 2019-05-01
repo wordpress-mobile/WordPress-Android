@@ -69,7 +69,6 @@ sealed class BlockListItem(val type: Type) {
     data class ListItem(
         val text: String,
         val value: String,
-        val percentageOfMaxValue: Double?,
         val showDivider: Boolean = true
     ) : BlockListItem(LIST_ITEM) {
         override val itemId: Int
