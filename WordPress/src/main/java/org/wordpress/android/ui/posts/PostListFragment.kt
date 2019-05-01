@@ -17,6 +17,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -51,6 +53,9 @@ class PostListFragment : Fragment() {
     private var recyclerView: RecyclerView? = null
     private var actionableEmptyView: ActionableEmptyView? = null
     private var progressLoadMore: ProgressBar? = null
+
+    private lateinit var itemDecorationCompactLayout: RecyclerItemDecoration
+    private lateinit var itemDecorationStandardLayout: RecyclerItemDecoration
 
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
@@ -107,6 +112,17 @@ class PostListFragment : Fragment() {
 
         mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
+                when(layoutType){
+                    STANDARD -> {
+                        recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
+                        recyclerView?.addItemDecoration(itemDecorationStandardLayout)
+                    }
+                    COMPACT -> {
+                        recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
+                        recyclerView?.addItemDecoration(itemDecorationCompactLayout)
+                    }
+                }
+
                 recyclerView?.scrollToPosition(0)
                 postListAdapter.updateItemLayoutType(layoutType)
             }
@@ -147,9 +163,15 @@ class PostListFragment : Fragment() {
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
 
         val context = nonNullActivity
-        val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.margin_medium)
+        itemDecorationStandardLayout = RecyclerItemDecoration(
+                0,
+                context.resources.getDimensionPixelSize(R.dimen.margin_medium)
+        )
+        itemDecorationCompactLayout = RecyclerItemDecoration(
+                0,
+                context.resources.getDimensionPixelSize(R.dimen.list_divider_height)
+        )
         recyclerView?.layoutManager = LinearLayoutManager(context)
-        recyclerView?.addItemDecoration(RecyclerItemDecoration(0, spacingVertical))
         recyclerView?.adapter = postListAdapter
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
