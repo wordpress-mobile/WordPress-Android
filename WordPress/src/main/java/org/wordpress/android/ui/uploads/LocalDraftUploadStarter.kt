@@ -10,7 +10,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
 /**
  * Provides a way to find and upload all local drafts.
