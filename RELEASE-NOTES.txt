@@ -1,3 +1,7 @@
+12.5
+-----
+* Fixed local drafts not automatically pushed to the server.
+
 12.4
 -----
 * Added support for displaying posts in tabs based on their status
