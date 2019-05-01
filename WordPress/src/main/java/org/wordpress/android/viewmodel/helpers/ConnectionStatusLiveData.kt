@@ -11,7 +11,12 @@ import android.net.ConnectivityManager
  * A wrapper class for the network connection status. It can be extended to provide more details about the current
  * network connection.
  */
-class ConnectionStatus(val isConnected: Boolean)
+data class ConnectionStatus(val isConnected: Boolean) {
+    companion object {
+        val CONNECTED = ConnectionStatus(isConnected = true)
+        val DISCONNECTED = ConnectionStatus(isConnected = false)
+    }
+}
 
 /**
  * A LiveData instance that can be injected to keep track of the network availability.
