@@ -5,8 +5,6 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.CommentsModel
-import org.wordpress.android.fluxc.model.stats.CommentsModel.Author
-import org.wordpress.android.fluxc.model.stats.CommentsModel.Post
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
@@ -69,9 +67,6 @@ class CommentsUseCase
     override fun buildStatefulUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
-        val maxAuthorsComments = getMaxAuthorsComments(model.authors)
-        val maxPostsComments = getMaxPostsComments(model.posts)
-
         if (useCaseMode == BLOCK) {
             items.add(Title(string.stats_view_comments))
         }
@@ -85,9 +80,9 @@ class CommentsUseCase
             )
 
             if (uiState == 0) {
-                items.addAll(buildAuthorsTab(model.authors, maxAuthorsComments))
+                items.addAll(buildAuthorsTab(model.authors))
             } else {
-                items.addAll(buildPostsTab(model.posts, maxPostsComments))
+                items.addAll(buildPostsTab(model.posts))
             }
 
             if (model.hasMoreAuthors && uiState == 0 || model.hasMorePosts && uiState == 1) {
@@ -104,30 +99,7 @@ class CommentsUseCase
         return items
     }
 
-    private fun getMaxAuthorsComments(authors: List<CommentsModel.Author>): Int {
-        var maxComments = -1
-
-        authors.forEach {
-            if(it.comments > maxComments) maxComments = it.comments
-        }
-
-        return maxComments
-    }
-
-    private fun getMaxPostsComments(posts: List<CommentsModel.Post>): Int {
-        var maxComments = -1
-
-        posts.forEach {
-            if(it.comments > maxComments) maxComments = it.comments
-        }
-
-        return maxComments
-    }
-
-    private fun buildAuthorsTab(
-        authors: List<Author>,
-        maxAuthorsComments: Int
-    ): List<BlockListItem> {
+    private fun buildAuthorsTab(authors: List<CommentsModel.Author>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
         if (authors.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_author_label, R.string.stats_comments_label))
@@ -137,7 +109,6 @@ class CommentsUseCase
                         iconStyle = AVATAR,
                         text = author.name,
                         value = author.comments.toFormattedString(),
-                        percentageOfMaxValue = author.comments.toDouble() / maxAuthorsComments.toDouble(),
                         showDivider = index < authors.size - 1
                 )
             })
@@ -147,10 +118,7 @@ class CommentsUseCase
         return mutableItems
     }
 
-    private fun buildPostsTab(
-        posts: List<Post>,
-        maxPostsComments: Int
-    ): List<BlockListItem> {
+    private fun buildPostsTab(posts: List<CommentsModel.Post>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
         if (posts.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_title_label, R.string.stats_comments_label))
@@ -158,7 +126,7 @@ class CommentsUseCase
                 ListItem(
                         post.name,
                         post.comments.toFormattedString(),
-                        post.comments.toDouble() / maxPostsComments.toDouble(),
+                        null,
                         index < posts.size - 1
                 )
             })
