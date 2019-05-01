@@ -11,10 +11,18 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Singleton
+/**
+ * Provides a way to find and upload all local drafts.
+ */
 class LocalDraftUploadStarter @Inject constructor(
+    /**
+     * The Application context
+     */
     private val context: Context,
     private val postStore: PostStore,
+    /**
+     * The Coroutine dispatcher used for querying in FluxC.
+     */
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     fun uploadLocalDrafts(scope: CoroutineScope, site: SiteModel) = scope.launch(bgDispatcher) {
