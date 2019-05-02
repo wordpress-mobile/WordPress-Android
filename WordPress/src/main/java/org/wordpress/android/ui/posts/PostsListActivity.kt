@@ -16,10 +16,12 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.Toolbar
 import android.view.HapticFeedbackConstants
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -287,8 +289,25 @@ class PostsListActivity : AppCompatActivity(),
         if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
+        } else if (item.itemId == R.id.toggle_post_list_item_layout) {
+            viewModel.toggleViewLayout()
+            return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menu?.let {
+            menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
+            val toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
+            viewModel.viewLayoutMenuIcon.observe(this, Observer { iconRes ->
+                iconRes?.let { icon ->
+                    updateMenuIconForViewLayoutType(toggleViewLayoutMenuItem, icon)
+                }
+            })
+        }
+        return true
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
@@ -308,5 +327,13 @@ class PostsListActivity : AppCompatActivity(),
 
     override fun onDismissByOutsideTouch(instanceTag: String) {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
+    }
+
+    // Menu PostListViewLayoutType handling
+
+    private fun updateMenuIconForViewLayoutType(menuItem: MenuItem, @DrawableRes iconId: Int) {
+        getDrawable(iconId)?.let { drawable ->
+            menuItem.setIcon(drawable)
+        }
     }
 }

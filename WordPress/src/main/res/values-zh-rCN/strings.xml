@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-04 13:54:28+0000
+Translation-Revision-Date: 2019-04-16 08:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">无法查看可用的域信用</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">正在查看域信用</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">注册域</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">要安装插件，您需要拥有一个与站点相关联的自定义域。</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">安装插件</string>
     <string name="new_site_creation_preview_subtitle">您可以稍后定制站点的外观和风格</string>
     <string name="publish_on">发布日期：%s</string>
     <string name="schedule_for">预计发布日期：%s</string>

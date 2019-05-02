@@ -76,8 +76,6 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.uploads.UploadService;
-import org.wordpress.android.util.QuickStartUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
@@ -90,8 +88,10 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.io.File;
@@ -227,8 +227,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             Fabric.with(this, new Crashlytics());
         }
 
-        // Init WellSql
-        WellSql.init(new WellSqlConfig(getApplicationContext()));
+        initWellSql();
 
         // Init Dagger
         initDaggerComponent();
@@ -310,6 +309,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+    }
+
+    // note that this is overridden in WordPressDebug
+    protected void initWellSql() {
+        WellSql.init(new WellSqlConfig(getApplicationContext()));
     }
 
     protected void initDaggerComponent() {

@@ -666,6 +666,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE:
             case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
                 return "reader_saved_list_viewed";
+            case READER_SITE_SHARED:
+                return "reader_site_shared";
             case EDITOR_CREATED_POST:
                 return "editor_post_created";
             case EDITOR_SAVED_DRAFT:
