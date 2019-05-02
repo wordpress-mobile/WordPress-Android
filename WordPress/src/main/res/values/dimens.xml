@@ -407,6 +407,7 @@
     <dimen name="stats_percentage_bar_height">4dp</dimen>
     <dimen name="stats_percentage_bar_margin_top">8dp</dimen>
     <dimen name="stats_percentage_bar_margin_bottom">14dp</dimen>
+    <dimen name="stats_percentage_bar_gone_margin_bottom">8dp</dimen>
 
     <dimen name="settings_icon_size">24dp</dimen>
 
