@@ -405,7 +405,6 @@
     <dimen name="stats_activity_spacing">1dp</dimen>
 
     <dimen name="stats_percentage_bar_height">4dp</dimen>
-    <dimen name="stats_percentage_bar_margin_top">8dp</dimen>
     <dimen name="stats_percentage_bar_margin_bottom">14dp</dimen>
     <dimen name="stats_percentage_bar_gone_margin_bottom">8dp</dimen>
 
