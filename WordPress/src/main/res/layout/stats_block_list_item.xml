@@ -22,7 +22,7 @@
         android:textAlignment="viewStart"
         android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toTopOf="@+id/subtext"
-        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintEnd_toStartOf="@id/value"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="@+id/icon_container"
@@ -117,7 +117,7 @@
         android:layout_marginTop="@dimen/stats_percentage_bar_margin_top"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/divider"
-        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintEnd_toStartOf="@id/value"
         app:layout_constraintStart_toStartOf="@id/text"
         app:layout_constraintTop_toBottomOf="@id/subtext">
 
@@ -146,13 +146,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/text"
         app:layout_constraintTop_toBottomOf="@id/percentage_bar_constraint_layout" />
-
-    <android.support.constraint.Barrier
-        android:id="@+id/barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="start"
-        app:constraint_referenced_ids="expand_button,value" />
-
 
 </android.support.constraint.ConstraintLayout>
