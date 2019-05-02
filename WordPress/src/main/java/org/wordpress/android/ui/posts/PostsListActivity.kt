@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.DrawableRes
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
@@ -21,7 +22,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -35,6 +35,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.widgets.WPSnackbar
@@ -301,9 +302,10 @@ class PostsListActivity : AppCompatActivity(),
         menu?.let {
             menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
             val toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
-            viewModel.viewLayoutMenuIcon.observe(this, Observer { iconRes ->
-                iconRes?.let { icon ->
-                    updateMenuIconForViewLayoutType(toggleViewLayoutMenuItem, icon)
+            viewModel.viewLayoutTypeMenuUiState.observe(this, Observer {menuUiState ->
+                menuUiState?.let {
+                    updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
+                    updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
                 }
             })
         }
@@ -331,9 +333,13 @@ class PostsListActivity : AppCompatActivity(),
 
     // Menu PostListViewLayoutType handling
 
-    private fun updateMenuIconForViewLayoutType(menuItem: MenuItem, @DrawableRes iconId: Int) {
-        getDrawable(iconId)?.let { drawable ->
+    private fun updateMenuIcon(@DrawableRes iconRes: Int, menuItem: MenuItem) {
+        getDrawable(iconRes)?.let { drawable ->
             menuItem.setIcon(drawable)
         }
+    }
+
+    private fun updateMenuTitle(title: UiString, menuItem: MenuItem): MenuItem? {
+        return menuItem.setTitle(uiHelpers.getTextOfUiString(this@PostsListActivity, title))
     }
 }
