@@ -25,7 +25,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void loginWithEmailPassword() {
-        wpLogin();
+        new LoginFlow().loginEmailPassword();
     }
 
     @Test
