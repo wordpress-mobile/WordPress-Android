@@ -70,6 +70,8 @@ that same WordPress.com account only. In other words, if the credentials were cr
 be able to login with foo@email.com and access foo@email.com sites. Using another account like bar@email.com will cause
 the `Client cannot use "password" grant_type` error. 
 
+**Note**: Due to a known [issue](https://github.com/wordpress-mobile/WordPress-Android/issues/8754), login with a wordpress account with 2FA enabled is not currently fully supported on _development builds_.  If you _must_ login with an account with 2FA enabled on development builds, please follow instructions listed in the workaround [here](DEV-BUILD-2FA-LOGIN-ISSUE.md).
+
 Read more about [OAuth2][6] and the [WordPress.com REST endpoint][7].
 
 ## Google Configuration ##
