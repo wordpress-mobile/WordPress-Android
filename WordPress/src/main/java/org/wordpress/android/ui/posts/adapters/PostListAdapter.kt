@@ -140,7 +140,12 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
 
     override fun getChangePayload(oldItem: PostListItemType, newItem: PostListItemType): Any? {
         if (oldItem is PostListItemUiState && newItem is PostListItemUiState) {
-            // suppresses the default animation if the progress has changed to prevent blinking as the upload progresses
+            /**
+             * Suppresses the default animation if the progress has changed to prevent blinking as the upload progresses
+             *
+             * We don't need to use the payload in onBindViewHolder unless we want to. Passing a non-null value
+             * suppresses the default ItemAnimator, which is all we need in this case.
+             */
             return oldItem.data.progressBarState != newItem.data.progressBarState
         }
         return super.getChangePayload(oldItem, newItem)
