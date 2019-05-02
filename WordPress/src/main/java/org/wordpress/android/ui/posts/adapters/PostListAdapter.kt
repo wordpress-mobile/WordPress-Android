@@ -57,7 +57,7 @@ class PostListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             VIEW_TYPE_ENDLIST_INDICATOR -> {
-                val view = layoutInflater.inflate(R.layout.endlist_indicator, parent, false)
+                val view = layoutInflater.inflate(R.layout.list_with_fab_endlist_indicator, parent, false)
                 EndListViewHolder(view)
             }
             VIEW_TYPE_LOADING -> {

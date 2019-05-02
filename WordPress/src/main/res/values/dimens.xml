@@ -17,6 +17,7 @@
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
 
+    <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
     <dimen name="endlist_indicator_height">86dp</dimen>
 
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->

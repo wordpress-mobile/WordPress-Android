@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    appears below the last item in the page list
+    Simple end list indicator for cases when we want to make sure the FAB doesn't cover any content.
 -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
