@@ -54,11 +54,10 @@ class PostListAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             VIEW_TYPE_ENDLIST_INDICATOR -> {
-                val view = layoutInflater.inflate(R.layout.endlist_indicator, parent, false)
-                view.layoutParams.height = postViewHolderConfig.endlistIndicatorHeight
+                val view = layoutInflater.inflate(R.layout.list_with_fab_endlist_indicator, parent, false)
                 EndListViewHolder(view)
             }
             VIEW_TYPE_LOADING -> {
@@ -82,7 +81,7 @@ class PostListAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // The only holders that require special setup are PostListItemViewHolder sealed subclasses
         if (holder is PostListItemViewHolder) {
             val item = getItem(position)
