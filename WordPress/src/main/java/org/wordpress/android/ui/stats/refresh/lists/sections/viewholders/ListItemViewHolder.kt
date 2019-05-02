@@ -16,8 +16,6 @@ class ListItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     private val text = itemView.findViewById<TextView>(id.text)
     private val value = itemView.findViewById<TextView>(id.value)
     private val divider = itemView.findViewById<View>(id.divider)
-    private val percentageBarConstraintLayout = itemView.findViewById<View>(id.percentage_bar_constraint_layout)
-    private var percentageBar = itemView.findViewById<View>(id.percentage_bar)
 
     fun bind(item: ListItem) {
         icon.visibility = View.GONE
