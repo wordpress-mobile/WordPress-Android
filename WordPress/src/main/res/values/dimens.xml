@@ -371,6 +371,10 @@
     <dimen name="posts_list_spinner_avatar_padding">1dp</dimen>
     <dimen name="posts_list_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
     <dimen name="posts_list_tab_layout_fading_edge_width">16dp</dimen>
+    <dimen name="posts_list_compact_row_height">80dp</dimen>
+    <dimen name="posts_list_compact_image_size">50dp</dimen>
+    <dimen name="posts_list_compact_menu_button_size">24dp</dimen>
+
 
     <!--site creation-->
     <dimen name="site_creation_segments_icon_size">24dp</dimen>

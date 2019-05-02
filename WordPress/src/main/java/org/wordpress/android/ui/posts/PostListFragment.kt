@@ -105,6 +105,12 @@ class PostListFragment : Fragment() {
         val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
+        mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
+            optionaLayoutType?.let { layoutType ->
+                recyclerView?.scrollToPosition(0)
+                postListAdapter.updateItemLayoutType(layoutType)
+            }
+        })
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
         viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
