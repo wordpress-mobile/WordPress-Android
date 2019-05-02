@@ -467,6 +467,8 @@ public class WPSupportUtils {
 
                 if (resumedActivities.iterator().hasNext()) {
                     mCurrentActivity = (Activity) resumedActivities.iterator().next();
+                } else {
+                    mCurrentActivity = (Activity) resumedActivities.toArray()[0];
                 }
             }
         });
