@@ -302,7 +302,7 @@ class PostsListActivity : AppCompatActivity(),
         menu?.let {
             menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
             val toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
-            viewModel.viewLayoutTypeMenuUiState.observe(this, Observer {menuUiState ->
+            viewModel.viewLayoutTypeMenuUiState.observe(this, Observer { menuUiState ->
                 menuUiState?.let {
                     updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
                     updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
