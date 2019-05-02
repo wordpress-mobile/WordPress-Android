@@ -71,6 +71,7 @@ import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
+import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -90,7 +91,6 @@ import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTI
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.stats.OldStatsActivity.LOGGED_INTO_JETPACK;
-import static org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.*;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
@@ -282,20 +282,20 @@ public class ActivityLauncher {
     }
 
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab) {
-        startForTabbedInsightsStats(context, statsType, selectedTab, null);
+        StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, null);
     }
 
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab,
                                                   int localSiteId) {
-        startForTabbedInsightsStats(context, statsType, selectedTab, localSiteId);
+        StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, localSiteId);
     }
 
     public static void viewAllInsightsStats(Context context, StatsViewType statsType) {
-        startForInsights(context, statsType);
+        StatsViewAllActivity.startForInsights(context, statsType);
     }
 
     public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType) {
-        startForGranularStats(context, statsType, granularity);
+        StatsViewAllActivity.startForGranularStats(context, statsType, granularity);
     }
 
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
