@@ -35,7 +35,6 @@ import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElem
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
-import static org.wordpress.android.support.WPSupportUtils.waitForSwipeRefreshLayoutToStopReloading;
 import static org.wordpress.android.test.BuildConfig.SCREENSHOT_LOGINPASSWORD;
 import static org.wordpress.android.test.BuildConfig.SCREENSHOT_LOGINUSERNAME;
 
@@ -132,7 +131,6 @@ public class WPScreenshotTest extends BaseTest {
 
         // Wait for the blog posts to load, then edit the first post
         selectItemWithTitleInTabLayout("Drafts", R.id.tabLayout);
-//        waitForSwipeRefreshLayoutToStopReloading();
 
         idleFor(2000);
 
