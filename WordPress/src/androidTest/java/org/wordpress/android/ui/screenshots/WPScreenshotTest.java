@@ -54,9 +54,7 @@ public class WPScreenshotTest extends BaseTest {
     public void wPScreenshotTest() {
         mActivityTestRule.launchActivity(null);
         Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
-
-        wpLogin();
-
+        
         // Never show the Gutenberg dialog when opening a post
         AppPrefs.setGutenbergInformativeDialogDisabled(true);
 
