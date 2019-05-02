@@ -30,6 +30,7 @@ import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
+import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
@@ -132,7 +133,10 @@ public class WPScreenshotTest extends BaseTest {
         scrollToThenClickOn(R.id.row_blog_posts);
 
         // Wait for the blog posts to load, then edit the first post
-        waitForSwipeRefreshLayoutToStopReloading();
+        selectItemWithTitleInTabLayout("Drafts", R.id.tabLayout);
+//        waitForSwipeRefreshLayoutToStopReloading();
+
+        idleFor(2000);
 
         PostsListPage.tapPostWithName(name);
 
