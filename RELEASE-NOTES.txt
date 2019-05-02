@@ -1,3 +1,7 @@
+12.5
+----
+* Added a bar that represents proportionate number of views for some stats elements
+
 12.4
 -----
 * Added support for displaying posts in tabs based on their status
