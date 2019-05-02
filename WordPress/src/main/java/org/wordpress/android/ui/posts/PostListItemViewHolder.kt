@@ -44,6 +44,11 @@ sealed class PostListItemViewHolder(
     private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
 
+    /**
+     * Url of an image loaded in the `featuredImageView`.
+     */
+    private var loadedFeaturedImgUrl: String? = null
+
     abstract fun onBind(item: PostListItemUiState)
 
     class Standard(
@@ -162,6 +167,10 @@ sealed class PostListItemViewHolder(
     }
 
     private fun showFeaturedImage(imageUrl: String?) {
+        if (imageUrl == loadedFeaturedImgUrl) {
+            // Suppress blinking as the media upload progresses
+            return
+        }
         if (imageUrl == null) {
             featuredImageView.visibility = View.GONE
             config.imageManager.cancelRequestAndClearImageView(featuredImageView)
@@ -183,5 +192,6 @@ sealed class PostListItemViewHolder(
                 config.imageManager.cancelRequestAndClearImageView(featuredImageView)
             }
         }
+        loadedFeaturedImgUrl = imageUrl
     }
 }
