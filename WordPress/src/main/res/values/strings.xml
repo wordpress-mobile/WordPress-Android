@@ -256,7 +256,8 @@
     <string name="posts_draft_empty">You don\'t have any draft posts</string>
     <string name="posts_trashed_empty">You don\'t have any trashed posts</string>
     <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
-    <string name="post_list_toggle_item_view_layout">toggle rows view</string>
+    <string name="post_list_toggle_item_layout_cards_view">Switch to cards view</string>
+    <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
 
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>

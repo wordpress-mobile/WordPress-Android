@@ -13,7 +13,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
@@ -36,6 +35,8 @@ import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
+import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
+import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
@@ -106,8 +107,8 @@ class PostListMainViewModel @Inject constructor(
     private val _viewLayoutType = MutableLiveData<PostListViewLayoutType>()
     val viewLayoutType: LiveData<PostListViewLayoutType> = _viewLayoutType
 
-    private val _viewLayoutMenuIcon = MutableLiveData<Int>()
-    val viewLayoutMenuIcon: LiveData<Int> = _viewLayoutMenuIcon
+    private val _viewLayoutTypeMenuUiState = MutableLiveData<PostListViewLayoutTypeMenuUiState>()
+    val viewLayoutTypeMenuUiState: LiveData<PostListViewLayoutTypeMenuUiState> = _viewLayoutTypeMenuUiState
 
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
@@ -373,11 +374,9 @@ class PostListMainViewModel @Inject constructor(
 
     private fun setViewLayoutAndIcon(layout: PostListViewLayoutType) {
         _viewLayoutType.value = layout
-        _viewLayoutMenuIcon.value = iconForViewLayout(layout)
-    }
-
-    private fun iconForViewLayout(layout: PostListViewLayoutType) = when (layout) {
-        STANDARD -> R.drawable.ic_view_post_compact_white_24dp
-        COMPACT -> R.drawable.ic_view_post_full_white_24dp
+        _viewLayoutTypeMenuUiState.value = when (layout) {
+            STANDARD -> StandardViewLayoutTypeMenuUiState
+            COMPACT -> CompactViewLayoutTypeMenuUiState
+        }
     }
 }
