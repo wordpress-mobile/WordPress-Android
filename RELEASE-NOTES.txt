@@ -4,6 +4,7 @@
 * Added ability to filter posts by their author
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
+* New Insights Management for selecting the most relevant stats
 
 12.3
 -----
@@ -25,8 +26,6 @@
 * Added an action to share sites in the Reader
 * Updated color scheme to Classic Bright
 * Adds support for .blog subdomains for the new site creation flow
-
-* New Insights Management for selecting the most relevant stats
 
 12.1
 -----
