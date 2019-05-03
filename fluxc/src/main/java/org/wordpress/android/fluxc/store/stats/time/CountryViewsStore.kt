@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.stats.time.CountryViewsModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.CountryViewsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -20,7 +20,7 @@ import kotlin.coroutines.CoroutineContext
 class CountryViewsStore
 @Inject constructor(
     private val restClient: CountryViewsRestClient,
-    private val sqlUtils: TimeStatsSqlUtils,
+    private val sqlUtils: CountryViewsSqlUtils,
     private val timeStatsMapper: TimeStatsMapper,
     private val coroutineContext: CoroutineContext
 ) {
@@ -31,11 +31,14 @@ class CountryViewsStore
         date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
+        if (!forced && sqlUtils.hasFreshRequest(site, granularity, date, limitMode.limit)) {
+            return@withContext OnStatsFetched(getCountryViews(site, granularity, limitMode, date), cached = true)
+        }
         val payload = restClient.fetchCountryViews(site, granularity, date, limitMode.limit + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
-                sqlUtils.insert(site, payload.response, granularity, date)
+                sqlUtils.insert(site, payload.response, granularity, date, limitMode.limit)
                 OnStatsFetched(timeStatsMapper.map(payload.response, limitMode))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
@@ -48,6 +51,6 @@ class CountryViewsStore
         limitMode: LimitMode,
         date: Date
     ): CountryViewsModel? {
-        return sqlUtils.selectCountryViews(site, period, date)?.let { timeStatsMapper.map(it, limitMode) }
+        return sqlUtils.select(site, period, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
