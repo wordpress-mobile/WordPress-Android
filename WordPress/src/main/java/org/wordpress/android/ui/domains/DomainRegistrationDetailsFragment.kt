@@ -6,7 +6,11 @@ import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
+import android.text.SpannableString
 import android.text.TextUtils
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,10 +50,12 @@ import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.PHONE
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.POSTAL_CODE
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.STATE
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.WPUrlUtils
 import javax.inject.Inject
 
 class DomainRegistrationDetailsFragment : Fragment() {
@@ -106,9 +112,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
         if (savedInstanceState != null) {
             supportedCountries = savedInstanceState.getParcelableArray(EXTRA_SUPPORTED_COUNTRIES)
-                    as Array<SupportedDomainCountry>?
+                    ?.filterIsInstance(SupportedDomainCountry::class.java)?.toTypedArray()
             supportedStates = savedInstanceState.getParcelableArray(EXTRA_SUPPORTED_STATES)
-                    as Array<SupportedStateResponse>?
+                    ?.filterIsInstance(SupportedStateResponse::class.java)?.toTypedArray()
 
             selectedCountry = savedInstanceState.getParcelable(EXTRA_SELECTED_COUNTRY)
             selectedState = savedInstanceState.getParcelable(EXTRA_SELECTED_STATE)
@@ -145,6 +151,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Country and State input could only be populated from the dialog
         country_input.inputType = 0
         country_input.setOnClickListener {
             showCountryPicker(supportedCountries!!)
@@ -160,6 +167,40 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 registerDomain()
             }
         }
+
+        // make link to ToS clickable
+        val spannableTosString = SpannableString(tos_explanation.text)
+        val tosUnderlineSpan = spannableTosString.getSpans(
+                0,
+                spannableTosString.length,
+                UnderlineSpan::class.java
+        )
+
+        if (tosUnderlineSpan.size == 1) {
+            val tosClickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View?) {
+                    ActivityLauncher.openUrlExternal(context, WPUrlUtils.buildTermsOfServiceUrl(context))
+                }
+            }
+
+            val spanStart = spannableTosString.getSpanStart(tosUnderlineSpan[0])
+            val spanEnd = spannableTosString.getSpanEnd(tosUnderlineSpan[0])
+
+            spannableTosString.setSpan(
+                    tosClickableSpan,
+                    spanStart,
+                    spanEnd,
+                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            tos_explanation.text = spannableTosString
+            tos_explanation.movementMethod = LinkMovementMethod.getInstance()
+        } else {
+            tos_explanation.setOnClickListener {
+                ActivityLauncher.openUrlExternal(context, WPUrlUtils.buildTermsOfServiceUrl(context))
+            }
+        }
+
 
         if (supportedStates == null || supportedStates!!.isEmpty()) {
             toggleStatesInputField(false)
@@ -178,12 +219,12 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
             if (isStatesLoadingProgressVisible) {
                 showStatesProgressIndicator()
-            } else {
+            }else{
                 hideStatesProgressIndicator()
             }
 
             if (isProgressDialogVisible) {
-                showProgressDialog()
+                showDomainRegistrationProgressDialog()
             }
         } else {
             showFormProgressIndicator()
@@ -252,7 +293,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
     }
 
     private fun registerDomain() {
-        showProgressDialog()
+        showDomainRegistrationProgressDialog()
         dispatcher.dispatch(
                 TransactionActionBuilder.newCreateShoppingCartAction(
                         CreateShoppingCartPayload(
@@ -345,7 +386,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         states_loading_progress_indicator.visibility = View.GONE
     }
 
-    private fun showProgressDialog() {
+    private fun showDomainRegistrationProgressDialog() {
         if (loadingProgressDialog == null) {
             loadingProgressDialog = ProgressDialog(context)
             loadingProgressDialog!!.isIndeterminate = true

@@ -9,7 +9,7 @@
         android:id="@+id/domain_registration_details_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/shadow_divider"
+        android:layout_above="@+id/register_domain_button_container"
         android:layout_alignParentTop="true"
         android:fillViewport="true"
         tools:visibility="visible">
@@ -38,6 +38,7 @@
                     android:text="@string/domain_registration_privacy_protection_description"/>
 
                 <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/tos_explanation"
                     style="@style/DomainRegistrationFormSubTitle"
                     android:paddingTop="4dp"
                     android:text="@string/domain_registration_privacy_protection_tos"/>
