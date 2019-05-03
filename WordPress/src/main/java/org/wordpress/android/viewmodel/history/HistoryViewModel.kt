@@ -1,7 +1,11 @@
 package org.wordpress.android.viewmodel.history
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.text.TextUtils
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +31,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -34,8 +39,9 @@ class HistoryViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val networkUtils: NetworkUtilsWrapper,
-    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
-) : ViewModel() {
+    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope,
+    connectionStatus: LiveData<ConnectionStatus>
+) : ViewModel(), LifecycleOwner {
     enum class HistoryListStatus {
         DONE,
         ERROR,
@@ -61,8 +67,17 @@ class HistoryViewModel @Inject constructor(
     lateinit var post: PostModel
     lateinit var site: SiteModel
 
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+
     init {
+        lifecycleRegistry.markState(Lifecycle.State.CREATED)
         dispatcher.register(this)
+        connectionStatus.observe(this, Observer {
+            if (it?.isConnected == true) {
+                fetchRevisions()
+            }
+        })
     }
 
     fun create(post: PostModel, site: SiteModel) {
@@ -77,6 +92,7 @@ class HistoryViewModel @Inject constructor(
         fetchRevisions()
 
         isStarted = true
+        lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
 
     private fun createRevisionsList(revisions: List<RevisionModel>) {
@@ -171,6 +187,7 @@ class HistoryViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
+        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
         super.onCleared()
     }
 
