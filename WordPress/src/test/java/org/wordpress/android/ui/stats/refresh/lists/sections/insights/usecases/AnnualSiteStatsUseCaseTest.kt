@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -97,6 +98,25 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
                     "53k"
             )
         }
+    }
+
+    @Test
+    fun `maps empty result to UI model`() = test {
+        val forced = false
+        val refresh = true
+        val model = YearsInsightsModel(
+                listOf()
+        )
+        whenever(insightsStore.getYearsInsights(site)).thenReturn(model)
+        whenever(insightsStore.fetchYearsInsights(site, forced)).thenReturn(
+                OnStatsFetched(
+                        model
+                )
+        )
+
+        val result = loadMostPopularInsights(refresh, forced)
+
+        Assertions.assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
     }
 
     @Test
