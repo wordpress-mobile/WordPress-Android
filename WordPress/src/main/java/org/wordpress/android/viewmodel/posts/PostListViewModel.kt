@@ -88,7 +88,8 @@ class PostListViewModel @Inject constructor(
             createEmptyUiState(
                     postListType = connector.postListType,
                     isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
-                    isFetchingFirstPage = pagedListWrapper.isFetchingFirstPage.value ?: false,
+                    isLoadingData = pagedListWrapper.isFetchingFirstPage.value ?: false ||
+                            pagedListWrapper.data.value == null,
                     isListEmpty = pagedListWrapper.isEmpty.value ?: true,
                     error = pagedListWrapper.listError.value,
                     fetchFirstPage = this::fetchFirstPage,
