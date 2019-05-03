@@ -60,7 +60,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     companion object {
         private const val SEARCH_QUERY_DELAY_MS = 250L
-        private const val SUGGESTIONS_REQUEST_COUNT = 30
+        private const val SUGGESTIONS_REQUEST_COUNT = 20
     }
 
     // Bind Dispatcher to Lifecycle
@@ -116,7 +116,9 @@ class DomainSuggestionsViewModel @Inject constructor(
             suggestions = ListState.Error(suggestions, event.error.message)
             return
         }
-        suggestions = ListState.Success(event.suggestions)
+
+        val sortedDomainSuggestions = event.suggestions.sortedBy { it.relevance }.asReversed()
+        suggestions = ListState.Success(sortedDomainSuggestions)
     }
 
     fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
