@@ -76,6 +76,6 @@ open class SingleMediatorLiveEvent<T> : MediatorLiveData<T>() {
     }
 
     companion object {
-        private val TAG = "SingleLiveEvent"
+        private const val TAG = "SingleLiveEvent"
     }
 }

@@ -300,7 +300,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun isValidPosition(position: Int): Boolean {
-        return position in 0..(NUM_PAGES - 1)
+        return position in 0 until NUM_PAGES
     }
 
     private inner class NavAdapter {
@@ -325,11 +325,11 @@ class WPMainNavigationView @JvmOverloads constructor(
             }
 
             val fragment = fragmentManager.findFragmentByTag(getTagForPosition(position))
-            if (fragment != null) {
+            return if (fragment != null) {
                 mFragments.put(position, fragment)
-                return fragment
+                fragment
             } else {
-                return createFragment(position)
+                createFragment(position)
             }
         }
     }

@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Author
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.AUTHORS
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants

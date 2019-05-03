@@ -17,6 +17,9 @@
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
 
+    <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
+    <dimen name="list_with_fab_endlist_indicator_height">86dp</dimen>
+
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
     <dimen name="appbar_elevation">4dp</dimen>
 
@@ -233,7 +236,7 @@
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
     <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
 
-    <dimen name="menu_item_height">48sp</dimen>
+    <dimen name="menu_item_height">48dp</dimen>
     <dimen name="menu_item_width">256sp</dimen>
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
@@ -366,11 +369,15 @@
     <dimen name="post_list_row_skeleton_view_date_height">16dp</dimen>
 
     <!--posts list-->
-    <dimen name="posts_list_spinner_width">56dp</dimen>
-    <dimen name="posts_list_spinner_avatar_size">30dp</dimen>
-    <dimen name="posts_list_spinner_avatar_padding">1dp</dimen>
+    <dimen name="posts_list_spinner_width">60dp</dimen>
+    <dimen name="posts_list_spinner_avatar_size">32dp</dimen>
+    <dimen name="posts_list_spinner_avatar_padding">2dp</dimen>
     <dimen name="posts_list_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
     <dimen name="posts_list_tab_layout_fading_edge_width">16dp</dimen>
+    <dimen name="posts_list_compact_row_height">80dp</dimen>
+    <dimen name="posts_list_compact_image_size">40dp</dimen>
+    <dimen name="posts_list_compact_menu_button_size">24dp</dimen>
+
 
     <!--site creation-->
     <dimen name="site_creation_segments_icon_size">24dp</dimen>
@@ -384,9 +391,9 @@
     <dimen name="new_site_creation_preview_web_view_side_margin">40dp</dimen>
     <dimen name="new_site_creation_preview_ok_button_container_height">68dp</dimen>
     <dimen name="new_site_creation_container_elevation">6dp</dimen>
-    <dimen name="new_site_creation_verticals_search_input_text_padding">24dp</dimen>
+    <dimen name="new_site_creation_verticals_search_input_text_padding">32dp</dimen>
 
-    <dimen name="new_site_creation_domains_radio_button_padding_start">20dp</dimen>
+    <dimen name="new_site_creation_domains_radio_button_padding_start">28dp</dimen>
 
     <dimen name="new_site_creation_preview_skeleton_mid_size_width">174dp</dimen>
     <dimen name="new_site_creation_preview_skeleton_large_block_height">136dp</dimen>
@@ -403,6 +410,9 @@
     <dimen name="stats_list_card_last_spacing">8dp</dimen>
     <dimen name="stats_list_item_left_margin">56dp</dimen>
     <dimen name="stats_activity_spacing">1dp</dimen>
+    <dimen name="stats_insights_management_margin">24dp</dimen>
+    <dimen name="stats_insights_menu_item_width">231dp</dimen>
+    <dimen name="stats_insights_button_container_height">52dp</dimen>
     <dimen name="stats_percentage_bar_height">4dp</dimen>
     <dimen name="stats_percentage_bar_margin_top">8dp</dimen>
     <dimen name="stats_percentage_bar_margin_end">16dp</dimen>

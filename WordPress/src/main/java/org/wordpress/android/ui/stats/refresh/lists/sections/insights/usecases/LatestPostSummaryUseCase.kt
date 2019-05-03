@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -8,7 +9,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_S
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -35,7 +37,8 @@ class LatestPostSummaryUseCase
     private val latestPostStore: LatestPostInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val latestPostSummaryMapper: LatestPostSummaryMapper,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val popupMenuHandler: ItemPopupMenuHandler
 ) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher) {
     override suspend fun loadCachedData(): InsightsLatestPostModel? {
         return latestPostStore.getLatestPostInsights(statsSiteProvider.siteModel)
@@ -67,7 +70,7 @@ class LatestPostSummaryUseCase
 
     private fun buildNullableUiModel(domainModel: InsightsLatestPostModel?): MutableList<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(string.stats_insights_latest_post_summary))
+        items.add(buildTitle())
         items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
         if (domainModel != null && domainModel.hasData()) {
             items.add(
@@ -99,6 +102,8 @@ class LatestPostSummaryUseCase
         items.add(buildLink(domainModel))
         return items
     }
+
+    private fun buildTitle() = Title(string.stats_insights_latest_post_summary, menuAction = this::onMenuClick)
 
     private fun InsightsLatestPostModel.hasData() =
             this.postViewsCount > 0 || this.postCommentCount > 0 || this.postLikeCount > 0
@@ -152,6 +157,10 @@ class LatestPostSummaryUseCase
     private fun onLinkClicked(params: LinkClickParams) {
         analyticsTracker.track(STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED)
         navigateTo(ViewPost(params.postId, params.postUrl))
+    }
+
+    private fun onMenuClick(view: View) {
+        popupMenuHandler.onMenuClick(view, type)
     }
 
     data class LinkClickParams(val postId: Long, val postUrl: String)

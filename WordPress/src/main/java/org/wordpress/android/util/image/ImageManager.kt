@@ -11,6 +11,11 @@ import android.text.TextUtils
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
+import android.widget.ImageView.ScaleType.FIT_CENTER
+import android.widget.ImageView.ScaleType.FIT_END
+import android.widget.ImageView.ScaleType.FIT_START
+import android.widget.ImageView.ScaleType.FIT_XY
+import android.widget.ImageView.ScaleType.MATRIX
 import android.widget.TextView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -29,7 +34,7 @@ import javax.inject.Singleton
  * Singleton for asynchronous image fetching/loading with support for placeholders, transformations and more.
  */
 @Singleton
-class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderManager) {
+class ImageManager @Inject constructor(private val placeholderManager: ImagePlaceholderManager) {
     interface RequestListener<T> {
         fun onLoadFailed(e: Exception?)
         fun onResourceReady(resource: T)
@@ -61,7 +66,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
      * If no URL is provided, it only loads the placeholder
      */
     @JvmOverloads
-    fun load(imageView: ImageView, imageType: ImageType, imgUrl: String = "", scaleType: ImageView.ScaleType = CENTER) {
+    fun load(imageView: ImageView, imageType: ImageType, imgUrl: String = "", scaleType: ScaleType = CENTER) {
         val context = imageView.context
         if (!context.isAvailable()) return
         GlideApp.with(context)
@@ -129,7 +134,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
      * Loads the Bitmap into the ImageView.
      */
     @JvmOverloads
-    fun load(imageView: ImageView, bitmap: Bitmap, scaleType: ImageView.ScaleType = CENTER) {
+    fun load(imageView: ImageView, bitmap: Bitmap, scaleType: ScaleType = CENTER) {
         val context = imageView.context
         if (!context.isAvailable()) return
         GlideApp.with(context)
@@ -143,7 +148,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
      * Loads the Drawable into the ImageView.
      */
     @JvmOverloads
-    fun load(imageView: ImageView, drawable: Drawable, scaleType: ImageView.ScaleType = CENTER) {
+    fun load(imageView: ImageView, drawable: Drawable, scaleType: ScaleType = CENTER) {
         val context = imageView.context
         if (!context.isAvailable()) return
         GlideApp.with(context)
@@ -157,7 +162,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
      * Loads the DrawableResource into the ImageView.
      */
     @JvmOverloads
-    fun load(imageView: ImageView, @DrawableRes resourceId: Int, scaleType: ImageView.ScaleType = CENTER) {
+    fun load(imageView: ImageView, @DrawableRes resourceId: Int, scaleType: ScaleType = CENTER) {
         val context = imageView.context
         if (!context.isAvailable()) return
         GlideApp.with(context)
@@ -195,7 +200,7 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         context: Context,
         target: BaseTarget<Bitmap>,
         imgUrl: String,
-        scaleType: ImageView.ScaleType = CENTER
+        scaleType: ScaleType = CENTER
     ) {
         if (!context.isAvailable()) return
         GlideApp.with(context)
@@ -225,14 +230,14 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
         scaleType: ScaleType
     ): GlideRequest<T> {
         return when (scaleType) {
-            ImageView.ScaleType.CENTER_CROP -> this.centerCrop()
-            ImageView.ScaleType.CENTER_INSIDE -> this.centerInside()
-            ImageView.ScaleType.FIT_CENTER -> this.fitCenter()
-            ImageView.ScaleType.CENTER -> this
-            ImageView.ScaleType.FIT_END,
-            ImageView.ScaleType.FIT_START,
-            ImageView.ScaleType.FIT_XY,
-            ImageView.ScaleType.MATRIX -> {
+            ScaleType.CENTER_CROP -> this.centerCrop()
+            ScaleType.CENTER_INSIDE -> this.centerInside()
+            FIT_CENTER -> this.fitCenter()
+            CENTER -> this
+            FIT_END,
+            FIT_START,
+            FIT_XY,
+            MATRIX -> {
                 AppLog.e(AppLog.T.UTILS, String.format("ScaleType %s is not supported.", scaleType.toString()))
                 this
             }

@@ -221,7 +221,7 @@ Language: en_CA
     <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Manage insights</string>
+    <string name="stats_manage_insights">Manage insights</string>
     <string name="stats_empty_insights_description">Customize your insights and get the low-down on your site’s performance</string>
     <string name="stats_empty_insights_title">No insights added yet</string>
     <string name="stats_no_data_yet">No data yet</string>

@@ -140,7 +140,7 @@ class PagesViewModel
 
     private var searchJob: Job? = null
     private var pageUpdateContinuations: MutableMap<Long, Continuation<Unit>> = mutableMapOf()
-    private var currentPageType = PageListType.PUBLISHED
+    private var currentPageType = PUBLISHED
 
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
@@ -245,7 +245,7 @@ class PagesViewModel
 
     fun checkIfNewPageButtonShouldBeVisible() {
         val isNotEmpty = pageMap.values.any { currentPageType.pageStatuses.contains(it.status) }
-        val hasNoExceptions = !currentPageType.pageStatuses.contains(PageStatus.TRASHED) &&
+        val hasNoExceptions = !currentPageType.pageStatuses.contains(TRASHED) &&
                 _isSearchExpanded.value != true
         _isNewPageButtonVisible.postOnUi(isNotEmpty && hasNoExceptions)
     }
@@ -289,12 +289,12 @@ class PagesViewModel
                 Comparator { previous, next ->
                     when {
                         previous == next -> 0
-                        previous == PageListType.PUBLISHED -> -1
-                        next == PageListType.PUBLISHED -> 1
-                        previous == PageListType.DRAFTS -> -1
-                        next == PageListType.DRAFTS -> 1
-                        previous == PageListType.SCHEDULED -> -1
-                        next == PageListType.SCHEDULED -> 1
+                        previous == PUBLISHED -> -1
+                        next == PUBLISHED -> 1
+                        previous == DRAFTS -> -1
+                        next == DRAFTS -> 1
+                        previous == SCHEDULED -> -1
+                        next == SCHEDULED -> 1
                         else -> throw IllegalArgumentException("Unexpected page type")
                     }
                 })
@@ -327,8 +327,8 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
-            MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
+            MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
             PUBLISH_NOW -> publishPageNow(page.id)
             DELETE_PERMANENTLY -> deletePage(page)
         }
@@ -614,6 +614,7 @@ class PagesViewModel
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onPostUploaded(event: OnPostUploaded) {
         var id = 0L
         if (!pageUpdateContinuations.contains(id)) {
