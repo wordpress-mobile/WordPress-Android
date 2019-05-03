@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/register_domain_button_container">
+
+        <ScrollView
+            android:id="@+id/domain_registration_details_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:fillViewport="true"
+            android:visibility="visible"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/stats_white_background"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/margin_large"
+                    android:paddingEnd="@dimen/margin_large"
+                    android:paddingStart="@dimen/margin_large"
+                    tools:ignore="UselessParent">
+
+                    <org.wordpress.android.widgets.WPTextView
+                        style="@style/StatsModuleTitle"
+                        android:background="?android:selectableItemBackground"
+                        android:paddingBottom="@dimen/margin_medium"
+                        android:paddingTop="@dimen/margin_large"
+                        android:text="@string/domain_registration_privacy_protection_title"/>
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="start"
+                        android:text="@string/domain_registration_privacy_protection_description"
+                        android:textAppearance="?android:attr/textAppearance"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_sz_small"/>
+
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="start"
+                        android:paddingTop="4dp"
+                        android:text="@string/domain_registration_privacy_protection_tos"
+                        android:textAppearance="?android:attr/textAppearance"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_sz_small"/>
+
+                    <RadioGroup
+                        android:id="@+id/domain_privacy_options_radiogroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_large"
+                        android:checkedButton="@+id/domain_privacy_on_radio_button"
+                        tools:ignore="UnusedAttribute"
+                        tools:visibility="visible">
+
+                        <RadioButton
+                            android:id="@+id/domain_privacy_on_radio_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/margin_medium"
+                            android:paddingTop="@dimen/margin_medium"
+                            android:text="@string/domain_privacy_option_on_title"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="@dimen/text_sz_large"
+                            tools:checked="true">
+                        </RadioButton>
+
+                        <RadioButton
+                            android:id="@+id/domain_privacy_off_radio_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/margin_medium"
+                            android:paddingTop="@dimen/margin_medium"
+                            android:text="@string/domain_privacy_option_off_title"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="@dimen/text_sz_large">
+                        </RadioButton>
+                    </RadioGroup>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:background="@drawable/stats_white_background"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/margin_large"
+                    android:paddingStart="@dimen/margin_large"
+                    tools:ignore="UselessParent">
+
+
+                    <org.wordpress.android.widgets.WPTextView
+                        style="@style/StatsModuleTitle"
+                        android:background="?android:selectableItemBackground"
+                        android:paddingBottom="@dimen/margin_medium"
+                        android:paddingTop="@dimen/margin_large"
+                        android:text="@string/domain_contact_information_title"/>
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_medium"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="start"
+                        android:text="@string/domain_contact_information_description"
+                        android:textAppearance="?android:attr/textAppearance"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_sz_small"/>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/first_name_input_container"
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/first_name_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/first_name"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPersonName"
+                            tools:ignore="HardcodedText"
+                            tools:text="John"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/last_name_input_container"
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/last_name_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/last_name"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPersonName"
+                            tools:text="Smith"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/organization_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/domain_contact_information_organization_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/email_input_container"
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/email_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/email"
+                            android:imeOptions="actionNext"
+                            android:inputType="textEmailAddress"
+                            tools:text="email@wordpress.com"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/country_code_input_container"
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/country_code_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/domain_contact_information_country_code_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            tools:text="44"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/phone_number_input_container"
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/phone_number_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/domain_contact_information_phone_number_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            tools:text="3127924444"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/country_input_container"
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/country_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:hint="@string/domain_contact_information_country_hint"
+                            android:inputType="none"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/address_input_container"
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/address_first_line_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/domain_contact_information_address_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPostalAddress"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/address_second_line_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/domain_contact_information_address_hint_two"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPostalAddress"/>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/city_input_container"
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/city_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/domain_contact_information_city_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPostalAddress"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/state_input_container"
+                            style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                            <EditText
+                                android:id="@+id/state_input"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusable="false"
+                                android:hint="@string/domain_contact_information_state_hint"
+                                android:inputType="none"/>
+                        </android.support.design.widget.TextInputLayout>
+
+                        <ProgressBar
+                            android:id="@+id/states_loading_progress_indicator"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="@dimen/progress_spinner_small"
+                            android:layout_height="@dimen/progress_spinner_small"
+                            android:layout_alignBottom="@+id/state_input_container"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignTop="@+id/state_input_container"
+                            android:layout_centerInParent="true"
+                            android:visibility="visible"
+                            />
+                    </RelativeLayout>
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/postal_code_input_container"
+                        style="@style/DomainRegistrationDetailsTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/postal_code_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/domain_contact_information_postal_code_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPostalAddress"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/progress_indicator"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/register_domain_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_medium_large"
+        android:paddingStart="@dimen/margin_medium_large"
+        android:paddingTop="@dimen/margin_medium">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/register_domain_button"
+            style="@style/WordPress.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/domain_contact_information_register_domain_button"/>
+    </LinearLayout>
+</RelativeLayout>

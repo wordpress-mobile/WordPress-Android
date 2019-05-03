@@ -91,7 +91,7 @@ class DomainSuggestionsFragment : Fragment() {
 
                 if (listState is ListState.Error<*>) {
                     val errorMessage = if (TextUtils.isEmpty(listState.errorMessage)) {
-                        getString(R.string.suggestion_fetch_error)
+                        getString(R.string.domain_suggestions_fetch_error)
                     } else {
                         listState.errorMessage
                     }
@@ -114,7 +114,8 @@ class DomainSuggestionsFragment : Fragment() {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
     }
 
-    interface OnDomainSelectedListener {
+    interface DomainRegistrationStepsListener {
         fun onDomainSelected(domainProductDetails: DomainProductDetails)
+        fun onDomainRegistered(domainName: String)
     }
 }

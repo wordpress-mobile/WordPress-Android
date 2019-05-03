@@ -238,7 +238,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
     private fun showEmptyFieldError(editText: EditText) {
         val parent = editText.parent.parent
         if (parent is TextInputLayout) {
-            showFieldError(editText, getString(R.string.domain_contact_form_input_error, parent.hint))
+            showFieldError(editText, getString(R.string.domain_registration_contact_form_input_error, parent.hint))
         }
     }
 
