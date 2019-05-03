@@ -50,9 +50,7 @@ class TransactionsStoreTest {
                         SUPPORTED_COUNTRIES_MODEL
                 )
         )
-
         val action = TransactionActionBuilder.generateNoPayloadAction(TransactionAction.FETCH_SUPPORTED_COUNTRIES)
-
         transactionsStore.onAction(action)
 
         verify(transactionsRestClient).fetchSupportedCountries()
@@ -83,7 +81,6 @@ class TransactionsStoreTest {
         )
 
         val action = TransactionActionBuilder.newCreateShoppingCartAction(payload)
-
         transactionsStore.onAction(action)
 
         verify(transactionsRestClient).createShoppingCart(
@@ -108,7 +105,6 @@ class TransactionsStoreTest {
         val payload = RedeemShoppingCartPayload(CREATE_SHOPPING_CART_RESPONSE, DOMAIN_CONTACT_INFORMATION)
 
         val action = TransactionActionBuilder.newRedeemCartWithCreditsAction(payload)
-
         transactionsStore.onAction(action)
 
         verify(transactionsRestClient).redeemCartUsingCredits(CREATE_SHOPPING_CART_RESPONSE, DOMAIN_CONTACT_INFORMATION)

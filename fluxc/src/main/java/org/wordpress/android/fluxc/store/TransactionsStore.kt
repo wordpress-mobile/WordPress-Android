@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import android.text.TextUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
@@ -55,7 +56,12 @@ class TransactionsStore @Inject constructor(
         val supportedCountriesPayload = transactionsRestClient.fetchSupportedCountries()
 
         return if (!supportedCountriesPayload.isError) {
-            OnSupportedCountriesFetched(supportedCountriesPayload.countries)
+            // api returns couple of objects with empty names and codes so we need to filter them out
+            val filteredCountries: Array<SupportedDomainCountry>? = supportedCountriesPayload.countries?.filter {
+                !TextUtils.isEmpty(it.code) && !TextUtils.isEmpty(it.name)
+            }?.toTypedArray()
+
+            OnSupportedCountriesFetched(filteredCountries)
         } else {
             OnSupportedCountriesFetched(
                     FetchSupportedCountriesError(

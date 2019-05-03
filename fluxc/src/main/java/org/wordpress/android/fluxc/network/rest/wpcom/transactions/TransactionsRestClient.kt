@@ -40,9 +40,7 @@ constructor(
                 this,
                 url,
                 emptyMap(),
-                Array<SupportedDomainCountry>::class.java,
-                enableCaching = false,
-                forced = true
+                Array<SupportedDomainCountry>::class.java
         )) {
             is Success -> {
                 FetchedSupportedCountriesPayload(response.data)
