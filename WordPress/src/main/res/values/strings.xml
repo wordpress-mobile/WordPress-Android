@@ -1013,6 +1013,7 @@
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
+    <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
     <string name="stats_insights_year">Year</string>
     <string name="stats_insights_posts">Posts</string>
     <string name="stats_insights_total_comments">Total comments</string>

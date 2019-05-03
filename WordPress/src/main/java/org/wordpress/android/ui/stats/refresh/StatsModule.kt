@@ -34,7 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase.AnnualSiteStatsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase.CommentsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
@@ -85,7 +85,7 @@ class StatsModule {
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
         followerTotalsUseCase: FollowerTotalsUseCase,
-        annualSiteStatsUseCase: AnnualSiteStatsUseCase
+        annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -98,7 +98,7 @@ class StatsModule {
                 publicizeUseCaseFactory.build(BLOCK),
                 postingActivityUseCase,
                 followerTotalsUseCase,
-                annualSiteStatsUseCase
+                annualSiteStatsUseCaseFactory.build(BLOCK)
         )
     }
 
@@ -116,7 +116,8 @@ class StatsModule {
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
         postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
-        postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory
+        postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory,
+        annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 followersUseCaseFactory.build(VIEW_ALL),
@@ -125,7 +126,8 @@ class StatsModule {
                 publicizeUseCaseFactory.build(VIEW_ALL),
                 postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
                 postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
-                postRecentWeeksUseCaseFactory.build(VIEW_ALL)
+                postRecentWeeksUseCaseFactory.build(VIEW_ALL),
+                annualSiteStatsUseCaseFactory.build(VIEW_ALL)
         )
     }
 

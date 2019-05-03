@@ -3,9 +3,11 @@ package org.wordpress.android.ui.stats.refresh.utils
 import android.content.Intent
 import android.support.v4.app.FragmentActivity
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.stats.StatsUtils
+import org.wordpress.android.ui.stats.StatsViewType.ANNUAL_STATS
 import org.wordpress.android.ui.stats.StatsViewType.AUTHORS
 import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
@@ -22,6 +24,7 @@ import org.wordpress.android.ui.stats.StatsViewType.VIDEO_PLAYS
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAnnualStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
@@ -120,6 +123,9 @@ class StatsNavigator
             }
             is ViewAuthors -> {
                 ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, AUTHORS)
+            }
+            is ViewAnnualStats -> {
+                ActivityLauncher.viewAllGranularStats(activity, YEARS, ANNUAL_STATS)
             }
             is ViewUrl -> {
                 WPWebViewActivity.openURL(activity, target.url)

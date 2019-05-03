@@ -2,26 +2,38 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ANNUAL_SITE_STATS
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.util.LocaleManagerWrapper
+import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-class AnnualSiteStatsUseCase
-@Inject constructor(
+private const val VISIBLE_ITEMS = 1
+
+class AnnualSiteStatsUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val mostPopularStore: MostPopularInsightsStore,
-    private val statsSiteProvider: StatsSiteProvider
+    private val statsSiteProvider: StatsSiteProvider,
+    private val selectedDateProvider: SelectedDateProvider,
+    private val annualStatsMapper: AnnualStatsMapper,
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : StatelessUseCase<YearsInsightsModel>(ANNUAL_SITE_STATS, mainDispatcher) {
     override suspend fun loadCachedData(): YearsInsightsModel? {
         return mostPopularStore.getYearsInsights(statsSiteProvider.siteModel)
@@ -42,57 +54,71 @@ class AnnualSiteStatsUseCase
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_this_year_site_stats))
 
     override fun buildUiModel(domainModel: YearsInsightsModel): List<BlockListItem> {
+        val periodFromProvider = selectedDateProvider.getSelectedDate(ANNUAL_STATS)
+        val availablePeriods = domainModel.years
+        val availableDates = availablePeriods.map { yearToDate(it.year) }
+        val selectedPeriod = periodFromProvider ?: availableDates.last()
+        val index = availableDates.indexOf(selectedPeriod)
+
+        selectedDateProvider.selectDate(index, availableDates, ANNUAL_STATS)
+
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_insights_this_year_site_stats))
-        val lastYear = domainModel.years.last()
-        items.add(
-                QuickScanItem(
-                        Column(
-                                string.stats_insights_year,
-                                lastYear.year
-                        ),
-                        Column(
-                                string.stats_insights_posts,
-                                lastYear.totalPosts.toFormattedString()
+
+        when (useCaseMode) {
+            BLOCK -> {
+                items.add(Title(R.string.stats_insights_this_year_site_stats))
+                items.addAll(annualStatsMapper.mapYearInBlock(domainModel.years.last()))
+                if (domainModel.years.size > VISIBLE_ITEMS) {
+                    items.add(
+                            Link(
+                                    text = R.string.stats_insights_view_more,
+                                    navigateAction = NavigationAction.create(this::onViewMoreClicked)
+                            )
+                    )
+                }
+            }
+            VIEW_ALL -> {
+                items.addAll(
+                        annualStatsMapper.mapYearInViewAll(
+                                domainModel.years.getOrNull(index) ?: domainModel.years.last()
                         )
                 )
-        )
-        items.add(
-                QuickScanItem(
-                        Column(
-                                string.stats_insights_total_comments,
-                                lastYear.totalComments.toFormattedString()
-                        ),
-                        Column(
-                                string.stats_insights_average_comments,
-                                lastYear.avgComments?.toFormattedString() ?: "0"
-                        )
-                )
-        )
-        items.add(
-                QuickScanItem(
-                        Column(
-                                string.stats_insights_total_likes,
-                                lastYear.totalLikes.toFormattedString()
-                        ),
-                        Column(
-                                string.stats_insights_average_likes,
-                                lastYear.avgLikes?.toFormattedString() ?: "0"
-                        )
-                )
-        )
-        items.add(
-                QuickScanItem(
-                        Column(
-                                string.stats_insights_total_words,
-                                lastYear.totalWords.toFormattedString()
-                        ),
-                        Column(
-                                string.stats_insights_average_words,
-                                lastYear.avgWords?.toFormattedString() ?: "0"
-                        )
-                )
-        )
+            }
+        }
         return items
+    }
+
+    private fun onViewMoreClicked() {
+        navigateTo(NavigationTarget.ViewAnnualStats)
+    }
+
+    private fun yearToDate(year: String): Date {
+        val calendar = Calendar.getInstance(localeManagerWrapper.getLocale())
+        calendar.timeInMillis = 0
+        calendar.set(Calendar.YEAR, Integer.valueOf(year))
+        calendar.set(Calendar.MONTH, calendar.getMaximum(Calendar.MONTH))
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getMaximum(Calendar.DAY_OF_MONTH))
+        return calendar.time
+    }
+
+    class AnnualSiteStatsUseCaseFactory
+    @Inject constructor(
+        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        private val mostPopularStore: MostPopularInsightsStore,
+        private val statsSiteProvider: StatsSiteProvider,
+        private val annualStatsMapper: AnnualStatsMapper,
+        private val localeManagerWrapper: LocaleManagerWrapper,
+        private val selectedDateProvider: SelectedDateProvider
+    ) : InsightUseCaseFactory {
+        override fun build(useCaseMode: UseCaseMode) =
+                AnnualSiteStatsUseCase(
+                        mainDispatcher,
+                        mostPopularStore,
+                        statsSiteProvider,
+                        selectedDateProvider,
+                        annualStatsMapper,
+                        localeManagerWrapper,
+                        useCaseMode
+                )
     }
 }
