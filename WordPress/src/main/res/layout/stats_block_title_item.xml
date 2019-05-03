@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
               style="@style/StatsBlockLine"
+              android:layout_width="match_parent"
               android:orientation="horizontal">
 
     <TextView
         android:id="@+id/text"
-        android:layout_gravity="center_vertical"
         style="@style/StatsBlockTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:text="@string/unknown"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <ImageButton
+        android:id="@+id/menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_ellipsis_vertical_grey_darken_48dp"
+        android:contentDescription="@string/stats_item_settings"/>
 
 </LinearLayout>

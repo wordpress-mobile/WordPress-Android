@@ -15,10 +15,10 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_date_selector.*
+import kotlinx.android.synthetic.main.stats_empty_view.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
@@ -88,6 +88,10 @@ class StatsListFragment : DaggerFragment() {
                 )
         )
 
+        statsEmptyView.button.setOnClickListener {
+            viewModel.onEmptyInsightsButtonClicked()
+        }
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1) && dy != 0) {
@@ -96,12 +100,16 @@ class StatsListFragment : DaggerFragment() {
             }
         })
 
-        select_next_date.setOnClickListener {
+        nextDateButton.setOnClickListener {
             viewModel.onNextDateSelected()
         }
 
-        select_previous_date.setOnClickListener {
+        previousDateButton.setOnClickListener {
             viewModel.onPreviousDateSelected()
+        }
+
+        statsErrorView.button.setOnClickListener {
+            viewModel.onRetryClick()
         }
     }
 
@@ -145,10 +153,13 @@ class StatsListFragment : DaggerFragment() {
                     }
                     is UiModel.Error -> {
                         recyclerView.visibility = View.GONE
-                        actionable_error_view.visibility = View.VISIBLE
-                        actionable_error_view.button.setOnClickListener {
-                            viewModel.onRetryClick()
-                        }
+                        statsErrorView.visibility = View.VISIBLE
+                        statsEmptyView.visibility = View.GONE
+                    }
+                    is UiModel.Empty -> {
+                        recyclerView.visibility = View.GONE
+                        statsEmptyView.visibility = View.VISIBLE
+                        statsErrorView.visibility = View.GONE
                     }
                 }
             }
@@ -159,14 +170,14 @@ class StatsListFragment : DaggerFragment() {
             if (date_selection_toolbar.visibility != dateSelectorVisibility) {
                 date_selection_toolbar.visibility = dateSelectorVisibility
             }
-            selected_date.text = dateSelectorUiModel?.date ?: ""
+            selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
             val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (select_previous_date.isEnabled != enablePreviousButton) {
-                select_previous_date.isEnabled = enablePreviousButton
+            if (previousDateButton.isEnabled != enablePreviousButton) {
+                previousDateButton.isEnabled = enablePreviousButton
             }
             val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (select_next_date.isEnabled != enableNextButton) {
-                select_next_date.isEnabled = enableNextButton
+            if (nextDateButton.isEnabled != enableNextButton) {
+                nextDateButton.isEnabled = enableNextButton
             }
         })
 
@@ -185,11 +196,19 @@ class StatsListFragment : DaggerFragment() {
         viewModel.listSelected.observe(this, Observer {
             viewModel.onListSelected()
         })
+
+        viewModel.typeMoved?.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let {
+                viewModel.onTypeMoved()
+            }
+        })
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {
         recyclerView.visibility = View.VISIBLE
-        actionable_error_view.visibility = View.GONE
+        statsErrorView.visibility = View.GONE
+        statsEmptyView.visibility = View.GONE
+
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
             adapter = StatsBlockAdapter(imageManager)
@@ -197,6 +216,7 @@ class StatsListFragment : DaggerFragment() {
         } else {
             adapter = recyclerView.adapter as StatsBlockAdapter
         }
+
         val layoutManager = recyclerView?.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()
         adapter.update(statsState)
