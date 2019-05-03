@@ -25,6 +25,7 @@ import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
+import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
@@ -185,6 +186,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PlansViewModel.class)
     abstract ViewModel plansViewModel(PlansViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DomainSuggestionsViewModel.class)
+    abstract ViewModel domainSuggestionsViewModel(DomainSuggestionsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

@@ -36,6 +36,7 @@ import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
@@ -413,6 +414,12 @@ public class ActivityLauncher {
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, slug);
             context.startActivity(intent);
         }
+    }
+
+    public static void viewDomainRegistrationActivity(Activity activity, SiteModel site) {
+        Intent intent = new Intent(activity, DomainRegistrationActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {

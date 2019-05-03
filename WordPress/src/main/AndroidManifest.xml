@@ -555,6 +555,12 @@
             android:label="@string/activity_log_event"
             android:theme="@style/Calypso.NoActionBar"/>
 
+        <!--Domain Registration-->
+        <activity
+            android:name=".ui.domains.DomainRegistrationActivity"
+            android:label="@string/register_domain"
+            android:theme="@style/Calypso.NoActionBar"/>
+
         <!-- Me activities -->
         <activity
             android:name=".ui.prefs.MyProfileActivity"
