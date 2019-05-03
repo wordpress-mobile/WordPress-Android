@@ -221,7 +221,7 @@ Language: sq_AL
     <string name="stats_followers_count_message">%1$s Ndjekës Gjithsej: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Administroni tendenca</string>
+    <string name="stats_manage_insights">Administroni tendenca</string>
     <string name="stats_empty_insights_description">Përshtatni tendencat tuaj dhe merrni faktet mbi funksionimin e sajtit tuaj</string>
     <string name="stats_empty_insights_title">S’janë shtuar ende tendenca</string>
     <string name="stats_no_data_yet">Ende pa të dhëna</string>

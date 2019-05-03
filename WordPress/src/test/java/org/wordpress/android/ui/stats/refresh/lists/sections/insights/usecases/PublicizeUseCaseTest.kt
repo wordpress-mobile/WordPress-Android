@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel.Service
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -29,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -39,6 +40,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var serviceMapper: ServiceMapper
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     private lateinit var useCase: PublicizeUseCase
     private val itemsToLoad = 6
     private val limitMode = LimitMode.Top(itemsToLoad)
@@ -50,6 +52,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 serviceMapper,
                 tracker,
+                popupMenuHandler,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -72,7 +75,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
 
         val result = loadPublicizeModel(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.PUBLICIZE)
+        assertThat(result.type).isEqualTo(InsightType.PUBLICIZE)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertThat(this).hasSize(3)
@@ -103,7 +106,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
 
         val result = loadPublicizeModel(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.PUBLICIZE)
+        assertThat(result.type).isEqualTo(InsightType.PUBLICIZE)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertThat(this).hasSize(4)
@@ -127,7 +130,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
 
         val result = loadPublicizeModel(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.PUBLICIZE)
+        assertThat(result.type).isEqualTo(InsightType.PUBLICIZE)
         assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
         result.stateData!!.apply {
             assertThat(this).hasSize(2)

@@ -32,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -45,6 +46,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var annualStatsMapper: AnnualStatsMapper
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     private val year2019 = YearInsights(null, null, null, null, 0, 0, 0, 0, 0, "2019")
     private val year2018 = year2019.copy(year = "2018")
     private lateinit var useCase: AnnualSiteStatsUseCase
@@ -57,6 +59,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 annualStatsMapper,
                 localeManagerWrapper,
+                popupMenuHandler,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -74,7 +77,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
                         model
                 )
         )
-        whenever(annualStatsMapper.mapYearInBlock(year2019)).thenReturn(listOf(BlockListItem.Empty()))
+        whenever(annualStatsMapper.mapYearInBlock(year2019)).thenReturn(listOf(Empty()))
 
         val result = loadMostPopularInsights(refresh, forced)
 
@@ -103,7 +106,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
                         model
                 )
         )
-        whenever(annualStatsMapper.mapYearInBlock(year2019)).thenReturn(listOf(BlockListItem.Empty()))
+        whenever(annualStatsMapper.mapYearInBlock(year2019)).thenReturn(listOf(Empty()))
 
         val result = loadMostPopularInsights(refresh, forced)
 
@@ -131,6 +134,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 annualStatsMapper,
                 localeManagerWrapper,
+                popupMenuHandler,
                 VIEW_ALL
         )
         val forced = false
@@ -142,7 +146,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
                         model
                 )
         )
-        whenever(annualStatsMapper.mapYearInViewAll(year2019)).thenReturn(listOf(BlockListItem.Empty()))
+        whenever(annualStatsMapper.mapYearInViewAll(year2019)).thenReturn(listOf(Empty()))
 
         val result = loadMostPopularInsights(refresh, forced)
 
@@ -169,7 +173,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadMostPopularInsights(refresh, forced)
 
-        Assertions.assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
     }
 
     @Test

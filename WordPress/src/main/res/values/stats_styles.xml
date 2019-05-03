@@ -200,6 +200,11 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+    <style name="StatsInsightManagementList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="StatsActivityBox">
         <item name="android:layout_width">@dimen/stats_activity_box_size</item>
         <item name="android:layout_height">@dimen/stats_activity_box_size</item>

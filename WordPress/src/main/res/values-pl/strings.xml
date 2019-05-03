@@ -216,7 +216,7 @@ Language: pl
     <string name="stats_followers_count_message">Całkowita liczba obserwujących %1$s: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Zarządzaj trendami</string>
+    <string name="stats_manage_insights">Zarządzaj trendami</string>
     <string name="stats_empty_insights_description">Spersonalizuj kartę Trendy i uzyskaj pełną informację o wynikach swojej witryny</string>
     <string name="stats_empty_insights_title">Brak trendów, jak dotąd</string>
     <string name="stats_no_data_yet">Brak danych, jak dotąd</string>
