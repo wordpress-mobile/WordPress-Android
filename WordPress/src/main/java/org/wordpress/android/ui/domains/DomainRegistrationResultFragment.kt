@@ -26,9 +26,6 @@ class DomainRegistrationResultFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val nonNullActivity = checkNotNull(activity)
-        (nonNullActivity.application as WordPress).component()?.inject(this)
-
         domainName = arguments?.getString(EXTRA_REGISTERED_DOMAIN_NAME, "")
     }
 
@@ -40,7 +37,6 @@ class DomainRegistrationResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         checkNotNull((activity?.application as WordPress).component())
-        (activity?.application as WordPress).component().inject(this)
 
         continue_button.setOnClickListener {
             activity!!.finish()
@@ -50,9 +46,5 @@ class DomainRegistrationResultFragment : Fragment() {
                 R.string.domain_registration_result_description,
                 domainName
         )
-
-        continue_button.setOnClickListener {
-            activity?.finish()
-        }
     }
 }
