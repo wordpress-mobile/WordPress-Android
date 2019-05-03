@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# This script builds the apks for the beta and alpha versions.
+# This script builds the bundles for the beta and alpha versions.
 
-OUTDIR="WordPress/build/outputs/apk/"
+OUTDIR="WordPress/build/outputs/bundle/"
 BUILDFILE="WordPress/build.gradle"
 BUILDDIR="build"
 LOGFILE="$BUILDDIR/build.log"
@@ -20,16 +20,16 @@ current_branch=`git rev-parse --abbrev-ref HEAD`
 beta_branch=$1
 alpha_branch=$2
 
-BUILD_APK_RET_VALUE=0
+BUILD_APP_BUNDLE_RET_VALUE=0
 
-source ./tools/build-apk-core.sh
+source ./tools/build-app-bundle-core.sh
 
 check_clean_working_dir
 date > $LOGFILE
-build_apk $beta_branch Vanilla
-beta_code=$BUILD_APK_RET_VALUE
-build_apk $alpha_branch Zalpha
-alpha_code=$BUILD_APK_RET_VALUE
+build_app_bundle $beta_branch Vanilla
+beta_code=$BUILD_APP_BUNDLE_RET_VALUE
+build_app_bundle $alpha_branch Zalpha
+alpha_code=$BUILD_APP_BUNDLE_RET_VALUE
 git checkout $current_branch
 
 echo "Version codes - beta: $beta_code, alpha: $alpha_code" | tee -a $LOGFILE
