@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-26 19:17:44+0000
+Translation-Revision-Date: 2019-04-11 16:32:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="plugin_check_domain_credit_error">Lyckades inte kontrollera domänens saldo</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Kontrollerar domänens saldo</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrera domän</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">För att installera tillägg måste du ha en anpassad domän som är associerad med din webbplats.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Installera tillägg</string>
     <string name="new_site_creation_preview_subtitle">Senare kommer du att kunna anpassa utseendet och känslan hos din webbplats</string>
     <string name="publish_on">Publicera den: %s</string>
     <string name="schedule_for">Schemalägg till: %s</string>

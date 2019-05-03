@@ -10,4 +10,9 @@
     <item name="bg_rectangle_white_radius_top_card" type="drawable">@drawable/bg_rectangle_white</item>
     <item name="bg_rectangle_white_radius_card" type="drawable">@drawable/bg_rectangle_white</item>
 
+    <!--
+        Aliases for login library.
+    -->
+    <drawable name="login_email_alert">@drawable/img_illustration_email_alert_120dp</drawable>
+
 </resources>

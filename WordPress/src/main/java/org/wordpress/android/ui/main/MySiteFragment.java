@@ -193,9 +193,7 @@ public class MySiteFragment extends Fragment implements
     public void onResume() {
         super.onResume();
 
-        if (mSiteSettings == null) {
-            initSiteSettings();
-        }
+        updateSiteSettingsIfNecessary();
 
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(getSelectedSite());
@@ -292,10 +290,21 @@ public class MySiteFragment extends Fragment implements
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
     }
 
-    private void initSiteSettings() {
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSelectedSite(), this);
-        if (mSiteSettings != null) {
-            mSiteSettings.init(true);
+    private void updateSiteSettingsIfNecessary() {
+        SiteModel selectedSite = getSelectedSite();
+        if (selectedSite == null) {
+            // If the selected site is null, we can't update its site settings
+            return;
+        }
+        if (mSiteSettings != null && mSiteSettings.getLocalSiteId() != selectedSite.getId()) {
+            // The site has changed, we can't use the previous site settings, force a refresh
+            mSiteSettings = null;
+        }
+        if (mSiteSettings == null) {
+            mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSelectedSite(), this);
+            if (mSiteSettings != null) {
+                mSiteSettings.init(true);
+            }
         }
     }
 
@@ -714,8 +723,7 @@ public class MySiteFragment extends Fragment implements
                         int mediaId = (int) data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
 
                         showSiteIconProgressBar(true);
-                        mSiteSettings.setSiteIconMediaId(mediaId);
-                        mSiteSettings.saveSettings();
+                        updateSiteIconMediaId(mediaId);
                     } else {
                         String strMediaUri = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
                         if (strMediaUri == null) {
@@ -1033,8 +1041,7 @@ public class MySiteFragment extends Fragment implements
                     MediaModel media = event.mediaModelList.get(0);
                     mImageManager.load(mBlavatarImageView, ImageType.BLAVATAR, PhotonUtils
                             .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH));
-                    mSiteSettings.setSiteIconMediaId((int) media.getMediaId());
-                    mSiteSettings.saveSettings();
+                    updateSiteIconMediaId((int) media.getMediaId());
                 } else {
                     AppLog.w(T.MAIN, "Site icon upload completed, but mediaList is empty.");
                 }
@@ -1103,8 +1110,7 @@ public class MySiteFragment extends Fragment implements
             case TAG_CHANGE_SITE_ICON_DIALOG:
                 AnalyticsTracker.track(Stat.MY_SITE_ICON_REMOVED);
                 showSiteIconProgressBar(true);
-                mSiteSettings.setSiteIconMediaId(0);
-                mSiteSettings.saveSettings();
+                updateSiteIconMediaId(0);
                 break;
             case TAG_QUICK_START_DIALOG:
                 AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED);
@@ -1336,6 +1342,13 @@ public class MySiteFragment extends Fragment implements
             promoDialog.show(getFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG);
             AppPrefs.setQuickStartMigrationDialogShown(true);
             AnalyticsTracker.track(Stat.QUICK_START_MIGRATION_DIALOG_VIEWED);
+        }
+    }
+
+    private void updateSiteIconMediaId(int mediaId) {
+        if (mSiteSettings != null) {
+            mSiteSettings.setSiteIconMediaId(mediaId);
+            mSiteSettings.saveSettings();
         }
     }
 }
