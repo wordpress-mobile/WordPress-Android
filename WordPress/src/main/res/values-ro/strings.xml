@@ -221,7 +221,7 @@ Language: ro
     <string name="stats_followers_count_message">Total urmăritori %1$s: %2$s</string>
     <string name="stats_followers_email">Prin email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Administrează perspectivele</string>
+    <string name="stats_manage_insights">Administrează perspectivele</string>
     <string name="stats_empty_insights_description">Personalizează-ți perspectivele și primești informații relevante despre performanța sitului</string>
     <string name="stats_empty_insights_title">Nu ai adăugat perspective până acum</string>
     <string name="stats_no_data_yet">Încă nu există date</string>

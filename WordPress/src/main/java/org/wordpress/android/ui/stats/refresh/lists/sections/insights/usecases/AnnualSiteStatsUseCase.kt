@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ANNUAL_SITE_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
@@ -17,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
@@ -33,6 +36,7 @@ class AnnualSiteStatsUseCase(
     private val selectedDateProvider: SelectedDateProvider,
     private val annualStatsMapper: AnnualStatsMapper,
     private val localeManagerWrapper: LocaleManagerWrapper,
+    private val popupMenuHandler: ItemPopupMenuHandler,
     private val useCaseMode: UseCaseMode
 ) : StatelessUseCase<YearsInsightsModel>(ANNUAL_SITE_STATS, mainDispatcher) {
     override suspend fun loadCachedData(): YearsInsightsModel? {
@@ -67,7 +71,7 @@ class AnnualSiteStatsUseCase(
 
         when (useCaseMode) {
             BLOCK -> {
-                items.add(Title(R.string.stats_insights_this_year_site_stats))
+                items.add(buildTitle())
                 items.addAll(annualStatsMapper.mapYearInBlock(domainModel.years.last()))
                 if (domainModel.years.size > VISIBLE_ITEMS) {
                     items.add(
@@ -102,6 +106,12 @@ class AnnualSiteStatsUseCase(
         return calendar.time
     }
 
+    private fun buildTitle() = Title(string.stats_insights_this_year_site_stats, menuAction = this::onMenuClick)
+
+    private fun onMenuClick(view: View) {
+        popupMenuHandler.onMenuClick(view, type)
+    }
+
     class AnnualSiteStatsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -109,7 +119,8 @@ class AnnualSiteStatsUseCase(
         private val statsSiteProvider: StatsSiteProvider,
         private val annualStatsMapper: AnnualStatsMapper,
         private val localeManagerWrapper: LocaleManagerWrapper,
-        private val selectedDateProvider: SelectedDateProvider
+        private val selectedDateProvider: SelectedDateProvider,
+        private val popupMenuHandler: ItemPopupMenuHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 AnnualSiteStatsUseCase(
@@ -119,6 +130,7 @@ class AnnualSiteStatsUseCase(
                         selectedDateProvider,
                         annualStatsMapper,
                         localeManagerWrapper,
+                        popupMenuHandler,
                         useCaseMode
                 )
     }

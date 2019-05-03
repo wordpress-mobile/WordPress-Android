@@ -200,7 +200,7 @@ Language: nb_NO
     <string name="stats_followers_count_message">Totalt %1$s følgere: %2$s</string>
     <string name="stats_followers_email">E-post</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Behandle innsikter</string>
+    <string name="stats_manage_insights">Behandle innsikter</string>
     <string name="stats_empty_insights_description">Tilpass dine innsikter og få den viktigste informasjonen om ytelsen til nettstedet ditt</string>
     <string name="stats_empty_insights_title">Ingen innsikter lagt til ennå</string>
     <string name="stats_no_data_yet">Ingen data ennå</string>

@@ -221,7 +221,7 @@ Language: sv_SE
     <string name="stats_followers_count_message">Totalt antal följare för ”%1$s”: %2$s</string>
     <string name="stats_followers_email">E-post</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Hantera insikter</string>
+    <string name="stats_manage_insights">Hantera insikter</string>
     <string name="stats_empty_insights_description">Anpassa dina insikter och se detaljerna om hur din webbplats presterar</string>
     <string name="stats_empty_insights_title">Inga insikter har lagts till än</string>
     <string name="stats_no_data_yet">Inga data insamlade än</string>

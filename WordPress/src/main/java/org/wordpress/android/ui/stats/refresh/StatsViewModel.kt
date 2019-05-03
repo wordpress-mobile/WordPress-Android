@@ -109,6 +109,7 @@ class StatsViewModel
         listUseCases[statsSection]?.onListSelected()
 
         _toolbarHasShadow.value = statsSection == INSIGHTS
+
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
             DAYS -> analyticsTracker.track(STATS_PERIOD_DAYS_ACCESSED)

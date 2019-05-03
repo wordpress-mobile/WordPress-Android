@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
@@ -75,7 +75,7 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(PostDetailTypes.POST_OVERVIEW)
+        Assertions.assertThat(result.type).isEqualTo(PostDetailType.POST_OVERVIEW)
         Assertions.assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
             Assertions.assertThat(this[0]).isEqualTo(title)

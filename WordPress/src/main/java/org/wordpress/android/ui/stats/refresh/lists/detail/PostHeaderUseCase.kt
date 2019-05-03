@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -16,7 +16,7 @@ class PostHeaderUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val statsPostProvider: StatsPostProvider
 ) : StatelessUseCase<String>(
-        PostDetailTypes.POST_HEADER,
+        PostDetailType.POST_HEADER,
         mainDispatcher
 ) {
     override suspend fun loadCachedData(): String? {

@@ -2,12 +2,14 @@
 <org.wordpress.android.ui.ActionableEmptyView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/actionable_empty_view"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/statsEmptyView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_default"
     android:visibility="gone"
-    app:aevButton="@string/stats_button_manage_insights"
+    tools:visibility="visible"
+    app:aevButton="@string/stats_manage_insights"
     app:aevImage="@drawable/img_illustration_insights_94dp"
-    app:aevSubtitle="@string/stats_empty_insights_description"
+    app:aevSubtitle="@string/stats_insights_management_title"
     app:aevTitle="@string/stats_empty_insights_title"/>

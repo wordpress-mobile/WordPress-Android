@@ -6,7 +6,7 @@ import kotlinx.coroutines.async
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PagedMode
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWER_TOTALS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.modules.BG_THREAD

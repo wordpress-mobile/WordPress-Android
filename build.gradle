@@ -15,7 +15,7 @@ buildscript {
 }
 
 plugins {
-  id 'com.gradle.build-scan' version '1.16'
+    id 'com.gradle.build-scan' version '1.16'
 }
 
 apply plugin: 'com.automattic.android.fetchstyle'
@@ -104,5 +104,5 @@ buildScan {
 }
 
 ext {
-    fluxCVersion = 'c17892263bb2be9cdeca41cdd0156179127f2cdf'
+    fluxCVersion = '6d22deacb53596904e1c5bf49f01e3194867ce61'
 }
