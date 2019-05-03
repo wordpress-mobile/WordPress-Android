@@ -109,32 +109,22 @@
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintVertical_chainStyle="packed"/>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/percentage_bar_constraint_layout"
+    <ProgressBar
+        android:id="@+id/bar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="@dimen/stats_percentage_bar_height"
         android:layout_marginTop="@dimen/stats_percentage_bar_margin_top"
         android:visibility="gone"
+        android:progressTint="@color/stats_percentage_bar"
+        android:progressBackgroundTint="@color/transparent"
+        android:layout_marginEnd="@dimen/stats_percentage_bar_margin_end"
         app:layout_goneMarginBottom="@dimen/stats_percentage_bar_gone_margin_bottom"
         app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintEnd_toStartOf="@id/value"
         app:layout_constraintStart_toStartOf="@id/text"
-        app:layout_constraintTop_toBottomOf="@id/subtext">
+        app:layout_constraintTop_toBottomOf="@id/subtext" />
 
-        <View
-            android:id="@+id/percentage_bar"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/stats_percentage_bar_height"
-            android:background="@color/stats_percentage_bar"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="1.0"/>
-
-    </android.support.constraint.ConstraintLayout>
 
     <View
         android:id="@+id/divider"
@@ -145,6 +135,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/text"
-        app:layout_constraintTop_toBottomOf="@id/percentage_bar_constraint_layout" />
+        app:layout_constraintTop_toBottomOf="@id/bar" />
 
 </android.support.constraint.ConstraintLayout>

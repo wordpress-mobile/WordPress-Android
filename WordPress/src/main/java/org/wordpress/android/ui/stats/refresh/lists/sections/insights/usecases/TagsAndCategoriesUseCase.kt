@@ -74,7 +74,7 @@ class TagsAndCategoriesUseCase
     override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
-        val maxViews = getMaxViews(domainModel.tags)
+        val maxViews = (domainModel.tags.maxBy { it.views }?.views ?: -1).toInt()
 
         if (useCaseMode == BLOCK) {
             items.add(Title(R.string.stats_insights_tags_and_categories))
@@ -124,16 +124,6 @@ class TagsAndCategoriesUseCase
         return items
     }
 
-    private fun getMaxViews(views: List<TagModel>): Int {
-        var max = -1
-
-        views.forEach {
-            if (it.views > max) max = it.views.toInt()
-        }
-
-        return max
-    }
-
     private fun areTagsEqual(tagA: TagModel, tagB: TagModel?): Boolean {
         return tagA.items == tagB?.items && tagA.views == tagB.views
     }
@@ -144,7 +134,7 @@ class TagsAndCategoriesUseCase
                 icon = getIcon(item.type),
                 text = item.name,
                 value = tag.views.toFormattedString(),
-                percentageOfMaxValue = tag.views.toDouble() / maxViews.toDouble(),
+                barWidth = if (maxViews == 0) null else ((tag.views.toDouble() / maxViews.toDouble()) * 100).toInt(),
                 showDivider = index < listSize - 1,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick)
         )
@@ -160,7 +150,7 @@ class TagsAndCategoriesUseCase
         return ListItemWithIcon(
                 icon = R.drawable.ic_folder_multiple_white_24dp,
                 text = text,
-                percentageOfMaxValue = tag.views.toDouble() / maxViews.toDouble(),
+                barWidth = if (maxViews == 0) null else ((tag.views.toDouble() / maxViews.toDouble()) * 100).toInt(),
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1
         )

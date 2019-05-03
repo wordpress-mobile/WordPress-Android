@@ -96,7 +96,7 @@ constructor(
     override fun buildStatefulUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
-        val maxViews: Int = getMaxViews(domainModel.authors)
+        val maxViews = domainModel.authors.maxBy { it.views }?.views ?: -1
 
         if (useCaseMode == BLOCK) {
             items.add(Title(R.string.stats_authors))
@@ -112,7 +112,8 @@ constructor(
                         iconStyle = AVATAR,
                         text = author.name,
                         value = author.views.toFormattedString(),
-                        percentageOfMaxValue = author.views.toDouble() / maxViews.toDouble(),
+                        barWidth = if (maxViews == 0) null
+                                    else ((author.views.toDouble() / maxViews.toDouble()) * 100).toInt(),
                         showDivider = index < domainModel.authors.size - 1
                 )
                 if (author.posts.isEmpty()) {
@@ -151,16 +152,6 @@ constructor(
             }
         }
         return items
-    }
-
-    private fun getMaxViews(authors: List<Author>): Int {
-        var max = -1
-
-        authors.forEach {
-            if (it.views > max) max = it.views
-        }
-
-        return max
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {

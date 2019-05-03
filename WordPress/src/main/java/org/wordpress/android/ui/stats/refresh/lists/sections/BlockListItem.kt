@@ -85,7 +85,7 @@ sealed class BlockListItem(val type: Type) {
         val subText: String? = null,
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
-        val percentageOfMaxValue: Double? = null,
+        val barWidth: Int? = null,
         val showDivider: Boolean = true,
         val textStyle: TextStyle = TextStyle.NORMAL,
         val navigationAction: NavigationAction? = null

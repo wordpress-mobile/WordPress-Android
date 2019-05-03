@@ -248,9 +248,9 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         assertThat(items[3] is ListItemWithIcon).isTrue()
         assertThat(items[4] is ListItemWithIcon).isTrue()
 
-        assertThat((items[2] as ListItemWithIcon).percentageOfMaxValue).isEqualTo(0.5)
-        assertThat((items[3] as ListItemWithIcon).percentageOfMaxValue).isEqualTo(1.0)
-        assertThat((items[4] as ListItemWithIcon).percentageOfMaxValue).isEqualTo(0.75)
+        assertThat((items[2] as ListItemWithIcon).barWidth).isEqualTo(50)
+        assertThat((items[3] as ListItemWithIcon).barWidth).isEqualTo(100)
+        assertThat((items[4] as ListItemWithIcon).barWidth).isEqualTo(75)
     }
 
     private fun assertTitle(item: BlockListItem) {

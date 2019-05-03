@@ -211,9 +211,9 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         assertThat(items[3] is ExpandableItem).isTrue()
         assertThat(items[4] is ExpandableItem).isTrue()
 
-        assertThat((items[2] as ExpandableItem).header.percentageOfMaxValue).isEqualTo(0.5)
-        assertThat((items[3] as ExpandableItem).header.percentageOfMaxValue).isEqualTo(1.0)
-        assertThat((items[4] as ExpandableItem).header.percentageOfMaxValue).isEqualTo(0.75)
+        assertThat((items[2] as ExpandableItem).header.barWidth).isEqualTo(50)
+        assertThat((items[3] as ExpandableItem).header.barWidth).isEqualTo(100)
+        assertThat((items[4] as ExpandableItem).header.barWidth).isEqualTo(75)
     }
 
     private fun assertTitle(item: BlockListItem) {

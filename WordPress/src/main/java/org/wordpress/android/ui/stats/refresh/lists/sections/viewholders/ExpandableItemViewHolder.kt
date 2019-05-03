@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.support.constraint.ConstraintLayout.LayoutParams
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
@@ -21,8 +21,7 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
     private val value = itemView.findViewById<TextView>(id.value)
     private val divider = itemView.findViewById<View>(id.divider)
     private val expandButton = itemView.findViewById<ImageView>(id.expand_button)
-    private val percentageBarConstraintLayout = itemView.findViewById<View>(id.percentage_bar_constraint_layout)
-    private var percentageBar = itemView.findViewById<View>(id.percentage_bar)
+    private var bar: ProgressBar = itemView.findViewById<View>(id.bar) as ProgressBar
 
     fun bind(
         expandableItem: ExpandableItem,
@@ -46,14 +45,12 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
             expandableItem.onExpandClicked(!expandableItem.isExpanded)
         }
 
-        if (header.percentageOfMaxValue != null) {
-            percentageBarConstraintLayout.visibility = View.VISIBLE
+        if (header.barWidth != null) {
+            bar.visibility = View.VISIBLE
 
-            val params: LayoutParams = percentageBar.layoutParams as LayoutParams
-            params.matchConstraintPercentWidth = header.percentageOfMaxValue.toFloat()
-            percentageBar.layoutParams = params
+            bar.progress = header.barWidth
         } else {
-            percentageBarConstraintLayout.visibility = View.GONE
+            bar.visibility = View.GONE
         }
     }
 }
