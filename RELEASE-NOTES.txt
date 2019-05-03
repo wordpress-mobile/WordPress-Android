@@ -4,6 +4,7 @@
 * Added ability to filter posts by their author
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
+* App download size is now much smaller.
 
 12.3
 -----
