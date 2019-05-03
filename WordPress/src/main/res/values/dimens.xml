@@ -366,9 +366,9 @@
     <dimen name="post_list_row_skeleton_view_date_height">16dp</dimen>
 
     <!--posts list-->
-    <dimen name="posts_list_spinner_width">56dp</dimen>
-    <dimen name="posts_list_spinner_avatar_size">30dp</dimen>
-    <dimen name="posts_list_spinner_avatar_padding">1dp</dimen>
+    <dimen name="posts_list_spinner_width">60dp</dimen>
+    <dimen name="posts_list_spinner_avatar_size">32dp</dimen>
+    <dimen name="posts_list_spinner_avatar_padding">2dp</dimen>
     <dimen name="posts_list_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
     <dimen name="posts_list_tab_layout_fading_edge_width">16dp</dimen>
     <dimen name="posts_list_compact_row_height">80dp</dimen>
@@ -388,9 +388,9 @@
     <dimen name="new_site_creation_preview_web_view_side_margin">40dp</dimen>
     <dimen name="new_site_creation_preview_ok_button_container_height">68dp</dimen>
     <dimen name="new_site_creation_container_elevation">6dp</dimen>
-    <dimen name="new_site_creation_verticals_search_input_text_padding">24dp</dimen>
+    <dimen name="new_site_creation_verticals_search_input_text_padding">32dp</dimen>
 
-    <dimen name="new_site_creation_domains_radio_button_padding_start">20dp</dimen>
+    <dimen name="new_site_creation_domains_radio_button_padding_start">28dp</dimen>
 
     <dimen name="new_site_creation_preview_skeleton_mid_size_width">174dp</dimen>
     <dimen name="new_site_creation_preview_skeleton_large_block_height">136dp</dimen>
