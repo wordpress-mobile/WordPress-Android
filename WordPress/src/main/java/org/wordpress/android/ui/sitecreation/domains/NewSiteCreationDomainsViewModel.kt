@@ -134,7 +134,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun resetUiState() {
-        updateUiStateToContent(null, ListState.Ready(emptyList()))
+        updateUiStateToContent(null, Ready(emptyList()))
     }
 
     private fun fetchDomains(query: DomainSuggestionsQuery) {
@@ -149,7 +149,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             }
         } else {
             tracker.trackErrorShown(ERROR_CONTEXT, NewSiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR)
-            updateUiStateToContent(query, ListState.Error(listState, errorMessageResId = R.string.no_network_message))
+            updateUiStateToContent(query, Error(listState, errorMessageResId = R.string.no_network_message))
         }
     }
 
@@ -163,7 +163,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             )
             updateUiStateToContent(
                     query,
-                    ListState.Error(
+                    Error(
                             listState,
                             errorMessageResId = R.string.site_creation_fetch_suggestions_error_unknown
                     )
@@ -176,7 +176,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
              */
             val domainNames = event.suggestions.map { it.domain_name }.partition { it.startsWith("${query.value}.") }
                     .toList().flatten()
-            updateUiStateToContent(query, ListState.Success(domainNames))
+            updateUiStateToContent(query, Success(domainNames))
         }
     }
 
@@ -191,7 +191,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                         searchInputUiState = createSearchInputUiState(
                                 showProgress = state is Loading,
                                 showClearButton = isNonEmptyUserQuery,
-                                showDivider = !state.data.isEmpty()
+                                showDivider = state.data.isNotEmpty()
                         ),
                         contentState = createDomainsUiContentState(query, state),
                         createSiteButtonContainerVisibility = selectedDomain != null

@@ -57,7 +57,9 @@ abstract class StatsListViewModel(
 
     val listSelected = statsUseCase.listSelected
 
-    val uiModel: LiveData<UiModel> = statsUseCase.data.throttle(this, distinct = true)
+    val uiModel: LiveData<UiModel> by lazy {
+        statsUseCase.data.throttle(this, distinct = true)
+    }
 
     val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {
         it ?: DateSelectorUiModel(false)

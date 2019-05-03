@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
@@ -35,6 +36,7 @@ import javax.inject.Inject
 
 typealias PagedPostList = PagedList<PostListItemType>
 
+@SuppressLint("UseSparseArrays")
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,

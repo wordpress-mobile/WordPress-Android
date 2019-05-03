@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts.adapters
 import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.View
@@ -102,8 +101,8 @@ class PostListAdapter(
         notifyDataSetChanged()
     }
 
-    private class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
-    private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private class LoadingViewHolder(view: View) : ViewHolder(view)
+    private class EndListViewHolder(view: View) : ViewHolder(view)
 }
 
 private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListItemType>() {

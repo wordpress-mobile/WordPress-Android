@@ -125,8 +125,7 @@ class StatsFragment : DaggerFragment() {
     }
 
     private fun getInitialTimeFrame(activity: FragmentActivity): StatsSection? {
-        val initialTimeFrame = activity.intent.getSerializableExtra(ARG_DESIRED_TIMEFRAME)
-        return when (initialTimeFrame) {
+        return when (activity.intent.getSerializableExtra(ARG_DESIRED_TIMEFRAME)) {
             StatsTimeframe.INSIGHTS -> INSIGHTS
             DAY -> DAYS
             WEEK -> WEEKS
