@@ -111,7 +111,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 statuses = statuses,
                 statusesColor = statusesColor,
                 statusesDelimiter = statusesDelimeter,
-                showProgress = shouldShowProgress(
+                progressBarState = getProgressBarState(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
                 ),
@@ -141,6 +141,21 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                     ?.let { StringEscapeUtils.unescapeHtml4(it) }
                     ?.let { PostUtils.collapseShortcodes(it) }
                     ?.let { UiStringText(it) }
+
+    private fun getProgressBarState(
+        uploadUiState: PostUploadUiState,
+        performingCriticalAction: Boolean
+    ): PostListItemProgressBar {
+        return if (shouldShowProgress(uploadUiState, performingCriticalAction)) {
+            if (uploadUiState is UploadingMedia) {
+                PostListItemProgressBar.Determinate(uploadUiState.progress)
+            } else {
+                PostListItemProgressBar.Indeterminate
+            }
+        } else {
+            PostListItemProgressBar.Hidden
+        }
+    }
 
     private fun shouldShowProgress(uploadUiState: PostUploadUiState, performingCriticalAction: Boolean): Boolean {
         return performingCriticalAction || uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
@@ -322,7 +337,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     }
 
     private sealed class PostUploadUiState {
-        object UploadingMedia : PostUploadUiState()
+        data class UploadingMedia(val progress: Int) : PostUploadUiState()
         object UploadingPost : PostUploadUiState()
         data class UploadFailed(val error: UploadError) : PostUploadUiState()
         object UploadQueued : PostUploadUiState()
@@ -331,7 +346,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
 
     private fun createUploadUiState(status: PostListItemUploadStatus): PostUploadUiState {
         return when {
-            status.hasInProgressMediaUpload -> UploadingMedia
+            status.hasInProgressMediaUpload -> UploadingMedia(status.mediaUploadProgress)
             status.isUploading -> UploadingPost
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
             status.uploadError != null -> PostUploadUiState.UploadFailed(status.uploadError)

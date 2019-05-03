@@ -17,6 +17,7 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostViewHolderConfig
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
 import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.LoadingItem
@@ -136,5 +137,22 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
             return oldItem.data == newItem.data
         }
         return false
+    }
+
+    override fun getChangePayload(oldItem: PostListItemType, newItem: PostListItemType): Any? {
+        if (oldItem is PostListItemUiState && newItem is PostListItemUiState) {
+            /**
+             * Suppresses the default animation if the progress has changed to prevent blinking as the upload progresses
+             *
+             * We don't need to use the payload in onBindViewHolder unless we want to. Passing a non-null value
+             * suppresses the default ItemAnimator, which is all we need in this case.
+             */
+            if (oldItem.data.progressBarState is PostListItemProgressBar.Determinate &&
+                    newItem.data.progressBarState is PostListItemProgressBar.Determinate &&
+                    oldItem.data.progressBarState.progress != newItem.data.progressBarState.progress) {
+                return true
+            }
+        }
+        return super.getChangePayload(oldItem, newItem)
     }
 }
