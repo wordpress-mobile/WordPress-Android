@@ -24,6 +24,8 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val VISIBLE_ITEMS = 1
+
 class AnnualSiteStatsUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val mostPopularStore: MostPopularInsightsStore,
@@ -66,7 +68,7 @@ class AnnualSiteStatsUseCase(
             BLOCK -> {
                 items.add(Title(R.string.stats_insights_this_year_site_stats))
                 items.addAll(annualStatsMapper.mapYearInBlock(domainModel.years.last()))
-                if (domainModel.years.size > 1) {
+                if (domainModel.years.size > VISIBLE_ITEMS) {
                     items.add(
                             Link(
                                     text = R.string.stats_insights_view_more,
