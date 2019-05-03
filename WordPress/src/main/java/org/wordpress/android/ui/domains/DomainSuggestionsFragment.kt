@@ -113,9 +113,4 @@ class DomainSuggestionsFragment : Fragment() {
     private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
     }
-
-    interface DomainRegistrationStepsListener {
-        fun onDomainSelected(domainProductDetails: DomainProductDetails)
-        fun onDomainRegistered(domainName: String)
-    }
 }

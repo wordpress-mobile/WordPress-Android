@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.domains.DomainSuggestionsFragment.DomainRegistrationStepsListener
 
 class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsListener {
     override fun onCreate(savedInstanceState: Bundle?) {
