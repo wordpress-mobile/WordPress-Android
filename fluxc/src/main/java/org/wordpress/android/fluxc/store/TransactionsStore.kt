@@ -113,6 +113,24 @@ class TransactionsStore @Inject constructor(
         constructor(error: FetchSupportedCountriesError) : this() {
             this.error = error
         }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as OnSupportedCountriesFetched
+
+            if (countries != null) {
+                if (other.countries == null) return false
+                if (!countries.contentEquals(other.countries)) return false
+            } else if (other.countries != null) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            return countries?.contentHashCode() ?: 0
+        }
     }
 
     data class OnShoppingCartCreated(
