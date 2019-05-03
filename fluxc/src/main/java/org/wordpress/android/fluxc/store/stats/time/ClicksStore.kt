@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.stats.time.ClicksModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ClicksSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -20,7 +20,7 @@ import kotlin.coroutines.CoroutineContext
 class ClicksStore
 @Inject constructor(
     private val restClient: ClicksRestClient,
-    private val sqlUtils: TimeStatsSqlUtils,
+    private val sqlUtils: ClicksSqlUtils,
     private val timeStatsMapper: TimeStatsMapper,
     private val coroutineContext: CoroutineContext
 ) {
@@ -31,11 +31,14 @@ class ClicksStore
         date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
+        if (!forced && sqlUtils.hasFreshRequest(site, granularity, date, limitMode.limit)) {
+            return@withContext OnStatsFetched(getClicks(site, granularity, limitMode, date), cached = true)
+        }
         val payload = restClient.fetchClicks(site, granularity, date, limitMode.limit + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
-                sqlUtils.insert(site, payload.response, granularity, date)
+                sqlUtils.insert(site, payload.response, granularity, date, limitMode.limit)
                 OnStatsFetched(timeStatsMapper.map(payload.response, limitMode))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
@@ -43,6 +46,6 @@ class ClicksStore
     }
 
     fun getClicks(site: SiteModel, period: StatsGranularity, limitMode: Top, date: Date): ClicksModel? {
-        return sqlUtils.selectClicks(site, period, date)?.let { timeStatsMapper.map(it, limitMode) }
+        return sqlUtils.select(site, period, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
