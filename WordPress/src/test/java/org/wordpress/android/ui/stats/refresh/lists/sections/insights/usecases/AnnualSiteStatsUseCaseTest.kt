@@ -169,7 +169,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadMostPopularInsights(refresh, forced)
 
-        Assertions.assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
     }
 
     @Test
