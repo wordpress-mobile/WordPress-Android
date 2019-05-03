@@ -1,9 +1,13 @@
 12.4
 -----
+* Reduce number of network calls in Stats and improve performance
 * Added support for displaying posts in tabs based on their status
 * Added ability to filter posts by their author
+* Added ability to toggle to compact view type for blog posts list
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
+* New Insights Management for selecting the most relevant stats
+* App download size is now much smaller.
 
 12.3
 -----

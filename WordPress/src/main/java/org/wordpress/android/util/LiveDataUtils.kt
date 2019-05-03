@@ -203,8 +203,8 @@ fun <T> LiveData<T>.throttle(
 ): ThrottleLiveData<T> {
     val mediatorLiveData: ThrottleLiveData<T> = ThrottleLiveData(coroutineScope = coroutineScope, offset = offset)
     mediatorLiveData.addSource(this) {
-        if (it != mediatorLiveData.value || !distinct) {
-            mediatorLiveData.value = it
+        if ((it != mediatorLiveData.value || !distinct) && it != null) {
+            mediatorLiveData.postValue(it)
         }
     }
     return mediatorLiveData

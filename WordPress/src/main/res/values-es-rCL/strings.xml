@@ -60,7 +60,7 @@ Language: es_CL
     <string name="stats_followers_count_message">Total %1$s Seguidores: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Administrar estadísticas</string>
+    <string name="stats_manage_insights">Administrar estadísticas</string>
     <string name="stats_empty_insights_title">Aún no se ha añadido estadisticas</string>
     <string name="stats_no_data_yet">Aún no hay datos</string>
     <string name="menu_debug">Menú Depuración</string>

@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.DrawableRes
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.Toolbar
 import android.view.HapticFeedbackConstants
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -33,6 +35,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.widgets.WPSnackbar
@@ -287,8 +290,26 @@ class PostsListActivity : AppCompatActivity(),
         if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
+        } else if (item.itemId == R.id.toggle_post_list_item_layout) {
+            viewModel.toggleViewLayout()
+            return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menu?.let {
+            menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
+            val toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
+            viewModel.viewLayoutTypeMenuUiState.observe(this, Observer { menuUiState ->
+                menuUiState?.let {
+                    updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
+                    updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
+                }
+            })
+        }
+        return true
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
@@ -308,5 +329,17 @@ class PostsListActivity : AppCompatActivity(),
 
     override fun onDismissByOutsideTouch(instanceTag: String) {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
+    }
+
+    // Menu PostListViewLayoutType handling
+
+    private fun updateMenuIcon(@DrawableRes iconRes: Int, menuItem: MenuItem) {
+        getDrawable(iconRes)?.let { drawable ->
+            menuItem.setIcon(drawable)
+        }
+    }
+
+    private fun updateMenuTitle(title: UiString, menuItem: MenuItem): MenuItem? {
+        return menuItem.setTitle(uiHelpers.getTextOfUiString(this@PostsListActivity, title))
     }
 }

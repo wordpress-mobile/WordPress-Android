@@ -185,19 +185,19 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `show progress when performing critical action`() {
         val state = createPostListItemUiState(performingCriticalAction = true)
-        assertThat(state.data.showProgress).isTrue()
+        assertThat(state.data.progressBarState).isEqualTo(PostListItemProgressBar.Indeterminate)
     }
 
     @Test
     fun `show progress when post is uploading or queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploadingOrQueued = true))
-        assertThat(state.data.showProgress).isTrue()
+        assertThat(state.data.progressBarState).isEqualTo(PostListItemProgressBar.Indeterminate)
     }
 
     @Test
     fun `show progress when uploading media`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasInProgressMediaUpload = true))
-        assertThat(state.data.showProgress).isTrue()
+        assertThat(state.data.progressBarState).isInstanceOf(PostListItemProgressBar.Determinate::class.java)
     }
 
     @Test
@@ -207,7 +207,7 @@ class PostListItemUiStateHelperTest {
                         isUploadFailed = true
                 )
         )
-        assertThat(state.data.showProgress).isFalse()
+        assertThat(state.data.progressBarState).isEqualTo(PostListItemProgressBar.Hidden)
     }
 
     @Test
@@ -219,7 +219,7 @@ class PostListItemUiStateHelperTest {
                         hasInProgressMediaUpload = true
                 )
         )
-        assertThat(state.data.showProgress).isTrue()
+        assertThat(state.data.progressBarState).isInstanceOf(PostListItemProgressBar.Determinate::class.java)
     }
 
     @Test
