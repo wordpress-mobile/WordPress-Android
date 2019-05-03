@@ -2,7 +2,6 @@ package org.wordpress.android.viewmodel.posts
 
 import android.support.annotation.DrawableRes
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
 import org.wordpress.android.ui.posts.PostListType
@@ -34,7 +33,7 @@ sealed class PostListEmptyUiState(
     object DataShown : PostListEmptyUiState(emptyViewVisible = false)
 
     object Loading : PostListEmptyUiState(
-            title = UiStringRes(string.posts_fetching),
+            title = UiStringRes(R.string.posts_fetching),
             imgResId = R.drawable.img_illustration_posts_75dp
     )
 
@@ -58,7 +57,7 @@ sealed class PostListEmptyUiState(
 fun createEmptyUiState(
     postListType: PostListType,
     isNetworkAvailable: Boolean,
-    isFetchingFirstPage: Boolean,
+    isLoadingData: Boolean,
     isListEmpty: Boolean,
     error: ListError?,
     fetchFirstPage: () -> Unit,
@@ -71,7 +70,7 @@ fun createEmptyUiState(
                     error = error,
                     fetchFirstPage = fetchFirstPage
             )
-            isFetchingFirstPage -> PostListEmptyUiState.Loading
+            isLoadingData -> PostListEmptyUiState.Loading
             else -> createEmptyListUiState(postListType = postListType, newPost = newPost)
         }
     } else {

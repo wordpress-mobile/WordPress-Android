@@ -217,7 +217,7 @@ Language: he_IL
     <string name="stats_followers_count_message">סך הכול %1$s עוקבים: %2$s</string>
     <string name="stats_followers_email">אימייל</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">ניהול תובנות</string>
+    <string name="stats_manage_insights">ניהול תובנות</string>
     <string name="stats_empty_insights_title">עדיין לא נוספו תובנות</string>
     <string name="stats_no_data_yet">עדיין אין נתונים</string>
     <string name="menu_debug">תפריט איתור באגים</string>

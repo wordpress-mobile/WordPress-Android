@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white">
+
+    <LinearLayout
+        android:id="@+id/search_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_extra_large">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_extra_medium_large">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_extra_extra_small"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_search_white_24dp"
+                android:tint="@color/neutral"/>
+
+            <ProgressBar
+                android:id="@+id/suggestion_progress_bar"
+                android:layout_width="@dimen/progress_spinner_small"
+                android:layout_height="@dimen/progress_spinner_small"
+                android:background="@android:color/white"
+                tools:visibility="gone"/>
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/domain_suggestion_keyword_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_small"
+            android:background="@android:color/transparent"
+            android:clickable="false"
+            android:hint="@string/suggestions_search_hint"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="@dimen/margin_extra_extra_small"
+            android:textColorHint="@color/neutral_400"
+            android:textSize="@dimen/text_sz_medium"
+            tools:ignore="Autofill,RtlSymmetry"/>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_below="@+id/search_container"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:background="@color/divider"
+       />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_buttons"
+        android:layout_below="@+id/divider"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/domain_suggestions_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+                android:id="@+id/domain_suggestions_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <org.wordpress.android.ui.ActionableEmptyView
+                android:id="@+id/actionableEmptyView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:aevTitle="@string/suggestions_empty_list"
+                tools:visibility="visible"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_container_shadow_height"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/login_shadow"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:clipToPadding="false"
+        android:padding="@dimen/margin_large">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/chose_domain_button"
+            style="@style/WordPress.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/choose_domain">
+        </android.support.v7.widget.AppCompatButton>
+    </RelativeLayout>
+</RelativeLayout>

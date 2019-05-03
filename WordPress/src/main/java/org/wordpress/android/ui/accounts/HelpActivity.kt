@@ -30,10 +30,10 @@ class HelpActivity : AppCompatActivity() {
     @Inject lateinit var zendeskHelper: ZendeskHelper
 
     private val originFromExtras by lazy {
-        (intent.extras?.get(HelpActivity.ORIGIN_KEY) as Origin?) ?: Origin.UNKNOWN
+        (intent.extras?.get(ORIGIN_KEY) as Origin?) ?: Origin.UNKNOWN
     }
     private val extraTagsFromExtras by lazy {
-        intent.extras?.getStringArrayList(HelpActivity.EXTRA_TAGS_KEY)
+        intent.extras?.getStringArrayList(EXTRA_TAGS_KEY)
     }
     private val selectedSiteFromExtras by lazy {
         intent.extras?.get(WordPress.SITE) as SiteModel?
@@ -174,7 +174,7 @@ class HelpActivity : AppCompatActivity() {
             extraSupportTags: List<String>?
         ): Intent {
             val intent = Intent(context, HelpActivity::class.java)
-            intent.putExtra(HelpActivity.ORIGIN_KEY, origin)
+            intent.putExtra(ORIGIN_KEY, origin)
             if (selectedSite != null) {
                 intent.putExtra(WordPress.SITE, selectedSite)
             }
@@ -195,8 +195,8 @@ class HelpActivity : AppCompatActivity() {
                 extraSupportTags as ArrayList<String>?
             }
 
-            if (tagsList != null && !tagsList.isEmpty()) {
-                intent.putStringArrayListExtra(HelpActivity.EXTRA_TAGS_KEY, tagsList)
+            if (tagsList != null && tagsList.isNotEmpty()) {
+                intent.putStringArrayListExtra(EXTRA_TAGS_KEY, tagsList)
             }
 
             return intent

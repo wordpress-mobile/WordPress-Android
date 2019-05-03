@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.drawable
@@ -8,7 +9,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -45,6 +47,7 @@ class TagsAndCategoriesUseCase
     private val statsSiteProvider: StatsSiteProvider,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val popupMenuHandler: ItemPopupMenuHandler,
     private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<TagsModel, TagsAndCategoriesUiState>(
         TAGS_AND_CATEGORIES,
@@ -71,11 +74,15 @@ class TagsAndCategoriesUseCase
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_tags_and_categories))
 
+    override fun buildEmptyItem(): List<BlockListItem> {
+        return listOf(buildTitle(), Empty())
+    }
+
     override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {
-            items.add(Title(R.string.stats_insights_tags_and_categories))
+            items.add(buildTitle())
         }
 
         if (domainModel.tags.isEmpty()) {
@@ -121,6 +128,8 @@ class TagsAndCategoriesUseCase
         }
         return items
     }
+
+    private fun buildTitle() = Title(string.stats_insights_tags_and_categories, menuAction = this::onMenuClick)
 
     private fun areTagsEqual(tagA: TagModel, tagB: TagModel?): Boolean {
         return tagA.items == tagB?.items && tagA.views == tagB.views
@@ -175,6 +184,10 @@ class TagsAndCategoriesUseCase
         navigateTo(ViewTag(link))
     }
 
+    private fun onMenuClick(view: View) {
+        popupMenuHandler.onMenuClick(view, type)
+    }
+
     data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null)
 
     class TagsAndCategoriesUseCaseFactory
@@ -183,7 +196,8 @@ class TagsAndCategoriesUseCase
         private val tagsStore: TagsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val resourceProvider: ResourceProvider,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val popupMenuHandler: ItemPopupMenuHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 TagsAndCategoriesUseCase(
@@ -192,6 +206,7 @@ class TagsAndCategoriesUseCase
                         statsSiteProvider,
                         resourceProvider,
                         analyticsTracker,
+                        popupMenuHandler,
                         useCaseMode
                 )
     }

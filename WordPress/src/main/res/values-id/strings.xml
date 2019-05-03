@@ -217,7 +217,7 @@ Language: id
     <string name="stats_followers_count_message">Total %1$s Pengikut: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Kelola informasi</string>
+    <string name="stats_manage_insights">Kelola informasi</string>
     <string name="stats_empty_insights_title">Belum ada informasi yang ditambahkan</string>
     <string name="stats_no_data_yet">Belum ada data</string>
     <string name="menu_debug">Menu Debug</string>
