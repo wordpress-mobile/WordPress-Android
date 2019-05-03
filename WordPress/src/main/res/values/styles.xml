@@ -842,7 +842,26 @@
         <item name="android:background">@color/neutral_0</item>
     </style>
 
-    <style name="DomainRegistrationDetailsTextInputLayout">
+    <style name="DomainRegistrationFormTitle">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:gravity">start</item>
+    </style>
+
+      <style name="DomainRegistrationFormSubTitle">
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:gravity">start</item>
+    </style>
+
+    <style name="DomainRegistrationDetailsFormTextInputLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>

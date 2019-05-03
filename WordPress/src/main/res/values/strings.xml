@@ -1984,6 +1984,14 @@
     <string name="domain_registration_result_description">your new domain <b>%s</b> is being set up. Your site is
         doing somersaults in excitement!</string>
     <string name="domain_registration_result_continue_button">continue</string>
+    <string name="domain_registration_country_picker_dialog_title">Select Country</string>
+    <string name="domain_registration_state_picker_dialog_title">Select State</string>
+    <string name="domain_registration_loading_form_details_progress_dialog_message">Loading form details…</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
+    <string name="domain_registration_error_registering_domain">Error occurred during domain registration: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">Error occurred fetching domain contact information: %s</string>
+    <string name="domain_registration_error_updating_site">Error occurred while updating your site details: %s</string>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
 
 
     <!-- Automated Transfer Eligibility Errors -->
