@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.VisitsAndViewsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -20,7 +20,7 @@ import kotlin.coroutines.CoroutineContext
 class VisitsAndViewsStore
 @Inject constructor(
     private val restClient: VisitAndViewsRestClient,
-    private val sqlUtils: TimeStatsSqlUtils,
+    private val sqlUtils: VisitsAndViewsSqlUtils,
     private val timeStatsMapper: TimeStatsMapper,
     private val coroutineContext: CoroutineContext
 ) {
@@ -31,11 +31,14 @@ class VisitsAndViewsStore
         date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchVisits(site, date, granularity, limitMode.limit, forced)
+        if (!forced && sqlUtils.hasFreshRequest(site, granularity, date, limitMode.limit)) {
+            return@withContext OnStatsFetched(getVisits(site, granularity, limitMode, date), cached = true)
+        }
+        val payload = restClient.fetchVisits(site, granularity, date, limitMode.limit, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
-                sqlUtils.insert(site, payload.response, granularity, date)
+                sqlUtils.insert(site, payload.response, granularity, date, limitMode.limit)
                 val overviewResponse = timeStatsMapper.map(payload.response, limitMode)
                 if (overviewResponse.period.isBlank() || overviewResponse.dates.isEmpty())
                     OnStatsFetched(StatsError(INVALID_RESPONSE, "Overview: Required data 'period' or 'dates' missing"))
@@ -52,6 +55,6 @@ class VisitsAndViewsStore
         limitMode: LimitMode,
         date: Date
     ): VisitsAndViewsModel? {
-        return sqlUtils.selectVisitsAndViews(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
+        return sqlUtils.select(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
