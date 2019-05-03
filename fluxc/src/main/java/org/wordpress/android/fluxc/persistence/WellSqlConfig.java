@@ -31,7 +31,6 @@ public class WellSqlConfig extends DefaultWellConfig {
     @StringDef({ADDON_WOOCOMMERCE})
     @Target(ElementType.PARAMETER)
     public @interface AddOn {}
-
     public static final String ADDON_WOOCOMMERCE = "WC";
 
     public WellSqlConfig(Context context) {
@@ -44,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 66;
+        return 67;
     }
 
     @Override
@@ -505,6 +504,12 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 65:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 66:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE InsightTypes (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,INSIGHT_TYPE TEXT NOT NULL,POSITION INTEGER,STATUS TEXT NOT NULL)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

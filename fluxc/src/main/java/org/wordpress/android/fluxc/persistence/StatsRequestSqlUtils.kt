@@ -34,6 +34,7 @@ class StatsRequestSqlUtils
             deleteStatement = deleteStatement.equals(StatsBlockTable.DATE, date)
         }
         deleteStatement.endWhere().execute()
+        val timeStamp = System.currentTimeMillis()
         WellSql.insert(
                 StatsRequestBuilder(
                         localSiteId = site.id,
@@ -41,7 +42,7 @@ class StatsRequestSqlUtils
                         statsType = statsType.name,
                         date = date,
                         postId = postId,
-                        timeStamp = System.currentTimeMillis(),
+                        timeStamp = timeStamp,
                         requestedItems = requestedItems
                 )
         ).execute()
