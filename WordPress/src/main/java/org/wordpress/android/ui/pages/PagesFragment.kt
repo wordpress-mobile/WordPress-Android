@@ -30,11 +30,11 @@ import kotlinx.android.synthetic.main.pages_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
@@ -65,6 +65,11 @@ class PagesFragment : Fragment() {
     private lateinit var viewModel: PagesViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
+    /**
+     * PostStore needs to be injected here as otherwise FluxC doesn't accept emitted events.
+     */
+    @Suppress("unused")
+    @Inject lateinit var postStore: PostStore
     @Inject lateinit var quickStartStore: QuickStartStore
     @Inject lateinit var dispatcher: Dispatcher
     private var quickStartEvent: QuickStartEvent? = null
@@ -246,8 +251,7 @@ class PagesFragment : Fragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
-        val nonNullSite = checkNotNull(site)
-        viewModel.start(nonNullSite)
+        viewModel.start(site)
     }
 
     private fun setupObservers(activity: FragmentActivity) {
@@ -268,7 +272,7 @@ class PagesFragment : Fragment() {
                     WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
                 } else {
                     val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
-                    snackbar.setAction(getString(holder.buttonTitleRes)) { _ -> holder.buttonAction() }
+                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
                     snackbar.show()
                 }
             }
@@ -355,10 +359,10 @@ class PagesFragment : Fragment() {
         val dialog = BasicFragmentDialog()
         dialog.initialize(
                 page.id.toString(),
-                getString(string.delete_page),
-                getString(string.page_delete_dialog_message, page.title),
-                getString(string.delete),
-                getString(string.cancel)
+                getString(R.string.delete_page),
+                getString(R.string.page_delete_dialog_message, page.title),
+                getString(R.string.delete),
+                getString(R.string.cancel)
         )
         dialog.show(fragmentManager, page.id.toString())
     }
@@ -374,6 +378,7 @@ class PagesFragment : Fragment() {
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onEvent(event: QuickStartEvent) {
         if (!isAdded || view == null) {
             return

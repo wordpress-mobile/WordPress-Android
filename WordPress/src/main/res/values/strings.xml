@@ -254,8 +254,10 @@
     <string name="posts_published_empty">You haven\'t published any posts yet</string>
     <string name="posts_scheduled_empty">You don\'t have any scheduled posts</string>
     <string name="posts_draft_empty">You don\'t have any draft posts</string>
-    <string name="posts_trashed_empty">You don\'t have any binned posts</string>
+    <string name="posts_trashed_empty">You don\'t have any trashed posts</string>
     <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
+    <string name="post_list_toggle_item_layout_cards_view">Switch to cards view</string>
+    <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
 
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
@@ -864,6 +866,13 @@
     <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
 
+    <!-- Domain Registration-->
+    <string name="register_domain">Register Domain</string>
+    <string name="choose_domain">Choose Domain</string>
+    <string name="suggestions_empty_list">No suggestions found</string>
+    <string name="suggestions_search_hint">Type a keyword for more ideas</string>
+    <string name="suggestion_fetch_error">Domain suggestions couldn\'t be loaded</string>
+
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
@@ -1014,6 +1023,7 @@
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
+    <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
     <string name="stats_insights_year">Year</string>
     <string name="stats_insights_posts">Posts</string>
     <string name="stats_insights_total_comments">Total comments</string>

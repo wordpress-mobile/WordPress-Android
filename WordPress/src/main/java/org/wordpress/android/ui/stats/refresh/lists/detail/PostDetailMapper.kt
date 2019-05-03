@@ -77,7 +77,7 @@ class PostDetailMapper
     fun mapWeeks(
         weeks: List<PostDetailStatsModel.Week>,
         visibleCount: Int,
-        uiState: PostDetailMapper.ExpandedWeekUiState,
+        uiState: ExpandedWeekUiState,
         onUiState: (ExpandedWeekUiState) -> Unit
     ): List<BlockListItem> {
         val weekList = mutableListOf<BlockListItem>()

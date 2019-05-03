@@ -58,15 +58,15 @@ class PostDayViewsUseCase
 
         return when {
             error != null -> {
-                selectedDateProvider.dateLoadingSucceeded(DETAIL)
+                selectedDateProvider.onDateLoadingSucceeded(DETAIL)
                 State.Error(error.message ?: error.type.name)
             }
             model != null && model.dayViews.isNotEmpty() -> {
-                selectedDateProvider.dateLoadingSucceeded(DETAIL)
+                selectedDateProvider.onDateLoadingSucceeded(DETAIL)
                 State.Data(model)
             }
             else -> {
-                selectedDateProvider.dateLoadingSucceeded(DETAIL)
+                selectedDateProvider.onDateLoadingSucceeded(DETAIL)
                 State.Empty()
             }
         }

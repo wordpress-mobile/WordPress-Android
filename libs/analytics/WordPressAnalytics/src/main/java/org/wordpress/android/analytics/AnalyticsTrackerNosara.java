@@ -448,7 +448,7 @@ public class AnalyticsTrackerNosara extends Tracker {
         if (user == null) {
             try {
                 throw new AnalyticsException("Trying to track analytics with an null user!");
-                // TODO add CrashlyticsUtils.logException or track this error in Nosara by using a special test user.
+                // TODO add Crash Logging Exception or track this error in Nosara by using a special test user.
             } catch (AnalyticsException e) {
                 AppLog.e(AppLog.T.STATS, e);
             }
@@ -714,6 +714,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "post_list_author_filter_changed";
             case POST_LIST_TAB_CHANGED:
                 return "post_list_tab_changed";
+            case POST_LIST_VIEW_LAYOUT_TOGGLED:
+                return "post_list_view_layout_toggled";
             case EDITOR_OPENED:
                 return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:
