@@ -17,6 +17,9 @@
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
 
+    <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
+    <dimen name="list_with_fab_endlist_indicator_height">86dp</dimen>
+
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
     <dimen name="appbar_elevation">4dp</dimen>
 
@@ -371,6 +374,10 @@
     <dimen name="posts_list_spinner_avatar_padding">2dp</dimen>
     <dimen name="posts_list_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
     <dimen name="posts_list_tab_layout_fading_edge_width">16dp</dimen>
+    <dimen name="posts_list_compact_row_height">80dp</dimen>
+    <dimen name="posts_list_compact_image_size">40dp</dimen>
+    <dimen name="posts_list_compact_menu_button_size">24dp</dimen>
+
 
     <!--site creation-->
     <dimen name="site_creation_segments_icon_size">24dp</dimen>

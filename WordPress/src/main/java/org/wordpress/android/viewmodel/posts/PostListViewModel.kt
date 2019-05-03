@@ -197,11 +197,12 @@ class PostListViewModel @Inject constructor(
                             post.content
                     ),
                     formattedDate = PostUtils.getFormattedDate(post),
-                    performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id))
-            ) { postModel, buttonType, statEvent ->
-                trackPostListAction(connector.site, buttonType, postModel, statEvent)
-                connector.postActionHandler.handlePostButton(buttonType, postModel)
-            }
+                    performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
+                    onAction = { postModel, buttonType, statEvent ->
+                        trackPostListAction(connector.site, buttonType, postModel, statEvent)
+                        connector.postActionHandler.handlePostButton(buttonType, postModel)
+                    }
+            )
 
     private fun retryOnConnectionAvailableAfterRefreshError() {
         val connectionAvailableAfterRefreshError = networkUtilsWrapper.isNetworkAvailable() &&

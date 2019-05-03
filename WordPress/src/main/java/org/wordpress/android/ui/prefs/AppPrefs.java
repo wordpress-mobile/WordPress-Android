@@ -15,6 +15,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
+import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.util.StringUtils;
@@ -116,7 +117,8 @@ public class AppPrefs {
 
         IS_QUICK_START_NOTICE_REQUIRED,
 
-        POST_LIST_AUTHOR_FILTER
+        POST_LIST_AUTHOR_FILTER,
+        POST_LIST_VIEW_LAYOUT_TYPE
     }
 
     /**
@@ -830,7 +832,7 @@ public class AppPrefs {
     public static void setAvatarVersion(int version) {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
     }
-    
+
     public static void setGutenbergInformativeDialogDisabled(Boolean isDisabled) {
         setBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, isDisabled);
     }
@@ -846,5 +848,15 @@ public class AppPrefs {
 
     public static void setAuthorFilterSelection(@NonNull AuthorFilterSelection selection) {
         setLong(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, selection.getId());
+    }
+
+    @NonNull public static PostListViewLayoutType getPostsListViewLayoutType() {
+        long id = getLong(DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE,
+                PostListViewLayoutType.getDefaultValue().getId());
+        return PostListViewLayoutType.fromId(id);
+    }
+
+    public static void setPostsListViewLayoutType(@NonNull PostListViewLayoutType type) {
+        setLong(DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE, type.getId());
     }
 }
