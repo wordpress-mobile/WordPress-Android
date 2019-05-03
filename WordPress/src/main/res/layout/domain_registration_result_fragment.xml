@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tada_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerVertical="true"
-    android:background="@color/white"
+    android:background="@color/background_default"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingEnd="@dimen/margin_extra_large"
@@ -24,8 +23,8 @@
         android:gravity="center"
         android:paddingTop="@dimen/margin_medium"
         android:text="@string/domain_registration_result_title"
-         android:textStyle="bold"
-        android:textSize="@dimen/text_sz_extra_large"/>
+        android:textSize="@dimen/text_sz_extra_large"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/domain_registration_result_message"

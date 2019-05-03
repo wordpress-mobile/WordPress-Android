@@ -19,12 +19,12 @@ class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsL
         }
 
         if (savedInstanceState == null) {
-            val fragmentTransaction = supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(
-                    R.id.fragment_container,
-                    DomainSuggestionsFragment.newInstance()
-            )
-            fragmentTransaction.commit()
+            supportFragmentManager.beginTransaction()
+                    .replace(
+                            R.id.fragment_container,
+                            DomainSuggestionsFragment.newInstance()
+                    )
+                    .commit()
         }
     }
 
@@ -37,29 +37,28 @@ class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsL
     }
 
     override fun onDomainSelected(domainProductDetails: DomainProductDetails) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.setCustomAnimations(
+        supportFragmentManager.beginTransaction().setCustomAnimations(
                 R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
                 R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
         )
-        fragmentTransaction.replace(
-                R.id.fragment_container,
-                DomainRegistrationDetailsFragment.newInstance(domainProductDetails)
-        )
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
+                .replace(
+                        R.id.fragment_container,
+                        DomainRegistrationDetailsFragment.newInstance(domainProductDetails)
+                )
+                .addToBackStack(null)
+                .commit()
     }
 
     override fun onDomainRegistered(domainName: String) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.setCustomAnimations(
-                R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-        )
-        fragmentTransaction.replace(
-                R.id.fragment_container,
-                DomainRegistrationResultFragment.newInstance(domainName)
-        )
-        fragmentTransaction.commit()
+        supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                        R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
+                )
+                .replace(
+                        R.id.fragment_container,
+                        DomainRegistrationResultFragment.newInstance(domainName)
+                )
+                .commit()
     }
 }

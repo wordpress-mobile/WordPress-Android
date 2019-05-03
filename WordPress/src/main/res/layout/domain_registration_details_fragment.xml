@@ -22,7 +22,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/stats_white_background"
+                android:background="@color/background"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large">
@@ -80,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                android:background="@drawable/stats_white_background"
+                android:background="@color/background"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large"
@@ -88,7 +88,7 @@
 
 
                 <org.wordpress.android.widgets.WPTextView
-                    style="@style/StatsModuleTitle"
+                    style="@style/DomainRegistrationFormTitle"
                     android:paddingBottom="@dimen/margin_medium"
                     android:paddingTop="@dimen/margin_large"
                     android:text="@string/domain_contact_information_title"/>
@@ -310,14 +310,13 @@
         android:id="@+id/form_progress_indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_default">
+        android:background="@color/background_default"
+        tools:visibility="gone">
 
         <ProgressBar
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="visible"
-            />
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 </RelativeLayout>
