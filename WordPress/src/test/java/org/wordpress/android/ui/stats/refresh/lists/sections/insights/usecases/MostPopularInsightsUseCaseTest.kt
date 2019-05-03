@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.math.roundToInt
@@ -33,6 +34,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dateUtils: DateUtils
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     private lateinit var useCase: MostPopularInsightsUseCase
     private val day = 2
     private val highestDayPercent = 15.0
@@ -47,7 +49,8 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 statsSiteProvider,
                 dateUtils,
-                resourceProvider
+                resourceProvider,
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(dateUtils.getWeekDay(day)).thenReturn(dayString)

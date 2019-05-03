@@ -156,7 +156,7 @@ class HistoryListFragment : Fragment() {
         })
 
         viewModel.showDialog.observe(this, Observer {
-            if (it is HistoryListItem.Revision && activity is HistoryItemClickInterface) {
+            if (it is Revision && activity is HistoryItemClickInterface) {
                 (activity as HistoryItemClickInterface).onHistoryItemClicked(it, viewModel.revisionsList)
             }
         })

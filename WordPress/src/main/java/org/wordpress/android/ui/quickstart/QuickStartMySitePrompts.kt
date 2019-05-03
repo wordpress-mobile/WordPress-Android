@@ -89,7 +89,7 @@ enum class QuickStartMySitePrompts constructor(
 
         @JvmStatic
         fun getPromptDetailsForTask(task: QuickStartTask): QuickStartMySitePrompts? {
-            QuickStartMySitePrompts.values().forEach {
+            values().forEach {
                 if (it.task == task) return it
             }
             return null

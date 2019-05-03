@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.CLICKS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.CLICKS
 import org.wordpress.android.fluxc.store.stats.time.ClicksStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
@@ -121,7 +121,7 @@ constructor(
                                     textStyle = LIGHT,
                                     value = click.views.toFormattedString(),
                                     showDivider = false,
-                                    navigationAction = click.url?.let { NavigationAction.create(it, this::onItemClick) }
+                                    navigationAction = click.url?.let { create(it, this::onItemClick) }
                             )
                         })
                         items.add(Divider)

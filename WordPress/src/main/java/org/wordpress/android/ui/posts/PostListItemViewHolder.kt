@@ -23,6 +23,9 @@ import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar.Determinate
+import org.wordpress.android.viewmodel.posts.PostListItemProgressBar.Indeterminate
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
 import org.wordpress.android.widgets.PostListButton
@@ -40,6 +43,11 @@ sealed class PostListItemViewHolder(
     private val statusesTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
     private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
+
+    /**
+     * Url of an image loaded in the `featuredImageView`.
+     */
+    private var loadedFeaturedImgUrl: String? = null
 
     abstract fun onBind(item: PostListItemUiState)
 
@@ -108,7 +116,7 @@ sealed class PostListItemViewHolder(
         uiHelpers.updateVisibility(statusesTextView, data.statuses.isNotEmpty())
         updateStatusesLabel(statusesTextView, data.statuses, data.statusesDelimiter, data.statusesColor)
         showFeaturedImage(data.imageUrl)
-        uiHelpers.updateVisibility(uploadProgressBar, data.showProgress)
+        updateProgressBarState(data.progressBarState)
         uiHelpers.updateVisibility(disabledOverlay, data.showOverlay)
     }
 
@@ -127,6 +135,17 @@ sealed class PostListItemViewHolder(
             }
         }
         menu.show()
+    }
+
+    private fun updateProgressBarState(progressBarState: PostListItemProgressBar) {
+        uiHelpers.updateVisibility(uploadProgressBar, progressBarState.visibility)
+        when (progressBarState) {
+            Indeterminate -> uploadProgressBar.isIndeterminate = true
+            is Determinate -> {
+                uploadProgressBar.isIndeterminate = false
+                uploadProgressBar.progress = progressBarState.progress
+            }
+        }
     }
 
     private fun updateStatusesLabel(
@@ -148,6 +167,10 @@ sealed class PostListItemViewHolder(
     }
 
     private fun showFeaturedImage(imageUrl: String?) {
+        if (imageUrl == loadedFeaturedImgUrl) {
+            // Suppress blinking as the media upload progresses
+            return
+        }
         if (imageUrl == null) {
             featuredImageView.visibility = View.GONE
             config.imageManager.cancelRequestAndClearImageView(featuredImageView)
@@ -169,5 +192,6 @@ sealed class PostListItemViewHolder(
                 config.imageManager.cancelRequestAndClearImageView(featuredImageView)
             }
         }
+        loadedFeaturedImgUrl = imageUrl
     }
 }

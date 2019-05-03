@@ -221,7 +221,7 @@ Language: ru
     <string name="stats_followers_count_message">Всего %1$s Подписчики: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Настроить статистику</string>
+    <string name="stats_manage_insights">Настроить статистику</string>
     <string name="stats_empty_insights_description">Настройте вашу статистику и узнайте важное то, чем живет ваш сайт.</string>
     <string name="stats_empty_insights_title">Еще нет статистики</string>
     <string name="stats_no_data_yet">Пока нет данных</string>

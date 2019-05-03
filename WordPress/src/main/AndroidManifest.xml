@@ -288,9 +288,13 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.StatsViewAllActivity"
-            android:label="@string/stats"
             android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
+        <activity
+            android:name=".ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity"
+            android:label="@string/stats_manage_insights"
+            android:launchMode="singleTop"
+            android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.stats.refresh.lists.detail.StatsDetailActivity"
             android:label="@string/stats"
@@ -553,6 +557,12 @@
         <activity
             android:name=".ui.activitylog.detail.ActivityLogDetailActivity"
             android:label="@string/activity_log_event"
+            android:theme="@style/Calypso.NoActionBar"/>
+
+        <!--Domain Registration-->
+        <activity
+            android:name=".ui.domains.DomainRegistrationActivity"
+            android:label="@string/register_domain"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Me activities -->

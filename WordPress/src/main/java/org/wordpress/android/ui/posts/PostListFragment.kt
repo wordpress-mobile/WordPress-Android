@@ -17,6 +17,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -52,6 +54,9 @@ class PostListFragment : Fragment() {
     private var actionableEmptyView: ActionableEmptyView? = null
     private var progressLoadMore: ProgressBar? = null
 
+    private lateinit var itemDecorationCompactLayout: RecyclerItemDecoration
+    private lateinit var itemDecorationStandardLayout: RecyclerItemDecoration
+
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
 
@@ -59,8 +64,6 @@ class PostListFragment : Fragment() {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
         PostViewHolderConfig(
-                // endList indicator height is hard-coded here so that its horizontal line is in the middle of the fab
-                endlistIndicatorHeight = DisplayUtils.dpToPx(context, 74),
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
                 isPhotonCapable = SiteUtils.isPhotonCapable(site),
@@ -107,6 +110,17 @@ class PostListFragment : Fragment() {
 
         mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
+                when (layoutType) {
+                    STANDARD -> {
+                        recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
+                        recyclerView?.addItemDecoration(itemDecorationStandardLayout)
+                    }
+                    COMPACT -> {
+                        recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
+                        recyclerView?.addItemDecoration(itemDecorationCompactLayout)
+                    }
+                }
+
                 recyclerView?.scrollToPosition(0)
                 postListAdapter.updateItemLayoutType(layoutType)
             }
@@ -147,9 +161,15 @@ class PostListFragment : Fragment() {
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
 
         val context = nonNullActivity
-        val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.margin_medium)
+        itemDecorationStandardLayout = RecyclerItemDecoration(
+                0,
+                context.resources.getDimensionPixelSize(R.dimen.margin_medium)
+        )
+        itemDecorationCompactLayout = RecyclerItemDecoration(
+                0,
+                context.resources.getDimensionPixelSize(R.dimen.list_divider_height)
+        )
         recyclerView?.layoutManager = LinearLayoutManager(context)
-        recyclerView?.addItemDecoration(RecyclerItemDecoration(0, spacingVertical))
         recyclerView?.adapter = postListAdapter
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {

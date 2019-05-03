@@ -403,7 +403,7 @@ private fun createZendeskIdentity(email: String?, name: String?): Identity {
  */
 private fun getCombinedLogInformationOfSites(allSites: List<SiteModel>?): String {
     allSites?.let {
-        return it.joinToString(separator = ZendeskConstants.blogSeparator) { it.logInformation }
+        return it.joinToString(separator = ZendeskConstants.blogSeparator) { site -> site.logInformation }
     }
     return ZendeskConstants.noneValue
 }
@@ -416,18 +416,18 @@ private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTa
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site
-        if (it.any { it.isWPCom }) {
+        if (it.any { site -> site.isWPCom }) {
             tags.add(ZendeskConstants.wpComTag)
         }
 
         // Add Jetpack tag if at least one site is Jetpack connected. Even if a site is Jetpack connected,
         // it does not necessarily mean that user is connected with the REST API, but we don't care about that here
-        if (it.any { it.isJetpackConnected }) {
+        if (it.any { site -> site.isJetpackConnected }) {
             tags.add(ZendeskConstants.jetpackTag)
         }
 
         // Find distinct plans and add them
-        val plans = it.mapNotNull { it.planShortName }.distinct()
+        val plans = it.mapNotNull { site -> site.planShortName }.distinct()
         tags.addAll(plans)
     }
     tags.add(origin.toString())
