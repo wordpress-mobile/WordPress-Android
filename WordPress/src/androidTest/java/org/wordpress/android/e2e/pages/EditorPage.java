@@ -11,6 +11,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -20,15 +21,15 @@ import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class EditorPage {
+
     private static ViewInteraction publishButton = onView(withId(R.id.menu_save_post));
-
     private static ViewInteraction editor = onView(withId(R.id.aztec));
-
-    private static ViewInteraction titleField = onView(allOf(withId(R.id.title), withHint("Title")));
-
-    private static ViewInteraction publishConfirmation = onView(
-            CoreMatchers.allOf(withId(android.support.design.R.id.snackbar_text),
-                    withText("Post published")));
+    private static ViewInteraction titleField = onView(allOf(withId(R.id.title),
+            withHint("Title")));
+    private static ViewInteraction publishConfirmation = onView(withText("Post published"));
+    private static ViewInteraction addMediaButton = onView(withId(R.id.format_bar_button_media_collapsed));
+    private static ViewInteraction allowMediaAccessButton = onView(allOf(withId(R.id.button),
+            withText("Allow")));
 
     public EditorPage() {
         editor.check(matches(isDisplayed()));
@@ -42,6 +43,20 @@ public class EditorPage {
 
     public EditorPage enterContent(String postContent) {
         editor.perform(typeText(postContent), ViewActions.closeSoftKeyboard());
+
+        return this;
+    }
+
+    public EditorPage enterImage() {
+        // Click on add media button
+        addMediaButton.perform(click());
+
+        // Click on Allow button
+        allowMediaAccessButton.perform(click());
+
+        // Accept alert for media access
+        onView(withText("ALLOW")).inRoot(isDialog()).perform(click());
+
 
         return this;
     }

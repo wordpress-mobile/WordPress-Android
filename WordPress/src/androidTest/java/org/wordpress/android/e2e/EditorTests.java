@@ -23,7 +23,7 @@ public class EditorTests extends BaseTest {
         String title = "Title";
         String content = "Content";
 
-        wpLogin();
+        loginIfNecessary();
 
         MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
         sleep();
