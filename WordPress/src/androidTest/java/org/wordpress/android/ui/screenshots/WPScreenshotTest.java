@@ -92,7 +92,7 @@ public class WPScreenshotTest extends BaseTest {
             Espresso.closeSoftKeyboard();
         }
 
-        Screengrab.screenshot(screenshotName);
+        takeScreenshot(screenshotName);
         pressBackUntilElementIsDisplayed(R.id.row_blog_posts);
     }
 
@@ -103,7 +103,7 @@ public class WPScreenshotTest extends BaseTest {
 
         waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
 
-        Screengrab.screenshot("4-media");
+        takeScreenshot("4-media");
         pressBackUntilElementIsDisplayed(R.id.row_media);
     }
 
@@ -114,7 +114,7 @@ public class WPScreenshotTest extends BaseTest {
         waitForAtLeastOneElementWithIdToBeDisplayed(R.id.note_content_container);
         waitForImagesOfTypeWithPlaceholder(R.id.note_avatar, ImageType.AVATAR);
 
-        Screengrab.screenshot("3-notifications");
+        takeScreenshot("3-notifications");
 
         // Exit the notifications activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -127,10 +127,18 @@ public class WPScreenshotTest extends BaseTest {
 
         // Wait for the stats to load
         waitForAtLeastOneElementWithIdToBeDisplayed(R.id.stats_block_list);
-        Screengrab.screenshot("2-stats");
+        takeScreenshot("2-stats");
 
         // Exit the Stats Activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void takeScreenshot(String screenshotName) {
+        try {
+            Screengrab.screenshot(screenshotName);
+        } catch (RuntimeException r) {
+            // Screenshots will fail when running outside of Fastlane, so this is safe to ignore.
+        }
     }
 
     private boolean editPostActivityIsNoLongerLoadingImages() {
