@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -68,31 +69,40 @@ class HistoryListFragment : Fragment() {
 
         empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, LinearLayoutManager.VERTICAL, false)
         empty_recycler_view.setEmptyView(actionable_empty_view)
+        actionable_empty_view.button.setText(R.string.button_retry)
+        actionable_empty_view.button.setOnClickListener {
+            checkConnectionAndPullToRefresh(nonNullActivity)
+        }
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(swipe_refresh_layout) {
-            if (NetworkUtils.checkConnection(nonNullActivity)) {
-                viewModel.onPullToRefresh()
-            } else {
-                swipeToRefreshHelper.isRefreshing = false
-            }
+            checkConnectionAndPullToRefresh(nonNullActivity)
         }
 
         (nonNullActivity.application as WordPress).component()?.inject(this)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
         viewModel.create(arguments?.get(KEY_POST) as PostModel, arguments?.get(KEY_SITE) as SiteModel)
-
-        setPostOrPageEmptyText()
+        updatePostOrPageEmptyView()
         setObservers()
     }
 
-    private fun setPostOrPageEmptyText() {
+    private fun checkConnectionAndPullToRefresh(nonNullActivity: Activity) {
+        if (NetworkUtils.checkConnection(nonNullActivity)) {
+            viewModel.onPullToRefresh()
+        } else {
+            swipeToRefreshHelper.isRefreshing = false
+        }
+    }
+
+    private fun updatePostOrPageEmptyView() {
         actionable_empty_view.title.text = getString(R.string.history_empty_title)
         actionable_empty_view.subtitle.text = if ((arguments?.get(KEY_POST) as PostModel).isPage) {
             getString(R.string.history_empty_subtitle_page)
         } else {
             getString(R.string.history_empty_subtitle_post)
         }
+        actionable_empty_view.button.visibility = View.GONE
+        actionable_empty_view.subtitle.visibility = View.VISIBLE
     }
 
     private fun reloadList(data: List<HistoryListItem>) {
@@ -122,16 +132,25 @@ class HistoryListFragment : Fragment() {
                 swipeToRefreshHelper.isRefreshing = listStatus == HistoryListStatus.FETCHING
             }
             when (listStatus) {
-                HistoryListStatus.FETCHING, HistoryListStatus.DONE -> {
-                    setPostOrPageEmptyText()
+                HistoryListStatus.DONE -> {
+                    updatePostOrPageEmptyView()
+                }
+                HistoryListStatus.FETCHING -> {
+                    actionable_empty_view.title.setText(R.string.history_fecthing_revisions)
+                    actionable_empty_view.subtitle.visibility = View.GONE
+                    actionable_empty_view.button.visibility = View.GONE
                 }
                 HistoryListStatus.NO_NETWORK -> {
                     actionable_empty_view.title.setText(R.string.no_network_title)
                     actionable_empty_view.subtitle.setText(R.string.no_network_message)
+                    actionable_empty_view.subtitle.visibility = View.VISIBLE
+                    actionable_empty_view.button.visibility = View.VISIBLE
                 }
                 HistoryListStatus.ERROR -> {
                     actionable_empty_view.title.setText(R.string.no_network_title)
                     actionable_empty_view.subtitle.setText(R.string.error_generic_network)
+                    actionable_empty_view.subtitle.visibility = View.VISIBLE
+                    actionable_empty_view.button.visibility = View.VISIBLE
                 }
             }
         })
