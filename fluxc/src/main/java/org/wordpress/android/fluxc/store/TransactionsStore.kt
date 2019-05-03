@@ -32,8 +32,7 @@ class TransactionsStore @Inject constructor(
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
-        val actionType = action.type as? TransactionAction ?: return
-        when (actionType) {
+        when (action.type as? TransactionAction ?: return) {
             FETCH_SUPPORTED_COUNTRIES -> {
                 GlobalScope.launch(coroutineContext) {
                     emitChange(fetchSupportedCountries())
@@ -163,10 +162,7 @@ class TransactionsStore @Inject constructor(
 
     data class CreateShoppingCartError(var type: CreateCartErrorType, val message: String = "") : OnChangedError
 
-    data class RedeemShoppingCartError(
-        var type: TransactionErrorType,
-        val message: String = ""
-    ) : OnChangedError
+    data class RedeemShoppingCartError(var type: TransactionErrorType, val message: String = "") : OnChangedError
 
     enum class FetchSupportedCountriesErrorType {
         GENERIC_ERROR
