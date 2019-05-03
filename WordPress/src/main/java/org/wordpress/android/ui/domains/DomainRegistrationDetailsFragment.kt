@@ -201,7 +201,6 @@ class DomainRegistrationDetailsFragment : Fragment() {
             }
         }
 
-
         if (supportedStates == null || supportedStates!!.isEmpty()) {
             toggleStatesInputField(false)
         }
@@ -219,7 +218,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
             if (isStatesLoadingProgressVisible) {
                 showStatesProgressIndicator()
-            }else{
+            } else {
                 hideStatesProgressIndicator()
             }
 
