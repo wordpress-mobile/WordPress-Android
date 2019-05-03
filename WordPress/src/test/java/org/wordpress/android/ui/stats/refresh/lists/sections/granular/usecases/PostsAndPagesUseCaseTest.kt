@@ -363,7 +363,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val result = loadData(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(TimeStatsTypes.POSTS_AND_PAGES)
+        assertThat(result.type).isEqualTo(TimeStatsType.POSTS_AND_PAGES)
         val items = result.data!!
 
         assertThat(items.size).isEqualTo(5)
