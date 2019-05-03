@@ -45,8 +45,7 @@ class FormattableContentClickHandler
         }
         val id = clickedSpan.id ?: 0
         val siteId = clickedSpan.siteId ?: 0
-        val rangeType = clickedSpan.rangeType()
-        when (rangeType) {
+        when (val rangeType = clickedSpan.rangeType()) {
             SITE ->
                 // Show blog preview
                 showBlogPreviewActivity(activity, id)

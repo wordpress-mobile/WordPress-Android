@@ -43,8 +43,7 @@ import javax.inject.Named
 private const val BLOCK_ITEM_COUNT = 6
 private const val VIEW_ALL_PAGE_SIZE = 10
 
-class FollowersUseCase
-@Inject constructor(
+class FollowersUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val followersStore: FollowersStore,

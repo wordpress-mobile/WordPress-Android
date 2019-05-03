@@ -78,25 +78,25 @@ open class BlockListItemViewHolder(
         val avatar = findViewById<ImageView>(R.id.avatar)
         val icon = findViewById<ImageView>(R.id.icon)
         val hasIcon = item.icon != null || item.iconUrl != null
-        if (hasIcon) {
-            this.visibility = View.VISIBLE
-            when (item.iconStyle) {
-                NORMAL -> {
-                    findViewById<ImageView>(R.id.avatar).visibility = View.GONE
-                    icon.setImageOrLoad(item, imageManager)
-                }
-                AVATAR -> {
-                    icon.visibility = View.GONE
-                    avatar.setAvatarOrLoad(item, imageManager)
-                }
-                EMPTY_SPACE -> {
-                    this.visibility = View.INVISIBLE
+        when {
+            hasIcon -> {
+                this.visibility = View.VISIBLE
+                when (item.iconStyle) {
+                    NORMAL -> {
+                        findViewById<ImageView>(R.id.avatar).visibility = View.GONE
+                        icon.setImageOrLoad(item, imageManager)
+                    }
+                    AVATAR -> {
+                        icon.visibility = View.GONE
+                        avatar.setAvatarOrLoad(item, imageManager)
+                    }
+                    EMPTY_SPACE -> {
+                        this.visibility = View.INVISIBLE
+                    }
                 }
             }
-        } else if (item.iconStyle == EMPTY_SPACE) {
-            this.visibility = View.INVISIBLE
-        } else {
-            this.visibility = View.GONE
+            item.iconStyle == EMPTY_SPACE -> this.visibility = View.INVISIBLE
+            else -> this.visibility = View.GONE
         }
     }
 }

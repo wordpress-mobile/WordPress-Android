@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.design.widget.AppBarLayout
 import android.support.design.widget.AppBarLayout.LayoutParams
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout.OnTabSelectedListener
@@ -254,8 +253,8 @@ class StatsViewAllFragment : DaggerFragment() {
                 tabLayout.getTabAt(tabs.selectedTabPosition)?.select()
             }
 
-            (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
-                    AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL.or(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+            (toolbar.layoutParams as LayoutParams).scrollFlags =
+                    LayoutParams.SCROLL_FLAG_SCROLL.or(LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
             tabLayout.visibility = View.VISIBLE
 
             data.filter { it !is TabsItem }
@@ -284,11 +283,11 @@ class StatsViewAllFragment : DaggerFragment() {
 
             override fun onTabSelected(tab: Tab) {
                 item.onTabSelected(tab.position)
-                activity?.intent?.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, tab.position)
+                activity?.intent?.putExtra(SELECTED_TAB_KEY, tab.position)
             }
         })
 
-        val selectedTab = activity?.intent?.getIntExtra(StatsViewAllFragment.SELECTED_TAB_KEY, 0) ?: 0
+        val selectedTab = activity?.intent?.getIntExtra(SELECTED_TAB_KEY, 0) ?: 0
         tabLayout.getTabAt(selectedTab)?.select()
     }
 }

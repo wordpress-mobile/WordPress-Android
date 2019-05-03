@@ -99,7 +99,7 @@ class HistoryViewModel @Inject constructor(
                 existingRevisions.forEach { it ->
                     var mutableRevision = it
 
-                    if (mutableRevision is HistoryListItem.Revision) {
+                    if (mutableRevision is Revision) {
                         // we shouldn't directly update items in MutableLiveData, as they will be updated downstream
                         // and DiffUtil will not catch this change
                         mutableRevision = mutableRevision.copy()
@@ -137,7 +137,7 @@ class HistoryViewModel @Inject constructor(
         val items = mutableListOf<HistoryListItem>()
 
         revisions.forEach {
-            val item = HistoryListItem.Revision(it)
+            val item = Revision(it)
             val last = items.lastOrNull() as? Revision
 
             if (item.formattedDate != last?.formattedDate) {
@@ -167,7 +167,7 @@ class HistoryViewModel @Inject constructor(
     }
 
     fun onItemClicked(item: HistoryListItem) {
-        if (item is HistoryListItem.Revision) {
+        if (item is Revision) {
             _showDialog.value = item
         }
     }

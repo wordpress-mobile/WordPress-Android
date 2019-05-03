@@ -121,6 +121,7 @@ class StatsListFragment : DaggerFragment() {
 
         val viewModelClass = when (statsSection) {
             StatsSection.DETAIL -> DetailListViewModel::class.java
+            StatsSection.ANNUAL_STATS,
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
             StatsSection.WEEKS -> WeeksListViewModel::class.java

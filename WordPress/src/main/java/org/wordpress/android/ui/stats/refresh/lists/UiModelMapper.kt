@@ -27,7 +27,7 @@ class UiModelMapper
             UiModel.Success(useCaseModels.map { useCaseModel ->
                 when (useCaseModel.state) {
                     SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
-                    ERROR -> StatsBlock.Error(
+                    ERROR -> Error(
                             useCaseModel.type,
                             useCaseModel.stateData ?: useCaseModel.data ?: listOf()
                     )
@@ -80,7 +80,7 @@ class UiModelMapper
                     when (useCaseModel.state) {
                         SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
                         ERROR -> useCaseModel.stateData?.let {
-                            StatsBlock.Error(
+                            Error(
                                     useCaseModel.type,
                                     useCaseModel.stateData
                             )

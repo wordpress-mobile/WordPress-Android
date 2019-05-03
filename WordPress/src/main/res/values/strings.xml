@@ -254,8 +254,10 @@
     <string name="posts_published_empty">You haven\'t published any posts yet</string>
     <string name="posts_scheduled_empty">You don\'t have any scheduled posts</string>
     <string name="posts_draft_empty">You don\'t have any draft posts</string>
-    <string name="posts_trashed_empty">You don\'t have any binned posts</string>
+    <string name="posts_trashed_empty">You don\'t have any trashed posts</string>
     <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
+    <string name="post_list_toggle_item_layout_cards_view">Switch to cards view</string>
+    <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
 
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
@@ -1011,6 +1013,7 @@
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
+    <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
     <string name="stats_insights_year">Year</string>
     <string name="stats_insights_posts">Posts</string>
     <string name="stats_insights_total_comments">Total comments</string>

@@ -2025,6 +2025,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     mPost.setStatus(PostStatus.PUBLISHED.toString());
                     mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
+                } else {
+                    // particular case: if user is submitting for review (that is,
+                    // can't publish posts directly to this site), update the status
+                    if (!userCanPublishPosts()) {
+                        mPost.setStatus(PostStatus.PENDING.toString());
+                    }
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
 
                 boolean postUpdateSuccessful = updatePostObject();
@@ -2053,11 +2060,9 @@ public class EditPostActivity extends AppCompatActivity implements
                                 }
                             });
                         } else {
-                            mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                             savePostOnlineAndFinishAsync(isFirstTimePublish, true);
                         }
                     } else {
-                        mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                         savePostLocallyAndFinishAsync(true);
                     }
                 } else {
@@ -2977,6 +2982,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
+                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                     handleMediaPickerResult(data);
                     // No need to bump analytics here. Bumped later in
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
@@ -3373,8 +3379,9 @@ public class EditPostActivity extends AppCompatActivity implements
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
         } else if (mShowGutenbergEditor) {
-            // show the WP media library only since that's the only mode integrated currently from Gutenberg-mobile
-            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+            // show the WP media library with pictures only, since that's the only mode currently
+            // integrated in Gutenberg-mobile
+            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_EDITOR_PICKER);
         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
         } else {

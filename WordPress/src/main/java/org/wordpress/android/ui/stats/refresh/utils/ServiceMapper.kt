@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.utils
 import android.support.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper.Service.FACEBOOK
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper.Service.GOOGLE_PLUS
@@ -23,7 +22,7 @@ private const val PATH_ICON = "https://secure.gravatar.com/blavatar/3a03c8ce5bf1
 
 class ServiceMapper
 @Inject constructor(private val resourceProvider: ResourceProvider) {
-    fun map(services: List<PublicizeModel.Service>): List<BlockListItem.ListItemWithIcon> {
+    fun map(services: List<PublicizeModel.Service>): List<ListItemWithIcon> {
         val dimension = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)
         return services.mapIndexed { index, service ->
             val mappedService = getService(service.name)

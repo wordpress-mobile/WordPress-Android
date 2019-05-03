@@ -48,7 +48,8 @@ abstract class StatsListViewModel(
         WEEKS(R.string.stats_timeframe_weeks),
         MONTHS(R.string.stats_timeframe_months),
         YEARS(R.string.stats_timeframe_years),
-        DETAIL(R.string.stats);
+        DETAIL(R.string.stats),
+        ANNUAL_STATS(R.string.stats_insights_annual_site_stats);
     }
 
     val selectedDate = dateSelector.selectedDate
@@ -57,7 +58,9 @@ abstract class StatsListViewModel(
 
     val listSelected = statsUseCase.listSelected
 
-    val uiModel: LiveData<UiModel> = statsUseCase.data.throttle(this, distinct = true)
+    val uiModel: LiveData<UiModel> by lazy {
+        statsUseCase.data.throttle(this, distinct = true)
+    }
 
     val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {
         it ?: DateSelectorUiModel(false)
