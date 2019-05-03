@@ -27,6 +27,8 @@
         android:textAlignment="viewStart"
         android:textColor="@color/neutral_700"
         android:textColorHint="@color/neutral_300"
+        tools:drawableStart="@drawable/ic_search_white_24dp"
+        tools:drawableTint="@color/neutral_300"
         tools:hint="@string/site_creation_domain_keywords_hint"
         tools:ignore="RtlSymmetry"
         tools:targetApi="o">
@@ -37,12 +39,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        tools:visibility="invisible">
 
         <ProgressBar
             android:layout_width="@dimen/site_creation_verticals_search_progress_size"
             android:layout_height="@dimen/site_creation_verticals_search_progress_size"
-            android:layout_marginStart="@dimen/margin_large"/>
+            android:layout_marginStart="@dimen/margin_extra_large"/>
     </FrameLayout>
 
     <LinearLayout
@@ -52,6 +55,7 @@
         android:layout_alignBottom="@+id/input"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/input"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center">
 
         <View
@@ -59,7 +63,8 @@
             android:layout_width="@dimen/site_creation_verticals_clear_search_icon_size"
             android:layout_height="@dimen/site_creation_verticals_clear_search_icon_size"
             android:background="@drawable/ic_close_white_24dp"
-            android:contentDescription="@string/new_site_creation_clear_all_content_description"/>
+            android:contentDescription="@string/new_site_creation_clear_all_content_description"
+            tools:backgroundTint="@color/neutral_300"/>
 
     </LinearLayout>
 

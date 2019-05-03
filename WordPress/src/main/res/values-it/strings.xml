@@ -201,7 +201,7 @@ Language: it
     <string name="stats_followers_count_message">Totale follower da %1$s: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Gestisci insight</string>
+    <string name="stats_manage_insights">Gestisci insight</string>
     <string name="stats_empty_insights_title">Nessun insight aggiunto</string>
     <string name="stats_no_data_yet">Nessun dato</string>
     <string name="menu_debug">Menu di debug</string>

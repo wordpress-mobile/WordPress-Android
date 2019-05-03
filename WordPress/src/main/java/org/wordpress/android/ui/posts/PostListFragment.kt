@@ -17,6 +17,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -37,6 +39,7 @@ import javax.inject.Inject
 
 private const val EXTRA_POST_LIST_AUTHOR_FILTER = "post_list_author_filter"
 private const val EXTRA_POST_LIST_TYPE = "post_list_type"
+private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 2
 
 class PostListFragment : Fragment() {
     @Inject internal lateinit var imageManager: ImageManager
@@ -51,6 +54,9 @@ class PostListFragment : Fragment() {
     private var actionableEmptyView: ActionableEmptyView? = null
     private var progressLoadMore: ProgressBar? = null
 
+    private lateinit var itemDecorationCompactLayout: RecyclerItemDecoration
+    private lateinit var itemDecorationStandardLayout: RecyclerItemDecoration
+
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
 
@@ -58,8 +64,6 @@ class PostListFragment : Fragment() {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
         PostViewHolderConfig(
-                // endList indicator height is hard-coded here so that its horizontal line is in the middle of the fab
-                endlistIndicatorHeight = DisplayUtils.dpToPx(context, 74),
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
                 isPhotonCapable = SiteUtils.isPhotonCapable(site),
@@ -104,6 +108,23 @@ class PostListFragment : Fragment() {
         val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
+        mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
+            optionaLayoutType?.let { layoutType ->
+                when (layoutType) {
+                    STANDARD -> {
+                        recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
+                        recyclerView?.addItemDecoration(itemDecorationStandardLayout)
+                    }
+                    COMPACT -> {
+                        recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
+                        recyclerView?.addItemDecoration(itemDecorationCompactLayout)
+                    }
+                }
+
+                recyclerView?.scrollToPosition(0)
+                postListAdapter.updateItemLayoutType(layoutType)
+            }
+        })
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
         viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
@@ -140,9 +161,15 @@ class PostListFragment : Fragment() {
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
 
         val context = nonNullActivity
-        val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.margin_medium)
+        itemDecorationStandardLayout = RecyclerItemDecoration(
+                0,
+                context.resources.getDimensionPixelSize(R.dimen.margin_medium)
+        )
+        itemDecorationCompactLayout = RecyclerItemDecoration(
+                0,
+                context.resources.getDimensionPixelSize(R.dimen.list_divider_height)
+        )
         recyclerView?.layoutManager = LinearLayoutManager(context)
-        recyclerView?.addItemDecoration(RecyclerItemDecoration(0, spacingVertical))
         recyclerView?.adapter = postListAdapter
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
@@ -155,8 +182,30 @@ class PostListFragment : Fragment() {
         return view
     }
 
+    /**
+     * Updates the data for the adapter while retaining visible item in certain cases.
+     *
+     * PagedList tries to keep the visible item by adding new items outside of the screen while modifying the scroll
+     * position. In most cases, this works out great because it doesn't interrupt to the user. However, after a new
+     * item is inserted at the top while the list is showing the very first items, it feels very weird to not have the
+     * inserted item shown. For example, if a new draft is added there is no indication of it except for the flash
+     * of the scroll bar which is not noticeable unless user is paying attention to it.
+     *
+     * In these cases, we try to keep the scroll position the same instead of keeping the visible item the same by
+     * first saving the state and re-applying it after the data updates are completed. Since `PagedListAdapter` uses
+     * bg thread to calculate the changes, we need to post the change in the bg thread as well so that it'll be applied
+     * after changes are reflected.
+     */
     private fun updatePagedListData(pagedListData: PagedPostList) {
+        val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         postListAdapter.submitList(pagedListData)
+        recyclerView?.post {
+            (recyclerView?.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
+                if (layoutManager.findFirstVisibleItemPosition() < MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
+                    layoutManager.onRestoreInstanceState(recyclerViewState)
+                }
+            }
+        }
     }
 
     private fun updateEmptyViewForState(state: PostListEmptyUiState) {

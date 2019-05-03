@@ -169,7 +169,7 @@ Language: zh_CN
     <string name="stats_followers_count_message">共 %1$s 位粉丝：%2$s</string>
     <string name="stats_followers_email">电子邮件</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">管理见解</string>
+    <string name="stats_manage_insights">管理见解</string>
     <string name="stats_empty_insights_title">尚未添加任何见解</string>
     <string name="stats_no_data_yet">尚无数据</string>
     <string name="change_password_dialog_message">正在更改密码…</string>

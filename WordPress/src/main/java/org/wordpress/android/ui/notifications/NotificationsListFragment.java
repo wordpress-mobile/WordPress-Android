@@ -39,6 +39,7 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.HashMap;
@@ -52,7 +53,6 @@ import static org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SEL
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 import static org.wordpress.android.ui.stats.StatsConnectJetpackActivity.FAQ_URL;
-import static org.wordpress.android.ui.stats.StatsConnectJetpackActivity.TERMS_URL;
 
 public class NotificationsListFragment extends Fragment implements MainToolbarFragment {
     public static final String NOTE_ID_EXTRA = "noteId";
@@ -156,7 +156,7 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
         TextView jetpackTermsAndConditions = view.findViewById(R.id.jetpack_terms_and_conditions);
         jetpackTermsAndConditions.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
-                WPWebViewActivity.openURL(requireContext(), TERMS_URL);
+                WPWebViewActivity.openURL(requireContext(), WPUrlUtils.buildTermsOfServiceUrl(getContext()));
             }
         });
 

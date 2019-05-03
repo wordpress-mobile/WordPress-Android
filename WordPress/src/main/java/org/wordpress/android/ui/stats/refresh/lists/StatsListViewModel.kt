@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.MONTH_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.WEEK_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.YEAR_STATS_USE_CASE
@@ -22,9 +24,11 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
+import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -37,7 +41,8 @@ abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val dateSelector: StatsDateSelector
+    private val dateSelector: StatsDateSelector,
+    popupMenuHandler: ItemPopupMenuHandler? = null
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
     private var isInitialized = false
@@ -48,20 +53,28 @@ abstract class StatsListViewModel(
         WEEKS(R.string.stats_timeframe_weeks),
         MONTHS(R.string.stats_timeframe_months),
         YEARS(R.string.stats_timeframe_years),
-        DETAIL(R.string.stats);
+        DETAIL(R.string.stats),
+        ANNUAL_STATS(R.string.stats_insights_annual_site_stats);
     }
 
     val selectedDate = dateSelector.selectedDate
 
-    val navigationTarget: LiveData<Event<NavigationTarget>> = statsUseCase.navigationTarget
+    private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
+    val navigationTarget: LiveData<Event<NavigationTarget>> = mergeNotNull(
+            statsUseCase.navigationTarget, mutableNavigationTarget
+    )
 
     val listSelected = statsUseCase.listSelected
 
-    val uiModel: LiveData<UiModel> = statsUseCase.data.throttle(this, distinct = true)
+    val uiModel: LiveData<UiModel> by lazy {
+        statsUseCase.data.throttle(this, distinct = true)
+    }
 
     val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {
         it ?: DateSelectorUiModel(false)
     }
+
+    val typeMoved = popupMenuHandler?.typeMoved
 
     override fun onCleared() {
         statsUseCase.onCleared()
@@ -105,6 +118,10 @@ abstract class StatsListViewModel(
         dateSelector.updateDateSelector()
     }
 
+    fun onEmptyInsightsButtonClicked() {
+        mutableNavigationTarget.value = Event(ViewInsightsManagement)
+    }
+
     fun start() {
         if (!isInitialized) {
             isInitialized = true
@@ -119,6 +136,13 @@ abstract class StatsListViewModel(
     sealed class UiModel {
         data class Success(val data: List<StatsBlock>) : UiModel()
         class Error(val message: Int = R.string.stats_loading_error) : UiModel()
+        object Empty : UiModel()
+    }
+
+    fun onTypeMoved() {
+        launch {
+            statsUseCase.refreshTypes()
+        }
     }
 }
 
@@ -127,8 +151,15 @@ class InsightsListViewModel
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(INSIGHTS_USE_CASE) private val insightsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, insightsUseCase, analyticsTracker, dateSelectorFactory.build(INSIGHTS))
+    dateSelectorFactory: StatsDateSelector.Factory,
+    popupMenuHandler: ItemPopupMenuHandler
+) : StatsListViewModel(
+        mainDispatcher,
+        insightsUseCase,
+        analyticsTracker,
+        dateSelectorFactory.build(INSIGHTS),
+        popupMenuHandler
+)
 
 class YearsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,

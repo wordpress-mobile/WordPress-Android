@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.design.widget.AppBarLayout
 import android.support.design.widget.AppBarLayout.LayoutParams
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout.OnTabSelectedListener
@@ -84,7 +83,7 @@ class StatsViewAllFragment : DaggerFragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViews(savedInstanceState: Bundle?) {
+        private fun initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
@@ -98,10 +97,10 @@ class StatsViewAllFragment : DaggerFragment() {
             viewModel.onPullToRefresh()
         }
 
-        select_next_date.setOnClickListener {
+        nextDateButton.setOnClickListener {
             viewModel.onNextDateSelected()
         }
-        select_previous_date.setOnClickListener {
+        previousDateButton.setOnClickListener {
             viewModel.onPreviousDateSelected()
         }
     }
@@ -174,8 +173,8 @@ class StatsViewAllFragment : DaggerFragment() {
             if (it != null) {
                 recyclerView.visibility = if (it is StatsBlock.Success) View.VISIBLE else View.GONE
                 loadingContainer.visibility = if (it is StatsBlock.Loading) View.VISIBLE else View.GONE
-                actionable_error_view.visibility = if (it is StatsBlock.Error) View.VISIBLE else View.GONE
-                actionable_empty_view.visibility = if (it is StatsBlock.EmptyBlock) View.VISIBLE else View.GONE
+                statsErrorView.visibility = if (it is StatsBlock.Error) View.VISIBLE else View.GONE
+                statsEmptyView.visibility = if (it is StatsBlock.EmptyBlock) View.VISIBLE else View.GONE
                 when (it) {
                     is StatsBlock.Success -> {
                         loadData(recyclerView, prepareLayout(it.data, it.type))
@@ -184,7 +183,7 @@ class StatsViewAllFragment : DaggerFragment() {
                         loadData(loadingRecyclerView, prepareLayout(it.data, it.type))
                     }
                     is StatsBlock.Error -> {
-                        actionable_error_view.button.setOnClickListener {
+                        statsErrorView.button.setOnClickListener {
                             viewModel.onRetryClick()
                         }
                     }
@@ -202,14 +201,14 @@ class StatsViewAllFragment : DaggerFragment() {
             if (date_selection_toolbar.visibility != dateSelectorVisibility) {
                 date_selection_toolbar.visibility = dateSelectorVisibility
             }
-            selected_date.text = dateSelectorUiModel?.date ?: ""
+            selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
             val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (select_previous_date.isEnabled != enablePreviousButton) {
-                select_previous_date.isEnabled = enablePreviousButton
+            if (previousDateButton.isEnabled != enablePreviousButton) {
+                previousDateButton.isEnabled = enablePreviousButton
             }
             val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (select_next_date.isEnabled != enableNextButton) {
-                select_next_date.isEnabled = enableNextButton
+            if (nextDateButton.isEnabled != enableNextButton) {
+                nextDateButton.isEnabled = enableNextButton
             }
         })
 
@@ -254,8 +253,8 @@ class StatsViewAllFragment : DaggerFragment() {
                 tabLayout.getTabAt(tabs.selectedTabPosition)?.select()
             }
 
-            (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
-                    AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL.or(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+            (toolbar.layoutParams as LayoutParams).scrollFlags =
+                    LayoutParams.SCROLL_FLAG_SCROLL.or(LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
             tabLayout.visibility = View.VISIBLE
 
             data.filter { it !is TabsItem }
@@ -284,11 +283,11 @@ class StatsViewAllFragment : DaggerFragment() {
 
             override fun onTabSelected(tab: Tab) {
                 item.onTabSelected(tab.position)
-                activity?.intent?.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, tab.position)
+                activity?.intent?.putExtra(SELECTED_TAB_KEY, tab.position)
             }
         })
 
-        val selectedTab = activity?.intent?.getIntExtra(StatsViewAllFragment.SELECTED_TAB_KEY, 0) ?: 0
+        val selectedTab = activity?.intent?.getIntExtra(SELECTED_TAB_KEY, 0) ?: 0
         tabLayout.getTabAt(selectedTab)?.select()
     }
 }
