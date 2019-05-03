@@ -7,7 +7,7 @@
               android:gravity="center"
               android:orientation="horizontal"
               android:paddingBottom="@dimen/margin_medium"
-              android:paddingEnd="@dimen/margin_medium"
+              android:paddingEnd="@dimen/margin_extra_medium_large"
               android:paddingStart="0dp"
               android:paddingTop="@dimen/margin_medium"
               tools:ignore="UnusedAttribute">

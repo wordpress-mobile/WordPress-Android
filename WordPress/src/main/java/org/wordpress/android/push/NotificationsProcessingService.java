@@ -49,7 +49,9 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.QuickActionTrackPropertyValue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -83,6 +85,7 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_NOTE_BUNDLE = "note_bundle";
 
     private QuickActionProcessor mQuickActionProcessor;
+    private List<Long> mActionedCommentsRemoteIds = new ArrayList<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -493,6 +496,12 @@ public class NotificationsProcessingService extends Service {
             stopSelf(mTaskId);
         }
 
+        private void keepRemoteCommentIdForPostProcessing(long remoteCommendId) {
+            if (!mActionedCommentsRemoteIds.contains(remoteCommendId)) {
+                mActionedCommentsRemoteIds.add(remoteCommendId);
+            }
+        }
+
         private void getNoteFromNoteId(String noteId, RestRequest.Listener listener,
                                        RestRequest.ErrorListener errorListener) {
             if (noteId == null) {
@@ -553,6 +562,10 @@ public class NotificationsProcessingService extends Service {
                 requestFailed(ARG_ACTION_APPROVE);
                 return;
             }
+
+            // keep the CommentId, we'll use it later to know whether to trigger the end processing notification
+            // or not
+            keepRemoteCommentIdForPostProcessing(comment.getRemoteCommentId());
 
             // Push the comment
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(site, comment)));
@@ -621,11 +634,38 @@ public class NotificationsProcessingService extends Service {
         if (mQuickActionProcessor == null) {
             return;
         }
+
+        // LIKE_COMMENT events do not hold event.changedCommentsLocalIds info so, just process them
+        // also CREATE_NEW_COMMENT, which are received for REPLY quick actions won't have a matching id as FluxC
+        // only notifies us of _new_ comments (the actual reply) so, no way to connect one another in this place.
+        // Therefore, we only care and match for `PUSH_COMMENT` to make sure there's a corresponding initial APPROVE
+        // quick action that corresponds to the resulting FluxC event.
         if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
-            if (event.isError()) {
-                mQuickActionProcessor.requestFailed(ARG_ACTION_APPROVE);
-            } else {
-                mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
+            List<Long> eventChangedCommentsRemoteIds = new ArrayList<>();
+            if (mActionedCommentsRemoteIds.size() > 0) {
+                // prepare a comparable list of Ids
+                for (Integer commentLocalId : event.changedCommentsLocalIds) {
+                    CommentModel localComment = mCommentStore.getCommentByLocalId(commentLocalId);
+                    if (localComment != null) {
+                        eventChangedCommentsRemoteIds.add(localComment.getRemoteCommentId());
+                    }
+                }
+
+                // here we need to check ids: is an event corresponding to an action triggered from this Service?
+                for (Long oneEventCommentRemoteId : eventChangedCommentsRemoteIds) {
+                    if (mActionedCommentsRemoteIds.contains(oneEventCommentRemoteId)) {
+                        if (event.isError()) {
+                            mQuickActionProcessor.requestFailed(ARG_ACTION_APPROVE);
+                        } else {
+                            mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
+                        }
+                    }
+                }
+            }
+
+            // now remove any remoteIds for already processed actions
+            for (Long remoteId : eventChangedCommentsRemoteIds) {
+                mActionedCommentsRemoteIds.remove(remoteId);
             }
         } else if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
             if (event.isError()) {
