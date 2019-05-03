@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.domains.DomainSuggestionsFragment.OnDomainSelectedListener
+import org.wordpress.android.ui.domains.DomainSuggestionsFragment.DomainRegistrationStepsListener
 
-class DomainRegistrationActivity : AppCompatActivity(), OnDomainSelectedListener {
+class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,6 +38,21 @@ class DomainRegistrationActivity : AppCompatActivity(), OnDomainSelectedListener
     }
 
     override fun onDomainSelected(domainProductDetails: DomainProductDetails) {
-        // TODO show Domain registration details
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(
+                R.id.fragment_container,
+                DomainRegistrationDetailsFragment.newInstance(domainProductDetails)
+        )
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+    }
+
+    override fun onDomainRegistered(domainName: String) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(
+                R.id.fragment_container,
+                DomainRegistrationResultFragment.newInstance(domainName)
+        )
+        fragmentTransaction.commit()
     }
 }
