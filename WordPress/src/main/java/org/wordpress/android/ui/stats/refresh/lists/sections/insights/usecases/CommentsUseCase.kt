@@ -6,6 +6,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
 import org.wordpress.android.modules.UI_THREAD
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUse
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import zendesk.support.CommentsResponse
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -75,7 +77,7 @@ class CommentsUseCase
         if (model.authors.isNotEmpty() || model.posts.isNotEmpty()) {
             items.add(
                     TabsItem(
-                            listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages, R.string.stats_comments_totals),
+                            listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),
                             uiState
                     ) { selectedTabPosition -> onUiState(selectedTabPosition) }
             )
@@ -84,8 +86,6 @@ class CommentsUseCase
                 items.addAll(buildAuthorsTab(model.authors))
             } else if (uiState == 1){
                 items.addAll(buildPostsTab(model.posts))
-            } else if (uiState == 2){
-                items.addAll(buildTotalsTab(model.posts))
             }
 
             if (model.hasMoreAuthors && uiState == 0 || model.hasMorePosts && uiState == 1) {
@@ -123,8 +123,9 @@ class CommentsUseCase
 
     private fun buildPostsTab(posts: List<CommentsModel.Post>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
+        val totalComments = posts.mapIndexed { index, post -> post.comments }.sum()
         if (posts.isNotEmpty()) {
-            mutableItems.add(Header(R.string.stats_comments_title_label, R.string.stats_comments_label))
+            mutableItems.add(Information("Total Comments : " + totalComments))
             mutableItems.addAll(posts.mapIndexed { index, post ->
                 ListItem(
                         post.name,
@@ -132,19 +133,6 @@ class CommentsUseCase
                         index < posts.size - 1
                 )
             })
-        } else {
-            mutableItems.add(Empty())
-        }
-        return mutableItems
-    }
-
-    private fun buildTotalsTab(posts: List<CommentsModel.Post>): List<BlockListItem> {
-        val mutableItems = mutableListOf<BlockListItem>()
-        val totalComments = posts.mapIndexed { index, post -> post.comments }.sum()
-        if (posts.isNotEmpty()) {
-            mutableItems.add(
-                    Information( "Total Comments : " + totalComments)
-            )
         } else {
             mutableItems.add(Empty())
         }
