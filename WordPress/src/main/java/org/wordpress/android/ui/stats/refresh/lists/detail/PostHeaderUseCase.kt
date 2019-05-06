@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.detail
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
@@ -21,7 +21,7 @@ class PostHeaderUseCase
     private val statsPostProvider: StatsPostProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<String>(
-        PostDetailTypes.POST_HEADER,
+        PostDetailType.POST_HEADER,
         mainDispatcher
 ) {
     override suspend fun loadCachedData(): String? {

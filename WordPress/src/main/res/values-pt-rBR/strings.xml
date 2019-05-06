@@ -221,7 +221,7 @@ Language: pt_BR
     <string name="stats_followers_count_message">Total de seguidores por %1$s: %2$s</string>
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Gerenciar informações</string>
+    <string name="stats_manage_insights">Gerenciar informações</string>
     <string name="stats_empty_insights_description">Personalize as informações de seu site para saber mais sobre seu desempenho</string>
     <string name="stats_empty_insights_title">Nenhuma informação adicionada ainda</string>
     <string name="stats_no_data_yet">Nenhum dado ainda</string>

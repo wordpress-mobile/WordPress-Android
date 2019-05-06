@@ -834,4 +834,5 @@
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:background">@color/neutral_0</item>
     </style>
+
 </resources>

@@ -220,7 +220,7 @@ Language: ja_JP
     <string name="stats_followers_count_message">Total %1$s Followers:%2$s</string>
     <string name="stats_followers_email">メール</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">インサイトを管理</string>
+    <string name="stats_manage_insights">インサイトを管理</string>
     <string name="stats_empty_insights_description">インサイトをカスタマイズして、サイトのパフォーマンスを把握しましょう</string>
     <string name="stats_empty_insights_title">インサイトは追加されていません</string>
     <string name="stats_no_data_yet">データはまだありません</string>

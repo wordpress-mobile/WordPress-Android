@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.fluxc.store.stats.time.VideoPlaysStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -92,7 +92,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
+        assertThat(result.type).isEqualTo(TimeStatsType.VIDEOS)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertTitle(this[0])
@@ -122,7 +122,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         )
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
+        assertThat(result.type).isEqualTo(TimeStatsType.VIDEOS)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertThat(this).hasSize(4)
@@ -144,7 +144,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
+        assertThat(result.type).isEqualTo(TimeStatsType.VIDEOS)
         assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
         result.stateData!!.apply {
             assertThat(this).hasSize(2)
@@ -167,7 +167,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(TimeStatsTypes.VIDEOS)
+        assertThat(result.type).isEqualTo(TimeStatsType.VIDEOS)
     }
 
     private fun assertTitle(item: BlockListItem) {

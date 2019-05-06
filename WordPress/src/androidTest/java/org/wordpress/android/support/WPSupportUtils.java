@@ -30,6 +30,7 @@ import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -182,6 +183,20 @@ public class WPSupportUtils {
     public static void selectItemAtIndexInSpinner(Integer index, Integer spinnerElementID) {
         clickOn(spinnerElementID);
         clickOnSpinnerItemAtIndex(index);
+    }
+
+    public static void selectItemWithResourceIDInTabLayout(Integer stringResourceID, Integer elementID) {
+        String localizedString = getCurrentActivity().getString(stringResourceID);
+        selectItemWithTitleInTabLayout(localizedString, elementID);
+    }
+
+    public static void selectItemWithTitleInTabLayout(String string, Integer elementID) {
+        onView(
+                allOf(
+                        withText(string),
+                        isDescendantOfA(withId(R.id.tabLayout))
+                     )
+              ).perform(click());
     }
 
     // WAITERS
@@ -452,6 +467,8 @@ public class WPSupportUtils {
 
                 if (resumedActivities.iterator().hasNext()) {
                     mCurrentActivity = (Activity) resumedActivities.iterator().next();
+                } else {
+                    mCurrentActivity = (Activity) resumedActivities.toArray()[0];
                 }
             }
         });

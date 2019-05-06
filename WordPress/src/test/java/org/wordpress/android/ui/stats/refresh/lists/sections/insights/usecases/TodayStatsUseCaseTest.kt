@@ -10,7 +10,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -23,11 +23,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Quick
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 
 class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: TodayInsightsStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: TodayStatsUseCase
     private val views = 10
@@ -39,7 +41,8 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         useCase = TodayStatsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                statsSiteProvider
+                statsSiteProvider,
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
@@ -58,7 +61,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.TODAY_STATS)
+        assertThat(result.type).isEqualTo(InsightType.TODAY_STATS)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertThat(this).hasSize(3)
@@ -80,7 +83,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadTodayStats(refresh, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.TODAY_STATS)
+        assertThat(result.type).isEqualTo(InsightType.TODAY_STATS)
         assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
         result.stateData!!.apply {
             assertThat(this).hasSize(2)

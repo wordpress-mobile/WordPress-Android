@@ -14,8 +14,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
+import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
+import static org.wordpress.android.support.WPSupportUtils.atLeastOneElementWithIdIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
-import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
@@ -45,7 +46,12 @@ public class LoginFlow {
     }
 
     private void confirmLogin() {
-        ViewInteraction continueButton = onView(withText(getCurrentActivity().getString(R.string.login_continue)));
+        // If we get bumped to the "enter your username and password" screen, fill it in
+        if (atLeastOneElementWithIdIsDisplayed(R.id.login_password_row)) {
+            enterUsernameAndPassword(E2E_WP_COM_USER_USERNAME, E2E_WP_COM_USER_PASSWORD);
+        }
+
+        ViewInteraction continueButton = onView(withId(R.id.primary_button));
 
         waitForElementToBeDisplayed(continueButton);
         clickOn(continueButton);
