@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-11 20:23:28+0000
+Translation-Revision-Date: 2019-04-24 22:40:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">Ju lutemi, bëni hyrjen me emrin tuaj të përdoruesit dhe fjalëkalimin.</string>
+    <string name="login_invalid_site_url">Adresa e sajtit që dhatë është e pavlefshme. Ju lutemi, rijepeni.</string>
+    <string name="error_user_username_instead_of_email">Ju lutemi, hyni duke përdorur emrin tuaj të përdoruesit WordPress.com, në vend se adresën tuaj email.</string>
+    <string name="stats_insights_average_words">Mesatare fjalësh/postim</string>
+    <string name="stats_insights_total_words">Fjalë gjithsej</string>
+    <string name="stats_insights_average_likes">Mesatare pëlqimesh/postim</string>
+    <string name="stats_insights_total_likes">Pëlqime gjithsej</string>
+    <string name="stats_insights_average_comments">Mesatare komentesh/postim</string>
+    <string name="stats_insights_total_comments">Komente gjithsej</string>
+    <string name="stats_insights_posts">Postime</string>
+    <string name="stats_insights_year">Vit</string>
+    <string name="stats_insights_this_year_site_stats">Këtë Vit</string>
+    <string name="no_site_error">Sajti në këtë adresë s’është sajt WordPress. Që të mund të lidhemi me të, sajti duhet të përdorë WordPress-in.</string>
     <string name="plugin_check_domain_credit_error">S’u arrit të kontrollohet kredit përkatësie gjendje</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Po kontrollohet kredit përkatësie </string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Regjistroje përkatësinë</string>
@@ -1167,7 +1180,6 @@ Language: sq_AL
     <string name="error_media_not_found">S’u gjet dot media</string>
     <string name="error_media_insufficient_fs_permissions">S’u dhanë leje leximi mbi media në pajisje</string>
     <string name="site_settings_optimize_images">Optimizo Figurat</string>
-    <string name="no_site_error">S’u lidh dot te sajt WordPress. S’ka sajt WordPress të vlefshëm në këtë\n        adresë. Kontrolloni adresën (URL) të sajtit që dhatë.</string>
     <string name="media_generic_error">Ndodhi një gabim mediash</string>
     <string name="media_upload_error">Ndodhi një gabim ngarkimi mediash</string>
     <string name="retry">Riprovoni</string>
