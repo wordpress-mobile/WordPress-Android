@@ -32,6 +32,9 @@ class LocalDraftUploadStarter @Inject constructor(
         }
 
         val localDrafts = postStore.getLocalDrafts(site)
-        localDrafts.forEach { UploadService.uploadPost(context, it) }
+        localDrafts.forEach { localDraft ->
+            val intent = UploadService.getUploadPostServiceIntent(context, localDraft, false, false, true)
+            context.startService(intent)
+        }
     }
 }
