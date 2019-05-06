@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-17 09:54:09+0000
+Translation-Revision-Date: 2019-05-03 07:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">請透過你的使用者名稱和密碼登入。</string>
+    <string name="login_invalid_site_url">你輸入的網站地址無效。請重新輸入。</string>
+    <string name="error_user_username_instead_of_email">請使用你的 WordPress.com 使用者名稱登入，而非電子郵件地址。</string>
+    <string name="stats_insights_average_words">每篇文章平均字數</string>
+    <string name="stats_insights_total_words">總字數</string>
+    <string name="stats_insights_average_likes">每篇文章平均按讚數</string>
+    <string name="stats_insights_total_likes">按讚總數</string>
+    <string name="stats_insights_average_comments">每篇文章平均回應數</string>
+    <string name="stats_insights_total_comments">回應總數</string>
+    <string name="stats_insights_posts">文章</string>
+    <string name="stats_insights_year">年</string>
+    <string name="stats_insights_this_year_site_stats">今年</string>
+    <string name="no_site_error">此地址的網站不是 WordPress 網站。若需要我們連接網站，網站必須使用 WordPress。</string>
     <string name="plugin_check_domain_credit_error">無法查看可用的網域額度</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">正在查看網域額度</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">註冊網域</string>
     <string name="plugin_install_custom_domain_required_dialog_message">若要安裝外掛程式，你的自訂網域必須與你的網站建立關聯。</string>
     <string name="plugin_install_custom_domain_required_dialog_title">安裝外掛程式</string>
-    <string name="new_site_creation_preview_subtitle">你可以稍後自訂網站的外觀和風格</string>
     <string name="publish_on">發表於：%s</string>
     <string name="schedule_for">排程於：%s</string>
     <string name="published_on">已發表於：%s</string>
@@ -1108,7 +1120,6 @@ Language: zh_TW
     <string name="error_media_not_found">找不到媒體</string>
     <string name="error_media_insufficient_fs_permissions">裝置媒體拒絕讀取權限</string>
     <string name="site_settings_optimize_images">將圖片最佳化</string>
-    <string name="no_site_error">無法連線至 WordPress 網站。此地址沒有有效的\nWordPress 網站。請檢查你輸入的網站地址 (URL)。</string>
     <string name="media_generic_error">發生媒體錯誤</string>
     <string name="media_upload_error">發生媒體上傳錯誤</string>
     <string name="retry">重試</string>
