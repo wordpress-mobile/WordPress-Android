@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# This script builds the release apk
+# This script builds the release bundle
 
-OUTDIR="WordPress/build/outputs/apk/"
+OUTDIR="WordPress/build/outputs/bundle/"
 BUILDFILE="WordPress/build.gradle"
 BUILDDIR="build"
 LOGFILE="$BUILDDIR/build.log"
@@ -19,14 +19,14 @@ mkdir -p $BUILDDIR
 current_branch=`git rev-parse --abbrev-ref HEAD`
 release_branch=$1
 
-BUILD_APK_RET_VALUE=0
+BUILD_APP_BUNDLE_RET_VALUE=0
 
-source ./tools/build-apk-core.sh
+source ./tools/build-app-bundle-core.sh
 
 check_clean_working_dir
 date > $LOGFILE
-build_apk $release_branch Vanilla
-release_code=$BUILD_APK_RET_VALUE
+build_app_bundle $release_branch Vanilla
+release_code=$BUILD_APP_BUNDLE_RET_VALUE
 git checkout $current_branch
 
 echo "Version codes - release: $release_code" | tee -a $LOGFILE

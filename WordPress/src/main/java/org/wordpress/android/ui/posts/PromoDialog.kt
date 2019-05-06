@@ -132,42 +132,42 @@ class PromoDialog : AppCompatDialogFragment() {
         val link = view.findViewById<WPTextView>(R.id.promo_dialog_link)
         if (linkLabel.isNotEmpty() && activity is PromoDialogClickInterface) {
             link.text = linkLabel
-            link.setOnClickListener({ (activity as PromoDialogClickInterface).onLinkClicked(fragmentTag) })
+            link.setOnClickListener { (activity as PromoDialogClickInterface).onLinkClicked(fragmentTag) }
         } else {
             link.visibility = View.GONE
         }
 
         val buttonPositive = view.findViewById<Button>(R.id.promo_dialog_button_positive)
         buttonPositive.text = positiveButtonLabel
-        buttonPositive.setOnClickListener({
+        buttonPositive.setOnClickListener {
             if (activity is PromoDialogClickInterface) {
                 (activity as PromoDialogClickInterface).onPositiveClicked(fragmentTag)
             }
             this.dismiss()
-        })
+        }
 
         val buttonNegative = view.findViewById<Button>(R.id.promo_dialog_button_negative)
-        if (!negativeButtonLabel.isEmpty()) {
+        if (negativeButtonLabel.isNotEmpty()) {
             buttonNegative.visibility = View.VISIBLE
             buttonNegative.text = negativeButtonLabel
-            buttonNegative.setOnClickListener({
+            buttonNegative.setOnClickListener {
                 if (activity is PromoDialogClickInterface) {
                     (activity as PromoDialogClickInterface).onNegativeClicked(fragmentTag)
                 }
                 this.dismiss()
-            })
+            }
         }
 
         val buttonNeutral = view.findViewById<Button>(R.id.promo_dialog_button_neutral)
-        if (!neutralButtonLabel.isEmpty()) {
+        if (neutralButtonLabel.isNotEmpty()) {
             buttonNeutral.visibility = View.VISIBLE
             buttonNeutral.text = neutralButtonLabel
-            buttonNeutral.setOnClickListener({
+            buttonNeutral.setOnClickListener {
                 if (activity is PromoDialogClickInterface) {
                     (activity as PromoDialogClickInterface).onNeutralClicked(fragmentTag)
                 }
                 this.dismiss()
-            })
+            }
         }
     }
 }

@@ -9,7 +9,6 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
@@ -51,7 +50,7 @@ class RewindStatusService
     val rewindProgress: LiveData<RewindProgress> = mutableRewindProgress
 
     val isRewindInProgress: Boolean
-        get() = rewindProgress.value?.status == Status.RUNNING
+        get() = rewindProgress.value?.status == RUNNING
 
     val isRewindAvailable: Boolean
         get() = rewindAvailable.value == true
@@ -161,7 +160,7 @@ class RewindStatusService
     private fun updateRewindProgress(
         rewindId: String?,
         progress: Int?,
-        rewindStatus: Rewind.Status,
+        rewindStatus: Status,
         rewindError: String? = null
     ) {
         var activityItem = if (rewindId != null) activityLogStore.getActivityLogItemByRewindId(rewindId) else null
@@ -185,7 +184,7 @@ class RewindStatusService
         val activityLogItem: ActivityLogModel?,
         val progress: Int?,
         val date: Date?,
-        val status: Rewind.Status,
+        val status: Status,
         val failureReason: String? = null
     )
 }

@@ -80,21 +80,19 @@ Google Sign-In requires configuration files which contain client and server info
 that can't be shared publicly. More documentation and guides can be found on the
 [Google Identity Platform website][8].
 
-## How we work ##
+## Contributing
 
-You can read more about [Code Style Guidelines](CODESTYLE.md) we adopted, and
-how we're organizing branches in our repository in the
-[Contribution Guide](CONTRIBUTING.md).
+Read our [Contributing Guide](CONTRIBUTING.md) to learn about reporting issues, contributing code, and more ways to contribute.
 
-## Need help to build or hack? ##
+## Getting in Touch
 
-Say hello on our [Slack][4] channel: `#mobile`.
+If you have questions or just want to say hi, join the [WordPress Slack](https://chat.wordpress.org) and drop a message on the `#mobile` channel.
 
-## FAQ ##
+## Resources
 
-* Q: I can't build/test/package the project because of a `PermGen space` error.
-* A: Create a `gradle.properties` file in the project root directory with the
-following: `org.gradle.jvmargs=-XX:MaxPermSize=1024m`.
+- The [Wiki](https://github.com/wordpress-mobile/WordPress-Android/wiki) contains information about our development practices. 
+- [WordPress Mobile Blog](http://make.wordpress.org/mobile)
+- [WordPress Mobile Handbook](http://make.wordpress.org/mobile/handbook/)
 
 ## License ##
 

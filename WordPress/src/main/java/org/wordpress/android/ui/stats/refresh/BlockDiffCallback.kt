@@ -21,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK_BUTTON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
@@ -44,8 +45,7 @@ class BlockDiffCallback(
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
         return if (oldItem.type == newItem.type) {
-            val type = oldItem.type
-            when (type) {
+            when (oldItem.type) {
                 LIST_ITEM_WITH_ICON,
                 EXPANDABLE_ITEM,
                 TABS,
@@ -65,6 +65,7 @@ class BlockDiffCallback(
                 CHART_LEGEND,
                 REFERRED_ITEM,
                 QUICK_SCAN_ITEM,
+                LINK_BUTTON,
                 EMPTY -> oldItem == newItem
             }
         } else {

@@ -36,6 +36,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Loadi
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -48,6 +50,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    private lateinit var useCaseFactory: FollowersUseCaseFactory
     private lateinit var useCase: FollowersUseCase
     private val avatar = "avatar.jpg"
     private val user = "John Smith"
@@ -64,16 +68,17 @@ class FollowersUseCaseTest : BaseUnitTest() {
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
-        useCase = FollowersUseCase(
+        useCaseFactory = FollowersUseCaseFactory(
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
                 statsUtilsWrapper,
                 resourceProvider,
-                tracker,
-                BLOCK
+                popupMenuHandler,
+                tracker
         )
+        useCase = useCaseFactory.build(BLOCK)
         whenever(statsUtilsWrapper.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
         whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(
@@ -234,16 +239,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `maps email followers to UI model in the view all mode`() = test {
-        useCase = FollowersUseCase(
-                Dispatchers.Unconfined,
-                Dispatchers.Unconfined,
-                insightsStore,
-                statsSiteProvider,
-                statsUtilsWrapper,
-                resourceProvider,
-                tracker,
-                VIEW_ALL
-        )
+        useCase = useCaseFactory.build(VIEW_ALL)
 
         val refresh = true
         val wpComModel = FollowersModel(

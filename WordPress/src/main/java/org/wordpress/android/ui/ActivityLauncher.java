@@ -36,6 +36,7 @@ import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
@@ -72,6 +73,7 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -298,6 +300,11 @@ public class ActivityLauncher {
         StatsViewAllActivity.startForGranularStats(context, statsType, granularity);
     }
 
+    public static void viewInsightsManagement(Context context) {
+        Intent intent = new Intent(context, InsightsManagementActivity.class);
+        context.startActivity(intent);
+    }
+
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
@@ -400,6 +407,12 @@ public class ActivityLauncher {
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, slug);
             context.startActivity(intent);
         }
+    }
+
+    public static void viewDomainRegistrationActivity(Activity activity, SiteModel site) {
+        Intent intent = new Intent(activity, DomainRegistrationActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {

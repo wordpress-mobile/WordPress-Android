@@ -25,8 +25,7 @@ class SelectedDateProvider
             YEARS to SelectedDate(loading = true)
     )
 
-    private val mutableSelectedDateChanged = MutableLiveData<Event<SectionChange>>()
-    val selectedDateChanged: LiveData<Event<SectionChange>> = mutableSelectedDateChanged
+    private val selectedDateChanged = MutableLiveData<Event<SectionChange>>()
 
     fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<Event<SectionChange>> {
         return selectedDateChanged.filter { it.peekContent().selectedSection == statsGranularity.toStatsSection() }
@@ -63,9 +62,10 @@ class SelectedDateProvider
     }
 
     private fun updateSelectedDate(selectedDate: SelectedDate, statsSection: StatsSection) {
-        if (mutableDates[statsSection] != selectedDate) {
-            mutableDates[statsSection] = selectedDate
-            mutableSelectedDateChanged.postValue(Event(SectionChange(statsSection)))
+        val currentDate = mutableDates[statsSection]
+        mutableDates[statsSection] = selectedDate
+        if (selectedDate.hasUpdatedDate(currentDate)) {
+            selectedDateChanged.postValue(Event(SectionChange(statsSection)))
         }
     }
 
@@ -117,29 +117,29 @@ class SelectedDateProvider
         }
     }
 
-    fun dateLoadingFailed(statsGranularity: StatsGranularity) {
-        dateLoadingFailed(statsGranularity.toStatsSection())
+    fun onDateLoadingFailed(statsGranularity: StatsGranularity) {
+        onDateLoadingFailed(statsGranularity.toStatsSection())
     }
 
-    fun dateLoadingFailed(statsSection: StatsSection) {
+    fun onDateLoadingFailed(statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.index != null && !selectedDate.error) {
-            updateSelectedDate(selectedDate.copy(error = true), statsSection)
+            updateSelectedDate(selectedDate.copy(error = true, loading = false), statsSection)
         } else if (selectedDate.index == null) {
-            updateSelectedDate(SelectedDate(error = true), statsSection)
+            updateSelectedDate(SelectedDate(error = true, loading = false), statsSection)
         }
     }
 
-    fun dateLoadingSucceeded(statsGranularity: StatsGranularity) {
-        dateLoadingSucceeded(statsGranularity.toStatsSection())
+    fun onDateLoadingSucceeded(statsGranularity: StatsGranularity) {
+        onDateLoadingSucceeded(statsGranularity.toStatsSection())
     }
 
-    fun dateLoadingSucceeded(statsSection: StatsSection) {
+    fun onDateLoadingSucceeded(statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.index != null && selectedDate.error) {
-            updateSelectedDate(selectedDate.copy(error = false), statsSection)
+            updateSelectedDate(selectedDate.copy(error = false, loading = false), statsSection)
         } else if (selectedDate.index == null) {
-            updateSelectedDate(SelectedDate(error = false), statsSection)
+            updateSelectedDate(SelectedDate(error = false, loading = false), statsSection)
         }
     }
 
@@ -147,12 +147,12 @@ class SelectedDateProvider
 
     fun clear() {
         mutableDates.clear()
-        mutableSelectedDateChanged.value = null
+        selectedDateChanged.value = null
     }
 
     fun clear(statsSection: StatsSection) {
         mutableDates[statsSection] = SelectedDate(loading = true)
-        mutableSelectedDateChanged.value = null
+        selectedDateChanged.value = null
     }
 
     data class SelectedDate(
@@ -163,6 +163,15 @@ class SelectedDateProvider
     ) {
         fun hasData(): Boolean = index != null && availableDates.size > index && index >= 0
         fun getDate(): Date = availableDates[index!!]
+        fun hasUpdatedDate(selectedDate: SelectedDate?): Boolean {
+            return if (selectedDate == null) {
+                hasData()
+            } else if (hasData() && selectedDate.hasData()) {
+                getDate() != selectedDate.getDate()
+            } else {
+                index != selectedDate.index
+            }
+        }
     }
 
     data class SectionChange(val selectedSection: StatsSection)

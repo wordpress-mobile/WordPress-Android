@@ -171,8 +171,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
     }
 
     private fun getScreenTitle(step: SiteCreationStep): String {
-        val screenTitleData = mainViewModel.screenTitleForWizardStep(step)
-        return when (screenTitleData) {
+        return when (val screenTitleData = mainViewModel.screenTitleForWizardStep(step)) {
             is ScreenTitleStepCount -> getString(
                     screenTitleData.resId,
                     screenTitleData.stepPosition,
