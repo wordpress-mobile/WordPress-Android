@@ -9,50 +9,8 @@
 * New Insights Management for selecting the most relevant stats
 * App download size is now much smaller.
 
-12.3
------
-* Updated primary button color to pink
-* Redirect to username/password login when WordPress.com reports email login not allowed
-* Updated notifications list to Material guidelines
-* Updated snackbar design to Material guidelines
-* New Follower totals insights in the Stats
-* Fixed crash when viewing Notifications tab
-* Add "This Year" card to Stats Insights screen
-* The Site → Blog Posts → View WebView will no longer show any Calypso UI
-* Fixed an issue with Twitter publicize connections
-* Fixed an issue where the site icon wasn't updating correctly after switching to another site
-* Fixes an issue which can result in missing posts in the Reader
-
-12.2
------
-* Fixed padding of some icons on devices running Android Lollipop
-* Added an action to share sites in the Reader
-* Updated color scheme to Classic Bright
-* Adds support for .blog subdomains for the new site creation flow
-
-12.1
------
-* Design improvements for the new site creation flow
-* Refreshed post stats detail screen - opens from the Blog posts/Stats and from Stats/Posts and Pages
-* Added swiping between tabs in Notifications
-* Refreshed View all Stats screens, when digging into stats data
-* Visual update to Today's stats, All-time stats and Most popular stats blocks
-* Now sharing pictures to WordPress opens the Block editor
-* Fixed crash when inserting text right before an Image
-* Now sharing pictures to WordPress opens the block editor
-
-12.0
------
-* Faster opening of large posts
-* Updated Notifications with tabs
-* Add Posting activity block to the Stats/Insights
-* Fixed error notifications for failed uploads
-
-11.9
------
-* Introduced new site creation wizard
-* Make "<em>" the default markup for italic in the editor
-* Updated Plans with new design
-* Fixed an issue where posts show up as scheduled even after they are published
-* Add Visitors overlay to the Overview block in Stats
-* Change Stats design to flat on smaller devices
+* The blog posts list screen has been updated: posts are now displayed in different tabs based on their status, you can now filter posts by their author and you can toggle to a compact view for the posts lists.
+* In the Stats Insights screen, you can now select the most relevants stats by tapping the "Edit" button at the bottom. 
+* In the reader, audio files embedded in post can now be played.
+* A bunch of small UI and performance issues have been fixed. 
+* App download size is now much smaller. 
