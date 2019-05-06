@@ -14,7 +14,6 @@ Language: cy_GB
     <string name="error_media_unauthorized">Nid oes gennych ganiatâd i weld y na golygu  cyfryngau</string>
     <string name="error_media_not_found">Methu canfod cyfryngau</string>
     <string name="site_settings_optimize_images">Optimeiddio Delweddau</string>
-    <string name="no_site_error">Methu cysylltu â gwefan WordPress. Nid oes gwefan WordPress dilys yn y cyfeiriad\n      hwn. Gwiriwch cyfeiriad y wefan (URL).</string>
     <string name="media_generic_error">Digwyddodd gwall cyfryngau</string>
     <string name="media_upload_error">Digwyddodd gwall llwytho cyfrwng</string>
     <string name="retry">Ceisiwch eto</string>
