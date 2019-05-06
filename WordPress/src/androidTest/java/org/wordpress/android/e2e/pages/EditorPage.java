@@ -17,6 +17,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.withIndex;
 
 public class EditorPage {
     private static ViewInteraction publishButton = onView(withId(R.id.menu_save_post));
@@ -24,9 +25,10 @@ public class EditorPage {
     private static ViewInteraction titleField = onView(allOf(withId(R.id.title),
             withHint("Title")));
     private static ViewInteraction publishConfirmation = onView(withText("Post published"));
-    private static ViewInteraction addMediaButton = onView(withId(R.id.format_bar_button_media_collapsed));
+    private static ViewInteraction addMediaButton = onView(withId(R.id.media_button_container));
     private static ViewInteraction allowMediaAccessButton = onView(allOf(withId(R.id.button),
             withText("Allow")));
+    private static ViewInteraction confirmButton = onView(withId(R.id.mnu_confirm_selection));
 
     public EditorPage() {
         editor.check(matches(isDisplayed()));
@@ -48,12 +50,24 @@ public class EditorPage {
         // Click on add media button
         addMediaButton.perform(click());
 
-        // Click on Allow button
-        allowMediaAccessButton.perform(click());
+        if (isElementDisplayed(allowMediaAccessButton)) {
+            // Click on Allow button
+            allowMediaAccessButton.perform(click());
 
-        // Accept alert for media access
-        onView(withText("ALLOW")).inRoot(isDialog()).perform(click());
+            // Accept alert for media access
+            onView(withText("ALLOW")).inRoot(isDialog()).perform(click());
+        }
 
+        // Click on a random image
+        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
+
+        // Click the confirm button
+        confirmButton.perform(click());
+
+        if (isElementDisplayed(onView(withText("LEAVE OFF")))) {
+            // Accept alert for media access
+            onView(withText("LEAVE OFF")).inRoot(isDialog()).perform(click());
+        }
 
         return this;
     }

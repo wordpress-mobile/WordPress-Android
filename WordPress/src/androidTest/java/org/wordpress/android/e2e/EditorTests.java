@@ -19,7 +19,7 @@ public class EditorTests extends BaseTest {
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
     @Test
-    public void testPublishPost() {
+    public void testPublishSimplePost() {
         String title = "Title";
         String content = "Content";
 
@@ -37,5 +37,25 @@ public class EditorTests extends BaseTest {
                 .enterContent(content)
                 .publishPost();
         assertTrue(isPublished);
+    }
+
+    @Test
+    public void testPublishFullPost() {
+        String title = "Title";
+        String content = "Content";
+
+        loginIfNecessary();
+
+        MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
+        sleep();
+        mb.clickBlogPosts();
+
+        new MySitesPage()
+                .startNewPost(E2E_WP_COM_USER_SITE_ADDRESS);
+
+        new EditorPage()
+                .enterTitle(title)
+                .enterContent(content)
+                .enterImage();
     }
 }
