@@ -49,7 +49,6 @@ Language: is
     <string name="error_media_unauthorized">Þú hefur ekki heimild til þess að skoða eða breyta skrá</string>
     <string name="error_media_not_found">Skrá fannst ekki</string>
     <string name="site_settings_optimize_images">Hagræða myndum</string>
-    <string name="no_site_error">Gat ekki tengst WordPress vef. Það er enginn gildur WordPress vefur á þessari\n        vefslóð. Skoðaðu vefslóðina sem þú slóst inn.</string>
     <string name="media_generic_error">Skráarvilla</string>
     <string name="media_upload_error">Skráarvilla kom upp</string>
     <string name="retry">Reyna aftur</string>

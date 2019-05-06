@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-12 22:52:30+0000
+Translation-Revision-Date: 2019-04-25 05:35:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">Bitte mit deinem Benutzernamen und Passwort anmelden.</string>
+    <string name="login_invalid_site_url">Die eingegebene Website-Adresse ist ungültig. Bitte erneut eingeben.</string>
+    <string name="error_user_username_instead_of_email">Bitte mit deinem WordPress.com-Benutzernamen anstelle deiner E-Mail-Adresse anmelden.</string>
+    <string name="stats_insights_average_words">Durchschn. Wörter/Beitrag</string>
+    <string name="stats_insights_total_words">Wörter insgesamt</string>
+    <string name="stats_insights_average_likes">Durchschn. Likes/Beitrag</string>
+    <string name="stats_insights_total_likes">Likes insgesamt</string>
+    <string name="stats_insights_average_comments">Durchschn. Kommentare/Beitrag</string>
+    <string name="stats_insights_total_comments">Kommentare insgesamt</string>
+    <string name="stats_insights_posts">Beiträge</string>
+    <string name="stats_insights_year">Jahr</string>
+    <string name="stats_insights_this_year_site_stats">Dieses Jahr</string>
+    <string name="no_site_error">Die Website unter dieser Adresse ist keine WordPress-Website. Um sie verbinden zu können, muss sie WordPress-Website benutzen.</string>
     <string name="plugin_check_domain_credit_error">Die Überprüfung des verfügbaren Domain-Guthabens konnte nicht durchgeführt werden</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Überprüfen von Domain-Guthaben</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Domain registrieren</string>
@@ -1167,7 +1180,6 @@ Language: de
     <string name="error_media_not_found">Medien konnten nicht gefunden werden</string>
     <string name="error_media_insufficient_fs_permissions">Leseberechtigung für Mediendatei erforderlich</string>
     <string name="site_settings_optimize_images">Bilder optimieren</string>
-    <string name="no_site_error">Konnte keine Verbindung zur WordPress-Website herstellen. Es gibt keine gültige WordPress-Website an dieser\n Adresse. Überprüfe die eingegebene Website-Adresse (URL).</string>
     <string name="media_generic_error">Medienfehler aufgetreten</string>
     <string name="media_upload_error">Fehler beim Medien-Upload aufgetreten</string>
     <string name="retry">Erneut versuchen</string>

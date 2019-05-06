@@ -1095,7 +1095,6 @@ Language: nb_NO
     <string name="error_media_not_found">Mediet ble ikke funnet</string>
     <string name="error_media_insufficient_fs_permissions">Innlesingstillatelser for enhetens medier er avslått</string>
     <string name="site_settings_optimize_images">Optimaliser bilder</string>
-    <string name="no_site_error">Klarte ikke å koble til WordPress-nettstedet. Det er ingen gyldige WordPress-nettsteder\npå denne adressen. Sjekk nettstedsadressen (URL) som du skrev inn.</string>
     <string name="media_generic_error">Mediefeil oppstod</string>
     <string name="media_upload_error">Medieopplastningsfeil oppstod</string>
     <string name="retry">Prøv igjen</string>
