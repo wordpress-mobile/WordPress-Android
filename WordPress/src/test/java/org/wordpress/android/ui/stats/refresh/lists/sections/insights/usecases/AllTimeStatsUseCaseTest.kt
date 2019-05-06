@@ -12,7 +12,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 
@@ -30,6 +31,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: AllTimeInsightsStore
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: AllTimeStatsUseCase
     private val bestDay = "2018-11-25"
@@ -40,7 +42,8 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
-                statsDateFormatter
+                statsDateFormatter,
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsDateFormatter.printDate(bestDay)).thenReturn(bestDayTransformed)
@@ -61,7 +64,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.ERROR)
-        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        assertThat(result.type).isEqualTo(InsightType.ALL_TIME_STATS)
     }
 
     @Test
@@ -79,7 +82,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
-        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        assertThat(result.type).isEqualTo(InsightType.ALL_TIME_STATS)
         val items = result.stateData!!
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
@@ -107,7 +110,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        assertThat(result.type).isEqualTo(InsightType.ALL_TIME_STATS)
         val items = result.data!!
         assertEquals(items.size, 3)
         assertTrue(items[0] is Title)
@@ -143,7 +146,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(InsightsTypes.ALL_TIME_STATS)
+        assertThat(result.type).isEqualTo(InsightType.ALL_TIME_STATS)
         val items = result.data!!
         assertEquals(items.size, 3)
         assertTrue(items[0] is Title)

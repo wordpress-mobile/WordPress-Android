@@ -1,9 +1,16 @@
+12.5
+-----
+
 12.4
 -----
+* Reduce number of network calls in Stats and improve performance
 * Added support for displaying posts in tabs based on their status
 * Added ability to filter posts by their author
+* Added ability to toggle to compact view type for blog posts list
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
+* New Insights Management for selecting the most relevant stats
+* App download size is now much smaller.
 
 12.3
 -----
@@ -44,11 +51,4 @@
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
 
-11.9
------
-* Introduced new site creation wizard
-* Make "<em>" the default markup for italic in the editor
-* Updated Plans with new design
-* Fixed an issue where posts show up as scheduled even after they are published
-* Add Visitors overlay to the Overview block in Stats
-* Change Stats design to flat on smaller devices
+

@@ -11,6 +11,7 @@ sealed class PostListItemType {
     class PostListItemUiState(
         val data: PostListItemUiStateData,
         val actions: List<PostListItemAction>,
+        val compactActions: PostListItemAction.MoreItem,
         val onSelected: () -> Unit
     ) : PostListItemType()
 
@@ -24,13 +25,19 @@ data class PostListItemUiStateData(
     val title: UiString?,
     val excerpt: UiString?,
     val imageUrl: String?,
-    val dateAndAuthor: UiString?,
+    val date: UiString?,
     @ColorRes val statusesColor: Int?,
     val statuses: List<UiString>,
     val statusesDelimiter: UiString,
-    val showProgress: Boolean,
+    val progressBarState: PostListItemProgressBar,
     val showOverlay: Boolean
 )
+
+sealed class PostListItemProgressBar(val visibility: Boolean) {
+    object Hidden : PostListItemProgressBar(visibility = false)
+    object Indeterminate : PostListItemProgressBar(visibility = true)
+    data class Determinate(val progress: Int) : PostListItemProgressBar(visibility = true)
+}
 
 sealed class PostListItemAction(val buttonType: PostListButtonType, val onButtonClicked: (PostListButtonType) -> Unit) {
     class SingleItem(buttonType: PostListButtonType, onButtonClicked: (PostListButtonType) -> Unit) :

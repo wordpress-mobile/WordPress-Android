@@ -204,7 +204,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment() {
         fun newInstance(screenTitle: String, segmentId: Long): NewSiteCreationVerticalsFragment {
             val fragment = NewSiteCreationVerticalsFragment()
             val bundle = Bundle()
-            bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
             bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
             fragment.arguments = bundle
             return fragment

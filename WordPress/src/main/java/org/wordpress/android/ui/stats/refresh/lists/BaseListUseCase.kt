@@ -7,14 +7,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.DistinctMutableLiveData
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.distinct
@@ -28,15 +27,19 @@ class BaseListUseCase(
     private val mainDispatcher: CoroutineDispatcher,
     private val statsSiteProvider: StatsSiteProvider,
     private val useCases: List<BaseStatsUseCase<*, *>>,
-    private val getStatsTypes: suspend () -> List<StatsTypes>,
-    private val mapUiModel: (useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit) -> UiModel
+    private val getStatsTypes: suspend () -> List<StatsType>,
+    private val mapUiModel: (
+        useCaseModels: List<UseCaseModel>,
+        MutableLiveData<Event<NavigationTarget>>,
+        showError: (Int) -> Unit
+    ) -> UiModel
 ) {
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
-    private val statsTypes = DistinctMutableLiveData<List<StatsTypes>>(listOf())
-    val data: MediatorLiveData<UiModel> = mergeNotNull(statsTypes, blockListData) { insights, map ->
-        insights.mapNotNull {
+    private val statsTypes = MutableLiveData<List<StatsType>>()
+    val data: MediatorLiveData<UiModel> = mergeNotNull(statsTypes, blockListData) { types, map ->
+        types.mapNotNull {
             if (map.containsKey(it)) {
                 map[it]
             } else {
@@ -44,13 +47,14 @@ class BaseListUseCase(
             }
         }
     }.map { useCaseModels ->
-        mapUiModel(useCaseModels) { message ->
+        mapUiModel(useCaseModels, mutableNavigationTarget) { message ->
             mutableSnackbarMessage.postValue(message)
         }
     }.distinct()
 
+    private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
     val navigationTarget: LiveData<Event<NavigationTarget>> = mergeNotNull(
-            useCases.map { it.navigationTarget },
+            useCases.map { it.navigationTarget } + mutableNavigationTarget,
             distinct = false
     )
 
@@ -70,16 +74,26 @@ class BaseListUseCase(
         loadData(true, forced)
     }
 
+    suspend fun refreshTypes(): List<StatsType> {
+        val items = getStatsTypes()
+        withContext(mainDispatcher) {
+            statsTypes.value = items
+        }
+        return items
+    }
+
     private suspend fun loadData(refresh: Boolean, forced: Boolean) {
         if (statsSiteProvider.hasLoadedSite()) {
             withContext(bgDispatcher) {
                 if (PackageUtils.isDebugBuild() && useCases.distinctBy { it.type }.size < useCases.size) {
                     throw RuntimeException("Duplicate stats type in a use case")
                 }
-                useCases.forEach { block -> launch { block.fetch(refresh, forced) } }
-                val items = getStatsTypes()
-                withContext(mainDispatcher) {
-                    statsTypes.value = items
+                val visibleTypes = refreshTypes()
+                visibleTypes.forEach { type ->
+                    useCases.find { it.type == type }
+                            ?.let { block -> launch(bgDispatcher) {
+                                block.fetch(refresh, forced) }
+                            }
                 }
             }
         } else {
@@ -89,7 +103,6 @@ class BaseListUseCase(
 
     fun onCleared() {
         mutableSnackbarMessage.value = null
-        statsTypes.clear()
         blockListData.value = null
         useCases.forEach { it.clear() }
         data.value = null

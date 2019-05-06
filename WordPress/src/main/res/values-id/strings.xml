@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-16 07:54:10+0000
+Translation-Revision-Date: 2019-04-30 09:54:32+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">Silakan login dengan nama pengguna dan kata sandi Anda.</string>
+    <string name="login_invalid_site_url">Alamat situs yang Anda masukkan tidak valid. Harap masukkan lagi.</string>
+    <string name="error_user_username_instead_of_email">Silakan login menggunakan nama pengguna WordPress.com sebagai ganti alamat email Anda.</string>
+    <string name="stats_insights_average_words">Rata-rata kata/pos</string>
+    <string name="stats_insights_total_words">Total kata</string>
+    <string name="stats_insights_average_likes">Rata-rata suka/pos</string>
+    <string name="stats_insights_total_likes">Total suka</string>
+    <string name="stats_insights_average_comments">Rata-rata komentar/pos</string>
+    <string name="stats_insights_total_comments">Total komentar</string>
+    <string name="stats_insights_posts">Pos</string>
+    <string name="stats_insights_year">Tahun</string>
+    <string name="stats_insights_this_year_site_stats">Tahun Ini</string>
+    <string name="no_site_error">Situs di alamat ini bukan situs WordPress. Agar kami dapat menghubungkannya, situs harus menggunakan WordPress.</string>
     <string name="plugin_check_domain_credit_error">Gagal memeriksa kredit domain yang tersedia</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Memeriksa kredit domain</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Daftarkan domain</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Untuk menginstal plugin, Anda harus memiliki domain kustom yang terkait dengan situs Anda.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Instal plugin</string>
-    <string name="new_site_creation_preview_subtitle">Anda nanti dapat menyesuaikan tampilan dan nuansa situs</string>
     <string name="publish_on">Terbitkan pada: %s</string>
     <string name="schedule_for">Jadwalkan untuk: %s</string>
     <string name="published_on">Diterbitkan pada: %s</string>
@@ -217,7 +229,7 @@ Language: id
     <string name="stats_followers_count_message">Total %1$s Pengikut: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Kelola informasi</string>
+    <string name="stats_manage_insights">Kelola informasi</string>
     <string name="stats_empty_insights_title">Belum ada informasi yang ditambahkan</string>
     <string name="stats_no_data_yet">Belum ada data</string>
     <string name="menu_debug">Menu Debug</string>
@@ -1121,7 +1133,6 @@ Language: id
     <string name="error_media_not_found">Media tidak ditemukan</string>
     <string name="error_media_insufficient_fs_permissions">Baca izin yang diperlukan pada file media</string>
     <string name="site_settings_optimize_images">Optimalkan Gambar</string>
-    <string name="no_site_error">Tidak dapat terhubung ke situs WordPress. Tidak ada situs WordPress yang valid di\n alamat ini. Periksa alamat situs (URL) yang Anda masukkan.</string>
     <string name="media_generic_error">Terjadi error media</string>
     <string name="media_upload_error">Terjadi error saat mengunggah media</string>
     <string name="retry">Coba lagi</string>

@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-14 21:35:31+0000
+Translation-Revision-Date: 2019-04-29 11:05:04+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">Lütfen kullanıcı adı ve parola ile oturum açın.</string>
+    <string name="login_invalid_site_url">Girdiğiniz site adresi geçersiz. Lütfen tekrar girin.</string>
+    <string name="error_user_username_instead_of_email">Lütfen e-posta adresiniz yerine WordPress.com kullanıcı adınızı kullanarak oturum açın.</string>
+    <string name="stats_insights_average_words">Ort kelime/yazı</string>
+    <string name="stats_insights_total_words">Toplam kelime</string>
+    <string name="stats_insights_average_likes">Ort beğeni/yazı</string>
+    <string name="stats_insights_total_likes">Toplam beğeni</string>
+    <string name="stats_insights_average_comments">Ort yorum/yazı</string>
+    <string name="stats_insights_total_comments">Toplam yorum</string>
+    <string name="stats_insights_posts">Yazılar</string>
+    <string name="stats_insights_year">Yıl</string>
+    <string name="stats_insights_this_year_site_stats">Bu yıl</string>
+    <string name="no_site_error">Bu adresteki site bir WordPress sitesi değil. Bağlanmamız için sitenin WordPress kullanması gerekir.</string>
     <string name="plugin_check_domain_credit_error">Kullanılabilir alan adı kredisi kontrol edilemedi</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Alan adı kredileri kontrol ediliyor</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Alan adı kaydet</string>
@@ -221,7 +234,7 @@ Language: tr
     <string name="stats_followers_count_message">Toplam %1$s takipçisi: %2$s</string>
     <string name="stats_followers_email">E-posta</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">İçgörüleri yönet</string>
+    <string name="stats_manage_insights">İçgörüleri yönet</string>
     <string name="stats_empty_insights_description">Analizlerinizi özelleştirin ve sitenizin performansındaki düşüş hakkında bilgi edinin</string>
     <string name="stats_empty_insights_title">Henüz içgörü eklenmedi</string>
     <string name="stats_no_data_yet">Henüz veri yok</string>
@@ -1167,7 +1180,6 @@ Language: tr
     <string name="error_media_not_found">Ortam bulunamadı</string>
     <string name="error_media_insufficient_fs_permissions">Cihaz ortam dosyası için okuma izni reddedildi</string>
     <string name="site_settings_optimize_images">Görselleri iyileştir</string>
-    <string name="no_site_error">WordPress sitesine bağlanılamıyor. Bu adreste geçerli bir WordPress sitesi\n     bulunmuyor. Lütfen site adresini kontrol edin.</string>
     <string name="media_generic_error">Ortam hatası oluştu</string>
     <string name="media_upload_error">Ortam yükleme hatası oluştu</string>
     <string name="retry">Tekrar dene</string>

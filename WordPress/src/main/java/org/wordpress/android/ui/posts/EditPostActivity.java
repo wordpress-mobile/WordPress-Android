@@ -2025,6 +2025,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     mPost.setStatus(PostStatus.PUBLISHED.toString());
                     mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
+                } else {
+                    // particular case: if user is submitting for review (that is,
+                    // can't publish posts directly to this site), update the status
+                    if (!userCanPublishPosts()) {
+                        mPost.setStatus(PostStatus.PENDING.toString());
+                    }
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
 
                 boolean postUpdateSuccessful = updatePostObject();
@@ -2053,11 +2060,9 @@ public class EditPostActivity extends AppCompatActivity implements
                                 }
                             });
                         } else {
-                            mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                             savePostOnlineAndFinishAsync(isFirstTimePublish, true);
                         }
                     } else {
-                        mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                         savePostLocallyAndFinishAsync(true);
                     }
                 } else {
