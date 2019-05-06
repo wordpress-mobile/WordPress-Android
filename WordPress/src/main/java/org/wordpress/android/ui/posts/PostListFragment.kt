@@ -116,8 +116,10 @@ class PostListFragment : Fragment() {
                         recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
                         recyclerView?.addItemDecoration(itemDecorationStandardLayout)
                         (recyclerView?.layoutParams as? MarginLayoutParams)?.let {
-                            it.marginStart = nonNullActivity.resources.getDimensionPixelSize(R.dimen.post_list_content_margin)
-                            it.marginEnd = nonNullActivity.resources.getDimensionPixelSize(R.dimen.post_list_content_margin)
+                            it.marginStart = nonNullActivity.resources
+                                    .getDimensionPixelSize(R.dimen.post_list_content_margin)
+                            it.marginEnd = nonNullActivity.resources
+                                    .getDimensionPixelSize(R.dimen.post_list_content_margin)
                         }
                     }
                     COMPACT -> {
