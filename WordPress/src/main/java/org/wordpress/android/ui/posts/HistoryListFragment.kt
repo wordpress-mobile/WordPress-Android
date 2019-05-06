@@ -126,7 +126,7 @@ class HistoryListFragment : Fragment() {
                     updatePostOrPageEmptyView()
                 }
                 HistoryListStatus.FETCHING -> {
-                    actionable_empty_view.title.setText(R.string.history_fecthing_revisions)
+                    actionable_empty_view.title.setText(R.string.history_fetching_revisions)
                     actionable_empty_view.subtitle.visibility = View.GONE
                     actionable_empty_view.button.visibility = View.GONE
                     reloadList(viewModel.revisions.value ?: emptyList())
