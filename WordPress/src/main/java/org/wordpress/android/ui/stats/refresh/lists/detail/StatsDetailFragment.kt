@@ -79,7 +79,7 @@ class StatsDetailFragment : DaggerFragment() {
         })
 
         viewModel.selectedDateChanged.observe(this, Observer { event ->
-            if (event?.hasBeenHandled == false) {
+            if (event?.getContentIfNotHandled() != null) {
                 viewModel.onDateChanged()
             }
         })
@@ -89,14 +89,14 @@ class StatsDetailFragment : DaggerFragment() {
             if (date_selection_toolbar.visibility != dateSelectorVisibility) {
                 date_selection_toolbar.visibility = dateSelectorVisibility
             }
-            selected_date.text = dateSelectorUiModel?.date ?: ""
+            selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
             val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (select_previous_date.isEnabled != enablePreviousButton) {
-                select_previous_date.isEnabled = enablePreviousButton
+            if (previousDateButton.isEnabled != enablePreviousButton) {
+                previousDateButton.isEnabled = enablePreviousButton
             }
             val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (select_next_date.isEnabled != enableNextButton) {
-                select_next_date.isEnabled = enableNextButton
+            if (nextDateButton.isEnabled != enableNextButton) {
+                nextDateButton.isEnabled = enableNextButton
             }
         })
     }

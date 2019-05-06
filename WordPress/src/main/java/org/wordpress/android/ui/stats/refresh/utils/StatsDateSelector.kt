@@ -2,7 +2,11 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
@@ -60,8 +64,20 @@ constructor(
     private fun getDateLabelForSection(): String? {
         return statsDateFormatter.printGranularDate(
                 selectedDateProvider.getSelectedDate(statsSection) ?: selectedDateProvider.getCurrentDate(),
-                statsSection.toStatsGranularity() ?: DAYS
+                toStatsGranularity()
         )
+    }
+
+    private fun toStatsGranularity(): StatsGranularity {
+        return when (statsSection) {
+            StatsSection.DETAIL,
+            StatsSection.INSIGHTS,
+            StatsSection.DAYS -> DAYS
+            StatsSection.WEEKS -> WEEKS
+            StatsSection.MONTHS -> MONTHS
+            StatsSection.ANNUAL_STATS,
+            StatsSection.YEARS -> YEARS
+        }
     }
 
     fun onNextDateSelected() {

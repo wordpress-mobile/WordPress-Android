@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.view.View
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
@@ -13,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK_BUTTON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
@@ -52,10 +54,15 @@ sealed class BlockListItem(val type: Type) {
         LOADING_ITEM,
         ACTIVITY_ITEM,
         REFERRED_ITEM,
-        QUICK_SCAN_ITEM
+        QUICK_SCAN_ITEM,
+        LINK_BUTTON
     }
 
-    data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
+    data class Title(
+        @StringRes val textResource: Int? = null,
+        val text: String? = null,
+        val menuAction: ((View) -> Unit)? = null
+    ) : BlockListItem(TITLE)
 
     data class ReferredItem(@StringRes val label: Int, val itemTitle: String) : BlockListItem(REFERRED_ITEM)
 
@@ -137,8 +144,12 @@ sealed class BlockListItem(val type: Type) {
         @DrawableRes val icon: Int? = null,
         @StringRes val text: Int,
         val navigateAction: NavigationAction
-    ) :
-            BlockListItem(LINK)
+    ) : BlockListItem(LINK)
+
+    data class LinkButton(
+        @StringRes val text: Int,
+        val navigateAction: NavigationAction
+    ) : BlockListItem(LINK_BUTTON)
 
     data class BarChartItem(
         val entries: List<Bar>,
