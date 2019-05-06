@@ -145,15 +145,10 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun fetchRevisions() {
-        if (networkUtils.isNetworkAvailable()) {
-            _listStatus.value = HistoryListStatus.FETCHING
-            val payload = FetchRevisionsPayload(post, site)
-            uiScope.launch {
-                dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
-            }
-        } else {
-            _listStatus.value = HistoryListStatus.NO_NETWORK
-            createRevisionsList(emptyList())
+        _listStatus.value = HistoryListStatus.FETCHING
+        val payload = FetchRevisionsPayload(post, site)
+        uiScope.launch {
+            dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
         }
     }
 
@@ -211,7 +206,6 @@ class HistoryViewModel @Inject constructor(
             } else {
                 _listStatus.value = HistoryListStatus.NO_NETWORK
             }
-            createRevisionsList(emptyList())
         } else {
             _listStatus.value = HistoryListStatus.DONE
             createRevisionsList(event.revisionsModel.revisions)
