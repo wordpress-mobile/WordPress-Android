@@ -129,21 +129,18 @@ class HistoryListFragment : Fragment() {
                     actionable_empty_view.title.setText(R.string.history_fetching_revisions)
                     actionable_empty_view.subtitle.visibility = View.GONE
                     actionable_empty_view.button.visibility = View.GONE
-                    reloadList(viewModel.revisions.value ?: emptyList())
                 }
                 HistoryListStatus.NO_NETWORK -> {
                     actionable_empty_view.title.setText(R.string.no_network_title)
                     actionable_empty_view.subtitle.setText(R.string.no_network_message)
                     actionable_empty_view.subtitle.visibility = View.VISIBLE
                     actionable_empty_view.button.visibility = View.VISIBLE
-                    reloadList(viewModel.revisions.value ?: emptyList())
                 }
                 HistoryListStatus.ERROR -> {
                     actionable_empty_view.title.setText(R.string.no_network_title)
                     actionable_empty_view.subtitle.setText(R.string.error_generic_network)
                     actionable_empty_view.subtitle.visibility = View.VISIBLE
                     actionable_empty_view.button.visibility = View.VISIBLE
-                    reloadList(viewModel.revisions.value ?: emptyList())
                 }
             }
         })

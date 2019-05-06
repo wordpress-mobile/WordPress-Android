@@ -88,6 +88,7 @@ class HistoryViewModel @Inject constructor(
         this.revisionsList = ArrayList()
         this.post = post
         this.site = site
+        this._revisions.value = emptyList()
 
         fetchRevisions()
 
