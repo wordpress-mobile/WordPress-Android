@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.Button
 import android.widget.ProgressBar
 import org.wordpress.android.R
@@ -114,10 +115,18 @@ class PostListFragment : Fragment() {
                     STANDARD -> {
                         recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
                         recyclerView?.addItemDecoration(itemDecorationStandardLayout)
+                        (recyclerView?.layoutParams as? MarginLayoutParams)?.let {
+                            it.marginStart = nonNullActivity.resources.getDimensionPixelSize(R.dimen.post_list_content_margin)
+                            it.marginEnd = nonNullActivity.resources.getDimensionPixelSize(R.dimen.post_list_content_margin)
+                        }
                     }
                     COMPACT -> {
                         recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
                         recyclerView?.addItemDecoration(itemDecorationCompactLayout)
+                        (recyclerView?.layoutParams as? MarginLayoutParams)?.let {
+                            it.marginStart = 0
+                            it.marginEnd = 0
+                        }
                     }
                 }
 
