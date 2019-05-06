@@ -1,14 +1,3 @@
-12.4
------
-* Reduce number of network calls in Stats and improve performance
-* Added support for displaying posts in tabs based on their status
-* Added ability to filter posts by their author
-* Added ability to toggle to compact view type for blog posts list
-* Fixed several bugs on the blog posts screen
-* Fixed bug that prevented audio playing in the reader
-* New Insights Management for selecting the most relevant stats
-* App download size is now much smaller.
-
 * The blog posts list screen has been updated: posts are now displayed in different tabs based on their status, you can now filter posts by their author and you can toggle to a compact view for the posts lists.
 * In the Stats Insights screen, you can now select the most relevants stats by tapping the "Edit" button at the bottom. 
 * In the reader, audio files embedded in post can now be played.
