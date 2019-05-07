@@ -1,7 +1,6 @@
 12.5
 ----
 * Added a bar that represents proportionate number of views for some stats elements
------
 
 12.4
 -----
