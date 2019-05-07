@@ -1,7 +1,11 @@
 package org.wordpress.android.viewmodel.history
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.text.TextUtils
 import kotlinx.coroutines.CoroutineScope
@@ -24,19 +28,24 @@ import org.wordpress.android.ui.people.utils.PeopleUtils
 import org.wordpress.android.ui.people.utils.PeopleUtils.FetchUsersCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import javax.inject.Inject
 import javax.inject.Named
 
 class HistoryViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
-    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
-) : ViewModel() {
+    private val networkUtils: NetworkUtilsWrapper,
+    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope,
+    connectionStatus: LiveData<ConnectionStatus>
+) : ViewModel(), LifecycleOwner {
     enum class HistoryListStatus {
         DONE,
         ERROR,
+        NO_NETWORK,
         FETCHING
     }
 
@@ -58,8 +67,17 @@ class HistoryViewModel @Inject constructor(
     lateinit var post: PostModel
     lateinit var site: SiteModel
 
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+
     init {
+        lifecycleRegistry.markState(Lifecycle.State.CREATED)
         dispatcher.register(this)
+        connectionStatus.observe(this, Observer {
+            if (it?.isConnected == true) {
+                fetchRevisions()
+            }
+        })
     }
 
     fun create(post: PostModel, site: SiteModel) {
@@ -70,10 +88,12 @@ class HistoryViewModel @Inject constructor(
         this.revisionsList = ArrayList()
         this.post = post
         this.site = site
+        this._revisions.value = emptyList()
 
         fetchRevisions()
 
         isStarted = true
+        lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
 
     private fun createRevisionsList(revisions: List<RevisionModel>) {
@@ -163,6 +183,7 @@ class HistoryViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
+        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
         super.onCleared()
     }
 
@@ -180,8 +201,12 @@ class HistoryViewModel @Inject constructor(
     @SuppressWarnings("unused")
     fun onRevisionsFetched(event: OnRevisionsFetched) {
         if (event.isError) {
-            _listStatus.value = HistoryListStatus.ERROR
             AppLog.e(T.API, "An error occurred while fetching History revisions")
+            if (networkUtils.isNetworkAvailable()) {
+                _listStatus.value = HistoryListStatus.ERROR
+            } else {
+                _listStatus.value = HistoryListStatus.NO_NETWORK
+            }
         } else {
             _listStatus.value = HistoryListStatus.DONE
             createRevisionsList(event.revisionsModel.revisions)
