@@ -1,13 +1,5 @@
 package org.wordpress.android.ui.uploads;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.text.TextUtils;
-import android.view.View;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -31,6 +23,14 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPSnackbar;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,8 +118,7 @@ public class UploadUtils {
         boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
         if (savedLocally && !NetworkUtils.isNetworkAvailable(activity)) {
             // The network is not available, we can't do anything
-            ToastUtils.showToast(activity, R.string.error_publish_no_network,
-                                 ToastUtils.Duration.SHORT);
+            showSnackbar(snackbarAttachView, R.string.error_publish_no_network);
             return;
         }
 
