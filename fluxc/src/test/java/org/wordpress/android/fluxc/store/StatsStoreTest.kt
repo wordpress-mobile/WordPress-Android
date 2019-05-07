@@ -20,11 +20,13 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class StatsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var insightTypesSqlUtils: InsightTypeSqlUtils
+    @Mock lateinit var preferenceUtilsWrapper: PreferenceUtilsWrapper
     private lateinit var store: StatsStore
 
     @ExperimentalCoroutinesApi
@@ -32,7 +34,8 @@ class StatsStoreTest {
     fun setUp() {
         store = StatsStore(
                 Unconfined,
-                insightTypesSqlUtils
+                insightTypesSqlUtils,
+                preferenceUtilsWrapper
         )
     }
 
