@@ -27,6 +27,7 @@ private const val FORMATTER_DATE = "January 1st, 1:35pm"
 private val POST_STATE_PUBLISH = PostStatus.PUBLISHED.toString()
 private val POST_STATE_PRIVATE = PostStatus.PRIVATE.toString()
 private val POST_STATE_PENDING = PostStatus.PENDING.toString()
+private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
 
 @RunWith(MockitoJUnitRunner::class)
 class PostListItemUiStateHelperTest {
@@ -126,6 +127,15 @@ class PostListItemUiStateHelperTest {
     fun `uploading post label shown when the post is being uploaded`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploading = true))
         assertThat(state.data.statuses).contains(UiStringRes(R.string.post_uploading))
+    }
+
+    @Test
+    fun `uploading draft label shown when the draft is being uploaded`() {
+        val state = createPostListItemUiState(
+                uploadStatus = createUploadStatus(isUploading = true),
+                post = createPostModel(status = POST_STATE_DRAFT)
+        )
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_uploading_draft))
     }
 
     @Test
