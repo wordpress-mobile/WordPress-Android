@@ -102,7 +102,7 @@ class PlansViewModel @Inject constructor(
             _plans.value = emptyList()
             AppLog.e(T.API, "An error occurred while fetching plans. Cache is not available.")
         } else {
-            _listStatus.value = PlansListStatus.DONE
+            _listStatus.value = DONE
             _plans.value = event.planOffers
         }
     }

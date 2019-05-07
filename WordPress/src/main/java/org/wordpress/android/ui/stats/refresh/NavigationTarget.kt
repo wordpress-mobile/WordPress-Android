@@ -33,4 +33,6 @@ sealed class NavigationTarget {
     object ViewMonthsAndYearsStats : NavigationTarget()
     object ViewDayAverageStats : NavigationTarget()
     object ViewRecentWeeksStats : NavigationTarget()
+    object ViewAnnualStats : NavigationTarget()
+    object ViewInsightsManagement : NavigationTarget()
 }

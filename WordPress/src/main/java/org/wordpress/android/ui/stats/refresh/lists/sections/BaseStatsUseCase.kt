@@ -6,7 +6,7 @@ import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
@@ -27,7 +27,7 @@ import org.wordpress.android.viewmodel.Event
  * Do not override this class directly. Use StatefulUseCase or StatelessUseCase instead.
  */
 abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
-    val type: StatsTypes,
+    val type: StatsType,
     private val mainDispatcher: CoroutineDispatcher,
     private val defaultUiState: UI_STATE
 ) {
@@ -200,7 +200,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     }
 
     data class UseCaseModel(
-        val type: StatsTypes,
+        val type: StatsType,
         val data: List<BlockListItem>? = null,
         val stateData: List<BlockListItem>? = null,
         val state: UseCaseState = SUCCESS
@@ -216,7 +216,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param defaultUiState default value the UI state should have when the screen first loads
      */
     abstract class StatefulUseCase<DOMAIN_MODEL, UI_STATE>(
-        type: StatsTypes,
+        type: StatsType,
         mainDispatcher: CoroutineDispatcher,
         private val defaultUiState: UI_STATE
     ) : BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(type, mainDispatcher, defaultUiState) {
@@ -238,7 +238,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * These blocks don't have only one UI state and it doesn't change.
      */
     abstract class StatelessUseCase<DOMAIN_MODEL>(
-        type: StatsTypes,
+        type: StatsType,
         mainDispatcher: CoroutineDispatcher
     ) : BaseStatsUseCase<DOMAIN_MODEL, NotUsedUiState>(type, mainDispatcher, NotUsedUiState) {
         /**

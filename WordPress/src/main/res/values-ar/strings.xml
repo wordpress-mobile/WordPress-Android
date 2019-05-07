@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-18 02:50:56+0000
+Translation-Revision-Date: 2019-04-24 19:41:07+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">يرجى تسجيل الدخول باسم المستخدم وكلمة المرور الخاصة بك.</string>
+    <string name="login_invalid_site_url">عنوان الموقع الذي أدخلته غير صالح. يرجى إعادة إدخاله.</string>
+    <string name="error_user_username_instead_of_email">يرجى تسجيل الدخول باستخدام اسم مستخدم WordPress.com الخاص بك بدلاً من عنوان بريدك الإلكتروني.</string>
+    <string name="stats_insights_average_words">معدل الكلمات/المقالة</string>
+    <string name="stats_insights_total_words">إجمالي الكلمات</string>
+    <string name="stats_insights_average_likes">معدل الإعجابات/المقالة</string>
+    <string name="stats_insights_total_likes">إجمالي الإعجابات</string>
+    <string name="stats_insights_average_comments">معدل التعليقات/المقالة</string>
+    <string name="stats_insights_total_comments">إجمالي التعليقات</string>
+    <string name="stats_insights_posts">المقالات</string>
+    <string name="stats_insights_year">عام</string>
+    <string name="stats_insights_this_year_site_stats">هذا العام</string>
+    <string name="no_site_error">الموقع على عنوان هذا الرابط ليس موقع ووردبريس. وبالنسبة لنا للاتصال به، يجب أن يستخدم الموقع ووردبريس.</string>
     <string name="plugin_check_domain_credit_error">فشل التحقق من الرصيد المتاح للنطاقات</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">جاري التحقق من الرصيد المتاح للنطاقات</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">تسجيل نطاق</string>
     <string name="plugin_install_custom_domain_required_dialog_message">لتنصيب الإضافات، لا بد من أن يكون لديك نطاق مخصص مرتبط بموقعك.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">تنصيب الإضافة</string>
-    <string name="new_site_creation_preview_subtitle">ستتمكن من تخصيص شكل ومظهر موقعك لاحقًا</string>
+    <string name="new_site_creation_preview_subtitle">ستتمكن من تخصيص شكل ومظهر الموقع الخاص بك لاحقًا</string>
     <string name="publish_on">تاريخ النشر: %s</string>
     <string name="schedule_for">جدولة ليوم: %s</string>
     <string name="published_on">تمّ النشر في: %s</string>
@@ -221,7 +234,7 @@ Language: ar
     <string name="stats_followers_count_message">إجمالي %1$s من المتابعين: %2$s</string>
     <string name="stats_followers_email">البريد الإلكتروني</string>
     <string name="stats_followers_wordpress_com">ووردبريس.كوم</string>
-    <string name="stats_button_manage_insights">إدارة الرؤى</string>
+    <string name="stats_manage_insights">إدارة الرؤى</string>
     <string name="stats_empty_insights_description">تخصيص الرؤى الخاصة بك والحصول على معلومات حول أداء موقعك</string>
     <string name="stats_empty_insights_title">لم تتم إضافة رى حتى الآن</string>
     <string name="stats_no_data_yet">لا توجد بيانات حتى الآن</string>
@@ -1167,7 +1180,6 @@ Language: ar
     <string name="error_media_not_found">يتعذر العثور على الوسائط</string>
     <string name="error_media_insufficient_fs_permissions">يلزم وجود إذن بالقراءة على ملف الوسائط</string>
     <string name="site_settings_optimize_images">تحسين الصور</string>
-    <string name="no_site_error">يتعذر الاتصال بموقع ووردبريس. لا يوجد موقع ووردبريس صالح في هذا\n العنوان. تحقق من عنوان الموقع (URL) الذي أدخلته.</string>
     <string name="media_generic_error">حدث خطأ في الوسائط</string>
     <string name="media_upload_error">حدث خطأ في رفع الوسائط</string>
     <string name="retry">إعادة المحاولة</string>

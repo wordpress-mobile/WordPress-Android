@@ -622,7 +622,6 @@ Language: el_GR
     <string name="error_media_not_found">Δεν βρέθηκαν πολυμέσα</string>
     <string name="error_media_insufficient_fs_permissions">Απαιτείται άδεια ανάγνωσης για το αρχείο πολυμέσων</string>
     <string name="site_settings_optimize_images">Βελτιστοποίηση εικόνων</string>
-    <string name="no_site_error">Αδυναμία σύνδεσης στον ιστότοπο WordPress. Δεν υπάρχει έγκυρος ιστότοπος του WordPress σε αυτή\nτη διεύθυνση. Ελέγξτε τη διεύθυνση ιστοτόπου (URL) που δώσατε.</string>
     <string name="media_generic_error">Σφάλμα πολυμέσων</string>
     <string name="media_upload_error">Σφάλμα μεταφόρτωσης πολυμέσων</string>
     <string name="retry">Δοκιμάστε ξανά</string>

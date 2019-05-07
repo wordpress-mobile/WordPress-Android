@@ -1,7 +1,11 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.support.v7.util.DiffUtil.Callback
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Control
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Loading
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
 
 class StatsBlockDiffCallback(
     private val oldList: List<StatsBlock>,
@@ -11,7 +15,13 @@ class StatsBlockDiffCallback(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
-        return oldItem.statsTypes == newItem.statsTypes
+        return oldItem.type == newItem.type && when (oldItem) {
+            is Success -> oldItem.statsType == (newItem as Success).statsType
+            is EmptyBlock -> oldItem.statsType == (newItem as EmptyBlock).statsType
+            is Error -> oldItem.statsType == (newItem as Error).statsType
+            is Loading -> oldItem.statsType == (newItem as Loading).statsType
+            is Control -> true
+        }
     }
 
     override fun getOldListSize(): Int = oldList.size
@@ -30,7 +40,7 @@ class StatsBlockDiffCallback(
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
-        if (oldItem is Success && newItem is Success) {
+        if (oldItem.type == newItem.type) {
             return Payload
         }
         return null

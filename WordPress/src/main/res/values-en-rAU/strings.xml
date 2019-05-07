@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-12 23:29:27+0000
+Translation-Revision-Date: 2019-04-25 00:45:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
+    <string name="login_invalid_site_url">The site address you entered is invalid. Please re-enter it.</string>
+    <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
+    <string name="stats_insights_average_words">Avg words/post</string>
+    <string name="stats_insights_total_words">Total words</string>
+    <string name="stats_insights_average_likes">Avg likes/post</string>
+    <string name="stats_insights_total_likes">Total likes</string>
+    <string name="stats_insights_average_comments">Avg comments/post</string>
+    <string name="stats_insights_total_comments">Total comments</string>
+    <string name="stats_insights_posts">Posts</string>
+    <string name="stats_insights_year">Year</string>
+    <string name="stats_insights_this_year_site_stats">This Year</string>
+    <string name="no_site_error">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
     <string name="plugin_check_domain_credit_error">Failed to check available domain credits</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Checking domain credits</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Register domain</string>
@@ -221,7 +234,7 @@ Language: en_AU
     <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Manage insights</string>
+    <string name="stats_manage_insights">Manage insights</string>
     <string name="stats_empty_insights_description">Customise your insights and get the low-down on your site’s performance</string>
     <string name="stats_empty_insights_title">No insights added yet</string>
     <string name="stats_no_data_yet">No data yet</string>
@@ -1167,7 +1180,6 @@ Language: en_AU
     <string name="error_media_not_found">Media could not be found</string>
     <string name="error_media_insufficient_fs_permissions">Read permission denied on device media</string>
     <string name="site_settings_optimize_images">Optimise Images</string>
-    <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this\n        address. Check the site address (URL) you entered.</string>
     <string name="media_generic_error">Media error occurred</string>
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="retry">Retry</string>

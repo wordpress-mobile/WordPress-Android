@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-17 01:54:09+0000
+Translation-Revision-Date: 2019-05-03 03:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">ユーザー名とパスワードでログインしてください。</string>
+    <string name="login_invalid_site_url">入力されたサイトアドレスが無効です。もう一度入力してください。</string>
+    <string name="error_user_username_instead_of_email">メールアドレスではなく WordPress.com ユーザー名を使用してログインしてください。</string>
+    <string name="stats_insights_average_words">1投稿あたりの平均単語数</string>
+    <string name="stats_insights_total_words">総単語数</string>
+    <string name="stats_insights_average_likes">1投稿あたりの「いいね」の平均数</string>
+    <string name="stats_insights_total_likes">「いいね」の総数</string>
+    <string name="stats_insights_average_comments">1投稿あたりの平均コメント数</string>
+    <string name="stats_insights_total_comments">総コメント数</string>
+    <string name="stats_insights_posts">投稿</string>
+    <string name="stats_insights_year">年</string>
+    <string name="stats_insights_this_year_site_stats">今年</string>
+    <string name="no_site_error">このアドレスのサイトは WordPress のサイトではありません。接続するには、接続先のサイトが WordPress を使用している必要があります。</string>
     <string name="plugin_check_domain_credit_error">登録可能なドメインクレジットの確認に失敗しました</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">ドメインクレジットの確認</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">ドメインを登録</string>
     <string name="plugin_install_custom_domain_required_dialog_message">プラグインをインストールするには、カスタムドメインをサイトに関連付ける必要があります。</string>
     <string name="plugin_install_custom_domain_required_dialog_title">プラグインをインストール</string>
-    <string name="new_site_creation_preview_subtitle">サイトの外見は後でカスタマイズできます。</string>
     <string name="publish_on">公開日:%s</string>
     <string name="schedule_for">予約:%s</string>
     <string name="published_on">公開日時:%s</string>
@@ -220,7 +232,7 @@ Language: ja_JP
     <string name="stats_followers_count_message">Total %1$s Followers:%2$s</string>
     <string name="stats_followers_email">メール</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">インサイトを管理</string>
+    <string name="stats_manage_insights">インサイトを管理</string>
     <string name="stats_empty_insights_description">インサイトをカスタマイズして、サイトのパフォーマンスを把握しましょう</string>
     <string name="stats_empty_insights_title">インサイトは追加されていません</string>
     <string name="stats_no_data_yet">データはまだありません</string>
@@ -1166,7 +1178,6 @@ Language: ja_JP
     <string name="error_media_not_found">メディアを検出できませんでした</string>
     <string name="error_media_insufficient_fs_permissions">端末上のメディア読み取り権限が拒否されました</string>
     <string name="site_settings_optimize_images">画像を最適化</string>
-    <string name="no_site_error">WordPress サイトに接続できませんでした。有効な WordPress サイトはこの\nアドレスにはありません。入力したサイトアドレス (URL) を確認してください。</string>
     <string name="media_generic_error">メディアエラーが発生しました</string>
     <string name="media_upload_error">メディアアップロードエラーが発生しました</string>
     <string name="retry">再試行</string>

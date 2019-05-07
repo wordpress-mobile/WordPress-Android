@@ -85,3 +85,4 @@ fastlane/screenshots_orig
 /vendor
 /fastlane/promo_screenshots
 /fastlane/metadata/tmp
+sentry.properties
