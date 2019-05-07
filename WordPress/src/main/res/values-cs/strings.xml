@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-01 15:55:46+0000
+Translation-Revision-Date: 2019-04-24 10:29:25+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+    <string name="stats_insights_average_words">Průměr slov/příspěvek</string>
+    <string name="stats_insights_total_words">Celkem slov</string>
+    <string name="stats_insights_average_likes">Průměr to se mi líbí/příspěvek</string>
+    <string name="stats_insights_total_likes">Celkem to se mi líbí</string>
+    <string name="stats_insights_average_comments">Průměr komentářů/příspěvek</string>
+    <string name="stats_insights_total_comments">Celkem komentářů</string>
+    <string name="stats_insights_posts">Příspěvky</string>
+    <string name="stats_insights_year">Rok</string>
+    <string name="stats_insights_this_year_site_stats">Tento rok</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrace domény</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Instalovat plugin</string>
     <string name="new_site_creation_preview_subtitle">Později budete moci přizpůsobit zobrazení a vzhled svých stránek</string>
     <string name="publish_on">Publikovat na: %s</string>
     <string name="schedule_for">Naplánováno na: %s</string>
@@ -58,6 +69,13 @@ Language: cs_CZ
     <string name="exit">exit</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="new_site_creation_clear_all_content_description">Vyčistit</string>
+    <string name="notification_new_site_creation_title">Vytvořit stránku</string>
+    <string name="new_site_creation_create_site_button">Vytvořit stránku</string>
+    <string name="new_site_creation_search_domain_input_hint">Prohledat domény</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Vlastní rubrika</string>
+    <string name="new_site_creation_button_skip">Přeskočít</string>
+    <string name="new_site_creation_site_title_hint">Název stránky</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
     <string name="new_site_creation_screen_title_general">Vytvořit webovou stránku</string>
     <string name="preference_strip_image_location">Odstranit polohu z médií</string>
@@ -1027,7 +1045,6 @@ Language: cs_CZ
     <string name="error_media_not_found">Média nebyla nalezena</string>
     <string name="error_media_insufficient_fs_permissions">Oprávnění ke čtení médií v zařízení byla odepřena</string>
     <string name="site_settings_optimize_images">Optimalizovat obrázky</string>
-    <string name="no_site_error">Nelze se připojit k WordPress webu. Není platná adresa WordPress stránky. \n         Zkontrolujte zadanou URL adresu.</string>
     <string name="media_generic_error">Chyba médií</string>
     <string name="media_upload_error">Došlo k chybě nahrávání médií</string>
     <string name="retry">Znovu</string>

@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-15 14:29:10+0000
+Translation-Revision-Date: 2019-04-24 10:03:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">Por favor, accede con tu nombre de usuario y contraseña.</string>
+    <string name="login_invalid_site_url">La dirección del sitio que has introducido no es válida. Por favor, vuelve a introducirla.</string>
+    <string name="error_user_username_instead_of_email">Por favor, accede usando tu nombre de usuario de WordPress.com en vez de tu dirección de correo electrónico.</string>
+    <string name="stats_insights_average_words">Promedio de palabras/entrada</string>
+    <string name="stats_insights_total_words">Total de palabras</string>
+    <string name="stats_insights_average_likes">Promedio de me gusta/entrada</string>
+    <string name="stats_insights_total_likes">Total de me gusta</string>
+    <string name="stats_insights_average_comments">Promedio de comentarios/entrada</string>
+    <string name="stats_insights_total_comments">Total de comentarios</string>
+    <string name="stats_insights_posts">Entradas</string>
+    <string name="stats_insights_year">Año</string>
+    <string name="stats_insights_this_year_site_stats">Este ao</string>
+    <string name="no_site_error">El sitio de esta dirección no es un sitio WordPress. Para que nos podamos conectar el sitio debe usar WordPress.</string>
     <string name="plugin_check_domain_credit_error">Fallo al comprobar los créditos de dominio disponibles</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Comprobando créditos de dominio</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrar dominio</string>
@@ -1167,7 +1180,6 @@ Language: es
     <string name="error_media_not_found">No se ha podido encontrar el archivo multimedia</string>
     <string name="error_media_insufficient_fs_permissions">Permisos de lectura denegados en los medios del dispositivo</string>
     <string name="site_settings_optimize_images">Optimiza las imágenes</string>
-    <string name="no_site_error">No pudo conectarse al sitio de WordPress. No hay ningún sitio WordPress válida en esta \n        dirección. Compruebe la dirección del sitio (URL) que escribiste.</string>
     <string name="media_generic_error">Error de los archivos multimedia</string>
     <string name="media_upload_error">Hubo un error al cargar el archivo multimedia</string>
     <string name="retry">Reintentar</string>
