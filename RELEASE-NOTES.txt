@@ -1,3 +1,6 @@
+12.5
+-----
+
 12.4
 -----
 * Reduce number of network calls in Stats and improve performance
@@ -7,6 +10,7 @@
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
 * Make current day difference grey in Stats Overview
+* Add link to the Post from the Post stats
 * New Insights Management for selecting the most relevant stats
 * App download size is now much smaller.
 
@@ -49,11 +53,4 @@
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
 
-11.9
------
-* Introduced new site creation wizard
-* Make "<em>" the default markup for italic in the editor
-* Updated Plans with new design
-* Fixed an issue where posts show up as scheduled even after they are published
-* Add Visitors overlay to the Overview block in Stats
-* Change Stats design to flat on smaller devices
+

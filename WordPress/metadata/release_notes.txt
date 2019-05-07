@@ -1,3 +1,5 @@
-* Better sharing: You can now share entire sites from the Reader, not just posts.
-* Better Stats: Insights includes a new “This Year” section, and stats have better RTL support.
-* Fixes: Issues with missing posts in the Reader and site icons that didn’t updating properly when switching sites have been resolved.
+* The blog posts list screen has been updated: posts are now displayed in different tabs based on their status, you can now filter posts by their author and you can toggle to a compact view for the posts lists.
+* In the Stats Insights screen, you can now select the most relevants stats by tapping the "Edit" button at the bottom. 
+* In the reader, audio files embedded in post can now be played.
+* A bunch of small UI and performance issues have been fixed. 
+* App download size is now much smaller. 
