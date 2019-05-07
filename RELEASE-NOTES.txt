@@ -4,7 +4,6 @@
 * Added ability to filter posts by their author
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
-* Fixed minor issue with Google SmartLock
 
 12.3
 -----
