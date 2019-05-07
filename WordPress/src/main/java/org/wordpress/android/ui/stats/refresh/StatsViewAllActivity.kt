@@ -63,7 +63,6 @@ class StatsViewAllActivity : AppCompatActivity() {
             selectedTab: Int? = null,
             localSiteId: Int? = null
         ) {
-            AnalyticsTracker.track(Stat.STATS_VIEW_ALL_ACCESSED)
             val intent = Intent(context, StatsViewAllActivity::class.java)
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType)
             selectedTab?.let {
