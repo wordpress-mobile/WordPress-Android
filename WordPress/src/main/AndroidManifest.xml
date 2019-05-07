@@ -723,6 +723,24 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
         </receiver>
+        <receiver android:name=".ui.stats.refresh.lists.widget.StatsChartAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stats_chart_app_widget_info"/>
+        </receiver>
+        <service
+            android:name=".ui.stats.refresh.lists.widget.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity android:name=".ui.stats.refresh.lists.widget.StatsChartAppWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
         <receiver
             android:name=".util.analytics.receiver.InstallationReferrerReceiver"
             android:permission="android.permission.INSTALL_PACKAGES"

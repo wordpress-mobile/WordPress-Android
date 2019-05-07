@@ -1,0 +1,31 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/link_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_widget"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:contentDescription="Chart"
+        android:src="@drawable/app_icon_background"/>
+
+    <TextView
+        android:id="@+id/label_start"
+        style="@style/StatsGraphLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="January 2019"/>
+
+    <TextView
+        android:id="@+id/label_end"
+        style="@style/StatsGraphLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="December 2019"/>
+</LinearLayout>
