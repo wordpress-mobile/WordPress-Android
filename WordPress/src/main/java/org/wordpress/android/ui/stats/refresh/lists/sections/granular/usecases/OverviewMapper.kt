@@ -10,6 +10,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -28,7 +29,12 @@ class OverviewMapper
             string.stats_comments
     )
 
-    fun buildTitle(selectedItem: PeriodData?, previousItem: PeriodData?, selectedPosition: Int): ValueItem {
+    fun buildTitle(
+        selectedItem: PeriodData?,
+        previousItem: PeriodData?,
+        selectedPosition: Int,
+        isLast: Boolean
+    ): ValueItem {
         val value = selectedItem?.getValue(selectedPosition) ?: 0
         val previousValue = previousItem?.getValue(selectedPosition)
         val positive = value >= (previousValue ?: 0)
@@ -45,13 +51,17 @@ class OverviewMapper
                 resourceProvider.getString(R.string.stats_traffic_change, difference.toFormattedString(), percentage)
             }
         }
-
+        val state = when {
+            isLast -> State.NEUTRAL
+            positive -> State.POSITIVE
+            else -> State.NEGATIVE
+        }
         return ValueItem(
                 value = value.toFormattedString(MILLION),
                 unit = units[selectedPosition],
                 isFirst = true,
                 change = change,
-                positive = positive
+                state = state
         )
     }
 

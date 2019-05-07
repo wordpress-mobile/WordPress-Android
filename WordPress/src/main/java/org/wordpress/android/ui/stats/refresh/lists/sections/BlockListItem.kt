@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 
 sealed class BlockListItem(val type: Type) {
     fun id(): Int {
@@ -74,8 +75,10 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val unit: Int,
         val isFirst: Boolean = false,
         val change: String? = null,
-        val positive: Boolean = true
-    ) : BlockListItem(VALUE_ITEM)
+        val state: State = POSITIVE
+    ) : BlockListItem(VALUE_ITEM) {
+        enum class State { POSITIVE, NEGATIVE, NEUTRAL }
+    }
 
     data class ListItem(
         val text: String,
