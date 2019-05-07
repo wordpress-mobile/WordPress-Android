@@ -247,6 +247,7 @@
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="local_draft">Local draft</string>
     <string name="post_uploading">Uploading post</string>
+    <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_queued">Queued post</string>
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="posts_empty_list_button">Create a post</string>
@@ -1245,6 +1246,7 @@
     <string name="editor_draft_saved_locally">Draft saved on device</string>
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
     <string name="editor_uploading_post">Your post is uploading</string>
+    <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
@@ -1352,6 +1354,7 @@
     <string name="history_load_dialog_button_positive">Load</string>
     <string name="history_loaded_revision">Revision loaded</string>
     <string name="history_loading_revision">Loading revision</string>
+    <string name="history_fetching_revisions">Fetching revisions…</string>
     <string name="history_title" translatable="false">@string/menu_history</string>
     <string name="history_preview_visual">Visual preview</string>
     <string name="history_preview_html">HTML preview</string>

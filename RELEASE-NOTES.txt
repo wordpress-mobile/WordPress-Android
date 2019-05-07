@@ -9,6 +9,8 @@
 * Added ability to toggle to compact view type for blog posts list
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
+* Make current day difference grey in Stats Overview
+* Add link to the Post from the Post stats
 * New Insights Management for selecting the most relevant stats
 * App download size is now much smaller.
 
