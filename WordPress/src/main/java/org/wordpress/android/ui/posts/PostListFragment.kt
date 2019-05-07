@@ -115,21 +115,22 @@ class PostListFragment : Fragment() {
                     STANDARD -> {
                         recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
                         recyclerView?.addItemDecoration(itemDecorationStandardLayout)
-                        (recyclerView?.layoutParams as? MarginLayoutParams)?.let {
-                            it.marginStart = nonNullActivity.resources
-                                    .getDimensionPixelSize(R.dimen.post_list_content_margin)
-                            it.marginEnd = nonNullActivity.resources
-                                    .getDimensionPixelSize(R.dimen.post_list_content_margin)
-                        }
                     }
                     COMPACT -> {
                         recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
                         recyclerView?.addItemDecoration(itemDecorationCompactLayout)
-                        (recyclerView?.layoutParams as? MarginLayoutParams)?.let {
-                            it.marginStart = 0
-                            it.marginEnd = 0
-                        }
                     }
+                }
+
+                val contentMargin = when (layoutType) {
+                    STANDARD -> nonNullActivity.resources
+                            .getDimensionPixelSize(R.dimen.post_list_content_margin_standard)
+                    COMPACT -> nonNullActivity.resources
+                            .getDimensionPixelSize(R.dimen.post_list_content_margin_compact)
+                }
+                (recyclerView?.layoutParams as? MarginLayoutParams)?.let {
+                    it.marginStart = contentMargin
+                    it.marginEnd = contentMargin
                 }
 
                 recyclerView?.scrollToPosition(0)
