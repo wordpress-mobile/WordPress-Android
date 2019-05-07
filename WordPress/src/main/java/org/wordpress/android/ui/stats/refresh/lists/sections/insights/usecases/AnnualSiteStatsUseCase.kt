@@ -24,7 +24,8 @@ class AnnualSiteStatsUseCase
     private val statsSiteProvider: StatsSiteProvider
 ) : StatelessUseCase<YearsInsightsModel>(ANNUAL_SITE_STATS, mainDispatcher) {
     override suspend fun loadCachedData(): YearsInsightsModel? {
-        return mostPopularStore.getYearsInsights(statsSiteProvider.siteModel)
+        val dbModel = mostPopularStore.getYearsInsights(statsSiteProvider.siteModel)
+        return if (dbModel?.years?.isNotEmpty() == true) dbModel else null
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<YearsInsightsModel> {
@@ -34,7 +35,7 @@ class AnnualSiteStatsUseCase
 
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
-            model != null -> State.Data(model)
+            model != null && model.years.isNotEmpty() -> State.Data(model)
             else -> State.Empty()
         }
     }
