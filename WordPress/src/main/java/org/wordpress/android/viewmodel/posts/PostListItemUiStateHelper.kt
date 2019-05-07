@@ -62,7 +62,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
-        val uploadUiState = createUploadUiState(uploadStatus, postStatus == PostStatus.DRAFT)
+        val uploadUiState = createUploadUiState(uploadStatus, postStatus)
 
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
@@ -348,15 +348,15 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     }
 
     private fun createUploadUiState(
-        status: PostListItemUploadStatus,
-        isDraft: Boolean
+        uploadStatus: PostListItemUploadStatus,
+        postStatus: PostStatus
     ): PostUploadUiState {
         return when {
-            status.hasInProgressMediaUpload -> UploadingMedia(status.mediaUploadProgress)
-            status.isUploading -> UploadingPost(isDraft)
+            uploadStatus.hasInProgressMediaUpload -> UploadingMedia(uploadStatus.mediaUploadProgress)
+            uploadStatus.isUploading -> UploadingPost(postStatus == PostStatus.DRAFT)
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
-            status.uploadError != null -> PostUploadUiState.UploadFailed(status.uploadError)
-            status.hasPendingMediaUpload || status.isQueued || status.isUploadingOrQueued -> UploadQueued
+            uploadStatus.uploadError != null -> PostUploadUiState.UploadFailed(uploadStatus.uploadError)
+            uploadStatus.hasPendingMediaUpload || uploadStatus.isQueued || uploadStatus.isUploadingOrQueued -> UploadQueued
             else -> NothingToUpload
         }
     }
