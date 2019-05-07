@@ -356,7 +356,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             uploadStatus.isUploading -> UploadingPost(postStatus == PostStatus.DRAFT)
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
             uploadStatus.uploadError != null -> PostUploadUiState.UploadFailed(uploadStatus.uploadError)
-            uploadStatus.hasPendingMediaUpload || uploadStatus.isQueued || uploadStatus.isUploadingOrQueued -> UploadQueued
+            uploadStatus.hasPendingMediaUpload ||
+                    uploadStatus.isQueued ||
+                    uploadStatus.isUploadingOrQueued -> UploadQueued
             else -> NothingToUpload
         }
     }
