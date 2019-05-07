@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel.Item
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -204,7 +204,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
 
         val result = loadTags(refresh, forced)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        assertThat(result.type).isEqualTo(InsightsTypes.TAGS_AND_CATEGORIES)
+        assertThat(result.type).isEqualTo(InsightType.TAGS_AND_CATEGORIES)
 
         val items = result.data!!
 
