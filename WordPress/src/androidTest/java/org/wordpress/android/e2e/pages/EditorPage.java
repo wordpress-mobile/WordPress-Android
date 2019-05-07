@@ -3,7 +3,6 @@ package org.wordpress.android.e2e.pages;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 
-import org.hamcrest.CoreMatchers;
 import org.wordpress.android.R;
 
 import static android.support.test.espresso.Espresso.onView;
