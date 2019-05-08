@@ -437,7 +437,7 @@ public class PostStoreUnitTest {
     }
 
     @Test
-    public void testGetLocalDraftsMethodOnlyReturnsLocalDrafts() {
+    public void testGetLocalDraftPostsMethodOnlyReturnsLocalDrafts() {
         // Arrange
         final String baseTitle = "Alexandrine Thiel";
         for (int i = 0; i < 3; i++) {
@@ -446,6 +446,10 @@ public class PostStoreUnitTest {
             PostSqlUtils.insertPostForResult(post);
         }
 
+        final PostModel localDraftPage = PostTestUtils.generateSampleLocalDraftPost();
+        localDraftPage.setIsPage(true);
+        PostSqlUtils.insertPostForResult(localDraftPage);
+
         final PostModel uploadedPost = PostTestUtils.generateSampleUploadedPost();
         PostSqlUtils.insertPostForResult(uploadedPost);
 
@@ -453,15 +457,16 @@ public class PostStoreUnitTest {
         site.setId(PostTestUtils.DEFAULT_LOCAL_SITE_ID);
 
         // Act
-        final List<PostModel> localDrafts = PostSqlUtils.getLocalDrafts(site.getId());
+        final List<PostModel> localDraftPosts = mPostStore.getLocalDraftPosts(site);
 
         // Assert
-        assertEquals(3, localDrafts.size());
-        for (PostModel localDraft : localDrafts) {
-            assertTrue(localDraft.isLocalDraft());
-            assertTrue(localDraft.getTitle().startsWith(baseTitle));
+        assertEquals(3, localDraftPosts.size());
+        for (PostModel localDraftPost : localDraftPosts) {
+            assertTrue(localDraftPost.isLocalDraft());
+            assertTrue(localDraftPost.getTitle().startsWith(baseTitle));
 
-            assertNotEquals(uploadedPost.getId(), localDraft.getId());
+            assertNotEquals(uploadedPost.getId(), localDraftPost.getId());
+            assertNotEquals(localDraftPage.getId(), localDraftPost.getId());
         }
     }
 
