@@ -6,15 +6,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE
 
-/**
- * A wrapper class for the network connection status. It can be extended to provide more details about the current
- * network connection.
- */
-class ConnectionStatus(val isConnected: Boolean)
+enum class ConnectionStatus {
+    AVAILABLE,
+    UNAVAILABLE
+}
 
 /**
  * A LiveData instance that can be injected to keep track of the network availability.
+ *
+ * This only emits if the network availability changes and not when the user switches between cellular and wi-fi.
  *
  * IMPORTANT: It needs to be observed for the changes to be posted.
  */
@@ -34,7 +37,11 @@ class ConnectionStatusLiveData(private val context: Context) : LiveData<Connecti
         override fun onReceive(context: Context, intent: Intent) {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
             val networkInfo = connectivityManager?.activeNetworkInfo
-            postValue(ConnectionStatus(networkInfo?.isConnected == true))
+
+            val nextValue: ConnectionStatus = if (networkInfo?.isConnected == true) AVAILABLE else UNAVAILABLE
+            if (value != nextValue) {
+                postValue(nextValue)
+            }
         }
     }
 }

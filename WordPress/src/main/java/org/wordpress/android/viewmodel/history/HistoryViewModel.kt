@@ -32,6 +32,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -74,7 +75,7 @@ class HistoryViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
         dispatcher.register(this)
         connectionStatus.observe(this, Observer {
-            if (it?.isConnected == true) {
+            if (it == AVAILABLE) {
                 fetchRevisions()
             }
         })
