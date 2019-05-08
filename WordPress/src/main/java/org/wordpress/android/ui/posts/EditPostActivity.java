@@ -1808,8 +1808,11 @@ public class EditPostActivity extends AppCompatActivity implements
     private synchronized void savePostToDb() {
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
 
-        // update the original post object, so we'll know of new changes
-        mOriginalPost = mPost.clone();
+        // if it's the first time creating a new post mOriginalPost will be null
+        // otherwise it gets initialized on initializePostObject()
+        if (mOriginalPost == null) {
+            mOriginalPost = mPost.clone();
+        }
 
         if (mShowAztecEditor) {
             // update the list of uploading ids
