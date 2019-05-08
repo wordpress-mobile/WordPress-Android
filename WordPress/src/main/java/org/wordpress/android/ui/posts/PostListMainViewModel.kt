@@ -8,7 +8,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
-import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -67,6 +66,7 @@ class PostListMainViewModel @Inject constructor(
     private val prefs: AppPrefsWrapper,
     private val localDraftUploadStarter: LocalDraftUploadStarter,
     private val connectionStatus: LiveData<ConnectionStatus>,
+    private val postListEventListenerFactory: PostListEventListener.Factory,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), LifecycleOwner, CoroutineScope {
@@ -165,12 +165,7 @@ class PostListMainViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    /**
-     * @param postListEventsListenerEnabled This is only provided to make this class testable in unit tests.
-     *   If `false`, this will not call [listenForPostListEvents]. That method uses `EventBus` which does not
-     *   work during unit tests.
-     */
-    fun start(site: SiteModel, @VisibleForTesting postListEventsListenerEnabled: Boolean = true) {
+    fun start(site: SiteModel) {
         this.site = site
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
@@ -179,28 +174,26 @@ class PostListMainViewModel @Inject constructor(
             AuthorFilterSelection.EVERYONE
         }
 
-        if (postListEventsListenerEnabled) {
-            listenForPostListEvents(
-                    lifecycle = lifecycle,
-                    dispatcher = dispatcher,
-                    postStore = postStore,
-                    site = site,
-                    postActionHandler = postActionHandler,
-                    handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
-                    handlePostUploadedWithoutError = {
-                        refreshAllLists()
-                    },
-                    triggerPostUploadAction = { _postUploadAction.postValue(it) },
-                    invalidateUploadStatus = {
-                        uploadStatusTracker.invalidateUploadStatus(it)
-                        invalidateAllLists()
-                    },
-                    invalidateFeaturedMedia = {
-                        featuredImageTracker.invalidateFeaturedMedia(it)
-                        invalidateAllLists()
-                    }
-            )
-        }
+        postListEventListenerFactory.createAndStartListening(
+                lifecycle = lifecycle,
+                dispatcher = dispatcher,
+                postStore = postStore,
+                site = site,
+                postActionHandler = postActionHandler,
+                handlePostUpdatedWithoutError = postConflictResolver::onPostSuccessfullyUpdated,
+                handlePostUploadedWithoutError = {
+                    refreshAllLists()
+                },
+                triggerPostUploadAction = { _postUploadAction.postValue(it) },
+                invalidateUploadStatus = {
+                    uploadStatusTracker.invalidateUploadStatus(it)
+                    invalidateAllLists()
+                },
+                invalidateFeaturedMedia = {
+                    featuredImageTracker.invalidateFeaturedMedia(it)
+                    invalidateAllLists()
+                }
+        )
 
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(

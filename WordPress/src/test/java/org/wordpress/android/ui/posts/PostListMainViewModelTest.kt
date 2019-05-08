@@ -29,7 +29,7 @@ class PostListMainViewModelTest {
         )
 
         // When
-        viewModel.start(site = site, postListEventsListenerEnabled = false)
+        viewModel.start(site = site)
 
         // Then
         verify(localDraftUploadStarter, times(1)).uploadLocalDrafts(scope = eq(viewModel), site = eq(site))
@@ -46,7 +46,7 @@ class PostListMainViewModelTest {
                 localDraftUploadStarter = localDraftUploadStarter,
                 connectionStatus = connectionStatus
         )
-        viewModel.start(site = site, postListEventsListenerEnabled = false)
+        viewModel.start(site = site)
 
         // When
         connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
@@ -74,7 +74,8 @@ class PostListMainViewModelTest {
                     localDraftUploadStarter = localDraftUploadStarter,
                     connectionStatus = connectionStatus,
                     mainDispatcher = mock(),
-                    bgDispatcher = mock()
+                    bgDispatcher = mock(),
+                    postListEventListenerFactory = mock()
             )
         }
     }
