@@ -125,12 +125,13 @@ public class PostSqlUtils {
                 .getAsModel();
     }
 
-    public static List<PostModel> getLocalDrafts(@NonNull Integer localSiteId) {
+    public static List<PostModel> getLocalDrafts(@NonNull Integer localSiteId, boolean isPage) {
         return WellSql.select(PostModel.class)
                       .where()
                       .beginGroup()
                       .equals(PostModelTable.LOCAL_SITE_ID, localSiteId)
                       .equals(PostModelTable.IS_LOCAL_DRAFT, true)
+                      .equals(PostModelTable.IS_PAGE, isPage)
                       .endGroup()
                       .endWhere()
                       .getAsModel();
