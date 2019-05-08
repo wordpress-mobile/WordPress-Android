@@ -234,7 +234,7 @@ Language: es
     <string name="stats_followers_count_message">Total %1$s seguidores: %2$s</string>
     <string name="stats_followers_email">Correo electrónico</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Gestionar impresiones</string>
+    <string name="stats_manage_insights">Gestionar impresiones</string>
     <string name="stats_empty_insights_description">Personaliza tus informes y profundiza en el rendimiento de tu sitio</string>
     <string name="stats_empty_insights_title">Aún no se han añadido impresiones</string>
     <string name="stats_no_data_yet">Aún no hay datos</string>

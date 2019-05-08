@@ -234,7 +234,7 @@ Language: tr
     <string name="stats_followers_count_message">Toplam %1$s takipçisi: %2$s</string>
     <string name="stats_followers_email">E-posta</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">İçgörüleri yönet</string>
+    <string name="stats_manage_insights">İçgörüleri yönet</string>
     <string name="stats_empty_insights_description">Analizlerinizi özelleştirin ve sitenizin performansındaki düşüş hakkında bilgi edinin</string>
     <string name="stats_empty_insights_title">Henüz içgörü eklenmedi</string>
     <string name="stats_no_data_yet">Henüz veri yok</string>

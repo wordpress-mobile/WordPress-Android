@@ -187,7 +187,7 @@ Language: zh_TW
     <string name="stats_followers_count_message">%1$s 關注者總數：%2$s</string>
     <string name="stats_followers_email">電子郵件</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">管理洞察報告</string>
+    <string name="stats_manage_insights">管理洞察報告</string>
     <string name="stats_empty_insights_title">尚未新增任何洞察報告</string>
     <string name="stats_no_data_yet">尚無資料</string>
     <string name="menu_debug">除錯選單</string>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Simple end list indicator for cases when we want to make sure the FAB doesn't cover any content.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/endlist_indicator"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_with_fab_endlist_indicator_height"
+    tools:background="@android:color/white"/>

@@ -225,7 +225,7 @@ Language: ko_KR
     <string name="stats_followers_count_message">총 %1$s 팔로워 수: %2$s</string>
     <string name="stats_followers_email">이메일</string>
     <string name="stats_followers_wordpress_com">워드프레스닷컴</string>
-    <string name="stats_button_manage_insights">인사이트 관리</string>
+    <string name="stats_manage_insights">인사이트 관리</string>
     <string name="stats_empty_insights_title">아직 추가된 인사이트가 없음</string>
     <string name="stats_no_data_yet">아직 데이터 없음</string>
     <string name="menu_debug">디버그 메뉴</string>

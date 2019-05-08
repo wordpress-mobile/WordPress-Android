@@ -17,12 +17,14 @@
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
 
+    <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
+    <dimen name="list_with_fab_endlist_indicator_height">86dp</dimen>
+
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
     <dimen name="appbar_elevation">4dp</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
-    <dimen name="card_gutters">12dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
@@ -45,10 +47,7 @@
     <dimen name="default_cardview_elevation">2dp</dimen>
 
     <!-- featured image in post list -->
-    <dimen name="postlist_featured_image_height_normal">128dp</dimen>
-    <dimen name="postlist_featured_image_height_tablet">220dp</dimen>
-    <dimen name="postlist_featured_image_height_tablet_large">280dp</dimen>
-    <dimen name="postlist_featured_image_height">@dimen/postlist_featured_image_height_normal</dimen>
+    <dimen name="postlist_featured_image_height">98dp</dimen>
 
     <!-- left/right margin for content such as Me fragment, My Site fragment -->
     <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
@@ -237,7 +236,7 @@
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
     <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
 
-    <dimen name="menu_item_height">48sp</dimen>
+    <dimen name="menu_item_height">48dp</dimen>
     <dimen name="menu_item_width">256sp</dimen>
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
@@ -365,11 +364,20 @@
     <dimen name="quota_bar_text_minimum_height">36dp</dimen>
 
     <!--post skeleton-->
-    <dimen name="post_list_row_skeleton_view_title_width">160dp</dimen>
-    <dimen name="post_list_row_skeleton_view_title_height">@dimen/margin_extra_medium_large</dimen>
-    <dimen name="post_list_row_skeleton_view_excerpt_height">@dimen/margin_extra_medium_large</dimen>
-    <dimen name="post_list_row_skeleton_view_date_width">80dp</dimen>
-    <dimen name="post_list_row_skeleton_view_date_height">@dimen/margin_extra_large</dimen>
+    <dimen name="post_list_row_skeleton_view_title_height">20dp</dimen>
+    <dimen name="post_list_row_skeleton_view_excerpt_height">16dp</dimen>
+    <dimen name="post_list_row_skeleton_view_date_height">16dp</dimen>
+
+    <!--posts list-->
+    <dimen name="posts_list_spinner_width">60dp</dimen>
+    <dimen name="posts_list_spinner_avatar_size">32dp</dimen>
+    <dimen name="posts_list_spinner_avatar_padding">2dp</dimen>
+    <dimen name="posts_list_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
+    <dimen name="posts_list_tab_layout_fading_edge_width">16dp</dimen>
+    <dimen name="posts_list_compact_row_height">80dp</dimen>
+    <dimen name="posts_list_compact_image_size">40dp</dimen>
+    <dimen name="posts_list_compact_menu_button_size">24dp</dimen>
+
 
     <!--site creation-->
     <dimen name="site_creation_segments_icon_size">24dp</dimen>
@@ -383,14 +391,13 @@
     <dimen name="new_site_creation_preview_web_view_side_margin">40dp</dimen>
     <dimen name="new_site_creation_preview_ok_button_container_height">68dp</dimen>
     <dimen name="new_site_creation_container_elevation">6dp</dimen>
-    <dimen name="new_site_creation_verticals_search_input_text_padding">24dp</dimen>
+    <dimen name="new_site_creation_verticals_search_input_text_padding">32dp</dimen>
 
-    <dimen name="new_site_creation_domains_radio_button_padding_start">20dp</dimen>
+    <dimen name="new_site_creation_domains_radio_button_padding_start">28dp</dimen>
 
     <dimen name="new_site_creation_preview_skeleton_mid_size_width">174dp</dimen>
     <dimen name="new_site_creation_preview_skeleton_large_block_height">136dp</dimen>
     <dimen name="new_site_creation_preview_landscape_title_and_button_container_width">220dp</dimen>
-    <dimen name="new_site_creation_preview_ok_button_height">36dp</dimen>
 
     <!-- stats -->
     <dimen name="stats_header_height">32dp</dimen>
@@ -403,6 +410,9 @@
     <dimen name="stats_list_card_last_spacing">8dp</dimen>
     <dimen name="stats_list_item_left_margin">56dp</dimen>
     <dimen name="stats_activity_spacing">1dp</dimen>
+    <dimen name="stats_insights_management_margin">24dp</dimen>
+    <dimen name="stats_insights_menu_item_width">231dp</dimen>
+    <dimen name="stats_insights_button_container_height">52dp</dimen>
 
     <dimen name="settings_icon_size">24dp</dimen>
 

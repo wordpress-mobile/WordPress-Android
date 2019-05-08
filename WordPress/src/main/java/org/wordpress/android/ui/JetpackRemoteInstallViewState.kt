@@ -1,7 +1,9 @@
 package org.wordpress.android.ui
 
+import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Type.ERROR
@@ -14,6 +16,7 @@ sealed class JetpackRemoteInstallViewState(
     @StringRes val titleResource: Int,
     @StringRes val messageResource: Int,
     @DrawableRes val icon: Int,
+    @ColorRes val iconTint: Int? = null,
     @StringRes val buttonResource: Int? = null,
     open val onClick: () -> Unit = {},
     val progressBarVisible: Boolean = false
@@ -23,6 +26,7 @@ sealed class JetpackRemoteInstallViewState(
             string.install_jetpack,
             string.install_jetpack_message,
             icon = drawable.ic_plans_white_24dp,
+            iconTint = color.jetpack,
             buttonResource = string.install_jetpack_continue,
             onClick = onClick
     )
@@ -32,6 +36,7 @@ sealed class JetpackRemoteInstallViewState(
             string.installing_jetpack,
             string.installing_jetpack_message,
             icon = drawable.ic_plans_white_24dp,
+            iconTint = color.jetpack,
             progressBarVisible = true
     )
 
@@ -41,6 +46,7 @@ sealed class JetpackRemoteInstallViewState(
             string.jetpack_installed_message,
             icon = drawable.ic_plans_white_24dp,
             buttonResource = string.install_jetpack_continue,
+            iconTint = color.jetpack,
             onClick = onClick
     )
 

@@ -43,7 +43,7 @@ class SupportHelper {
                 .create()
         dialog.setOnShowListener {
             val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
-            button.setOnClickListener { _ ->
+            button.setOnClickListener {
                 val newEmail = emailEditText.text.toString()
                 val newName = nameEditText.text.toString()
                 if (validateEmail(newEmail)) {
