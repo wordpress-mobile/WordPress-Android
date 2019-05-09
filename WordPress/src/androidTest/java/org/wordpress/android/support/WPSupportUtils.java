@@ -135,6 +135,11 @@ public class WPSupportUtils {
                .perform(closeSoftKeyboard());
     }
 
+    public static void checkViewHasText(ViewInteraction element, String text) {
+        waitForElementToBeDisplayed(element);
+        element.check(matches(withText(text)));
+    }
+
     public static void focusEditPostTitle() {
         ViewInteraction postTitle = onView(
                 allOf(
@@ -223,6 +228,15 @@ public class WPSupportUtils {
             @Override
             public Boolean get() {
                 return !isElementDisplayed(elementID);
+            }
+        });
+    }
+
+    public static void waitForElementToNotBeDisplayed(final ViewInteraction element) {
+        waitForConditionToBeTrue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return !isElementDisplayed(element);
             }
         });
     }
