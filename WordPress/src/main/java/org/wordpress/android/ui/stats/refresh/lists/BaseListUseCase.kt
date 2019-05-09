@@ -30,7 +30,6 @@ class BaseListUseCase(
     private val getStatsTypes: suspend () -> List<StatsType>,
     private val mapUiModel: (
         useCaseModels: List<UseCaseModel>,
-        MutableLiveData<Event<NavigationTarget>>,
         showError: (Int) -> Unit
     ) -> UiModel
 ) {
@@ -47,7 +46,7 @@ class BaseListUseCase(
             }
         }
     }.map { useCaseModels ->
-        mapUiModel(useCaseModels, mutableNavigationTarget) { message ->
+        mapUiModel(useCaseModels) { message ->
             mutableSnackbarMessage.postValue(message)
         }
     }.distinct()
