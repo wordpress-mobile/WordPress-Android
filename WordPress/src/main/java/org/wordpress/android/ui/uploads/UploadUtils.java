@@ -118,8 +118,7 @@ public class UploadUtils {
         boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
         if (savedLocally && !NetworkUtils.isNetworkAvailable(activity)) {
             // The network is not available, we can't do anything
-            ToastUtils.showToast(activity, R.string.error_publish_no_network,
-                                 ToastUtils.Duration.SHORT);
+            showSnackbar(snackbarAttachView, R.string.error_publish_no_network);
             return;
         }
 
