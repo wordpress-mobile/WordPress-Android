@@ -1483,6 +1483,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activity_log_rewind_started";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
+            case SUPPORT_OPENED:
+                return "support_opened";
             case SUPPORT_IDENTITY_FORM_VIEWED:
                 return "support_identity_form_viewed";
             case SUPPORT_IDENTITY_SET:
