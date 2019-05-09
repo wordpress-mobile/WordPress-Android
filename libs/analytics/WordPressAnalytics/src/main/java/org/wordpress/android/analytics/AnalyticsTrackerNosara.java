@@ -1255,6 +1255,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_exited";
             case ENHANCED_SITE_CREATION_ERROR_SHOWN:
                 return "enhanced_site_creation_error_shown";
+            case ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED:
+                return "enhanced_site_creation_background_service_updated";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
@@ -1483,6 +1485,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activity_log_rewind_started";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
+            case SUPPORT_OPENED:
+                return "support_opened";
             case SUPPORT_IDENTITY_FORM_VIEWED:
                 return "support_identity_form_viewed";
             case SUPPORT_IDENTITY_SET:
