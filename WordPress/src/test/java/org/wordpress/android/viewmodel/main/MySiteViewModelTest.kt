@@ -45,8 +45,20 @@ class MySiteViewModelTest {
     @Test
     fun currentPlanIsSetWhenPlansAreLoaded() {
         val plans = listOf(
-                PlanModel(1, "slug", "name", isCurrentPlan = false, hasDomainCredit =false),
-                PlanModel(2, "slug", "name", isCurrentPlan = true, hasDomainCredit = true)
+                PlanModel(
+                        1,
+                        "slug",
+                        "name",
+                        isCurrentPlan = false,
+                        hasDomainCredit = false
+                ),
+                PlanModel(
+                        2,
+                        "slug",
+                        "name",
+                        isCurrentPlan = true,
+                        hasDomainCredit = true
+                )
         )
 
         whenever(dispatcher.dispatch(any())).then {
@@ -66,8 +78,20 @@ class MySiteViewModelTest {
     @Test
     fun currentPlanIsNullWhenNoCurrentPlans() {
         val plans = listOf(
-                PlanModel(1, "slug", "name", isCurrentPlan = false, hasDomainCredit =false),
-                PlanModel(2, "slug", "name", isCurrentPlan = false, hasDomainCredit = true)
+                PlanModel(
+                        1,
+                        "slug",
+                        "name",
+                        isCurrentPlan = false,
+                        hasDomainCredit = false
+                ),
+                PlanModel(
+                        2,
+                        "slug",
+                        "name",
+                        isCurrentPlan = false,
+                        hasDomainCredit = true
+                )
         )
 
         whenever(dispatcher.dispatch(any())).then {
@@ -97,7 +121,13 @@ class MySiteViewModelTest {
     @Test
     fun currentPlanIsNullWhenError() {
         whenever(dispatcher.dispatch(any())).then {
-            viewModel.onPlansFetched(OnPlansFetched(null, null, PlansError("Unknown Blog", "Unknown Blog")))
+            viewModel.onPlansFetched(
+                    OnPlansFetched(
+                            null,
+                            null,
+                            PlansError("Unknown Blog", "Unknown Blog")
+                    )
+            )
         }
 
         viewModel.currentPlan.observeForever { plan ->
@@ -150,8 +180,20 @@ class MySiteViewModelTest {
     @Test
     fun clearPlansRemovesAllPlans() {
         val plans = listOf(
-                PlanModel(1, "slug", "name", isCurrentPlan = false, hasDomainCredit =false),
-                PlanModel(2, "slug", "name", isCurrentPlan = false, hasDomainCredit = true)
+                PlanModel(
+                        1,
+                        "slug",
+                        "name",
+                        isCurrentPlan = false,
+                        hasDomainCredit = false
+                ),
+                PlanModel(
+                        2,
+                        "slug",
+                        "name",
+                        isCurrentPlan = false,
+                        hasDomainCredit = true
+                )
         )
 
         viewModel.onPlansFetched(OnPlansFetched(site, plans, null))
