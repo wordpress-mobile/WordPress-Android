@@ -4,6 +4,7 @@ include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
 include ':libs:login:WordPressLoginFlow'
+include ':libs:mocks:WordPressMocks'
 
 if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()) {
     include ':react-native-svg'

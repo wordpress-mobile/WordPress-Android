@@ -1,5 +1,4 @@
-* The blog posts list screen has been updated: posts are now displayed in different tabs based on their status, you can now filter posts by their author and you can toggle to a compact view for the posts lists.
-* In the Stats Insights screen, you can now select the most relevants stats by tapping the "Edit" button at the bottom. 
-* In the reader, audio files embedded in post can now be played.
-* A bunch of small UI and performance issues have been fixed. 
-* App download size is now much smaller. 
+* Explore the updated blog posts list screen: it can sort posts by publication status and filter them by author, and includes a compact-view toggle.
+* Focus on the most important stats in the Insights screen — tap the Edit button to customize your view.
+* Add a soundtrack to your Reader experience! Audio embeds are now playable there.
+* It’s always nice to save space on your device, so you’ll love the (significantly) smaller download size of the app.
