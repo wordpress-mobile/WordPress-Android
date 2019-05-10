@@ -55,7 +55,7 @@ constructor(
 
     suspend fun createShoppingCart(
         site: SiteModel,
-        productId: Int,
+        productId: String,
         domainName: String,
         isPrivacyProtectionEnabled: Boolean
     ): CreatedShoppingCartPayload {
@@ -133,7 +133,7 @@ constructor(
         val products: List<Product>?
     ) : Response {
         data class Product(
-            val product_id: Int,
+            val product_id: String?,
             val meta: String?
         )
     }

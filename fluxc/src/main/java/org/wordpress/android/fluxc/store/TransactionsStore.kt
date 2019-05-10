@@ -133,7 +133,7 @@ class TransactionsStore @Inject constructor(
 
     class CreateShoppingCartPayload(
         val site: SiteModel,
-        val productId: Int,
+        val productId: String,
         val domainName: String,
         val isPrivacyEnabled: Boolean
     ) : Payload<BaseRequest.BaseNetworkError>()
