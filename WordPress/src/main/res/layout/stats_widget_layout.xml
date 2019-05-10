@@ -48,7 +48,8 @@
         android:minHeight="@dimen/stats_widget_main_container_min_size"
         android:layout_width="match_parent"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <!-- Views -->
         <LinearLayout

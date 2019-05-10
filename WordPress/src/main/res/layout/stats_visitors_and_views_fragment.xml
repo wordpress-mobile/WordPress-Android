@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="gone" >
+            android:visibility="gone"
+            android:baselineAligned="false" >
 
             <!-- VIEWS tab-->
             <include
@@ -107,7 +108,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_marginBottom="@dimen/margin_medium">
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:baselineAligned="false">
             <LinearLayout
                 android:focusable="false"
                 android:orientation="horizontal"
