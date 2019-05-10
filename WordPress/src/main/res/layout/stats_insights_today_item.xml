@@ -10,7 +10,8 @@
         android:id="@+id/stats_post_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <!-- VIEWS tab-->
         <include
