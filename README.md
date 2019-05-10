@@ -70,7 +70,7 @@ be able to login with foo@email.com. Using another account like bar@email.com wi
 the `Client cannot use "password" grant_type` error. 
 
 For security reasons, some account-related actions aren't supported for development builds when using a WordPress.com account with 2-factor authentication enabled.
-There is also currently an issue where a restart of the app is required to complete login in this case: [issue](https://github.com/wordpress-mobile/WordPress-Android/issues/8754) 
+There is also currently an [issue](https://github.com/wordpress-mobile/WordPress-Android/issues/8754) where a restart of the app is required to complete login in this case. 
 
 Read more about [OAuth2][6] and the [WordPress.com REST endpoint][7].
 
