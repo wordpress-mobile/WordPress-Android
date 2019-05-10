@@ -33,6 +33,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -435,9 +436,43 @@ public class PostStoreUnitTest {
         assertNull(mPostStore.getLocalRevision(site, postModel));
     }
 
+    @Test
+    public void testGetLocalDraftPostsMethodOnlyReturnsLocalDrafts() {
+        // Arrange
+        final String baseTitle = "Alexandrine Thiel";
+        for (int i = 0; i < 3; i++) {
+            final String compoundTitle = baseTitle.concat(":").concat(UUID.randomUUID().toString());
+            final PostModel post = PostTestUtils.generateSampleLocalDraftPost(compoundTitle);
+            PostSqlUtils.insertPostForResult(post);
+        }
+
+        final PostModel localDraftPage = PostTestUtils.generateSampleLocalDraftPost();
+        localDraftPage.setIsPage(true);
+        PostSqlUtils.insertPostForResult(localDraftPage);
+
+        final PostModel uploadedPost = PostTestUtils.generateSampleUploadedPost();
+        PostSqlUtils.insertPostForResult(uploadedPost);
+
+        final SiteModel site = new SiteModel();
+        site.setId(PostTestUtils.DEFAULT_LOCAL_SITE_ID);
+
+        // Act
+        final List<PostModel> localDraftPosts = mPostStore.getLocalDraftPosts(site);
+
+        // Assert
+        assertEquals(3, localDraftPosts.size());
+        for (PostModel localDraftPost : localDraftPosts) {
+            assertTrue(localDraftPost.isLocalDraft());
+            assertTrue(localDraftPost.getTitle().startsWith(baseTitle));
+
+            assertNotEquals(uploadedPost.getId(), localDraftPost.getId());
+            assertNotEquals(localDraftPage.getId(), localDraftPost.getId());
+        }
+    }
+
     /**
      * Tests that getPostsByLocalOrRemotePostIds works correctly in various situations.
-     *
+     * <p>
      * Normally it's not a good idea to combine multiple tests like this, however due to Java's verbosity the tests
      * are combined to avoid having too much boilerplate code.
      */

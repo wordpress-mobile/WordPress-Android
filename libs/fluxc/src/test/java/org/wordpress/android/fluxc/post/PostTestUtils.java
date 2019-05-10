@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.post;
 
+import android.support.annotation.NonNull;
+
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.PostModel;
@@ -14,13 +16,15 @@ public class PostTestUtils {
     public static final double EXAMPLE_LATITUDE = 44.8378;
     public static final double EXAMPLE_LONGITUDE = -0.5792;
 
+    static final int DEFAULT_LOCAL_SITE_ID = 6;
+
     public static PostModel generateSampleUploadedPost() {
         return generateSampleUploadedPost("text");
     }
 
     public static PostModel generateSampleUploadedPost(String postFormat) {
         PostModel example = new PostModel();
-        example.setLocalSiteId(6);
+        example.setLocalSiteId(DEFAULT_LOCAL_SITE_ID);
         example.setRemotePostId(5);
         example.setTitle("A test post");
         example.setContent("Bunch of content here");
@@ -29,9 +33,13 @@ public class PostTestUtils {
     }
 
     public static PostModel generateSampleLocalDraftPost() {
+        return generateSampleLocalDraftPost("A test post");
+    }
+
+    static PostModel generateSampleLocalDraftPost(@NonNull String title) {
         PostModel example = new PostModel();
-        example.setLocalSiteId(6);
-        example.setTitle("A test post");
+        example.setLocalSiteId(DEFAULT_LOCAL_SITE_ID);
+        example.setTitle(title);
         example.setContent("Bunch of content here");
         example.setIsLocalDraft(true);
         return example;
@@ -39,7 +47,7 @@ public class PostTestUtils {
 
     public static PostModel generateSampleLocallyChangedPost() {
         PostModel example = new PostModel();
-        example.setLocalSiteId(6);
+        example.setLocalSiteId(DEFAULT_LOCAL_SITE_ID);
         example.setRemotePostId(7);
         example.setTitle("A test post");
         example.setContent("Bunch of content here");
