@@ -268,6 +268,39 @@
 
             </android.support.v7.widget.CardView>
 
+            <!--Register Domain-->
+            <LinearLayout
+                android:id="@+id/my_site_register_domain_cta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/row_register_domain"
+                    style="@style/MySiteListRowLayout">
+
+                    <ImageView
+                        android:id="@+id/my_site_register_domain_icon"
+                        style="@style/MySiteListRowAlertIcon"
+                        android:importantForAccessibility="no"
+                        android:tint="@color/alert_yellow"
+                        android:src="@drawable/ic_notice_white_24dp"/>
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/my_site_register_domain_text_view"
+                        style="@style/MySiteListRowTextView"
+                        android:text="@string/register_domain"/>
+
+                </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/MySiteListRowDescription"
+                android:text="@string/my_site_custom_domain_name" />
+
+            </LinearLayout>
+
             <!--Stats-->
             <LinearLayout
                 android:id="@+id/row_stats"
