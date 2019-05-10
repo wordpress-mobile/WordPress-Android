@@ -34,7 +34,7 @@ class TransactionsStoreTest {
 
     companion object {
         private const val TEST_DOMAIN_NAME = "superraredomainname156726.blog"
-        private const val TEST_DOMAIN_PRODUCT_ID = "76"
+        private const val TEST_DOMAIN_PRODUCT_ID = 76
     }
 
     @ExperimentalCoroutinesApi
@@ -55,7 +55,7 @@ class TransactionsStoreTest {
 
         verify(transactionsRestClient).fetchSupportedCountries()
 
-        val expectedEvent = TransactionsStore.OnSupportedCountriesFetched(SUPPORTED_COUNTRIES_MODEL)
+        val expectedEvent = TransactionsStore.OnSupportedCountriesFetched(SUPPORTED_COUNTRIES_MODEL.toMutableList())
         verify(dispatcher).emitChange(eq(expectedEvent))
     }
 

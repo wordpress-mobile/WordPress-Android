@@ -55,7 +55,7 @@ constructor(
 
     suspend fun createShoppingCart(
         site: SiteModel,
-        productId: String,
+        productId: Int,
         domainName: String,
         isPrivacyProtectionEnabled: Boolean
     ): CreatedShoppingCartPayload {
