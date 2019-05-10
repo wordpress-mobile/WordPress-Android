@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -10,8 +11,12 @@ import com.nhaarman.mockitokotlin2.verify
 import org.junit.Rule
 import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE
 
 class PostListMainViewModelTest {
     @get:Rule val rule = InstantTaskExecutorRule()
@@ -21,7 +26,7 @@ class PostListMainViewModelTest {
         // Given
         val site = SiteModel()
         val localDraftUploadStarter = mock<LocalDraftUploadStarter>()
-        val connectionStatus = MutableLiveData<ConnectionStatus>().apply { value = ConnectionStatus.CONNECTED }
+        val connectionStatus = MutableLiveData<ConnectionStatus>().apply { value = AVAILABLE }
 
         val viewModel = createPostListMainViewModel(
                 localDraftUploadStarter = localDraftUploadStarter,
@@ -40,7 +45,7 @@ class PostListMainViewModelTest {
         // Given
         val site = SiteModel()
         val localDraftUploadStarter = mock<LocalDraftUploadStarter>()
-        val connectionStatus = MutableLiveData<ConnectionStatus>().apply { value = ConnectionStatus.CONNECTED }
+        val connectionStatus = MutableLiveData<ConnectionStatus>().apply { value = AVAILABLE }
 
         val viewModel = createPostListMainViewModel(
                 localDraftUploadStarter = localDraftUploadStarter,
@@ -49,8 +54,8 @@ class PostListMainViewModelTest {
         viewModel.start(site = site)
 
         // When
-        connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
-        connectionStatus.postValue(ConnectionStatus.CONNECTED)
+        connectionStatus.postValue(UNAVAILABLE)
+        connectionStatus.postValue(AVAILABLE)
 
         // Then
         // The upload should be executed 3 times because we have 2 connections status changes plus the auto-upload
@@ -63,6 +68,10 @@ class PostListMainViewModelTest {
             localDraftUploadStarter: LocalDraftUploadStarter,
             connectionStatus: LiveData<ConnectionStatus>
         ): PostListMainViewModel {
+            val prefs = mock<AppPrefsWrapper> {
+                on { postListViewLayoutType } doReturn STANDARD
+            }
+
             return PostListMainViewModel(
                     dispatcher = mock(),
                     postStore = mock(),
@@ -70,7 +79,7 @@ class PostListMainViewModelTest {
                     uploadStore = mock(),
                     mediaStore = mock(),
                     networkUtilsWrapper = mock(),
-                    prefs = mock(),
+                    prefs = prefs,
                     localDraftUploadStarter = localDraftUploadStarter,
                     connectionStatus = connectionStatus,
                     mainDispatcher = mock(),
