@@ -34,6 +34,7 @@ import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -573,9 +574,11 @@ public class MySiteFragment extends Fragment implements
         final View domainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta);
 
         mViewModel.getSite().observe(this, new Observer<SiteModel>() {
-            @Override public void onChanged(@Nullable SiteModel siteModel) {
-                mViewModel.clearPlans();
-                mViewModel.loadPlans(siteModel);
+            @Override public void onChanged(@Nullable SiteModel site) {
+                if (BuildConfig.DOMAIN_REGISTRATION_ENABLED) {
+                    mViewModel.clearPlans();
+                    mViewModel.loadPlans(site);
+                }
             }
         });
 
