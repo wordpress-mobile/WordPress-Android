@@ -31,10 +31,11 @@ class LocalDraftUploadStarter @Inject constructor(
             return@launch
         }
 
-        val localDrafts = postStore.getLocalDraftPosts(site)
-        localDrafts.forEach { localDraft ->
-            val intent = UploadService.getUploadPostServiceIntent(context, localDraft, false, false, true)
-            context.startService(intent)
-        }
+        postStore.getLocalDraftPosts(site)
+                .filterNot { UploadService.isPostUploadingOrQueued(it) }
+                .forEach { localDraft ->
+                    val intent = UploadService.getUploadPostServiceIntent(context, localDraft, false, false, true)
+                    context.startService(intent)
+                }
     }
 }
