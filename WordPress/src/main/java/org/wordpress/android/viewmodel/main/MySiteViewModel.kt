@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import javax.inject.Inject
 
-class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: Dispatcher): ViewModel() {
+class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: Dispatcher) : ViewModel() {
     private val plans = MutableLiveData<List<PlanModel>>()
     private val site = MutableLiveData<SiteModel>()
 
