@@ -60,7 +60,7 @@ class TransactionsStore @Inject constructor(
                 !TextUtils.isEmpty(it.code) && !TextUtils.isEmpty(it.name)
             }?.toTypedArray()
 
-            OnSupportedCountriesFetched(filteredCountries)
+            OnSupportedCountriesFetched(filteredCountries?.toMutableList())
         } else {
             OnSupportedCountriesFetched(
                     FetchSupportedCountriesError(
@@ -108,28 +108,10 @@ class TransactionsStore @Inject constructor(
     // Actions
 
     data class OnSupportedCountriesFetched(
-        val countries: Array<SupportedDomainCountry>? = null
+        val countries: List<SupportedDomainCountry>? = null
     ) : Store.OnChanged<FetchSupportedCountriesError>() {
         constructor(error: FetchSupportedCountriesError) : this() {
             this.error = error
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as OnSupportedCountriesFetched
-
-            if (countries != null) {
-                if (other.countries == null) return false
-                if (!countries.contentEquals(other.countries)) return false
-            } else if (other.countries != null) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            return countries?.contentHashCode() ?: 0
         }
     }
 
@@ -151,7 +133,7 @@ class TransactionsStore @Inject constructor(
 
     class CreateShoppingCartPayload(
         val site: SiteModel,
-        val productId: String,
+        val productId: Int,
         val domainName: String,
         val isPrivacyEnabled: Boolean
     ) : Payload<BaseRequest.BaseNetworkError>()
