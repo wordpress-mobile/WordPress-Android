@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -38,6 +41,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -86,6 +90,7 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
+import org.wordpress.android.viewmodel.main.MySiteViewModel;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -121,6 +126,9 @@ public class MySiteFragment extends Fragment implements
     public static final String TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG";
     public static final String TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG";
     public static final int AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000;
+
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    private MySiteViewModel mViewModel;
 
     private ImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
@@ -183,6 +191,8 @@ public class MySiteFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         ((WordPress) requireActivity().getApplication()).component().inject(this);
 
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(MySiteViewModel.class);
+
         if (savedInstanceState != null) {
             mActiveTutorialPrompt =
                     (QuickStartMySitePrompts) savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY);
@@ -212,6 +222,8 @@ public class MySiteFragment extends Fragment implements
                 mActivityLogContainer.setVisibility(View.VISIBLE);
             }
         }
+
+        mViewModel.setSite(site);
 
         updateQuickStartContainer();
 
@@ -351,6 +363,9 @@ public class MySiteFragment extends Fragment implements
         mQuickStartMenuButton = rootView.findViewById(R.id.quick_start_more);
 
         setupClickListeners(rootView);
+        setupObservers(rootView);
+
+        mViewModel.setSite(getSelectedSite());
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
         mToolbar.setTitle(mToolbarTitle);
@@ -550,6 +565,27 @@ public class MySiteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 showQuickStartCardMenu();
+            }
+        });
+    }
+
+    private void setupObservers(View rootView) {
+        final View domainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta);
+
+        mViewModel.getSite().observe(this, new Observer<SiteModel>() {
+            @Override public void onChanged(@Nullable SiteModel siteModel) {
+                mViewModel.clearPlans();
+                mViewModel.loadPlans(siteModel);
+            }
+        });
+
+        mViewModel.getCurrentPlan().observe(this, new Observer<PlanModel>() {
+            @Override public void onChanged(@Nullable PlanModel plan) {
+                if (plan != null && plan.getHasDomainCredit()) {
+                    domainRegistrationCta.setVisibility(View.VISIBLE);
+                } else {
+                    domainRegistrationCta.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -1011,6 +1047,7 @@ public class MySiteFragment extends Fragment implements
     public void onSiteChanged(SiteModel site) {
         refreshSelectedSiteDetails(site);
         showSiteIconProgressBar(false);
+        mViewModel.setSite(site);
     }
 
     @SuppressWarnings("unused")
