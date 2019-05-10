@@ -891,12 +891,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private void overlayFailedMedia(String localMediaId, Attributes attributes) {
         // set intermediate shade overlay
         AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-        mContent.setOverlay(localMediaIdPredicate, 0,
-                            new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_error_color)),
-                            Gravity.FILL);
 
-        Drawable alertDrawable = getResources().getDrawable(R.drawable.media_retry_image);
-        mContent.setOverlay(localMediaIdPredicate, 1, alertDrawable, Gravity.CENTER);
+        Drawable iconDrawable = getResources().getDrawable(R.drawable.media_retry_image);
+        float textSize = getResources().getDimension(R.dimen.text_header);
+        TextDrawable textDrawable = new TextDrawable(getResources(),
+                getString(R.string.editor_failed_to_insert_media_tap_to_retry), textSize);
+        // Divide icon height by 2 and shift the text vertically (note: both elements are vertically centered)
+        textDrawable.setTranslateY(iconDrawable.getIntrinsicHeight() / 2);
+
+        mContent.setOverlay(localMediaIdPredicate, 0, iconDrawable, Gravity.CENTER);
+        mContent.setOverlay(localMediaIdPredicate, 1, textDrawable, Gravity.CENTER);
         mContent.updateElementAttributes(localMediaIdPredicate, new AztecAttributes(attributes));
     }
 
