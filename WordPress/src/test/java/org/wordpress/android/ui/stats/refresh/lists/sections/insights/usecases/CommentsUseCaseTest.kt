@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel.Post
 import org.wordpress.android.fluxc.model.stats.LimitMode
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -36,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -44,6 +45,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     private lateinit var useCase: CommentsUseCase
     private val postId: Long = 10
     private val postTitle = "Post"
@@ -59,6 +61,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 statsSiteProvider,
                 tracker,
+                popupMenuHandler,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -82,7 +85,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val result = loadComments(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.COMMENTS)
+        assertThat(result.type).isEqualTo(InsightType.COMMENTS)
         val tabsItem = result.data!!.assertEmptyTab(0)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
 
@@ -111,7 +114,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val result = loadComments(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.COMMENTS)
+        assertThat(result.type).isEqualTo(InsightType.COMMENTS)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertThat(this).hasSize(3)
@@ -148,7 +151,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val result = loadComments(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.COMMENTS)
+        assertThat(result.type).isEqualTo(InsightType.COMMENTS)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertThat(this).hasSize(4)
@@ -175,7 +178,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val result = loadComments(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightsTypes.COMMENTS)
+        assertThat(result.type).isEqualTo(InsightType.COMMENTS)
 
         val tabsItem = result.data!!.assertTabWithUsers(0)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)

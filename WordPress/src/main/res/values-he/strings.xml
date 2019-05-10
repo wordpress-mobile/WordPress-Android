@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-16 09:54:09+0000
+Translation-Revision-Date: 2019-05-01 08:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">עליך להיכנס באמצעות שם המשתמש והסיסמה שלך.</string>
+    <string name="login_invalid_site_url">כתובת האתר שהזנת לא תקפה. יש להזין את הכתובת שוב.</string>
+    <string name="error_user_username_instead_of_email">יש להיכנס באמצעות שם המשתמש ב-WordPress.com במקום כתובת המייל.</string>
+    <string name="stats_insights_average_words">ממוצע מילים לפוסט</string>
+    <string name="stats_insights_total_words">סה\"כ מילים</string>
+    <string name="stats_insights_average_likes">ממוצע לייקים לפוסט</string>
+    <string name="stats_insights_total_likes">סה\"כ לייקים</string>
+    <string name="stats_insights_average_comments">ממוצע תגובות לפוסט</string>
+    <string name="stats_insights_total_comments">סה\"כ תגובות</string>
+    <string name="stats_insights_posts">פוסטים</string>
+    <string name="stats_insights_year">שנה</string>
+    <string name="stats_insights_this_year_site_stats">השנה</string>
+    <string name="no_site_error">כתובת האתר שהזנת אינה עבור אתר ב-WordPress. כדי שנוכל להתחבר לאתר, האתר חייב להשתמש בפלטפורמה של WordPress.</string>
     <string name="plugin_check_domain_credit_error">לא הייתה אפשרות לבדוק את נקודות הזיכוי הזמינות בדומיין</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">בודק נקודות זיכוי בדומיין</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">רישום הדומיין</string>
     <string name="plugin_install_custom_domain_required_dialog_message">כדי להתקין תוספים, עליך לספק דומיין מותאם אישית שמקושר לאתר שלך.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">התקנת תוסף</string>
-    <string name="new_site_creation_preview_subtitle">תהיה לך אפשרות להתאים אישית את המראה והאווירה של האתר שלך בשלב מאוחר יותר</string>
     <string name="publish_on">פרסום בתאריך: %s</string>
     <string name="schedule_for">תזמון לתאריך: %s</string>
     <string name="published_on">פורסם בתאריך: %s</string>
@@ -217,7 +229,7 @@ Language: he_IL
     <string name="stats_followers_count_message">סך הכול %1$s עוקבים: %2$s</string>
     <string name="stats_followers_email">אימייל</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">ניהול תובנות</string>
+    <string name="stats_manage_insights">ניהול תובנות</string>
     <string name="stats_empty_insights_title">עדיין לא נוספו תובנות</string>
     <string name="stats_no_data_yet">עדיין אין נתונים</string>
     <string name="menu_debug">תפריט איתור באגים</string>
@@ -1158,7 +1170,6 @@ Language: he_IL
     <string name="error_media_not_found">לא ניתן למצוא פריטי מדיה</string>
     <string name="error_media_insufficient_fs_permissions">קריאת ההרשאות שלא אושרו במדיה של המכשיר</string>
     <string name="site_settings_optimize_images">מיטוב תמונות</string>
-    <string name="no_site_error">לא ניתן היה להתחבר לאתר WordPress. אין אתר WordPress תקף ב-\n כתובת זו. בדוק את כתובת האתר (URL) שהזנת.</string>
     <string name="media_generic_error">אירעה שגיאה בפריטי המדיה</string>
     <string name="media_upload_error">אירעה שגיאה בהעלאת פריטי מדיה</string>
     <string name="retry">יש לנסות שנית</string>

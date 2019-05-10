@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.view.View
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
@@ -13,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK_BUTTON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
@@ -23,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 
 sealed class BlockListItem(val type: Type) {
     fun id(): Int {
@@ -51,20 +54,31 @@ sealed class BlockListItem(val type: Type) {
         LOADING_ITEM,
         ACTIVITY_ITEM,
         REFERRED_ITEM,
-        QUICK_SCAN_ITEM
+        QUICK_SCAN_ITEM,
+        LINK_BUTTON
     }
 
-    data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
+    data class Title(
+        @StringRes val textResource: Int? = null,
+        val text: String? = null,
+        val menuAction: ((View) -> Unit)? = null
+    ) : BlockListItem(TITLE)
 
-    data class ReferredItem(@StringRes val label: Int, val itemTitle: String) : BlockListItem(REFERRED_ITEM)
+    data class ReferredItem(
+        @StringRes val label: Int,
+        val itemTitle: String,
+        val navigationAction: NavigationAction? = null
+    ) : BlockListItem(REFERRED_ITEM)
 
     data class ValueItem(
         val value: String,
         @StringRes val unit: Int,
         val isFirst: Boolean = false,
         val change: String? = null,
-        val positive: Boolean = true
-    ) : BlockListItem(VALUE_ITEM)
+        val state: State = POSITIVE
+    ) : BlockListItem(VALUE_ITEM) {
+        enum class State { POSITIVE, NEGATIVE, NEUTRAL }
+    }
 
     data class ListItem(
         val text: String,
@@ -134,8 +148,12 @@ sealed class BlockListItem(val type: Type) {
         @DrawableRes val icon: Int? = null,
         @StringRes val text: Int,
         val navigateAction: NavigationAction
-    ) :
-            BlockListItem(LINK)
+    ) : BlockListItem(LINK)
+
+    data class LinkButton(
+        @StringRes val text: Int,
+        val navigateAction: NavigationAction
+    ) : BlockListItem(LINK_BUTTON)
 
     data class BarChartItem(
         val entries: List<Bar>,

@@ -27,6 +27,7 @@ private const val FORMATTER_DATE = "January 1st, 1:35pm"
 private val POST_STATE_PUBLISH = PostStatus.PUBLISHED.toString()
 private val POST_STATE_PRIVATE = PostStatus.PRIVATE.toString()
 private val POST_STATE_PENDING = PostStatus.PENDING.toString()
+private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
 
 @RunWith(MockitoJUnitRunner::class)
 class PostListItemUiStateHelperTest {
@@ -129,6 +130,15 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
+    fun `uploading draft label shown when the draft is being uploaded`() {
+        val state = createPostListItemUiState(
+                uploadStatus = createUploadStatus(isUploading = true),
+                post = createPostModel(status = POST_STATE_DRAFT)
+        )
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_uploading_draft))
+    }
+
+    @Test
     fun `uploading media label shown when the post's media is being uploaded`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasInProgressMediaUpload = true))
         assertThat(state.data.statuses).contains(UiStringRes(R.string.uploading_media))
@@ -185,19 +195,19 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `show progress when performing critical action`() {
         val state = createPostListItemUiState(performingCriticalAction = true)
-        assertThat(state.data.showProgress).isTrue()
+        assertThat(state.data.progressBarState).isEqualTo(PostListItemProgressBar.Indeterminate)
     }
 
     @Test
     fun `show progress when post is uploading or queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploadingOrQueued = true))
-        assertThat(state.data.showProgress).isTrue()
+        assertThat(state.data.progressBarState).isEqualTo(PostListItemProgressBar.Indeterminate)
     }
 
     @Test
     fun `show progress when uploading media`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(hasInProgressMediaUpload = true))
-        assertThat(state.data.showProgress).isTrue()
+        assertThat(state.data.progressBarState).isInstanceOf(PostListItemProgressBar.Determinate::class.java)
     }
 
     @Test
@@ -207,7 +217,7 @@ class PostListItemUiStateHelperTest {
                         isUploadFailed = true
                 )
         )
-        assertThat(state.data.showProgress).isFalse()
+        assertThat(state.data.progressBarState).isEqualTo(PostListItemProgressBar.Hidden)
     }
 
     @Test
@@ -219,7 +229,7 @@ class PostListItemUiStateHelperTest {
                         hasInProgressMediaUpload = true
                 )
         )
-        assertThat(state.data.showProgress).isTrue()
+        assertThat(state.data.progressBarState).isInstanceOf(PostListItemProgressBar.Determinate::class.java)
     }
 
     @Test

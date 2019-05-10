@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
@@ -30,7 +30,7 @@ class PostDayViewsUseCase
     private val statsPostProvider: StatsPostProvider,
     private val postDetailStore: PostDetailStore
 ) : BaseStatsUseCase<PostDetailStatsModel, UiState>(
-        PostDetailTypes.POST_OVERVIEW,
+        PostDetailType.POST_OVERVIEW,
         mainDispatcher,
         UiState()
 ) {
@@ -58,15 +58,15 @@ class PostDayViewsUseCase
 
         return when {
             error != null -> {
-                selectedDateProvider.dateLoadingSucceeded(DETAIL)
+                selectedDateProvider.onDateLoadingSucceeded(DETAIL)
                 State.Error(error.message ?: error.type.name)
             }
             model != null && model.dayViews.isNotEmpty() -> {
-                selectedDateProvider.dateLoadingSucceeded(DETAIL)
+                selectedDateProvider.onDateLoadingSucceeded(DETAIL)
                 State.Data(model)
             }
             else -> {
-                selectedDateProvider.dateLoadingSucceeded(DETAIL)
+                selectedDateProvider.onDateLoadingSucceeded(DETAIL)
                 State.Empty()
             }
         }
@@ -87,7 +87,13 @@ class PostDayViewsUseCase
         val previousItem = domainModel.dayViews.getOrNull(domainModel.dayViews.indexOf(selectedItem) - 1)
 
         val items = mutableListOf<BlockListItem>()
-        items.add(postDayViewsMapper.buildTitle(selectedItem, previousItem))
+        items.add(
+                postDayViewsMapper.buildTitle(
+                        selectedItem,
+                        previousItem,
+                        isLast = selectedItem == domainModel.dayViews.last()
+                )
+        )
         items.addAll(
                 postDayViewsMapper.buildChart(
                         domainModel.dayViews,

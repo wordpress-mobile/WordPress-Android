@@ -56,7 +56,7 @@ class JetpackRemoteInstallViewModelTest {
     @Before
     fun setUp() {
         whenever(site.id).thenReturn(siteId)
-        viewModel = JetpackRemoteInstallViewModel(jetpackStore, dispatcher, accountStore, siteStore)
+        viewModel = JetpackRemoteInstallViewModel(dispatcher, accountStore, siteStore, jetpackStore)
         viewModel.liveViewState.observeForever { if (it != null) viewStates.add(it) }
         viewModel.liveActionOnResult.observeForever { if (it != null) jetpackResultActionData = it }
         actionCaptor = argumentCaptor()

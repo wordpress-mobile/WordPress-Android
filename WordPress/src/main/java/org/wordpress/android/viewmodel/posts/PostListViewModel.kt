@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
@@ -39,6 +40,7 @@ import javax.inject.Named
 
 typealias PagedPostList = PagedList<PostListItemType>
 
+@SuppressLint("UseSparseArrays")
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,
@@ -94,7 +96,8 @@ class PostListViewModel @Inject constructor(
             createEmptyUiState(
                     postListType = connector.postListType,
                     isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
-                    isFetchingFirstPage = pagedListWrapper.isFetchingFirstPage.value ?: false,
+                    isLoadingData = pagedListWrapper.isFetchingFirstPage.value ?: false ||
+                            pagedListWrapper.data.value == null,
                     isListEmpty = pagedListWrapper.isEmpty.value ?: true,
                     error = pagedListWrapper.listError.value,
                     fetchFirstPage = this::fetchFirstPage,
@@ -208,11 +211,12 @@ class PostListViewModel @Inject constructor(
                             post.content
                     ),
                     formattedDate = PostUtils.getFormattedDate(post),
-                    performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id))
-            ) { postModel, buttonType, statEvent ->
-                trackPostListAction(connector.site, buttonType, postModel, statEvent)
-                connector.postActionHandler.handlePostButton(buttonType, postModel)
-            }
+                    performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
+                    onAction = { postModel, buttonType, statEvent ->
+                        trackPostListAction(connector.site, buttonType, postModel, statEvent)
+                        connector.postActionHandler.handlePostButton(buttonType, postModel)
+                    }
+            )
 
     private fun retryOnConnectionAvailableAfterRefreshError() {
         val connectionAvailableAfterRefreshError = networkUtilsWrapper.isNetworkAvailable() &&

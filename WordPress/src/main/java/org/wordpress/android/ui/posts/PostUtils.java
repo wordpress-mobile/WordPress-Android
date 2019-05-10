@@ -200,6 +200,7 @@ public class PostUtils {
                                     && StringUtils.equals(oldPost.getPassword(), newPost.getPassword())
                                     && StringUtils.equals(oldPost.getPostFormat(), newPost.getPostFormat())
                                     && StringUtils.equals(oldPost.getDateCreated(), newPost.getDateCreated())
+                                    && StringUtils.equals(oldPost.getSlug(), newPost.getSlug())
                                     && oldPost.getFeaturedImageId() == newPost.getFeaturedImageId()
                                     && oldPost.getTagNameList().containsAll(newPost.getTagNameList())
                                     && newPost.getTagNameList().containsAll(oldPost.getTagNameList())

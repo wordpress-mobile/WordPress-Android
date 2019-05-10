@@ -6,7 +6,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.OVERVIEW
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
@@ -74,15 +74,15 @@ constructor(
 
         return when {
             error != null -> {
-                selectedDateProvider.dateLoadingFailed(statsGranularity)
+                selectedDateProvider.onDateLoadingFailed(statsGranularity)
                 State.Error(error.message ?: error.type.name)
             }
             model != null && model.dates.isNotEmpty() -> {
-                selectedDateProvider.dateLoadingSucceeded(statsGranularity)
+                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
                 State.Data(model)
             }
             else -> {
-                selectedDateProvider.dateLoadingSucceeded(statsGranularity)
+                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
                 State.Empty()
             }
         }
@@ -112,7 +112,12 @@ constructor(
             val selectedItem = domainModel.dates.getOrNull(shiftedIndex) ?: domainModel.dates.last()
             val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
             items.add(
-                    overviewMapper.buildTitle(selectedItem, previousItem, uiState.selectedPosition)
+                    overviewMapper.buildTitle(
+                            selectedItem,
+                            previousItem,
+                            uiState.selectedPosition,
+                            isLast = selectedItem == domainModel.dates.last()
+                    )
             )
             items.addAll(
                     overviewMapper.buildChart(
@@ -126,7 +131,7 @@ constructor(
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
         } else {
-            selectedDateProvider.dateLoadingFailed(statsGranularity)
+            selectedDateProvider.onDateLoadingFailed(statsGranularity)
             AppLog.e(T.STATS, "There is no data to be shown in the overview block")
         }
         return items

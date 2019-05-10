@@ -30,11 +30,11 @@ import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
+import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
-import static org.wordpress.android.support.WPSupportUtils.waitForSwipeRefreshLayoutToStopReloading;
 import static org.wordpress.android.test.BuildConfig.SCREENSHOT_LOGINPASSWORD;
 import static org.wordpress.android.test.BuildConfig.SCREENSHOT_LOGINUSERNAME;
 
@@ -53,9 +53,7 @@ public class WPScreenshotTest extends BaseTest {
     public void wPScreenshotTest() {
         mActivityTestRule.launchActivity(null);
         Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
-
-        wpLogin();
-
+        
         // Never show the Gutenberg dialog when opening a post
         AppPrefs.setGutenbergInformativeDialogDisabled(true);
 
@@ -132,7 +130,9 @@ public class WPScreenshotTest extends BaseTest {
         scrollToThenClickOn(R.id.row_blog_posts);
 
         // Wait for the blog posts to load, then edit the first post
-        waitForSwipeRefreshLayoutToStopReloading();
+        selectItemWithTitleInTabLayout("Drafts", R.id.tabLayout);
+
+        idleFor(2000);
 
         PostsListPage.tapPostWithName(name);
 
