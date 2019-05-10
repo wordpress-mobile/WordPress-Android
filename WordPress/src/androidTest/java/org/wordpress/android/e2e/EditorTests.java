@@ -1,6 +1,8 @@
 package org.wordpress.android.e2e;
 
+import android.Manifest.permission;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,6 +28,9 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToNotBe
 public class EditorTests extends BaseTest {
     @Rule
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.READ_EXTERNAL_STORAGE);
 
     @Test
     public void testPublishSimplePost() {

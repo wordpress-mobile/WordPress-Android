@@ -55,9 +55,6 @@ public class EditorPage {
         if (isElementDisplayed(allowMediaAccessButton)) {
             // Click on Allow button
             allowMediaAccessButton.perform(click());
-
-            // Accept alert for media access
-            onView(withText("ALLOW")).inRoot(isDialog()).perform(click());
         }
 
         // Click on a random image
