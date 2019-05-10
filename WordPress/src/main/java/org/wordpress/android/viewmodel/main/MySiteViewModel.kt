@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.main
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
@@ -15,8 +16,8 @@ import javax.inject.Inject
 
 class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: Dispatcher): ViewModel() {
     private val plans = MutableLiveData<List<PlanModel>>()
+    private val site = MutableLiveData<SiteModel>()
 
-    val site = MutableLiveData<SiteModel>()
     val currentPlan = MediatorLiveData<PlanModel>().apply {
         addSource(plans) { plans ->
             value = plans?.find { it.isCurrentPlan }
@@ -32,6 +33,10 @@ class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: 
         super.onCleared()
     }
 
+    fun getSite(): LiveData<SiteModel> {
+        return site
+    }
+
     fun setSite(site: SiteModel?) {
         if (site?.id != this.site.value?.id) {
             this.site.value = site
@@ -42,6 +47,10 @@ class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: 
         if (site != null) {
             dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
         }
+    }
+
+    fun getPlans(): LiveData<List<PlanModel>> {
+        return plans
     }
 
     fun clearPlans() {
