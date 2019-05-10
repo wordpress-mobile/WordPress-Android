@@ -34,7 +34,7 @@ class TransactionsStoreTest {
 
     companion object {
         private const val TEST_DOMAIN_NAME = "superraredomainname156726.blog"
-        private const val TEST_DOMAIN_PRODUCT_ID = 76
+        private const val TEST_DOMAIN_PRODUCT_ID = "76"
     }
 
     @ExperimentalCoroutinesApi

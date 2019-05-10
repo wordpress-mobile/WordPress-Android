@@ -12,8 +12,8 @@ val CREATE_SHOPPING_CART_RESPONSE = CreateShoppingCartResponse(
         76,
         22.toString(),
         listOf(
-                Product(76, "superraredomainname156726.blog"),
-                Product(1001, "other product")
+                Product("76", "superraredomainname156726.blog"),
+                Product("1001", "other product")
         )
 )
 
