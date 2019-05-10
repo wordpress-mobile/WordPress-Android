@@ -30,7 +30,7 @@ class ConnectionStatusLiveDataTest {
             on { registerReceiver(captor.capture(), any()) } doReturn mock()
         }
 
-        connectionStatusLiveData = ConnectionStatusLiveData(context)
+        connectionStatusLiveData = ConnectionStatusLiveData.Factory(context).create()
         // Start observing to capture the broadcastReceiver
         connectionStatusLiveData.observeForever { }
 
@@ -88,7 +88,7 @@ class ConnectionStatusLiveDataTest {
             on { activeNetworkInfo } doReturn networkInfo
         }
 
-        return mock<Context> {
+        return mock {
             on { getSystemService(any()) } doReturn connectivityManager
         }
     }
