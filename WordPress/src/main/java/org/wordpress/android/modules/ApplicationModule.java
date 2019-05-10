@@ -54,7 +54,7 @@ public abstract class ApplicationModule {
     }
 
     @Provides
-    public static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
-        return new ConnectionStatusLiveData(context);
+    static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
+        return new ConnectionStatusLiveData.Factory(context).create();
     }
 }
