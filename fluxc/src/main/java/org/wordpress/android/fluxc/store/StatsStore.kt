@@ -69,6 +69,10 @@ class StatsStore
         preferenceUtils.getFluxCPreferences().edit().putBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, true).apply()
     }
 
+    fun isInsightsManagementNewsCardShowing(): Boolean {
+        return preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, true)
+    }
+
     suspend fun getAddedInsights(site: SiteModel) = withContext(coroutineContext) {
         val addedInsights = insightTypeSqlUtils.selectAddedItemsOrderedByStatus(site)
         val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
