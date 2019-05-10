@@ -899,8 +899,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         // Divide icon height by 2 and shift the text vertically (note: both elements are vertically centered)
         textDrawable.setTranslateY(iconDrawable.getIntrinsicHeight() / 2);
 
-        mContent.setOverlay(localMediaIdPredicate, 0, iconDrawable, Gravity.CENTER);
-        mContent.setOverlay(localMediaIdPredicate, 1, textDrawable, Gravity.CENTER);
+        mContent.setOverlay(localMediaIdPredicate, 0,
+                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
+                Gravity.FILL);
+        mContent.setOverlay(localMediaIdPredicate, 1, iconDrawable, Gravity.CENTER);
+        mContent.setOverlay(localMediaIdPredicate, 2, textDrawable, Gravity.CENTER);
         mContent.updateElementAttributes(localMediaIdPredicate, new AztecAttributes(attributes));
     }
 
