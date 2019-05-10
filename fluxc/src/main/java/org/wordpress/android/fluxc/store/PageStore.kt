@@ -182,6 +182,12 @@ class PageStore @Inject constructor(
         fetchPages(site, false)
     }
 
+    suspend fun getLocalDraftPages(site: SiteModel): List<PageModel> = withContext(coroutineContext) {
+        return@withContext PostSqlUtils.getLocalDrafts(site.id, true).map {
+            PageModel(post = it, site = site)
+        }
+    }
+
     private fun fetchPages(site: SiteModel, loadMore: Boolean) {
         val payload = FetchPostsPayload(site, loadMore, PAGE_TYPES)
         dispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload))

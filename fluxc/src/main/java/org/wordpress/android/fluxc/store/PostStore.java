@@ -423,6 +423,13 @@ public class PostStore extends Store {
     }
 
     /**
+     * Returns all posts and pages that are local drafts for the given site.
+     */
+    public List<PostModel> getLocalDraftPosts(@NonNull SiteModel site) {
+        return PostSqlUtils.getLocalDrafts(site.getId(), false);
+    }
+
+    /**
      * Given a local ID for a post, returns that post as a {@link PostModel}.
      */
     public PostModel getPostByLocalPostId(int localId) {

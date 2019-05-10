@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model.stats.time
 
 import com.google.gson.Gson
+import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Post
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
@@ -214,7 +215,8 @@ class TimeStatsMapper
                 if (author.name == null || author.views == null || author.avatarUrl == null) {
                     AppLog.e(STATS, "AuthorsResponse: Missing fields on an author")
                 }
-                AuthorsModel.Author(author.name ?: "", author.views ?: 0, author.avatarUrl, posts ?: listOf())
+                AuthorsModel.Author(StringEscapeUtils.unescapeHtml4(author.name) ?: "",
+                        author.views ?: 0, author.avatarUrl, posts ?: listOf())
             }
         }
         val hasMore = if (first != null && authors != null) first.authors.size > authors.size else false
