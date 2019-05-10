@@ -41,10 +41,9 @@ class ConnectionStatusLiveData private constructor(private val context: Context)
         override fun onReceive(context: Context, intent: Intent) {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
             val networkInfo = connectivityManager?.activeNetworkInfo
+
             val nextValue: ConnectionStatus = if (networkInfo?.isConnected == true) AVAILABLE else UNAVAILABLE
-            if (value != nextValue) {
-                postValue(nextValue)
-            }
+            postValue(nextValue)
         }
     }
 
