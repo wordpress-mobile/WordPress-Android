@@ -93,7 +93,6 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.viewmodel.main.MySiteViewModel;
 import org.wordpress.android.viewmodel.main.MySiteViewModel.NetworkStatus;
-import org.wordpress.android.viewmodel.main.MySiteViewModel.Status;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -596,8 +595,19 @@ public class MySiteFragment extends Fragment implements
 
         mViewModel.getStatus().observe(this, new Observer<NetworkStatus>() {
             @Override public void onChanged(@Nullable NetworkStatus status) {
-                if (status != null && status.getStatus() == Status.FAILED) {
-                    AppLog.e(T.DOMAIN_REGISTRATION, status.getLogMessage());
+                if (status != null) {
+                    switch (status.getStatus()) {
+                        case LOADING:
+                            showSiteIconProgressBar(true);
+                            break;
+                        case FAILED:
+                            AppLog.e(T.DOMAIN_REGISTRATION, status.getLogMessage());
+                            showSiteIconProgressBar(false);
+                            break;
+                        case SUCCESS:
+                            showSiteIconProgressBar(false);
+                            break;
+                    }
                 }
             }
         });
