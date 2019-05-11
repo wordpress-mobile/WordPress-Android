@@ -12,11 +12,13 @@ import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
+import org.wordpress.android.fluxc.store.Store.OnChangedError
 import javax.inject.Inject
 
 class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: Dispatcher) : ViewModel() {
-    private val plans = MutableLiveData<List<PlanModel>>()
     private val site = MutableLiveData<SiteModel>()
+    private val plans = MutableLiveData<List<PlanModel>>()
+    private val status = MutableLiveData<NetworkStatus>()
 
     val currentPlan = MediatorLiveData<PlanModel>().apply {
         addSource(plans) { plans ->
@@ -45,6 +47,7 @@ class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: 
 
     fun loadPlans(site: SiteModel?) {
         if (site != null) {
+            status.value = NetworkStatus(Status.LOADING)
             dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
         }
     }
@@ -57,10 +60,24 @@ class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: 
         plans.value = null
     }
 
+    fun getStatus(): LiveData<NetworkStatus> {
+        return status
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlansFetched(event: OnPlansFetched) {
         if (!event.isError) {
+            status.value = NetworkStatus(Status.SUCCESS)
             plans.value = event.plans
+        } else {
+            status.value = NetworkStatus(
+                    Status.FAILED,
+                    "An error occurred while fetching plans : ${event.error.message}"
+            )
         }
     }
+
+    data class NetworkStatus(val status: Status, val logMessage: String? = null)
+
+    enum class Status { LOADING, SUCCESS, FAILED }
 }

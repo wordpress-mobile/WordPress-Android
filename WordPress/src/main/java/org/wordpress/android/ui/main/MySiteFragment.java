@@ -92,6 +92,8 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.viewmodel.main.MySiteViewModel;
+import org.wordpress.android.viewmodel.main.MySiteViewModel.NetworkStatus;
+import org.wordpress.android.viewmodel.main.MySiteViewModel.Status;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -588,6 +590,14 @@ public class MySiteFragment extends Fragment implements
                     domainRegistrationCta.setVisibility(View.VISIBLE);
                 } else {
                     domainRegistrationCta.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        mViewModel.getStatus().observe(this, new Observer<NetworkStatus>() {
+            @Override public void onChanged(@Nullable NetworkStatus status) {
+                if (status != null && status.getStatus() == Status.FAILED) {
+                    AppLog.e(T.DOMAIN_REGISTRATION, status.getLogMessage());
                 }
             }
         });
