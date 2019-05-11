@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
-import org.wordpress.android.fluxc.store.Store.OnChangedError
 import javax.inject.Inject
 
 class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: Dispatcher) : ViewModel() {
