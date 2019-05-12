@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel;
@@ -197,6 +198,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DomainSuggestionsViewModel.class)
     abstract ViewModel domainSuggestionsViewModel(DomainSuggestionsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(WPWebViewViewModel.class)
+    abstract ViewModel wpWebViewViewModel(WPWebViewViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
