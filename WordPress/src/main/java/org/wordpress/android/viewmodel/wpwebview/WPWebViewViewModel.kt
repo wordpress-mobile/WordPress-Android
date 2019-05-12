@@ -50,7 +50,6 @@ class WPWebViewViewModel
         }
     }
 
-
     fun retry() {
         if (mUiState.value !is WebPreviewFullscreenProgressUiState) {
             updateUiState(WebPreviewFullscreenProgressUiState)
