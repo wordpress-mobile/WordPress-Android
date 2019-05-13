@@ -5,7 +5,6 @@ import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
 import kotlinx.coroutines.CoroutineDispatcher
@@ -39,12 +38,10 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostFetcher
@@ -68,8 +65,6 @@ class PostListMainViewModel @Inject constructor(
     mediaStore: MediaStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
-    private val localDraftUploadStarter: LocalDraftUploadStarter,
-    private val connectionStatus: LiveData<ConnectionStatus>,
     private val postListEventListenerFactory: PostListEventListener.Factory,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -216,10 +211,6 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
-
-        connectionStatus.observe(this, Observer {
-            localDraftUploadStarter.queueUpload(site = site)
-        })
     }
 
     override fun onCleared() {
