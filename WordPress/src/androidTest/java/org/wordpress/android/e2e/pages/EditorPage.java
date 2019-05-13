@@ -22,7 +22,6 @@ import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
-import static org.wordpress.android.support.WPSupportUtils.waitForElementToNotBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.withIndex;
 
 public class EditorPage {
