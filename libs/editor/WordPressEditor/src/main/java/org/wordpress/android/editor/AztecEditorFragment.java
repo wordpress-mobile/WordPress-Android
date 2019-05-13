@@ -1671,12 +1671,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             AttributesWithClass attributesWithClass = getAttributesWithClass(
                                     mContent.getElementAttributes(mTappedMediaPredicate));
 
-                            // remove the failed class
+                            // add or remove the failed class depending on whether the media was uploaded or not
                             attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
+
+                            // clear overlays
+                            mContent.clearOverlays(mTappedMediaPredicate);
 
                             if (!attributesWithClass.hasClass(ATTR_STATUS_FAILED)) {
                                 // just save the item and leave
-                                mContent.clearOverlays(mTappedMediaPredicate);
                                 mContent.resetAttributedMediaSpan(mTappedMediaPredicate);
                                 return;
                             }
