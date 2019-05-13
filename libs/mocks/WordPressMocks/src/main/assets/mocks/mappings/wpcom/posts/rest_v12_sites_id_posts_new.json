@@ -6,20 +6,13 @@
             "context": {
                 "equalTo": "edit"
             }
-        },
-        "bodyPatterns": [
-            {
-                "equalToJson": "{\"format\":\"standard\",\"title\":\"Title\",\"content\":\"Content\",\"status\":\"publish\"}",
-                "ignoreArrayOrder": true,
-                "ignoreExtraElements": true
-            }
-        ]
+        }
     },
     "response": {
         "status": 200,
         "fixedDelayMilliseconds": 800,
         "jsonBody": {
-            "ID": 3,
+            "ID": 5,
             "site_ID": 158396482,
             "author": {
                 "ID": 152748359,
@@ -36,10 +29,10 @@
             },
             "date": "2019-03-12T15:00:53+00:00",
             "modified": "2019-03-12T15:00:53+00:00",
-            "title": "Title",
+            "title": "{{jsonPath request.body '$.title'}}",
             "URL": "https://lowtestingmobile.wordpress.com/2019/03/12/title-33/",
             "short_URL": "https://e/paIC9Y-1r",
-            "content": "Content",
+            "content": "{{jsonPath request.body '$.content'}}",
             "excerpt": "",
             "slug": "title-33",
             "guid": "https://lowtestingmobile.wordpress.com/2019/03/12/title-33/",
@@ -120,11 +113,11 @@
             ],
             "meta": {
                 "links": {
-                    "self": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/posts/3",
-                    "help": "https://ic-api.wordpress.com/rest/v1.2/sites/158396482/posts/3/help",
+                    "self": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/posts/5",
+                    "help": "https://ic-api.wordpress.com/rest/v1.2/sites/158396482/posts/5/help",
                     "site": "https://ic-api.wordpress.com/rest/v1.2/sites/158396482",
-                    "replies": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/posts/3/replies/",
-                    "likes": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/posts/3/likes/"
+                    "replies": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/posts/5/replies/",
+                    "likes": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/posts/5/likes/"
                 }
             },
             "capabilities": {
@@ -141,6 +134,5 @@
         }
     },
     "scenarioName": "new-post",
-    "requiredScenarioState": "Started",
     "newScenarioState": "Post Published"
 }
