@@ -1687,17 +1687,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             }
 
                             // set intermediate shade overlay
-                            mContent.setOverlay(mTappedMediaPredicate, 0, new ColorDrawable(
-                                    getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
+                            overlayProgressingMedia(mTappedMediaPredicate);
 
-                            Drawable progressDrawable = getResources().getDrawable(
-                                    android.R.drawable.progress_horizontal);
-                            // set the height of the progress bar to 2
-                            // (it's in dp since the drawable will be adjusted by the span)
-                            progressDrawable.setBounds(0, 0, 0, 4);
-
-                            mContent.setOverlay(mTappedMediaPredicate, 1, progressDrawable,
-                                                Gravity.FILL_HORIZONTAL | Gravity.TOP);
                             mContent.updateElementAttributes(mTappedMediaPredicate,
                                                              attributesWithClass.getAttributes());
 
