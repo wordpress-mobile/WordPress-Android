@@ -1035,7 +1035,6 @@ Language: sk
     <string name="error_media_not_found">Média nemožno nájsť</string>
     <string name="error_media_insufficient_fs_permissions">Povolenie čítania zamietnuté na zariadení médií.</string>
     <string name="site_settings_optimize_images">Optimalizovať obrázky</string>
-    <string name="no_site_error">Nemožno pripojiť na webovú stránku WordPress.com. Neexistuje platná webová stárnka WordPress na tejto adrese. Skontrolujte adresu webovej stránky (URL), ktorú ste zadali.</string>
     <string name="media_generic_error">Vyskytli sa chyby médií</string>
     <string name="media_upload_error">Vyskytla sa chyba pri nahrávaní médií</string>
     <string name="retry">Opakovať</string>

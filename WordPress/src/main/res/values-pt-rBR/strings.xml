@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-12 07:20:42+0000
+Translation-Revision-Date: 2019-05-02 20:13:42+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">Acesse com seu nome de usuário e senha.</string>
+    <string name="login_invalid_site_url">O endereço do site informado é inválido. Informe o endereço novamente.</string>
+    <string name="error_user_username_instead_of_email">Acesse usando seu nome de usuário do WordPress.com ao invés de seu endereço de e-mail.</string>
+    <string name="stats_insights_average_words">Média de palavras por post</string>
+    <string name="stats_insights_total_words">Total de palavras</string>
+    <string name="stats_insights_average_likes">Média de curtidas por post</string>
+    <string name="stats_insights_total_likes">Total de curtidas</string>
+    <string name="stats_insights_average_comments">Média de comentários por post</string>
+    <string name="stats_insights_total_comments">Total de comentários</string>
+    <string name="stats_insights_posts">Posts</string>
+    <string name="stats_insights_year">Ano</string>
+    <string name="stats_insights_this_year_site_stats">Esse ano</string>
+    <string name="no_site_error">O site publicado nesse endereço não é um site WordPress. Para que possamos nos conectar a ele, é necessário que seja um site feito usando o WordPress.</string>
     <string name="plugin_check_domain_credit_error">Falha ao verificar por créditos de domínio disponíveis</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Verificando créditos de domínios</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrar domínio</string>
@@ -1167,7 +1180,6 @@ Language: pt_BR
     <string name="error_media_not_found">Mídia não encontrada</string>
     <string name="error_media_insufficient_fs_permissions">Permissão negada para leitura de mídia do dispositivo</string>
     <string name="site_settings_optimize_images">Otimizar imagens</string>
-    <string name="no_site_error">Não foi possível se conectar ao site WordPress. Não há um site WordPress válido\n neste endereço. Verifique o endereço do site (URL) que você forneceu.</string>
     <string name="media_generic_error">Ocorreu um erro na mídia</string>
     <string name="media_upload_error">Ocorreu um erro ao fazer upload da mídia</string>
     <string name="retry">Tentar novamente</string>
@@ -1829,7 +1841,7 @@ Language: pt_BR
     <string name="notifications_empty_all">Nenhuma notificação… ainda.</string>
     <string name="http_authorization_required">Autorização obrigatória</string>
     <string name="invalid_site_url_message">Verifique se a URL do site inserida é válida</string>
-    <string name="open_source_licenses">Abrir licenças da origem</string>
+    <string name="open_source_licenses">Abrir licenças dos arquivos fonte</string>
     <string name="file_error_create">Não foi possível criar um arquivo temporário para carregar a mídia. Certifique-se de que há espaço livro suficiente em seu dispositivo.</string>
     <string name="category_name">Nome da categoria</string>
     <string name="add_new_category">Adicionar nova categoria</string>

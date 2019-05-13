@@ -66,14 +66,13 @@ import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivit
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
-import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
-import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
+import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
@@ -285,32 +284,20 @@ public class ActivityLauncher {
     }
 
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
-        context.startActivity(intent);
+        StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, null);
     }
 
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab,
                                                   int localSiteId) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
-        intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId);
-        context.startActivity(intent);
+        StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, localSiteId);
     }
 
     public static void viewAllInsightsStats(Context context, StatsViewType statsType) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        context.startActivity(intent);
+        StatsViewAllActivity.startForInsights(context, statsType);
     }
 
     public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity);
-        context.startActivity(intent);
+        StatsViewAllActivity.startForGranularStats(context, statsType, granularity);
     }
 
     public static void viewInsightsManagement(Context context) {
@@ -617,6 +604,9 @@ public class ActivityLauncher {
 
     public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin,
                                           @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("origin", origin.name());
+        AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
         context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
     }
 
