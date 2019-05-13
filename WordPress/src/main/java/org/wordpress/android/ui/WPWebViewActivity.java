@@ -1,14 +1,28 @@
 package org.wordpress.android.ui;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
@@ -18,6 +32,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -26,6 +41,8 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -86,11 +103,65 @@ public class WPWebViewActivity extends WebViewActivity {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject UiHelpers mUiHelpers;
+
+    private ViewGroup mFullScreenErrorLayout;
+    private ViewGroup mFullScreenProgressLayout;
+    private WPWebViewViewModel mViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void configureView() {
+        setContentView(R.layout.wpwebview_activity);
+
+        mFullScreenErrorLayout = findViewById(R.id.error_layout);
+        mFullScreenProgressLayout = findViewById(R.id.progress_layout);
+        mWebView = findViewById(R.id.webView);
+
+        initRetryButton();
+        initViewModel();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void initRetryButton() {
+        Button retryBtn = mFullScreenErrorLayout.findViewById(R.id.error_retry);
+        retryBtn.setOnClickListener(new OnClickListener() {
+                @Override public void onClick(View v) {
+                    mViewModel.retry();
+                    loadContent();
+                }
+        });
+    }
+
+    private void initViewModel() {
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPWebViewViewModel.class);
+        mViewModel.getMUiState().observe(this, new Observer<WebPreviewUiState>() {
+            @Override public void onChanged(@Nullable WebPreviewUiState webPreviewUiState) {
+                if (webPreviewUiState != null) {
+                    mUiHelpers.updateVisibility(mFullScreenErrorLayout,
+                            webPreviewUiState.getFullscreenErrorLayoutVisibility());
+                    mUiHelpers.updateVisibility(mFullScreenProgressLayout,
+                            webPreviewUiState.getFullscreenProgressLayoutVisibility());
+                    mUiHelpers.updateVisibility(mWebView, webPreviewUiState.getWebViewVisibility());
+                }
+            }
+        });
+        mViewModel.start();
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
@@ -255,9 +326,57 @@ public class WPWebViewActivity extends WebViewActivity {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            return new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
+            return new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL) {
+                boolean mWebResourceError;
+
+                @Override
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    super.onPageStarted(view, url, favicon);
+                    mWebResourceError = false;
+                }
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    if (!mWebResourceError) {
+                        mViewModel.onUrlLoaded();
+                    }
+                }
+
+                @Override
+                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                    super.onReceivedError(view, request, error);
+                    mWebResourceError = true;
+                    mViewModel.onError();
+                }
+            };
         } else {
-            return new URLFilteredWebViewClient(allowedURL);
+            return new URLFilteredWebViewClient(allowedURL) {
+                // onPageFinished() gets called even if there was an error
+                // so it's necessary to keep track if an error happened
+                boolean mWebResourceError;
+
+                @Override
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    super.onPageStarted(view, url, favicon);
+                    mWebResourceError = false;
+                }
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    if (!mWebResourceError) {
+                        mViewModel.onUrlLoaded();
+                    }
+                }
+
+                @Override
+                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                    super.onReceivedError(view, request, error);
+                    mWebResourceError = true;
+                    mViewModel.onError();
+                }
+            };
         }
     }
 
