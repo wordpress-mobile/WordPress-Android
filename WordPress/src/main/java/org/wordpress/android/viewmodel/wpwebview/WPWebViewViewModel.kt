@@ -13,6 +13,8 @@ class WPWebViewViewModel
 @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper
 ) : ViewModel() {
+    private var isStarted = false
+
     private val m_uiState: MutableLiveData<WebPreviewUiState> = MutableLiveData()
     val mUiState: LiveData<WebPreviewUiState> = m_uiState
 
@@ -20,6 +22,10 @@ class WPWebViewViewModel
      * If there is no internet show the error screen
      */
     fun start() {
+        if (isStarted) {
+            return
+        }
+        isStarted = true
         if (!networkUtils.isNetworkAvailable()) {
             updateUiState(WebPreviewFullscreenErrorUiState)
         } else {

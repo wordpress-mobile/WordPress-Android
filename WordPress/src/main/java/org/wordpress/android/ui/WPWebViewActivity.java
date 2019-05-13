@@ -145,7 +145,7 @@ public class WPWebViewActivity extends WebViewActivity {
                     mViewModel.retry();
                     loadContent();
                 }
-            });
+        });
     }
 
     private void initViewModel() {
