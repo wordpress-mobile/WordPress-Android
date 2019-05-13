@@ -19,6 +19,7 @@ import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +59,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
@@ -115,7 +117,7 @@ public class MySiteFragment extends Fragment implements
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface, MainToolbarFragment,
-        OnConfirmListener, OnDismissListener {
+        OnConfirmListener, OnDismissListener, OnClickListener {
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
@@ -399,12 +401,7 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        rootView.findViewById(R.id.row_register_domain).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewDomainRegistrationActivity(getActivity(), getSelectedSite());
-            }
-        });
+        rootView.findViewById(R.id.row_register_domain).setOnClickListener(this);
 
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -569,6 +566,15 @@ public class MySiteFragment extends Fragment implements
                 showQuickStartCardMenu();
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.row_register_domain:
+                ActivityLauncher.viewDomainRegistrationActivity(this, getSelectedSite());
+                break;
+        }
     }
 
     private void setupObservers(View rootView) {
@@ -839,6 +845,19 @@ public class MySiteFragment extends Fragment implements
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
                 }
+                break;
+            case RequestCodes.REGISTER_DOMAIN:
+                String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
+                int yOffset = getResources().getDimensionPixelOffset(R.dimen.smart_toast_offset_y);
+
+                ToastUtils.showToast(
+                        getActivity(),
+                        getString(R.string.my_site_verify_your_email, email),
+                        Duration.LONG,
+                        Gravity.BOTTOM,
+                        0,
+                        yOffset
+                );
                 break;
         }
     }

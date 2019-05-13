@@ -49,7 +49,7 @@ class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsL
                 .commit()
     }
 
-    override fun onDomainRegistered(domainName: String) {
+    override fun onDomainRegistered(domainName: String, email: String?) {
         supportFragmentManager.beginTransaction()
                 .setCustomAnimations(
                         R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
@@ -57,7 +57,7 @@ class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsL
                 )
                 .replace(
                         R.id.fragment_container,
-                        DomainRegistrationResultFragment.newInstance(domainName)
+                        DomainRegistrationResultFragment.newInstance(domainName, email)
                 )
                 .commit()
     }

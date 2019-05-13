@@ -1743,6 +1743,7 @@
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
     <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
+    <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
     <string name="my_site_icon_dialog_title">Site Icon</string>
     <string name="my_site_icon_dialog_add_message">Would you like to add a site icon?</string>
     <string name="my_site_icon_dialog_change_message">How would you like to edit the icon?</string>
