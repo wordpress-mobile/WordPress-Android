@@ -218,7 +218,7 @@ class PostListMainViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
         connectionStatus.observe(this, Observer {
-            localDraftUploadStarter.uploadLocalDrafts(scope = this@PostListMainViewModel, site = site)
+            localDraftUploadStarter.queueUpload(site = site)
         })
     }
 

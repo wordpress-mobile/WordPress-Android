@@ -154,7 +154,7 @@ class PostListViewModel @Inject constructor(
     // Public Methods
 
     fun swipeToRefresh() {
-        localDraftUploadStarter.uploadLocalDrafts(scope = this, site = connector.site)
+        localDraftUploadStarter.queueUpload(site = connector.site)
         fetchFirstPage()
     }
 
