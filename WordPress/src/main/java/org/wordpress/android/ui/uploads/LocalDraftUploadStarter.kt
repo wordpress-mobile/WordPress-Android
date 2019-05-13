@@ -11,6 +11,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Provides a way to find and upload all local drafts.
@@ -27,7 +28,9 @@ class LocalDraftUploadStarter @Inject constructor(
      */
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val networkUtilsWrapper: NetworkUtilsWrapper
-) {
+) : CoroutineScope {
+    override val coroutineContext: CoroutineContext get() = bgDispatcher
+
     fun uploadLocalDrafts(scope: CoroutineScope, site: SiteModel) = scope.launch(bgDispatcher) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return@launch
