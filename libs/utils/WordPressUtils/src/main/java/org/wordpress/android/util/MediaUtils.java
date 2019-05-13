@@ -437,7 +437,6 @@ public class MediaUtils {
 
                 // TODO handle non-primary volumes
             } else if (isDownloadsDocument(uri)) {
-                // DownloadsProvider
                 final String id = DocumentsContract.getDocumentId(uri);
 
                 if (id != null && id.startsWith("raw:")) {
@@ -457,11 +456,10 @@ public class MediaUtils {
                         if (path != null) {
                             return path;
                         }
-                    } catch (Exception ignored) {
+                    } catch (Exception e) {
+                        AppLog.e(AppLog.T.UTILS, "Error reading _data column for URI: " + contentUri, e);
                     }
                 }
-                // path could not be retrieved using ContentResolver, therefore copy file to accessible cache using
-                // streams
                 return FileUtils.cacheFile(context, uri);
             } else if (isMediaDocument(uri)) { // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
