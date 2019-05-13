@@ -402,7 +402,7 @@ public class MediaUtils {
      * @param context The context.
      * @param uri The Uri to query.
      */
-    private static String getPath(final Context context, final Uri uri) {
+    static String getPath(final Context context, final Uri uri) {
         String path = getDocumentProviderPathKitkatOrHigher(context, uri);
 
         if (path != null) {
@@ -436,16 +436,33 @@ public class MediaUtils {
                 }
 
                 // TODO handle non-primary volumes
-            } else if (isDownloadsDocument(uri)) { // DownloadsProvider
+            } else if (isDownloadsDocument(uri)) {
+                // DownloadsProvider
                 final String id = DocumentsContract.getDocumentId(uri);
-                try {
-                    final Uri contentUri = ContentUris.withAppendedId(
-                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-                    return getDataColumn(context, contentUri, null, null);
-                } catch (NumberFormatException e) {
-                    AppLog.e(AppLog.T.UTILS, "Can't read the path for file with ID " + id);
-                    return null;
+
+                if (id != null && id.startsWith("raw:")) {
+                    return id.substring(4);
                 }
+
+                String[] contentUriPrefixesToTry = new String[]{
+                        "content://downloads/public_downloads",
+                        "content://downloads/my_downloads",
+                        "content://downloads/all_downloads"
+                };
+
+                for (String contentUriPrefix : contentUriPrefixesToTry) {
+                    Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
+                    try {
+                        String path = getDataColumn(context, contentUri, null, null);
+                        if (path != null) {
+                            return path;
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }
+                // path could not be retrieved using ContentResolver, therefore copy file to accessible cache using
+                // streams
+                return FileUtils.cacheFile(context, uri);
             } else if (isMediaDocument(uri)) { // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
