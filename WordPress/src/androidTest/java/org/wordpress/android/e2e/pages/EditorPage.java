@@ -18,6 +18,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
@@ -31,6 +32,7 @@ public class EditorPage {
             withHint("Title")));
     private static ViewInteraction publishConfirmation = onView(withText("Post published"));
     private static ViewInteraction addMediaButton = onView(withId(R.id.media_button_container));
+    private static ViewInteraction mediaLibraryButton = onView(withId(R.id.media_bar_button_library));
     private static ViewInteraction allowMediaAccessButton = onView(allOf(withId(R.id.button),
             withText("Allow")));
     private static ViewInteraction confirmButton = onView(withId(R.id.mnu_confirm_selection));
@@ -50,56 +52,53 @@ public class EditorPage {
     // Image needs a little time to be uploaded after entering the image
     public void enterImage() {
         // Click on add media button
-        addMediaButton.perform(click());
+        clickOn(addMediaButton);
+        clickOn(mediaLibraryButton);
 
         if (isElementDisplayed(allowMediaAccessButton)) {
             // Click on Allow button
-            allowMediaAccessButton.perform(click());
+            clickOn(allowMediaAccessButton);
         }
 
         // Click on a random image
-        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
+        onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
 
         // Click the confirm button
-        confirmButton.perform(click());
+        clickOn(confirmButton);
 
         if (isElementDisplayed(onView(withText("LEAVE OFF")))) {
             // Accept alert for media access
-            onView(withText("LEAVE OFF")).inRoot(isDialog()).perform(click());
+            clickOn(onView(withText("LEAVE OFF")).inRoot(isDialog()));
         }
     }
 
     public void openSettings() {
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText("Post settings")).perform(click());
+        clickOn(onView(withText("Post settings")));
     }
 
     public void addACategory(String category) {
-        onView(withId(R.id.post_categories_container)).perform(click());
-        onView(withText(category)).perform(click());
+        clickOn(onView(withId(R.id.post_categories_container)));
+        clickOn(onView(withText(category)));
         pressBack();
     }
 
     public void addATag(String tag) {
-        onView(withId(R.id.post_tags_container)).perform(click());
+        clickOn(onView(withId(R.id.post_tags_container)));
         ViewInteraction tagsField = onView(withId(R.id.tags_edit_text));
         populateTextField(tagsField, tag);
         pressBack();
     }
 
     public void setFeaturedImage() {
-        onView(withId(R.id.post_add_featured_image_button)).perform(click());
-        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
-        onView(withId(R.id.mnu_confirm_selection)).perform(click());
-        waitForElementToNotBeDisplayed(onView(withText(R.string.uploading_media)));
+        clickOn(onView(withId(R.id.post_add_featured_image_button)));
+        clickOn(onView(withId(R.id.icon_wpmedia)));
+        onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
     }
 
     public boolean publishPost() {
-        publishButton.perform(click());
-        onView(withText("PUBLISH NOW"))
-                .inRoot(isDialog())
-                .check(matches(isDisplayed()))
-                .perform(click());
+        clickOn(publishButton);
+        clickOn(onView(withText("PUBLISH NOW")));
         waitForElementToBeDisplayed(publishConfirmation);
         return isElementDisplayed(publishConfirmation);
     }
