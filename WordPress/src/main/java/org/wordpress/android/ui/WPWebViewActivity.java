@@ -338,7 +338,8 @@ public class WPWebViewActivity extends WebViewActivity {
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
-                    if (!mWebResourceError) {
+                    // need to check if mViewModel is null because other classes extend WPWebViewActivity
+                    if (!mWebResourceError && mViewModel != null) {
                         mViewModel.onUrlLoaded();
                     }
                 }
@@ -347,7 +348,9 @@ public class WPWebViewActivity extends WebViewActivity {
                 public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                     super.onReceivedError(view, request, error);
                     mWebResourceError = true;
-                    mViewModel.onError();
+                    if (mViewModel != null) {
+                        mViewModel.onError();
+                    }
                 }
             };
         } else {
@@ -365,7 +368,7 @@ public class WPWebViewActivity extends WebViewActivity {
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
-                    if (!mWebResourceError) {
+                    if (!mWebResourceError && mViewModel != null) {
                         mViewModel.onUrlLoaded();
                     }
                 }
@@ -374,7 +377,9 @@ public class WPWebViewActivity extends WebViewActivity {
                 public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                     super.onReceivedError(view, request, error);
                     mWebResourceError = true;
-                    mViewModel.onError();
+                    if (mViewModel != null) {
+                        mViewModel.onError();
+                    }
                 }
             };
         }

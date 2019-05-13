@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -131,6 +134,20 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
                                                                       mSite.getUsername(), mSite.getPassword(),
                                                                       mAccountStore.getAccessToken());
         webView.postUrl(authenticationUrl, postData.getBytes());
+    }
+
+    @Override
+    public void configureView() {
+        setContentView(R.layout.webview);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
