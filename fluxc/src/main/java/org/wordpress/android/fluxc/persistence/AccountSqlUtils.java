@@ -57,23 +57,22 @@ public class AccountSqlUtils {
      */
     public static int updateAccount(long localId, final ContentValues cv) {
         AccountModel account = getAccountByLocalId(localId);
-        if (account == null || cv == null) {
-            return 0;
-        }
+        if (account == null || cv == null) return 0;
         return WellSql.update(AccountModel.class).whereId(account.getId())
-                      .put(account, new InsertMapper<AccountModel>() {
-                          @Override
-                          public ContentValues toCv(AccountModel item) {
-                              return cv;
-                          }
-                      }).execute();
+                .put(account, new InsertMapper<AccountModel>() {
+                    @Override
+                    public ContentValues toCv(AccountModel item) {
+                        return cv;
+                    }
+                }).execute();
     }
 
     /**
      * Update the username in the {@link AccountModelTable} that matches the given {@link AccountModel}.
      *
-     * @param accountModel {@link AccountModel} to update with username
-     * @param username     username to update in {@link AccountModelTable#USER_NAME}
+     * @param accountModel  {@link AccountModel} to update with username
+     * @param username      username to update in {@link AccountModelTable#USER_NAME}
+     *
      * @return zero if update is not performed; non-zero otherwise
      */
     public static int updateUsername(AccountModel accountModel, final String username) {
@@ -81,14 +80,14 @@ public class AccountSqlUtils {
             return 0;
         } else {
             return WellSql.update(AccountModel.class).whereId(accountModel.getId())
-                          .put(accountModel, new InsertMapper<AccountModel>() {
-                              @Override
-                              public ContentValues toCv(AccountModel item) {
-                                  ContentValues cv = new ContentValues();
-                                  cv.put(AccountModelTable.USER_NAME, username);
-                                  return cv;
-                              }
-                          }).execute();
+                    .put(accountModel, new InsertMapper<AccountModel>() {
+                        @Override
+                        public ContentValues toCv(AccountModel item) {
+                            ContentValues cv = new ContentValues();
+                            cv.put(AccountModelTable.USER_NAME, username);
+                            return cv;
+                        }
+                    }).execute();
         }
     }
 
@@ -97,7 +96,7 @@ public class AccountSqlUtils {
      */
     public static int deleteAccount(AccountModel account) {
         return account == null ? 0 : WellSql.delete(AccountModel.class)
-                                            .where().equals(AccountModelTable.ID, account.getId()).endWhere().execute();
+                .where().equals(AccountModelTable.ID, account.getId()).endWhere().execute();
     }
 
     public static List<AccountModel> getAllAccounts() {
@@ -118,15 +117,16 @@ public class AccountSqlUtils {
      */
     public static AccountModel getAccountByLocalId(long localId) {
         List<AccountModel> accountResult = WellSql.select(AccountModel.class)
-                                                  .where().equals(AccountModelTable.ID, localId)
-                                                  .endWhere().getAsModel();
+                .where().equals(AccountModelTable.ID, localId)
+                .endWhere().getAsModel();
         return accountResult.isEmpty() ? null : accountResult.get(0);
     }
 
     /**
      * Get list of {@link SubscriptionModel} matching {@param searchString} by blog name or URL.
      *
-     * @param searchString Text to filter subscriptions by
+     * @param searchString      Text to filter subscriptions by
+     *
      * @return {@link List} of {@link SubscriptionModel}
      */
     public static List<SubscriptionModel> getSubscriptionsByNameOrUrlMatching(String searchString) {
@@ -139,7 +139,7 @@ public class AccountSqlUtils {
     /**
      * Update list of {@link SubscriptionModel} by deleting existing subscriptions and inserting {@param subscriptions}.
      *
-     * @param subscriptions {@link List} of {@link SubscriptionModel} to insert into database
+     * @param subscriptions     {@link List} of {@link SubscriptionModel} to insert into database
      */
     public static void updateSubscriptions(@NonNull List<SubscriptionModel> subscriptions) {
         WellSql.delete(SubscriptionModel.class).execute();
