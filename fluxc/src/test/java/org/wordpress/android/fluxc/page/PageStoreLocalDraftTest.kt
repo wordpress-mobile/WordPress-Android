@@ -70,7 +70,7 @@ class PageStoreLocalDraftTest {
         // Assert
         assertThat(localDraftPages).hasSize(3)
         assertThat(localDraftPages).allMatch { it.title.startsWith(baseTitle) }
-        assertThat(localDraftPages.map { it.pageId }).isEqualTo(expectedPages.map { it.id })
+        assertThat(localDraftPages.map { it.id }).isEqualTo(expectedPages.map { it.id })
     }
 
     private fun createLocalDraft(localSiteId: Int, baseTitle: String = "Title") = PostModel().apply {
