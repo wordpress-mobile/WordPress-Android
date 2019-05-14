@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.domains
 
 import android.app.Activity.RESULT_OK
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,10 +13,10 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.domain_registration_result_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.viewmodel.domains.DomainRegistrationResultViewModel
 
 class DomainRegistrationResultFragment : Fragment() {
-    private var domainName: String? = null
-    private var email: String? = null
+    private lateinit var viewModel: DomainRegistrationResultViewModel
 
     companion object {
         private const val EXTRA_REGISTERED_DOMAIN_NAME = "extra_registered_domain_name"
@@ -34,8 +35,9 @@ class DomainRegistrationResultFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        domainName = arguments?.getString(EXTRA_REGISTERED_DOMAIN_NAME, "")
-        email = arguments?.getString(EXTRA_REGISTERED_DOMAIN_EMAIL, "")
+        viewModel = ViewModelProviders.of(this).get(DomainRegistrationResultViewModel::class.java)
+        viewModel.domainName = arguments?.getString(EXTRA_REGISTERED_DOMAIN_NAME, "")
+        viewModel.email = arguments?.getString(EXTRA_REGISTERED_DOMAIN_EMAIL, "")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -49,7 +51,7 @@ class DomainRegistrationResultFragment : Fragment() {
 
         continue_button.setOnClickListener {
             val intent = Intent()
-            intent.putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, email)
+            intent.putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, viewModel.email)
 
             activity!!.setResult(RESULT_OK, intent)
             activity!!.finish()
@@ -58,7 +60,7 @@ class DomainRegistrationResultFragment : Fragment() {
         domain_registration_result_message.text = HtmlCompat.fromHtml(
                 getString(
                         R.string.domain_registration_result_description,
-                        domainName
+                        viewModel.domainName
                 ), FROM_HTML_MODE_COMPACT
         )
     }
