@@ -32,10 +32,8 @@ class LocalDraftUploadStarter @Inject constructor(
     private val context: Context,
     private val postStore: PostStore,
     private val siteStore: SiteStore,
-    /**
-     * The Coroutine dispatcher used for querying in FluxC.
-     */
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val uploadServiceFacade: UploadServiceFacade,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
@@ -76,10 +74,15 @@ class LocalDraftUploadStarter @Inject constructor(
 
     private fun upload(scope: CoroutineScope, site: SiteModel) = scope.launch(Dispatchers.IO) {
         postStore.getLocalDraftPosts(site)
-                .filterNot { UploadService.isPostUploadingOrQueued(it) }
+                .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
                 .forEach { localDraft ->
-                    val intent = UploadService.getUploadPostServiceIntent(context, localDraft, false, false, true)
-                    context.startService(intent)
+                    uploadServiceFacade.uploadPost(
+                            context = context,
+                            post = localDraft,
+                            trackAnalytics = false,
+                            publish = false,
+                            isRetry = true
+                    )
                 }
     }
 }
