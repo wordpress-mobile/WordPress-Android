@@ -459,7 +459,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 mEmailInput.getEditText().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (isAdded()) {
+                        if (isAdded() && mEmailInput != null) {
                             ActivityUtils.showKeyboard(mEmailInput.getEditText());
                         }
                     }
