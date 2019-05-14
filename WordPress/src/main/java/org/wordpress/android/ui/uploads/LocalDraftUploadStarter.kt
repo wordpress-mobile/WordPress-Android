@@ -42,6 +42,15 @@ class LocalDraftUploadStarter @Inject constructor(
 
     override val coroutineContext: CoroutineContext get() = job + bgDispatcher
 
+    /**
+     * The hook for making this class automatically launch uploads whenever the app is placed in the foreground.
+     *
+     * This must be attached during [org.wordpress.android.WordPress]' creation like so:
+     *
+     * ```
+     * ProcessLifecycleOwner.get().getLifecycle().addObserver(mLocalDraftUploadStarter.getProcessLifecycleObserver());
+     * ```
+     */
     val processLifecycleObserver = object : LifecycleObserver {
         @OnLifecycleEvent(Event.ON_START)
         fun onAppComesFromBackground() {
