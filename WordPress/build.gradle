@@ -144,13 +144,15 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.2'
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'com.android.support:exifinterface:28.0.0'
-    implementation'com.android.support:support-media-compat:28.0.0'
+    implementation 'com.android.support:support-media-compat:28.0.0'
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:percent:28.0.0'
     implementation 'com.android.support:preference-v7:28.0.0'
+    implementation "android.arch.work:work-runtime:$arch_work_version"
+    implementation "android.arch.work:work-runtime-ktx:$arch_work_version"
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
@@ -222,6 +224,7 @@ dependencies {
     androidTestImplementation 'tools.fastlane:screengrab:1.2.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
+    androidTestImplementation "android.arch.work:work-testing:$arch_work_version"
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
