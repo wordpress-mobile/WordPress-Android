@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-26 18:17:46+0000
+Translation-Revision-Date: 2019-05-02 13:07:23+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
-    <string name="new_site_creation_preview_subtitle">Będziesz mógł/mogła później spersonalizować wygląd swojej witryny </string>
+    <string name="notification_wpcom_username_needed">Zaloguj się za pomocą swojej nazwy użytkownika i hasła.</string>
+    <string name="login_invalid_site_url">Wprowadzony adres witryny jest nieprawidłowy. Wprowadź ponownie.</string>
+    <string name="error_user_username_instead_of_email">Zaloguj się przy pomocy użytkonika WordPress.com zamiast swojego adresu email.</string>
+    <string name="stats_insights_average_words">Średnio słów/wpis</string>
+    <string name="stats_insights_total_words">Suma słów</string>
+    <string name="stats_insights_average_likes">Średnio polub./wpis</string>
+    <string name="stats_insights_total_likes">Suma polubień</string>
+    <string name="stats_insights_average_comments">Średnio koment./wpis</string>
+    <string name="stats_insights_total_comments">Suma komentarzy</string>
+    <string name="stats_insights_posts">Wpisów</string>
+    <string name="stats_insights_year">Rok</string>
+    <string name="stats_insights_this_year_site_stats">Ten rok</string>
+    <string name="no_site_error">Adres witryny nie jest nie adresem witryny WordPressa. Aby ją połączyć, witryna musi wykorzystywać WordPressa.</string>
+    <string name="plugin_check_domain_credit_error">Nie udało się sprawdzić dostępnych środków w ramach domeny</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Sprawdzanie środków domeny</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Zarejestruj domenę</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Aby zainstalować wtyczki, musisz mieć przypisaną spersonalizowaną domenę powiązaną do twojej witryny.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Zainstaluj wtyczkę</string>
+    <string name="new_site_creation_preview_subtitle">Będziesz mógł/mogła spersonalizować wygląd swojej witryny w późniejszym czasie</string>
     <string name="publish_on">Publikuj dnia: %s</string>
     <string name="schedule_for">Zaplanuj na dzień: %s</string>
     <string name="published_on">Opublikowano dnia: %s</string>
@@ -1162,7 +1180,6 @@ Language: pl
     <string name="error_media_not_found">Nie można odnaleźć mediów</string>
     <string name="error_media_insufficient_fs_permissions">Brak wymaganych uprawnień odczytu do mediów na tym urządzeniu</string>
     <string name="site_settings_optimize_images">Optymalizuj obrazki</string>
-    <string name="no_site_error">Nie można podłączyć witryny WordPress. Brak prawidłowej witryny WordPress pod tym adresem. Sprawdź czy wprowadziłeś poprawny adres.</string>
     <string name="media_generic_error">Wystąpił błąd mediów</string>
     <string name="media_upload_error">Wystąpił błąd przesyłania mediów</string>
     <string name="retry">Spróbuj ponownie</string>

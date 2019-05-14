@@ -247,6 +247,7 @@
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="local_draft">Local draft</string>
     <string name="post_uploading">Uploading post</string>
+    <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_queued">Queued post</string>
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="posts_empty_list_button">Create a post</string>
@@ -1238,11 +1239,14 @@
     <string name="editor_draft_saved_locally">Draft saved on device</string>
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
     <string name="editor_uploading_post">Your post is uploading</string>
+    <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
 
     <string name="async_promo_title_publish">Publish with Confidence</string>
     <string name="async_promo_title_schedule">Schedule with Confidence</string>
@@ -1345,6 +1349,7 @@
     <string name="history_load_dialog_button_positive">Load</string>
     <string name="history_loaded_revision">Revision loaded</string>
     <string name="history_loading_revision">Loading revision</string>
+    <string name="history_fetching_revisions">Fetching revisions…</string>
     <string name="history_title" translatable="false">@string/menu_history</string>
     <string name="history_preview_visual">Visual preview</string>
     <string name="history_preview_html">HTML preview</string>
@@ -2641,7 +2646,7 @@
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198" tools:ignore="UnusedResources">WordPress Media Library</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280" tools:ignore="UnusedResources">Clear All Settings</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374" translatable="false" tools:ignore="UnusedResources">@string/editor_failed_to_insert_media_tap_for_options</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26" tools:ignore="UnusedResources">CHOOSE IMAGE</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27" tools:ignore="UnusedResources">Paste URL</string>
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21" tools:ignore="UnusedResources">Unsupported Block</string>

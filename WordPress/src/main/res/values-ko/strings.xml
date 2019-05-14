@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-16 08:54:09+0000
+Translation-Revision-Date: 2019-05-02 06:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">사용자 이름과 비밀번호를 사용하여 로그인하세요.</string>
+    <string name="login_invalid_site_url">입력하신 사이트 주소가 유효하지 않습니다. 다시 입력하세요.</string>
+    <string name="error_user_username_instead_of_email">이메일 주소가 아닌 워드프레스닷컴 사용자 이름을 사용하여 로그인하세요.</string>
+    <string name="stats_insights_average_words">평균 단어 수/글 수</string>
+    <string name="stats_insights_total_words">총 단어 수</string>
+    <string name="stats_insights_average_likes">평균 좋아요 클릭 수/글 수</string>
+    <string name="stats_insights_total_likes">총 좋아요 클릭 수</string>
+    <string name="stats_insights_average_comments">평균 댓글 수/글 수</string>
+    <string name="stats_insights_total_comments">전체 댓글 수</string>
+    <string name="stats_insights_posts">글</string>
+    <string name="stats_insights_year">년</string>
+    <string name="stats_insights_this_year_site_stats">올해</string>
+    <string name="no_site_error">이 주소의 사이트는 워드프레스 사이트가 아닙니다. 연결하려면 사이트에서 워드프레스를 사용해야 합니다.</string>
     <string name="plugin_check_domain_credit_error">사용 가능한 도메인 크레딧을 확인하지 못함</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">도메인 크레딧 확인 중</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">도메인 등록</string>
     <string name="plugin_install_custom_domain_required_dialog_message">플러그인을 설치하려면 사이트와 연결된 사용자 정의 도메인이 있어야 합니다.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">플러그인 설치</string>
-    <string name="new_site_creation_preview_subtitle">나중에 사이트 디자인의 모양과 느낌을 원하는 대로 변경할 수 있습니다.</string>
     <string name="publish_on">공개하기: %s</string>
     <string name="schedule_for">예약됨: %s</string>
     <string name="published_on">공개됨: %s</string>
@@ -1150,7 +1162,6 @@ Language: ko_KR
     <string name="error_media_not_found">미디어를 찾을 수 없음</string>
     <string name="error_media_insufficient_fs_permissions">미디어 파일에 대한 읽기 권한이 필요함</string>
     <string name="site_settings_optimize_images">이미지 최적화</string>
-    <string name="no_site_error">워드프레스 사이트에 연결할 수 없습니다. 유효한 워드프레스 사이트가 현재\n 주소에 없습니다. 입력한 사이트 주소(URL)를 확인하세요.</string>
     <string name="media_generic_error">미디어 오류가 발생했습니다.</string>
     <string name="media_upload_error">미디어 업로드 오류가 발생했습니다.</string>
     <string name="retry">다시 시도</string>
