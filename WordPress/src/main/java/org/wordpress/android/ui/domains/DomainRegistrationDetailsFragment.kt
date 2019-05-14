@@ -414,7 +414,11 @@ class DomainRegistrationDetailsFragment : Fragment() {
     }
 
     private fun toggleStatesInputFieldVisibility(isEnabled: Boolean) {
-        state_input_container.visibility = if(isEnabled) View.VISIBLE else View.GONE
+        state_input_container.visibility = if (isEnabled) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 
     private fun fetchStates() {
