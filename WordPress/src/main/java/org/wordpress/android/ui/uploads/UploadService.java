@@ -209,9 +209,8 @@ public class UploadService extends Service {
         if (mediaList != null && !mediaList.isEmpty()) {
             Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(mPostStore, mediaList);
             for (PostModel post : postsToRefresh) {
-                if (!mUploadStore.isRegisteredPostModel(post)) {
-                    mUploadStore.registerPostModel(post, mediaList);
-                }
+                // If the post is already registered, the new media will be added to its list
+                mUploadStore.registerPostModel(post, mediaList);
             }
 
             if (isRetry) {
