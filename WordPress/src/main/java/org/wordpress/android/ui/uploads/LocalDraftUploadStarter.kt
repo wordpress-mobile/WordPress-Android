@@ -7,16 +7,15 @@ import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -52,36 +51,30 @@ class LocalDraftUploadStarter @Inject constructor(
     init {
         // Since this class is meant to be a Singleton, it should be fine (I think) to use observeForever in here.
         connectionStatus.observeForever {
-            if (it == AVAILABLE) {
-                queueUploadForAllSites()
-            }
+            queueUploadForAllSites()
         }
     }
 
     private fun queueUploadForAllSites() = launch {
         val sites = siteStore.sites
-        // TODO there should be an actual queue instead of calling this directly
         upload(sites = sites)
     }
 
     fun queueUpload(site: SiteModel) = launch {
-        // TODO there should be an actual queue instead of calling this directly
         upload(sites = listOf(site))
     }
 
     private suspend fun upload(sites: List<SiteModel>) = coroutineScope {
-        sites.forEach { site ->
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
-                return@coroutineScope
-            }
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return@coroutineScope
+        }
 
-            yield()
-
-            uploadSite(site = site)
+        sites.forEach {
+            upload(scope = this, site = it)
         }
     }
 
-    private fun uploadSite(site: SiteModel) {
+    private fun upload(scope: CoroutineScope, site: SiteModel) = scope.launch(Dispatchers.IO) {
         postStore.getLocalDraftPosts(site)
                 .filterNot { UploadService.isPostUploadingOrQueued(it) }
                 .forEach { localDraft ->
