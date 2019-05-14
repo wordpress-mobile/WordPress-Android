@@ -37,7 +37,7 @@ class PostListMainViewModelTest {
         viewModel.start(site = site)
 
         // Then
-        verify(localDraftUploadStarter, times(1)).uploadLocalDrafts(scope = eq(viewModel), site = eq(site))
+        verify(localDraftUploadStarter, times(1)).queueUpload(site = eq(site))
     }
 
     @Test
@@ -60,7 +60,7 @@ class PostListMainViewModelTest {
         // Then
         // The upload should be executed 3 times because we have 2 connections status changes plus the auto-upload
         // during `viewModel.start()`.
-        verify(localDraftUploadStarter, times(3)).uploadLocalDrafts(scope = eq(viewModel), site = eq(site))
+        verify(localDraftUploadStarter, times(3)).queueUpload(site = eq(site))
     }
 
     private companion object {
@@ -80,8 +80,6 @@ class PostListMainViewModelTest {
                     mediaStore = mock(),
                     networkUtilsWrapper = mock(),
                     prefs = prefs,
-                    localDraftUploadStarter = localDraftUploadStarter,
-                    connectionStatus = connectionStatus,
                     mainDispatcher = mock(),
                     bgDispatcher = mock(),
                     postListEventListenerFactory = mock()

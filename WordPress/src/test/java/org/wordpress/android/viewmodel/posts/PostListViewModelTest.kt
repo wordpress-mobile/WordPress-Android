@@ -28,7 +28,7 @@ class PostListViewModelTest {
         viewModel.swipeToRefresh()
 
         // Then
-        verify(localDraftUploadStarter, times(1)).uploadLocalDrafts(scope = eq(viewModel), site = eq(site))
+        verify(localDraftUploadStarter, times(1)).queueUpload(site = eq(site))
     }
 
     private companion object {
@@ -62,8 +62,7 @@ class PostListViewModelTest {
                     listItemUiStateHelper = mock(),
                     networkUtilsWrapper = mock(),
                     localDraftUploadStarter = localDraftUploadStarter,
-                    connectionStatus = mock(),
-                    bgDispatcher = Dispatchers.Default
+                    connectionStatus = mock()
             )
         }
     }
