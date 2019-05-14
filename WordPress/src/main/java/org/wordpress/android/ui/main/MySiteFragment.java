@@ -570,10 +570,8 @@ public class MySiteFragment extends Fragment implements
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.row_register_domain:
-                ActivityLauncher.viewDomainRegistrationActivity(this, getSelectedSite());
-                break;
+        if (view.getId() == R.id.row_register_domain) {
+            ActivityLauncher.viewDomainRegistrationActivity(this, getSelectedSite());
         }
     }
 
