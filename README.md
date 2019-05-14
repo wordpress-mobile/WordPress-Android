@@ -86,7 +86,7 @@ Read our [Contributing Guide](CONTRIBUTING.md) to learn about reporting issues, 
 
 ## Security
 
-If you happen to find a security vulnerability, we would appreciate you letting us know at https://hackerone.com/automattic and allow us to respond before disclosing the issue publicly.
+If you happen to find a security vulnerability, we would appreciate you letting us know at https://hackerone.com/automattic and allowing us to respond before disclosing the issue publicly.
 
 ## Getting in Touch
 
