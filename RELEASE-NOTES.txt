@@ -28,6 +28,7 @@
 * Fixed an issue with Twitter publicize connections
 * Fixed an issue where the site icon wasn't updating correctly after switching to another site
 * Fixes an issue which can result in missing posts in the Reader
+* Fixed crash when editing a post with a previously cancelled image upload
 
 12.2
 -----
