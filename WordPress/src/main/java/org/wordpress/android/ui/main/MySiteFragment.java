@@ -848,16 +848,7 @@ public class MySiteFragment extends Fragment implements
                 break;
             case RequestCodes.REGISTER_DOMAIN:
                 String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
-                int yOffset = getResources().getDimensionPixelOffset(R.dimen.smart_toast_offset_y);
-
-                ToastUtils.showToast(
-                        getActivity(),
-                        getString(R.string.my_site_verify_your_email, email),
-                        Duration.LONG,
-                        Gravity.BOTTOM,
-                        0,
-                        yOffset
-                );
+                showRegisterDomainConfirmationMessage(email);
                 break;
         }
     }
@@ -1023,6 +1014,30 @@ public class MySiteFragment extends Fragment implements
 
         // Refresh the title
         setTitle(site.getName());
+    }
+
+    private void showRegisterDomainConfirmationMessage(@Nullable String email) {
+        int yOffset = getResources().getDimensionPixelOffset(R.dimen.smart_toast_offset_y);
+        if (!TextUtils.isEmpty(email)) {
+            ToastUtils.showToast(
+                    getActivity(),
+                    getString(R.string.my_site_verify_your_email, email),
+                    Duration.LONG,
+                    Gravity.BOTTOM,
+                    0,
+                    yOffset
+                                );
+        } else {
+            AppLog.e(AppLog.T.MAIN, "There is no domain contact email");
+            ToastUtils.showToast(
+                    getActivity(),
+                    getString(R.string.my_site_verify_your_email_without_email),
+                    Duration.LONG,
+                    Gravity.BOTTOM,
+                    0,
+                    yOffset
+                                );
+        }
     }
 
     private void toggleAdminVisibility(@Nullable final SiteModel site) {
