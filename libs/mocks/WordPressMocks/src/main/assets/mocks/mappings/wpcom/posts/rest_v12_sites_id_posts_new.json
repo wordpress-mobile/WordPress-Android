@@ -10,7 +10,7 @@
     },
     "response": {
         "status": 200,
-        "fixedDelayMilliseconds": 800,
+        "fixedDelayMilliseconds": 1000,
         "jsonBody": {
             "ID": 5,
             "site_ID": 158396482,
