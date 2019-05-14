@@ -8,6 +8,7 @@ import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
@@ -37,7 +38,9 @@ class LocalDraftUploadStarter @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
-    override val coroutineContext: CoroutineContext get() = bgDispatcher
+    private val job = Job()
+
+    override val coroutineContext: CoroutineContext get() = job + bgDispatcher
 
     val processLifecycleObserver = object : LifecycleObserver {
         @OnLifecycleEvent(Event.ON_START)
