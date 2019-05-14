@@ -61,6 +61,13 @@ android {
         buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "true"
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "false"
+
+        // Gutenberg's dependency - react-native-video is using
+        // Java API 1.8
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
     }
 
     flavorDimensions "buildType"
