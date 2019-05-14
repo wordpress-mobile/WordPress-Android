@@ -7,11 +7,27 @@
                 android:background="@android:color/white">
 
     <LinearLayout
+        android:id="@+id/introduction_container"
+        style="@style/DomainSuggestionsFormIntroductionContainer"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/DomainSuggestionsFormIntroductionTitle"
+            android:text="@string/domains_suggestions_intro_title"/>
+
+        <TextView
+            style="@style/DomainSuggestionsFormIntroductionDescription"
+            android:text="@string/domains_suggestions_intro_description"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/search_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/introduction_container"
         android:layout_marginTop="@dimen/margin_extra_small"
         android:gravity="center_vertical"
         android:orientation="horizontal"

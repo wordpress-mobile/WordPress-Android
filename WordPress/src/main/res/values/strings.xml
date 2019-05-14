@@ -1966,6 +1966,8 @@
     <string name="register_domain">Register Domain</string>
     <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
+    <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
+    <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>

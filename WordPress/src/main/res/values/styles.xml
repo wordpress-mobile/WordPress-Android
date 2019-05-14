@@ -867,4 +867,32 @@
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
     </style>
 
+    <style name="DomainSuggestionsFormIntroductionContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_dialog</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingBottom">@dimen/margin_extra_large</item>
+        <item name="android:background">@color/neutral_0</item>
+    </style>
+
+    <style name="DomainSuggestionsFormIntroductionTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/neutral_600</item>
+        <item name="android:text">@dimen/text_sz_large</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="DomainSuggestionsFormIntroductionDescription">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/neutral_400</item>
+        <item name="android:text">@dimen/text_sz_large</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
 </resources>
