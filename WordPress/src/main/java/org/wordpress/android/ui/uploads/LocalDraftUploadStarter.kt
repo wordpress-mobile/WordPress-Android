@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.uploads
 
+import android.arch.lifecycle.Lifecycle.Event
+import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -38,6 +41,13 @@ class LocalDraftUploadStarter @Inject constructor(
     connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext get() = bgDispatcher
+
+    val processLifecycleObserver = object : LifecycleObserver {
+        @OnLifecycleEvent(Event.ON_START)
+        fun onAppComesFromBackground() {
+            queueUploadForAllSites()
+        }
+    }
 
     init {
         // Since this class is meant to be a Singleton, it should be fine (I think) to use observeForever in here.
