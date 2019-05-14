@@ -91,7 +91,6 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     private var site: SiteModel? = null
     private var domainProductDetails: DomainProductDetails? = null
-    private var domainContactInformation: DomainContactModel? = null
 
     private var supportedCountries: Array<SupportedDomainCountry>? = null
     private var supportedStates: Array<SupportedStateResponse>? = null
@@ -507,11 +506,11 @@ class DomainRegistrationDetailsFragment : Fragment() {
             return
         }
 
-        domainContactInformation = contactFormToDomainContactModel()
+        val domainContactInformation = contactFormToDomainContactModel()
         dispatcher.dispatch(
                 TransactionActionBuilder.newRedeemCartWithCreditsAction(
                         RedeemShoppingCartPayload(
-                                event.cartDetails!!, domainContactInformation!!
+                                event.cartDetails!!, domainContactInformation
                         )
                 )
         )
@@ -569,9 +568,10 @@ class DomainRegistrationDetailsFragment : Fragment() {
             )
         }
         // if domain registration was successful proceed to result screen anyway
+        val domainContactInformation = contactFormToDomainContactModel()
         (activity as DomainRegistrationActivity).onDomainRegistered(
                 domainProductDetails!!.domainName,
-                domainContactInformation!!.email
+                domainContactInformation.email
         )
     }
 
