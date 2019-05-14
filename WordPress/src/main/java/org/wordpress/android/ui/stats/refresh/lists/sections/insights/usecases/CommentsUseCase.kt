@@ -6,7 +6,6 @@ import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
 import org.wordpress.android.modules.UI_THREAD
@@ -125,7 +124,7 @@ class CommentsUseCase
         val mutableItems = mutableListOf<BlockListItem>()
         val totalComments = posts.mapIndexed { index, post -> post.comments }.sum()
         if (posts.isNotEmpty()) {
-            mutableItems.add(Information("Total Comments : " + totalComments))
+            mutableItems.add(Information("Total Comments : " + totalComments))//Introducing a Total Comments(counter) indicator.
             mutableItems.addAll(posts.mapIndexed { index, post ->
                 ListItem(
                         post.name,
