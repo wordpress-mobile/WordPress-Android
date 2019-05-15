@@ -238,7 +238,7 @@ fun <T> LiveData<T>.filter(predicate: (T) -> Boolean): LiveData<T> {
  * })
  * ```
  *
- * The first value emitted by `connectionStatusLiveData` would be ignored and [Observer] will nto be called.
+ * The first value emitted by `connectionStatusLiveData` would be ignored and [Observer] will not be called.
  */
 fun <T> LiveData<T>.skip(times: Int): LiveData<T> {
     check(times > 0) { "The number of times to skip must be greater than 0" }
