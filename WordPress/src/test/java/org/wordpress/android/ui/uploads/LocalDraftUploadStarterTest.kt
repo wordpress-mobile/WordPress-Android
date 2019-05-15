@@ -8,11 +8,15 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ProcessLifecycleOwner
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argWhere
+import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
@@ -28,6 +32,8 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE
+import java.util.UUID
+import kotlin.random.Random
 
 @RunWith(MockitoJUnitRunner::class)
 class LocalDraftUploadStarterTest {
@@ -35,8 +41,14 @@ class LocalDraftUploadStarterTest {
 
     private val sites = listOf(SiteModel(), SiteModel())
     private val sitesAndPosts: Map<SiteModel, List<PostModel>> = mapOf(
-            sites[0] to listOf(PostModel(), PostModel()),
-            sites[1] to listOf(PostModel(), PostModel(), PostModel())
+            sites[0] to listOf(createPostModel(), createPostModel()),
+            sites[1] to listOf(
+                    createPostModel(),
+                    createPostModel(),
+                    createPostModel(),
+                    createPostModel(),
+                    createPostModel()
+            )
     )
     private val posts = sitesAndPosts.values.flatten()
 
@@ -55,10 +67,7 @@ class LocalDraftUploadStarterTest {
         val connectionStatus = createConnectionStatusLiveData(UNAVAILABLE)
         val uploadServiceFacade = createMockedUploadServiceFacade()
 
-        val starter = createLocalDraftUploadStarter(
-                connectionStatus = connectionStatus,
-                uploadServiceFacade = uploadServiceFacade
-        )
+        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
         starter.activateAutoUploading(createMockedProcessLifecycleOwner())
 
         // When
@@ -86,10 +95,7 @@ class LocalDraftUploadStarterTest {
 
         val lifecycle = LifecycleRegistry(mock()).apply { handleLifecycleEvent(Event.ON_CREATE) }
 
-        val starter = createLocalDraftUploadStarter(
-                connectionStatus = connectionStatus,
-                uploadServiceFacade = uploadServiceFacade
-        )
+        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
         starter.activateAutoUploading(createMockedProcessLifecycleOwner(lifecycle))
 
         // When
@@ -112,16 +118,12 @@ class LocalDraftUploadStarterTest {
     @Test
     fun `when uploading a single site, only the local drafts of that site is uploaded`() {
         // Given
+        val site: SiteModel = sites[1]
+
         val connectionStatus = createConnectionStatusLiveData(null)
         val uploadServiceFacade = createMockedUploadServiceFacade()
 
-        val starter = createLocalDraftUploadStarter(
-                connectionStatus = connectionStatus,
-                uploadServiceFacade = uploadServiceFacade
-        )
-        starter.activateAutoUploading(createMockedProcessLifecycleOwner())
-
-        val site: SiteModel = sites[1]
+        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
 
         // When
         runBlocking {
@@ -136,6 +138,45 @@ class LocalDraftUploadStarterTest {
                 publish = any(),
                 isRetry = eq(true)
         )
+    }
+
+    @Test
+    fun `when uploading, it ignores local drafts that are already queued`() {
+        // Given
+        val site: SiteModel = sites[1]
+        val (expectedQueuedPosts, expectedUploadedPosts) = sitesAndPosts.getValue(site).let { posts ->
+            // Split into halves of already queued and what should be uploaded
+            return@let Pair(
+                    posts.subList(0, posts.size / 2),
+                    posts.subList(posts.size / 2, posts.size)
+            )
+        }
+
+        val connectionStatus = createConnectionStatusLiveData(null)
+        val uploadServiceFacade = mock<UploadServiceFacade> {
+            on { isPostUploadingOrQueued(any()) } doAnswer {
+                val post = it.arguments.first() as PostModel
+                expectedQueuedPosts.contains(post)
+            }
+        }
+
+        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
+
+        // When
+        runBlocking {
+            starter.queueUpload(site).join()
+        }
+
+        // Then
+        verify(uploadServiceFacade, times(expectedUploadedPosts.size)).uploadPost(
+                context = any(),
+                post = argWhere { expectedUploadedPosts.contains(it) },
+                trackAnalytics = any(),
+                publish = any(),
+                isRetry = eq(true)
+        )
+        verify(uploadServiceFacade, times(sitesAndPosts.getValue(site).size)).isPostUploadingOrQueued(any())
+        verifyNoMoreInteractions(uploadServiceFacade)
     }
 
     private suspend fun LocalDraftUploadStarter.waitForAllCoroutinesToFinish() {
@@ -173,6 +214,11 @@ class LocalDraftUploadStarterTest {
 
         fun createMockedProcessLifecycleOwner(lifecycle: Lifecycle = mock()) = mock<ProcessLifecycleOwner> {
             on { this.lifecycle } doReturn lifecycle
+        }
+
+        fun createPostModel() = PostModel().apply {
+            id = Random.nextInt()
+            title = UUID.randomUUID().toString()
         }
     }
 }
