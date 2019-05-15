@@ -109,6 +109,35 @@ class LocalDraftUploadStarterTest {
         )
     }
 
+    @Test
+    fun `when uploading a single site, only the local drafts of that site is uploaded`() {
+        // Given
+        val connectionStatus = createConnectionStatusLiveData(null)
+        val uploadServiceFacade = createMockedUploadServiceFacade()
+
+        val starter = createLocalDraftUploadStarter(
+                connectionStatus = connectionStatus,
+                uploadServiceFacade = uploadServiceFacade
+        )
+        starter.activateAutoUploading(createMockedProcessLifecycleOwner())
+
+        val site: SiteModel = sites[1]
+
+        // When
+        runBlocking {
+            starter.queueUpload(site).join()
+        }
+
+        // Then
+        verify(uploadServiceFacade, times(sitesAndPosts.getValue(site).size)).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any(),
+                publish = any(),
+                isRetry = eq(true)
+        )
+    }
+
     private suspend fun LocalDraftUploadStarter.waitForAllCoroutinesToFinish() {
         val job = checkNotNull(coroutineContext[Job])
         job.children.forEach { it.join() }
@@ -132,8 +161,10 @@ class LocalDraftUploadStarterTest {
             on { isNetworkAvailable() } doReturn true
         }
 
-        fun createConnectionStatusLiveData(initialValue: ConnectionStatus) = MutableLiveData<ConnectionStatus>().apply {
-            value = initialValue
+        fun createConnectionStatusLiveData(initialValue: ConnectionStatus?): MutableLiveData<ConnectionStatus> {
+            return MutableLiveData<ConnectionStatus>().apply {
+                value = initialValue
+            }
         }
 
         fun createMockedUploadServiceFacade() = mock<UploadServiceFacade> {
