@@ -7,7 +7,6 @@
 /devices/$deviceId#String/delete/
 
 /is-available/blog/
-/is-available/domain/
 /is-available/email/
 /is-available/username/
 
