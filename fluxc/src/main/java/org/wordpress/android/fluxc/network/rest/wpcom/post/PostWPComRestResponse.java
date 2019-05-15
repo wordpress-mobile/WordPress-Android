@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.post;
 import com.google.gson.annotations.SerializedName;
 
 import org.wordpress.android.fluxc.network.Response;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMeta.PostData.PostAutoSave;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
 
 import java.util.List;
@@ -55,6 +56,14 @@ public class PostWPComRestResponse implements Response {
     public Map<String, TermWPComRestResponse> categories;
     public Capabilities capabilities;
     public PostMeta meta;
+
+    public PostAutoSave getPostAutoSave() {
+        if (meta != null && meta.data != null && meta.data.autosave != null) {
+            return meta.data.autosave;
+        } else {
+            return null;
+        }
+    }
 
     @SuppressWarnings("CheckStyle")
     class PostMeta {
