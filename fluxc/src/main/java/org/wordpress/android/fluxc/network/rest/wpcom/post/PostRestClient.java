@@ -599,6 +599,7 @@ public class PostRestClient extends BaseWPComRestClient {
         Map<String, String> params = new HashMap<>();
 
         params.put("context", "edit");
+        params.put("meta", "autosave");
         params.put("number", String.valueOf(number));
 
         if (getPages) {
