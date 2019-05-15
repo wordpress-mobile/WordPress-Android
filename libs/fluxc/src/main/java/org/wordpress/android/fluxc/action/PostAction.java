@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.store.PostStore.AutoSavePublishedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
@@ -33,6 +34,8 @@ public enum PostAction implements IAction {
     RESTORE_POST,
     @Action(payloadType = FetchRevisionsPayload.class)
     FETCH_REVISIONS,
+    @Action(payloadType = RemotePostPayload.class)
+    AUTO_SAVE_PUBLISHED_POST,
 
     // Remote responses
     @Action(payloadType = FetchPostListResponsePayload.class)
@@ -49,6 +52,8 @@ public enum PostAction implements IAction {
     RESTORED_POST,
     @Action(payloadType = FetchRevisionsResponsePayload.class)
     FETCHED_REVISIONS,
+    @Action(payloadType = AutoSavePublishedPostPayload.class)
+    AUTO_SAVED_PUBLISHED_POST,
 
     // Local actions
     @Action(payloadType = PostModel.class)
