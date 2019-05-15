@@ -224,14 +224,18 @@ public class PostStore extends Store {
 
     public static class AutoSavePublishedPostPayload extends Payload<PostError> {
         public PostAutoSaveModel autoSaveModel;
+        public int localPostId;
         public SiteModel site;
 
-        public AutoSavePublishedPostPayload(@NonNull PostAutoSaveModel autoSaveModel, @NonNull SiteModel site) {
+        public AutoSavePublishedPostPayload(int localPostId, @NonNull PostAutoSaveModel autoSaveModel,
+                                            @NonNull SiteModel site) {
+            this.localPostId = localPostId;
             this.autoSaveModel = autoSaveModel;
             this.site = site;
         }
 
-        public AutoSavePublishedPostPayload(@NonNull PostError error) {
+        public AutoSavePublishedPostPayload(int localPostId, @NonNull PostError error) {
+            this.localPostId = localPostId;
             this.error = error;
         }
     }
@@ -945,12 +949,13 @@ public class PostStore extends Store {
     }
 
     private void handleAutoSavedPublishedPost(AutoSavePublishedPostPayload payload) {
-        // TODO save unpublished revision into PostModel's autosave fields (they don't exist yet) + get localPostId
-        Integer localPostId = 1;
-        // TODO dispatch post autoSaved event
+        int rowsAffected = PostSqlUtils.updatePostsAutoSave(payload.site, payload.autoSaveModel);
         CauseOfOnPostChanged causeOfChange =
-                new CauseOfOnPostChanged.AutoSavePublishedPost(localPostId);
-        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, 1);
+                new CauseOfOnPostChanged.AutoSavePublishedPost(payload.localPostId);
+        if (rowsAffected != 1) {
+            AppLog.e(AppLog.T.API, "Updating fields of a single post affected: " + rowsAffected + " rows");
+        }
+        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
     }
 
