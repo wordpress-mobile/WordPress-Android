@@ -2,6 +2,7 @@ package org.wordpress.android.ui.uploads
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ProcessLifecycleOwner
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
@@ -43,6 +44,9 @@ class LocalDraftUploadStarterTest {
             on { getLocalDraftPosts(eq(it)) } doReturn sitesAndPosts[it]
         }
     }
+    private val processLifecycleOwner = mock<ProcessLifecycleOwner> {
+        on { lifecycle } doReturn mock()
+    }
 
     @Test
     fun `when the internet connection is restored, it uploads all local drafts`() {
@@ -50,7 +54,7 @@ class LocalDraftUploadStarterTest {
         val networkUtilsWrapper = mock<NetworkUtilsWrapper> {
             on { isNetworkAvailable() } doReturn true
         }
-        val connectionStatus = MutableLiveData<ConnectionStatus>()
+        val connectionStatus = MutableLiveData<ConnectionStatus>().apply { value = UNAVAILABLE }
         val uploadServiceFacade = mock<UploadServiceFacade> {
             on { isPostUploadingOrQueued(any()) } doReturn false
         }
@@ -64,6 +68,7 @@ class LocalDraftUploadStarterTest {
                 connectionStatus = connectionStatus,
                 uploadServiceFacade = uploadServiceFacade
         )
+        starter.startAutoUploads(processLifecycleOwner)
 
         // When
         runBlocking {
