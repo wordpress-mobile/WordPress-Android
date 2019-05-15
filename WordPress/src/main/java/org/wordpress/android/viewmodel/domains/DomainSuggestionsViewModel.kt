@@ -50,6 +50,10 @@ class DomainSuggestionsViewModel @Inject constructor(
     val selectedPosition: LiveData<Int>
         get() = _selectedPosition
 
+    private val _isIntroVisible = MutableLiveData<Boolean>().apply { value = true }
+    val isIntroVisible: LiveData<Boolean>
+        get() = _isIntroVisible
+
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
             debouncer.debounce(Void::class.java, {
@@ -129,6 +133,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     fun updateSearchQuery(query: String) {
         if (!TextUtils.isEmpty(query)) {
             searchQuery = query
+            _isIntroVisible.value = false
         } else if (searchQuery != site.name) {
             // Only reinitialize the search query, if it has changed.
             initializeDefaultSuggestions()

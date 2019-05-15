@@ -78,6 +78,11 @@ class DomainSuggestionsFragment : Fragment() {
     }
 
     private fun setupObservers() {
+        viewModel.isIntroVisible.observe(this, Observer {
+            it?.let { isIntroVisible ->
+                introduction_container.visibility = if (isIntroVisible) View.VISIBLE else View.GONE
+            }
+        })
         viewModel.suggestionsLiveData.observe(this, Observer { listState ->
             if (listState != null) {
                 val isLoading = listState is ListState.Loading<*>
