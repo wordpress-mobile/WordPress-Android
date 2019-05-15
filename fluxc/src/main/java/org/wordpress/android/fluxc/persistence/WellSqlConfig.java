@@ -564,6 +564,7 @@ public class WellSqlConfig extends DefaultWellConfig {
     }
 
 
+    @SuppressWarnings({"MethodLength"})
     private void migrateAddOn(@AddOn String addOnName, SQLiteDatabase db, int oldDbVersion) {
         if (mActiveAddOns.contains(addOnName)) {
             switch (oldDbVersion) {

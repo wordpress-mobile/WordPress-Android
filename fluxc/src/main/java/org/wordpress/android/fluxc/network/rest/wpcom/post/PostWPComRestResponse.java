@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResp
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("CheckStyle")
 public class PostWPComRestResponse implements Response {
     public class PostsResponse {
         public List<PostWPComRestResponse> posts;
@@ -65,7 +66,6 @@ public class PostWPComRestResponse implements Response {
         }
     }
 
-    @SuppressWarnings("CheckStyle")
     class PostMeta {
         PostData data;
 
