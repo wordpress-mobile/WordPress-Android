@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.post;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.wordpress.android.fluxc.network.Response;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
 
@@ -52,4 +54,20 @@ public class PostWPComRestResponse implements Response {
     public Map<String, TermWPComRestResponse> tags;
     public Map<String, TermWPComRestResponse> categories;
     public Capabilities capabilities;
+    public PostMeta meta;
+
+    @SuppressWarnings("CheckStyle")
+    class PostMeta {
+        PostData data;
+
+        class PostData {
+             @SuppressWarnings("SpellCheckingInspection") PostAutoSave autosave;
+
+            class PostAutoSave {
+                @SerializedName("ID") long revisionId;
+                String modified;
+                String preview_URL;
+            }
+        }
+    }
 }
