@@ -691,12 +691,18 @@ public class PostStore extends Store {
                     // Post doesn't exist in the DB, nothing to do.
                     continue;
                 }
-                // Check if the post's last modified date or status has changed. We need to check status separately
-                // because when a scheduled post is published, its modified date will not be updated.
+                boolean isAutoSaveChanged =
+                        (post.getAutoSaveModified() != null && item.autoSaveModified == null)
+                        || (post.getAutoSaveModified() == null && item.autoSaveModified != null)
+                        || (post.getAutoSaveModified() != null && !post.getAutoSaveModified()
+                                                                       .equals(item.autoSaveModified));
+                // Check if the post's last modified date, status or meta.data.autosave have changed.
+                // We need to check status separately because when a scheduled post is published, its modified date
+                // will not be updated.
                 boolean isPostChanged =
                         !post.getLastModified().equals(item.lastModified)
                         || !post.getStatus().equals(item.status)
-                        || !post.getAutoSaveModified().equals(item.autoSaveModified);
+                        || isAutoSaveChanged;
                 if (isPostChanged) {
                     // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
                     // as we'd otherwise overwrite and lose these local changes forever
