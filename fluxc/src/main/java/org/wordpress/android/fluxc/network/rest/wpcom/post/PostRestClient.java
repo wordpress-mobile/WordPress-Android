@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsRespons
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponsePart;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.RevisionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
+import org.wordpress.android.fluxc.store.PostStore.AutoSavePublishedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
@@ -223,6 +224,43 @@ public class PostRestClient extends BaseWPComRestClient {
         request.addQueryParameter("context", "edit");
 
         request.disableRetries();
+        add(request);
+    }
+
+    public void autoSavePublishedPost(final @NonNull PostModel post, final @NonNull SiteModel site) {
+        if (PostStatus.fromPost(post) != PostStatus.PUBLISHED) {
+            // We could use /rest/v1.2 for other post statuses as Calypso does, but we decided to use pushPost(..)
+            // instead as the autoSave /rest/v1.2 doesn't create a new revision.
+            throw new IllegalArgumentException("Auto-save must be used only with already published posts.");
+        }
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).autosave.getUrlV1_1();
+
+        Map<String, Object> body = postModelToAutoSaveParams(post);
+
+        final WPComGsonRequest<PostAutoSaveModel> request = WPComGsonRequest.buildPostRequest(url, body,
+                PostAutoSaveModel.class,
+                new Listener<PostAutoSaveModel>() {
+                    @Override
+                    public void onResponse(PostAutoSaveModel response) {
+                        AutoSavePublishedPostPayload payload = new AutoSavePublishedPostPayload(response, site);
+                        mDispatcher.dispatch(PostActionBuilder.newAutoSavedPublishedPostAction(payload));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        PostError postError = new PostError(error.apiError, error.message);
+                        AutoSavePublishedPostPayload payload = new AutoSavePublishedPostPayload(postError);
+                        mDispatcher.dispatch(PostActionBuilder.newAutoSavedPublishedPostAction(payload));
+                    }
+                }
+                                                                                             );
+        /*
+         *      TODO I think we can keep the retries enabled, right? It's not an idempotent method, but saving the post
+         *      multiple times shouldn't hurt
+         */
+//        request.disableRetries();
         add(request);
     }
 
@@ -472,6 +510,14 @@ public class PostRestClient extends BaseWPComRestClient {
             params.put("metadata", metadata);
         }
 
+        return params;
+    }
+
+    private Map<String, Object> postModelToAutoSaveParams(PostModel post) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("title", StringUtils.notNullStr(post.getTitle()));
+        params.put("content", StringUtils.notNullStr(post.getContent()));
+        params.put("excerpt", StringUtils.notNullStr(post.getExcerpt()));
         return params;
     }
 

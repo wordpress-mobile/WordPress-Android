@@ -8,6 +8,7 @@ import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +40,7 @@ import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostAutoSaveModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
@@ -217,6 +219,20 @@ public class PostStore extends Store {
         public FetchRevisionsResponsePayload(PostModel post, RevisionsModel revisionsModel) {
             this.post = post;
             this.revisionsModel = revisionsModel;
+        }
+    }
+
+    public static class AutoSavePublishedPostPayload extends Payload<PostError> {
+        public PostAutoSaveModel autoSaveModel;
+        public SiteModel site;
+
+        public AutoSavePublishedPostPayload(@NonNull PostAutoSaveModel autoSaveModel, @NonNull SiteModel site) {
+            this.autoSaveModel = autoSaveModel;
+            this.site = site;
+        }
+
+        public AutoSavePublishedPostPayload(@NonNull PostError error) {
+            this.error = error;
         }
     }
 
@@ -589,6 +605,12 @@ public class PostStore extends Store {
             case REMOVE_ALL_POSTS:
                 removeAllPosts();
                 break;
+            case AUTO_SAVE_PUBLISHED_POST:
+                autoSavePublishedPost((RemotePostPayload) action.getPayload());
+                break;
+            case AUTO_SAVED_PUBLISHED_POST:
+                handleAutoSavedPublishedPost((AutoSavePublishedPostPayload) action.getPayload());
+                break;
             case FETCH_REVISIONS:
                 fetchRevisions((FetchRevisionsPayload) action.getPayload());
                 break;
@@ -912,6 +934,24 @@ public class PostStore extends Store {
 
         mDispatcher.dispatch(ListActionBuilder
                 .newListRequiresRefreshAction(PostListDescriptor.calculateTypeIdentifier(postModel.getLocalSiteId())));
+    }
+
+    private void autoSavePublishedPost(RemotePostPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.autoSavePublishedPost(payload.post, payload.site);
+        } else {
+            throw new NotImplementedException("AutoSave is not supported in XML-RPC api.");
+        }
+    }
+
+    private void handleAutoSavedPublishedPost(AutoSavePublishedPostPayload payload) {
+        // TODO save unpublished revision into PostModel's autosave fields (they don't exist yet) + get localPostId
+        Integer localPostId = 1;
+        // TODO dispatch post autoSaved event
+        CauseOfOnPostChanged causeOfChange =
+                new CauseOfOnPostChanged.AutoSavePublishedPost(localPostId);
+        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, 1);
+        emitChange(onPostChanged);
     }
 
     public void setLocalRevision(RevisionModel model, SiteModel site, PostModel post) {
