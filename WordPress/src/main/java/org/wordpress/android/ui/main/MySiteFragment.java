@@ -583,9 +583,9 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        mViewModel.getCurrentPlan().observe(this, new Observer<PlanModel>() {
-            @Override public void onChanged(@Nullable PlanModel plan) {
-                if (plan != null && plan.getHasDomainCredit()) {
+        mViewModel.isDomainRegistrationVisible().observe(this, new Observer<Boolean>() {
+            @Override public void onChanged(@Nullable Boolean isDomainRegistrationVisible) {
+                if (isDomainRegistrationVisible != null && isDomainRegistrationVisible) {
                     mDomainRegistrationCta.setVisibility(View.VISIBLE);
                 } else {
                     mDomainRegistrationCta.setVisibility(View.GONE);

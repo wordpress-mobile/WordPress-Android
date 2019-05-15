@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.main
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -19,10 +20,8 @@ class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: 
     private val plans = MutableLiveData<List<PlanModel>>()
     private val status = MutableLiveData<NetworkStatus>()
 
-    val currentPlan = MediatorLiveData<PlanModel>().apply {
-        addSource(plans) { plans ->
-            value = plans?.find { it.isCurrentPlan }
-        }
+    val isDomainRegistrationVisible: LiveData<Boolean> = Transformations.map(plans) { plans ->
+        plans?.find { it.isCurrentPlan }?.hasDomainCredit ?: false
     }
 
     init {

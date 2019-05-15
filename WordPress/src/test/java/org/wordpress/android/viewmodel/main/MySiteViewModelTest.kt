@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
@@ -43,7 +44,7 @@ class MySiteViewModelTest {
     }
 
     @Test
-    fun currentPlanIsSetWhenPlansAreLoaded() {
+    fun isDomainRegistrationVisibleIsTrueWhenCurrentPlanHasDomainCreditAvailable() {
         val plans = listOf(
                 PlanModel(
                         1,
@@ -65,10 +66,10 @@ class MySiteViewModelTest {
             viewModel.onPlansFetched(OnPlansFetched(site, plans, null))
         }
 
-        viewModel.currentPlan.observeForever { plan ->
-            assertNotNull(plan)
-            plan?.let {
-                assert(it.isCurrentPlan)
+        viewModel.isDomainRegistrationVisible.observeForever { isDomainRegistrationVisible ->
+            assertNotNull(isDomainRegistrationVisible)
+            isDomainRegistrationVisible?.let {
+                assert(it)
             }
         }
 
@@ -76,7 +77,7 @@ class MySiteViewModelTest {
     }
 
     @Test
-    fun currentPlanIsNullWhenNoCurrentPlans() {
+    fun isDomainRegistrationVisibleIsFalseWhenThereIsNoCurrentPlan() {
         val plans = listOf(
                 PlanModel(
                         1,
@@ -98,28 +99,30 @@ class MySiteViewModelTest {
             viewModel.onPlansFetched(OnPlansFetched(site, plans, null))
         }
 
-        viewModel.currentPlan.observeForever { plan ->
-            assertNull(plan)
+        viewModel.isDomainRegistrationVisible.observeForever { isDomainRegistrationVisible ->
+            assertNotNull(isDomainRegistrationVisible)
+            isDomainRegistrationVisible?.let { assertFalse(it) }
         }
 
         viewModel.loadPlans(site)
     }
 
     @Test
-    fun currentPlanIsNullWhenNoPlans() {
+    fun isDomainRegistrationVisibleIsFalseWhenThereAreNoPlans() {
         whenever(dispatcher.dispatch(any())).then {
             viewModel.onPlansFetched(OnPlansFetched(site, null, null))
         }
 
-        viewModel.currentPlan.observeForever { plan ->
-            assertNull(plan)
+        viewModel.isDomainRegistrationVisible.observeForever { isDomainRegistrationVisible ->
+            assertNotNull(isDomainRegistrationVisible)
+            isDomainRegistrationVisible?.let { assertFalse(it) }
         }
 
         viewModel.loadPlans(site)
     }
 
     @Test
-    fun currentPlanIsNullWhenError() {
+    fun isDomainRegistrationVisibleIsFalseWhenThereIsAnErrorLoadingPlans() {
         whenever(dispatcher.dispatch(any())).then {
             viewModel.onPlansFetched(
                     OnPlansFetched(
@@ -130,8 +133,9 @@ class MySiteViewModelTest {
             )
         }
 
-        viewModel.currentPlan.observeForever { plan ->
-            assertNull(plan)
+        viewModel.isDomainRegistrationVisible.observeForever { isDomainRegistrationVisible ->
+            assertNotNull(isDomainRegistrationVisible)
+            isDomainRegistrationVisible?.let { assertFalse(it) }
         }
 
         viewModel.loadPlans(site)
