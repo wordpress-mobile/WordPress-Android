@@ -42,7 +42,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -367,7 +366,7 @@ public class MySiteFragment extends Fragment implements
         mDomainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta);
 
         setupClickListeners(rootView);
-        setupObservers(rootView);
+        setupObservers();
 
         mViewModel.setSite(getSelectedSite());
 
@@ -573,7 +572,7 @@ public class MySiteFragment extends Fragment implements
         });
     }
 
-    private void setupObservers(View rootView) {
+    private void setupObservers() {
         mViewModel.getSite().observe(this, new Observer<SiteModel>() {
             @Override public void onChanged(@Nullable SiteModel site) {
                 if (BuildConfig.DOMAIN_REGISTRATION_ENABLED) {
