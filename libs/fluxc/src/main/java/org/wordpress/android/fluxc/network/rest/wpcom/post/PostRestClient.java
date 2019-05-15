@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMeta.PostData.PostAutoSave;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponse;
@@ -71,6 +72,7 @@ public class PostRestClient extends BaseWPComRestClient {
         Map<String, String> params = new HashMap<>();
 
         params.put("context", "edit");
+        params.put("meta", "autosave");
 
         final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 PostWPComRestResponse.class,
@@ -401,6 +403,13 @@ public class PostRestClient extends BaseWPComRestClient {
                 tagNames.add(value.name);
             }
             post.setTagNameList(tagNames);
+        }
+
+        if (from.meta != null && from.meta.data != null && from.meta.data.autosave != null) {
+            PostAutoSave autoSave = from.meta.data.autosave;
+            post.setAutoSaveRevisionId(autoSave.revisionId);
+            post.setAutoSaveModified(autoSave.modified);
+            post.setAutoSavePreviewUrl(autoSave.preview_URL);
         }
 
         if (from.capabilities != null) {
