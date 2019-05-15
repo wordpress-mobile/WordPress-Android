@@ -144,19 +144,19 @@ class MySiteViewModelTest {
     @Test
     fun setSiteWillFireObserversIfNewSiteIsDifferentThanOldSite() {
         viewModel.setSite(site)
-        viewModel.getSite().observeForever(siteObserver)
+        viewModel.site.observeForever(siteObserver)
 
         val site = SiteModel().apply { id = 2 }
         viewModel.setSite(site)
 
         verify(siteObserver, times(1)).onChanged(site)
-        assertEquals(2, viewModel.getSite().value?.id)
+        assertEquals(2, viewModel.site.value?.id)
     }
 
     @Test
     fun setSiteWillNotFireObserversIfNewSiteHasSameIdAsOldSite() {
         viewModel.setSite(site)
-        viewModel.getSite().observeForever(siteObserver)
+        viewModel.site.observeForever(siteObserver)
 
         val site = SiteModel().apply { id = 1 }
         viewModel.setSite(site)
@@ -203,6 +203,6 @@ class MySiteViewModelTest {
         viewModel.onPlansFetched(OnPlansFetched(site, plans, null))
         viewModel.clearPlans()
 
-        assertNull(viewModel.getPlans().value)
+        assertNull(viewModel.plans.value)
     }
 }

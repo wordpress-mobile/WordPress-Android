@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.main
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
@@ -16,14 +15,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import javax.inject.Inject
 
 class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: Dispatcher) : ViewModel() {
-    private val site = MutableLiveData<SiteModel>()
-    private val plans = MutableLiveData<List<PlanModel>>()
-    private val status = MutableLiveData<NetworkStatus>()
-
-    val isDomainRegistrationVisible: LiveData<Boolean> = Transformations.map(plans) { plans ->
-        plans?.find { it.isCurrentPlan }?.hasDomainCredit ?: false
-    }
-
     init {
         dispatcher.register(this)
     }
@@ -33,42 +24,46 @@ class MySiteViewModel @Inject constructor(val store: SiteStore, val dispatcher: 
         super.onCleared()
     }
 
-    fun getSite(): LiveData<SiteModel> {
-        return site
+    private val _status = MutableLiveData<NetworkStatus>()
+    val status: LiveData<NetworkStatus>
+        get() = _status
+
+    private val _site = MutableLiveData<SiteModel>()
+    val site: LiveData<SiteModel>
+        get() = _site
+
+    private val _plans = MutableLiveData<List<PlanModel>>()
+    val plans: LiveData<List<PlanModel>>
+        get() = _plans
+
+    val isDomainRegistrationVisible: LiveData<Boolean> = Transformations.map(plans) { plans ->
+        plans?.find { it.isCurrentPlan }?.hasDomainCredit ?: false
     }
 
     fun setSite(site: SiteModel?) {
-        if (site?.id != this.site.value?.id) {
-            this.site.value = site
+        if (site?.id != _site.value?.id) {
+            _site.value = site
         }
     }
 
     fun loadPlans(site: SiteModel?) {
         if (site != null) {
-            status.value = NetworkStatus(Status.LOADING)
+            _status.value = NetworkStatus(Status.LOADING)
             dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
         }
     }
 
-    fun getPlans(): LiveData<List<PlanModel>> {
-        return plans
-    }
-
     fun clearPlans() {
-        plans.value = null
-    }
-
-    fun getStatus(): LiveData<NetworkStatus> {
-        return status
+        _plans.value = null
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlansFetched(event: OnPlansFetched) {
         if (!event.isError) {
-            status.value = NetworkStatus(Status.SUCCESS)
-            plans.value = event.plans
+            _status.value = NetworkStatus(Status.SUCCESS)
+            _plans.value = event.plans
         } else {
-            status.value = NetworkStatus(
+            _status.value = NetworkStatus(
                     Status.FAILED,
                     "An error occurred while fetching plans : ${event.error.message}"
             )
