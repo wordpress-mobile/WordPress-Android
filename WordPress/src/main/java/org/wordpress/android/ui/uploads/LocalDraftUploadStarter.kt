@@ -30,7 +30,7 @@ import kotlin.coroutines.CoroutineContext
  * Auto-uploads happen when the app is placed in the foreground or when the internet connection is restored. In
  * addition to this, call sites can also request an immediate execution by calling [upload].
  *
- * The method [startAutoUploads] must be called once, preferably during app creation, for the auto-uploads to work.
+ * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
  */
 @Singleton
 class LocalDraftUploadStarter @Inject constructor(
@@ -65,10 +65,10 @@ class LocalDraftUploadStarter @Inject constructor(
      * This must be called during [org.wordpress.android.WordPress]' creation like so:
      *
      * ```
-     * mLocalDraftUploadStarter.startAutoUploads(ProcessLifecycleOwner.get())
+     * mLocalDraftUploadStarter.activateAutoUploading(ProcessLifecycleOwner.get())
      * ```
      */
-    fun startAutoUploads(processLifecycleOwner: ProcessLifecycleOwner) {
+    fun activateAutoUploading(processLifecycleOwner: ProcessLifecycleOwner) {
         // Since this class is meant to be a Singleton, it should be fine (I think) to use observeForever in here.
         // We're skipping the first emitted value because the processLifecycleObserver below will also trigger an
         // immediate upload.

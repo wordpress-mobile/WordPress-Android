@@ -279,7 +279,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         // Make the UploadStarter observe the app process so it can auto-start uploads
-        mLocalDraftUploadStarter.startAutoUploads((ProcessLifecycleOwner) ProcessLifecycleOwner.get());
+        mLocalDraftUploadStarter.activateAutoUploading((ProcessLifecycleOwner) ProcessLifecycleOwner.get());
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
