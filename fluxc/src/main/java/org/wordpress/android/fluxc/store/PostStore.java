@@ -88,11 +88,13 @@ public class PostStore extends Store {
         public Long remotePostId;
         public String lastModified;
         public String status;
+        public String autoSaveModified;
 
-        public PostListItem(Long remotePostId, String lastModified, String status) {
+        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified) {
             this.remotePostId = remotePostId;
             this.lastModified = lastModified;
             this.status = status;
+            this.autoSaveModified = autoSaveModified;
         }
     }
 
@@ -692,7 +694,9 @@ public class PostStore extends Store {
                 // Check if the post's last modified date or status has changed. We need to check status separately
                 // because when a scheduled post is published, its modified date will not be updated.
                 boolean isPostChanged =
-                        !post.getLastModified().equals(item.lastModified) || !post.getStatus().equals(item.status);
+                        !post.getLastModified().equals(item.lastModified)
+                        || !post.getStatus().equals(item.status)
+                        || !post.getAutoSaveModified().equals(item.autoSaveModified);
                 if (isPostChanged) {
                     // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
                     // as we'd otherwise overwrite and lose these local changes forever

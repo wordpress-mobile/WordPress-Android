@@ -107,7 +107,10 @@ public class PostRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
-        String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status"));
+        // TODO the meta object can be quite large and it partially beats the purpose of this approach where we fetch
+        //  minimal number of data from which we can determine whether the local version of the post is in sync with
+        //  the remote version. Ideally we'd fetch just "meta.data.autosave.modified", not the whole meta object.
+        String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status", "meta"));
         Map<String, String> params =
                 createFetchPostListParameters(false, offset, pageSize, listDescriptor.getStatusList(),
                         listDescriptor.getAuthor(), fields, listDescriptor.getOrder().getValue(),
@@ -122,8 +125,13 @@ public class PostRestClient extends BaseWPComRestClient {
                     public void onResponse(PostsResponse response) {
                         List<PostListItem> postListItems = new ArrayList<>(response.posts.size());
                         for (PostWPComRestResponse postResponse : response.posts) {
+                            String autoSaveModified = null;
+                            if (postResponse.getPostAutoSave() != null) {
+                                autoSaveModified = postResponse.getPostAutoSave().modified;
+                            }
                             postListItems
-                                    .add(new PostListItem(postResponse.ID, postResponse.modified, postResponse.status));
+                                    .add(new PostListItem(postResponse.ID, postResponse.modified, postResponse.status,
+                                            autoSaveModified));
                         }
                         boolean canLoadMore = postListItems.size() == pageSize;
                         FetchPostListResponsePayload responsePayload =
@@ -414,8 +422,8 @@ public class PostRestClient extends BaseWPComRestClient {
             post.setTagNameList(tagNames);
         }
 
-        if (from.meta != null && from.meta.data != null && from.meta.data.autosave != null) {
-            PostAutoSave autoSave = from.meta.data.autosave;
+        if (from.getPostAutoSave() != null) {
+            PostAutoSave autoSave = from.getPostAutoSave();
             post.setAutoSaveRevisionId(autoSave.revisionId);
             post.setAutoSaveModified(autoSave.modified);
             post.setAutoSavePreviewUrl(autoSave.preview_URL);
