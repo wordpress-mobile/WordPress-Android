@@ -12,6 +12,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.fluxc.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
@@ -949,13 +950,23 @@ public class PostStore extends Store {
     }
 
     private void handleAutoSavedPublishedPost(AutoSavePublishedPostPayload payload) {
-        int rowsAffected = PostSqlUtils.updatePostsAutoSave(payload.site, payload.autoSaveModel);
-        CauseOfOnPostChanged causeOfChange =
-                new CauseOfOnPostChanged.AutoSavePublishedPost(payload.localPostId);
-        if (rowsAffected != 1) {
-            AppLog.e(AppLog.T.API, "Updating fields of a single post affected: " + rowsAffected + " rows");
+        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.AutoSavePublishedPost(payload.localPostId);
+        OnPostChanged onPostChanged;
+
+        if (payload.isError()) {
+            onPostChanged = new OnPostChanged(causeOfChange, 0);
+            onPostChanged.error = payload.error;
+        } else {
+            int rowsAffected = PostSqlUtils.updatePostsAutoSave(payload.site, payload.autoSaveModel);
+            if (rowsAffected != 1) {
+                String errorMsg = "Updating fields of a single post affected: " + rowsAffected + " rows";
+                AppLog.e(AppLog.T.API, errorMsg);
+                if (BuildConfig.DEBUG) {
+                    throw new RuntimeException(errorMsg);
+                }
+            }
+            onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         }
-        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
     }
 

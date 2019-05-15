@@ -46,6 +46,7 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.StringUtils;
@@ -233,39 +234,45 @@ public class PostRestClient extends BaseWPComRestClient {
         if (PostStatus.fromPost(post) != PostStatus.PUBLISHED) {
             // We could use /rest/v1.2 for other post statuses as Calypso does, but we decided to use pushPost(..)
             // instead as the autoSave /rest/v1.2 doesn't create a new revision.
-            throw new IllegalArgumentException("Auto-save must be used only with already published posts.");
-        }
-        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).autosave.getUrlV1_1();
+            PostError postError = new PostError(PostErrorType.UNSUPPORTED_ACTION,
+                            "AutoSave is supported only for Published posts.");
+            AutoSavePublishedPostPayload payload = new AutoSavePublishedPostPayload(post.getId(), postError);
+            mDispatcher.dispatch(PostActionBuilder.newAutoSavedPublishedPostAction(payload));
+        } else {
+            String url =
+                    WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).autosave.getUrlV1_1();
 
-        Map<String, Object> body = postModelToAutoSaveParams(post);
+            Map<String, Object> body = postModelToAutoSaveParams(post);
 
-        final WPComGsonRequest<PostAutoSaveModel> request = WPComGsonRequest.buildPostRequest(url, body,
-                PostAutoSaveModel.class,
-                new Listener<PostAutoSaveModel>() {
-                    @Override
-                    public void onResponse(PostAutoSaveModel response) {
-                        AutoSavePublishedPostPayload payload =
-                                new AutoSavePublishedPostPayload(post.getId(), response, site);
-                        mDispatcher.dispatch(PostActionBuilder.newAutoSavedPublishedPostAction(payload));
+            final WPComGsonRequest<PostAutoSaveModel> request = WPComGsonRequest.buildPostRequest(url, body,
+                    PostAutoSaveModel.class,
+                    new Listener<PostAutoSaveModel>() {
+                        @Override
+                        public void onResponse(PostAutoSaveModel response) {
+                            AutoSavePublishedPostPayload payload =
+                                    new AutoSavePublishedPostPayload(post.getId(), response, site);
+                            mDispatcher.dispatch(PostActionBuilder.newAutoSavedPublishedPostAction(payload));
+                        }
+                    },
+                    new WPComErrorListener() {
+                        @Override
+                        public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                            // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                            PostError postError = new PostError(error.apiError, error.message);
+                            AutoSavePublishedPostPayload payload =
+                                    new AutoSavePublishedPostPayload(post.getId(), postError);
+                            mDispatcher.dispatch(PostActionBuilder.newAutoSavedPublishedPostAction(payload));
+                        }
                     }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
-                        PostError postError = new PostError(error.apiError, error.message);
-                        AutoSavePublishedPostPayload payload =
-                                new AutoSavePublishedPostPayload(post.getId(), postError);
-                        mDispatcher.dispatch(PostActionBuilder.newAutoSavedPublishedPostAction(payload));
-                    }
-                }
-                                                                                             );
-        /*
-         *      TODO I think we can keep the retries enabled, right? It's not an idempotent method, but saving the post
-         *      multiple times shouldn't hurt
-         */
+                                                                                                 );
+            /*
+             *      TODO I think we can keep the retries enabled, right? It's not an idempotent method, but saving
+             *      the post
+             *      multiple times shouldn't hurt
+             */
 //        request.disableRetries();
-        add(request);
+            add(request);
+        }
     }
 
     public void deletePost(final @NonNull PostModel post, final @NonNull SiteModel site,
