@@ -92,9 +92,16 @@ If you happen to find a security vulnerability, we would appreciate you letting 
 
 If you have questions or just want to say hi, join the [WordPress Slack](https://chat.wordpress.org) and drop a message on the `#mobile` channel.
 
+## Documentation
+
+- [Coding Style](https://github.com/wordpress-mobile/WordPress-Android/wiki/Coding-Style) - guidelines and validation and auto-formatting tools
+- [Pull Request Guidelines](https://github.com/wordpress-mobile/WordPress-Android/wiki/Pull-Request-Guidelines) - branch naming and how to write good pull requests
+- [Subtree'd Library Projects](https://github.com/wordpress-mobile/WordPress-Android/wiki/Subtree'd-Library-Projects) - how to deal with subtree dependencies
+
+Please read our [Wiki](https://github.com/wordpress-mobile/WordPress-Android/wiki) for more. 
+
 ## Resources
 
-- The [Wiki](https://github.com/wordpress-mobile/WordPress-Android/wiki) contains information about our development practices. 
 - [WordPress Mobile Blog](http://make.wordpress.org/mobile)
 - [WordPress Mobile Handbook](http://make.wordpress.org/mobile/handbook/)
 
