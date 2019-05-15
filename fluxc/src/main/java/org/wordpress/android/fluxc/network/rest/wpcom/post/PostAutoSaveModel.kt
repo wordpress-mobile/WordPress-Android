@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class PostAutoSaveModel(
     @SerializedName("ID") val revisionId: Long?,
-    @SerializedName("post_ID") val postId: Long?,
+    @SerializedName("post_ID") val remotePostId: Long?,
     @SerializedName("modified") val modified: String?,
     @SerializedName("preview_URL") val previewUrl: String?
 )

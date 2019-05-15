@@ -244,7 +244,8 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostAutoSaveModel>() {
                     @Override
                     public void onResponse(PostAutoSaveModel response) {
-                        AutoSavePublishedPostPayload payload = new AutoSavePublishedPostPayload(response, site);
+                        AutoSavePublishedPostPayload payload =
+                                new AutoSavePublishedPostPayload(post.getId(), response, site);
                         mDispatcher.dispatch(PostActionBuilder.newAutoSavedPublishedPostAction(payload));
                     }
                 },
@@ -253,7 +254,8 @@ public class PostRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 404 unknown_post (invalid post ID)
                         PostError postError = new PostError(error.apiError, error.message);
-                        AutoSavePublishedPostPayload payload = new AutoSavePublishedPostPayload(postError);
+                        AutoSavePublishedPostPayload payload =
+                                new AutoSavePublishedPostPayload(post.getId(), postError);
                         mDispatcher.dispatch(PostActionBuilder.newAutoSavedPublishedPostAction(payload));
                     }
                 }
