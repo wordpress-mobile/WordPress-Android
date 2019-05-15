@@ -4,6 +4,7 @@ import android.arch.lifecycle.Lifecycle.Event
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.OnLifecycleEvent
+import android.arch.lifecycle.ProcessLifecycleOwner
 import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -24,7 +25,12 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 /**
- * Provides a way to find and upload all local drafts.
+ * Automatically uploads local drafts.
+ *
+ * Auto-uploads happen when the app is placed in the foreground or when the internet connection is restored. In
+ * addition to this, call sites can also request an immediate executed by calling [queueUpload].
+ *
+ * The method [startAutoUploads] must be called once, preferably during app creation, for the auto-uploads to work.
  */
 @Singleton
 class LocalDraftUploadStarter @Inject constructor(
@@ -37,7 +43,7 @@ class LocalDraftUploadStarter @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadServiceFacade: UploadServiceFacade,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    connectionStatus: LiveData<ConnectionStatus>
+    private val connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
     private val job = Job()
 
@@ -45,25 +51,32 @@ class LocalDraftUploadStarter @Inject constructor(
 
     /**
      * The hook for making this class automatically launch uploads whenever the app is placed in the foreground.
-     *
-     * This must be attached during [org.wordpress.android.WordPress]' creation like so:
-     *
-     * ```
-     * ProcessLifecycleOwner.get().getLifecycle().addObserver(mLocalDraftUploadStarter.getProcessLifecycleObserver());
-     * ```
      */
-    val processLifecycleObserver = object : LifecycleObserver {
+    private val processLifecycleObserver = object : LifecycleObserver {
         @OnLifecycleEvent(Event.ON_START)
         fun onAppComesFromBackground() {
             queueUploadForAllSites()
         }
     }
 
-    init {
+    /**
+     * Activates the necessary observers for this class to start auto-uploading.
+     *
+     * This must be called during [org.wordpress.android.WordPress]' creation like so:
+     *
+     * ```
+     * mLocalDraftUploadStarter.startAutoUploads(ProcessLifecycleOwner.get())
+     * ```
+     */
+    fun startAutoUploads(processLifecycleOwner: ProcessLifecycleOwner) {
         // Since this class is meant to be a Singleton, it should be fine (I think) to use observeForever in here.
+        // We're skipping the first emitted value because the processLifecycleObserver below will also trigger an
+        // immediate upload.
         connectionStatus.skip(1).observeForever {
             queueUploadForAllSites()
         }
+
+        processLifecycleOwner.lifecycle.addObserver(processLifecycleObserver)
     }
 
     private fun queueUploadForAllSites() = launch {

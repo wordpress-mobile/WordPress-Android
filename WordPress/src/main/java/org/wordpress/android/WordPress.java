@@ -76,12 +76,12 @@ import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter;
 import org.wordpress.android.ui.uploads.UploadService;
-import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -279,7 +279,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         // Make the UploadStarter observe the app process so it can auto-start uploads
-        ProcessLifecycleOwner.get().getLifecycle().addObserver(mLocalDraftUploadStarter.getProcessLifecycleObserver());
+        mLocalDraftUploadStarter.startAutoUploads((ProcessLifecycleOwner) ProcessLifecycleOwner.get());
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
