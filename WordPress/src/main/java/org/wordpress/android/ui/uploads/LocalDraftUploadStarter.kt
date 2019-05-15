@@ -28,7 +28,7 @@ import kotlin.coroutines.CoroutineContext
  * Automatically uploads local drafts.
  *
  * Auto-uploads happen when the app is placed in the foreground or when the internet connection is restored. In
- * addition to this, call sites can also request an immediate executed by calling [queueUpload].
+ * addition to this, call sites can also request an immediate execution by calling [upload].
  *
  * The method [startAutoUploads] must be called once, preferably during app creation, for the auto-uploads to work.
  */
@@ -55,7 +55,7 @@ class LocalDraftUploadStarter @Inject constructor(
     private val processLifecycleObserver = object : LifecycleObserver {
         @OnLifecycleEvent(Event.ON_START)
         fun onAppComesFromBackground() {
-            queueUploadForAllSites()
+            queueUploadFromAllSites()
         }
     }
 
@@ -73,22 +73,25 @@ class LocalDraftUploadStarter @Inject constructor(
         // We're skipping the first emitted value because the processLifecycleObserver below will also trigger an
         // immediate upload.
         connectionStatus.skip(1).observeForever {
-            queueUploadForAllSites()
+            queueUploadFromAllSites()
         }
 
         processLifecycleOwner.lifecycle.addObserver(processLifecycleObserver)
     }
 
-    private fun queueUploadForAllSites() = launch {
+    private fun queueUploadFromAllSites() = launch {
         val sites = siteStore.sites
-        upload(sites = sites)
+        checkConnectionAndUpload(sites = sites)
     }
 
+    /**
+     * Upload all local drafts from the given [site].
+     */
     fun queueUpload(site: SiteModel) = launch {
-        upload(sites = listOf(site))
+        checkConnectionAndUpload(sites = listOf(site))
     }
 
-    private suspend fun upload(sites: List<SiteModel>) = coroutineScope {
+    private suspend fun checkConnectionAndUpload(sites: List<SiteModel>) = coroutineScope {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return@coroutineScope
         }
