@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import javax.inject.Inject
 import javax.inject.Named
@@ -60,7 +61,7 @@ class LocalDraftUploadStarter @Inject constructor(
 
     init {
         // Since this class is meant to be a Singleton, it should be fine (I think) to use observeForever in here.
-        connectionStatus.observeForever {
+        connectionStatus.skip(1).observeForever {
             queueUploadForAllSites()
         }
     }
