@@ -163,6 +163,7 @@ public class MySiteFragment extends Fragment implements
     private View mQuickStartGrowView;
     private View mQuickStartMenuButton;
     private Handler mQuickStartSnackBarHandler = new Handler();
+    private LinearLayout mDomainRegistrationCta;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -363,6 +364,7 @@ public class MySiteFragment extends Fragment implements
         mQuickStartGrowSubtitle = rootView.findViewById(R.id.quick_start_grow_subtitle);
         mQuickStartGrowTitle = rootView.findViewById(R.id.quick_start_grow_title);
         mQuickStartMenuButton = rootView.findViewById(R.id.quick_start_more);
+        mDomainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta);
 
         setupClickListeners(rootView);
         setupObservers(rootView);
@@ -572,8 +574,6 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void setupObservers(View rootView) {
-        final View domainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta);
-
         mViewModel.getSite().observe(this, new Observer<SiteModel>() {
             @Override public void onChanged(@Nullable SiteModel site) {
                 if (BuildConfig.DOMAIN_REGISTRATION_ENABLED) {
@@ -586,9 +586,9 @@ public class MySiteFragment extends Fragment implements
         mViewModel.getCurrentPlan().observe(this, new Observer<PlanModel>() {
             @Override public void onChanged(@Nullable PlanModel plan) {
                 if (plan != null && plan.getHasDomainCredit()) {
-                    domainRegistrationCta.setVisibility(View.VISIBLE);
+                    mDomainRegistrationCta.setVisibility(View.VISIBLE);
                 } else {
-                    domainRegistrationCta.setVisibility(View.GONE);
+                    mDomainRegistrationCta.setVisibility(View.GONE);
                 }
             }
         });
