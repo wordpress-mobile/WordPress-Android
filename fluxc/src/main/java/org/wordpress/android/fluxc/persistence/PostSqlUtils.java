@@ -21,7 +21,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
-import org.wordpress.android.fluxc.network.rest.wpcom.post.PostAutoSaveModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -242,15 +242,15 @@ public class PostSqlUtils {
     }
 
 
-    public static int updatePostsAutoSave(SiteModel site, final PostAutoSaveModel autoSaveModel) {
+    public static int updatePostsAutoSave(SiteModel site, final PostRemoteAutoSaveModel autoSaveModel) {
         return WellSql.update(PostModel.class)
                .where().beginGroup()
                .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
                .equals(PostModelTable.REMOTE_POST_ID, autoSaveModel.getRemotePostId())
                .endGroup().endWhere()
-               .put(autoSaveModel, new InsertMapper<PostAutoSaveModel>() {
+               .put(autoSaveModel, new InsertMapper<PostRemoteAutoSaveModel>() {
                    @Override
-                   public ContentValues toCv(PostAutoSaveModel item) {
+                   public ContentValues toCv(PostRemoteAutoSaveModel item) {
                        ContentValues cv = new ContentValues();
                        cv.put(PostModelTable.AUTO_SAVE_REVISION_ID, autoSaveModel.getRevisionId());
                        cv.put(PostModelTable.AUTO_SAVE_MODIFIED, autoSaveModel.getModified());

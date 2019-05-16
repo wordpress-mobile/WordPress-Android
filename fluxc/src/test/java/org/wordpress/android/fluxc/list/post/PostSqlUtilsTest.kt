@@ -10,7 +10,7 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.post.PostAutoSaveModel
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveModel
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
 import kotlin.test.assertNull
@@ -47,7 +47,7 @@ class PostSqlUtilsTest {
         assertNull(post.autoSavePreviewUrl)
         assertEquals(0, post.autoSaveRevisionId)
 
-        PostSqlUtils.updatePostsAutoSave(site, PostAutoSaveModel(revisionId, remotePostId, modifiedDate, previewUrl))
+        PostSqlUtils.updatePostsAutoSave(site, PostRemoteAutoSaveModel(revisionId, remotePostId, modifiedDate, previewUrl))
 
         val postsForSite = PostSqlUtils.getPostsForSite(site, false)
 
