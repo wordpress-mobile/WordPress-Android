@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        aztecVersion = 'gb-stray-selection-fix-try1'
+        aztecVersion = 'v1.3.27'
     }
 
     repositories {
