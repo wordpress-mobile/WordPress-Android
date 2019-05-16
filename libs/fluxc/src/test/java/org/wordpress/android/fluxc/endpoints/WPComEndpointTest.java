@@ -64,7 +64,6 @@ public class WPComEndpointTest {
         assertEquals("/is-available/email/", WPCOMREST.is_available.email.getEndpoint());
         assertEquals("/is-available/username/", WPCOMREST.is_available.username.getEndpoint());
         assertEquals("/is-available/blog/", WPCOMREST.is_available.blog.getEndpoint());
-        assertEquals("/is-available/domain/", WPCOMREST.is_available.domain.getEndpoint());
 
         // Magic link email sender
         assertEquals("/auth/send-login-email/", WPCOMREST.auth.send_login_email.getEndpoint());
