@@ -59,6 +59,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     // Unpublished revision data
     @Column private long mAutoSaveRevisionId;
     @Column private String mAutoSaveModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
+    @Column private String mRemoteAutoSaveModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column private String mAutoSavePreviewUrl;
 
 
@@ -341,6 +342,14 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     public void setAutoSaveModified(String autoSaveModified) {
         mAutoSaveModified = autoSaveModified;
+    }
+
+    public String getRemoteAutoSaveModified() {
+        return mRemoteAutoSaveModified;
+    }
+
+    public void setRemoteAutoSaveModified(String remoteAutoSaveModified) {
+        mRemoteAutoSaveModified = remoteAutoSaveModified;
     }
 
     public String getAutoSavePreviewUrl() {

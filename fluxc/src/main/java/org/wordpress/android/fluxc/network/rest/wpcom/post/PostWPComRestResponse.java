@@ -66,12 +66,15 @@ public class PostWPComRestResponse implements Response {
         }
     }
 
+    @SuppressWarnings("CheckStyle")
     class PostMeta {
         PostData data;
 
+        @SuppressWarnings("CheckStyle")
         class PostData {
              @SuppressWarnings("SpellCheckingInspection") PostAutoSave autosave;
 
+            @SuppressWarnings("CheckStyle")
             class PostAutoSave {
                 @SerializedName("ID") long revisionId;
                 String modified;
