@@ -55,6 +55,7 @@ class PostSqlUtilsTest {
         assertEquals(revisionId, postsForSite[0].autoSaveRevisionId)
         assertEquals(remotePostId, postsForSite[0].remotePostId)
         assertEquals(modifiedDate, postsForSite[0].autoSaveModified)
+        assertEquals(modifiedDate, postsForSite[0].remoteAutoSaveModified)
         assertEquals(previewUrl, postsForSite[0].autoSavePreviewUrl)
     }
 }
