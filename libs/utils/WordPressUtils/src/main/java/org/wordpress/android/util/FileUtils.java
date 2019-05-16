@@ -1,17 +1,10 @@
 package org.wordpress.android.util;
 
-import android.content.Context;
-import android.net.Uri;
 import android.text.TextUtils;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class FileUtils {
-    public static final String DOCUMENTS_DIR = "documents";
     /**
      * Returns the length of the file denoted by this abstract pathname.
      * The return value is unspecified if this pathname denotes a directory.
@@ -64,45 +57,5 @@ public class FileUtils {
             filename = filePath;
         }
         return filename;
-    }
-
-    /**
-     * This solution is based on https://stackoverflow.com/a/53021624
-     * In certain cases we cannot load a file from the disk so we have to cache it instead using streams.
-     * The helper methods are copied from - https://github.com/coltoscosmin/FileUtils/blob/master/FileUtils.java
-     *  @param context The context.
-     * @param uri The Uri to query.
-     * @param file Target file
-     */
-    static String cacheFile(Context context, Uri uri, File file) {
-        String destinationPath = null;
-        if (file != null) {
-            destinationPath = file.getAbsolutePath();
-            saveFileFromUri(context, uri, destinationPath);
-        }
-        return destinationPath;
-    }
-
-    private static void saveFileFromUri(Context context, Uri uri, String destinationPath) {
-        InputStream is = null;
-        BufferedOutputStream bos = null;
-        try {
-            is = context.getContentResolver().openInputStream(uri);
-            bos = new BufferedOutputStream(new FileOutputStream(destinationPath, false));
-            byte[] buf = new byte[1024];
-            is.read(buf);
-            do {
-                bos.write(buf);
-            } while (is.read(buf) != -1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (is != null) is.close();
-                if (bos != null) bos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
