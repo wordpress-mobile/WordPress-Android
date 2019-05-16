@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-11 16:32:56+0000
+Translation-Revision-Date: 2019-04-24 09:26:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">Logga in med ditt användarnamn och lösenord.</string>
+    <string name="login_invalid_site_url">Du har angivit en ogiltig webbplatsadress. Försök igen.</string>
+    <string name="error_user_username_instead_of_email">Logga in med ditt användarnamn för WordPress.com och inte med din e-postadress.</string>
+    <string name="stats_insights_average_words">Ord per inlägg i snitt</string>
+    <string name="stats_insights_total_words">Totalt antal ord</string>
+    <string name="stats_insights_average_likes">Gilla per inlägg i snitt</string>
+    <string name="stats_insights_total_likes">Totalt antal ”gilla”</string>
+    <string name="stats_insights_average_comments">Kommentarer per inlägg i snitt</string>
+    <string name="stats_insights_total_comments">Totalt antal kommentarer</string>
+    <string name="stats_insights_posts">Inlägg</string>
+    <string name="stats_insights_year">År</string>
+    <string name="stats_insights_this_year_site_stats">I år</string>
+    <string name="no_site_error">Webbplatsen på denna adress är inte en WordPress-webbplats.  För att vi ska kunna ansluta till den måste webbplatsen använda WordPress.</string>
     <string name="plugin_check_domain_credit_error">Lyckades inte kontrollera domänens saldo</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Kontrollerar domänens saldo</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrera domän</string>
     <string name="plugin_install_custom_domain_required_dialog_message">För att installera tillägg måste du ha en anpassad domän som är associerad med din webbplats.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Installera tillägg</string>
-    <string name="new_site_creation_preview_subtitle">Senare kommer du att kunna anpassa utseendet och känslan hos din webbplats</string>
+    <string name="new_site_creation_preview_subtitle">Du kommer att kunna anpassa utseendet och känslan hos din webbplats senare</string>
     <string name="publish_on">Publicera den: %s</string>
     <string name="schedule_for">Schemalägg till: %s</string>
     <string name="published_on">Publicerat: %s</string>
@@ -221,7 +234,7 @@ Language: sv_SE
     <string name="stats_followers_count_message">Totalt antal följare för ”%1$s”: %2$s</string>
     <string name="stats_followers_email">E-post</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Hantera insikter</string>
+    <string name="stats_manage_insights">Hantera insikter</string>
     <string name="stats_empty_insights_description">Anpassa dina insikter och se detaljerna om hur din webbplats presterar</string>
     <string name="stats_empty_insights_title">Inga insikter har lagts till än</string>
     <string name="stats_no_data_yet">Inga data insamlade än</string>
@@ -1167,7 +1180,6 @@ Language: sv_SE
     <string name="error_media_not_found">Media-filen hittades inte</string>
     <string name="error_media_insufficient_fs_permissions">Tillstånd saknas för läsning av enhetens mediafiler</string>
     <string name="site_settings_optimize_images">Optimera bilder</string>
-    <string name="no_site_error">Det gick inte att ansluta till WordPress-webbplatsen. På den angivna adressen finns det ingen giltig WordPress-webbplats. Kontrollera adressen (URL) du matat in.</string>
     <string name="media_generic_error">Ett mediefel har inträffat</string>
     <string name="media_upload_error">Ett fel inträffade vid uppladdning av media</string>
     <string name="retry">Försök igen</string>

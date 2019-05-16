@@ -1,14 +1,13 @@
 package org.wordpress.android.ui.posts.adapters
 
 import android.content.Context
-import android.database.DataSetObserver
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.AppCompatTextView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SpinnerAdapter
+import android.widget.BaseAdapter
 import androidx.annotation.CallSuper
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -17,21 +16,18 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.image.ImageManager
-import java.lang.ref.WeakReference
+import org.wordpress.android.util.image.ImageType.NO_PLACEHOLDER
 import javax.inject.Inject
 
-class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
+class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
 
-    private var observers: MutableList<WeakReference<DataSetObserver>> = mutableListOf()
     private val items = mutableListOf<AuthorFilterListItemUIState>()
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
     }
-
-    override fun getCount(): Int = items.count()
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view: View? = convertView
@@ -51,11 +47,7 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
         return view!!
     }
 
-    override fun getItem(position: Int): AuthorFilterListItemUIState = items[position]
-
     override fun getItemId(position: Int): Long = items[position].id
-
-    override fun getItemViewType(position: Int): Int = 0
 
     fun getIndexOfSelection(selection: AuthorFilterSelection): Int? {
         for ((index, item) in items.withIndex()) {
@@ -85,21 +77,11 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
         return view!!
     }
 
-    override fun getViewTypeCount(): Int = 1
     override fun hasStableIds(): Boolean = true
-    override fun isEmpty(): Boolean = false
 
-    fun notifyDataSetChanged() {
-        for (observer in observers) {
-            observer.get()?.onChanged()
-        }
-    }
+    override fun getItem(position: Int): Any = items[position]
 
-    override fun registerDataSetObserver(observer: DataSetObserver) {
-        if (!observers.mapNotNull { it.get() }.contains(observer)) {
-            observers.add(WeakReference(observer))
-        }
-    }
+    override fun getCount(): Int = items.count()
 
     fun updateItems(newItems: List<AuthorFilterListItemUIState>) {
         items.clear()
@@ -107,24 +89,33 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
         notifyDataSetChanged()
     }
 
-    override fun unregisterDataSetObserver(observer: DataSetObserver) {
-        for ((index, currentRef) in observers.withIndex()) {
-            if (observer == currentRef.get()) {
-                observers.removeAt(index)
-                return
-            }
-        }
-    }
-
     private open class NormalViewHolder(protected val itemView: View) {
         protected val image: AppCompatImageView = itemView.findViewById(R.id.post_list_author_selection_image)
 
         @CallSuper
         open fun bind(state: AuthorFilterListItemUIState, imageManager: ImageManager, uiHelpers: UiHelpers) {
-            val avatarSize = image.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
-            val url = GravatarUtils.fixGravatarUrl(state.avatarUrl, avatarSize)
-
-            imageManager.loadIntoCircle(image, state.imageType, url)
+            /**
+             * We can't use error/placeholder drawables as it causes an issue described here
+             * https://github.com/wordpress-mobile/WordPress-Android/issues/9745.
+             * It seems getView method always returns convertView == null when used with Spinner. When we invoke
+             * imageManager.load..(url..) in the view holder and the 'url' is empty or the requests fails
+             * an error/placeholder drawable is used. However, this results in another layout/measure phase
+             * -> getView(..) is called again. However, since the convertView == null we inflate a new view and
+             * imageManager.load..(..) is invoked again - this goes on forever.
+             * In order to prevent this issue we don't use placeholder/error drawables in this case.
+             * The cost of this solution is that an empty circle is shown if we don't have the avatar in the cache
+             * and the request fails.
+             */
+            when (state) {
+                is AuthorFilterListItemUIState.Everyone -> {
+                    imageManager.load(image, state.imageRes)
+                }
+                is AuthorFilterListItemUIState.Me -> {
+                    val avatarSize = image.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
+                    val url = GravatarUtils.fixGravatarUrl(state.avatarUrl, avatarSize)
+                    imageManager.loadIntoCircle(image, NO_PLACEHOLDER, url)
+                }
+            }
         }
     }
 
@@ -134,9 +125,7 @@ class AuthorSelectionAdapter(context: Context) : SpinnerAdapter {
         override fun bind(state: AuthorFilterListItemUIState, imageManager: ImageManager, uiHelpers: UiHelpers) {
             super.bind(state, imageManager, uiHelpers)
             val context = itemView.context
-
             text.text = uiHelpers.getTextOfUiString(context, state.text)
-
             itemView.setBackgroundColor(ContextCompat.getColor(context, state.dropDownBackground))
         }
     }

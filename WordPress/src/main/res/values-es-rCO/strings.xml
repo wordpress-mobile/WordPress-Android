@@ -306,7 +306,6 @@ Language: es_CO
     <string name="error_media_not_found">No se ha podido encontrar el archivo multimedia</string>
     <string name="error_media_insufficient_fs_permissions">Permisos de lectura denegados en los medios del dispositivo</string>
     <string name="site_settings_optimize_images">Optimiza las imágenes</string>
-    <string name="no_site_error">No pudo conectarse al sitio de WordPress. No hay ningún sitio WordPress válida en esta \n        dirección. Compruebe la dirección del sitio (URL) que escribiste.</string>
     <string name="media_generic_error">Error de los archivos multimedia</string>
     <string name="media_upload_error">Hubo un error al cargar el archivo multimedia</string>
     <string name="retry">Reintentar</string>

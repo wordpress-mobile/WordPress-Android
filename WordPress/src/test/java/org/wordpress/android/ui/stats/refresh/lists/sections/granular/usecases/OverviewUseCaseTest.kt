@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
@@ -66,7 +66,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
-        whenever(overviewMapper.buildTitle(any(), isNull(), any())).thenReturn(title)
+        whenever(overviewMapper.buildTitle(any(), isNull(), any(), any())).thenReturn(title)
         whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(listOf(barChartItem))
         whenever(overviewMapper.buildColumns(any(), any(), any())).thenReturn(columns)
     }
@@ -83,7 +83,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(TimeStatsTypes.OVERVIEW)
+        assertThat(result.type).isEqualTo(TimeStatsType.OVERVIEW)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
             assertThat(this[0]).isEqualTo(title)

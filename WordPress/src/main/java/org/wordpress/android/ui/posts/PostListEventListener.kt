@@ -27,38 +27,13 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-
-fun listenForPostListEvents(
-    lifecycle: Lifecycle,
-    dispatcher: Dispatcher,
-    postStore: PostStore,
-    site: SiteModel,
-    postActionHandler: PostActionHandler,
-    handlePostUpdatedWithoutError: () -> Unit,
-    handlePostUploadedWithoutError: (LocalId) -> Unit,
-    triggerPostUploadAction: (PostUploadAction) -> Unit,
-    invalidateUploadStatus: (List<Int>) -> Unit,
-    invalidateFeaturedMedia: (List<Long>) -> Unit
-) {
-    PostListEventListener(
-            lifecycle = lifecycle,
-            dispatcher = dispatcher,
-            postStore = postStore,
-            site = site,
-            postActionHandler = postActionHandler,
-            handlePostUpdatedWithoutError = handlePostUpdatedWithoutError,
-            handlePostUploadedWithoutError = handlePostUploadedWithoutError,
-            triggerPostUploadAction = triggerPostUploadAction,
-            invalidateUploadStatus = invalidateUploadStatus,
-            invalidateFeaturedMedia = invalidateFeaturedMedia
-    )
-}
+import javax.inject.Inject
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
  * you see fit.
  */
-private class PostListEventListener(
+class PostListEventListener(
     private val lifecycle: Lifecycle,
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
@@ -161,6 +136,7 @@ private class PostListEventListener(
             return
         }
         featuredMediaChanged(event.media.mediaId)
+        uploadStatusChanged(event.media.localPostId)
     }
 
     // EventBus Events
@@ -225,5 +201,33 @@ private class PostListEventListener(
 
     private fun featuredMediaChanged(vararg featuredImageIds: Long) {
         invalidateFeaturedMedia.invoke(featuredImageIds.toList())
+    }
+
+    class Factory @Inject constructor() {
+        fun createAndStartListening(
+            lifecycle: Lifecycle,
+            dispatcher: Dispatcher,
+            postStore: PostStore,
+            site: SiteModel,
+            postActionHandler: PostActionHandler,
+            handlePostUpdatedWithoutError: () -> Unit,
+            handlePostUploadedWithoutError: (LocalId) -> Unit,
+            triggerPostUploadAction: (PostUploadAction) -> Unit,
+            invalidateUploadStatus: (List<Int>) -> Unit,
+            invalidateFeaturedMedia: (List<Long>) -> Unit
+        ) {
+            PostListEventListener(
+                    lifecycle = lifecycle,
+                    dispatcher = dispatcher,
+                    postStore = postStore,
+                    site = site,
+                    postActionHandler = postActionHandler,
+                    handlePostUpdatedWithoutError = handlePostUpdatedWithoutError,
+                    handlePostUploadedWithoutError = handlePostUploadedWithoutError,
+                    triggerPostUploadAction = triggerPostUploadAction,
+                    invalidateUploadStatus = invalidateUploadStatus,
+                    invalidateFeaturedMedia = invalidateFeaturedMedia
+            )
+        }
     }
 }

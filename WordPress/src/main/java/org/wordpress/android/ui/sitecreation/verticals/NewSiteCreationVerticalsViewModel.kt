@@ -136,7 +136,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         } else {
             tracker.trackVerticalsViewed()
             segmentPrompt = event.prompt!!
-            updateUiStateToContent("", ListState.Ready(emptyList()))
+            updateUiStateToContent("", Ready(emptyList()))
         }
     }
 
@@ -162,7 +162,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         if (query.isNotEmpty()) {
             fetchVerticals(query)
         } else {
-            updateUiStateToContent(query, ListState.Ready(emptyList()))
+            updateUiStateToContent(query, Ready(emptyList()))
         }
     }
 
@@ -204,7 +204,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             tracker.trackErrorShown(ERROR_CONTEXT_LIST_ITEM, event.error.type.toString(), event.error.message)
             updateUiStateToContent(
                     query,
-                    ListState.Error(
+                    Error(
                             listState,
                             errorMessageResId = R.string.site_creation_fetch_suggestions_error_unknown
                     )
@@ -226,7 +226,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                         searchInputUiState = createSearchInputUiState(
                                 query,
                                 showProgress = state is Loading,
-                                showDivider = !state.data.isEmpty(),
+                                showDivider = state.data.isNotEmpty(),
                                 hint = segmentPrompt.hint
                         ),
                         items = createSuggestionsUiStates(

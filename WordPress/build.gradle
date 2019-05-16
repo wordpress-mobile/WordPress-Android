@@ -1,21 +1,19 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'io.fabric.tools:gradle:1.27.0'
         classpath 'com.google.gms:google-services:3.2.0'
         classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.51'
+        classpath 'io.sentry:sentry-android-gradle-plugin:1.7.16'
     }
 }
 
 repositories {
     google()
     jcenter()
-    maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://giphy.bintray.com/giphy-sdk" }
     maven { url "https://jitpack.io" }
@@ -25,7 +23,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
@@ -47,8 +44,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-166"
-        versionCode 717
+        versionName "12.4-rc-3"
+        versionCode 728
         minSdkVersion 21
         targetSdkVersion 26
 
@@ -59,11 +56,18 @@ android {
         }
 
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "true"
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "false"
+
+        // Gutenberg's dependency - react-native-video is using
+        // Java API 1.8
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
     }
 
     flavorDimensions "buildType"
@@ -97,7 +101,6 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
-            ext.enableCrashlytics = false
         }
     }
 
@@ -125,9 +128,6 @@ androidExtensions {
 }
 
 dependencies {
-    implementation('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-        transitive = true;
-    }
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -204,6 +204,16 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
+    androidTestImplementation('com.github.tomakehurst:wiremock:2.23.2') {
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'org.apache.commons', module: 'commons-lang3'
+        exclude group: 'asm', module: 'asm'
+        exclude group: 'org.json', module: 'json'
+    }
+    androidTestImplementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+
+    androidTestImplementation project(path:':libs:mocks:WordPressMocks')
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
@@ -211,12 +221,14 @@ dependencies {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
 
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
+
     // Dagger
-    implementation 'com.google.dagger:dagger:2.11'
-    kapt 'com.google.dagger:dagger-compiler:2.11'
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
-    implementation 'com.google.dagger:dagger-android-support:2.11'
-    kapt 'com.google.dagger:dagger-android-processor:2.11'
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
         exclude group: "com.android.volley"
@@ -243,6 +255,10 @@ dependencies {
 
     lintChecks 'org.wordpress:lint:1.0.1'
 
+    // Sentry
+    implementation 'io.sentry:sentry-android:1.7.16'
+    implementation 'org.slf4j:slf4j-nop:1.7.25'
+
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.5.0'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
@@ -258,26 +274,6 @@ configurations.all {
     // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
     exclude group: 'org.wordpress', module: 'utils'
     exclude group: 'org.wordpress', module: 'analytics'
-}
-
-task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
-    def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
-    def inputFile = checkGradlePropertiesFile()
-    outputs.file outputFile
-    inputs.file inputFile
-    doLast {
-        def properties = loadPropertiesFromFile(inputFile)
-        def crashlyticsApiKey = properties.getProperty('wp.crashlytics.apikey', '0')
-        def writer = new FileWriter(outputFile)
-        writer.write("""// auto-generated file from ${rootDir}/gradle.properties do not modify
-apiKey=${crashlyticsApiKey}""")
-        writer.close()
-    }
-}
-
-// Add generateCrashlyticsConfig to all generateBuildConfig tasks (all variants)
-android.applicationVariants.all { variant ->
-    variant.generateBuildConfig.dependsOn(generateCrashlyticsConfig)
 }
 
 android.buildTypes.all { buildType ->
@@ -373,3 +369,5 @@ assert !(file(legacyGBBundleFile).exists()) : "Error: Legacy Gutenberg JS bundle
 
 // Keep this at the bottom (https://stackoverflow.com/a/37565535)
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.sentry.android.gradle'
+

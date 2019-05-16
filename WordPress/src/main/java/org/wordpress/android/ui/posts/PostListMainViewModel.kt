@@ -5,6 +5,7 @@ import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,11 +34,17 @@ import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
+import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
+import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
+import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
+import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostFetcher
@@ -61,6 +68,9 @@ class PostListMainViewModel @Inject constructor(
     mediaStore: MediaStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
+    private val localDraftUploadStarter: LocalDraftUploadStarter,
+    private val connectionStatus: LiveData<ConnectionStatus>,
+    private val postListEventListenerFactory: PostListEventListener.Factory,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), LifecycleOwner, CoroutineScope {
@@ -99,6 +109,12 @@ class PostListMainViewModel @Inject constructor(
 
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
+
+    private val _viewLayoutType = MutableLiveData<PostListViewLayoutType>()
+    val viewLayoutType: LiveData<PostListViewLayoutType> = _viewLayoutType
+
+    private val _viewLayoutTypeMenuUiState = MutableLiveData<PostListViewLayoutTypeMenuUiState>()
+    val viewLayoutTypeMenuUiState: LiveData<PostListViewLayoutTypeMenuUiState> = _viewLayoutTypeMenuUiState
 
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
@@ -162,13 +178,16 @@ class PostListMainViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
 
+        val layout = prefs.postListViewLayoutType
+        setViewLayoutAndIcon(layout)
+
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection
         } else {
             AuthorFilterSelection.EVERYONE
         }
 
-        listenForPostListEvents(
+        postListEventListenerFactory.createAndStartListening(
                 lifecycle = lifecycle,
                 dispatcher = dispatcher,
                 postStore = postStore,
@@ -188,6 +207,7 @@ class PostListMainViewModel @Inject constructor(
                     invalidateAllLists()
                 }
         )
+
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
@@ -196,6 +216,10 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
+
+        connectionStatus.observe(this, Observer {
+            localDraftUploadStarter.uploadLocalDrafts(scope = this@PostListMainViewModel, site = site)
+        })
     }
 
     override fun onCleared() {
@@ -219,8 +243,8 @@ class PostListMainViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-                getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl,
-                postFetcher = postFetcher
+                postFetcher = postFetcher,
+                getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
     }
 
@@ -347,4 +371,23 @@ class PostListMainViewModel @Inject constructor(
                 _toastMessage.postValue(ToastMessageHolder(string.no_network_message, Duration.SHORT))
                 false
             }
+
+    fun toggleViewLayout() {
+        val currentLayoutType = viewLayoutType.value ?: PostListViewLayoutType.defaultValue
+        val toggledValue = when (currentLayoutType) {
+            STANDARD -> COMPACT
+            COMPACT -> STANDARD
+        }
+        prefs.postListViewLayoutType = toggledValue
+        AnalyticsUtils.trackAnalyticsPostListToggleLayout(toggledValue)
+        setViewLayoutAndIcon(toggledValue)
+    }
+
+    private fun setViewLayoutAndIcon(layout: PostListViewLayoutType) {
+        _viewLayoutType.value = layout
+        _viewLayoutTypeMenuUiState.value = when (layout) {
+            STANDARD -> StandardViewLayoutTypeMenuUiState
+            COMPACT -> CompactViewLayoutTypeMenuUiState
+        }
+    }
 }

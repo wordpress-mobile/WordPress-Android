@@ -22,15 +22,16 @@ wp.zendesk.domain=https://www.google.com/
 wp.zendesk.oauth_client_id=wordpress
 wp.giphy.api_key=wordpress
 wp.reset_db_on_downgrade = false
+wp.sentry.dsn=wordpress
 
 # Needed to use the Google Maps component aka the PlacePicker (Post Settings -> Location)
 wp.res.com.google.android.geo.api.key = geo-api-key
 
 # Optional: Needed for the end to end tests
-wp.e2e.wp_com_user.email=
-wp.e2e.wp_com_user.password=
-wp.e2e.wp_com_user.site_address=
-wp.e2e.wp_com_user.username=
-wp.e2e.self_hosted_user.username=
-wp.e2e.self_hosted_user.password=
-wp.e2e.self_hosted_user.site_address=
+wp.e2e.wp_com_user.email=e2eflowtestingmobile@example.com
+wp.e2e.wp_com_user.password=mocked_password
+wp.e2e.wp_com_user.site_address=e2eflowtestingmobile.wordpress.com
+wp.e2e.wp_com_user.username=e2eflowtestingmobile
+wp.e2e.self_hosted_user.username=e2eflowtestingmobile
+wp.e2e.self_hosted_user.password=mocked_password
+wp.e2e.self_hosted_user.site_address=127.0.0.1:8080
