@@ -12,7 +12,7 @@
         android:id="@+id/toolbar" />
 
     <include
-        layout="@layout/new_site_creation_progress"
+        layout="@layout/progress_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
