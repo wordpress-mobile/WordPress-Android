@@ -65,7 +65,7 @@ class WPWebViewViewModel
     sealed class WebPreviewUiState(
         val fullscreenProgressLayoutVisibility: Boolean = false,
         val webViewVisibility: Boolean = false,
-        val fullscreenErrorLayoutVisibility: Boolean = false
+        val actionableEmptyView: Boolean = false
     ) {
         object WebPreviewContentUiState : WebPreviewUiState(
                 webViewVisibility = true
@@ -76,7 +76,7 @@ class WPWebViewViewModel
         )
 
         object WebPreviewFullscreenErrorUiState : WebPreviewUiState(
-                fullscreenErrorLayoutVisibility = true
+                actionableEmptyView = true
         )
     }
 }

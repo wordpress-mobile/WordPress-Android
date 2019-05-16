@@ -22,7 +22,6 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
@@ -106,7 +105,7 @@ public class WPWebViewActivity extends WebViewActivity {
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject UiHelpers mUiHelpers;
 
-    private ViewGroup mFullScreenErrorLayout;
+    private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
     private WPWebViewViewModel mViewModel;
 
@@ -120,7 +119,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public void configureView() {
         setContentView(R.layout.wpwebview_activity);
 
-        mFullScreenErrorLayout = findViewById(R.id.error_layout);
+        mActionableEmptyView = findViewById(R.id.actionable_empty_view);
         mFullScreenProgressLayout = findViewById(R.id.progress_layout);
         mWebView = findViewById(R.id.webView);
 
@@ -139,8 +138,7 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     private void initRetryButton() {
-        Button retryBtn = mFullScreenErrorLayout.findViewById(R.id.error_retry);
-        retryBtn.setOnClickListener(new OnClickListener() {
+        mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View v) {
                     mViewModel.retry();
                     loadContent();
@@ -153,8 +151,8 @@ public class WPWebViewActivity extends WebViewActivity {
         mViewModel.getMUiState().observe(this, new Observer<WebPreviewUiState>() {
             @Override public void onChanged(@Nullable WebPreviewUiState webPreviewUiState) {
                 if (webPreviewUiState != null) {
-                    mUiHelpers.updateVisibility(mFullScreenErrorLayout,
-                            webPreviewUiState.getFullscreenErrorLayoutVisibility());
+                    mUiHelpers.updateVisibility(mActionableEmptyView,
+                            webPreviewUiState.getActionableEmptyView());
                     mUiHelpers.updateVisibility(mFullScreenProgressLayout,
                             webPreviewUiState.getFullscreenProgressLayoutVisibility());
                     mUiHelpers.updateVisibility(mWebView, webPreviewUiState.getWebViewVisibility());
