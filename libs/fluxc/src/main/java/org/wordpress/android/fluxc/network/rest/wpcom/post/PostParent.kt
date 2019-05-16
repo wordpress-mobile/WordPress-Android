@@ -9,4 +9,3 @@ data class PostParent(
     @SerializedName("link") val link: String? = null,
     @SerializedName("title") val title: String? = null
 ) : JsonObjectOrFalse()
-
