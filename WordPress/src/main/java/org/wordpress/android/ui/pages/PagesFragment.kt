@@ -25,8 +25,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import de.greenrobot.event.EventBus
 import kotlinx.android.synthetic.main.pages_fragment.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -369,7 +369,7 @@ class PagesFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().registerSticky(this)
+        EventBus.getDefault().register(this)
     }
 
     override fun onStop() {

@@ -79,6 +79,7 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ConnectionChangeEvent event) {
         OnThemeLoadingUpdated onThemeLoadingUpdated = getState();
         if (isAdded()

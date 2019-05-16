@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -34,8 +35,6 @@ import org.wordpress.android.util.WPMeShortlinks;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 
