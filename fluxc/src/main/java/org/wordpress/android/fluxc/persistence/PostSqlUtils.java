@@ -255,6 +255,7 @@ public class PostSqlUtils {
                        cv.put(PostModelTable.AUTO_SAVE_REVISION_ID, autoSaveModel.getRevisionId());
                        cv.put(PostModelTable.AUTO_SAVE_MODIFIED, autoSaveModel.getModified());
                        cv.put(PostModelTable.AUTO_SAVE_PREVIEW_URL, autoSaveModel.getPreviewUrl());
+                       cv.put(PostModelTable.REMOTE_AUTO_SAVE_MODIFIED, autoSaveModel.getModified());
                        return cv;
                    }
                }).execute();
