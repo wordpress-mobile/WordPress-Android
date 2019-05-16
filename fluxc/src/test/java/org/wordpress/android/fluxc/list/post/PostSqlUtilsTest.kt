@@ -47,7 +47,10 @@ class PostSqlUtilsTest {
         assertNull(post.autoSavePreviewUrl)
         assertEquals(0, post.autoSaveRevisionId)
 
-        PostSqlUtils.updatePostsAutoSave(site, PostRemoteAutoSaveModel(revisionId, remotePostId, modifiedDate, previewUrl))
+        PostSqlUtils.updatePostsAutoSave(
+                site,
+                PostRemoteAutoSaveModel(revisionId, remotePostId, modifiedDate, previewUrl)
+        )
 
         val postsForSite = PostSqlUtils.getPostsForSite(site, false)
 
