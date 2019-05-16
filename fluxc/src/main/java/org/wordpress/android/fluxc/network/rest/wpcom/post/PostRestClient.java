@@ -273,12 +273,6 @@ public class PostRestClient extends BaseWPComRestClient {
                         }
                     }
                                                                                                  );
-            /*
-             *      TODO I think we can keep the retries enabled, right? It's not an idempotent method, but saving
-             *      the post
-             *      multiple times shouldn't hurt
-             */
-//        request.disableRetries();
             add(request);
         }
     }
