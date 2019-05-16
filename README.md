@@ -11,7 +11,7 @@ it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.
 1. Make sure you've installed [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and [Android Studio](https://developer.android.com/studio/index.html), a _Standard Setup_ would work.
 1. `git clone git@github.com:wordpress-mobile/WordPress-Android.git` in the folder of your preference.
 1. `cd WordPress-Android` to enter the working directory.
-1. `cp gradle.properties-example gradle.properties` to copy the example credentials file to your home folder.
+1. `cp gradle.properties-example gradle.properties` to set up the sample app credentials file.
 1. In Android Studio, open the project from the local repository as a **Gradle project** to auto-generate `local.properties` with the SDK location.
 1. Go Tools → Android → AVD Manager and make sure you have an emulation device setup.
 1. Run.
