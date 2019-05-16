@@ -460,7 +460,14 @@ public class MediaUtils {
                         AppLog.e(AppLog.T.UTILS, "Error reading _data column for URI: " + contentUri, e);
                     }
                 }
-                return FileUtils.cacheFile(context, uri);
+                File cacheDir = context.getCacheDir();
+                String mimeType = UrlUtils.getUrlMimeType(uri.toString());
+                String fileName = getFilenameFromURI(context, uri);
+                if (TextUtils.isEmpty(fileName)) {
+                    fileName = generateTimeStampedFileName(mimeType);
+                }
+
+                return FileUtils.cacheFile(context, uri, getUniqueCacheFileForName(fileName, cacheDir, mimeType));
             } else if (isMediaDocument(uri)) { // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");

@@ -1,22 +1,14 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.OpenableColumns;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
-import org.wordpress.android.util.AppLog.T;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import static org.wordpress.android.util.MediaUtils.getPath;
 
 public class FileUtils {
     public static final String DOCUMENTS_DIR = "documents";
@@ -78,100 +70,17 @@ public class FileUtils {
      * This solution is based on https://stackoverflow.com/a/53021624
      * In certain cases we cannot load a file from the disk so we have to cache it instead using streams.
      * The helper methods are copied from - https://github.com/coltoscosmin/FileUtils/blob/master/FileUtils.java
-     *
-     * @param context The context.
+     *  @param context The context.
      * @param uri The Uri to query.
+     * @param file Target file
      */
-    static String cacheFile(Context context, Uri uri) {
-        String fileName = getFileName(context, uri);
-        File cacheDir = getDocumentCacheDir(context);
-        File file = generateFileName(fileName, cacheDir);
+    static String cacheFile(Context context, Uri uri, File file) {
         String destinationPath = null;
         if (file != null) {
             destinationPath = file.getAbsolutePath();
             saveFileFromUri(context, uri, destinationPath);
         }
         return destinationPath;
-    }
-
-    private static String getFileName(Context context, Uri uri) {
-        String mimeType = context.getContentResolver().getType(uri);
-        String filename = null;
-
-        if (mimeType == null) {
-            String path = getPath(context, uri);
-            if (path == null) {
-                filename = getName(uri.toString());
-            } else {
-                File file = new File(path);
-                filename = file.getName();
-            }
-        } else {
-            Cursor returnCursor = context.getContentResolver().query(uri, null,
-                    null, null, null);
-            if (returnCursor != null) {
-                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                returnCursor.moveToFirst();
-                filename = returnCursor.getString(nameIndex);
-                returnCursor.close();
-            }
-        }
-
-        return filename;
-    }
-
-    private static String getName(String filename) {
-        if (filename == null) {
-            return null;
-        }
-        int index = filename.lastIndexOf('/');
-        return filename.substring(index + 1);
-    }
-
-    private static File getDocumentCacheDir(@NonNull Context context) {
-        File dir = new File(context.getCacheDir(), DOCUMENTS_DIR);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        return dir;
-    }
-
-    @Nullable
-    private static File generateFileName(@Nullable String name, File directory) {
-        if (name == null) {
-            return null;
-        }
-
-        File file = new File(directory, name);
-
-        if (file.exists()) {
-            String fileName = name;
-            String extension = "";
-            int dotIndex = name.lastIndexOf('.');
-            if (dotIndex > 0) {
-                fileName = name.substring(0, dotIndex);
-                extension = name.substring(dotIndex);
-            }
-
-            int index = 0;
-
-            while (file.exists()) {
-                index++;
-                name = fileName + '(' + index + ')' + extension;
-                file = new File(directory, name);
-            }
-        }
-
-        try {
-            if (!file.createNewFile()) {
-                return null;
-            }
-        } catch (IOException e) {
-            AppLog.e(T.UTILS, e);
-            return null;
-        }
-
-        return file;
     }
 
     private static void saveFileFromUri(Context context, Uri uri, String destinationPath) {
