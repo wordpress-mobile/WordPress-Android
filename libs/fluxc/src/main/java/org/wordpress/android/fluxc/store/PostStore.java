@@ -41,7 +41,7 @@ import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.post.PostAutoSaveModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
@@ -225,19 +225,19 @@ public class PostStore extends Store {
         }
     }
 
-    public static class AutoSavePublishedPostPayload extends Payload<PostError> {
-        public PostAutoSaveModel autoSaveModel;
+    public static class RemoteAutoSavePostPayload extends Payload<PostError> {
+        public PostRemoteAutoSaveModel autoSaveModel;
         public int localPostId;
         public SiteModel site;
 
-        public AutoSavePublishedPostPayload(int localPostId, @NonNull PostAutoSaveModel autoSaveModel,
-                                            @NonNull SiteModel site) {
+        public RemoteAutoSavePostPayload(int localPostId, @NonNull PostRemoteAutoSaveModel autoSaveModel,
+                                         @NonNull SiteModel site) {
             this.localPostId = localPostId;
             this.autoSaveModel = autoSaveModel;
             this.site = site;
         }
 
-        public AutoSavePublishedPostPayload(int localPostId, @NonNull PostError error) {
+        public RemoteAutoSavePostPayload(int localPostId, @NonNull PostError error) {
             this.localPostId = localPostId;
             this.error = error;
         }
@@ -612,11 +612,11 @@ public class PostStore extends Store {
             case REMOVE_ALL_POSTS:
                 removeAllPosts();
                 break;
-            case AUTO_SAVE_PUBLISHED_POST:
-                autoSavePublishedPost((RemotePostPayload) action.getPayload());
+            case REMOTE_AUTO_SAVE_POST:
+                remoteAutoSavePost((RemotePostPayload) action.getPayload());
                 break;
-            case AUTO_SAVED_PUBLISHED_POST:
-                handleAutoSavedPublishedPost((AutoSavePublishedPostPayload) action.getPayload());
+            case REMOTE_AUTO_SAVED_POST:
+                handleRemoteAutoSavedPost((RemoteAutoSavePostPayload) action.getPayload());
                 break;
             case FETCH_REVISIONS:
                 fetchRevisions((FetchRevisionsPayload) action.getPayload());
@@ -954,16 +954,16 @@ public class PostStore extends Store {
                 .newListRequiresRefreshAction(PostListDescriptor.calculateTypeIdentifier(postModel.getLocalSiteId())));
     }
 
-    private void autoSavePublishedPost(RemotePostPayload payload) {
+    private void remoteAutoSavePost(RemotePostPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.autoSavePublishedPost(payload.post, payload.site);
+            mPostRestClient.remoteAutoSavePost(payload.post, payload.site);
         } else {
-            throw new NotImplementedException("AutoSave is not supported in XML-RPC api.");
+            throw new NotImplementedException("RemoteAutoSave is not supported in XML-RPC api.");
         }
     }
 
-    private void handleAutoSavedPublishedPost(AutoSavePublishedPostPayload payload) {
-        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.AutoSavePublishedPost(payload.localPostId);
+    private void handleRemoteAutoSavedPost(RemoteAutoSavePostPayload payload) {
+        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.RemoteAutoSavePost(payload.localPostId);
         OnPostChanged onPostChanged;
 
         if (payload.isError()) {
