@@ -127,7 +127,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         for (PostWPComRestResponse postResponse : response.getPosts()) {
                             String autoSaveModified = null;
                             if (postResponse.getPostAutoSave() != null) {
-                                autoSaveModified = postResponse.getPostAutoSave().modified;
+                                autoSaveModified = postResponse.getPostAutoSave().getModified();
                             }
                             postListItems
                                     .add(new PostListItem(postResponse.getRemotePostId(), postResponse.getModified(),
