@@ -30,7 +30,7 @@ public class EditorTests extends BaseTest {
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
     @Rule
-    public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.READ_EXTERNAL_STORAGE);
+    public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE);
 
     @Test
     public void testPublishSimplePost() {
