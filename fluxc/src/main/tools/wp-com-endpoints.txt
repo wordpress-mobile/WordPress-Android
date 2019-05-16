@@ -21,6 +21,10 @@
 /me/social-login/connect/
 /me/username/
 
+/me/transactions/supported-countries/
+/me/transactions/
+/me/shopping-cart/$site
+
 /notifications/
 /notifications/$note_id
 /notifications/seen/
