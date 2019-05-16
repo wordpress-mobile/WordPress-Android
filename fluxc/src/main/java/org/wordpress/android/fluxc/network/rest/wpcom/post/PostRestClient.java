@@ -426,6 +426,7 @@ public class PostRestClient extends BaseWPComRestClient {
             PostAutoSave autoSave = from.getPostAutoSave();
             post.setAutoSaveRevisionId(autoSave.revisionId);
             post.setAutoSaveModified(autoSave.modified);
+            post.setRemoteAutoSaveModified(autoSave.modified);
             post.setAutoSavePreviewUrl(autoSave.preview_URL);
         }
 
