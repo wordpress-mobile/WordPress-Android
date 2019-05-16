@@ -48,6 +48,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.vertical.VerticalRestClient;
 import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
@@ -415,6 +416,16 @@ public class ReleaseNetworkModule {
                                                        AccessToken token, UserAgent userAgent,
                                                        WPComGsonRequestBuilder wpComGsonRequestBuilder) {
         return new PlanOffersRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public TransactionsRestClient provideTransactionsRestClient(Context appContext, Dispatcher dispatcher,
+                                                         @Named("regular") RequestQueue requestQueue,
+                                                         AccessToken token, UserAgent userAgent,
+                                                         WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new TransactionsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
                 userAgent);
     }
 
