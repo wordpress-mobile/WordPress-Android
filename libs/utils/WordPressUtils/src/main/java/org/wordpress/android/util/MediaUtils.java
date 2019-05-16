@@ -402,7 +402,7 @@ public class MediaUtils {
      * @param context The context.
      * @param uri The Uri to query.
      */
-    static String getPath(final Context context, final Uri uri) {
+    private static String getPath(final Context context, final Uri uri) {
         String path = getDocumentProviderPathKitkatOrHigher(context, uri);
 
         if (path != null) {
