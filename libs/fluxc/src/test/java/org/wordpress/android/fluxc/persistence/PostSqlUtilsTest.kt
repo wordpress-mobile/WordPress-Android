@@ -11,8 +11,6 @@ import org.robolectric.annotation.Config
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveModel
-import org.wordpress.android.fluxc.persistence.PostSqlUtils
-import org.wordpress.android.fluxc.persistence.WellSqlConfig
 import kotlin.test.assertNull
 
 @Config(manifest = Config.NONE)
