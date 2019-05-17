@@ -92,6 +92,12 @@ class LocalDraftUploadStarter @Inject constructor(
         checkConnectionAndUpload(sites = listOf(site))
     }
 
+    /**
+     * If there is an internet connection, uploads all local drafts belonging to [sites].
+     *
+     * This coroutine will suspend until all the [upload] operations have completed. If one of them fails, all query
+     * and queuing attempts ([upload]) will be canceled. The exception will be thrown by this method.
+     */
     private suspend fun checkConnectionAndUpload(sites: List<SiteModel>) = coroutineScope {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return@coroutineScope
@@ -102,6 +108,11 @@ class LocalDraftUploadStarter @Inject constructor(
         }
     }
 
+    /**
+     * This is meant to be used by [checkConnectionAndUpload] only.
+     *
+     * @param scope The scope created by [checkConnectionAndUpload].
+     */
     private fun upload(scope: CoroutineScope, site: SiteModel) = scope.launch(ioDispatcher) {
         postStore.getLocalDraftPosts(site)
                 .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }

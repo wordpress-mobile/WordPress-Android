@@ -106,7 +106,10 @@ class LiveDataUtilsTest : BaseUnitTest() {
     @Test
     fun `when skipping 1 on a LiveData emitting multiple values, the first value is not emitted`() {
         // Given
-        val source = MutableLiveData<String>().apply { value = "Alpha" }
+        val source = MutableLiveData<String>().apply {
+            // Capture the scenario of the LiveData having a pre-existing value before an observer is added
+            value = "Alpha"
+        }
         val skip = source.skip(1)
 
         // When
