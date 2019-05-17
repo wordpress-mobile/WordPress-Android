@@ -50,6 +50,7 @@ import org.wordpress.android.fluxc.store.ListStore.ListError;
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload;
+import org.wordpress.android.fluxc.utils.ObjectsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -691,11 +692,7 @@ public class PostStore extends Store {
                     // Post doesn't exist in the DB, nothing to do.
                     continue;
                 }
-                boolean isAutoSaveChanged =
-                        (post.getAutoSaveModified() != null && item.autoSaveModified == null)
-                        || (post.getAutoSaveModified() == null && item.autoSaveModified != null)
-                        || (post.getAutoSaveModified() != null && !post.getAutoSaveModified()
-                                                                       .equals(item.autoSaveModified));
+                boolean isAutoSaveChanged = !ObjectsUtils.equals(post, item);
                 // Check if the post's last modified date, status or meta.data.autosave have changed.
                 // We need to check status separately because when a scheduled post is published, its modified date
                 // will not be updated.
