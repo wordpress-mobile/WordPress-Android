@@ -83,7 +83,7 @@ class StatsViewAllFragment : DaggerFragment() {
         super.onSaveInstanceState(outState)
     }
 
-        private fun initializeViews(savedInstanceState: Bundle?) {
+    private fun initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
@@ -225,8 +225,16 @@ class StatsViewAllFragment : DaggerFragment() {
         })
 
         viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
-            val elevation = if (hasShadow == true) resources.getDimension(R.dimen.appbar_elevation) else 0f
-            app_bar_layout.postDelayed({ ViewCompat.setElevation(app_bar_layout, elevation) }, 100)
+            app_bar_layout.postDelayed({
+                if (app_bar_layout != null) {
+                    val elevation = if (hasShadow == true) {
+                        resources.getDimension(R.dimen.appbar_elevation)
+                    } else {
+                        0f
+                    }
+                    ViewCompat.setElevation(app_bar_layout, elevation)
+                }
+            }, 100)
         })
     }
 

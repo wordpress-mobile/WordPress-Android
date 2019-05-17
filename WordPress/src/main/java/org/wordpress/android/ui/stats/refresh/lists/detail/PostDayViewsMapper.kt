@@ -7,6 +7,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State
 import org.wordpress.android.ui.stats.refresh.utils.HUNDRED_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -18,7 +19,11 @@ class PostDayViewsMapper
     private val resourceProvider: ResourceProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) {
-    fun buildTitle(selectedItem: Day, previousItem: Day?): ValueItem {
+    fun buildTitle(
+        selectedItem: Day,
+        previousItem: Day?,
+        isLast: Boolean
+    ): ValueItem {
         val value = selectedItem.count
         val previousValue = previousItem?.count
         val positive = value >= (previousValue ?: 0)
@@ -36,12 +41,17 @@ class PostDayViewsMapper
             }
         }
 
+        val state = when {
+            isLast -> State.NEUTRAL
+            positive -> State.POSITIVE
+            else -> State.NEGATIVE
+        }
         return ValueItem(
                 value = value.toFormattedString(HUNDRED_THOUSAND),
                 unit = R.string.stats_views,
                 isFirst = true,
                 change = change,
-                positive = positive
+                state = state
         )
     }
 

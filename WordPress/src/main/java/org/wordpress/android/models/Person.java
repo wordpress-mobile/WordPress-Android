@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.support.annotation.Nullable;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
@@ -44,7 +45,7 @@ public class Person {
             long personID = Long.parseLong(json.getString("ID"));
             Person person = new Person(personID, localTableBlogId);
             person.setUsername(json.optString("login"));
-            person.setDisplayName(json.optString("name"));
+            person.setDisplayName(StringEscapeUtils.unescapeHtml4(json.optString("name")));
             person.setAvatarUrl(json.optString("avatar_URL"));
             person.mPersonType = PersonType.USER;
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
@@ -70,7 +71,7 @@ public class Person {
         try {
             long personID = Long.parseLong(json.getString("ID"));
             Person person = new Person(personID, localTableBlogId);
-            person.setDisplayName(json.optString("label"));
+            person.setDisplayName(StringEscapeUtils.unescapeHtml4(json.optString("label")));
             person.setUsername(json.optString("login"));
             person.setAvatarUrl(json.optString("avatar"));
             person.setSubscribed(json.optString("date_subscribed"));
@@ -96,7 +97,7 @@ public class Person {
             long personID = Long.parseLong(json.getString("ID"));
             Person person = new Person(personID, localTableBlogId);
             person.setUsername(json.optString("login"));
-            person.setDisplayName(json.optString("name"));
+            person.setDisplayName(StringEscapeUtils.unescapeHtml4(json.optString("name")));
             person.setAvatarUrl(json.optString("avatar_URL"));
             person.setPersonType(PersonType.VIEWER);
 
