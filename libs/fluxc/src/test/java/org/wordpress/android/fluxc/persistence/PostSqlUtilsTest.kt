@@ -55,10 +55,10 @@ class PostSqlUtilsTest {
         val postsForSite = PostSqlUtils.getPostsForSite(site, false)
 
         assertEquals(1, postsForSite.size)
-        assertEquals(revisionId, postsForSite[0].autoSaveRevisionId)
-        assertEquals(remotePostId, postsForSite[0].remotePostId)
-        assertEquals(modifiedDate, postsForSite[0].autoSaveModified)
-        assertEquals(modifiedDate, postsForSite[0].remoteAutoSaveModified)
-        assertEquals(previewUrl, postsForSite[0].autoSavePreviewUrl)
+        assertEquals(revisionId, postsForSite.first().autoSaveRevisionId)
+        assertEquals(remotePostId, postsForSite.first().remotePostId)
+        assertEquals(modifiedDate, postsForSite.first().autoSaveModified)
+        assertEquals(modifiedDate, postsForSite.first().remoteAutoSaveModified)
+        assertEquals(previewUrl, postsForSite.first().autoSavePreviewUrl)
     }
 }
