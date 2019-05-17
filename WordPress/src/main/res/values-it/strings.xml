@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-15 14:54:08+0000
+Translation-Revision-Date: 2019-05-02 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="notification_wpcom_username_needed">Accedi con i tuoi nome utente e password.</string>
+    <string name="login_invalid_site_url">L\'indirizzo del sito immesso non è valido. Immettilo di nuovo.</string>
+    <string name="error_user_username_instead_of_email">Accedi utilizzando il tuo nome utente di WordPress.com invece del tuo indirizzo e-mail.</string>
+    <string name="stats_insights_average_words">Parole in media per articolo</string>
+    <string name="stats_insights_total_words">Parole totali</string>
+    <string name="stats_insights_average_likes">Like in media per articolo</string>
+    <string name="stats_insights_total_likes">Like totali</string>
+    <string name="stats_insights_average_comments">Commenti in media per articolo</string>
+    <string name="stats_insights_total_comments">Commenti totali</string>
+    <string name="stats_insights_posts">Articoli</string>
+    <string name="stats_insights_year">Anno</string>
+    <string name="stats_insights_this_year_site_stats">Quest\'anno</string>
+    <string name="no_site_error">Il sito a questo indirizzo non è un sito WordPress. Per poterci connettere, il sito deve utilizzare WordPress.</string>
     <string name="plugin_check_domain_credit_error">Impossibile controllare i crediti di dominio disponibili</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Controllo dei crediti di dominio</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registra dominio</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Per installare i plugin, il dominio personalizzato deve essere associato al tuo sito.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Installa plugin</string>
-    <string name="new_site_creation_preview_subtitle">Potrai personalizzare l’aspetto e il tono del tuo sito in un secondo momento</string>
     <string name="publish_on">Pubblica il: %s</string>
     <string name="schedule_for">Programmato per: %s</string>
     <string name="published_on">Pubblicato il: %s</string>
@@ -1138,7 +1150,6 @@ Language: it
     <string name="error_media_not_found">Non è possibile trovare i media</string>
     <string name="error_media_insufficient_fs_permissions">Permessi di lettura negati dai dati del dispositivo</string>
     <string name="site_settings_optimize_images">Ottimizza le immagini</string>
-    <string name="no_site_error">Non è possibile connettersi al sito WordPress. Non è presente alcun sito WordPress valido a questo\n indirizzo. Controlla l\'indirizzo del sito (URL) che hai inserito.</string>
     <string name="media_generic_error">Si è verificato un errore con i media</string>
     <string name="media_upload_error">Si è verificato un errore durante il caricamento dei media</string>
     <string name="retry">Riprova</string>

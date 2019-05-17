@@ -195,6 +195,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         MediaFilter filter;
         if (mBrowserType.isSingleImagePicker()) {
             filter = MediaFilter.FILTER_IMAGES;
+        } else if (mBrowserType == MediaBrowserType.GUTENBERG_IMAGE_PICKER) {
+            filter = MediaFilter.FILTER_IMAGES;
+        } else if (mBrowserType == MediaBrowserType.GUTENBERG_VIDEO_PICKER) {
+            filter = MediaFilter.FILTER_VIDEOS;
         } else if (savedInstanceState != null) {
             filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
         } else {

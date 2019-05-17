@@ -169,7 +169,7 @@ public class UploadUtils {
                 } else {
                     if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
                         || UploadService.isPostUploadingOrQueued(post)) {
-                        showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
+                        showSnackbar(snackbarAttachView, R.string.editor_uploading_draft);
                     } else {
                         showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
                                                   R.string.button_publish,

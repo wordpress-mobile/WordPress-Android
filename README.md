@@ -65,10 +65,12 @@ account. Note that authenticating to WordPress.com via Google is not supported i
 
 Note that credentials created with our [WordPress.com applications manager][5] allow login only and not signup. New
 accounts must be created using the [official app][1] or [on the web](https://wordpress.com/start). Login is restricted
-to the WordPress.com account with which the credentials were created. Also, you will be able to interact with sites of
-that same WordPress.com account only. In other words, if the credentials were created with foo@email.com, you will only
-be able to login with foo@email.com and access foo@email.com sites. Using another account like bar@email.com will cause
+to the WordPress.com account with which the credentials were created. In other words, if the credentials were created with foo@email.com, you will only
+be able to login with foo@email.com. Using another account like bar@email.com will cause
 the `Client cannot use "password" grant_type` error. 
+
+For security reasons, some account-related actions aren't supported for development builds when using a WordPress.com account with 2-factor authentication enabled.
+There is also currently an [issue](https://github.com/wordpress-mobile/WordPress-Android/issues/8754) where a restart of the app is required to complete login in this case. 
 
 Read more about [OAuth2][6] and the [WordPress.com REST endpoint][7].
 
@@ -84,13 +86,24 @@ that can't be shared publicly. More documentation and guides can be found on the
 
 Read our [Contributing Guide](CONTRIBUTING.md) to learn about reporting issues, contributing code, and more ways to contribute.
 
+## Security
+
+If you happen to find a security vulnerability, we would appreciate you letting us know at https://hackerone.com/automattic and allowing us to respond before disclosing the issue publicly.
+
 ## Getting in Touch
 
 If you have questions or just want to say hi, join the [WordPress Slack](https://chat.wordpress.org) and drop a message on the `#mobile` channel.
 
+## Documentation
+
+- [Coding Style](https://github.com/wordpress-mobile/WordPress-Android/wiki/Coding-Style) - guidelines and validation and auto-formatting tools
+- [Pull Request Guidelines](https://github.com/wordpress-mobile/WordPress-Android/wiki/Pull-Request-Guidelines) - branch naming and how to write good pull requests
+- [Subtree'd Library Projects](https://github.com/wordpress-mobile/WordPress-Android/wiki/Subtree'd-Library-Projects) - how to deal with subtree dependencies
+
+Please read our [Wiki](https://github.com/wordpress-mobile/WordPress-Android/wiki) for more. 
+
 ## Resources
 
-- The [Wiki](https://github.com/wordpress-mobile/WordPress-Android/wiki) contains information about our development practices. 
 - [WordPress Mobile Blog](http://make.wordpress.org/mobile)
 - [WordPress Mobile Handbook](http://make.wordpress.org/mobile/handbook/)
 

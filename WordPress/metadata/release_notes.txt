@@ -1,3 +1,4 @@
-* Better sharing: You can now share entire sites from the Reader, not just posts.
-* Better Stats: Insights includes a new “This Year” section, and stats have better RTL support.
-* Fixes: Issues with missing posts in the Reader and site icons that didn’t updating properly when switching sites have been resolved.
+* Explore the updated blog posts list screen: it can sort posts by publication status and filter them by author, and includes a compact-view toggle.
+* Focus on the most important stats in the Insights screen — tap the Edit button to customize your view.
+* Add a soundtrack to your Reader experience! Audio embeds are now playable there.
+* It’s always nice to save space on your device, so you’ll love the (significantly) smaller download size of the app.

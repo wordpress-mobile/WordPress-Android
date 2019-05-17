@@ -112,7 +112,12 @@ constructor(
             val selectedItem = domainModel.dates.getOrNull(shiftedIndex) ?: domainModel.dates.last()
             val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
             items.add(
-                    overviewMapper.buildTitle(selectedItem, previousItem, uiState.selectedPosition)
+                    overviewMapper.buildTitle(
+                            selectedItem,
+                            previousItem,
+                            uiState.selectedPosition,
+                            isLast = selectedItem == domainModel.dates.last()
+                    )
             )
             items.addAll(
                     overviewMapper.buildChart(
