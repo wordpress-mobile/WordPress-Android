@@ -33,7 +33,6 @@ public class EditorPage {
     private static ViewInteraction publishConfirmation = onView(allOf(
             withText("Post published"), isDescendantOfA(withId(R.id.snackbar))));
     private static ViewInteraction addMediaButton = onView(withId(R.id.media_button_container));
-    private static ViewInteraction mediaLibraryButton = onView(withId(R.id.media_bar_button_library));
     private static ViewInteraction allowMediaAccessButton = onView(allOf(withId(R.id.button),
             withText("Allow")));
     private static ViewInteraction confirmButton = onView(withId(R.id.mnu_confirm_selection));
@@ -54,7 +53,6 @@ public class EditorPage {
     public void enterImage() {
         // Click on add media button
         clickOn(addMediaButton);
-        clickOn(mediaLibraryButton);
 
         if (isElementDisplayed(allowMediaAccessButton)) {
             // Click on Allow button
@@ -62,7 +60,7 @@ public class EditorPage {
         }
 
         // Click on a random image
-        onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
+        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
 
         // Click the confirm button
         clickOn(confirmButton);
