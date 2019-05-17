@@ -710,9 +710,7 @@ public class PostStore extends Store {
                         // both locally and on the remote), so flag the local version of the Post so the
                         // hosting app can inform the user and the user can decide and take action
                         post.setRemoteLastModified(item.lastModified);
-                        if (isAutoSaveChanged) {
-                            post.setRemoteAutoSaveModified(item.autoSaveModified);
-                        }
+                        post.setRemoteAutoSaveModified(item.autoSaveModified);
                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
                     }
                 }
