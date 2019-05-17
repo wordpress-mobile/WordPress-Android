@@ -248,10 +248,8 @@ fun <T> LiveData<T>.skip(times: Int): LiveData<T> {
     mediator.addSource(this) { value ->
         skipped += 1
 
-        if (skipped <= times) {
-            return@addSource
-        } else {
-            mediator.postValue(value)
+        if (skipped > times) {
+            mediator.value = value
         }
     }
 
