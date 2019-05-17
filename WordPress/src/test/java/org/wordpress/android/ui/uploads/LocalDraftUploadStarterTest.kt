@@ -191,6 +191,7 @@ class LocalDraftUploadStarterTest {
             postStore = postStore,
             siteStore = siteStore,
             bgDispatcher = Dispatchers.Default,
+            ioDispatcher = Dispatchers.IO,
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
             connectionStatus = connectionStatus,
             uploadServiceFacade = uploadServiceFacade
