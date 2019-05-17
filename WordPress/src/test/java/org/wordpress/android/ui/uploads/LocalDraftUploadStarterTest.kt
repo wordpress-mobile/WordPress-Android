@@ -126,7 +126,7 @@ class LocalDraftUploadStarterTest {
 
         // When
         runBlocking {
-            starter.queueUpload(site).join()
+            starter.queueUploadFromSite(site).join()
         }
 
         // Then
@@ -163,7 +163,7 @@ class LocalDraftUploadStarterTest {
 
         // When
         runBlocking {
-            starter.queueUpload(site).join()
+            starter.queueUploadFromSite(site).join()
         }
 
         // Then

@@ -214,7 +214,7 @@ class PostListMainViewModel @Inject constructor(
         )
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
-        localDraftUploadStarter.queueUpload(site)
+        localDraftUploadStarter.queueUploadFromSite(site)
     }
 
     override fun onCleared() {

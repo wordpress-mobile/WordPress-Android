@@ -28,7 +28,7 @@ class PostListMainViewModelTest {
         viewModel.start(site = site)
 
         // Then
-        verify(localDraftUploadStarter, times(1)).queueUpload(site = eq(site))
+        verify(localDraftUploadStarter, times(1)).queueUploadFromSite(eq(site))
     }
 
     private companion object {

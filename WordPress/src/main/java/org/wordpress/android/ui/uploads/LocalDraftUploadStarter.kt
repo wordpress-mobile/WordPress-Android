@@ -88,7 +88,7 @@ class LocalDraftUploadStarter @Inject constructor(
     /**
      * Upload all local drafts from the given [site].
      */
-    fun queueUpload(site: SiteModel) = launch {
+    fun queueUploadFromSite(site: SiteModel) = launch {
         checkConnectionAndUpload(sites = listOf(site))
     }
 
