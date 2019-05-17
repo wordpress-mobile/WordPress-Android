@@ -302,10 +302,12 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.WPWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.JetpackConnectionWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
             android:theme="@style/Calypso.NoActionBar" />
