@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.list.post
+package org.wordpress.android.fluxc.persistence
 
 import com.yarolegovich.wellsql.WellSql
 import org.junit.Assert.assertEquals
