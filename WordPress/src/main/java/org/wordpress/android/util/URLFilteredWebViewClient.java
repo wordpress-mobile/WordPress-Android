@@ -1,6 +1,9 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -16,8 +19,15 @@ import java.util.Set;
  * Generally used to disable links and navigation in admin pages.
  */
 public class URLFilteredWebViewClient extends WebViewClient {
+    public interface URLWebViewClientListener {
+        void onPageLoaded();
+        void onError();
+    }
+
     private Set<String> mAllowedURLs = new LinkedHashSet<>();
     private int mLinksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
+    private boolean mWebResourceError;
+    private URLWebViewClientListener mListener;
 
     public URLFilteredWebViewClient() {
     }
@@ -35,8 +45,35 @@ public class URLFilteredWebViewClient extends WebViewClient {
         mAllowedURLs.addAll(urls);
     }
 
+    public void setListener(URLWebViewClientListener listener) {
+        mListener = listener;
+    }
+
     protected boolean isAllURLsAllowed() {
         return mAllowedURLs.size() == 0;
+    }
+
+    @Override
+    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+        super.onPageStarted(view, url, favicon);
+        mWebResourceError = false;
+    }
+
+    @Override
+    public void onPageFinished(WebView view, String url) {
+        super.onPageFinished(view, url);
+        if (mListener != null && !mWebResourceError) {
+            mListener.onPageLoaded();
+        }
+    }
+
+    @Override
+    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+        super.onReceivedError(view, request, error);
+        mWebResourceError = true;
+        if (mListener != null) {
+            mListener.onError();
+        }
     }
 
     @Override

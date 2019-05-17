@@ -18,9 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
@@ -36,6 +33,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.URLFilteredWebViewClient;
+import org.wordpress.android.util.URLFilteredWebViewClient.URLWebViewClientListener;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
@@ -85,7 +83,7 @@ import javax.inject.Inject;
  * or self-signed certs in place.
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
  */
-public class WPWebViewActivity extends WebViewActivity {
+public class WPWebViewActivity extends WebViewActivity implements URLWebViewClientListener {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -318,69 +316,29 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     protected WebViewClient createWebViewClient(List<String> allowedURL) {
+        URLFilteredWebViewClient webViewClient;
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
             SiteModel site = mSiteStore.getSiteByLocalId(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
             if (site == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            return new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL) {
-                boolean mWebResourceError;
-
-                @Override
-                public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                    super.onPageStarted(view, url, favicon);
-                    mWebResourceError = false;
-                }
-
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    super.onPageFinished(view, url);
-                    // need to check if mViewModel is null because other classes extend WPWebViewActivity
-                    if (!mWebResourceError && mViewModel != null) {
-                        mViewModel.onUrlLoaded();
-                    }
-                }
-
-                @Override
-                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                    super.onReceivedError(view, request, error);
-                    mWebResourceError = true;
-                    if (mViewModel != null) {
-                        mViewModel.onError();
-                    }
-                }
-            };
+            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else {
-            return new URLFilteredWebViewClient(allowedURL) {
-                // onPageFinished() gets called even if there was an error
-                // so it's necessary to keep track if an error happened
-                boolean mWebResourceError;
-
-                @Override
-                public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                    super.onPageStarted(view, url, favicon);
-                    mWebResourceError = false;
-                }
-
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    super.onPageFinished(view, url);
-                    if (!mWebResourceError && mViewModel != null) {
-                        mViewModel.onUrlLoaded();
-                    }
-                }
-
-                @Override
-                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                    super.onReceivedError(view, request, error);
-                    mWebResourceError = true;
-                    if (mViewModel != null) {
-                        mViewModel.onError();
-                    }
-                }
-            };
+            webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
+        webViewClient.setListener(this);
+        return webViewClient;
+    }
+
+    @Override
+    public void onPageLoaded() {
+        mViewModel.onUrlLoaded();
+    }
+
+    @Override
+    public void onError() {
+        mViewModel.onError();
     }
 
     @Override
