@@ -2,6 +2,9 @@ package org.wordpress.android.e2e.pages;
 
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 
 import org.wordpress.android.R;
 
@@ -32,7 +35,6 @@ public class EditorPage {
             withHint("Title")));
     private static ViewInteraction publishConfirmation = onView(allOf(
             withText("Post published"), isDescendantOfA(withId(R.id.snackbar))));
-    private static ViewInteraction addMediaButton = onView(withId(R.id.media_button_container));
     private static ViewInteraction allowMediaAccessButton = onView(allOf(withId(R.id.button),
             withText("Allow")));
     private static ViewInteraction confirmButton = onView(withId(R.id.mnu_confirm_selection));
@@ -49,10 +51,19 @@ public class EditorPage {
         editor.perform(typeText(postContent), ViewActions.closeSoftKeyboard());
     }
 
+    public void clickAddMediaButton() {
+        try {
+            UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().resourceId(
+                    "org.wordpress.android:id/media_button_container")).click();
+        } catch (UiObjectNotFoundException e) {
+            System.out.println("Could not find media button to click");
+        }
+    }
+
     // Image needs a little time to be uploaded after entering the image
     public void enterImage() {
         // Click on add media button
-        clickOn(addMediaButton);
+        clickAddMediaButton();
 
         if (isElementDisplayed(allowMediaAccessButton)) {
             // Click on Allow button
