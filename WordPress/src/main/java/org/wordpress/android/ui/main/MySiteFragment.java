@@ -103,6 +103,7 @@ import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE;
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
+import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
 import static org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.RESULT_TASK;
 
 public class MySiteFragment extends Fragment implements
@@ -581,25 +582,6 @@ public class MySiteFragment extends Fragment implements
         } else {
             mDomainRegistrationCta.setVisibility(View.GONE);
         }
-    }
-
-    private boolean isDomainCreditAvailable(List<PlanModel> plans) {
-        PlanModel currentPlan = getCurrentPlan(plans);
-        if (currentPlan == null) {
-            return false;
-        }
-
-        return currentPlan.getHasDomainCredit();
-    }
-
-    private PlanModel getCurrentPlan(List<PlanModel> plans) {
-        for (PlanModel plan : plans) {
-            if (plan.isCurrentPlan()) {
-                return plan;
-            }
-        }
-
-        return null;
     }
 
     @Override
