@@ -967,9 +967,13 @@ public class WPMainActivity extends AppCompatActivity implements
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlansFetched(OnPlansFetched event) {
-        MySiteFragment fragment = getMySiteFragment();
-        if (fragment != null) {
-            fragment.updateDomainRegistrationCtaIfDomainCreditAvailable(event.plans);
+        if (event.isError()) {
+            AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching plans : " + event.error.message);
+        } else {
+            MySiteFragment fragment = getMySiteFragment();
+            if (fragment != null) {
+                fragment.updateDomainRegistrationCtaIfDomainCreditAvailable(event.plans);
+            }
         }
     }
 
