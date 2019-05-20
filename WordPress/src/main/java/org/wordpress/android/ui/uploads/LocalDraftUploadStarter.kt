@@ -104,16 +104,16 @@ class LocalDraftUploadStarter @Inject constructor(
         }
 
         sites.forEach {
-            upload(scope = this, site = it)
+            launch(ioDispatcher) {
+                upload(site = it)
+            }
         }
     }
 
     /**
      * This is meant to be used by [checkConnectionAndUpload] only.
-     *
-     * @param scope The scope created by [checkConnectionAndUpload].
      */
-    private fun upload(scope: CoroutineScope, site: SiteModel) = scope.launch(ioDispatcher) {
+    private fun upload(site: SiteModel) {
         postStore.getLocalDraftPosts(site)
                 .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
                 .forEach { localDraft ->
