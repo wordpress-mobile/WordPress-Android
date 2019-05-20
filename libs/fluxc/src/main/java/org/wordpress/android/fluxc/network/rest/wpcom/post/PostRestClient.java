@@ -346,8 +346,8 @@ public class PostRestClient extends BaseWPComRestClient {
         }
         post.setPostFormat(from.getFormat());
         if (from.getGeo() != null) {
-            post.setLatitude(from.getGeo().getLatitude());
-            post.setLongitude(from.getGeo().getLongitude());
+            post.setLatitude(from.getGeo().latitude);
+            post.setLongitude(from.getGeo().longitude);
         }
 
         if (from.getCategories() != null) {
@@ -373,8 +373,8 @@ public class PostRestClient extends BaseWPComRestClient {
         }
 
         if (from.getParent() != null) {
-            post.setParentId(from.getParent().getId());
-            post.setParentTitle(from.getParent().getTitle());
+            post.setParentId(from.getParent().ID);
+            post.setParentTitle(from.getParent().title);
         }
 
         return post;
