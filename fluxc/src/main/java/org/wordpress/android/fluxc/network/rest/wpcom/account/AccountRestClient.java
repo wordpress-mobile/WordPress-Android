@@ -188,14 +188,12 @@ public class AccountRestClient extends BaseWPComRestClient {
         public IsAvailable type;
         public String value;
         public boolean isAvailable;
-        public List<String> suggestions;
     }
 
     public enum IsAvailable {
         EMAIL,
         USERNAME,
-        BLOG,
-        DOMAIN
+        BLOG
     }
 
     public AccountRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
@@ -967,9 +965,6 @@ public class AccountRestClient extends BaseWPComRestClient {
             case BLOG:
                 url = WPCOMREST.is_available.blog.getUrlV0();
                 break;
-            case DOMAIN:
-                url = WPCOMREST.is_available.domain.getUrlV0();
-                break;
             case EMAIL:
                 url = WPCOMREST.is_available.email.getUrlV0();
                 break;
@@ -998,7 +993,6 @@ public class AccountRestClient extends BaseWPComRestClient {
                             if (response.error.equals("taken")) {
                                 // We consider "taken" not to be an error, and we report that the item is unavailable
                                 payload.isAvailable = false;
-                                payload.suggestions = response.suggestions; // These are only supplied by /domain/
                             } else if (response.error.equals("invalid") && type.equals(IsAvailable.BLOG)
                                     && response.message.contains("reserved")) {
                                 // Special case for /is-available/blog, which returns 'invalid' instead of 'taken'
