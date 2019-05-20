@@ -38,4 +38,12 @@ class LocalDraftUploadStarter @Inject constructor(
                     context.startService(intent)
                 }
     }
+
+    fun queueUploadFromAllSites() {
+
+    }
+
+    fun queueUpload(site: SiteModel) {
+
+    }
 }
