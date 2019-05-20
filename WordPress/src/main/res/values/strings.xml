@@ -1514,6 +1514,8 @@
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
     <string name="error_generic_error">Couldn\'t perform operation</string>
+    <string name="error_browser_no_network">Unable to load this page right now.</string>
+    <string name="error_network_connection">Check your network connection and try again.</string>
 
     <!-- Post Error -->
     <string name="error_unknown_post">Could not find the post on the server</string>

@@ -32,8 +32,9 @@
         android:layout_below="@+id/toolbar"
         android:visibility="gone"
         app:aevButton="@string/retry"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
-        app:aevTitle="@string/error_generic_network"
+        app:aevImage="@drawable/ic_cloud_illo"
+        app:aevTitle="@string/error_browser_no_network"
+        app:aevSubtitle="@string/error_network_connection"
         tools:visibility="visible">
     </org.wordpress.android.ui.ActionableEmptyView>
 
