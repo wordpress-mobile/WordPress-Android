@@ -1,21 +1,17 @@
 package org.wordpress.android.ui;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.URLFilteredWebViewClient.URLWebViewClientListener;
+import org.wordpress.android.util.BaseWebViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-class JetpackConnectionWebViewClient extends WebViewClient {
-    interface JetpackConnectionWebViewClientListener extends URLWebViewClientListener {
+class JetpackConnectionWebViewClient extends BaseWebViewClient {
+    interface JetpackConnectionWebViewClientListener extends BaseWebViewClientListener {
         void onRequiresWPComLogin(WebView webView, String redirectPage);
         void onRequiresJetpackLogin();
         void onJetpackSuccessfullyConnected(Uri uri);
@@ -35,34 +31,11 @@ class JetpackConnectionWebViewClient extends WebViewClient {
     private final @NonNull JetpackConnectionWebViewClientListener mListener;
     private final String mSiteUrl;
     private String mRedirectPage;
-    private boolean mWebResourceError;
 
     JetpackConnectionWebViewClient(@NonNull JetpackConnectionWebViewClientListener listener, String siteUrl) {
         mListener = listener;
         mSiteUrl = siteUrl;
-    }
-
-    @Override
-    public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        super.onPageStarted(view, url, favicon);
-        mWebResourceError = false;
-    }
-
-    @Override
-    public void onPageFinished(WebView view, String url) {
-        super.onPageFinished(view, url);
-        if (mListener != null && !mWebResourceError) {
-            mListener.onPageLoaded();
-        }
-    }
-
-    @Override
-    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-        super.onReceivedError(view, request, error);
-        mWebResourceError = true;
-        if (mListener != null) {
-            mListener.onError();
-        }
+        setMBaseWebViewClientListener(mListener);
     }
 
     @Override
