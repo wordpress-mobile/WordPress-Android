@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
@@ -82,14 +83,22 @@ class LocalDraftUploadStarter @Inject constructor(
 
     private fun queueUploadFromAllSites() = launch {
         val sites = siteStore.sites
-        checkConnectionAndUpload(sites = sites)
+        try {
+            checkConnectionAndUpload(sites = sites)
+        } catch (e: Exception) {
+            CrashLoggingUtils.log(e)
+        }
     }
 
     /**
      * Upload all local drafts from the given [site].
      */
     fun queueUploadFromSite(site: SiteModel) = launch {
-        checkConnectionAndUpload(sites = listOf(site))
+        try {
+            checkConnectionAndUpload(sites = listOf(site))
+        } catch (e: Exception) {
+            CrashLoggingUtils.log(e)
+        }
     }
 
     /**
